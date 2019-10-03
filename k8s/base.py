@@ -1,0 +1,123 @@
+import enum
+from datetime import datetime as DateTime
+from typing import Dict, Optional
+
+import pytz
+from korps import types
+from typeguard import typechecked
+
+
+@typechecked
+def Enum(name: str, values: Dict[str, str]):
+
+    class _cls(types.Renderable, str, enum.Enum):
+
+        def render(self) -> str:
+            return self.value
+
+    return _cls(name, values)
+
+
+class TypedObject(types.Object):
+
+    @typechecked
+    def render(self) -> types.Dict:
+        v = super().render()
+        apiVersion = self.apiVersion()
+        if apiVersion:  # omitempty
+            v.apiVersion = apiVersion
+        kind = self.kind()
+        if kind:  # omitempty
+            v.kind = kind
+        return v
+
+    # APIVersion defines the versioned schema of this representation of an object.
+    # Servers should convert recognized schemas to the latest internal value, and
+    # may reject unrecognized values.
+    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+    @typechecked
+    def apiVersion(self) -> Optional[str]:
+        return self._kwargs.get('apiVersion')
+
+    # Kind is a string value representing the REST resource this object represents.
+    # Servers may infer this from the endpoint the client submits requests to.
+    # Cannot be updated.
+    # In CamelCase.
+    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+    @typechecked
+    def kind(self) -> Optional[str]:
+        return self._kwargs.get('kind')
+
+
+class MetadataObject(types.Object):
+
+    @typechecked
+    def render(self) -> types.Dict:
+        v = super().render()
+        name = self.name()
+        if name:  # omitempty
+            v.metadata.name = name
+        namespace = self.namespace()
+        if namespace:  # omitempty
+            v.metadata.namespace = namespace
+        labels = self.labels()
+        if labels:  # omitempty
+            v.metadata.labels = labels
+        annotations = self.annotations()
+        if annotations:  # omitempty
+            v.metadata.annotations = annotations
+        return v
+
+    # Name must be unique within a namespace. Is required when creating resources, although
+    # some resources may allow a client to request the generation of an appropriate name
+    # automatically. Name is primarily intended for creation idempotence and configuration
+    # definition.
+    # Cannot be updated.
+    # More info: http://kubernetes.io/docs/user-guide/identifiers#names
+    @typechecked
+    def name(self) -> Optional[str]:
+        return self._kwargs.get('name')
+
+    # Namespace defines the space within each name must be unique. An empty namespace is
+    # equivalent to the "default" namespace, but "default" is the canonical representation.
+    # Not all objects are required to be scoped to a namespace - the value of this field for
+    # those objects will be empty.
+    #
+    # Must be a DNS_LABEL.
+    # Cannot be updated.
+    # More info: http://kubernetes.io/docs/user-guide/namespaces
+    @typechecked
+    def namespace(self) -> Optional[str]:
+        return self._kwargs.get('namespace')
+
+    # Map of string keys and values that can be used to organize and categorize
+    # (scope and select) objects. May match selectors of replication controllers
+    # and services.
+    # More info: http://kubernetes.io/docs/user-guide/labels
+    @typechecked
+    def labels(self) -> Dict[str, str]:
+        return self._kwargs.get('labels', {})
+
+    # Annotations is an unstructured key value map stored with a resource that may be
+    # set by external tools to store and retrieve arbitrary metadata. They are not
+    # queryable and should be preserved when modifying objects.
+    # More info: http://kubernetes.io/docs/user-guide/annotations
+    @typechecked
+    def annotations(self) -> Dict[str, str]:
+        return self._kwargs.get('annotations', {})
+
+
+class Time(types.Renderable):
+
+    _format = '%Y-%m-%dT%H:%M:%SZ'
+
+    def __init__(self, time: DateTime):
+        self.time = time
+
+    def render(self) -> str:
+        return self.time.astimezone(pytz.utc).strftime(self._format)
+
+
+class MicroTime(Time):
+
+    _format = '%Y-%m-%dT%H:%M:%S.%fZ'
