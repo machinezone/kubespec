@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from k8s.apimachinery.meta import v1 as metav1
 from korps import types
@@ -77,7 +78,7 @@ SideEffectClass = base.Enum('SideEffectClass', {
 class Rule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         apiGroups = self.apiGroups()
         if apiGroups:  # omit empty
@@ -144,7 +145,7 @@ class Rule(types.Object):
 class RuleWithOperations(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         operations = self.operations()
         if operations:  # omit empty
@@ -171,7 +172,7 @@ class RuleWithOperations(types.Object):
 class ServiceReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['namespace'] = self.namespace()
         v['name'] = self.name()
@@ -214,7 +215,7 @@ class ServiceReference(types.Object):
 class WebhookClientConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         url = self.url()
         if url is not None:  # omit empty
@@ -275,7 +276,7 @@ class WebhookClientConfig(types.Object):
 class MutatingWebhook(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['clientConfig'] = self.clientConfig()
@@ -475,7 +476,7 @@ class MutatingWebhook(types.Object):
 class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         webhooks = self.webhooks()
         if webhooks:  # omit empty
@@ -493,14 +494,14 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     # Webhooks is a list of webhooks and the affected resources and operations.
     @typechecked
     def webhooks(self) -> Dict[str, MutatingWebhook]:
-        return self._kwargs.get('webhooks', types.Dict())
+        return self._kwargs.get('webhooks', addict.Dict())
 
 
 # ValidatingWebhook describes an admission webhook and the resources and operations it applies to.
 class ValidatingWebhook(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['clientConfig'] = self.clientConfig()
@@ -678,7 +679,7 @@ class ValidatingWebhook(types.Object):
 class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         webhooks = self.webhooks()
         if webhooks:  # omit empty
@@ -696,4 +697,4 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     # Webhooks is a list of webhooks and the affected resources and operations.
     @typechecked
     def webhooks(self) -> Dict[str, ValidatingWebhook]:
-        return self._kwargs.get('webhooks', types.Dict())
+        return self._kwargs.get('webhooks', addict.Dict())

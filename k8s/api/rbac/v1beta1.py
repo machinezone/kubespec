@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from k8s.apimachinery.meta import v1 as metav1
 from korps import types
@@ -12,7 +13,7 @@ from typeguard import typechecked
 class AggregationRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         clusterRoleSelectors = self.clusterRoleSelectors()
         if clusterRoleSelectors:  # omit empty
@@ -31,7 +32,7 @@ class AggregationRule(types.Object):
 class PolicyRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['verbs'] = self.verbs()
         apiGroups = self.apiGroups()
@@ -82,7 +83,7 @@ class PolicyRule(types.Object):
 class ClusterRole(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['rules'] = self.rules()
         aggregationRule = self.aggregationRule()
@@ -115,7 +116,7 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
 class RoleRef(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['apiGroup'] = self.apiGroup()
         v['kind'] = self.kind()
@@ -143,7 +144,7 @@ class RoleRef(types.Object):
 class Subject(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['kind'] = self.kind()
         apiGroup = self.apiGroup()
@@ -185,7 +186,7 @@ class Subject(types.Object):
 class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         subjects = self.subjects()
         if subjects:  # omit empty
@@ -204,7 +205,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
     # Subjects holds references to the objects the role applies to.
     @typechecked
     def subjects(self) -> Dict[str, Subject]:
-        return self._kwargs.get('subjects', types.Dict())
+        return self._kwargs.get('subjects', addict.Dict())
     
     # RoleRef can only reference a ClusterRole in the global namespace.
     # If the RoleRef cannot be resolved, the Authorizer must return an error.
@@ -217,7 +218,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
 class Role(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['rules'] = self.rules()
         return v
@@ -242,7 +243,7 @@ class Role(base.TypedObject, base.MetadataObject):
 class RoleBinding(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         subjects = self.subjects()
         if subjects:  # omit empty
@@ -261,7 +262,7 @@ class RoleBinding(base.TypedObject, base.MetadataObject):
     # Subjects holds references to the objects the role applies to.
     @typechecked
     def subjects(self) -> Dict[str, Subject]:
-        return self._kwargs.get('subjects', types.Dict())
+        return self._kwargs.get('subjects', addict.Dict())
     
     # RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
     # If the RoleRef cannot be resolved, the Authorizer must return an error.

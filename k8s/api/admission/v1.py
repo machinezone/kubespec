@@ -2,6 +2,7 @@
 
 from typing import Dict, Optional
 
+import addict
 from k8s import base
 from k8s.api.authentication import v1 as authenticationv1
 from k8s.apimachinery import runtime
@@ -30,7 +31,7 @@ PatchType = base.Enum('PatchType', {
 class AdmissionRequest(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['uid'] = self.uid()
         v['kind'] = self.kind()
@@ -179,7 +180,7 @@ class AdmissionRequest(types.Object):
 class AdmissionResponse(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['uid'] = self.uid()
         v['allowed'] = self.allowed()
@@ -230,14 +231,14 @@ class AdmissionResponse(types.Object):
     # the admission webhook to add additional context to the audit log for this request.
     @typechecked
     def auditAnnotations(self) -> Dict[str, str]:
-        return self._kwargs.get('auditAnnotations', types.Dict())
+        return self._kwargs.get('auditAnnotations', addict.Dict())
 
 
 # AdmissionReview describes an admission review request/response.
 class AdmissionReview(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         request = self.request()
         if request is not None:  # omit empty

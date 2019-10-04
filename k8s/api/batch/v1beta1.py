@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+import addict
 from k8s import base
 from k8s.api.batch import v1 as batchv1
 from korps import types
@@ -27,7 +28,7 @@ ConcurrencyPolicy = base.Enum('ConcurrencyPolicy', {
 class JobTemplateSpec(base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -45,7 +46,7 @@ class JobTemplateSpec(base.MetadataObject):
 class CronJobSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['schedule'] = self.schedule()
         startingDeadlineSeconds = self.startingDeadlineSeconds()
@@ -116,7 +117,7 @@ class CronJobSpec(types.Object):
 class CronJob(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -142,7 +143,7 @@ class CronJob(base.TypedObject, base.MetadataObject):
 class JobTemplate(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         template = self.template()
         if template:  # omit empty

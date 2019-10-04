@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import runtime
@@ -70,7 +71,7 @@ StatefulSetUpdateStrategyType = base.Enum('StatefulSetUpdateStrategyType', {
 class ControllerRevision(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         data = self.data()
         if data:  # omit empty
@@ -101,7 +102,7 @@ class ControllerRevision(base.TypedObject, base.MetadataObject):
 class RollingUpdateDaemonSet(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -131,7 +132,7 @@ class RollingUpdateDaemonSet(types.Object):
 class DaemonSetUpdateStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -160,7 +161,7 @@ class DaemonSetUpdateStrategy(types.Object):
 class DaemonSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['selector'] = self.selector()
         v['template'] = self.template()
@@ -217,7 +218,7 @@ class DaemonSetSpec(types.Object):
 class DaemonSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -243,7 +244,7 @@ class DaemonSet(base.TypedObject, base.MetadataObject):
 class RollingUpdateDeployment(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -287,7 +288,7 @@ class RollingUpdateDeployment(types.Object):
 class DeploymentStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -316,7 +317,7 @@ class DeploymentStrategy(types.Object):
 class DeploymentSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -396,7 +397,7 @@ class DeploymentSpec(types.Object):
 class Deployment(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -421,7 +422,7 @@ class Deployment(base.TypedObject, base.MetadataObject):
 class ReplicaSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -470,7 +471,7 @@ class ReplicaSetSpec(types.Object):
 class ReplicaSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -496,7 +497,7 @@ class ReplicaSet(base.TypedObject, base.MetadataObject):
 class RollingUpdateStatefulSetStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         partition = self.partition()
         if partition is not None:  # omit empty
@@ -517,7 +518,7 @@ class RollingUpdateStatefulSetStrategy(types.Object):
 class StatefulSetUpdateStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -543,7 +544,7 @@ class StatefulSetUpdateStrategy(types.Object):
 class StatefulSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -646,7 +647,7 @@ class StatefulSetSpec(types.Object):
 class StatefulSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

@@ -2,6 +2,7 @@
 
 from typing import List, Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -42,7 +43,7 @@ Stage = base.Enum('Stage', {
 class Policy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['level'] = self.level()
         v['stages'] = self.stages()
@@ -65,7 +66,7 @@ class Policy(types.Object):
 class ServiceReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['namespace'] = self.namespace()
         v['name'] = self.name()
@@ -107,7 +108,7 @@ class ServiceReference(types.Object):
 class WebhookClientConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         url = self.url()
         if url is not None:  # omit empty
@@ -168,7 +169,7 @@ class WebhookClientConfig(types.Object):
 class WebhookThrottleConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         qps = self.qps()
         if qps is not None:  # omit empty
@@ -195,7 +196,7 @@ class WebhookThrottleConfig(types.Object):
 class Webhook(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         throttle = self.throttle()
         if throttle is not None:  # omit empty
@@ -219,7 +220,7 @@ class Webhook(types.Object):
 class AuditSinkSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['policy'] = self.policy()
         v['webhook'] = self.webhook()
@@ -242,7 +243,7 @@ class AuditSinkSpec(types.Object):
 class AuditSink(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

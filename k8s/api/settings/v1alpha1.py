@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -13,7 +14,7 @@ from typeguard import typechecked
 class PodPresetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         selector = self.selector()
         if selector:  # omit empty
@@ -41,7 +42,7 @@ class PodPresetSpec(types.Object):
     # Env defines the collection of EnvVar to inject into containers.
     @typechecked
     def env(self) -> Dict[str, 'corev1.EnvVar']:
-        return self._kwargs.get('env', types.Dict())
+        return self._kwargs.get('env', addict.Dict())
     
     # EnvFrom defines the collection of EnvFromSource to inject into containers.
     @typechecked
@@ -51,12 +52,12 @@ class PodPresetSpec(types.Object):
     # Volumes defines the collection of Volume to inject into the pod.
     @typechecked
     def volumes(self) -> Dict[str, 'corev1.Volume']:
-        return self._kwargs.get('volumes', types.Dict())
+        return self._kwargs.get('volumes', addict.Dict())
     
     # VolumeMounts defines the collection of VolumeMount to inject into containers.
     @typechecked
     def volumeMounts(self) -> Dict[str, 'corev1.VolumeMount']:
-        return self._kwargs.get('volumeMounts', types.Dict())
+        return self._kwargs.get('volumeMounts', addict.Dict())
 
 
 # PodPreset is a policy resource that defines additional runtime
@@ -64,7 +65,7 @@ class PodPresetSpec(types.Object):
 class PodPreset(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

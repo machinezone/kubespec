@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from korps import types
@@ -14,7 +15,7 @@ from typeguard import typechecked
 class PriorityClass(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['value'] = self.value()
         globalDefault = self.globalDefault()

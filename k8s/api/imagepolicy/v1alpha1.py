@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class ImageReviewContainerSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         image = self.image()
         if image:  # omit empty
@@ -28,7 +29,7 @@ class ImageReviewContainerSpec(types.Object):
 class ImageReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         containers = self.containers()
         if containers:  # omit empty
@@ -51,7 +52,7 @@ class ImageReviewSpec(types.Object):
     # It is up to each webhook backend to determine how to interpret these annotations, if at all.
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', types.Dict())
+        return self._kwargs.get('annotations', addict.Dict())
     
     # Namespace is the namespace the pod is being created in.
     @typechecked
@@ -63,7 +64,7 @@ class ImageReviewSpec(types.Object):
 class ImageReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['spec'] = self.spec()
         return v

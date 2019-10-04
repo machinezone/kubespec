@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from korps import types
@@ -19,7 +20,7 @@ AddressType = base.Enum('AddressType', {
 class EndpointConditions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ready = self.ready()
         if ready is not None:  # omit empty
@@ -39,7 +40,7 @@ class EndpointConditions(types.Object):
 class Endpoint(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['addresses'] = self.addresses()
         conditions = self.conditions()
@@ -101,14 +102,14 @@ class Endpoint(types.Object):
     #   endpoint is located. This should match the corresponding node label.
     @typechecked
     def topology(self) -> Dict[str, str]:
-        return self._kwargs.get('topology', types.Dict())
+        return self._kwargs.get('topology', addict.Dict())
 
 
 # EndpointPort represents a Port used by an EndpointSlice
 class EndpointPort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name is not None:  # omit empty
@@ -155,7 +156,7 @@ class EndpointPort(types.Object):
 class EndpointSlice(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['addressType'] = self.addressType()
         v['endpoints'] = self.endpoints()

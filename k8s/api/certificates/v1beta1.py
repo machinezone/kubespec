@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -43,7 +44,7 @@ KeyUsage = base.Enum('KeyUsage', {
 class CertificateSigningRequestSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['request'] = self.request()
         usages = self.usages()
@@ -98,14 +99,14 @@ class CertificateSigningRequestSpec(types.Object):
     # See user.Info interface for details.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', types.Dict())
+        return self._kwargs.get('extra', addict.Dict())
 
 
 # Describes a certificate signing request
 class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

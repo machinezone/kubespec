@@ -1,12 +1,8 @@
 import base64
-from typing import Any, Union
+from typing import Any, Dict, Union
 
 import addict
 from typeguard import typechecked
-
-
-class Dict(addict.Dict):
-    pass
 
 
 class Renderable:
@@ -18,16 +14,16 @@ class Renderable:
 class Object(Renderable):
 
     def __init__(self, **kwargs):
-        self._kwargs = Dict(kwargs)
+        self._kwargs = addict.Dict(kwargs)
 
     def render(self) -> Dict:
-        return Dict()
+        return addict.Dict()
 
 
 class Kadet:
 
     @typechecked
-    def __init__(self, obj: Union[dict, Object]):
+    def __init__(self, obj: Union[Dict, Object]):
         self.obj = obj
 
     def to_dict(self) -> dict:

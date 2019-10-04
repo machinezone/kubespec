@@ -2,6 +2,7 @@ import enum
 from datetime import datetime as DateTime
 from typing import Dict, Optional
 
+import addict
 import pytz
 from korps import types
 from typeguard import typechecked
@@ -21,7 +22,7 @@ def Enum(name: str, values: Dict[str, str]):
 class TypedObject(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         apiVersion = self.apiVersion()
         if apiVersion:  # omitempty
@@ -52,7 +53,7 @@ class TypedObject(types.Object):
 class MetadataObject(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omitempty

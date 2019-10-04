@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -25,7 +26,7 @@ PolicyType = base.Enum('PolicyType', {
 class IPBlock(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['cidr'] = self.cidr()
         except_ = self.except_()
@@ -52,7 +53,7 @@ class IPBlock(types.Object):
 class NetworkPolicyPeer(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         podSelector = self.podSelector()
         if podSelector is not None:  # omit empty
@@ -96,7 +97,7 @@ class NetworkPolicyPeer(types.Object):
 class NetworkPolicyPort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         protocol = self.protocol()
         if protocol is not None:  # omit empty
@@ -125,7 +126,7 @@ class NetworkPolicyPort(types.Object):
 class NetworkPolicyEgressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -159,7 +160,7 @@ class NetworkPolicyEgressRule(types.Object):
 class NetworkPolicyIngressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -192,7 +193,7 @@ class NetworkPolicyIngressRule(types.Object):
 class NetworkPolicySpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['podSelector'] = self.podSelector()
         ingress = self.ingress()
@@ -257,7 +258,7 @@ class NetworkPolicySpec(types.Object):
 class NetworkPolicy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

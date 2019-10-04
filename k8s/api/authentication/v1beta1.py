@@ -2,6 +2,7 @@
 
 from typing import List, Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class TokenReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         token = self.token()
         if token:  # omit empty
@@ -42,7 +43,7 @@ class TokenReviewSpec(types.Object):
 class TokenReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['spec'] = self.spec()
         return v

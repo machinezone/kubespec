@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from korps import types
@@ -29,7 +30,7 @@ VolumeBindingMode = base.Enum('VolumeBindingMode', {
 class StorageClass(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['provisioner'] = self.provisioner()
         parameters = self.parameters()
@@ -69,7 +70,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # create volumes of this storage class.
     @typechecked
     def parameters(self) -> Dict[str, str]:
-        return self._kwargs.get('parameters', types.Dict())
+        return self._kwargs.get('parameters', addict.Dict())
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
@@ -112,7 +113,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
 class VolumeAttachmentSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         persistentVolumeName = self.persistentVolumeName()
         if persistentVolumeName is not None:  # omit empty
@@ -142,7 +143,7 @@ class VolumeAttachmentSource(types.Object):
 class VolumeAttachmentSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['attacher'] = self.attacher()
         v['source'] = self.source()
@@ -173,7 +174,7 @@ class VolumeAttachmentSpec(types.Object):
 class VolumeAttachment(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['spec'] = self.spec()
         return v

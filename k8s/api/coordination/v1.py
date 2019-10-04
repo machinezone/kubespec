@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class LeaseSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         holderIdentity = self.holderIdentity()
         if holderIdentity is not None:  # omit empty
@@ -64,7 +65,7 @@ class LeaseSpec(types.Object):
 class Lease(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

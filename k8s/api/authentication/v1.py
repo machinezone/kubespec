@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class BoundObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         kind = self.kind()
         if kind:  # omit empty
@@ -52,7 +53,7 @@ class BoundObjectReference(types.Object):
 class TokenRequestSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['audiences'] = self.audiences()
         v['expirationSeconds'] = self.expirationSeconds()
@@ -90,7 +91,7 @@ class TokenRequestSpec(types.Object):
 class TokenRequest(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -112,7 +113,7 @@ class TokenRequest(base.TypedObject, base.MetadataObject):
 class TokenReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         token = self.token()
         if token:  # omit empty
@@ -143,7 +144,7 @@ class TokenReviewSpec(types.Object):
 class TokenReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -167,7 +168,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
 class UserInfo(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         username = self.username()
         if username:  # omit empty
@@ -203,4 +204,4 @@ class UserInfo(types.Object):
     # Any additional information provided by the authenticator.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', types.Dict())
+        return self._kwargs.get('extra', addict.Dict())

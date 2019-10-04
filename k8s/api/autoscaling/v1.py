@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class CrossVersionObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['kind'] = self.kind()
         v['name'] = self.name()
@@ -40,7 +41,7 @@ class CrossVersionObjectReference(types.Object):
 class HorizontalPodAutoscalerSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['scaleTargetRef'] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
@@ -83,7 +84,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
 class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -108,7 +109,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 class ScaleSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas:  # omit empty
@@ -125,7 +126,7 @@ class ScaleSpec(types.Object):
 class Scale(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

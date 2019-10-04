@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional, Union
 
+import addict
 from k8s import base
 from k8s.apimachinery import resource
 from k8s.apimachinery.meta import v1 as metav1
@@ -516,7 +517,7 @@ UnsatisfiableConstraintAction = base.Enum('UnsatisfiableConstraintAction', {
 class AWSElasticBlockStoreVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['volumeID'] = self.volumeID()
         fsType = self.fsType()
@@ -566,7 +567,7 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
 class NodeSelectorRequirement(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['key'] = self.key()
         v['operator'] = self.operator()
@@ -602,7 +603,7 @@ class NodeSelectorRequirement(types.Object):
 class NodeSelectorTerm(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
@@ -629,7 +630,7 @@ class NodeSelectorTerm(types.Object):
 class NodeSelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['nodeSelectorTerms'] = self.nodeSelectorTerms()
         return v
@@ -645,7 +646,7 @@ class NodeSelector(types.Object):
 class PreferredSchedulingTerm(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['weight'] = self.weight()
         v['preference'] = self.preference()
@@ -666,7 +667,7 @@ class PreferredSchedulingTerm(types.Object):
 class NodeAffinity(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
         if requiredDuringSchedulingIgnoredDuringExecution is not None:  # omit empty
@@ -708,7 +709,7 @@ class NodeAffinity(types.Object):
 class PodAffinityTerm(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         labelSelector = self.labelSelector()
         if labelSelector is not None:  # omit empty
@@ -744,7 +745,7 @@ class PodAffinityTerm(types.Object):
 class WeightedPodAffinityTerm(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['weight'] = self.weight()
         v['podAffinityTerm'] = self.podAffinityTerm()
@@ -766,7 +767,7 @@ class WeightedPodAffinityTerm(types.Object):
 class PodAffinity(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
@@ -805,7 +806,7 @@ class PodAffinity(types.Object):
 class PodAntiAffinity(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
@@ -844,7 +845,7 @@ class PodAntiAffinity(types.Object):
 class Affinity(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         nodeAffinity = self.nodeAffinity()
         if nodeAffinity is not None:  # omit empty
@@ -877,7 +878,7 @@ class Affinity(types.Object):
 class AzureDiskVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['diskName'] = self.diskName()
         v['diskURI'] = self.diskURI()
@@ -933,7 +934,7 @@ class AzureDiskVolumeSource(types.Object):
 class AzureFilePersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['secretName'] = self.secretName()
         v['shareName'] = self.shareName()
@@ -970,7 +971,7 @@ class AzureFilePersistentVolumeSource(types.Object):
 class AzureFileVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['secretName'] = self.secretName()
         v['shareName'] = self.shareName()
@@ -1000,7 +1001,7 @@ class AzureFileVolumeSource(types.Object):
 class ObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         kind = self.kind()
         if kind:  # omit empty
@@ -1078,7 +1079,7 @@ class ObjectReference(types.Object):
 class Binding(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['target'] = self.target()
         return v
@@ -1102,7 +1103,7 @@ class Binding(base.TypedObject, base.MetadataObject):
 class SecretReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -1127,7 +1128,7 @@ class SecretReference(types.Object):
 class CSIPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['driver'] = self.driver()
         v['volumeHandle'] = self.volumeHandle()
@@ -1183,7 +1184,7 @@ class CSIPersistentVolumeSource(types.Object):
     # Attributes of the volume to publish.
     @typechecked
     def volumeAttributes(self) -> Dict[str, str]:
-        return self._kwargs.get('volumeAttributes', types.Dict())
+        return self._kwargs.get('volumeAttributes', addict.Dict())
     
     # ControllerPublishSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
@@ -1228,7 +1229,7 @@ class CSIPersistentVolumeSource(types.Object):
 class LocalObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -1247,7 +1248,7 @@ class LocalObjectReference(types.Object):
 class CSIVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['driver'] = self.driver()
         readOnly = self.readOnly()
@@ -1287,7 +1288,7 @@ class CSIVolumeSource(types.Object):
     # driver. Consult your driver's documentation for supported values.
     @typechecked
     def volumeAttributes(self) -> Dict[str, str]:
-        return self._kwargs.get('volumeAttributes', types.Dict())
+        return self._kwargs.get('volumeAttributes', addict.Dict())
     
     # NodePublishSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
@@ -1303,7 +1304,7 @@ class CSIVolumeSource(types.Object):
 class Capabilities(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         add = self.add()
         if add:  # omit empty
@@ -1329,7 +1330,7 @@ class Capabilities(types.Object):
 class CephFSPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['monitors'] = self.monitors()
         path = self.path()
@@ -1391,7 +1392,7 @@ class CephFSPersistentVolumeSource(types.Object):
 class CephFSVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['monitors'] = self.monitors()
         path = self.path()
@@ -1455,7 +1456,7 @@ class CephFSVolumeSource(types.Object):
 class CinderPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['volumeID'] = self.volumeID()
         fsType = self.fsType()
@@ -1504,7 +1505,7 @@ class CinderPersistentVolumeSource(types.Object):
 class CinderVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['volumeID'] = self.volumeID()
         fsType = self.fsType()
@@ -1550,7 +1551,7 @@ class CinderVolumeSource(types.Object):
 class ClientIPConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         timeoutSeconds = self.timeoutSeconds()
         if timeoutSeconds is not None:  # omit empty
@@ -1569,7 +1570,7 @@ class ClientIPConfig(types.Object):
 class ComponentCondition(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['type'] = self.type()
         v['status'] = self.status()
@@ -1610,7 +1611,7 @@ class ComponentCondition(types.Object):
 class ComponentStatus(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         conditions = self.conditions()
         if conditions:  # omit empty
@@ -1635,7 +1636,7 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
 class ConfigMap(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         data = self.data()
         if data:  # omit empty
@@ -1660,7 +1661,7 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
     # the BinaryData field, this is enforced during validation process.
     @typechecked
     def data(self) -> Dict[str, str]:
-        return self._kwargs.get('data', types.Dict())
+        return self._kwargs.get('data', addict.Dict())
     
     # BinaryData contains the binary data.
     # Each key must consist of alphanumeric characters, '-', '_' or '.'.
@@ -1671,7 +1672,7 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
     # kubelet.
     @typechecked
     def binaryData(self) -> Dict[str, bytes]:
-        return self._kwargs.get('binaryData', types.Dict())
+        return self._kwargs.get('binaryData', addict.Dict())
 
 
 # ConfigMapEnvSource selects a ConfigMap to populate the environment
@@ -1682,7 +1683,7 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
 class ConfigMapEnvSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         optional = self.optional()
@@ -1705,7 +1706,7 @@ class ConfigMapEnvSource(types.Object):
 class ConfigMapKeySelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         v['key'] = self.key()
@@ -1734,7 +1735,7 @@ class ConfigMapKeySelector(types.Object):
 class ConfigMapNodeConfigSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['namespace'] = self.namespace()
         v['name'] = self.name()
@@ -1782,7 +1783,7 @@ class ConfigMapNodeConfigSource(types.Object):
 class KeyToPath(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['key'] = self.key()
         v['path'] = self.path()
@@ -1823,7 +1824,7 @@ class KeyToPath(types.Object):
 class ConfigMapProjection(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         items = self.items()
@@ -1864,7 +1865,7 @@ class ConfigMapProjection(types.Object):
 class ConfigMapVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         items = self.items()
@@ -1912,7 +1913,7 @@ class ConfigMapVolumeSource(types.Object):
 class ContainerPort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -1970,7 +1971,7 @@ class ContainerPort(types.Object):
 class SecretEnvSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         optional = self.optional()
@@ -1993,7 +1994,7 @@ class SecretEnvSource(types.Object):
 class EnvFromSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         prefix = self.prefix()
         if prefix:  # omit empty
@@ -2026,7 +2027,7 @@ class EnvFromSource(types.Object):
 class ObjectFieldSelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         apiVersion = self.apiVersion()
         if apiVersion:  # omit empty
@@ -2049,7 +2050,7 @@ class ObjectFieldSelector(types.Object):
 class ResourceFieldSelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         containerName = self.containerName()
         if containerName:  # omit empty
@@ -2080,7 +2081,7 @@ class ResourceFieldSelector(types.Object):
 class SecretKeySelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         v['key'] = self.key()
@@ -2109,7 +2110,7 @@ class SecretKeySelector(types.Object):
 class EnvVarSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         fieldRef = self.fieldRef()
         if fieldRef is not None:  # omit empty
@@ -2152,7 +2153,7 @@ class EnvVarSource(types.Object):
 class EnvVar(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         value = self.value()
@@ -2190,7 +2191,7 @@ class EnvVar(types.Object):
 class ExecAction(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         command = self.command()
         if command:  # omit empty
@@ -2211,7 +2212,7 @@ class ExecAction(types.Object):
 class HTTPHeader(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['value'] = self.value()
@@ -2232,7 +2233,7 @@ class HTTPHeader(types.Object):
 class HTTPGetAction(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -2276,14 +2277,14 @@ class HTTPGetAction(types.Object):
     # Custom headers to set in the request. HTTP allows repeated headers.
     @typechecked
     def httpHeaders(self) -> Dict[str, HTTPHeader]:
-        return self._kwargs.get('httpHeaders', types.Dict())
+        return self._kwargs.get('httpHeaders', addict.Dict())
 
 
 # TCPSocketAction describes an action based on opening a socket
 class TCPSocketAction(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['port'] = self.port()
         host = self.host()
@@ -2309,7 +2310,7 @@ class TCPSocketAction(types.Object):
 class Handler(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         exec_ = self.exec_()
         if exec_ is not None:  # omit empty
@@ -2347,7 +2348,7 @@ class Handler(types.Object):
 class Lifecycle(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         postStart = self.postStart()
         if postStart is not None:  # omit empty
@@ -2385,7 +2386,7 @@ class Lifecycle(types.Object):
 class Probe(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.Handler().render())  # inline
         initialDelaySeconds = self.initialDelaySeconds()
@@ -2446,7 +2447,7 @@ class Probe(types.Object):
 class ResourceRequirements(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         limits = self.limits()
         if limits:  # omit empty
@@ -2460,7 +2461,7 @@ class ResourceRequirements(types.Object):
     # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     @typechecked
     def limits(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('limits', types.Dict())
+        return self._kwargs.get('limits', addict.Dict())
     
     # Requests describes the minimum amount of compute resources required.
     # If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
@@ -2468,14 +2469,14 @@ class ResourceRequirements(types.Object):
     # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     @typechecked
     def requests(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('requests', types.Dict())
+        return self._kwargs.get('requests', addict.Dict())
 
 
 # SELinuxOptions are the labels to be applied to the container
 class SELinuxOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         user = self.user()
         if user:  # omit empty
@@ -2516,7 +2517,7 @@ class SELinuxOptions(types.Object):
 class WindowsSecurityContextOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         gmsaCredentialSpecName = self.gmsaCredentialSpecName()
         if gmsaCredentialSpecName is not None:  # omit empty
@@ -2559,7 +2560,7 @@ class WindowsSecurityContextOptions(types.Object):
 class SecurityContext(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         capabilities = self.capabilities()
         if capabilities is not None:  # omit empty
@@ -2676,7 +2677,7 @@ class SecurityContext(types.Object):
 class VolumeDevice(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['devicePath'] = self.devicePath()
@@ -2697,7 +2698,7 @@ class VolumeDevice(types.Object):
 class VolumeMount(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         readOnly = self.readOnly()
@@ -2760,7 +2761,7 @@ class VolumeMount(types.Object):
 class Container(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         image = self.image()
@@ -2887,7 +2888,7 @@ class Container(types.Object):
     # +listMapKey=protocol
     @typechecked
     def ports(self) -> Dict[str, ContainerPort]:
-        return self._kwargs.get('ports', types.Dict())
+        return self._kwargs.get('ports', addict.Dict())
     
     # List of sources to populate environment variables in the container.
     # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
@@ -2903,7 +2904,7 @@ class Container(types.Object):
     # Cannot be updated.
     @typechecked
     def env(self) -> Dict[str, EnvVar]:
-        return self._kwargs.get('env', types.Dict())
+        return self._kwargs.get('env', addict.Dict())
     
     # Compute Resources required by this container.
     # Cannot be updated.
@@ -2916,13 +2917,13 @@ class Container(types.Object):
     # Cannot be updated.
     @typechecked
     def volumeMounts(self) -> Dict[str, VolumeMount]:
-        return self._kwargs.get('volumeMounts', types.Dict())
+        return self._kwargs.get('volumeMounts', addict.Dict())
     
     # volumeDevices is the list of block devices to be used by the container.
     # This is a beta feature.
     @typechecked
     def volumeDevices(self) -> Dict[str, VolumeDevice]:
-        return self._kwargs.get('volumeDevices', types.Dict())
+        return self._kwargs.get('volumeDevices', addict.Dict())
     
     # Periodic probe of container liveness.
     # Container will be restarted if the probe fails.
@@ -3025,7 +3026,7 @@ class Container(types.Object):
 class DownwardAPIVolumeFile(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['path'] = self.path()
         fieldRef = self.fieldRef()
@@ -3070,7 +3071,7 @@ class DownwardAPIVolumeFile(types.Object):
 class DownwardAPIProjection(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         items = self.items()
         if items:  # omit empty
@@ -3088,7 +3089,7 @@ class DownwardAPIProjection(types.Object):
 class DownwardAPIVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         items = self.items()
         if items:  # omit empty
@@ -3118,7 +3119,7 @@ class DownwardAPIVolumeSource(types.Object):
 class EmptyDirVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         medium = self.medium()
         if medium:  # omit empty
@@ -3151,7 +3152,7 @@ class EmptyDirVolumeSource(types.Object):
 class EndpointAddress(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['ip'] = self.ip()
         hostname = self.hostname()
@@ -3195,7 +3196,7 @@ class EndpointAddress(types.Object):
 class EndpointPort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -3240,7 +3241,7 @@ class EndpointPort(types.Object):
 class EndpointSubset(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         addresses = self.addresses()
         if addresses:  # omit empty
@@ -3269,7 +3270,7 @@ class EndpointSubset(types.Object):
     # Port numbers available on the related IP addresses.
     @typechecked
     def ports(self) -> Dict[str, EndpointPort]:
-        return self._kwargs.get('ports', types.Dict())
+        return self._kwargs.get('ports', addict.Dict())
 
 
 # Endpoints is a collection of endpoints that implement the actual service. Example:
@@ -3287,7 +3288,7 @@ class EndpointSubset(types.Object):
 class Endpoints(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         subsets = self.subsets()
         if subsets:  # omit empty
@@ -3321,7 +3322,7 @@ class Endpoints(base.TypedObject, base.MetadataObject):
 class EphemeralContainerCommon(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         image = self.image()
@@ -3436,7 +3437,7 @@ class EphemeralContainerCommon(types.Object):
     # Ports are not allowed for ephemeral containers.
     @typechecked
     def ports(self) -> Dict[str, ContainerPort]:
-        return self._kwargs.get('ports', types.Dict())
+        return self._kwargs.get('ports', addict.Dict())
     
     # List of sources to populate environment variables in the container.
     # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
@@ -3452,7 +3453,7 @@ class EphemeralContainerCommon(types.Object):
     # Cannot be updated.
     @typechecked
     def env(self) -> Dict[str, EnvVar]:
-        return self._kwargs.get('env', types.Dict())
+        return self._kwargs.get('env', addict.Dict())
     
     # Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources
     # already allocated to the pod.
@@ -3464,13 +3465,13 @@ class EphemeralContainerCommon(types.Object):
     # Cannot be updated.
     @typechecked
     def volumeMounts(self) -> Dict[str, VolumeMount]:
-        return self._kwargs.get('volumeMounts', types.Dict())
+        return self._kwargs.get('volumeMounts', addict.Dict())
     
     # volumeDevices is the list of block devices to be used by the container.
     # This is a beta feature.
     @typechecked
     def volumeDevices(self) -> Dict[str, VolumeDevice]:
-        return self._kwargs.get('volumeDevices', types.Dict())
+        return self._kwargs.get('volumeDevices', addict.Dict())
     
     # Probes are not allowed for ephemeral containers.
     @typechecked
@@ -3565,7 +3566,7 @@ class EphemeralContainerCommon(types.Object):
 class EphemeralContainer(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.EphemeralContainerCommon().render())  # inline
         targetContainerName = self.targetContainerName()
@@ -3594,7 +3595,7 @@ class EphemeralContainer(types.Object):
 class EphemeralContainers(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['ephemeralContainers'] = self.ephemeralContainers()
         return v
@@ -3620,7 +3621,7 @@ class EphemeralContainers(base.TypedObject, base.MetadataObject):
 class EventSeries(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         count = self.count()
         if count:  # omit empty
@@ -3645,7 +3646,7 @@ class EventSeries(types.Object):
 class EventSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         component = self.component()
         if component:  # omit empty
@@ -3670,7 +3671,7 @@ class EventSource(types.Object):
 class Event(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['involvedObject'] = self.involvedObject()
         reason = self.reason()
@@ -3798,7 +3799,7 @@ class Event(base.TypedObject, base.MetadataObject):
 class FCVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         targetWWNs = self.targetWWNs()
         if targetWWNs:  # omit empty
@@ -3853,7 +3854,7 @@ class FCVolumeSource(types.Object):
 class FlexPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['driver'] = self.driver()
         fsType = self.fsType()
@@ -3900,7 +3901,7 @@ class FlexPersistentVolumeSource(types.Object):
     # Optional: Extra command options if any.
     @typechecked
     def options(self) -> Dict[str, str]:
-        return self._kwargs.get('options', types.Dict())
+        return self._kwargs.get('options', addict.Dict())
 
 
 # FlexVolume represents a generic volume resource that is
@@ -3908,7 +3909,7 @@ class FlexPersistentVolumeSource(types.Object):
 class FlexVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['driver'] = self.driver()
         fsType = self.fsType()
@@ -3955,7 +3956,7 @@ class FlexVolumeSource(types.Object):
     # Optional: Extra command options if any.
     @typechecked
     def options(self) -> Dict[str, str]:
-        return self._kwargs.get('options', types.Dict())
+        return self._kwargs.get('options', addict.Dict())
 
 
 # Represents a Flocker volume mounted by the Flocker agent.
@@ -3964,7 +3965,7 @@ class FlexVolumeSource(types.Object):
 class FlockerVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         datasetName = self.datasetName()
         if datasetName:  # omit empty
@@ -3995,7 +3996,7 @@ class FlockerVolumeSource(types.Object):
 class GCEPersistentDiskVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['pdName'] = self.pdName()
         fsType = self.fsType()
@@ -4046,7 +4047,7 @@ class GCEPersistentDiskVolumeSource(types.Object):
 class GlusterfsPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['endpoints'] = self.endpoints()
         v['path'] = self.path()
@@ -4090,7 +4091,7 @@ class GlusterfsPersistentVolumeSource(types.Object):
 class GlusterfsVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['endpoints'] = self.endpoints()
         v['path'] = self.path()
@@ -4124,7 +4125,7 @@ class GlusterfsVolumeSource(types.Object):
 class HostAlias(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ip = self.ip()
         if ip:  # omit empty
@@ -4150,7 +4151,7 @@ class HostAlias(types.Object):
 class HostPathVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['path'] = self.path()
         type = self.type()
@@ -4179,7 +4180,7 @@ class HostPathVolumeSource(types.Object):
 class ISCSIPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['targetPortal'] = self.targetPortal()
         v['iqn'] = self.iqn()
@@ -4282,7 +4283,7 @@ class ISCSIPersistentVolumeSource(types.Object):
 class ISCSIVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['targetPortal'] = self.targetPortal()
         v['iqn'] = self.iqn()
@@ -4383,7 +4384,7 @@ class ISCSIVolumeSource(types.Object):
 class LimitRangeItem(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -4413,34 +4414,34 @@ class LimitRangeItem(types.Object):
     # Max usage constraints on this kind by resource name.
     @typechecked
     def max(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('max', types.Dict())
+        return self._kwargs.get('max', addict.Dict())
     
     # Min usage constraints on this kind by resource name.
     @typechecked
     def min(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('min', types.Dict())
+        return self._kwargs.get('min', addict.Dict())
     
     # Default resource requirement limit value by resource name if resource limit is omitted.
     @typechecked
     def default(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('default', types.Dict())
+        return self._kwargs.get('default', addict.Dict())
     
     # DefaultRequest is the default resource requirement request value by resource name if resource request is omitted.
     @typechecked
     def defaultRequest(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('defaultRequest', types.Dict())
+        return self._kwargs.get('defaultRequest', addict.Dict())
     
     # MaxLimitRequestRatio if specified, the named resource must have a request and limit that are both non-zero where limit divided by request is less than or equal to the enumerated value; this represents the max burst for the named resource.
     @typechecked
     def maxLimitRequestRatio(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('maxLimitRequestRatio', types.Dict())
+        return self._kwargs.get('maxLimitRequestRatio', addict.Dict())
 
 
 # LimitRangeSpec defines a min/max usage limit for resources that match on kind.
 class LimitRangeSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['limits'] = self.limits()
         return v
@@ -4455,7 +4456,7 @@ class LimitRangeSpec(types.Object):
 class LimitRange(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -4481,7 +4482,7 @@ class LimitRange(base.TypedObject, base.MetadataObject):
 class LocalVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['path'] = self.path()
         fsType = self.fsType()
@@ -4509,7 +4510,7 @@ class LocalVolumeSource(types.Object):
 class NFSVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['server'] = self.server()
         v['path'] = self.path()
@@ -4543,7 +4544,7 @@ class NFSVolumeSource(types.Object):
 class NamespaceSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         finalizers = self.finalizers()
         if finalizers:  # omit empty
@@ -4562,7 +4563,7 @@ class NamespaceSpec(types.Object):
 class Namespace(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -4588,7 +4589,7 @@ class Namespace(base.TypedObject, base.MetadataObject):
 class NodeConfigSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         configMap = self.configMap()
         if configMap is not None:  # omit empty
@@ -4606,7 +4607,7 @@ class NodeConfigSource(types.Object):
 class Taint(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['key'] = self.key()
         value = self.value()
@@ -4646,7 +4647,7 @@ class Taint(types.Object):
 class NodeSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         podCIDR = self.podCIDR()
         if podCIDR:  # omit empty
@@ -4708,7 +4709,7 @@ class NodeSpec(types.Object):
 class Node(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -4734,7 +4735,7 @@ class Node(base.TypedObject, base.MetadataObject):
 class NodeProxyOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -4759,7 +4760,7 @@ class NodeProxyOptions(base.TypedObject):
 class PhotonPersistentDiskVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['pdID'] = self.pdID()
         fsType = self.fsType()
@@ -4784,7 +4785,7 @@ class PhotonPersistentDiskVolumeSource(types.Object):
 class PortworxVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['volumeID'] = self.volumeID()
         fsType = self.fsType()
@@ -4819,7 +4820,7 @@ class PortworxVolumeSource(types.Object):
 class QuobyteVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['registry'] = self.registry()
         v['volume'] = self.volume()
@@ -4879,7 +4880,7 @@ class QuobyteVolumeSource(types.Object):
 class RBDPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['monitors'] = self.monitors()
         v['image'] = self.image()
@@ -4965,7 +4966,7 @@ class RBDPersistentVolumeSource(types.Object):
 class ScaleIOPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['gateway'] = self.gateway()
         v['system'] = self.system()
@@ -5055,7 +5056,7 @@ class ScaleIOPersistentVolumeSource(types.Object):
 class StorageOSPersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
@@ -5114,7 +5115,7 @@ class StorageOSPersistentVolumeSource(types.Object):
 class VsphereVirtualDiskVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['volumePath'] = self.volumePath()
         fsType = self.fsType()
@@ -5156,7 +5157,7 @@ class VsphereVirtualDiskVolumeSource(types.Object):
 class PersistentVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         gcePersistentDisk = self.gcePersistentDisk()
         if gcePersistentDisk is not None:  # omit empty
@@ -5357,7 +5358,7 @@ class PersistentVolumeSource(types.Object):
 class VolumeNodeAffinity(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         required = self.required()
         if required is not None:  # omit empty
@@ -5374,7 +5375,7 @@ class VolumeNodeAffinity(types.Object):
 class PersistentVolumeSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         capacity = self.capacity()
         if capacity:  # omit empty
@@ -5407,7 +5408,7 @@ class PersistentVolumeSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
     @typechecked
     def capacity(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('capacity', types.Dict())
+        return self._kwargs.get('capacity', addict.Dict())
     
     # The actual volume backing the persistent volume.
     @typechecked
@@ -5470,7 +5471,7 @@ class PersistentVolumeSpec(types.Object):
 class PersistentVolume(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -5498,7 +5499,7 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
 class TypedLocalObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['apiGroup'] = self.apiGroup()
         v['kind'] = self.kind()
@@ -5528,7 +5529,7 @@ class TypedLocalObjectReference(types.Object):
 class PersistentVolumeClaimSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         accessModes = self.accessModes()
         if accessModes:  # omit empty
@@ -5605,7 +5606,7 @@ class PersistentVolumeClaimSpec(types.Object):
 class PersistentVolumeClaim(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -5634,7 +5635,7 @@ class PersistentVolumeClaim(base.TypedObject, base.MetadataObject):
 class PersistentVolumeClaimVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['claimName'] = self.claimName()
         readOnly = self.readOnly()
@@ -5659,7 +5660,7 @@ class PersistentVolumeClaimVolumeSource(types.Object):
 class PodDNSConfigOption(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -5684,7 +5685,7 @@ class PodDNSConfigOption(types.Object):
 class PodDNSConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         nameservers = self.nameservers()
         if nameservers:  # omit empty
@@ -5717,14 +5718,14 @@ class PodDNSConfig(types.Object):
     # will override those that appear in the base DNSPolicy.
     @typechecked
     def options(self) -> Dict[str, PodDNSConfigOption]:
-        return self._kwargs.get('options', types.Dict())
+        return self._kwargs.get('options', addict.Dict())
 
 
 # PodReadinessGate contains the reference to a pod condition
 class PodReadinessGate(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['conditionType'] = self.conditionType()
         return v
@@ -5739,7 +5740,7 @@ class PodReadinessGate(types.Object):
 class Sysctl(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['value'] = self.value()
@@ -5762,7 +5763,7 @@ class Sysctl(types.Object):
 class PodSecurityContext(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
@@ -5858,7 +5859,7 @@ class PodSecurityContext(types.Object):
     # sysctls (by the container runtime) might fail to launch.
     @typechecked
     def sysctls(self) -> Dict[str, Sysctl]:
-        return self._kwargs.get('sysctls', types.Dict())
+        return self._kwargs.get('sysctls', addict.Dict())
 
 
 # The pod this Toleration is attached to tolerates any taint that matches
@@ -5866,7 +5867,7 @@ class PodSecurityContext(types.Object):
 class Toleration(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         key = self.key()
         if key:  # omit empty
@@ -5924,7 +5925,7 @@ class Toleration(types.Object):
 class TopologySpreadConstraint(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['maxSkew'] = self.maxSkew()
         v['topologyKey'] = self.topologyKey()
@@ -6001,7 +6002,7 @@ class TopologySpreadConstraint(types.Object):
 class SecretProjection(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v.update(self.LocalObjectReference().render())  # inline
         items = self.items()
@@ -6040,7 +6041,7 @@ class SecretProjection(types.Object):
 class ServiceAccountTokenProjection(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         audience = self.audience()
         if audience:  # omit empty
@@ -6080,7 +6081,7 @@ class ServiceAccountTokenProjection(types.Object):
 class VolumeProjection(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         secret = self.secret()
         if secret is not None:  # omit empty
@@ -6121,7 +6122,7 @@ class VolumeProjection(types.Object):
 class ProjectedVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['sources'] = self.sources()
         defaultMode = self.defaultMode()
@@ -6149,7 +6150,7 @@ class ProjectedVolumeSource(types.Object):
 class RBDVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['monitors'] = self.monitors()
         v['image'] = self.image()
@@ -6235,7 +6236,7 @@ class RBDVolumeSource(types.Object):
 class ScaleIOVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['gateway'] = self.gateway()
         v['system'] = self.system()
@@ -6329,7 +6330,7 @@ class ScaleIOVolumeSource(types.Object):
 class SecretVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         secretName = self.secretName()
         if secretName:  # omit empty
@@ -6381,7 +6382,7 @@ class SecretVolumeSource(types.Object):
 class StorageOSVolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
@@ -6441,7 +6442,7 @@ class StorageOSVolumeSource(types.Object):
 class VolumeSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         hostPath = self.hostPath()
         if hostPath is not None:  # omit empty
@@ -6688,7 +6689,7 @@ class VolumeSource(types.Object):
 class Volume(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v.update(self.VolumeSource().render())  # inline
@@ -6713,7 +6714,7 @@ class Volume(types.Object):
 class PodSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         volumes = self.volumes()
         if volumes:  # omit empty
@@ -6818,7 +6819,7 @@ class PodSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/storage/volumes
     @typechecked
     def volumes(self) -> Dict[str, Volume]:
-        return self._kwargs.get('volumes', types.Dict())
+        return self._kwargs.get('volumes', addict.Dict())
     
     # List of initialization containers belonging to the pod.
     # Init containers are executed in order prior to containers being started. If any
@@ -6835,7 +6836,7 @@ class PodSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
     @typechecked
     def initContainers(self) -> Dict[str, Container]:
-        return self._kwargs.get('initContainers', types.Dict())
+        return self._kwargs.get('initContainers', addict.Dict())
     
     # List of containers belonging to the pod.
     # Containers cannot currently be added or removed.
@@ -6843,7 +6844,7 @@ class PodSpec(types.Object):
     # Cannot be updated.
     @typechecked
     def containers(self) -> Dict[str, Container]:
-        return self._kwargs.get('containers', types.Dict())
+        return self._kwargs.get('containers', addict.Dict())
     
     # List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
     # pod to perform user-initiated actions such as debugging. This list cannot be specified when
@@ -6895,7 +6896,7 @@ class PodSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        return self._kwargs.get('nodeSelector', types.Dict())
+        return self._kwargs.get('nodeSelector', addict.Dict())
     
     # ServiceAccountName is the name of the ServiceAccount to use to run this pod.
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
@@ -6956,7 +6957,7 @@ class PodSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
     @typechecked
     def imagePullSecrets(self) -> Dict[str, LocalObjectReference]:
-        return self._kwargs.get('imagePullSecrets', types.Dict())
+        return self._kwargs.get('imagePullSecrets', addict.Dict())
     
     # Specifies the hostname of the Pod
     # If not specified, the pod's hostname will be set to a system-defined value.
@@ -7061,7 +7062,7 @@ class PodSpec(types.Object):
     # This field is alpha-level as of Kubernetes v1.16, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('overhead', types.Dict())
+        return self._kwargs.get('overhead', addict.Dict())
     
     # TopologySpreadConstraints describes how a group of pods ought to spread across topology
     # domains. Scheduler will schedule pods in a way which abides by the constraints.
@@ -7081,7 +7082,7 @@ class PodSpec(types.Object):
 class Pod(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -7110,7 +7111,7 @@ class Pod(base.TypedObject, base.MetadataObject):
 class PodAttachOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         stdin = self.stdin()
         if stdin:  # omit empty
@@ -7177,7 +7178,7 @@ class PodAttachOptions(base.TypedObject):
 class PodExecOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         stdin = self.stdin()
         if stdin:  # omit empty
@@ -7245,7 +7246,7 @@ class PodExecOptions(base.TypedObject):
 class PodLogOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         container = self.container()
         if container:  # omit empty
@@ -7341,7 +7342,7 @@ class PodLogOptions(base.TypedObject):
 class PodPortForwardOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -7367,7 +7368,7 @@ class PodPortForwardOptions(base.TypedObject):
 class PodProxyOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -7392,7 +7393,7 @@ class PodProxyOptions(base.TypedObject):
 class PodStatusResult(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         return v
     
@@ -7409,7 +7410,7 @@ class PodStatusResult(base.TypedObject, base.MetadataObject):
 class PodTemplateSpec(base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -7427,7 +7428,7 @@ class PodTemplateSpec(base.MetadataObject):
 class PodTemplate(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         template = self.template()
         if template:  # omit empty
@@ -7453,7 +7454,7 @@ class PodTemplate(base.TypedObject, base.MetadataObject):
 class RangeAllocation(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['range'] = self.range()
         v['data'] = self.data()
@@ -7482,7 +7483,7 @@ class RangeAllocation(base.TypedObject, base.MetadataObject):
 class ReplicationControllerSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -7520,7 +7521,7 @@ class ReplicationControllerSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Dict[str, str]:
-        return self._kwargs.get('selector', types.Dict())
+        return self._kwargs.get('selector', addict.Dict())
     
     # Template is the object that describes the pod that will be created if
     # insufficient replicas are detected. This takes precedence over a TemplateRef.
@@ -7534,7 +7535,7 @@ class ReplicationControllerSpec(types.Object):
 class ReplicationController(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -7561,7 +7562,7 @@ class ReplicationController(base.TypedObject, base.MetadataObject):
 class ScopedResourceSelectorRequirement(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['scopeName'] = self.scopeName()
         v['operator'] = self.operator()
@@ -7595,7 +7596,7 @@ class ScopedResourceSelectorRequirement(types.Object):
 class ScopeSelector(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
@@ -7612,7 +7613,7 @@ class ScopeSelector(types.Object):
 class ResourceQuotaSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         hard = self.hard()
         if hard:  # omit empty
@@ -7629,7 +7630,7 @@ class ResourceQuotaSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
     @typechecked
     def hard(self) -> Dict[ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('hard', types.Dict())
+        return self._kwargs.get('hard', addict.Dict())
     
     # A collection of filters that must match each object tracked by a quota.
     # If not specified, the quota matches all objects.
@@ -7649,7 +7650,7 @@ class ResourceQuotaSpec(types.Object):
 class ResourceQuota(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -7676,7 +7677,7 @@ class ResourceQuota(base.TypedObject, base.MetadataObject):
 class Secret(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         data = self.data()
         if data:  # omit empty
@@ -7703,7 +7704,7 @@ class Secret(base.TypedObject, base.MetadataObject):
     # data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
     @typechecked
     def data(self) -> Dict[str, bytes]:
-        return self._kwargs.get('data', types.Dict())
+        return self._kwargs.get('data', addict.Dict())
     
     # stringData allows specifying non-binary secret data in string form.
     # It is provided as a write-only convenience method.
@@ -7711,7 +7712,7 @@ class Secret(base.TypedObject, base.MetadataObject):
     # It is never output when reading from the API.
     @typechecked
     def stringData(self) -> Dict[str, str]:
-        return self._kwargs.get('stringData', types.Dict())
+        return self._kwargs.get('stringData', addict.Dict())
     
     # Used to facilitate programmatic handling of secret data.
     @typechecked
@@ -7723,7 +7724,7 @@ class Secret(base.TypedObject, base.MetadataObject):
 class SerializedReference(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         reference = self.reference()
         if reference:  # omit empty
@@ -7748,7 +7749,7 @@ class SerializedReference(base.TypedObject):
 class ServicePort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -7811,7 +7812,7 @@ class ServicePort(types.Object):
 class SessionAffinityConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         clientIP = self.clientIP()
         if clientIP is not None:  # omit empty
@@ -7828,7 +7829,7 @@ class SessionAffinityConfig(types.Object):
 class ServiceSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -7881,7 +7882,7 @@ class ServiceSpec(types.Object):
     # +listMapKey=protocol
     @typechecked
     def ports(self) -> Dict[str, ServicePort]:
-        return self._kwargs.get('ports', types.Dict())
+        return self._kwargs.get('ports', addict.Dict())
     
     # Route service traffic to pods with label keys and values matching this
     # selector. If empty or not present, the service is assumed to have an
@@ -7891,7 +7892,7 @@ class ServiceSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/
     @typechecked
     def selector(self) -> Dict[str, str]:
-        return self._kwargs.get('selector', types.Dict())
+        return self._kwargs.get('selector', addict.Dict())
     
     # clusterIP is the IP address of the service and is usually assigned
     # randomly by the master. If an address is specified manually and is not in
@@ -8019,7 +8020,7 @@ class ServiceSpec(types.Object):
 class Service(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -8048,7 +8049,7 @@ class Service(base.TypedObject, base.MetadataObject):
 class ServiceAccount(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         secrets = self.secrets()
         if secrets:  # omit empty
@@ -8073,7 +8074,7 @@ class ServiceAccount(base.TypedObject, base.MetadataObject):
     # More info: https://kubernetes.io/docs/concepts/configuration/secret
     @typechecked
     def secrets(self) -> Dict[str, ObjectReference]:
-        return self._kwargs.get('secrets', types.Dict())
+        return self._kwargs.get('secrets', addict.Dict())
     
     # ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
     # in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
@@ -8081,7 +8082,7 @@ class ServiceAccount(base.TypedObject, base.MetadataObject):
     # More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
     @typechecked
     def imagePullSecrets(self) -> Dict[str, LocalObjectReference]:
-        return self._kwargs.get('imagePullSecrets', types.Dict())
+        return self._kwargs.get('imagePullSecrets', addict.Dict())
     
     # AutomountServiceAccountToken indicates whether pods running as this service account should have an API token automatically mounted.
     # Can be overridden at the pod level.
@@ -8094,7 +8095,7 @@ class ServiceAccount(base.TypedObject, base.MetadataObject):
 class ServiceProxyOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -8124,7 +8125,7 @@ class ServiceProxyOptions(base.TypedObject):
 class TopologySelectorLabelRequirement(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['key'] = self.key()
         v['values'] = self.values()
@@ -8150,7 +8151,7 @@ class TopologySelectorLabelRequirement(types.Object):
 class TopologySelectorTerm(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         matchLabelExpressions = self.matchLabelExpressions()
         if matchLabelExpressions:  # omit empty

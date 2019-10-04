@@ -2,6 +2,7 @@
 
 from typing import Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -13,7 +14,7 @@ from typeguard import typechecked
 class JobSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         parallelism = self.parallelism()
         if parallelism is not None:  # omit empty
@@ -115,7 +116,7 @@ class JobSpec(types.Object):
 class Job(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

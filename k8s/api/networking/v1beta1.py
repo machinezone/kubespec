@@ -2,6 +2,7 @@
 
 from typing import List, Optional, Union
 
+import addict
 from k8s import base
 from korps import types
 from typeguard import typechecked
@@ -11,7 +12,7 @@ from typeguard import typechecked
 class IngressBackend(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['serviceName'] = self.serviceName()
         v['servicePort'] = self.servicePort()
@@ -33,7 +34,7 @@ class IngressBackend(types.Object):
 class HTTPIngressPath(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -67,7 +68,7 @@ class HTTPIngressPath(types.Object):
 class HTTPIngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['paths'] = self.paths()
         return v
@@ -85,7 +86,7 @@ class HTTPIngressRuleValue(types.Object):
 class IngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         http = self.http()
         if http is not None:  # omit empty
@@ -103,7 +104,7 @@ class IngressRuleValue(types.Object):
 class IngressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         host = self.host()
         if host:  # omit empty
@@ -141,7 +142,7 @@ class IngressRule(types.Object):
 class IngressTLS(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         hosts = self.hosts()
         if hosts:  # omit empty
@@ -173,7 +174,7 @@ class IngressTLS(types.Object):
 class IngressSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         backend = self.backend()
         if backend is not None:  # omit empty
@@ -217,7 +218,7 @@ class IngressSpec(types.Object):
 class Ingress(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

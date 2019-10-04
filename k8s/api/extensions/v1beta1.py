@@ -2,6 +2,7 @@
 
 from typing import Dict, List, Optional, Union
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -140,7 +141,7 @@ SupplementalGroupsStrategyType = base.Enum('SupplementalGroupsStrategyType', {
 class AllowedCSIDriver(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         return v
@@ -156,7 +157,7 @@ class AllowedCSIDriver(types.Object):
 class AllowedFlexVolume(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['driver'] = self.driver()
         return v
@@ -173,7 +174,7 @@ class AllowedFlexVolume(types.Object):
 class AllowedHostPath(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         pathPrefix = self.pathPrefix()
         if pathPrefix:  # omit empty
@@ -204,7 +205,7 @@ class AllowedHostPath(types.Object):
 class RollingUpdateDaemonSet(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -233,7 +234,7 @@ class RollingUpdateDaemonSet(types.Object):
 class DaemonSetUpdateStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -263,7 +264,7 @@ class DaemonSetUpdateStrategy(types.Object):
 class DaemonSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         selector = self.selector()
         if selector is not None:  # omit empty
@@ -324,7 +325,7 @@ class DaemonSetSpec(types.Object):
 class DaemonSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -350,7 +351,7 @@ class DaemonSet(base.TypedObject, base.MetadataObject):
 class RollingUpdateDeployment(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -394,7 +395,7 @@ class RollingUpdateDeployment(types.Object):
 class DeploymentStrategy(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -423,7 +424,7 @@ class DeploymentStrategy(types.Object):
 class DeploymentSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -509,7 +510,7 @@ class DeploymentSpec(types.Object):
 class Deployment(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -534,7 +535,7 @@ class Deployment(base.TypedObject, base.MetadataObject):
 class RollbackConfig(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         revision = self.revision()
         if revision:  # omit empty
@@ -552,7 +553,7 @@ class RollbackConfig(types.Object):
 class DeploymentRollback(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         updatedAnnotations = self.updatedAnnotations()
@@ -577,7 +578,7 @@ class DeploymentRollback(base.TypedObject):
     # The annotations to be updated to a deployment
     @typechecked
     def updatedAnnotations(self) -> Dict[str, str]:
-        return self._kwargs.get('updatedAnnotations', types.Dict())
+        return self._kwargs.get('updatedAnnotations', addict.Dict())
     
     # The config of this deployment rollback.
     @typechecked
@@ -590,7 +591,7 @@ class DeploymentRollback(base.TypedObject):
 class IDRange(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['min'] = self.min()
         v['max'] = self.max()
@@ -612,7 +613,7 @@ class IDRange(types.Object):
 class FSGroupStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         rule = self.rule()
         if rule:  # omit empty
@@ -638,7 +639,7 @@ class FSGroupStrategyOptions(types.Object):
 class IngressBackend(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['serviceName'] = self.serviceName()
         v['servicePort'] = self.servicePort()
@@ -660,7 +661,7 @@ class IngressBackend(types.Object):
 class HTTPIngressPath(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -694,7 +695,7 @@ class HTTPIngressPath(types.Object):
 class HTTPIngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['paths'] = self.paths()
         return v
@@ -711,7 +712,7 @@ class HTTPIngressRuleValue(types.Object):
 class HostPortRange(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['min'] = self.min()
         v['max'] = self.max()
@@ -735,7 +736,7 @@ class HostPortRange(types.Object):
 class IPBlock(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['cidr'] = self.cidr()
         except_ = self.except_()
@@ -764,7 +765,7 @@ class IPBlock(types.Object):
 class IngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         http = self.http()
         if http is not None:  # omit empty
@@ -782,7 +783,7 @@ class IngressRuleValue(types.Object):
 class IngressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         host = self.host()
         if host:  # omit empty
@@ -820,7 +821,7 @@ class IngressRule(types.Object):
 class IngressTLS(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         hosts = self.hosts()
         if hosts:  # omit empty
@@ -852,7 +853,7 @@ class IngressTLS(types.Object):
 class IngressSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         backend = self.backend()
         if backend is not None:  # omit empty
@@ -897,7 +898,7 @@ class IngressSpec(types.Object):
 class Ingress(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -923,7 +924,7 @@ class Ingress(base.TypedObject, base.MetadataObject):
 class NetworkPolicyPeer(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         podSelector = self.podSelector()
         if podSelector is not None:  # omit empty
@@ -967,7 +968,7 @@ class NetworkPolicyPeer(types.Object):
 class NetworkPolicyPort(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         protocol = self.protocol()
         if protocol is not None:  # omit empty
@@ -1000,7 +1001,7 @@ class NetworkPolicyPort(types.Object):
 class NetworkPolicyEgressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -1034,7 +1035,7 @@ class NetworkPolicyEgressRule(types.Object):
 class NetworkPolicyIngressRule(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -1067,7 +1068,7 @@ class NetworkPolicyIngressRule(types.Object):
 class NetworkPolicySpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['podSelector'] = self.podSelector()
         ingress = self.ingress()
@@ -1132,7 +1133,7 @@ class NetworkPolicySpec(types.Object):
 class NetworkPolicy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -1158,7 +1159,7 @@ class NetworkPolicy(base.TypedObject, base.MetadataObject):
 class RunAsGroupStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['rule'] = self.rule()
         ranges = self.ranges()
@@ -1183,7 +1184,7 @@ class RunAsGroupStrategyOptions(types.Object):
 class RunAsUserStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['rule'] = self.rule()
         ranges = self.ranges()
@@ -1208,7 +1209,7 @@ class RunAsUserStrategyOptions(types.Object):
 class RuntimeClassStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['allowedRuntimeClassNames'] = self.allowedRuntimeClassNames()
         defaultRuntimeClassName = self.defaultRuntimeClassName()
@@ -1236,7 +1237,7 @@ class RuntimeClassStrategyOptions(types.Object):
 class SELinuxStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['rule'] = self.rule()
         seLinuxOptions = self.seLinuxOptions()
@@ -1261,7 +1262,7 @@ class SELinuxStrategyOptions(types.Object):
 class SupplementalGroupsStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         rule = self.rule()
         if rule:  # omit empty
@@ -1288,7 +1289,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
 class PodSecurityPolicySpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         privileged = self.privileged()
         if privileged:  # omit empty
@@ -1473,7 +1474,7 @@ class PodSecurityPolicySpec(types.Object):
     # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
     @typechecked
     def allowedCSIDrivers(self) -> Dict[str, AllowedCSIDriver]:
-        return self._kwargs.get('allowedCSIDrivers', types.Dict())
+        return self._kwargs.get('allowedCSIDrivers', addict.Dict())
     
     # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1519,7 +1520,7 @@ class PodSecurityPolicySpec(types.Object):
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -1544,7 +1545,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
 class ReplicaSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -1597,7 +1598,7 @@ class ReplicaSetSpec(types.Object):
 class ReplicaSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
@@ -1623,7 +1624,7 @@ class ReplicaSet(base.TypedObject, base.MetadataObject):
 class ReplicationControllerDummy(base.TypedObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         return v
     
@@ -1640,7 +1641,7 @@ class ReplicationControllerDummy(base.TypedObject):
 class ScaleSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         replicas = self.replicas()
         if replicas:  # omit empty
@@ -1657,7 +1658,7 @@ class ScaleSpec(types.Object):
 class Scale(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty

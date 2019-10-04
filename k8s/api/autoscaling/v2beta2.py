@@ -2,6 +2,7 @@
 
 from typing import List, Optional
 
+import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
@@ -50,7 +51,7 @@ MetricTargetType = base.Enum('MetricTargetType', {
 class CrossVersionObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['kind'] = self.kind()
         v['name'] = self.name()
@@ -79,7 +80,7 @@ class CrossVersionObjectReference(types.Object):
 class MetricIdentifier(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         selector = self.selector()
@@ -104,7 +105,7 @@ class MetricIdentifier(types.Object):
 class MetricTarget(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['type'] = self.type()
         value = self.value()
@@ -149,7 +150,7 @@ class MetricTarget(types.Object):
 class ExternalMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['metric'] = self.metric()
         v['target'] = self.target()
@@ -171,7 +172,7 @@ class ExternalMetricSource(types.Object):
 class ObjectMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['describedObject'] = self.describedObject()
         v['target'] = self.target()
@@ -200,7 +201,7 @@ class ObjectMetricSource(types.Object):
 class PodsMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['metric'] = self.metric()
         v['target'] = self.target()
@@ -227,7 +228,7 @@ class PodsMetricSource(types.Object):
 class ResourceMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
         v['target'] = self.target()
@@ -249,7 +250,7 @@ class ResourceMetricSource(types.Object):
 class MetricSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['type'] = self.type()
         object = self.object()
@@ -308,7 +309,7 @@ class MetricSpec(types.Object):
 class HorizontalPodAutoscalerSpec(types.Object):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         v['scaleTargetRef'] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
@@ -360,7 +361,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
 class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> types.Dict:
+    def render(self) -> addict.Dict:
         v = super().render()
         spec = self.spec()
         if spec:  # omit empty
