@@ -1,3 +1,4 @@
+import base64
 from typing import Any, Union
 
 import addict
@@ -39,9 +40,11 @@ class Kadet:
                 for k, v in value.items():
                     base[k] = _recurse(v)
                 return base
-
-            # Don't convert strings/bytes into lists
-            if isinstance(value, (str, bytes)):
+            # Base64 encode bytes
+            if isinstance(value, bytes):
+                return base64.b64encode(value).decode('UTF-8')
+            # Don't convert strings into lists
+            if isinstance(value, str):
                 return value
             try:
                 it = iter(value)

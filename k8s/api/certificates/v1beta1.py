@@ -65,7 +65,7 @@ class CertificateSigningRequestSpec(types.Object):
     
     # Base64-encoded PKCS#10 CSR data
     @typechecked
-    def request(self) -> List[int]:
+    def request(self) -> bytes:
         return self._kwargs.get('request', b'')
     
     # allowedUsages specifies a set of usage contexts the key will be

@@ -1670,7 +1670,7 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
     # Using this field will require 1.10+ apiserver and
     # kubelet.
     @typechecked
-    def binaryData(self) -> Dict[str, List[int]]:
+    def binaryData(self) -> Dict[str, bytes]:
         return self._kwargs.get('binaryData', types.Dict())
 
 
@@ -7474,7 +7474,7 @@ class RangeAllocation(base.TypedObject, base.MetadataObject):
     
     # Data is a bit array containing all allocated addresses in the previous segment.
     @typechecked
-    def data(self) -> List[int]:
+    def data(self) -> bytes:
         return self._kwargs.get('data', b'')
 
 
@@ -7702,7 +7702,7 @@ class Secret(base.TypedObject, base.MetadataObject):
     # base64 encoded string, representing the arbitrary (possibly non-string)
     # data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
     @typechecked
-    def data(self) -> Dict[str, List[int]]:
+    def data(self) -> Dict[str, bytes]:
         return self._kwargs.get('data', types.Dict())
     
     # stringData allows specifying non-binary secret data in string form.

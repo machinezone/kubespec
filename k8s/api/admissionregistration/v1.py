@@ -267,7 +267,7 @@ class WebhookClientConfig(types.Object):
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
-    def caBundle(self) -> List[int]:
+    def caBundle(self) -> bytes:
         return self._kwargs.get('caBundle', b'')
 
 
