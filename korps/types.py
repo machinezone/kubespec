@@ -2,6 +2,7 @@ import base64
 from typing import Any, Dict, Union
 
 import addict
+from korps import context
 from typeguard import typechecked
 
 
@@ -13,6 +14,7 @@ class Renderable:
 
 class Object(Renderable):
 
+    @context.scoped
     def __init__(self, **kwargs):
         self._kwargs = addict.Dict(kwargs)
 
