@@ -1685,7 +1685,7 @@ class ConfigMapEnvSource(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
             v['optional'] = optional
@@ -1693,8 +1693,8 @@ class ConfigMapEnvSource(types.Object):
     
     # The ConfigMap to select from.
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # Specify whether the ConfigMap must be defined
     @typechecked
@@ -1708,7 +1708,7 @@ class ConfigMapKeySelector(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         v['key'] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
@@ -1717,8 +1717,8 @@ class ConfigMapKeySelector(types.Object):
     
     # The ConfigMap to select from.
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # The key to select.
     @typechecked
@@ -1826,7 +1826,7 @@ class ConfigMapProjection(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
             v['items'] = items
@@ -1836,8 +1836,8 @@ class ConfigMapProjection(types.Object):
         return v
     
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # If unspecified, each key-value pair in the Data field of the referenced
     # ConfigMap will be projected into the volume as a file whose name is the
@@ -1867,7 +1867,7 @@ class ConfigMapVolumeSource(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
             v['items'] = items
@@ -1880,8 +1880,8 @@ class ConfigMapVolumeSource(types.Object):
         return v
     
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # If unspecified, each key-value pair in the Data field of the referenced
     # ConfigMap will be projected into the volume as a file whose name is the
@@ -1973,7 +1973,7 @@ class SecretEnvSource(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
             v['optional'] = optional
@@ -1981,8 +1981,8 @@ class SecretEnvSource(types.Object):
     
     # The Secret to select from.
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # Specify whether the Secret must be defined
     @typechecked
@@ -2083,7 +2083,7 @@ class SecretKeySelector(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         v['key'] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
@@ -2092,8 +2092,8 @@ class SecretKeySelector(types.Object):
     
     # The name of the secret in the pod's namespace to select from.
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # The key of the secret to select from.  Must be a valid secret key.
     @typechecked
@@ -2388,7 +2388,7 @@ class Probe(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.Handler().render())  # inline
+        v.update(self.handler().render())  # inline
         initialDelaySeconds = self.initialDelaySeconds()
         if initialDelaySeconds:  # omit empty
             v['initialDelaySeconds'] = initialDelaySeconds
@@ -2408,8 +2408,8 @@ class Probe(types.Object):
     
     # The action taken to determine the health of a container
     @typechecked
-    def Handler(self) -> Handler:
-        return self._kwargs.get('Handler', Handler())
+    def handler(self) -> Handler:
+        return self._kwargs.get('handler', Handler())
     
     # Number of seconds after the container has started before liveness probes are initiated.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
@@ -3568,7 +3568,7 @@ class EphemeralContainer(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.EphemeralContainerCommon().render())  # inline
+        v.update(self.ephemeralContainerCommon().render())  # inline
         targetContainerName = self.targetContainerName()
         if targetContainerName:  # omit empty
             v['targetContainerName'] = targetContainerName
@@ -3579,8 +3579,8 @@ class EphemeralContainer(types.Object):
     # following inlined struct so than an EphemeralContainer may easily be converted
     # to a Container.
     @typechecked
-    def EphemeralContainerCommon(self) -> EphemeralContainerCommon:
-        return self._kwargs.get('EphemeralContainerCommon', EphemeralContainerCommon())
+    def ephemeralContainerCommon(self) -> EphemeralContainerCommon:
+        return self._kwargs.get('ephemeralContainerCommon', EphemeralContainerCommon())
     
     # If set, the name of the container from PodSpec that this ephemeral container targets.
     # The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container.
@@ -5380,7 +5380,7 @@ class PersistentVolumeSpec(types.Object):
         capacity = self.capacity()
         if capacity:  # omit empty
             v['capacity'] = capacity
-        v.update(self.PersistentVolumeSource().render())  # inline
+        v.update(self.persistentVolumeSource().render())  # inline
         accessModes = self.accessModes()
         if accessModes:  # omit empty
             v['accessModes'] = accessModes
@@ -5412,8 +5412,8 @@ class PersistentVolumeSpec(types.Object):
     
     # The actual volume backing the persistent volume.
     @typechecked
-    def PersistentVolumeSource(self) -> PersistentVolumeSource:
-        return self._kwargs.get('PersistentVolumeSource', PersistentVolumeSource())
+    def persistentVolumeSource(self) -> PersistentVolumeSource:
+        return self._kwargs.get('persistentVolumeSource', PersistentVolumeSource())
     
     # AccessModes contains all ways the volume can be mounted.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes
@@ -6004,7 +6004,7 @@ class SecretProjection(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v.update(self.LocalObjectReference().render())  # inline
+        v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
             v['items'] = items
@@ -6014,8 +6014,8 @@ class SecretProjection(types.Object):
         return v
     
     @typechecked
-    def LocalObjectReference(self) -> LocalObjectReference:
-        return self._kwargs.get('LocalObjectReference', LocalObjectReference())
+    def localObjectReference(self) -> LocalObjectReference:
+        return self._kwargs.get('localObjectReference', LocalObjectReference())
     
     # If unspecified, each key-value pair in the Data field of the referenced
     # Secret will be projected into the volume as a file whose name is the
@@ -6692,7 +6692,7 @@ class Volume(types.Object):
     def render(self) -> addict.Dict:
         v = super().render()
         v['name'] = self.name()
-        v.update(self.VolumeSource().render())  # inline
+        v.update(self.volumeSource().render())  # inline
         return v
     
     # Volume's name.
@@ -6706,8 +6706,8 @@ class Volume(types.Object):
     # If not specified, the Volume is implied to be an EmptyDir.
     # This implied behavior is deprecated and will be removed in a future version.
     @typechecked
-    def VolumeSource(self) -> VolumeSource:
-        return self._kwargs.get('VolumeSource', VolumeSource())
+    def volumeSource(self) -> VolumeSource:
+        return self._kwargs.get('volumeSource', VolumeSource())
 
 
 # PodSpec is a description of a pod.

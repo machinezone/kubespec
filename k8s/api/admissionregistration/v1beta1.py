@@ -150,7 +150,7 @@ class RuleWithOperations(types.Object):
         operations = self.operations()
         if operations:  # omit empty
             v['operations'] = operations
-        v.update(self.Rule().render())  # inline
+        v.update(self.rule().render())  # inline
         return v
     
     # Operations is the operations the admission hook cares about - CREATE, UPDATE, or *
@@ -164,8 +164,8 @@ class RuleWithOperations(types.Object):
     # Rule is embedded, it describes other criteria of the rule, like
     # APIGroups, APIVersions, Resources, etc.
     @typechecked
-    def Rule(self) -> Rule:
-        return self._kwargs.get('Rule', Rule())
+    def rule(self) -> Rule:
+        return self._kwargs.get('rule', Rule())
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io

@@ -73,11 +73,11 @@ class Quantity(types.Object):
     @typechecked
     def render(self) -> addict.Dict:
         v = super().render()
-        v['Format'] = self.Format()
+        v['Format'] = self.format()
         return v
     
     # Change Format at will. See the comment for Canonicalize for
     # more details.
     @typechecked
-    def Format(self) -> Format:
+    def format(self) -> Format:
         return self._kwargs.get('Format')

@@ -109,7 +109,7 @@ class IngressRule(types.Object):
         host = self.host()
         if host:  # omit empty
             v['host'] = host
-        v.update(self.IngressRuleValue().render())  # inline
+        v.update(self.ingressRuleValue().render())  # inline
         return v
     
     # Host is the fully qualified domain name of a network host, as defined
@@ -134,8 +134,8 @@ class IngressRule(types.Object):
     # default backend, is left to the controller fulfilling the Ingress. Http is
     # currently the only supported IngressRuleValue.
     @typechecked
-    def IngressRuleValue(self) -> Optional[IngressRuleValue]:
-        return self._kwargs.get('IngressRuleValue')
+    def ingressRuleValue(self) -> Optional[IngressRuleValue]:
+        return self._kwargs.get('ingressRuleValue')
 
 
 # IngressTLS describes the transport layer security associated with an Ingress.
