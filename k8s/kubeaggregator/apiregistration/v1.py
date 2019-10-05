@@ -8,7 +8,7 @@ from typing import Optional
 
 import addict
 from k8s import base
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 

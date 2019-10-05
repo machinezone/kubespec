@@ -9,7 +9,7 @@ from typing import Optional
 import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 

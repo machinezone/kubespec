@@ -11,7 +11,7 @@ from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
 from k8s.apimachinery.meta import v1 as metav1
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 

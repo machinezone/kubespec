@@ -11,7 +11,7 @@ from k8s import base
 from k8s.api.authentication import v1 as authenticationv1
 from k8s.apimachinery import runtime
 from k8s.apimachinery.meta import v1 as metav1
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 

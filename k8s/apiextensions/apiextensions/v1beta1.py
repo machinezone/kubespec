@@ -10,7 +10,7 @@ import addict
 from k8s import base
 from k8s.apimachinery import runtime
 from k8s.apimachinery.meta import v1 as metav1
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 

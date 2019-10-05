@@ -6,7 +6,7 @@ import contextvars
 import functools
 
 
-_current_scope = contextvars.ContextVar('korps.context')
+_current_scope = contextvars.ContextVar('kargo.context')
 
 
 def scoped(func):

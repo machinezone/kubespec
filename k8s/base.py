@@ -8,7 +8,7 @@ from typing import Dict, Optional
 
 import addict
 import pytz
-from korps import types
+from kargo import types
 from typeguard import typechecked
 
 
