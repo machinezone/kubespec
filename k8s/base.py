@@ -1,3 +1,7 @@
+# Copyright 2019 Machine Zone, Inc. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
 import enum
 from datetime import datetime as DateTime
 from typing import Dict, Optional
