@@ -49,3 +49,38 @@ from typeguard import typechecked
 # runtime.Unknown object will be created and stored.)
 class RawExtension(types.Object):
     pass  # FIXME
+
+
+# Unknown allows api objects with unknown types to be passed-through. This can be used
+# to deal with the API objects from a plug-in. Unknown objects still have functioning
+# TypeMeta features-- kind, version, etc.
+# TODO: Make this object have easy access to field based accessors and settors for
+# metadata and field mutatation.
+class Unknown(base.TypedObject):
+
+    @typechecked
+    def render(self) -> addict.Dict:
+        v = super().render()
+        v['Raw'] = self.raw()
+        v['ContentEncoding'] = self.contentEncoding()
+        v['ContentType'] = self.contentType()
+        return v
+    
+    # Raw will hold the complete serialized object which couldn't be matched
+    # with a registered type. Most likely, nothing should be done with this
+    # except for passing it through the system.
+    @typechecked
+    def raw(self) -> bytes:
+        return self._kwargs.get('Raw', b'')
+    
+    # ContentEncoding is encoding used to encode 'Raw' data.
+    # Unspecified means no encoding.
+    @typechecked
+    def contentEncoding(self) -> str:
+        return self._kwargs.get('ContentEncoding', '')
+    
+    # ContentType  is serialization method used to serialize 'Raw'.
+    # Unspecified means ContentTypeJSON.
+    @typechecked
+    def contentType(self) -> str:
+        return self._kwargs.get('ContentType', '')

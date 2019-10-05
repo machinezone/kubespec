@@ -311,6 +311,22 @@ class DeleteOptions(base.TypedObject):
         return self._kwargs.get('dryRun', [])
 
 
+# Duration is a wrapper around time.Duration which supports correct
+# marshaling to YAML and JSON. In particular, it marshals into strings, which
+# can be used as map keys in json.
+class Duration(types.Object):
+
+    @typechecked
+    def render(self) -> addict.Dict:
+        v = super().render()
+        v['Duration'] = self.duration()
+        return v
+    
+    @typechecked
+    def duration(self) -> int:
+        return self._kwargs.get('Duration', 0)
+
+
 # GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
 # to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
 class GroupVersionKind(types.Object):
