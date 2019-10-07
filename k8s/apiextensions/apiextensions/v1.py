@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.apimachinery import runtime
 from k8s.apimachinery.meta import v1 as metav1
@@ -39,7 +38,7 @@ ResourceScope = base.Enum('ResourceScope', {
 class ConversionRequest(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['uid'] = self.uid()
         v['desiredAPIVersion'] = self.desiredAPIVersion()
@@ -69,7 +68,7 @@ class ConversionRequest(types.Object):
 class ConversionResponse(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['uid'] = self.uid()
         v['convertedObjects'] = self.convertedObjects()
@@ -104,7 +103,7 @@ class ConversionResponse(types.Object):
 class ConversionReview(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         request = self.request()
         if request is not None:  # omit empty
@@ -137,7 +136,7 @@ class ConversionReview(base.TypedObject):
 class CustomResourceColumnDefinition(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['type'] = self.type()
@@ -194,7 +193,7 @@ class CustomResourceColumnDefinition(types.Object):
 class ServiceReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['namespace'] = self.namespace()
         v['name'] = self.name()
@@ -235,7 +234,7 @@ class ServiceReference(types.Object):
 class WebhookClientConfig(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         url = self.url()
         if url is not None:  # omit empty
@@ -296,7 +295,7 @@ class WebhookClientConfig(types.Object):
 class WebhookConversion(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         clientConfig = self.clientConfig()
         if clientConfig is not None:  # omit empty
@@ -324,7 +323,7 @@ class WebhookConversion(types.Object):
 class CustomResourceConversion(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['strategy'] = self.strategy()
         webhook = self.webhook()
@@ -350,7 +349,7 @@ class CustomResourceConversion(types.Object):
 class CustomResourceDefinitionNames(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['plural'] = self.plural()
         singular = self.singular()
@@ -411,7 +410,7 @@ class CustomResourceDefinitionNames(types.Object):
 class CustomResourceSubresourceScale(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['specReplicasPath'] = self.specReplicasPath()
         v['statusReplicasPath'] = self.statusReplicasPath()
@@ -464,7 +463,7 @@ class CustomResourceSubresourceStatus(types.Object):
 class CustomResourceSubresources(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         status = self.status()
         if status is not None:  # omit empty
@@ -492,7 +491,7 @@ class CustomResourceSubresources(types.Object):
 class ExternalDocumentation(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         description = self.description()
         if description:  # omit empty
@@ -516,7 +515,7 @@ class ExternalDocumentation(types.Object):
 class JSON(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Raw'] = self.raw()
         return v
@@ -531,7 +530,7 @@ class JSON(types.Object):
 class JSONSchemaPropsOrArray(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Schema'] = self.schema()
         v['JSONSchemas'] = self.jSONSchemas()
@@ -551,7 +550,7 @@ class JSONSchemaPropsOrArray(types.Object):
 class JSONSchemaPropsOrBool(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Allows'] = self.allows()
         v['Schema'] = self.schema()
@@ -570,7 +569,7 @@ class JSONSchemaPropsOrBool(types.Object):
 class JSONSchemaPropsOrStringArray(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Schema'] = self.schema()
         v['Property'] = self.property()
@@ -589,7 +588,7 @@ class JSONSchemaPropsOrStringArray(types.Object):
 class JSONSchemaProps(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         id = self.id()
         if id:  # omit empty
@@ -836,7 +835,7 @@ class JSONSchemaProps(types.Object):
     
     @typechecked
     def properties(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('properties', addict.Dict())
+        return self._kwargs.get('properties', {})
     
     @typechecked
     def additionalProperties(self) -> Optional[JSONSchemaPropsOrBool]:
@@ -844,11 +843,11 @@ class JSONSchemaProps(types.Object):
     
     @typechecked
     def patternProperties(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('patternProperties', addict.Dict())
+        return self._kwargs.get('patternProperties', {})
     
     @typechecked
     def dependencies(self) -> Dict[str, JSONSchemaPropsOrStringArray]:
-        return self._kwargs.get('dependencies', addict.Dict())
+        return self._kwargs.get('dependencies', {})
     
     @typechecked
     def additionalItems(self) -> Optional[JSONSchemaPropsOrBool]:
@@ -856,7 +855,7 @@ class JSONSchemaProps(types.Object):
     
     @typechecked
     def definitions(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('definitions', addict.Dict())
+        return self._kwargs.get('definitions', {})
     
     @typechecked
     def externalDocs(self) -> Optional[ExternalDocumentation]:
@@ -941,7 +940,7 @@ class JSONSchemaProps(types.Object):
 class CustomResourceValidation(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         openAPIV3Schema = self.openAPIV3Schema()
         if openAPIV3Schema is not None:  # omit empty
@@ -958,7 +957,7 @@ class CustomResourceValidation(types.Object):
 class CustomResourceDefinitionVersion(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['served'] = self.served()
@@ -1006,14 +1005,14 @@ class CustomResourceDefinitionVersion(types.Object):
     # If no columns are specified, a single column displaying the age of the custom resource is used.
     @typechecked
     def additionalPrinterColumns(self) -> Dict[str, CustomResourceColumnDefinition]:
-        return self._kwargs.get('additionalPrinterColumns', addict.Dict())
+        return self._kwargs.get('additionalPrinterColumns', {})
 
 
 # CustomResourceDefinitionSpec describes how a user wants their resource to appear
 class CustomResourceDefinitionSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['group'] = self.group()
         v['names'] = self.names()
@@ -1055,7 +1054,7 @@ class CustomResourceDefinitionSpec(types.Object):
     # v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
     @typechecked
     def versions(self) -> Dict[str, CustomResourceDefinitionVersion]:
-        return self._kwargs.get('versions', addict.Dict())
+        return self._kwargs.get('versions', {})
     
     # conversion defines conversion settings for the CRD.
     @typechecked
@@ -1077,7 +1076,7 @@ class CustomResourceDefinitionSpec(types.Object):
 class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v

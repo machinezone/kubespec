@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.apimachinery import runtime
 from kargo import types
@@ -17,7 +16,7 @@ from typeguard import typechecked
 class AdmissionPluginConfiguration(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['path'] = self.path()
@@ -47,7 +46,7 @@ class AdmissionPluginConfiguration(types.Object):
 class AdmissionConfiguration(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['plugins'] = self.plugins().values()  # named list
         return v
@@ -63,13 +62,13 @@ class AdmissionConfiguration(base.TypedObject):
     # Plugins allows specifying a configuration per admission control plugin.
     @typechecked
     def plugins(self) -> Dict[str, AdmissionPluginConfiguration]:
-        return self._kwargs.get('plugins', addict.Dict())
+        return self._kwargs.get('plugins', {})
 
 
 class HTTPConnectConfig(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['url'] = self.url()
         caBundle = self.caBundle()
@@ -118,7 +117,7 @@ class HTTPConnectConfig(types.Object):
 class Connection(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['type'] = self.type()
         httpConnect = self.httpConnect()
@@ -144,7 +143,7 @@ class Connection(types.Object):
 class EgressSelection(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['connection'] = self.connection()
@@ -166,7 +165,7 @@ class EgressSelection(types.Object):
 class EgressSelectorConfiguration(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['egressSelections'] = self.egressSelections().values()  # named list
         return v
@@ -182,4 +181,4 @@ class EgressSelectorConfiguration(base.TypedObject):
     # connectionServices contains a list of egress selection client configurations
     @typechecked
     def egressSelections(self) -> Dict[str, EgressSelection]:
-        return self._kwargs.get('egressSelections', addict.Dict())
+        return self._kwargs.get('egressSelections', {})

@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
@@ -18,7 +17,7 @@ from typeguard import typechecked
 class Overhead(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         podFixed = self.podFixed()
         if podFixed:  # omit empty
@@ -28,7 +27,7 @@ class Overhead(types.Object):
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
     def podFixed(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('podFixed', addict.Dict())
+        return self._kwargs.get('podFixed', {})
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
@@ -36,7 +35,7 @@ class Overhead(types.Object):
 class Scheduling(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         nodeSelector = self.nodeSelector()
         if nodeSelector:  # omit empty
@@ -53,7 +52,7 @@ class Scheduling(types.Object):
     # be rejected in admission.
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        return self._kwargs.get('nodeSelector', addict.Dict())
+        return self._kwargs.get('nodeSelector', {})
     
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
@@ -74,7 +73,7 @@ class Scheduling(types.Object):
 class RuntimeClass(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['handler'] = self.handler()
         overhead = self.overhead()

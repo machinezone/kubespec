@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from kargo import types
@@ -18,7 +17,7 @@ from typeguard import typechecked
 class EventSeries(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['count'] = self.count()
         v['lastObservedTime'] = self.lastObservedTime()
@@ -39,7 +38,7 @@ class EventSeries(types.Object):
 class Event(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['eventTime'] = self.eventTime()
         series = self.series()
@@ -57,9 +56,7 @@ class Event(base.TypedObject, base.MetadataObject):
         reason = self.reason()
         if reason:  # omit empty
             v['reason'] = reason
-        regarding = self.regarding()
-        if regarding:  # omit empty
-            v['regarding'] = regarding
+        v['regarding'] = self.regarding()
         related = self.related()
         if related is not None:  # omit empty
             v['related'] = related
@@ -113,8 +110,8 @@ class Event(base.TypedObject, base.MetadataObject):
     # E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
     # it acts on some changes in a ReplicaSet object.
     @typechecked
-    def regarding(self) -> Optional['corev1.ObjectReference']:
-        return self._kwargs.get('regarding')
+    def regarding(self) -> 'corev1.ObjectReference':
+        return self._kwargs.get('regarding', corev1.ObjectReference())
     
     # Optional secondary object for more complex actions. E.g. when regarding object triggers
     # a creation or deletion of related object.

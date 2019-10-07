@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict
+from typing import Any, Dict
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
@@ -19,7 +18,7 @@ from typeguard import typechecked
 class ContainerMetrics(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['usage'] = self.usage()
@@ -33,14 +32,14 @@ class ContainerMetrics(types.Object):
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('usage', addict.Dict())
+        return self._kwargs.get('usage', {})
 
 
 # NodeMetrics sets resource usage metrics of a node.
 class NodeMetrics(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['timestamp'] = self.timestamp()
         v['window'] = self.window()
@@ -68,14 +67,14 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('usage', addict.Dict())
+        return self._kwargs.get('usage', {})
 
 
 # PodMetrics sets resource usage metrics of a pod.
 class PodMetrics(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['timestamp'] = self.timestamp()
         v['window'] = self.window()
@@ -103,4 +102,4 @@ class PodMetrics(base.TypedObject, base.MetadataObject):
     # Metrics for all containers are collected within the same time window.
     @typechecked
     def containers(self) -> Dict[str, ContainerMetrics]:
-        return self._kwargs.get('containers', addict.Dict())
+        return self._kwargs.get('containers', {})

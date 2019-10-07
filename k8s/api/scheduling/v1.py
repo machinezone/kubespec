@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from kargo import types
@@ -18,7 +17,7 @@ from typeguard import typechecked
 class PriorityClass(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['value'] = self.value()
         globalDefault = self.globalDefault()

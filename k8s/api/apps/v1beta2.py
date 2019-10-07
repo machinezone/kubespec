@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import runtime
@@ -77,11 +76,9 @@ StatefulSetUpdateStrategyType = base.Enum('StatefulSetUpdateStrategyType', {
 class ControllerRevision(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        data = self.data()
-        if data:  # omit empty
-            v['data'] = data
+        v['data'] = self.data()
         v['revision'] = self.revision()
         return v
     
@@ -95,8 +92,8 @@ class ControllerRevision(base.TypedObject, base.MetadataObject):
     
     # Data is the serialized representation of the state.
     @typechecked
-    def data(self) -> Optional['runtime.RawExtension']:
-        return self._kwargs.get('data')
+    def data(self) -> 'runtime.RawExtension':
+        return self._kwargs.get('data', runtime.RawExtension())
     
     # Revision indicates the revision of the state represented by Data.
     @typechecked
@@ -108,7 +105,7 @@ class ControllerRevision(base.TypedObject, base.MetadataObject):
 class RollingUpdateDaemonSet(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -138,7 +135,7 @@ class RollingUpdateDaemonSet(types.Object):
 class DaemonSetUpdateStrategy(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -167,13 +164,11 @@ class DaemonSetUpdateStrategy(types.Object):
 class DaemonSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['selector'] = self.selector()
         v['template'] = self.template()
-        updateStrategy = self.updateStrategy()
-        if updateStrategy:  # omit empty
-            v['updateStrategy'] = updateStrategy
+        v['updateStrategy'] = self.updateStrategy()
         minReadySeconds = self.minReadySeconds()
         if minReadySeconds:  # omit empty
             v['minReadySeconds'] = minReadySeconds
@@ -201,7 +196,7 @@ class DaemonSetSpec(types.Object):
     
     # An update strategy to replace existing DaemonSet pods with new pods.
     @typechecked
-    def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+    def updateStrategy(self) -> DaemonSetUpdateStrategy:
         return self._kwargs.get('updateStrategy', DaemonSetUpdateStrategy())
     
     # The minimum number of seconds for which a newly created DaemonSet pod should
@@ -226,11 +221,9 @@ class DaemonSetSpec(types.Object):
 class DaemonSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -244,7 +237,7 @@ class DaemonSet(base.TypedObject, base.MetadataObject):
     # The desired behavior of this daemon set.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional[DaemonSetSpec]:
+    def spec(self) -> DaemonSetSpec:
         return self._kwargs.get('spec', DaemonSetSpec())
 
 
@@ -252,7 +245,7 @@ class DaemonSet(base.TypedObject, base.MetadataObject):
 class RollingUpdateDeployment(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
@@ -296,7 +289,7 @@ class RollingUpdateDeployment(types.Object):
 class DeploymentStrategy(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -325,16 +318,14 @@ class DeploymentStrategy(types.Object):
 class DeploymentSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v['replicas'] = replicas
         v['selector'] = self.selector()
         v['template'] = self.template()
-        strategy = self.strategy()
-        if strategy:  # omit empty
-            v['strategy'] = strategy
+        v['strategy'] = self.strategy()
         minReadySeconds = self.minReadySeconds()
         if minReadySeconds:  # omit empty
             v['minReadySeconds'] = minReadySeconds
@@ -369,7 +360,7 @@ class DeploymentSpec(types.Object):
     
     # The deployment strategy to use to replace existing pods with new ones.
     @typechecked
-    def strategy(self) -> Optional[DeploymentStrategy]:
+    def strategy(self) -> DeploymentStrategy:
         return self._kwargs.get('strategy', DeploymentStrategy())
     
     # Minimum number of seconds for which a newly created pod should be ready
@@ -407,11 +398,9 @@ class DeploymentSpec(types.Object):
 class Deployment(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -424,7 +413,7 @@ class Deployment(base.TypedObject, base.MetadataObject):
     
     # Specification of the desired behavior of the Deployment.
     @typechecked
-    def spec(self) -> Optional[DeploymentSpec]:
+    def spec(self) -> DeploymentSpec:
         return self._kwargs.get('spec', DeploymentSpec())
 
 
@@ -432,7 +421,7 @@ class Deployment(base.TypedObject, base.MetadataObject):
 class ReplicaSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -441,9 +430,7 @@ class ReplicaSetSpec(types.Object):
         if minReadySeconds:  # omit empty
             v['minReadySeconds'] = minReadySeconds
         v['selector'] = self.selector()
-        template = self.template()
-        if template:  # omit empty
-            v['template'] = template
+        v['template'] = self.template()
         return v
     
     # Replicas is the number of desired replicas.
@@ -473,7 +460,7 @@ class ReplicaSetSpec(types.Object):
     # insufficient replicas are detected.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
-    def template(self) -> Optional['corev1.PodTemplateSpec']:
+    def template(self) -> 'corev1.PodTemplateSpec':
         return self._kwargs.get('template', corev1.PodTemplateSpec())
 
 
@@ -483,11 +470,9 @@ class ReplicaSetSpec(types.Object):
 class ReplicaSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -501,7 +486,7 @@ class ReplicaSet(base.TypedObject, base.MetadataObject):
     # Spec defines the specification of the desired behavior of the ReplicaSet.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional[ReplicaSetSpec]:
+    def spec(self) -> ReplicaSetSpec:
         return self._kwargs.get('spec', ReplicaSetSpec())
 
 
@@ -509,7 +494,7 @@ class ReplicaSet(base.TypedObject, base.MetadataObject):
 class RollingUpdateStatefulSetStrategy(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         partition = self.partition()
         if partition is not None:  # omit empty
@@ -528,7 +513,7 @@ class RollingUpdateStatefulSetStrategy(types.Object):
 class ScaleSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas:  # omit empty
@@ -545,11 +530,9 @@ class ScaleSpec(types.Object):
 class Scale(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -562,8 +545,8 @@ class Scale(base.TypedObject, base.MetadataObject):
     
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> Optional[ScaleSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> ScaleSpec:
+        return self._kwargs.get('spec', ScaleSpec())
 
 
 # StatefulSetUpdateStrategy indicates the strategy that the StatefulSet
@@ -572,7 +555,7 @@ class Scale(base.TypedObject, base.MetadataObject):
 class StatefulSetUpdateStrategy(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         type = self.type()
         if type:  # omit empty
@@ -598,7 +581,7 @@ class StatefulSetUpdateStrategy(types.Object):
 class StatefulSetSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
@@ -612,9 +595,7 @@ class StatefulSetSpec(types.Object):
         podManagementPolicy = self.podManagementPolicy()
         if podManagementPolicy:  # omit empty
             v['podManagementPolicy'] = podManagementPolicy
-        updateStrategy = self.updateStrategy()
-        if updateStrategy:  # omit empty
-            v['updateStrategy'] = updateStrategy
+        v['updateStrategy'] = self.updateStrategy()
         revisionHistoryLimit = self.revisionHistoryLimit()
         if revisionHistoryLimit is not None:  # omit empty
             v['revisionHistoryLimit'] = revisionHistoryLimit
@@ -680,7 +661,7 @@ class StatefulSetSpec(types.Object):
     # employed to update Pods in the StatefulSet when a revision is made to
     # Template.
     @typechecked
-    def updateStrategy(self) -> Optional[StatefulSetUpdateStrategy]:
+    def updateStrategy(self) -> StatefulSetUpdateStrategy:
         return self._kwargs.get('updateStrategy', StatefulSetUpdateStrategy())
     
     # revisionHistoryLimit is the maximum number of revisions that will
@@ -703,11 +684,9 @@ class StatefulSetSpec(types.Object):
 class StatefulSet(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -720,5 +699,5 @@ class StatefulSet(base.TypedObject, base.MetadataObject):
     
     # Spec defines the desired identities of pods in this set.
     @typechecked
-    def spec(self) -> Optional[StatefulSetSpec]:
+    def spec(self) -> StatefulSetSpec:
         return self._kwargs.get('spec', StatefulSetSpec())

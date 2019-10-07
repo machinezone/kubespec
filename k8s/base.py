@@ -4,9 +4,8 @@
 
 import enum
 from datetime import datetime as DateTime
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
-import addict
 import pytz
 from kargo import types
 from typeguard import typechecked
@@ -26,14 +25,14 @@ def Enum(name: str, values: Dict[str, str]):
 class TypedObject(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         apiVersion = self.apiVersion()
         if apiVersion:  # omitempty
-            v.apiVersion = apiVersion
+            v['apiVersion'] = apiVersion
         kind = self.kind()
         if kind:  # omitempty
-            v.kind = kind
+            v['kind'] = kind
         return v
 
     # APIVersion defines the versioned schema of this representation of an object.
@@ -57,20 +56,22 @@ class TypedObject(types.Object):
 class MetadataObject(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
+        metadata = v.get('metadata', {})
         name = self.name()
         if name:  # omitempty
-            v.metadata.name = name
+            metadata['name'] = name
         namespace = self.namespace()
         if namespace:  # omitempty
-            v.metadata.namespace = namespace
+            metadata['namespace'] = namespace
         labels = self.labels()
         if labels:  # omitempty
-            v.metadata.labels = labels
+            metadata['labels'] = labels
         annotations = self.annotations()
         if annotations:  # omitempty
-            v.metadata.annotations = annotations
+            metadata['annotations'] = annotations
+        v['metadata'] = metadata
         return v
 
     # Name must be unique within a namespace. Is required when creating resources, although

@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class ServiceReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         namespace = self.namespace()
         if namespace:  # omit empty
@@ -52,7 +51,7 @@ class ServiceReference(types.Object):
 class APIServiceSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['service'] = self.service()
         group = self.group()
@@ -131,11 +130,9 @@ class APIServiceSpec(types.Object):
 class APIService(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -148,5 +145,5 @@ class APIService(base.TypedObject, base.MetadataObject):
     
     # Spec contains information for locating and communicating with a server
     @typechecked
-    def spec(self) -> Optional[APIServiceSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> APIServiceSpec:
+        return self._kwargs.get('spec', APIServiceSpec())

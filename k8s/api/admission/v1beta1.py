@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.api.authentication import v1 as authenticationv1
 from k8s.apimachinery import runtime
@@ -35,7 +34,7 @@ PatchType = base.Enum('PatchType', {
 class AdmissionRequest(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['uid'] = self.uid()
         v['kind'] = self.kind()
@@ -60,18 +59,12 @@ class AdmissionRequest(types.Object):
             v['namespace'] = namespace
         v['operation'] = self.operation()
         v['userInfo'] = self.userInfo()
-        object = self.object()
-        if object:  # omit empty
-            v['object'] = object
-        oldObject = self.oldObject()
-        if oldObject:  # omit empty
-            v['oldObject'] = oldObject
+        v['object'] = self.object()
+        v['oldObject'] = self.oldObject()
         dryRun = self.dryRun()
         if dryRun is not None:  # omit empty
             v['dryRun'] = dryRun
-        options = self.options()
-        if options:  # omit empty
-            v['options'] = options
+        v['options'] = self.options()
         return v
     
     # UID is an identifier for the individual request/response. It allows us to distinguish instances of requests which are
@@ -156,13 +149,13 @@ class AdmissionRequest(types.Object):
     
     # Object is the object from the incoming request.
     @typechecked
-    def object(self) -> Optional['runtime.RawExtension']:
-        return self._kwargs.get('object')
+    def object(self) -> 'runtime.RawExtension':
+        return self._kwargs.get('object', runtime.RawExtension())
     
     # OldObject is the existing object. Only populated for DELETE and UPDATE requests.
     @typechecked
-    def oldObject(self) -> Optional['runtime.RawExtension']:
-        return self._kwargs.get('oldObject')
+    def oldObject(self) -> 'runtime.RawExtension':
+        return self._kwargs.get('oldObject', runtime.RawExtension())
     
     # DryRun indicates that modifications will definitely not be persisted for this request.
     # Defaults to false.
@@ -176,15 +169,15 @@ class AdmissionRequest(types.Object):
     # Operation might be a CREATE, in which case the Options will a
     # `meta.k8s.io/v1.CreateOptions` even though the caller provided `meta.k8s.io/v1.PatchOptions`.
     @typechecked
-    def options(self) -> Optional['runtime.RawExtension']:
-        return self._kwargs.get('options')
+    def options(self) -> 'runtime.RawExtension':
+        return self._kwargs.get('options', runtime.RawExtension())
 
 
 # AdmissionResponse describes an admission response.
 class AdmissionResponse(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['uid'] = self.uid()
         v['allowed'] = self.allowed()
@@ -235,14 +228,14 @@ class AdmissionResponse(types.Object):
     # the admission webhook to add additional context to the audit log for this request.
     @typechecked
     def auditAnnotations(self) -> Dict[str, str]:
-        return self._kwargs.get('auditAnnotations', addict.Dict())
+        return self._kwargs.get('auditAnnotations', {})
 
 
 # AdmissionReview describes an admission review request/response.
 class AdmissionReview(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         request = self.request()
         if request is not None:  # omit empty

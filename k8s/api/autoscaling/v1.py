@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class CrossVersionObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['kind'] = self.kind()
         v['name'] = self.name()
@@ -45,7 +44,7 @@ class CrossVersionObjectReference(types.Object):
 class HorizontalPodAutoscalerSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['scaleTargetRef'] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
@@ -88,11 +87,9 @@ class HorizontalPodAutoscalerSpec(types.Object):
 class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -105,7 +102,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
     
     # behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+    def spec(self) -> HorizontalPodAutoscalerSpec:
         return self._kwargs.get('spec', HorizontalPodAutoscalerSpec())
 
 
@@ -113,7 +110,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 class ScaleSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas:  # omit empty
@@ -130,11 +127,9 @@ class ScaleSpec(types.Object):
 class Scale(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -147,5 +142,5 @@ class Scale(base.TypedObject, base.MetadataObject):
     
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> Optional[ScaleSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> ScaleSpec:
+        return self._kwargs.get('spec', ScaleSpec())

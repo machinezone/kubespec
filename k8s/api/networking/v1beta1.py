@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class IngressBackend(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['serviceName'] = self.serviceName()
         v['servicePort'] = self.servicePort()
@@ -38,7 +37,7 @@ class IngressBackend(types.Object):
 class HTTPIngressPath(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -72,7 +71,7 @@ class HTTPIngressPath(types.Object):
 class HTTPIngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['paths'] = self.paths()
         return v
@@ -90,7 +89,7 @@ class HTTPIngressRuleValue(types.Object):
 class IngressRuleValue(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         http = self.http()
         if http is not None:  # omit empty
@@ -108,7 +107,7 @@ class IngressRuleValue(types.Object):
 class IngressRule(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         host = self.host()
         if host:  # omit empty
@@ -138,15 +137,15 @@ class IngressRule(types.Object):
     # default backend, is left to the controller fulfilling the Ingress. Http is
     # currently the only supported IngressRuleValue.
     @typechecked
-    def ingressRuleValue(self) -> Optional[IngressRuleValue]:
-        return self._kwargs.get('ingressRuleValue')
+    def ingressRuleValue(self) -> IngressRuleValue:
+        return self._kwargs.get('ingressRuleValue', IngressRuleValue())
 
 
 # IngressTLS describes the transport layer security associated with an Ingress.
 class IngressTLS(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         hosts = self.hosts()
         if hosts:  # omit empty
@@ -178,7 +177,7 @@ class IngressTLS(types.Object):
 class IngressSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         backend = self.backend()
         if backend is not None:  # omit empty
@@ -222,11 +221,9 @@ class IngressSpec(types.Object):
 class Ingress(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -240,5 +237,5 @@ class Ingress(base.TypedObject, base.MetadataObject):
     # Spec is the desired state of the Ingress.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional[IngressSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> IngressSpec:
+        return self._kwargs.get('spec', IngressSpec())

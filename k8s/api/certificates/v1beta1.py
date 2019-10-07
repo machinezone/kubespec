@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -48,7 +47,7 @@ KeyUsage = base.Enum('KeyUsage', {
 class CertificateSigningRequestSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['request'] = self.request()
         usages = self.usages()
@@ -103,18 +102,16 @@ class CertificateSigningRequestSpec(types.Object):
     # See user.Info interface for details.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', addict.Dict())
+        return self._kwargs.get('extra', {})
 
 
 # Describes a certificate signing request
 class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -127,5 +124,5 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
     
     # The certificate request itself and any additional information.
     @typechecked
-    def spec(self) -> Optional[CertificateSigningRequestSpec]:
+    def spec(self) -> CertificateSigningRequestSpec:
         return self._kwargs.get('spec', CertificateSigningRequestSpec())

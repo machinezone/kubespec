@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -47,7 +46,7 @@ Stage = base.Enum('Stage', {
 class Policy(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['level'] = self.level()
         v['stages'] = self.stages()
@@ -70,7 +69,7 @@ class Policy(types.Object):
 class ServiceReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['namespace'] = self.namespace()
         v['name'] = self.name()
@@ -112,7 +111,7 @@ class ServiceReference(types.Object):
 class WebhookClientConfig(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         url = self.url()
         if url is not None:  # omit empty
@@ -173,7 +172,7 @@ class WebhookClientConfig(types.Object):
 class WebhookThrottleConfig(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         qps = self.qps()
         if qps is not None:  # omit empty
@@ -200,7 +199,7 @@ class WebhookThrottleConfig(types.Object):
 class Webhook(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         throttle = self.throttle()
         if throttle is not None:  # omit empty
@@ -224,7 +223,7 @@ class Webhook(types.Object):
 class AuditSinkSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['policy'] = self.policy()
         v['webhook'] = self.webhook()
@@ -247,11 +246,9 @@ class AuditSinkSpec(types.Object):
 class AuditSink(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -264,5 +261,5 @@ class AuditSink(base.TypedObject, base.MetadataObject):
     
     # Spec defines the audit configuration spec
     @typechecked
-    def spec(self) -> Optional[AuditSinkSpec]:
+    def spec(self) -> AuditSinkSpec:
         return self._kwargs.get('spec', AuditSinkSpec())

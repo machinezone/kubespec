@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from kargo import types
@@ -53,7 +52,7 @@ VolumeLifecycleMode = base.Enum('VolumeLifecycleMode', {
 class CSIDriverSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         attachRequired = self.attachRequired()
         if attachRequired is not None:  # omit empty
@@ -136,7 +135,7 @@ class CSIDriverSpec(types.Object):
 class CSIDriver(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -159,7 +158,7 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
 class VolumeNodeResources(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         count = self.count()
         if count is not None:  # omit empty
@@ -179,7 +178,7 @@ class VolumeNodeResources(types.Object):
 class CSINodeDriver(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['nodeID'] = self.nodeID()
@@ -233,7 +232,7 @@ class CSINodeDriver(types.Object):
 class CSINodeSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['drivers'] = self.drivers().values()  # named list
         return v
@@ -242,7 +241,7 @@ class CSINodeSpec(types.Object):
     # If all drivers in the list are uninstalled, this can become empty.
     @typechecked
     def drivers(self) -> Dict[str, CSINodeDriver]:
-        return self._kwargs.get('drivers', addict.Dict())
+        return self._kwargs.get('drivers', {})
 
 
 # CSINode holds information about all CSI drivers installed on a node.
@@ -257,7 +256,7 @@ class CSINodeSpec(types.Object):
 class CSINode(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -284,7 +283,7 @@ class CSINode(base.TypedObject, base.MetadataObject):
 class StorageClass(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['provisioner'] = self.provisioner()
         parameters = self.parameters()
@@ -324,7 +323,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # create volumes of this storage class.
     @typechecked
     def parameters(self) -> Dict[str, str]:
-        return self._kwargs.get('parameters', addict.Dict())
+        return self._kwargs.get('parameters', {})
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
@@ -367,7 +366,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
 class VolumeAttachmentSource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         persistentVolumeName = self.persistentVolumeName()
         if persistentVolumeName is not None:  # omit empty
@@ -397,7 +396,7 @@ class VolumeAttachmentSource(types.Object):
 class VolumeAttachmentSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['attacher'] = self.attacher()
         v['source'] = self.source()
@@ -428,7 +427,7 @@ class VolumeAttachmentSpec(types.Object):
 class VolumeAttachment(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v

@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -30,7 +29,7 @@ PolicyType = base.Enum('PolicyType', {
 class IPBlock(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['cidr'] = self.cidr()
         except_ = self.except_()
@@ -57,7 +56,7 @@ class IPBlock(types.Object):
 class NetworkPolicyPeer(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         podSelector = self.podSelector()
         if podSelector is not None:  # omit empty
@@ -101,7 +100,7 @@ class NetworkPolicyPeer(types.Object):
 class NetworkPolicyPort(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         protocol = self.protocol()
         if protocol is not None:  # omit empty
@@ -130,7 +129,7 @@ class NetworkPolicyPort(types.Object):
 class NetworkPolicyEgressRule(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -164,7 +163,7 @@ class NetworkPolicyEgressRule(types.Object):
 class NetworkPolicyIngressRule(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
@@ -197,7 +196,7 @@ class NetworkPolicyIngressRule(types.Object):
 class NetworkPolicySpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['podSelector'] = self.podSelector()
         ingress = self.ingress()
@@ -262,11 +261,9 @@ class NetworkPolicySpec(types.Object):
 class NetworkPolicy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -279,5 +276,5 @@ class NetworkPolicy(base.TypedObject, base.MetadataObject):
     
     # Specification of the desired behavior for this NetworkPolicy.
     @typechecked
-    def spec(self) -> Optional[NetworkPolicySpec]:
+    def spec(self) -> NetworkPolicySpec:
         return self._kwargs.get('spec', NetworkPolicySpec())

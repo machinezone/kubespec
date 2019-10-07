@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.api.authentication import v1 as authenticationv1
 from k8s.apimachinery import runtime
@@ -50,7 +49,7 @@ Stage = base.Enum('Stage', {
 class ObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         resource = self.resource()
         if resource:  # omit empty
@@ -118,7 +117,7 @@ class ObjectReference(types.Object):
 class Event(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['level'] = self.level()
         v['auditID'] = self.auditID()
@@ -255,14 +254,14 @@ class Event(base.TypedObject):
     # should be short. Annotations are included in the Metadata level.
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', addict.Dict())
+        return self._kwargs.get('annotations', {})
 
 
 # GroupResources represents resource kinds in an API group.
 class GroupResources(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         group = self.group()
         if group:  # omit empty
@@ -311,7 +310,7 @@ class GroupResources(types.Object):
 class PolicyRule(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['level'] = self.level()
         users = self.users()
@@ -395,7 +394,7 @@ class PolicyRule(types.Object):
 class Policy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['rules'] = self.rules()
         omitStages = self.omitStages()

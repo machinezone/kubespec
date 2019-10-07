@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from kargo import types
@@ -24,7 +23,7 @@ AddressType = base.Enum('AddressType', {
 class EndpointConditions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         ready = self.ready()
         if ready is not None:  # omit empty
@@ -44,12 +43,10 @@ class EndpointConditions(types.Object):
 class Endpoint(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['addresses'] = self.addresses()
-        conditions = self.conditions()
-        if conditions:  # omit empty
-            v['conditions'] = conditions
+        v['conditions'] = self.conditions()
         hostname = self.hostname()
         if hostname is not None:  # omit empty
             v['hostname'] = hostname
@@ -74,8 +71,8 @@ class Endpoint(types.Object):
     
     # conditions contains information about the current status of the endpoint.
     @typechecked
-    def conditions(self) -> Optional[EndpointConditions]:
-        return self._kwargs.get('conditions')
+    def conditions(self) -> EndpointConditions:
+        return self._kwargs.get('conditions', EndpointConditions())
     
     # hostname of this endpoint. This field may be used by consumers of
     # endpoints to distinguish endpoints from each other (e.g. in DNS names).
@@ -106,14 +103,14 @@ class Endpoint(types.Object):
     #   endpoint is located. This should match the corresponding node label.
     @typechecked
     def topology(self) -> Dict[str, str]:
-        return self._kwargs.get('topology', addict.Dict())
+        return self._kwargs.get('topology', {})
 
 
 # EndpointPort represents a Port used by an EndpointSlice
 class EndpointPort(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name is not None:  # omit empty
@@ -160,7 +157,7 @@ class EndpointPort(types.Object):
 class EndpointSlice(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['addressType'] = self.addressType()
         v['endpoints'] = self.endpoints()

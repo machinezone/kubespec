@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
@@ -113,7 +112,7 @@ SupplementalGroupsStrategyType = base.Enum('SupplementalGroupsStrategyType', {
 class AllowedCSIDriver(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         return v
@@ -128,7 +127,7 @@ class AllowedCSIDriver(types.Object):
 class AllowedFlexVolume(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['driver'] = self.driver()
         return v
@@ -144,7 +143,7 @@ class AllowedFlexVolume(types.Object):
 class AllowedHostPath(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         pathPrefix = self.pathPrefix()
         if pathPrefix:  # omit empty
@@ -177,7 +176,7 @@ class AllowedHostPath(types.Object):
 class Eviction(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         deleteOptions = self.deleteOptions()
         if deleteOptions is not None:  # omit empty
@@ -202,7 +201,7 @@ class Eviction(base.TypedObject, base.MetadataObject):
 class IDRange(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['min'] = self.min()
         v['max'] = self.max()
@@ -223,7 +222,7 @@ class IDRange(types.Object):
 class FSGroupStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         rule = self.rule()
         if rule:  # omit empty
@@ -250,7 +249,7 @@ class FSGroupStrategyOptions(types.Object):
 class HostPortRange(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['min'] = self.min()
         v['max'] = self.max()
@@ -271,7 +270,7 @@ class HostPortRange(types.Object):
 class PodDisruptionBudgetSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         minAvailable = self.minAvailable()
         if minAvailable is not None:  # omit empty
@@ -311,11 +310,9 @@ class PodDisruptionBudgetSpec(types.Object):
 class PodDisruptionBudget(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -328,15 +325,15 @@ class PodDisruptionBudget(base.TypedObject, base.MetadataObject):
     
     # Specification of the desired behavior of the PodDisruptionBudget.
     @typechecked
-    def spec(self) -> Optional[PodDisruptionBudgetSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> PodDisruptionBudgetSpec:
+        return self._kwargs.get('spec', PodDisruptionBudgetSpec())
 
 
 # RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
 class RunAsGroupStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['rule'] = self.rule()
         ranges = self.ranges()
@@ -360,7 +357,7 @@ class RunAsGroupStrategyOptions(types.Object):
 class RunAsUserStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['rule'] = self.rule()
         ranges = self.ranges()
@@ -385,7 +382,7 @@ class RunAsUserStrategyOptions(types.Object):
 class RuntimeClassStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['allowedRuntimeClassNames'] = self.allowedRuntimeClassNames()
         defaultRuntimeClassName = self.defaultRuntimeClassName()
@@ -412,7 +409,7 @@ class RuntimeClassStrategyOptions(types.Object):
 class SELinuxStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['rule'] = self.rule()
         seLinuxOptions = self.seLinuxOptions()
@@ -436,7 +433,7 @@ class SELinuxStrategyOptions(types.Object):
 class SupplementalGroupsStrategyOptions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         rule = self.rule()
         if rule:  # omit empty
@@ -462,7 +459,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
 class PodSecurityPolicySpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         privileged = self.privileged()
         if privileged:  # omit empty
@@ -648,7 +645,7 @@ class PodSecurityPolicySpec(types.Object):
     # This is an alpha field, and is only honored if the API server enables the CSIInlineVolume feature gate.
     @typechecked
     def allowedCSIDrivers(self) -> Dict[str, AllowedCSIDriver]:
-        return self._kwargs.get('allowedCSIDrivers', addict.Dict())
+        return self._kwargs.get('allowedCSIDrivers', {})
     
     # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -693,11 +690,9 @@ class PodSecurityPolicySpec(types.Object):
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -710,5 +705,5 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
     
     # spec defines the policy enforced.
     @typechecked
-    def spec(self) -> Optional[PodSecurityPolicySpec]:
+    def spec(self) -> PodSecurityPolicySpec:
         return self._kwargs.get('spec', PodSecurityPolicySpec())

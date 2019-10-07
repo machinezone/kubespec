@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
@@ -55,7 +54,7 @@ MetricTargetType = base.Enum('MetricTargetType', {
 class CrossVersionObjectReference(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['kind'] = self.kind()
         v['name'] = self.name()
@@ -84,7 +83,7 @@ class CrossVersionObjectReference(types.Object):
 class MetricIdentifier(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         selector = self.selector()
@@ -109,7 +108,7 @@ class MetricIdentifier(types.Object):
 class MetricTarget(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['type'] = self.type()
         value = self.value()
@@ -154,7 +153,7 @@ class MetricTarget(types.Object):
 class ExternalMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['metric'] = self.metric()
         v['target'] = self.target()
@@ -176,7 +175,7 @@ class ExternalMetricSource(types.Object):
 class ObjectMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['describedObject'] = self.describedObject()
         v['target'] = self.target()
@@ -205,7 +204,7 @@ class ObjectMetricSource(types.Object):
 class PodsMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['metric'] = self.metric()
         v['target'] = self.target()
@@ -232,7 +231,7 @@ class PodsMetricSource(types.Object):
 class ResourceMetricSource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['target'] = self.target()
@@ -254,7 +253,7 @@ class ResourceMetricSource(types.Object):
 class MetricSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['type'] = self.type()
         object = self.object()
@@ -313,7 +312,7 @@ class MetricSpec(types.Object):
 class HorizontalPodAutoscalerSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['scaleTargetRef'] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
@@ -365,11 +364,9 @@ class HorizontalPodAutoscalerSpec(types.Object):
 class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -383,5 +380,5 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
     # spec is the specification for the behaviour of the autoscaler.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> HorizontalPodAutoscalerSpec:
+        return self._kwargs.get('spec', HorizontalPodAutoscalerSpec())

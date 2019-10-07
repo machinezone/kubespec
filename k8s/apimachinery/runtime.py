@@ -4,7 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-import addict
+from typing import Any, Dict
+
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -63,7 +64,7 @@ class RawExtension(types.Object):
 class Unknown(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Raw'] = self.raw()
         v['ContentEncoding'] = self.contentEncoding()

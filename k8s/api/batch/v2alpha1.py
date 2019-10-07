@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.api.batch import v1 as batchv1
 from kargo import types
@@ -32,17 +31,15 @@ ConcurrencyPolicy = base.Enum('ConcurrencyPolicy', {
 class JobTemplateSpec(base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     # Specification of the desired behavior of the job.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional['batchv1.JobSpec']:
+    def spec(self) -> 'batchv1.JobSpec':
         return self._kwargs.get('spec', batchv1.JobSpec())
 
 
@@ -50,7 +47,7 @@ class JobTemplateSpec(base.MetadataObject):
 class CronJobSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['schedule'] = self.schedule()
         startingDeadlineSeconds = self.startingDeadlineSeconds()
@@ -119,11 +116,9 @@ class CronJobSpec(types.Object):
 class CronJob(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -137,7 +132,7 @@ class CronJob(base.TypedObject, base.MetadataObject):
     # Specification of the desired behavior of a cron job, including the schedule.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional[CronJobSpec]:
+    def spec(self) -> CronJobSpec:
         return self._kwargs.get('spec', CronJobSpec())
 
 
@@ -145,11 +140,9 @@ class CronJob(base.TypedObject, base.MetadataObject):
 class JobTemplate(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        template = self.template()
-        if template:  # omit empty
-            v['template'] = template
+        v['template'] = self.template()
         return v
     
     @typechecked
@@ -163,5 +156,5 @@ class JobTemplate(base.TypedObject, base.MetadataObject):
     # Defines jobs that will be created from this template.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def template(self) -> Optional[JobTemplateSpec]:
+    def template(self) -> JobTemplateSpec:
         return self._kwargs.get('template', JobTemplateSpec())

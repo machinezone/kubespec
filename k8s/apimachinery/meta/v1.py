@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -204,7 +203,7 @@ StatusReason = base.Enum('StatusReason', {
 class Preconditions(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         uid = self.uid()
         if uid is not None:  # omit empty
@@ -231,7 +230,7 @@ class Preconditions(types.Object):
 class TypeMeta(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         kind = self.kind()
         if kind:  # omit empty
@@ -263,7 +262,7 @@ class TypeMeta(types.Object):
 class DeleteOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         gracePeriodSeconds = self.gracePeriodSeconds()
         if gracePeriodSeconds is not None:  # omit empty
@@ -321,7 +320,7 @@ class DeleteOptions(base.TypedObject):
 class Duration(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['Duration'] = self.duration()
         return v
@@ -336,7 +335,7 @@ class Duration(types.Object):
 class GroupVersionKind(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['group'] = self.group()
         v['version'] = self.version()
@@ -361,7 +360,7 @@ class GroupVersionKind(types.Object):
 class GroupVersionResource(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['group'] = self.group()
         v['version'] = self.version()
@@ -386,7 +385,7 @@ class GroupVersionResource(types.Object):
 class LabelSelectorRequirement(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['key'] = self.key()
         v['operator'] = self.operator()
@@ -421,7 +420,7 @@ class LabelSelectorRequirement(types.Object):
 class LabelSelector(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         matchLabels = self.matchLabels()
         if matchLabels:  # omit empty
@@ -436,7 +435,7 @@ class LabelSelector(types.Object):
     # operator is "In", and the values array contains only "value". The requirements are ANDed.
     @typechecked
     def matchLabels(self) -> Dict[str, str]:
-        return self._kwargs.get('matchLabels', addict.Dict())
+        return self._kwargs.get('matchLabels', {})
     
     # matchExpressions is a list of label selector requirements. The requirements are ANDed.
     @typechecked
@@ -449,7 +448,7 @@ class LabelSelector(types.Object):
 class ListMeta(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         continue_ = self.continue_()
         if continue_:  # omit empty
@@ -489,7 +488,7 @@ class ListMeta(types.Object):
 class ObjectMeta(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -533,7 +532,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        return self._kwargs.get('labels', addict.Dict())
+        return self._kwargs.get('labels', {})
     
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -541,7 +540,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', addict.Dict())
+        return self._kwargs.get('annotations', {})
 
 
 # StatusCause provides more information about an api.Status failure, including
@@ -549,7 +548,7 @@ class ObjectMeta(types.Object):
 class StatusCause(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         reason = self.reason()
         if reason:  # omit empty
@@ -597,7 +596,7 @@ class StatusCause(types.Object):
 class StatusDetails(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
@@ -662,11 +661,9 @@ class StatusDetails(types.Object):
 class Status(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        metadata = self.metadata()
-        if metadata:  # omit empty
-            v['metadata'] = metadata
+        v['metadata'] = self.metadata()
         status = self.status()
         if status:  # omit empty
             v['status'] = status
@@ -687,8 +684,8 @@ class Status(base.TypedObject):
     # Standard list metadata.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
-    def metadata(self) -> Optional[ListMeta]:
-        return self._kwargs.get('metadata')
+    def metadata(self) -> ListMeta:
+        return self._kwargs.get('metadata', ListMeta())
     
     # Status of the operation.
     # One of: "Success" or "Failure".

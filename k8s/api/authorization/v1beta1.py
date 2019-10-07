@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class NonResourceAttributes(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
@@ -41,7 +40,7 @@ class NonResourceAttributes(types.Object):
 class ResourceAttributes(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         namespace = self.namespace()
         if namespace:  # omit empty
@@ -110,7 +109,7 @@ class ResourceAttributes(types.Object):
 class SubjectAccessReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         resourceAttributes = self.resourceAttributes()
         if resourceAttributes is not None:  # omit empty
@@ -157,7 +156,7 @@ class SubjectAccessReviewSpec(types.Object):
     # it needs a reflection here.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', addict.Dict())
+        return self._kwargs.get('extra', {})
     
     # UID information about the requesting user.
     @typechecked
@@ -171,7 +170,7 @@ class SubjectAccessReviewSpec(types.Object):
 class LocalSubjectAccessReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -196,7 +195,7 @@ class LocalSubjectAccessReview(base.TypedObject, base.MetadataObject):
 class SelfSubjectAccessReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         resourceAttributes = self.resourceAttributes()
         if resourceAttributes is not None:  # omit empty
@@ -223,7 +222,7 @@ class SelfSubjectAccessReviewSpec(types.Object):
 class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -245,7 +244,7 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
 class SelfSubjectRulesReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         namespace = self.namespace()
         if namespace:  # omit empty
@@ -267,7 +266,7 @@ class SelfSubjectRulesReviewSpec(types.Object):
 class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v
@@ -290,7 +289,7 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
 class SubjectAccessReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v

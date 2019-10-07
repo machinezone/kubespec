@@ -5,7 +5,6 @@
 import base64
 from typing import Any, Dict, Union
 
-import addict
 from kargo import context
 from typeguard import typechecked
 
@@ -20,10 +19,10 @@ class Object(Renderable):
 
     @context.scoped
     def __init__(self, **kwargs):
-        self._kwargs = addict.Dict(kwargs)
+        self._kwargs = kwargs
 
-    def render(self) -> Dict:
-        return addict.Dict()
+    def render(self) -> Dict[str, Any]:
+        return {}
 
 
 @typechecked

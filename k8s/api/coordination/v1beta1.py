@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class LeaseSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         holderIdentity = self.holderIdentity()
         if holderIdentity is not None:  # omit empty
@@ -69,11 +68,9 @@ class LeaseSpec(types.Object):
 class Lease(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
-        spec = self.spec()
-        if spec:  # omit empty
-            v['spec'] = spec
+        v['spec'] = self.spec()
         return v
     
     @typechecked
@@ -87,5 +84,5 @@ class Lease(base.TypedObject, base.MetadataObject):
     # Specification of the Lease.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> Optional[LeaseSpec]:
-        return self._kwargs.get('spec')
+    def spec(self) -> LeaseSpec:
+        return self._kwargs.get('spec', LeaseSpec())

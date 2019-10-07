@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
@@ -19,7 +18,7 @@ from typeguard import typechecked
 class MetricIdentifier(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['name'] = self.name()
         v['selector'] = self.selector()
@@ -43,7 +42,7 @@ class MetricIdentifier(types.Object):
 class MetricListOptions(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         labelSelector = self.labelSelector()
         if labelSelector:  # omit empty
@@ -77,7 +76,7 @@ class MetricListOptions(base.TypedObject):
 class MetricValue(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['describedObject'] = self.describedObject()
         v['metric'] = self.metric()

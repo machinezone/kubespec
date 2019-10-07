@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-import addict
 from k8s import base
 from kargo import types
 from typeguard import typechecked
@@ -16,7 +15,7 @@ from typeguard import typechecked
 class ImageReviewContainerSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         image = self.image()
         if image:  # omit empty
@@ -33,7 +32,7 @@ class ImageReviewContainerSpec(types.Object):
 class ImageReviewSpec(types.Object):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         containers = self.containers()
         if containers:  # omit empty
@@ -56,7 +55,7 @@ class ImageReviewSpec(types.Object):
     # It is up to each webhook backend to determine how to interpret these annotations, if at all.
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', addict.Dict())
+        return self._kwargs.get('annotations', {})
     
     # Namespace is the namespace the pod is being created in.
     @typechecked
@@ -68,7 +67,7 @@ class ImageReviewSpec(types.Object):
 class ImageReview(base.TypedObject, base.MetadataObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['spec'] = self.spec()
         return v

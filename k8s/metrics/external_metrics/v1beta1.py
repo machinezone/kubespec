@@ -4,9 +4,8 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
-import addict
 from k8s import base
 from k8s.apimachinery import resource
 from kargo import types
@@ -19,7 +18,7 @@ from typeguard import typechecked
 class ExternalMetricValue(base.TypedObject):
 
     @typechecked
-    def render(self) -> addict.Dict:
+    def render(self) -> Dict[str, Any]:
         v = super().render()
         v['metricName'] = self.metricName()
         v['metricLabels'] = self.metricLabels()
@@ -46,7 +45,7 @@ class ExternalMetricValue(base.TypedObject):
     # a set of labels that identify a single time series for the metric
     @typechecked
     def metricLabels(self) -> Dict[str, str]:
-        return self._kwargs.get('metricLabels', addict.Dict())
+        return self._kwargs.get('metricLabels', {})
     
     # indicates the time at which the metrics were produced
     @typechecked
