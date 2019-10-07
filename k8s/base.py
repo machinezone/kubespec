@@ -13,9 +13,7 @@ from typeguard import check_return_type, typechecked
 
 @typechecked
 def Enum(name: str, values: Dict[str, str]):
-
     class _cls(types.Renderable, str, enum.Enum):
-
         def render(self) -> str:
             return self.value
 
@@ -23,16 +21,15 @@ def Enum(name: str, values: Dict[str, str]):
 
 
 class TypedObject(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         apiVersion = self.apiVersion()
         if apiVersion:  # omitempty
-            v['apiVersion'] = apiVersion
+            v["apiVersion"] = apiVersion
         kind = self.kind()
         if kind:  # omitempty
-            v['kind'] = kind
+            v["kind"] = kind
         return v
 
     # APIVersion defines the versioned schema of this representation of an object.
@@ -41,10 +38,12 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if 'apiVersion' in self._kwargs:
-            return self._kwargs['apiVersion']
-        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
-            return self._context['apiVersion']
+        if "apiVersion" in self._kwargs:
+            return self._kwargs["apiVersion"]
+        if "apiVersion" in self._context and check_return_type(
+            self._context["apiVersion"]
+        ):
+            return self._context["apiVersion"]
         return None
 
     # Kind is a string value representing the REST resource this object represents.
@@ -54,32 +53,31 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        if 'kind' in self._kwargs:
-            return self._kwargs['kind']
-        if 'kind' in self._context and check_return_type(self._context['kind']):
-            return self._context['kind']
+        if "kind" in self._kwargs:
+            return self._kwargs["kind"]
+        if "kind" in self._context and check_return_type(self._context["kind"]):
+            return self._context["kind"]
         return None
 
 
 class MetadataObject(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        metadata = v.get('metadata', {})
+        metadata = v.get("metadata", {})
         name = self.name()
         if name:  # omitempty
-            metadata['name'] = name
+            metadata["name"] = name
         namespace = self.namespace()
         if namespace:  # omitempty
-            metadata['namespace'] = namespace
+            metadata["namespace"] = namespace
         labels = self.labels()
         if labels:  # omitempty
-            metadata['labels'] = labels
+            metadata["labels"] = labels
         annotations = self.annotations()
         if annotations:  # omitempty
-            metadata['annotations'] = annotations
-        v['metadata'] = metadata
+            metadata["annotations"] = annotations
+        v["metadata"] = metadata
         return v
 
     # Name must be unique within a namespace. Is required when creating resources, although
@@ -90,10 +88,10 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
 
     # Namespace defines the space within each name must be unique. An empty namespace is
@@ -106,21 +104,24 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        if 'namespace' in self._kwargs:
-            return self._kwargs['namespace']
-        if 'namespace' in self._context and check_return_type(self._context['namespace']):
-            return self._context['namespace']
+        if "namespace" in self._kwargs:
+            return self._kwargs["namespace"]
+        if "namespace" in self._context and check_return_type(
+            self._context["namespace"]
+        ):
+            return self._context["namespace"]
         return None
+
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
     # and services.
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        if 'labels' in self._kwargs:
-            return self._kwargs['labels']
-        if 'labels' in self._context and check_return_type(self._context['labels']):
-            return self._context['labels']
+        if "labels" in self._kwargs:
+            return self._kwargs["labels"]
+        if "labels" in self._context and check_return_type(self._context["labels"]):
+            return self._context["labels"]
         return {}
 
     # Annotations is an unstructured key value map stored with a resource that may be
@@ -129,15 +130,18 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        if 'annotations' in self._kwargs:
-            return self._kwargs['annotations']
-        if 'annotations' in self._context and check_return_type(self._context['annotations']):
-            return self._context['annotations']
+        if "annotations" in self._kwargs:
+            return self._kwargs["annotations"]
+        if "annotations" in self._context and check_return_type(
+            self._context["annotations"]
+        ):
+            return self._context["annotations"]
         return {}
+
 
 class Time(types.Renderable):
 
-    _format = '%Y-%m-%dT%H:%M:%SZ'
+    _format = "%Y-%m-%dT%H:%M:%SZ"
 
     def __init__(self, time: DateTime):
         self.time = time
@@ -148,4 +152,4 @@ class Time(types.Renderable):
 
 class MicroTime(Time):
 
-    _format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    _format = "%Y-%m-%dT%H:%M:%S.%fZ"

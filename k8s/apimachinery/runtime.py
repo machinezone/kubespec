@@ -13,11 +13,11 @@ from typeguard import check_return_type, typechecked
 
 
 # RawExtension is used to hold extensions in external versions.
-# 
+#
 # To use this, make a field which has RawExtension as its type in your external, versioned
 # struct, and Object in your internal struct. You also need to register your
 # various plugin types.
-# 
+#
 # // Internal package:
 # type MyAPIObject struct {
 # 	runtime.TypeMeta `json:",inline"`
@@ -26,7 +26,7 @@ from typeguard import check_return_type, typechecked
 # type PluginA struct {
 # 	AOption string `json:"aOption"`
 # }
-# 
+#
 # // External package:
 # type MyAPIObject struct {
 # 	runtime.TypeMeta `json:",inline"`
@@ -35,7 +35,7 @@ from typeguard import check_return_type, typechecked
 # type PluginA struct {
 # 	AOption string `json:"aOption"`
 # }
-# 
+#
 # // On the wire, the JSON will look something like this:
 # {
 # 	"kind":"MyAPIObject",
@@ -45,7 +45,7 @@ from typeguard import check_return_type, typechecked
 # 		"aOption":"foo",
 # 	},
 # }
-# 
+#
 # So what happens? Decode first uses json or yaml to unmarshal the serialized data into
 # your external MyAPIObject. That causes the raw JSON to be stored, but not unpacked.
 # The next step is to copy (using pkg/conversion) into the internal struct. The runtime
@@ -63,42 +63,45 @@ class RawExtension(types.Object):
 # TODO: Make this object have easy access to field based accessors and settors for
 # metadata and field mutatation.
 class Unknown(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['Raw'] = self.raw()
-        v['ContentEncoding'] = self.contentEncoding()
-        v['ContentType'] = self.contentType()
+        v["Raw"] = self.raw()
+        v["ContentEncoding"] = self.contentEncoding()
+        v["ContentType"] = self.contentType()
         return v
-    
+
     # Raw will hold the complete serialized object which couldn't be matched
     # with a registered type. Most likely, nothing should be done with this
     # except for passing it through the system.
     @typechecked
     def raw(self) -> bytes:
-        if 'Raw' in self._kwargs:
-            return self._kwargs['Raw']
-        if 'Raw' in self._context and check_return_type(self._context['Raw']):
-            return self._context['Raw']
-        return b''
-    
+        if "Raw" in self._kwargs:
+            return self._kwargs["Raw"]
+        if "Raw" in self._context and check_return_type(self._context["Raw"]):
+            return self._context["Raw"]
+        return b""
+
     # ContentEncoding is encoding used to encode 'Raw' data.
     # Unspecified means no encoding.
     @typechecked
     def contentEncoding(self) -> str:
-        if 'ContentEncoding' in self._kwargs:
-            return self._kwargs['ContentEncoding']
-        if 'ContentEncoding' in self._context and check_return_type(self._context['ContentEncoding']):
-            return self._context['ContentEncoding']
-        return ''
-    
+        if "ContentEncoding" in self._kwargs:
+            return self._kwargs["ContentEncoding"]
+        if "ContentEncoding" in self._context and check_return_type(
+            self._context["ContentEncoding"]
+        ):
+            return self._context["ContentEncoding"]
+        return ""
+
     # ContentType  is serialization method used to serialize 'Raw'.
     # Unspecified means ContentTypeJSON.
     @typechecked
     def contentType(self) -> str:
-        if 'ContentType' in self._kwargs:
-            return self._kwargs['ContentType']
-        if 'ContentType' in self._context and check_return_type(self._context['ContentType']):
-            return self._context['ContentType']
-        return ''
+        if "ContentType" in self._kwargs:
+            return self._kwargs["ContentType"]
+        if "ContentType" in self._context and check_return_type(
+            self._context["ContentType"]
+        ):
+            return self._context["ContentType"]
+        return ""

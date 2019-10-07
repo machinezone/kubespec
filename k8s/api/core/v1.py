@@ -14,537 +14,611 @@ from kargo import types
 from typeguard import check_return_type, typechecked
 
 
-AzureDataDiskCachingMode = base.Enum('AzureDataDiskCachingMode', {
-    'None': 'None',
-    'ReadOnly': 'ReadOnly',
-    'ReadWrite': 'ReadWrite',
-})
+AzureDataDiskCachingMode = base.Enum(
+    "AzureDataDiskCachingMode",
+    {"None": "None", "ReadOnly": "ReadOnly", "ReadWrite": "ReadWrite"},
+)
 
 
-AzureDataDiskKind = base.Enum('AzureDataDiskKind', {
-    'Dedicated': 'Dedicated',
-    'Managed': 'Managed',
-    'Shared': 'Shared',
-})
+AzureDataDiskKind = base.Enum(
+    "AzureDataDiskKind",
+    {"Dedicated": "Dedicated", "Managed": "Managed", "Shared": "Shared"},
+)
 
 
 # See: https://en.wikibooks.org/wiki/Grsecurity/Appendix/Capability_Names_and_Descriptions
-Capability = base.Enum('Capability', {
-    'ALL': 'ALL',
-    'AUDIT_CONTROL': 'AUDIT_CONTROL',
-    'AUDIT_WRITE': 'AUDIT_WRITE',
-    'CHOWN': 'CHOWN',
-    'DAC_OVERRIDE': 'DAC_OVERRIDE',
-    'DAC_READ_SEARCH': 'DAC_READ_SEARCH',
-    'FOWNER': 'FOWNER',
-    'FSETID': 'FSETID',
-    'IPC_LOCK': 'IPC_LOCK',
-    'IPC_OWNER': 'IPC_OWNER',
-    'KILL': 'KILL',
-    'LEASE': 'LEASE',
-    'LINUX_IMMUTABLE': 'LINUX_IMMUTABLE',
-    'MAC_ADMIN': 'MAC_ADMIN',
-    'MAC_OVERRIDE': 'MAC_OVERRIDE',
-    'MKNOD': 'MKNOD',
-    'NET_ADMIN': 'NET_ADMIN',
-    'NET_BIND_SERVICE': 'NET_BIND_SERVICE',
-    'NET_BROADCAST': 'NET_BROADCAST',
-    'NET_RAW': 'NET_RAW',
-    'SETFCAP': 'SETFCAP',
-    'SETGID': 'SETGID',
-    'SETPCAP': 'SETPCAP',
-    'SETUID': 'SETUID',
-    'SYSLOG': 'SYSLOG',
-    'SYS_ADMIN': 'SYS_ADMIN',
-    'SYS_BOOT': 'SYS_BOOT',
-    'SYS_CHROOT': 'SYS_CHROOT',
-    'SYS_MODULE': 'SYS_MODULE',
-    'SYS_NICE': 'SYS_NICE',
-    'SYS_PACCT': 'SYS_PACCT',
-    'SYS_PTRACE': 'SYS_PTRACE',
-    'SYS_RAWIO': 'SYS_RAWIO',
-    'SYS_RESOURCE': 'SYS_RESOURCE',
-    'SYS_TIME': 'SYS_TIME',
-    'SYS_TTY_CONFIG': 'SYS_TTY_CONFIG',
-    'WAKE_ALARM': 'WAKE_ALARM',
-})
+Capability = base.Enum(
+    "Capability",
+    {
+        "ALL": "ALL",
+        "AUDIT_CONTROL": "AUDIT_CONTROL",
+        "AUDIT_WRITE": "AUDIT_WRITE",
+        "CHOWN": "CHOWN",
+        "DAC_OVERRIDE": "DAC_OVERRIDE",
+        "DAC_READ_SEARCH": "DAC_READ_SEARCH",
+        "FOWNER": "FOWNER",
+        "FSETID": "FSETID",
+        "IPC_LOCK": "IPC_LOCK",
+        "IPC_OWNER": "IPC_OWNER",
+        "KILL": "KILL",
+        "LEASE": "LEASE",
+        "LINUX_IMMUTABLE": "LINUX_IMMUTABLE",
+        "MAC_ADMIN": "MAC_ADMIN",
+        "MAC_OVERRIDE": "MAC_OVERRIDE",
+        "MKNOD": "MKNOD",
+        "NET_ADMIN": "NET_ADMIN",
+        "NET_BIND_SERVICE": "NET_BIND_SERVICE",
+        "NET_BROADCAST": "NET_BROADCAST",
+        "NET_RAW": "NET_RAW",
+        "SETFCAP": "SETFCAP",
+        "SETGID": "SETGID",
+        "SETPCAP": "SETPCAP",
+        "SETUID": "SETUID",
+        "SYSLOG": "SYSLOG",
+        "SYS_ADMIN": "SYS_ADMIN",
+        "SYS_BOOT": "SYS_BOOT",
+        "SYS_CHROOT": "SYS_CHROOT",
+        "SYS_MODULE": "SYS_MODULE",
+        "SYS_NICE": "SYS_NICE",
+        "SYS_PACCT": "SYS_PACCT",
+        "SYS_PTRACE": "SYS_PTRACE",
+        "SYS_RAWIO": "SYS_RAWIO",
+        "SYS_RESOURCE": "SYS_RESOURCE",
+        "SYS_TIME": "SYS_TIME",
+        "SYS_TTY_CONFIG": "SYS_TTY_CONFIG",
+        "WAKE_ALARM": "WAKE_ALARM",
+    },
+)
 
 
 # Type and constants for component health validation.
-ComponentConditionType = base.Enum('ComponentConditionType', {
-    # These are the valid conditions for the component.
-    'Healthy': 'Healthy',
-})
+ComponentConditionType = base.Enum(
+    "ComponentConditionType",
+    {
+        # These are the valid conditions for the component.
+        "Healthy": "Healthy"
+    },
+)
 
 
-ConditionStatus = base.Enum('ConditionStatus', {
-    'False': 'False',
-    'True': 'True',
-    'Unknown': 'Unknown',
-})
+ConditionStatus = base.Enum(
+    "ConditionStatus", {"False": "False", "True": "True", "Unknown": "Unknown"}
+)
 
 
 # DNSPolicy defines how a pod's DNS will be configured.
-DNSPolicy = base.Enum('DNSPolicy', {
-    # ClusterFirst indicates that the pod should use cluster DNS
-    # first unless hostNetwork is true, if it is available, then
-    # fall back on the default (as determined by kubelet) DNS settings.
-    'ClusterFirst': 'ClusterFirst',
-    # ClusterFirstWithHostNet indicates that the pod should use cluster DNS
-    # first, if it is available, then fall back on the default
-    # (as determined by kubelet) DNS settings.
-    'ClusterFirstWithHostNet': 'ClusterFirstWithHostNet',
-    # Default indicates that the pod should use the default (as
-    # determined by kubelet) DNS settings.
-    'Default': 'Default',
-    # None indicates that the pod should use empty DNS settings. DNS
-    # parameters such as nameservers and search paths should be defined via
-    # DNSConfig.
-    'None': 'None',
-})
+DNSPolicy = base.Enum(
+    "DNSPolicy",
+    {
+        # ClusterFirst indicates that the pod should use cluster DNS
+        # first unless hostNetwork is true, if it is available, then
+        # fall back on the default (as determined by kubelet) DNS settings.
+        "ClusterFirst": "ClusterFirst",
+        # ClusterFirstWithHostNet indicates that the pod should use cluster DNS
+        # first, if it is available, then fall back on the default
+        # (as determined by kubelet) DNS settings.
+        "ClusterFirstWithHostNet": "ClusterFirstWithHostNet",
+        # Default indicates that the pod should use the default (as
+        # determined by kubelet) DNS settings.
+        "Default": "Default",
+        # None indicates that the pod should use empty DNS settings. DNS
+        # parameters such as nameservers and search paths should be defined via
+        # DNSConfig.
+        "None": "None",
+    },
+)
 
 
 # FinalizerName is the name identifying a finalizer during namespace lifecycle.
-FinalizerName = base.Enum('FinalizerName', {
-    # These are internal finalizer values to Kubernetes, must be qualified name unless defined here or
-    # in metav1.
-    'Kubernetes': 'kubernetes',
-})
+FinalizerName = base.Enum(
+    "FinalizerName",
+    {
+        # These are internal finalizer values to Kubernetes, must be qualified name unless defined here or
+        # in metav1.
+        "Kubernetes": "kubernetes"
+    },
+)
 
 
-HostPathType = base.Enum('HostPathType', {
-    # A block device must exist at the given path
-    'BlockDev': 'BlockDevice',
-    # A character device must exist at the given path
-    'CharDev': 'CharDevice',
-    # A directory must exist at the given path
-    'Directory': 'Directory',
-    # If nothing exists at the given path, an empty directory will be created there
-    # as needed with file mode 0755, having the same group and ownership with Kubelet.
-    'DirectoryOrCreate': 'DirectoryOrCreate',
-    # A file must exist at the given path
-    'File': 'File',
-    # If nothing exists at the given path, an empty file will be created there
-    # as needed with file mode 0644, having the same group and ownership with Kubelet.
-    'FileOrCreate': 'FileOrCreate',
-    # A UNIX socket must exist at the given path
-    'Socket': 'Socket',
-    # For backwards compatible, leave it empty if unset
-    'Unset': '',
-})
+HostPathType = base.Enum(
+    "HostPathType",
+    {
+        # A block device must exist at the given path
+        "BlockDev": "BlockDevice",
+        # A character device must exist at the given path
+        "CharDev": "CharDevice",
+        # A directory must exist at the given path
+        "Directory": "Directory",
+        # If nothing exists at the given path, an empty directory will be created there
+        # as needed with file mode 0755, having the same group and ownership with Kubelet.
+        "DirectoryOrCreate": "DirectoryOrCreate",
+        # A file must exist at the given path
+        "File": "File",
+        # If nothing exists at the given path, an empty file will be created there
+        # as needed with file mode 0644, having the same group and ownership with Kubelet.
+        "FileOrCreate": "FileOrCreate",
+        # A UNIX socket must exist at the given path
+        "Socket": "Socket",
+        # For backwards compatible, leave it empty if unset
+        "Unset": "",
+    },
+)
 
 
 # IPFamily represents the IP Family (IPv4 or IPv6). This type is used
 # to express the family of an IP expressed by a type (i.e. service.Spec.IPFamily)
-IPFamily = base.Enum('IPFamily', {
-    # IPv4 indicates that this IP is IPv4 protocol
-    'IPv4': 'IPv4',
-    # IPv6 indicates that this IP is IPv6 protocol
-    'IPv6': 'IPv6',
-})
+IPFamily = base.Enum(
+    "IPFamily",
+    {
+        # IPv4 indicates that this IP is IPv4 protocol
+        "IPv4": "IPv4",
+        # IPv6 indicates that this IP is IPv6 protocol
+        "IPv6": "IPv6",
+    },
+)
 
 
 # LimitType is a type of object that is limited
-LimitType = base.Enum('LimitType', {
-    # Limit that applies to all containers in a namespace
-    'Container': 'Container',
-    # Limit that applies to all persistent volume claims in a namespace
-    'PersistentVolumeClaim': 'PersistentVolumeClaim',
-    # Limit that applies to all pods in a namespace
-    'Pod': 'Pod',
-})
+LimitType = base.Enum(
+    "LimitType",
+    {
+        # Limit that applies to all containers in a namespace
+        "Container": "Container",
+        # Limit that applies to all persistent volume claims in a namespace
+        "PersistentVolumeClaim": "PersistentVolumeClaim",
+        # Limit that applies to all pods in a namespace
+        "Pod": "Pod",
+    },
+)
 
 
 # MountPropagationMode describes mount propagation.
-MountPropagationMode = base.Enum('MountPropagationMode', {
-    # Bidirectional means that the volume in a container will
-    # receive new mounts from the host or other containers, and its own mounts
-    # will be propagated from the container to the host or other containers.
-    # Note that this mode is recursively applied to all mounts in the volume
-    # ("rshared" in Linux terminology).
-    'Bidirectional': 'Bidirectional',
-    # HostToContainer means that the volume in a container will
-    # receive new mounts from the host or other containers, but filesystems
-    # mounted inside the container won't be propagated to the host or other
-    # containers.
-    # Note that this mode is recursively applied to all mounts in the volume
-    # ("rslave" in Linux terminology).
-    'HostToContainer': 'HostToContainer',
-    # None means that the volume in a container will
-    # not receive new mounts from the host or other containers, and filesystems
-    # mounted inside the container won't be propagated to the host or other
-    # containers.
-    # Note that this mode corresponds to "private" in Linux terminology.
-    'None': 'None',
-})
+MountPropagationMode = base.Enum(
+    "MountPropagationMode",
+    {
+        # Bidirectional means that the volume in a container will
+        # receive new mounts from the host or other containers, and its own mounts
+        # will be propagated from the container to the host or other containers.
+        # Note that this mode is recursively applied to all mounts in the volume
+        # ("rshared" in Linux terminology).
+        "Bidirectional": "Bidirectional",
+        # HostToContainer means that the volume in a container will
+        # receive new mounts from the host or other containers, but filesystems
+        # mounted inside the container won't be propagated to the host or other
+        # containers.
+        # Note that this mode is recursively applied to all mounts in the volume
+        # ("rslave" in Linux terminology).
+        "HostToContainer": "HostToContainer",
+        # None means that the volume in a container will
+        # not receive new mounts from the host or other containers, and filesystems
+        # mounted inside the container won't be propagated to the host or other
+        # containers.
+        # Note that this mode corresponds to "private" in Linux terminology.
+        "None": "None",
+    },
+)
 
 
 # A node selector operator is the set of operators that can be used in
 # a node selector requirement.
-NodeSelectorOperator = base.Enum('NodeSelectorOperator', {
-    'DoesNotExist': 'DoesNotExist',
-    'Exists': 'Exists',
-    'Gt': 'Gt',
-    'In': 'In',
-    'Lt': 'Lt',
-    'NotIn': 'NotIn',
-})
+NodeSelectorOperator = base.Enum(
+    "NodeSelectorOperator",
+    {
+        "DoesNotExist": "DoesNotExist",
+        "Exists": "Exists",
+        "Gt": "Gt",
+        "In": "In",
+        "Lt": "Lt",
+        "NotIn": "NotIn",
+    },
+)
 
 
-PersistentVolumeAccessMode = base.Enum('PersistentVolumeAccessMode', {
-    # can be mounted in read-only mode to many hosts
-    'ReadOnlyMany': 'ReadOnlyMany',
-    # can be mounted in read/write mode to many hosts
-    'ReadWriteMany': 'ReadWriteMany',
-    # can be mounted in read/write mode to exactly 1 host
-    'ReadWriteOnce': 'ReadWriteOnce',
-})
+PersistentVolumeAccessMode = base.Enum(
+    "PersistentVolumeAccessMode",
+    {
+        # can be mounted in read-only mode to many hosts
+        "ReadOnlyMany": "ReadOnlyMany",
+        # can be mounted in read/write mode to many hosts
+        "ReadWriteMany": "ReadWriteMany",
+        # can be mounted in read/write mode to exactly 1 host
+        "ReadWriteOnce": "ReadWriteOnce",
+    },
+)
 
 
 # PersistentVolumeMode describes how a volume is intended to be consumed, either Block or Filesystem.
-PersistentVolumeMode = base.Enum('PersistentVolumeMode', {
-    # Block means the volume will not be formatted with a filesystem and will remain a raw block device.
-    'Block': 'Block',
-    # Filesystem means the volume will be or is formatted with a filesystem.
-    'Filesystem': 'Filesystem',
-})
+PersistentVolumeMode = base.Enum(
+    "PersistentVolumeMode",
+    {
+        # Block means the volume will not be formatted with a filesystem and will remain a raw block device.
+        "Block": "Block",
+        # Filesystem means the volume will be or is formatted with a filesystem.
+        "Filesystem": "Filesystem",
+    },
+)
 
 
 # PersistentVolumeReclaimPolicy describes a policy for end-of-life maintenance of persistent volumes.
-PersistentVolumeReclaimPolicy = base.Enum('PersistentVolumeReclaimPolicy', {
-    # Delete means the volume will be deleted from Kubernetes on release from its claim.
-    # The volume plugin must support Deletion.
-    'Delete': 'Delete',
-    # Recycle means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim.
-    # The volume plugin must support Recycling.
-    'Recycle': 'Recycle',
-    # Retain means the volume will be left in its current phase (Released) for manual reclamation by the administrator.
-    # The default policy is Retain.
-    'Retain': 'Retain',
-})
+PersistentVolumeReclaimPolicy = base.Enum(
+    "PersistentVolumeReclaimPolicy",
+    {
+        # Delete means the volume will be deleted from Kubernetes on release from its claim.
+        # The volume plugin must support Deletion.
+        "Delete": "Delete",
+        # Recycle means the volume will be recycled back into the pool of unbound persistent volumes on release from its claim.
+        # The volume plugin must support Recycling.
+        "Recycle": "Recycle",
+        # Retain means the volume will be left in its current phase (Released) for manual reclamation by the administrator.
+        # The default policy is Retain.
+        "Retain": "Retain",
+    },
+)
 
 
 # PodConditionType is a valid value for PodCondition.Type
-PodConditionType = base.Enum('PodConditionType', {
-    # ContainersReady indicates whether all containers in the pod are ready.
-    'ContainersReady': 'ContainersReady',
-    # Initialized means that all init containers in the pod have started successfully.
-    'Initialized': 'Initialized',
-    # PodScheduled represents status of the scheduling process for this pod.
-    'PodScheduled': 'PodScheduled',
-    # Ready means the pod is able to service requests and should be added to the
-    # load balancing pools of all matching services.
-    'Ready': 'Ready',
-})
+PodConditionType = base.Enum(
+    "PodConditionType",
+    {
+        # ContainersReady indicates whether all containers in the pod are ready.
+        "ContainersReady": "ContainersReady",
+        # Initialized means that all init containers in the pod have started successfully.
+        "Initialized": "Initialized",
+        # PodScheduled represents status of the scheduling process for this pod.
+        "PodScheduled": "PodScheduled",
+        # Ready means the pod is able to service requests and should be added to the
+        # load balancing pools of all matching services.
+        "Ready": "Ready",
+    },
+)
 
 
 # PreemptionPolicy describes a policy for if/when to preempt a pod.
-PreemptionPolicy = base.Enum('PreemptionPolicy', {
-    # Never means that pod never preempts other pods with lower priority.
-    'Never': 'Never',
-    # PreemptLowerPriority means that pod can preempt other pods with lower priority.
-    'PreemptLowerPriority': 'PreemptLowerPriority',
-})
+PreemptionPolicy = base.Enum(
+    "PreemptionPolicy",
+    {
+        # Never means that pod never preempts other pods with lower priority.
+        "Never": "Never",
+        # PreemptLowerPriority means that pod can preempt other pods with lower priority.
+        "PreemptLowerPriority": "PreemptLowerPriority",
+    },
+)
 
 
-ProcMountType = base.Enum('ProcMountType', {
-    # Default uses the container runtime defaults for readonly and masked
-    # paths for /proc.  Most container runtimes mask certain paths in /proc to avoid
-    # accidental security exposure of special devices or information.
-    'Default': 'Default',
-    # Unmasked bypasses the default masking behavior of the container
-    # runtime and ensures the newly created /proc the container stays in tact with
-    # no modifications.
-    'Unmasked': 'Unmasked',
-})
+ProcMountType = base.Enum(
+    "ProcMountType",
+    {
+        # Default uses the container runtime defaults for readonly and masked
+        # paths for /proc.  Most container runtimes mask certain paths in /proc to avoid
+        # accidental security exposure of special devices or information.
+        "Default": "Default",
+        # Unmasked bypasses the default masking behavior of the container
+        # runtime and ensures the newly created /proc the container stays in tact with
+        # no modifications.
+        "Unmasked": "Unmasked",
+    },
+)
 
 
 # Protocol defines network protocols supported for things like container ports.
-Protocol = base.Enum('Protocol', {
-    # SCTP is the SCTP protocol.
-    'SCTP': 'SCTP',
-    # TCP is the TCP protocol.
-    'TCP': 'TCP',
-    # UDP is the UDP protocol.
-    'UDP': 'UDP',
-})
+Protocol = base.Enum(
+    "Protocol",
+    {
+        # SCTP is the SCTP protocol.
+        "SCTP": "SCTP",
+        # TCP is the TCP protocol.
+        "TCP": "TCP",
+        # UDP is the UDP protocol.
+        "UDP": "UDP",
+    },
+)
 
 
 # PullPolicy describes a policy for if/when to pull a container image
-PullPolicy = base.Enum('PullPolicy', {
-    # Always means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.
-    'Always': 'Always',
-    # IfNotPresent means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.
-    'IfNotPresent': 'IfNotPresent',
-    # Never means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present
-    'Never': 'Never',
-})
+PullPolicy = base.Enum(
+    "PullPolicy",
+    {
+        # Always means that kubelet always attempts to pull the latest image. Container will fail If the pull fails.
+        "Always": "Always",
+        # IfNotPresent means that kubelet pulls if the image isn't present on disk. Container will fail if the image isn't present and the pull fails.
+        "IfNotPresent": "IfNotPresent",
+        # Never means that kubelet never pulls an image, but only uses a local image. Container will fail if the image isn't present
+        "Never": "Never",
+    },
+)
 
 
 # ResourceName is the name identifying various resources in a ResourceList.
-ResourceName = base.Enum('ResourceName', {
-    # CPU, in cores. (500m = .5 cores)
-    'CPU': 'cpu',
-    # ConfigMaps, number
-    'ConfigMaps': 'configmaps',
-    # Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    # The resource name for EphemeralStorage is alpha and it can change across releases.
-    'EphemeralStorage': 'ephemeral-storage',
-    # CPU limit, in cores. (500m = .5 cores)
-    'LimitsCPU': 'limits.cpu',
-    # Local ephemeral storage limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    'LimitsEphemeralStorage': 'limits.ephemeral-storage',
-    # Memory limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    'LimitsMemory': 'limits.memory',
-    # Memory, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    'Memory': 'memory',
-    # PersistentVolumeClaims, number
-    'PersistentVolumeClaims': 'persistentvolumeclaims',
-    # Pods, number
-    'Pods': 'pods',
-    # ReplicationControllers, number
-    'ReplicationControllers': 'replicationcontrollers',
-    # CPU request, in cores. (500m = .5 cores)
-    'RequestsCPU': 'requests.cpu',
-    # Local ephemeral storage request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    'RequestsEphemeralStorage': 'requests.ephemeral-storage',
-    # Memory request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
-    'RequestsMemory': 'requests.memory',
-    # Storage request, in bytes
-    'RequestsStorage': 'requests.storage',
-    # ResourceQuotas, number
-    'ResourceQuotas': 'resourcequotas',
-    # Secrets, number
-    'Secrets': 'secrets',
-    # Services, number
-    'Services': 'services',
-    # ServicesLoadBalancers, number
-    'ServicesLoadBalancers': 'services.loadbalancers',
-    # ServicesNodePorts, number
-    'ServicesNodePorts': 'services.nodeports',
-    # Volume size, in bytes (e,g. 5Gi = 5GiB = 5 * 1024 * 1024 * 1024)
-    'Storage': 'storage',
-})
+ResourceName = base.Enum(
+    "ResourceName",
+    {
+        # CPU, in cores. (500m = .5 cores)
+        "CPU": "cpu",
+        # ConfigMaps, number
+        "ConfigMaps": "configmaps",
+        # Local ephemeral storage, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        # The resource name for EphemeralStorage is alpha and it can change across releases.
+        "EphemeralStorage": "ephemeral-storage",
+        # CPU limit, in cores. (500m = .5 cores)
+        "LimitsCPU": "limits.cpu",
+        # Local ephemeral storage limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        "LimitsEphemeralStorage": "limits.ephemeral-storage",
+        # Memory limit, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        "LimitsMemory": "limits.memory",
+        # Memory, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        "Memory": "memory",
+        # PersistentVolumeClaims, number
+        "PersistentVolumeClaims": "persistentvolumeclaims",
+        # Pods, number
+        "Pods": "pods",
+        # ReplicationControllers, number
+        "ReplicationControllers": "replicationcontrollers",
+        # CPU request, in cores. (500m = .5 cores)
+        "RequestsCPU": "requests.cpu",
+        # Local ephemeral storage request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        "RequestsEphemeralStorage": "requests.ephemeral-storage",
+        # Memory request, in bytes. (500Gi = 500GiB = 500 * 1024 * 1024 * 1024)
+        "RequestsMemory": "requests.memory",
+        # Storage request, in bytes
+        "RequestsStorage": "requests.storage",
+        # ResourceQuotas, number
+        "ResourceQuotas": "resourcequotas",
+        # Secrets, number
+        "Secrets": "secrets",
+        # Services, number
+        "Services": "services",
+        # ServicesLoadBalancers, number
+        "ServicesLoadBalancers": "services.loadbalancers",
+        # ServicesNodePorts, number
+        "ServicesNodePorts": "services.nodeports",
+        # Volume size, in bytes (e,g. 5Gi = 5GiB = 5 * 1024 * 1024 * 1024)
+        "Storage": "storage",
+    },
+)
 
 
 # A ResourceQuotaScope defines a filter that must match each object tracked by a quota
-ResourceQuotaScope = base.Enum('ResourceQuotaScope', {
-    # Match all pod objects that have best effort quality of service
-    'BestEffort': 'BestEffort',
-    # Match all pod objects that do not have best effort quality of service
-    'NotBestEffort': 'NotBestEffort',
-    # Match all pod objects where !spec.activeDeadlineSeconds
-    'NotTerminating': 'NotTerminating',
-    # Match all pod objects that have priority class mentioned
-    'PriorityClass': 'PriorityClass',
-    # Match all pod objects where spec.activeDeadlineSeconds
-    'Terminating': 'Terminating',
-})
+ResourceQuotaScope = base.Enum(
+    "ResourceQuotaScope",
+    {
+        # Match all pod objects that have best effort quality of service
+        "BestEffort": "BestEffort",
+        # Match all pod objects that do not have best effort quality of service
+        "NotBestEffort": "NotBestEffort",
+        # Match all pod objects where !spec.activeDeadlineSeconds
+        "NotTerminating": "NotTerminating",
+        # Match all pod objects that have priority class mentioned
+        "PriorityClass": "PriorityClass",
+        # Match all pod objects where spec.activeDeadlineSeconds
+        "Terminating": "Terminating",
+    },
+)
 
 
 # RestartPolicy describes how the container should be restarted.
 # Only one of the following restart policies may be specified.
 # If none of the following policies is specified, the default one
 # is RestartPolicyAlways.
-RestartPolicy = base.Enum('RestartPolicy', {
-    'Always': 'Always',
-    'Never': 'Never',
-    'OnFailure': 'OnFailure',
-})
+RestartPolicy = base.Enum(
+    "RestartPolicy", {"Always": "Always", "Never": "Never", "OnFailure": "OnFailure"}
+)
 
 
 # A scope selector operator is the set of operators that can be used in
 # a scope selector requirement.
-ScopeSelectorOperator = base.Enum('ScopeSelectorOperator', {
-    'DoesNotExist': 'DoesNotExist',
-    'Exists': 'Exists',
-    'In': 'In',
-    'NotIn': 'NotIn',
-})
+ScopeSelectorOperator = base.Enum(
+    "ScopeSelectorOperator",
+    {"DoesNotExist": "DoesNotExist", "Exists": "Exists", "In": "In", "NotIn": "NotIn"},
+)
 
 
-SecretType = base.Enum('SecretType', {
-    # BasicAuth contains data needed for basic authentication.
-    # 
-    # Required at least one of fields:
-    # - Secret.Data["username"] - username used for authentication
-    # - Secret.Data["password"] - password or token needed for authentication
-    'BasicAuth': 'kubernetes.io/basic-auth',
-    # BootstrapToken is used during the automated bootstrap process (first
-    # implemented by kubeadm). It stores tokens that are used to sign well known
-    # ConfigMaps. They are used for authn.
-    'BootstrapToken': 'bootstrap.kubernetes.io/token',
-    # DockerConfigJson contains a dockercfg file that follows the same format rules as ~/.docker/config.json
-    # 
-    # Required fields:
-    # - Secret.Data[".dockerconfigjson"] - a serialized ~/.docker/config.json file
-    'DockerConfigJson': 'kubernetes.io/dockerconfigjson',
-    # Dockercfg contains a dockercfg file that follows the same format rules as ~/.dockercfg
-    # 
-    # Required fields:
-    # - Secret.Data[".dockercfg"] - a serialized ~/.dockercfg file
-    'Dockercfg': 'kubernetes.io/dockercfg',
-    # Opaque is the default. Arbitrary user-defined data
-    'Opaque': 'Opaque',
-    # SSHAuth contains data needed for SSH authetication.
-    # 
-    # Required field:
-    # - Secret.Data["ssh-privatekey"] - private SSH key needed for authentication
-    'SSHAuth': 'kubernetes.io/ssh-auth',
-    # ServiceAccountToken contains a token that identifies a service account to the API
-    # 
-    # Required fields:
-    # - Secret.Annotations["kubernetes.io/service-account.name"] - the name of the ServiceAccount the token identifies
-    # - Secret.Annotations["kubernetes.io/service-account.uid"] - the UID of the ServiceAccount the token identifies
-    # - Secret.Data["token"] - a token that identifies the service account to the API
-    'ServiceAccountToken': 'kubernetes.io/service-account-token',
-    # TLS contains information about a TLS client or server secret. It
-    # is primarily used with TLS termination of the Ingress resource, but may be
-    # used in other types.
-    # 
-    # Required fields:
-    # - Secret.Data["tls.key"] - TLS private key.
-    #   Secret.Data["tls.crt"] - TLS certificate.
-    # TODO: Consider supporting different formats, specifying CA/destinationCA.
-    'TLS': 'kubernetes.io/tls',
-})
+SecretType = base.Enum(
+    "SecretType",
+    {
+        # BasicAuth contains data needed for basic authentication.
+        #
+        # Required at least one of fields:
+        # - Secret.Data["username"] - username used for authentication
+        # - Secret.Data["password"] - password or token needed for authentication
+        "BasicAuth": "kubernetes.io/basic-auth",
+        # BootstrapToken is used during the automated bootstrap process (first
+        # implemented by kubeadm). It stores tokens that are used to sign well known
+        # ConfigMaps. They are used for authn.
+        "BootstrapToken": "bootstrap.kubernetes.io/token",
+        # DockerConfigJson contains a dockercfg file that follows the same format rules as ~/.docker/config.json
+        #
+        # Required fields:
+        # - Secret.Data[".dockerconfigjson"] - a serialized ~/.docker/config.json file
+        "DockerConfigJson": "kubernetes.io/dockerconfigjson",
+        # Dockercfg contains a dockercfg file that follows the same format rules as ~/.dockercfg
+        #
+        # Required fields:
+        # - Secret.Data[".dockercfg"] - a serialized ~/.dockercfg file
+        "Dockercfg": "kubernetes.io/dockercfg",
+        # Opaque is the default. Arbitrary user-defined data
+        "Opaque": "Opaque",
+        # SSHAuth contains data needed for SSH authetication.
+        #
+        # Required field:
+        # - Secret.Data["ssh-privatekey"] - private SSH key needed for authentication
+        "SSHAuth": "kubernetes.io/ssh-auth",
+        # ServiceAccountToken contains a token that identifies a service account to the API
+        #
+        # Required fields:
+        # - Secret.Annotations["kubernetes.io/service-account.name"] - the name of the ServiceAccount the token identifies
+        # - Secret.Annotations["kubernetes.io/service-account.uid"] - the UID of the ServiceAccount the token identifies
+        # - Secret.Data["token"] - a token that identifies the service account to the API
+        "ServiceAccountToken": "kubernetes.io/service-account-token",
+        # TLS contains information about a TLS client or server secret. It
+        # is primarily used with TLS termination of the Ingress resource, but may be
+        # used in other types.
+        #
+        # Required fields:
+        # - Secret.Data["tls.key"] - TLS private key.
+        #   Secret.Data["tls.crt"] - TLS certificate.
+        # TODO: Consider supporting different formats, specifying CA/destinationCA.
+        "TLS": "kubernetes.io/tls",
+    },
+)
 
 
 # Session Affinity Type string
-ServiceAffinity = base.Enum('ServiceAffinity', {
-    # ClientIP is the Client IP based.
-    'ClientIP': 'ClientIP',
-    # None - no session affinity.
-    'None': 'None',
-})
+ServiceAffinity = base.Enum(
+    "ServiceAffinity",
+    {
+        # ClientIP is the Client IP based.
+        "ClientIP": "ClientIP",
+        # None - no session affinity.
+        "None": "None",
+    },
+)
 
 
 # Service External Traffic Policy Type string
-ServiceExternalTrafficPolicyType = base.Enum('ServiceExternalTrafficPolicyType', {
-    # Cluster specifies node-global (legacy) behavior.
-    'Cluster': 'Cluster',
-    # Local specifies node-local endpoints behavior.
-    'Local': 'Local',
-})
+ServiceExternalTrafficPolicyType = base.Enum(
+    "ServiceExternalTrafficPolicyType",
+    {
+        # Cluster specifies node-global (legacy) behavior.
+        "Cluster": "Cluster",
+        # Local specifies node-local endpoints behavior.
+        "Local": "Local",
+    },
+)
 
 
 # Service Type string describes ingress methods for a service
-ServiceType = base.Enum('ServiceType', {
-    # ClusterIP means a service will only be accessible inside the
-    # cluster, via the cluster IP.
-    'ClusterIP': 'ClusterIP',
-    # ExternalName means a service consists of only a reference to
-    # an external name that kubedns or equivalent will return as a CNAME
-    # record, with no exposing or proxying of any pods involved.
-    'ExternalName': 'ExternalName',
-    # LoadBalancer means a service will be exposed via an
-    # external load balancer (if the cloud provider supports it), in addition
-    # to 'NodePort' type.
-    'LoadBalancer': 'LoadBalancer',
-    # NodePort means a service will be exposed on one port of
-    # every node, in addition to 'ClusterIP' type.
-    'NodePort': 'NodePort',
-})
+ServiceType = base.Enum(
+    "ServiceType",
+    {
+        # ClusterIP means a service will only be accessible inside the
+        # cluster, via the cluster IP.
+        "ClusterIP": "ClusterIP",
+        # ExternalName means a service consists of only a reference to
+        # an external name that kubedns or equivalent will return as a CNAME
+        # record, with no exposing or proxying of any pods involved.
+        "ExternalName": "ExternalName",
+        # LoadBalancer means a service will be exposed via an
+        # external load balancer (if the cloud provider supports it), in addition
+        # to 'NodePort' type.
+        "LoadBalancer": "LoadBalancer",
+        # NodePort means a service will be exposed on one port of
+        # every node, in addition to 'ClusterIP' type.
+        "NodePort": "NodePort",
+    },
+)
 
 
 # StorageMedium defines ways that storage can be allocated to a volume.
-StorageMedium = base.Enum('StorageMedium', {
-    # use whatever the default is for the node, assume anything we don't explicitly handle is this
-    'Default': '',
-    # use hugepages
-    'HugePages': 'HugePages',
-    # use memory (e.g. tmpfs on linux)
-    'Memory': 'Memory',
-})
+StorageMedium = base.Enum(
+    "StorageMedium",
+    {
+        # use whatever the default is for the node, assume anything we don't explicitly handle is this
+        "Default": "",
+        # use hugepages
+        "HugePages": "HugePages",
+        # use memory (e.g. tmpfs on linux)
+        "Memory": "Memory",
+    },
+)
 
 
-TaintEffect = base.Enum('TaintEffect', {
-    # Evict any already-running pods that do not tolerate the taint.
-    # Currently enforced by NodeController.
-    'NoExecute': 'NoExecute',
-    # Do not allow new pods to schedule onto the node unless they tolerate the taint,
-    # but allow all pods submitted to Kubelet without going through the scheduler
-    # to start, and allow all already-running pods to continue running.
-    # Enforced by the scheduler.
-    'NoSchedule': 'NoSchedule',
-    # Like TaintEffectNoSchedule, but the scheduler tries not to schedule
-    # new pods onto the node, rather than prohibiting new pods from scheduling
-    # onto the node entirely. Enforced by the scheduler.
-    'PreferNoSchedule': 'PreferNoSchedule',
-})
+TaintEffect = base.Enum(
+    "TaintEffect",
+    {
+        # Evict any already-running pods that do not tolerate the taint.
+        # Currently enforced by NodeController.
+        "NoExecute": "NoExecute",
+        # Do not allow new pods to schedule onto the node unless they tolerate the taint,
+        # but allow all pods submitted to Kubelet without going through the scheduler
+        # to start, and allow all already-running pods to continue running.
+        # Enforced by the scheduler.
+        "NoSchedule": "NoSchedule",
+        # Like TaintEffectNoSchedule, but the scheduler tries not to schedule
+        # new pods onto the node, rather than prohibiting new pods from scheduling
+        # onto the node entirely. Enforced by the scheduler.
+        "PreferNoSchedule": "PreferNoSchedule",
+    },
+)
 
 
 # TerminationMessagePolicy describes how termination messages are retrieved from a container.
-TerminationMessagePolicy = base.Enum('TerminationMessagePolicy', {
-    # FallbackToLogsOnError will read the most recent contents of the container logs
-    # for the container status message when the container exits with an error and the
-    # terminationMessagePath has no contents.
-    'FallbackToLogsOnError': 'FallbackToLogsOnError',
-    # File is the default behavior and will set the container status message to
-    # the contents of the container's terminationMessagePath when the container exits.
-    'File': 'File',
-})
+TerminationMessagePolicy = base.Enum(
+    "TerminationMessagePolicy",
+    {
+        # FallbackToLogsOnError will read the most recent contents of the container logs
+        # for the container status message when the container exits with an error and the
+        # terminationMessagePath has no contents.
+        "FallbackToLogsOnError": "FallbackToLogsOnError",
+        # File is the default behavior and will set the container status message to
+        # the contents of the container's terminationMessagePath when the container exits.
+        "File": "File",
+    },
+)
 
 
 # A toleration operator is the set of operators that can be used in a toleration.
-TolerationOperator = base.Enum('TolerationOperator', {
-    'Equal': 'Equal',
-    'Exists': 'Exists',
-})
+TolerationOperator = base.Enum(
+    "TolerationOperator", {"Equal": "Equal", "Exists": "Exists"}
+)
 
 
 # URIScheme identifies the scheme used for connection to a host for Get actions
-URIScheme = base.Enum('URIScheme', {
-    # HTTP means that the scheme used will be http://
-    'HTTP': 'HTTP',
-    # HTTPS means that the scheme used will be https://
-    'HTTPS': 'HTTPS',
-})
+URIScheme = base.Enum(
+    "URIScheme",
+    {
+        # HTTP means that the scheme used will be http://
+        "HTTP": "HTTP",
+        # HTTPS means that the scheme used will be https://
+        "HTTPS": "HTTPS",
+    },
+)
 
 
-UnsatisfiableConstraintAction = base.Enum('UnsatisfiableConstraintAction', {
-    # DoNotSchedule instructs the scheduler not to schedule the pod
-    # when constraints are not satisfied.
-    'DoNotSchedule': 'DoNotSchedule',
-    # ScheduleAnyway instructs the scheduler to schedule the pod
-    # even if constraints are not satisfied.
-    'ScheduleAnyway': 'ScheduleAnyway',
-})
+UnsatisfiableConstraintAction = base.Enum(
+    "UnsatisfiableConstraintAction",
+    {
+        # DoNotSchedule instructs the scheduler not to schedule the pod
+        # when constraints are not satisfied.
+        "DoNotSchedule": "DoNotSchedule",
+        # ScheduleAnyway instructs the scheduler to schedule the pod
+        # even if constraints are not satisfied.
+        "ScheduleAnyway": "ScheduleAnyway",
+    },
+)
 
 
 # Represents a Persistent Disk resource in AWS.
-# 
+#
 # An AWS EBS disk must exist before mounting to a container. The disk
 # must also be in the same AWS zone as the kubelet. An AWS EBS disk
 # can only be mounted as read/write once. AWS EBS volumes support
 # ownership management and SELinux relabeling.
 class AWSElasticBlockStoreVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['volumeID'] = self.volumeID()
+        v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         partition = self.partition()
         if partition:  # omit empty
-            v['partition'] = partition
+            v["partition"] = partition
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # Unique ID of the persistent disk resource in AWS (Amazon EBS volume).
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     @typechecked
     def volumeID(self) -> str:
-        if 'volumeID' in self._kwargs:
-            return self._kwargs['volumeID']
-        if 'volumeID' in self._context and check_return_type(self._context['volumeID']):
-            return self._context['volumeID']
-        return ''
-    
+        if "volumeID" in self._kwargs:
+            return self._kwargs["volumeID"]
+        if "volumeID" in self._context and check_return_type(self._context["volumeID"]):
+            return self._context["volumeID"]
+        return ""
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -552,69 +626,70 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # The partition in the volume that you want to mount.
     # If omitted, the default is to mount by volume name.
     # Examples: For volume /dev/sda1, you specify the partition as "1".
     # Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
     @typechecked
     def partition(self) -> Optional[int]:
-        if 'partition' in self._kwargs:
-            return self._kwargs['partition']
-        if 'partition' in self._context and check_return_type(self._context['partition']):
-            return self._context['partition']
+        if "partition" in self._kwargs:
+            return self._kwargs["partition"]
+        if "partition" in self._context and check_return_type(
+            self._context["partition"]
+        ):
+            return self._context["partition"]
         return None
-    
+
     # Specify "true" to force and set the ReadOnly property in VolumeMounts to "true".
     # If omitted, the default is "false".
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # A node selector requirement is a selector that contains values, a key, and an operator
 # that relates the key and values.
 class NodeSelectorRequirement(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['key'] = self.key()
-        v['operator'] = self.operator()
+        v["key"] = self.key()
+        v["operator"] = self.operator()
         values = self.values()
         if values:  # omit empty
-            v['values'] = values
+            v["values"] = values
         return v
-    
+
     # The label key that the selector applies to.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # Represents a key's relationship to a set of values.
     # Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
     @typechecked
     def operator(self) -> NodeSelectorOperator:
-        if 'operator' in self._kwargs:
-            return self._kwargs['operator']
-        if 'operator' in self._context and check_return_type(self._context['operator']):
-            return self._context['operator']
+        if "operator" in self._kwargs:
+            return self._kwargs["operator"]
+        if "operator" in self._context and check_return_type(self._context["operator"]):
+            return self._context["operator"]
         return None
-    
+
     # An array of string values. If the operator is In or NotIn,
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
     # the values array must be empty. If the operator is Gt or Lt, the values
@@ -622,10 +697,10 @@ class NodeSelectorRequirement(types.Object):
     # This array is replaced during a strategic merge patch.
     @typechecked
     def values(self) -> List[str]:
-        if 'values' in self._kwargs:
-            return self._kwargs['values']
-        if 'values' in self._context and check_return_type(self._context['values']):
-            return self._context['values']
+        if "values" in self._kwargs:
+            return self._kwargs["values"]
+        if "values" in self._context and check_return_type(self._context["values"]):
+            return self._context["values"]
         return []
 
 
@@ -633,34 +708,37 @@ class NodeSelectorRequirement(types.Object):
 # them are ANDed.
 # The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
 class NodeSelectorTerm(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
-            v['matchExpressions'] = matchExpressions
+            v["matchExpressions"] = matchExpressions
         matchFields = self.matchFields()
         if matchFields:  # omit empty
-            v['matchFields'] = matchFields
+            v["matchFields"] = matchFields
         return v
-    
+
     # A list of node selector requirements by node's labels.
     @typechecked
     def matchExpressions(self) -> List[NodeSelectorRequirement]:
-        if 'matchExpressions' in self._kwargs:
-            return self._kwargs['matchExpressions']
-        if 'matchExpressions' in self._context and check_return_type(self._context['matchExpressions']):
-            return self._context['matchExpressions']
+        if "matchExpressions" in self._kwargs:
+            return self._kwargs["matchExpressions"]
+        if "matchExpressions" in self._context and check_return_type(
+            self._context["matchExpressions"]
+        ):
+            return self._context["matchExpressions"]
         return []
-    
+
     # A list of node selector requirements by node's fields.
     @typechecked
     def matchFields(self) -> List[NodeSelectorRequirement]:
-        if 'matchFields' in self._kwargs:
-            return self._kwargs['matchFields']
-        if 'matchFields' in self._context and check_return_type(self._context['matchFields']):
-            return self._context['matchFields']
+        if "matchFields" in self._kwargs:
+            return self._kwargs["matchFields"]
+        if "matchFields" in self._context and check_return_type(
+            self._context["matchFields"]
+        ):
+            return self._context["matchFields"]
         return []
 
 
@@ -668,68 +746,77 @@ class NodeSelectorTerm(types.Object):
 # over a set of nodes; that is, it represents the OR of the selectors represented
 # by the node selector terms.
 class NodeSelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['nodeSelectorTerms'] = self.nodeSelectorTerms()
+        v["nodeSelectorTerms"] = self.nodeSelectorTerms()
         return v
-    
+
     # Required. A list of node selector terms. The terms are ORed.
     @typechecked
     def nodeSelectorTerms(self) -> List[NodeSelectorTerm]:
-        if 'nodeSelectorTerms' in self._kwargs:
-            return self._kwargs['nodeSelectorTerms']
-        if 'nodeSelectorTerms' in self._context and check_return_type(self._context['nodeSelectorTerms']):
-            return self._context['nodeSelectorTerms']
+        if "nodeSelectorTerms" in self._kwargs:
+            return self._kwargs["nodeSelectorTerms"]
+        if "nodeSelectorTerms" in self._context and check_return_type(
+            self._context["nodeSelectorTerms"]
+        ):
+            return self._context["nodeSelectorTerms"]
         return []
 
 
 # An empty preferred scheduling term matches all objects with implicit weight 0
 # (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
 class PreferredSchedulingTerm(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['weight'] = self.weight()
-        v['preference'] = self.preference()
+        v["weight"] = self.weight()
+        v["preference"] = self.preference()
         return v
-    
+
     # Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
     @typechecked
     def weight(self) -> int:
-        if 'weight' in self._kwargs:
-            return self._kwargs['weight']
-        if 'weight' in self._context and check_return_type(self._context['weight']):
-            return self._context['weight']
+        if "weight" in self._kwargs:
+            return self._kwargs["weight"]
+        if "weight" in self._context and check_return_type(self._context["weight"]):
+            return self._context["weight"]
         return 0
-    
+
     # A node selector term, associated with the corresponding weight.
     @typechecked
     def preference(self) -> NodeSelectorTerm:
-        if 'preference' in self._kwargs:
-            return self._kwargs['preference']
-        if 'preference' in self._context and check_return_type(self._context['preference']):
-            return self._context['preference']
+        if "preference" in self._kwargs:
+            return self._kwargs["preference"]
+        if "preference" in self._context and check_return_type(
+            self._context["preference"]
+        ):
+            return self._context["preference"]
         with context.Scope(**self._context):
             return NodeSelectorTerm()
 
 
 # Node affinity is a group of node affinity scheduling rules.
 class NodeAffinity(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
+        requiredDuringSchedulingIgnoredDuringExecution = (
+            self.requiredDuringSchedulingIgnoredDuringExecution()
+        )
         if requiredDuringSchedulingIgnoredDuringExecution is not None:  # omit empty
-            v['requiredDuringSchedulingIgnoredDuringExecution'] = requiredDuringSchedulingIgnoredDuringExecution
-        preferredDuringSchedulingIgnoredDuringExecution = self.preferredDuringSchedulingIgnoredDuringExecution()
+            v[
+                "requiredDuringSchedulingIgnoredDuringExecution"
+            ] = requiredDuringSchedulingIgnoredDuringExecution
+        preferredDuringSchedulingIgnoredDuringExecution = (
+            self.preferredDuringSchedulingIgnoredDuringExecution()
+        )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
-            v['preferredDuringSchedulingIgnoredDuringExecution'] = preferredDuringSchedulingIgnoredDuringExecution
+            v[
+                "preferredDuringSchedulingIgnoredDuringExecution"
+            ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
-    
+
     # If the affinity requirements specified by this field are not met at
     # scheduling time, the pod will not be scheduled onto the node.
     # If the affinity requirements specified by this field cease to be met
@@ -737,12 +824,17 @@ class NodeAffinity(types.Object):
     # may or may not try to eventually evict the pod from its node.
     @typechecked
     def requiredDuringSchedulingIgnoredDuringExecution(self) -> Optional[NodeSelector]:
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['requiredDuringSchedulingIgnoredDuringExecution']
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['requiredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['requiredDuringSchedulingIgnoredDuringExecution']
+        if "requiredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["requiredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "requiredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["requiredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["requiredDuringSchedulingIgnoredDuringExecution"]
         return None
-    
+
     # The scheduler will prefer to schedule pods to nodes that satisfy
     # the affinity expressions specified by this field, but it may choose
     # a node that violates one or more of the expressions. The node that is
@@ -753,11 +845,18 @@ class NodeAffinity(types.Object):
     # "weight" to the sum if the node matches the corresponding matchExpressions; the
     # node(s) with the highest sum are the most preferred.
     @typechecked
-    def preferredDuringSchedulingIgnoredDuringExecution(self) -> List[PreferredSchedulingTerm]:
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['preferredDuringSchedulingIgnoredDuringExecution']
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['preferredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['preferredDuringSchedulingIgnoredDuringExecution']
+    def preferredDuringSchedulingIgnoredDuringExecution(
+        self
+    ) -> List[PreferredSchedulingTerm]:
+        if "preferredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["preferredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "preferredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["preferredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["preferredDuringSchedulingIgnoredDuringExecution"]
         return []
 
 
@@ -768,38 +867,41 @@ class NodeAffinity(types.Object):
 # the label with key <topologyKey> matches that of any node on which
 # a pod of the set of pods is running
 class PodAffinityTerm(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         labelSelector = self.labelSelector()
         if labelSelector is not None:  # omit empty
-            v['labelSelector'] = labelSelector
+            v["labelSelector"] = labelSelector
         namespaces = self.namespaces()
         if namespaces:  # omit empty
-            v['namespaces'] = namespaces
-        v['topologyKey'] = self.topologyKey()
+            v["namespaces"] = namespaces
+        v["topologyKey"] = self.topologyKey()
         return v
-    
+
     # A label query over a set of resources, in this case pods.
     @typechecked
-    def labelSelector(self) -> Optional['metav1.LabelSelector']:
-        if 'labelSelector' in self._kwargs:
-            return self._kwargs['labelSelector']
-        if 'labelSelector' in self._context and check_return_type(self._context['labelSelector']):
-            return self._context['labelSelector']
+    def labelSelector(self) -> Optional["metav1.LabelSelector"]:
+        if "labelSelector" in self._kwargs:
+            return self._kwargs["labelSelector"]
+        if "labelSelector" in self._context and check_return_type(
+            self._context["labelSelector"]
+        ):
+            return self._context["labelSelector"]
         return None
-    
+
     # namespaces specifies which namespaces the labelSelector applies to (matches against);
     # null or empty list means "this pod's namespace"
     @typechecked
     def namespaces(self) -> List[str]:
-        if 'namespaces' in self._kwargs:
-            return self._kwargs['namespaces']
-        if 'namespaces' in self._context and check_return_type(self._context['namespaces']):
-            return self._context['namespaces']
+        if "namespaces" in self._kwargs:
+            return self._kwargs["namespaces"]
+        if "namespaces" in self._context and check_return_type(
+            self._context["namespaces"]
+        ):
+            return self._context["namespaces"]
         return []
-    
+
     # This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching
     # the labelSelector in the specified namespaces, where co-located is defined as running on a node
     # whose value of the label with key topologyKey matches that of any node on which any of the
@@ -807,58 +909,68 @@ class PodAffinityTerm(types.Object):
     # Empty topologyKey is not allowed.
     @typechecked
     def topologyKey(self) -> str:
-        if 'topologyKey' in self._kwargs:
-            return self._kwargs['topologyKey']
-        if 'topologyKey' in self._context and check_return_type(self._context['topologyKey']):
-            return self._context['topologyKey']
-        return ''
+        if "topologyKey" in self._kwargs:
+            return self._kwargs["topologyKey"]
+        if "topologyKey" in self._context and check_return_type(
+            self._context["topologyKey"]
+        ):
+            return self._context["topologyKey"]
+        return ""
 
 
 # The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
 class WeightedPodAffinityTerm(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['weight'] = self.weight()
-        v['podAffinityTerm'] = self.podAffinityTerm()
+        v["weight"] = self.weight()
+        v["podAffinityTerm"] = self.podAffinityTerm()
         return v
-    
+
     # weight associated with matching the corresponding podAffinityTerm,
     # in the range 1-100.
     @typechecked
     def weight(self) -> int:
-        if 'weight' in self._kwargs:
-            return self._kwargs['weight']
-        if 'weight' in self._context and check_return_type(self._context['weight']):
-            return self._context['weight']
+        if "weight" in self._kwargs:
+            return self._kwargs["weight"]
+        if "weight" in self._context and check_return_type(self._context["weight"]):
+            return self._context["weight"]
         return 0
-    
+
     # Required. A pod affinity term, associated with the corresponding weight.
     @typechecked
     def podAffinityTerm(self) -> PodAffinityTerm:
-        if 'podAffinityTerm' in self._kwargs:
-            return self._kwargs['podAffinityTerm']
-        if 'podAffinityTerm' in self._context and check_return_type(self._context['podAffinityTerm']):
-            return self._context['podAffinityTerm']
+        if "podAffinityTerm" in self._kwargs:
+            return self._kwargs["podAffinityTerm"]
+        if "podAffinityTerm" in self._context and check_return_type(
+            self._context["podAffinityTerm"]
+        ):
+            return self._context["podAffinityTerm"]
         with context.Scope(**self._context):
             return PodAffinityTerm()
 
 
 # Pod affinity is a group of inter pod affinity scheduling rules.
 class PodAffinity(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
+        requiredDuringSchedulingIgnoredDuringExecution = (
+            self.requiredDuringSchedulingIgnoredDuringExecution()
+        )
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
-            v['requiredDuringSchedulingIgnoredDuringExecution'] = requiredDuringSchedulingIgnoredDuringExecution
-        preferredDuringSchedulingIgnoredDuringExecution = self.preferredDuringSchedulingIgnoredDuringExecution()
+            v[
+                "requiredDuringSchedulingIgnoredDuringExecution"
+            ] = requiredDuringSchedulingIgnoredDuringExecution
+        preferredDuringSchedulingIgnoredDuringExecution = (
+            self.preferredDuringSchedulingIgnoredDuringExecution()
+        )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
-            v['preferredDuringSchedulingIgnoredDuringExecution'] = preferredDuringSchedulingIgnoredDuringExecution
+            v[
+                "preferredDuringSchedulingIgnoredDuringExecution"
+            ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
-    
+
     # If the affinity requirements specified by this field are not met at
     # scheduling time, the pod will not be scheduled onto the node.
     # If the affinity requirements specified by this field cease to be met
@@ -868,12 +980,17 @@ class PodAffinity(types.Object):
     # podAffinityTerm are intersected, i.e. all terms must be satisfied.
     @typechecked
     def requiredDuringSchedulingIgnoredDuringExecution(self) -> List[PodAffinityTerm]:
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['requiredDuringSchedulingIgnoredDuringExecution']
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['requiredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['requiredDuringSchedulingIgnoredDuringExecution']
+        if "requiredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["requiredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "requiredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["requiredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["requiredDuringSchedulingIgnoredDuringExecution"]
         return []
-    
+
     # The scheduler will prefer to schedule pods to nodes that satisfy
     # the affinity expressions specified by this field, but it may choose
     # a node that violates one or more of the expressions. The node that is
@@ -884,28 +1001,42 @@ class PodAffinity(types.Object):
     # "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
     # node(s) with the highest sum are the most preferred.
     @typechecked
-    def preferredDuringSchedulingIgnoredDuringExecution(self) -> List[WeightedPodAffinityTerm]:
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['preferredDuringSchedulingIgnoredDuringExecution']
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['preferredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['preferredDuringSchedulingIgnoredDuringExecution']
+    def preferredDuringSchedulingIgnoredDuringExecution(
+        self
+    ) -> List[WeightedPodAffinityTerm]:
+        if "preferredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["preferredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "preferredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["preferredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["preferredDuringSchedulingIgnoredDuringExecution"]
         return []
 
 
 # Pod anti affinity is a group of inter pod anti affinity scheduling rules.
 class PodAntiAffinity(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        requiredDuringSchedulingIgnoredDuringExecution = self.requiredDuringSchedulingIgnoredDuringExecution()
+        requiredDuringSchedulingIgnoredDuringExecution = (
+            self.requiredDuringSchedulingIgnoredDuringExecution()
+        )
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
-            v['requiredDuringSchedulingIgnoredDuringExecution'] = requiredDuringSchedulingIgnoredDuringExecution
-        preferredDuringSchedulingIgnoredDuringExecution = self.preferredDuringSchedulingIgnoredDuringExecution()
+            v[
+                "requiredDuringSchedulingIgnoredDuringExecution"
+            ] = requiredDuringSchedulingIgnoredDuringExecution
+        preferredDuringSchedulingIgnoredDuringExecution = (
+            self.preferredDuringSchedulingIgnoredDuringExecution()
+        )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
-            v['preferredDuringSchedulingIgnoredDuringExecution'] = preferredDuringSchedulingIgnoredDuringExecution
+            v[
+                "preferredDuringSchedulingIgnoredDuringExecution"
+            ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
-    
+
     # If the anti-affinity requirements specified by this field are not met at
     # scheduling time, the pod will not be scheduled onto the node.
     # If the anti-affinity requirements specified by this field cease to be met
@@ -915,12 +1046,17 @@ class PodAntiAffinity(types.Object):
     # podAffinityTerm are intersected, i.e. all terms must be satisfied.
     @typechecked
     def requiredDuringSchedulingIgnoredDuringExecution(self) -> List[PodAffinityTerm]:
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['requiredDuringSchedulingIgnoredDuringExecution']
-        if 'requiredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['requiredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['requiredDuringSchedulingIgnoredDuringExecution']
+        if "requiredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["requiredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "requiredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["requiredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["requiredDuringSchedulingIgnoredDuringExecution"]
         return []
-    
+
     # The scheduler will prefer to schedule pods to nodes that satisfy
     # the anti-affinity expressions specified by this field, but it may choose
     # a node that violates one or more of the expressions. The node that is
@@ -931,322 +1067,348 @@ class PodAntiAffinity(types.Object):
     # "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
     # node(s) with the highest sum are the most preferred.
     @typechecked
-    def preferredDuringSchedulingIgnoredDuringExecution(self) -> List[WeightedPodAffinityTerm]:
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._kwargs:
-            return self._kwargs['preferredDuringSchedulingIgnoredDuringExecution']
-        if 'preferredDuringSchedulingIgnoredDuringExecution' in self._context and check_return_type(self._context['preferredDuringSchedulingIgnoredDuringExecution']):
-            return self._context['preferredDuringSchedulingIgnoredDuringExecution']
+    def preferredDuringSchedulingIgnoredDuringExecution(
+        self
+    ) -> List[WeightedPodAffinityTerm]:
+        if "preferredDuringSchedulingIgnoredDuringExecution" in self._kwargs:
+            return self._kwargs["preferredDuringSchedulingIgnoredDuringExecution"]
+        if (
+            "preferredDuringSchedulingIgnoredDuringExecution" in self._context
+            and check_return_type(
+                self._context["preferredDuringSchedulingIgnoredDuringExecution"]
+            )
+        ):
+            return self._context["preferredDuringSchedulingIgnoredDuringExecution"]
         return []
 
 
 # Affinity is a group of affinity scheduling rules.
 class Affinity(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         nodeAffinity = self.nodeAffinity()
         if nodeAffinity is not None:  # omit empty
-            v['nodeAffinity'] = nodeAffinity
+            v["nodeAffinity"] = nodeAffinity
         podAffinity = self.podAffinity()
         if podAffinity is not None:  # omit empty
-            v['podAffinity'] = podAffinity
+            v["podAffinity"] = podAffinity
         podAntiAffinity = self.podAntiAffinity()
         if podAntiAffinity is not None:  # omit empty
-            v['podAntiAffinity'] = podAntiAffinity
+            v["podAntiAffinity"] = podAntiAffinity
         return v
-    
+
     # Describes node affinity scheduling rules for the pod.
     @typechecked
     def nodeAffinity(self) -> Optional[NodeAffinity]:
-        if 'nodeAffinity' in self._kwargs:
-            return self._kwargs['nodeAffinity']
-        if 'nodeAffinity' in self._context and check_return_type(self._context['nodeAffinity']):
-            return self._context['nodeAffinity']
+        if "nodeAffinity" in self._kwargs:
+            return self._kwargs["nodeAffinity"]
+        if "nodeAffinity" in self._context and check_return_type(
+            self._context["nodeAffinity"]
+        ):
+            return self._context["nodeAffinity"]
         return None
-    
+
     # Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
     @typechecked
     def podAffinity(self) -> Optional[PodAffinity]:
-        if 'podAffinity' in self._kwargs:
-            return self._kwargs['podAffinity']
-        if 'podAffinity' in self._context and check_return_type(self._context['podAffinity']):
-            return self._context['podAffinity']
+        if "podAffinity" in self._kwargs:
+            return self._kwargs["podAffinity"]
+        if "podAffinity" in self._context and check_return_type(
+            self._context["podAffinity"]
+        ):
+            return self._context["podAffinity"]
         return None
-    
+
     # Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
     @typechecked
     def podAntiAffinity(self) -> Optional[PodAntiAffinity]:
-        if 'podAntiAffinity' in self._kwargs:
-            return self._kwargs['podAntiAffinity']
-        if 'podAntiAffinity' in self._context and check_return_type(self._context['podAntiAffinity']):
-            return self._context['podAntiAffinity']
+        if "podAntiAffinity" in self._kwargs:
+            return self._kwargs["podAntiAffinity"]
+        if "podAntiAffinity" in self._context and check_return_type(
+            self._context["podAntiAffinity"]
+        ):
+            return self._context["podAntiAffinity"]
         return None
 
 
 # AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
 class AzureDiskVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['diskName'] = self.diskName()
-        v['diskURI'] = self.diskURI()
+        v["diskName"] = self.diskName()
+        v["diskURI"] = self.diskURI()
         cachingMode = self.cachingMode()
         if cachingMode is not None:  # omit empty
-            v['cachingMode'] = cachingMode
+            v["cachingMode"] = cachingMode
         fsType = self.fsType()
         if fsType is not None:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly is not None:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         kind = self.kind()
         if kind is not None:  # omit empty
-            v['kind'] = kind
+            v["kind"] = kind
         return v
-    
+
     # The Name of the data disk in the blob storage
     @typechecked
     def diskName(self) -> str:
-        if 'diskName' in self._kwargs:
-            return self._kwargs['diskName']
-        if 'diskName' in self._context and check_return_type(self._context['diskName']):
-            return self._context['diskName']
-        return ''
-    
+        if "diskName" in self._kwargs:
+            return self._kwargs["diskName"]
+        if "diskName" in self._context and check_return_type(self._context["diskName"]):
+            return self._context["diskName"]
+        return ""
+
     # The URI the data disk in the blob storage
     @typechecked
     def diskURI(self) -> str:
-        if 'diskURI' in self._kwargs:
-            return self._kwargs['diskURI']
-        if 'diskURI' in self._context and check_return_type(self._context['diskURI']):
-            return self._context['diskURI']
-        return ''
-    
+        if "diskURI" in self._kwargs:
+            return self._kwargs["diskURI"]
+        if "diskURI" in self._context and check_return_type(self._context["diskURI"]):
+            return self._context["diskURI"]
+        return ""
+
     # Host Caching mode: None, Read Only, Read Write.
     @typechecked
     def cachingMode(self) -> Optional[AzureDataDiskCachingMode]:
-        if 'cachingMode' in self._kwargs:
-            return self._kwargs['cachingMode']
-        if 'cachingMode' in self._context and check_return_type(self._context['cachingMode']):
-            return self._context['cachingMode']
-        return AzureDataDiskCachingMode['ReadWrite']
-    
+        if "cachingMode" in self._kwargs:
+            return self._kwargs["cachingMode"]
+        if "cachingMode" in self._context and check_return_type(
+            self._context["cachingMode"]
+        ):
+            return self._context["cachingMode"]
+        return AzureDataDiskCachingMode["ReadWrite"]
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
-        return 'ext4'
-    
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
+        return "ext4"
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Expected values Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
     @typechecked
     def kind(self) -> Optional[AzureDataDiskKind]:
-        if 'kind' in self._kwargs:
-            return self._kwargs['kind']
-        if 'kind' in self._context and check_return_type(self._context['kind']):
-            return self._context['kind']
-        return AzureDataDiskKind['Shared']
+        if "kind" in self._kwargs:
+            return self._kwargs["kind"]
+        if "kind" in self._context and check_return_type(self._context["kind"]):
+            return self._context["kind"]
+        return AzureDataDiskKind["Shared"]
 
 
 # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
 class AzureFilePersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['secretName'] = self.secretName()
-        v['shareName'] = self.shareName()
+        v["secretName"] = self.secretName()
+        v["shareName"] = self.shareName()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
-        v['secretNamespace'] = self.secretNamespace()
+            v["readOnly"] = readOnly
+        v["secretNamespace"] = self.secretNamespace()
         return v
-    
+
     # the name of secret that contains Azure Storage Account Name and Key
     @typechecked
     def secretName(self) -> str:
-        if 'secretName' in self._kwargs:
-            return self._kwargs['secretName']
-        if 'secretName' in self._context and check_return_type(self._context['secretName']):
-            return self._context['secretName']
-        return ''
-    
+        if "secretName" in self._kwargs:
+            return self._kwargs["secretName"]
+        if "secretName" in self._context and check_return_type(
+            self._context["secretName"]
+        ):
+            return self._context["secretName"]
+        return ""
+
     # Share Name
     @typechecked
     def shareName(self) -> str:
-        if 'shareName' in self._kwargs:
-            return self._kwargs['shareName']
-        if 'shareName' in self._context and check_return_type(self._context['shareName']):
-            return self._context['shareName']
-        return ''
-    
+        if "shareName" in self._kwargs:
+            return self._kwargs["shareName"]
+        if "shareName" in self._context and check_return_type(
+            self._context["shareName"]
+        ):
+            return self._context["shareName"]
+        return ""
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # the namespace of the secret that contains Azure Storage Account Name and Key
     # default is the same as the Pod
     @typechecked
     def secretNamespace(self) -> Optional[str]:
-        if 'secretNamespace' in self._kwargs:
-            return self._kwargs['secretNamespace']
-        if 'secretNamespace' in self._context and check_return_type(self._context['secretNamespace']):
-            return self._context['secretNamespace']
+        if "secretNamespace" in self._kwargs:
+            return self._kwargs["secretNamespace"]
+        if "secretNamespace" in self._context and check_return_type(
+            self._context["secretNamespace"]
+        ):
+            return self._context["secretNamespace"]
         return None
 
 
 # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
 class AzureFileVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['secretName'] = self.secretName()
-        v['shareName'] = self.shareName()
+        v["secretName"] = self.secretName()
+        v["shareName"] = self.shareName()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # the name of secret that contains Azure Storage Account Name and Key
     @typechecked
     def secretName(self) -> str:
-        if 'secretName' in self._kwargs:
-            return self._kwargs['secretName']
-        if 'secretName' in self._context and check_return_type(self._context['secretName']):
-            return self._context['secretName']
-        return ''
-    
+        if "secretName" in self._kwargs:
+            return self._kwargs["secretName"]
+        if "secretName" in self._context and check_return_type(
+            self._context["secretName"]
+        ):
+            return self._context["secretName"]
+        return ""
+
     # Share Name
     @typechecked
     def shareName(self) -> str:
-        if 'shareName' in self._kwargs:
-            return self._kwargs['shareName']
-        if 'shareName' in self._context and check_return_type(self._context['shareName']):
-            return self._context['shareName']
-        return ''
-    
+        if "shareName" in self._kwargs:
+            return self._kwargs["shareName"]
+        if "shareName" in self._context and check_return_type(
+            self._context["shareName"]
+        ):
+            return self._context["shareName"]
+        return ""
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # ObjectReference contains enough information to let you inspect or modify the referred object.
 class ObjectReference(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         kind = self.kind()
         if kind:  # omit empty
-            v['kind'] = kind
+            v["kind"] = kind
         namespace = self.namespace()
         if namespace:  # omit empty
-            v['namespace'] = namespace
+            v["namespace"] = namespace
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         uid = self.uid()
         if uid:  # omit empty
-            v['uid'] = uid
+            v["uid"] = uid
         apiVersion = self.apiVersion()
         if apiVersion:  # omit empty
-            v['apiVersion'] = apiVersion
+            v["apiVersion"] = apiVersion
         resourceVersion = self.resourceVersion()
         if resourceVersion:  # omit empty
-            v['resourceVersion'] = resourceVersion
+            v["resourceVersion"] = resourceVersion
         fieldPath = self.fieldPath()
         if fieldPath:  # omit empty
-            v['fieldPath'] = fieldPath
+            v["fieldPath"] = fieldPath
         return v
-    
+
     # Kind of the referent.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        if 'kind' in self._kwargs:
-            return self._kwargs['kind']
-        if 'kind' in self._context and check_return_type(self._context['kind']):
-            return self._context['kind']
+        if "kind" in self._kwargs:
+            return self._kwargs["kind"]
+        if "kind" in self._context and check_return_type(self._context["kind"]):
+            return self._context["kind"]
         return None
-    
+
     # Namespace of the referent.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
     @typechecked
     def namespace(self) -> Optional[str]:
-        if 'namespace' in self._kwargs:
-            return self._kwargs['namespace']
-        if 'namespace' in self._context and check_return_type(self._context['namespace']):
-            return self._context['namespace']
+        if "namespace" in self._kwargs:
+            return self._kwargs["namespace"]
+        if "namespace" in self._context and check_return_type(
+            self._context["namespace"]
+        ):
+            return self._context["namespace"]
         return None
-    
+
     # Name of the referent.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     # UID of the referent.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
     @typechecked
     def uid(self) -> Optional[str]:
-        if 'uid' in self._kwargs:
-            return self._kwargs['uid']
-        if 'uid' in self._context and check_return_type(self._context['uid']):
-            return self._context['uid']
+        if "uid" in self._kwargs:
+            return self._kwargs["uid"]
+        if "uid" in self._context and check_return_type(self._context["uid"]):
+            return self._context["uid"]
         return None
-    
+
     # API version of the referent.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if 'apiVersion' in self._kwargs:
-            return self._kwargs['apiVersion']
-        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
-            return self._context['apiVersion']
+        if "apiVersion" in self._kwargs:
+            return self._kwargs["apiVersion"]
+        if "apiVersion" in self._context and check_return_type(
+            self._context["apiVersion"]
+        ):
+            return self._context["apiVersion"]
         return None
-    
+
     # Specific resourceVersion to which this reference is made, if any.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        if 'resourceVersion' in self._kwargs:
-            return self._kwargs['resourceVersion']
-        if 'resourceVersion' in self._context and check_return_type(self._context['resourceVersion']):
-            return self._context['resourceVersion']
+        if "resourceVersion" in self._kwargs:
+            return self._kwargs["resourceVersion"]
+        if "resourceVersion" in self._context and check_return_type(
+            self._context["resourceVersion"]
+        ):
+            return self._context["resourceVersion"]
         return None
-    
+
     # If referring to a piece of an object instead of an entire object, this string
     # should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
     # For example, if the object reference is to a container within a pod, this would take on a value like:
@@ -1257,38 +1419,39 @@ class ObjectReference(types.Object):
     # TODO: this design is not final and this field is subject to change in the future.
     @typechecked
     def fieldPath(self) -> Optional[str]:
-        if 'fieldPath' in self._kwargs:
-            return self._kwargs['fieldPath']
-        if 'fieldPath' in self._context and check_return_type(self._context['fieldPath']):
-            return self._context['fieldPath']
+        if "fieldPath" in self._kwargs:
+            return self._kwargs["fieldPath"]
+        if "fieldPath" in self._context and check_return_type(
+            self._context["fieldPath"]
+        ):
+            return self._context["fieldPath"]
         return None
 
 
 # Binding ties one object to another; for example, a pod is bound to a node by a scheduler.
 # Deprecated in 1.7, please use the bindings subresource of pods instead.
 class Binding(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['target'] = self.target()
+        v["target"] = self.target()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Binding'
-    
+        return "Binding"
+
     # The target object that you want to bind to the standard object.
     @typechecked
     def target(self) -> ObjectReference:
-        if 'target' in self._kwargs:
-            return self._kwargs['target']
-        if 'target' in self._context and check_return_type(self._context['target']):
-            return self._context['target']
+        if "target" in self._kwargs:
+            return self._kwargs["target"]
+        if "target" in self._context and check_return_type(self._context["target"]):
+            return self._context["target"]
         with context.Scope(**self._context):
             return ObjectReference()
 
@@ -1296,119 +1459,123 @@ class Binding(base.TypedObject, base.MetadataObject):
 # SecretReference represents a Secret Reference. It has enough information to retrieve secret
 # in any namespace
 class SecretReference(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         namespace = self.namespace()
         if namespace:  # omit empty
-            v['namespace'] = namespace
+            v["namespace"] = namespace
         return v
-    
+
     # Name is unique within a namespace to reference a secret resource.
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     # Namespace defines the space within which the secret name must be unique.
     @typechecked
     def namespace(self) -> Optional[str]:
-        if 'namespace' in self._kwargs:
-            return self._kwargs['namespace']
-        if 'namespace' in self._context and check_return_type(self._context['namespace']):
-            return self._context['namespace']
+        if "namespace" in self._kwargs:
+            return self._kwargs["namespace"]
+        if "namespace" in self._context and check_return_type(
+            self._context["namespace"]
+        ):
+            return self._context["namespace"]
         return None
 
 
 # Represents storage that is managed by an external CSI volume driver (Beta feature)
 class CSIPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['driver'] = self.driver()
-        v['volumeHandle'] = self.volumeHandle()
+        v["driver"] = self.driver()
+        v["volumeHandle"] = self.volumeHandle()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         volumeAttributes = self.volumeAttributes()
         if volumeAttributes:  # omit empty
-            v['volumeAttributes'] = volumeAttributes
+            v["volumeAttributes"] = volumeAttributes
         controllerPublishSecretRef = self.controllerPublishSecretRef()
         if controllerPublishSecretRef is not None:  # omit empty
-            v['controllerPublishSecretRef'] = controllerPublishSecretRef
+            v["controllerPublishSecretRef"] = controllerPublishSecretRef
         nodeStageSecretRef = self.nodeStageSecretRef()
         if nodeStageSecretRef is not None:  # omit empty
-            v['nodeStageSecretRef'] = nodeStageSecretRef
+            v["nodeStageSecretRef"] = nodeStageSecretRef
         nodePublishSecretRef = self.nodePublishSecretRef()
         if nodePublishSecretRef is not None:  # omit empty
-            v['nodePublishSecretRef'] = nodePublishSecretRef
+            v["nodePublishSecretRef"] = nodePublishSecretRef
         controllerExpandSecretRef = self.controllerExpandSecretRef()
         if controllerExpandSecretRef is not None:  # omit empty
-            v['controllerExpandSecretRef'] = controllerExpandSecretRef
+            v["controllerExpandSecretRef"] = controllerExpandSecretRef
         return v
-    
+
     # Driver is the name of the driver to use for this volume.
     # Required.
     @typechecked
     def driver(self) -> str:
-        if 'driver' in self._kwargs:
-            return self._kwargs['driver']
-        if 'driver' in self._context and check_return_type(self._context['driver']):
-            return self._context['driver']
-        return ''
-    
+        if "driver" in self._kwargs:
+            return self._kwargs["driver"]
+        if "driver" in self._context and check_return_type(self._context["driver"]):
+            return self._context["driver"]
+        return ""
+
     # VolumeHandle is the unique volume name returned by the CSI volume
     # plugin’s CreateVolume to refer to the volume on all subsequent calls.
     # Required.
     @typechecked
     def volumeHandle(self) -> str:
-        if 'volumeHandle' in self._kwargs:
-            return self._kwargs['volumeHandle']
-        if 'volumeHandle' in self._context and check_return_type(self._context['volumeHandle']):
-            return self._context['volumeHandle']
-        return ''
-    
+        if "volumeHandle" in self._kwargs:
+            return self._kwargs["volumeHandle"]
+        if "volumeHandle" in self._context and check_return_type(
+            self._context["volumeHandle"]
+        ):
+            return self._context["volumeHandle"]
+        return ""
+
     # Optional: The value to pass to ControllerPublishVolumeRequest.
     # Defaults to false (read/write).
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs".
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Attributes of the volume to publish.
     @typechecked
     def volumeAttributes(self) -> Dict[str, str]:
-        if 'volumeAttributes' in self._kwargs:
-            return self._kwargs['volumeAttributes']
-        if 'volumeAttributes' in self._context and check_return_type(self._context['volumeAttributes']):
-            return self._context['volumeAttributes']
+        if "volumeAttributes" in self._kwargs:
+            return self._kwargs["volumeAttributes"]
+        if "volumeAttributes" in self._context and check_return_type(
+            self._context["volumeAttributes"]
+        ):
+            return self._context["volumeAttributes"]
         return {}
-    
+
     # ControllerPublishSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
     # ControllerPublishVolume and ControllerUnpublishVolume calls.
@@ -1416,12 +1583,14 @@ class CSIPersistentVolumeSource(types.Object):
     # secret object contains more than one secret, all secrets are passed.
     @typechecked
     def controllerPublishSecretRef(self) -> Optional[SecretReference]:
-        if 'controllerPublishSecretRef' in self._kwargs:
-            return self._kwargs['controllerPublishSecretRef']
-        if 'controllerPublishSecretRef' in self._context and check_return_type(self._context['controllerPublishSecretRef']):
-            return self._context['controllerPublishSecretRef']
+        if "controllerPublishSecretRef" in self._kwargs:
+            return self._kwargs["controllerPublishSecretRef"]
+        if "controllerPublishSecretRef" in self._context and check_return_type(
+            self._context["controllerPublishSecretRef"]
+        ):
+            return self._context["controllerPublishSecretRef"]
         return None
-    
+
     # NodeStageSecretRef is a reference to the secret object containing sensitive
     # information to pass to the CSI driver to complete the CSI NodeStageVolume
     # and NodeStageVolume and NodeUnstageVolume calls.
@@ -1429,12 +1598,14 @@ class CSIPersistentVolumeSource(types.Object):
     # secret object contains more than one secret, all secrets are passed.
     @typechecked
     def nodeStageSecretRef(self) -> Optional[SecretReference]:
-        if 'nodeStageSecretRef' in self._kwargs:
-            return self._kwargs['nodeStageSecretRef']
-        if 'nodeStageSecretRef' in self._context and check_return_type(self._context['nodeStageSecretRef']):
-            return self._context['nodeStageSecretRef']
+        if "nodeStageSecretRef" in self._kwargs:
+            return self._kwargs["nodeStageSecretRef"]
+        if "nodeStageSecretRef" in self._context and check_return_type(
+            self._context["nodeStageSecretRef"]
+        ):
+            return self._context["nodeStageSecretRef"]
         return None
-    
+
     # NodePublishSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
     # NodePublishVolume and NodeUnpublishVolume calls.
@@ -1442,12 +1613,14 @@ class CSIPersistentVolumeSource(types.Object):
     # secret object contains more than one secret, all secrets are passed.
     @typechecked
     def nodePublishSecretRef(self) -> Optional[SecretReference]:
-        if 'nodePublishSecretRef' in self._kwargs:
-            return self._kwargs['nodePublishSecretRef']
-        if 'nodePublishSecretRef' in self._context and check_return_type(self._context['nodePublishSecretRef']):
-            return self._context['nodePublishSecretRef']
+        if "nodePublishSecretRef" in self._kwargs:
+            return self._kwargs["nodePublishSecretRef"]
+        if "nodePublishSecretRef" in self._context and check_return_type(
+            self._context["nodePublishSecretRef"]
+        ):
+            return self._context["nodePublishSecretRef"]
         return None
-    
+
     # ControllerExpandSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
     # ControllerExpandVolume call.
@@ -1456,99 +1629,101 @@ class CSIPersistentVolumeSource(types.Object):
     # secret object contains more than one secret, all secrets are passed.
     @typechecked
     def controllerExpandSecretRef(self) -> Optional[SecretReference]:
-        if 'controllerExpandSecretRef' in self._kwargs:
-            return self._kwargs['controllerExpandSecretRef']
-        if 'controllerExpandSecretRef' in self._context and check_return_type(self._context['controllerExpandSecretRef']):
-            return self._context['controllerExpandSecretRef']
+        if "controllerExpandSecretRef" in self._kwargs:
+            return self._kwargs["controllerExpandSecretRef"]
+        if "controllerExpandSecretRef" in self._context and check_return_type(
+            self._context["controllerExpandSecretRef"]
+        ):
+            return self._context["controllerExpandSecretRef"]
         return None
 
 
 # LocalObjectReference contains enough information to let you locate the
 # referenced object inside the same namespace.
 class LocalObjectReference(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         return v
-    
+
     # Name of the referent.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
     # TODO: Add other useful fields. apiVersion, kind, uid?
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
 
 
 # Represents a source location of a volume to mount, managed by an external CSI driver
 class CSIVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['driver'] = self.driver()
+        v["driver"] = self.driver()
         readOnly = self.readOnly()
         if readOnly is not None:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         fsType = self.fsType()
         if fsType is not None:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         volumeAttributes = self.volumeAttributes()
         if volumeAttributes:  # omit empty
-            v['volumeAttributes'] = volumeAttributes
+            v["volumeAttributes"] = volumeAttributes
         nodePublishSecretRef = self.nodePublishSecretRef()
         if nodePublishSecretRef is not None:  # omit empty
-            v['nodePublishSecretRef'] = nodePublishSecretRef
+            v["nodePublishSecretRef"] = nodePublishSecretRef
         return v
-    
+
     # Driver is the name of the CSI driver that handles this volume.
     # Consult with your admin for the correct name as registered in the cluster.
     @typechecked
     def driver(self) -> str:
-        if 'driver' in self._kwargs:
-            return self._kwargs['driver']
-        if 'driver' in self._context and check_return_type(self._context['driver']):
-            return self._context['driver']
-        return ''
-    
+        if "driver" in self._kwargs:
+            return self._kwargs["driver"]
+        if "driver" in self._context and check_return_type(self._context["driver"]):
+            return self._context["driver"]
+        return ""
+
     # Specifies a read-only configuration for the volume.
     # Defaults to false (read/write).
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Filesystem type to mount. Ex. "ext4", "xfs", "ntfs".
     # If not provided, the empty value is passed to the associated CSI driver
     # which will determine the default filesystem to apply.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # VolumeAttributes stores driver-specific properties that are passed to the CSI
     # driver. Consult your driver's documentation for supported values.
     @typechecked
     def volumeAttributes(self) -> Dict[str, str]:
-        if 'volumeAttributes' in self._kwargs:
-            return self._kwargs['volumeAttributes']
-        if 'volumeAttributes' in self._context and check_return_type(self._context['volumeAttributes']):
-            return self._context['volumeAttributes']
+        if "volumeAttributes" in self._kwargs:
+            return self._kwargs["volumeAttributes"]
+        if "volumeAttributes" in self._context and check_return_type(
+            self._context["volumeAttributes"]
+        ):
+            return self._context["volumeAttributes"]
         return {}
-    
+
     # NodePublishSecretRef is a reference to the secret object containing
     # sensitive information to pass to the CSI driver to complete the CSI
     # NodePublishVolume and NodeUnpublishVolume calls.
@@ -1556,215 +1731,222 @@ class CSIVolumeSource(types.Object):
     # secret object contains more than one secret, all secret references are passed.
     @typechecked
     def nodePublishSecretRef(self) -> Optional[LocalObjectReference]:
-        if 'nodePublishSecretRef' in self._kwargs:
-            return self._kwargs['nodePublishSecretRef']
-        if 'nodePublishSecretRef' in self._context and check_return_type(self._context['nodePublishSecretRef']):
-            return self._context['nodePublishSecretRef']
+        if "nodePublishSecretRef" in self._kwargs:
+            return self._kwargs["nodePublishSecretRef"]
+        if "nodePublishSecretRef" in self._context and check_return_type(
+            self._context["nodePublishSecretRef"]
+        ):
+            return self._context["nodePublishSecretRef"]
         return None
 
 
 # Adds and removes POSIX capabilities from running containers.
 class Capabilities(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         add = self.add()
         if add:  # omit empty
-            v['add'] = add
+            v["add"] = add
         drop = self.drop()
         if drop:  # omit empty
-            v['drop'] = drop
+            v["drop"] = drop
         return v
-    
+
     # Added capabilities
     @typechecked
     def add(self) -> List[Capability]:
-        if 'add' in self._kwargs:
-            return self._kwargs['add']
-        if 'add' in self._context and check_return_type(self._context['add']):
-            return self._context['add']
+        if "add" in self._kwargs:
+            return self._kwargs["add"]
+        if "add" in self._context and check_return_type(self._context["add"]):
+            return self._context["add"]
         return []
-    
+
     # Removed capabilities
     @typechecked
     def drop(self) -> List[Capability]:
-        if 'drop' in self._kwargs:
-            return self._kwargs['drop']
-        if 'drop' in self._context and check_return_type(self._context['drop']):
-            return self._context['drop']
+        if "drop" in self._kwargs:
+            return self._kwargs["drop"]
+        if "drop" in self._context and check_return_type(self._context["drop"]):
+            return self._context["drop"]
         return []
 
 
 # Represents a Ceph Filesystem mount that lasts the lifetime of a pod
 # Cephfs volumes do not support ownership management or SELinux relabeling.
 class CephFSPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['monitors'] = self.monitors()
+        v["monitors"] = self.monitors()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
+            v["path"] = path
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         secretFile = self.secretFile()
         if secretFile:  # omit empty
-            v['secretFile'] = secretFile
+            v["secretFile"] = secretFile
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # Required: Monitors is a collection of Ceph monitors
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def monitors(self) -> List[str]:
-        if 'monitors' in self._kwargs:
-            return self._kwargs['monitors']
-        if 'monitors' in self._context and check_return_type(self._context['monitors']):
-            return self._context['monitors']
+        if "monitors" in self._kwargs:
+            return self._kwargs["monitors"]
+        if "monitors" in self._context and check_return_type(self._context["monitors"]):
+            return self._context["monitors"]
         return []
-    
+
     # Optional: Used as the mounted root, rather than the full Ceph tree, default is /
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
         return None
-    
+
     # Optional: User is the rados user name, default is admin
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
         return None
-    
+
     # Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def secretFile(self) -> Optional[str]:
-        if 'secretFile' in self._kwargs:
-            return self._kwargs['secretFile']
-        if 'secretFile' in self._context and check_return_type(self._context['secretFile']):
-            return self._context['secretFile']
+        if "secretFile" in self._kwargs:
+            return self._kwargs["secretFile"]
+        if "secretFile" in self._context and check_return_type(
+            self._context["secretFile"]
+        ):
+            return self._context["secretFile"]
         return None
-    
+
     # Optional: SecretRef is reference to the authentication secret for User, default is empty.
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # Represents a Ceph Filesystem mount that lasts the lifetime of a pod
 # Cephfs volumes do not support ownership management or SELinux relabeling.
 class CephFSVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['monitors'] = self.monitors()
+        v["monitors"] = self.monitors()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
+            v["path"] = path
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         secretFile = self.secretFile()
         if secretFile:  # omit empty
-            v['secretFile'] = secretFile
+            v["secretFile"] = secretFile
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # Required: Monitors is a collection of Ceph monitors
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def monitors(self) -> List[str]:
-        if 'monitors' in self._kwargs:
-            return self._kwargs['monitors']
-        if 'monitors' in self._context and check_return_type(self._context['monitors']):
-            return self._context['monitors']
+        if "monitors" in self._kwargs:
+            return self._kwargs["monitors"]
+        if "monitors" in self._context and check_return_type(self._context["monitors"]):
+            return self._context["monitors"]
         return []
-    
+
     # Optional: Used as the mounted root, rather than the full Ceph tree, default is /
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
         return None
-    
+
     # Optional: User is the rados user name, default is admin
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
         return None
-    
+
     # Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def secretFile(self) -> Optional[str]:
-        if 'secretFile' in self._kwargs:
-            return self._kwargs['secretFile']
-        if 'secretFile' in self._context and check_return_type(self._context['secretFile']):
-            return self._context['secretFile']
+        if "secretFile" in self._kwargs:
+            return self._kwargs["secretFile"]
+        if "secretFile" in self._context and check_return_type(
+            self._context["secretFile"]
+        ):
+            return self._context["secretFile"]
         return None
-    
+
     # Optional: SecretRef is reference to the authentication secret for User, default is empty.
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
@@ -1773,63 +1955,64 @@ class CephFSVolumeSource(types.Object):
 # The volume must also be in the same region as the kubelet.
 # Cinder volumes support ownership management and SELinux relabeling.
 class CinderPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['volumeID'] = self.volumeID()
+        v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         return v
-    
+
     # volume id used to identify the volume in cinder.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def volumeID(self) -> str:
-        if 'volumeID' in self._kwargs:
-            return self._kwargs['volumeID']
-        if 'volumeID' in self._context and check_return_type(self._context['volumeID']):
-            return self._context['volumeID']
-        return ''
-    
+        if "volumeID" in self._kwargs:
+            return self._kwargs["volumeID"]
+        if "volumeID" in self._context and check_return_type(self._context["volumeID"]):
+            return self._context["volumeID"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Optional: points to a secret object containing parameters used to connect
     # to OpenStack.
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
 
 
@@ -1838,197 +2021,198 @@ class CinderPersistentVolumeSource(types.Object):
 # The volume must also be in the same region as the kubelet.
 # Cinder volumes support ownership management and SELinux relabeling.
 class CinderVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['volumeID'] = self.volumeID()
+        v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         return v
-    
+
     # volume id used to identify the volume in cinder.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def volumeID(self) -> str:
-        if 'volumeID' in self._kwargs:
-            return self._kwargs['volumeID']
-        if 'volumeID' in self._context and check_return_type(self._context['volumeID']):
-            return self._context['volumeID']
-        return ''
-    
+        if "volumeID" in self._kwargs:
+            return self._kwargs["volumeID"]
+        if "volumeID" in self._context and check_return_type(self._context["volumeID"]):
+            return self._context["volumeID"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Optional: points to a secret object containing parameters used to connect
     # to OpenStack.
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
 
 
 # ClientIPConfig represents the configurations of Client IP based session affinity.
 class ClientIPConfig(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         timeoutSeconds = self.timeoutSeconds()
         if timeoutSeconds is not None:  # omit empty
-            v['timeoutSeconds'] = timeoutSeconds
+            v["timeoutSeconds"] = timeoutSeconds
         return v
-    
+
     # timeoutSeconds specifies the seconds of ClientIP type session sticky time.
     # The value must be >0 && <=86400(for 1 day) if ServiceAffinity == "ClientIP".
     # Default value is 10800(for 3 hours).
     @typechecked
     def timeoutSeconds(self) -> Optional[int]:
-        if 'timeoutSeconds' in self._kwargs:
-            return self._kwargs['timeoutSeconds']
-        if 'timeoutSeconds' in self._context and check_return_type(self._context['timeoutSeconds']):
-            return self._context['timeoutSeconds']
+        if "timeoutSeconds" in self._kwargs:
+            return self._kwargs["timeoutSeconds"]
+        if "timeoutSeconds" in self._context and check_return_type(
+            self._context["timeoutSeconds"]
+        ):
+            return self._context["timeoutSeconds"]
         return None
 
 
 # Information about the condition of a component.
 class ComponentCondition(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['type'] = self.type()
-        v['status'] = self.status()
+        v["type"] = self.type()
+        v["status"] = self.status()
         message = self.message()
         if message:  # omit empty
-            v['message'] = message
+            v["message"] = message
         error = self.error()
         if error:  # omit empty
-            v['error'] = error
+            v["error"] = error
         return v
-    
+
     # Type of condition for a component.
     # Valid value: "Healthy"
     @typechecked
     def type(self) -> ComponentConditionType:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
         return None
-    
+
     # Status of the condition for a component.
     # Valid values for "Healthy": "True", "False", or "Unknown".
     @typechecked
     def status(self) -> ConditionStatus:
-        if 'status' in self._kwargs:
-            return self._kwargs['status']
-        if 'status' in self._context and check_return_type(self._context['status']):
-            return self._context['status']
+        if "status" in self._kwargs:
+            return self._kwargs["status"]
+        if "status" in self._context and check_return_type(self._context["status"]):
+            return self._context["status"]
         return None
-    
+
     # Message about the condition for a component.
     # For example, information about a health check.
     @typechecked
     def message(self) -> Optional[str]:
-        if 'message' in self._kwargs:
-            return self._kwargs['message']
-        if 'message' in self._context and check_return_type(self._context['message']):
-            return self._context['message']
+        if "message" in self._kwargs:
+            return self._kwargs["message"]
+        if "message" in self._context and check_return_type(self._context["message"]):
+            return self._context["message"]
         return None
-    
+
     # Condition error code for a component.
     # For example, a health check error code.
     @typechecked
     def error(self) -> Optional[str]:
-        if 'error' in self._kwargs:
-            return self._kwargs['error']
-        if 'error' in self._context and check_return_type(self._context['error']):
-            return self._context['error']
+        if "error" in self._kwargs:
+            return self._kwargs["error"]
+        if "error" in self._context and check_return_type(self._context["error"]):
+            return self._context["error"]
         return None
 
 
 # ComponentStatus (and ComponentStatusList) holds the cluster validation info.
 class ComponentStatus(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         conditions = self.conditions()
         if conditions:  # omit empty
-            v['conditions'] = conditions
+            v["conditions"] = conditions
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ComponentStatus'
-    
+        return "ComponentStatus"
+
     # List of component conditions observed
     @typechecked
     def conditions(self) -> List[ComponentCondition]:
-        if 'conditions' in self._kwargs:
-            return self._kwargs['conditions']
-        if 'conditions' in self._context and check_return_type(self._context['conditions']):
-            return self._context['conditions']
+        if "conditions" in self._kwargs:
+            return self._kwargs["conditions"]
+        if "conditions" in self._context and check_return_type(
+            self._context["conditions"]
+        ):
+            return self._context["conditions"]
         return []
 
 
 # ConfigMap holds configuration data for pods to consume.
 class ConfigMap(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         data = self.data()
         if data:  # omit empty
-            v['data'] = data
+            v["data"] = data
         binaryData = self.binaryData()
         if binaryData:  # omit empty
-            v['binaryData'] = binaryData
+            v["binaryData"] = binaryData
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ConfigMap'
-    
+        return "ConfigMap"
+
     # Data contains the configuration data.
     # Each key must consist of alphanumeric characters, '-', '_' or '.'.
     # Values with non-UTF-8 byte sequences must use the BinaryData field.
@@ -2036,12 +2220,12 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
     # the BinaryData field, this is enforced during validation process.
     @typechecked
     def data(self) -> Dict[str, str]:
-        if 'data' in self._kwargs:
-            return self._kwargs['data']
-        if 'data' in self._context and check_return_type(self._context['data']):
-            return self._context['data']
+        if "data" in self._kwargs:
+            return self._kwargs["data"]
+        if "data" in self._context and check_return_type(self._context["data"]):
+            return self._context["data"]
         return {}
-    
+
     # BinaryData contains the binary data.
     # Each key must consist of alphanumeric characters, '-', '_' or '.'.
     # BinaryData can contain byte sequences that are not in the UTF-8 range.
@@ -2051,236 +2235,245 @@ class ConfigMap(base.TypedObject, base.MetadataObject):
     # kubelet.
     @typechecked
     def binaryData(self) -> Dict[str, bytes]:
-        if 'binaryData' in self._kwargs:
-            return self._kwargs['binaryData']
-        if 'binaryData' in self._context and check_return_type(self._context['binaryData']):
-            return self._context['binaryData']
+        if "binaryData" in self._kwargs:
+            return self._kwargs["binaryData"]
+        if "binaryData" in self._context and check_return_type(
+            self._context["binaryData"]
+        ):
+            return self._context["binaryData"]
         return {}
 
 
 # ConfigMapEnvSource selects a ConfigMap to populate the environment
 # variables with.
-# 
+#
 # The contents of the target ConfigMap's Data field will represent the
 # key-value pairs as environment variables.
 class ConfigMapEnvSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     # The ConfigMap to select from.
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # Specify whether the ConfigMap must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # Selects a key from a ConfigMap.
 class ConfigMapKeySelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
-        v['key'] = self.key()
+        v["key"] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     # The ConfigMap to select from.
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # The key to select.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # Specify whether the ConfigMap or its key must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node.
 class ConfigMapNodeConfigSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['namespace'] = self.namespace()
-        v['name'] = self.name()
+        v["namespace"] = self.namespace()
+        v["name"] = self.name()
         uid = self.uid()
         if uid:  # omit empty
-            v['uid'] = uid
+            v["uid"] = uid
         resourceVersion = self.resourceVersion()
         if resourceVersion:  # omit empty
-            v['resourceVersion'] = resourceVersion
-        v['kubeletConfigKey'] = self.kubeletConfigKey()
+            v["resourceVersion"] = resourceVersion
+        v["kubeletConfigKey"] = self.kubeletConfigKey()
         return v
-    
+
     # Namespace is the metadata.namespace of the referenced ConfigMap.
     # This field is required in all cases.
     @typechecked
     def namespace(self) -> str:
-        if 'namespace' in self._kwargs:
-            return self._kwargs['namespace']
-        if 'namespace' in self._context and check_return_type(self._context['namespace']):
-            return self._context['namespace']
-        return ''
-    
+        if "namespace" in self._kwargs:
+            return self._kwargs["namespace"]
+        if "namespace" in self._context and check_return_type(
+            self._context["namespace"]
+        ):
+            return self._context["namespace"]
+        return ""
+
     # Name is the metadata.name of the referenced ConfigMap.
     # This field is required in all cases.
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # UID is the metadata.UID of the referenced ConfigMap.
     # This field is forbidden in Node.Spec, and required in Node.Status.
     @typechecked
     def uid(self) -> Optional[str]:
-        if 'uid' in self._kwargs:
-            return self._kwargs['uid']
-        if 'uid' in self._context and check_return_type(self._context['uid']):
-            return self._context['uid']
+        if "uid" in self._kwargs:
+            return self._kwargs["uid"]
+        if "uid" in self._context and check_return_type(self._context["uid"]):
+            return self._context["uid"]
         return None
-    
+
     # ResourceVersion is the metadata.ResourceVersion of the referenced ConfigMap.
     # This field is forbidden in Node.Spec, and required in Node.Status.
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        if 'resourceVersion' in self._kwargs:
-            return self._kwargs['resourceVersion']
-        if 'resourceVersion' in self._context and check_return_type(self._context['resourceVersion']):
-            return self._context['resourceVersion']
+        if "resourceVersion" in self._kwargs:
+            return self._kwargs["resourceVersion"]
+        if "resourceVersion" in self._context and check_return_type(
+            self._context["resourceVersion"]
+        ):
+            return self._context["resourceVersion"]
         return None
-    
+
     # KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure
     # This field is required in all cases.
     @typechecked
     def kubeletConfigKey(self) -> str:
-        if 'kubeletConfigKey' in self._kwargs:
-            return self._kwargs['kubeletConfigKey']
-        if 'kubeletConfigKey' in self._context and check_return_type(self._context['kubeletConfigKey']):
-            return self._context['kubeletConfigKey']
-        return ''
+        if "kubeletConfigKey" in self._kwargs:
+            return self._kwargs["kubeletConfigKey"]
+        if "kubeletConfigKey" in self._context and check_return_type(
+            self._context["kubeletConfigKey"]
+        ):
+            return self._context["kubeletConfigKey"]
+        return ""
 
 
 # Maps a string key to a path within a volume.
 class KeyToPath(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['key'] = self.key()
-        v['path'] = self.path()
+        v["key"] = self.key()
+        v["path"] = self.path()
         mode = self.mode()
         if mode is not None:  # omit empty
-            v['mode'] = mode
+            v["mode"] = mode
         return v
-    
+
     # The key to project.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # The relative path of the file to map the key to.
     # May not be an absolute path.
     # May not contain the path element '..'.
     # May not start with the string '..'.
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # Optional: mode bits to use on this file, must be a value between 0
     # and 0777. If not specified, the volume defaultMode will be used.
     # This might be in conflict with other options that affect the file
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def mode(self) -> Optional[int]:
-        if 'mode' in self._kwargs:
-            return self._kwargs['mode']
-        if 'mode' in self._context and check_return_type(self._context['mode']):
-            return self._context['mode']
+        if "mode" in self._kwargs:
+            return self._kwargs["mode"]
+        if "mode" in self._context and check_return_type(self._context["mode"]):
+            return self._context["mode"]
         return None
 
 
 # Adapts a ConfigMap into a projected volume.
-# 
+#
 # The contents of the target ConfigMap's Data field will be presented in a
 # projected volume as files using the keys in the Data field as the file names,
 # unless the items element is populated with specific mappings of keys to paths.
 # Note that this is identical to a configmap volume source without the default
 # mode.
 class ConfigMapProjection(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # If unspecified, each key-value pair in the Data field of the referenced
     # ConfigMap will be projected into the volume as a file whose name is the
     # key and content is the value. If specified, the listed keys will be
@@ -2290,54 +2483,55 @@ class ConfigMapProjection(types.Object):
     # relative and may not contain the '..' path or start with '..'.
     @typechecked
     def items(self) -> List[KeyToPath]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
-    
+
     # Specify whether the ConfigMap or its keys must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # Adapts a ConfigMap into a volume.
-# 
+#
 # The contents of the target ConfigMap's Data field will be presented in a
 # volume as files using the keys in the Data field as the file names, unless
 # the items element is populated with specific mappings of keys to paths.
 # ConfigMap volumes support ownership management and SELinux relabeling.
 class ConfigMapVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         defaultMode = self.defaultMode()
         if defaultMode is not None:  # omit empty
-            v['defaultMode'] = defaultMode
+            v["defaultMode"] = defaultMode
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # If unspecified, each key-value pair in the Data field of the referenced
     # ConfigMap will be projected into the volume as a file whose name is the
     # key and content is the value. If specified, the listed keys will be
@@ -2347,12 +2541,12 @@ class ConfigMapVolumeSource(types.Object):
     # relative and may not contain the '..' path or start with '..'.
     @typechecked
     def items(self) -> List[KeyToPath]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
-    
+
     # Optional: mode bits to use on created files by default. Must be a
     # value between 0 and 0777. Defaults to 0644.
     # Directories within the path are not affected by this setting.
@@ -2360,375 +2554,391 @@ class ConfigMapVolumeSource(types.Object):
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def defaultMode(self) -> Optional[int]:
-        if 'defaultMode' in self._kwargs:
-            return self._kwargs['defaultMode']
-        if 'defaultMode' in self._context and check_return_type(self._context['defaultMode']):
-            return self._context['defaultMode']
+        if "defaultMode" in self._kwargs:
+            return self._kwargs["defaultMode"]
+        if "defaultMode" in self._context and check_return_type(
+            self._context["defaultMode"]
+        ):
+            return self._context["defaultMode"]
         return 420
-    
+
     # Specify whether the ConfigMap or its keys must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # ContainerPort represents a network port in a single container.
 class ContainerPort(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         hostPort = self.hostPort()
         if hostPort:  # omit empty
-            v['hostPort'] = hostPort
-        v['containerPort'] = self.containerPort()
+            v["hostPort"] = hostPort
+        v["containerPort"] = self.containerPort()
         protocol = self.protocol()
         if protocol:  # omit empty
-            v['protocol'] = protocol
+            v["protocol"] = protocol
         hostIP = self.hostIP()
         if hostIP:  # omit empty
-            v['hostIP'] = hostIP
+            v["hostIP"] = hostIP
         return v
-    
+
     # If specified, this must be an IANA_SVC_NAME and unique within the pod. Each
     # named port in a pod must have a unique name. Name for the port that can be
     # referred to by services.
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     # Number of port to expose on the host.
     # If specified, this must be a valid port number, 0 < x < 65536.
     # If HostNetwork is specified, this must match ContainerPort.
     # Most containers do not need this.
     @typechecked
     def hostPort(self) -> Optional[int]:
-        if 'hostPort' in self._kwargs:
-            return self._kwargs['hostPort']
-        if 'hostPort' in self._context and check_return_type(self._context['hostPort']):
-            return self._context['hostPort']
+        if "hostPort" in self._kwargs:
+            return self._kwargs["hostPort"]
+        if "hostPort" in self._context and check_return_type(self._context["hostPort"]):
+            return self._context["hostPort"]
         return None
-    
+
     # Number of port to expose on the pod's IP address.
     # This must be a valid port number, 0 < x < 65536.
     @typechecked
     def containerPort(self) -> int:
-        if 'containerPort' in self._kwargs:
-            return self._kwargs['containerPort']
-        if 'containerPort' in self._context and check_return_type(self._context['containerPort']):
-            return self._context['containerPort']
+        if "containerPort" in self._kwargs:
+            return self._kwargs["containerPort"]
+        if "containerPort" in self._context and check_return_type(
+            self._context["containerPort"]
+        ):
+            return self._context["containerPort"]
         return 0
-    
+
     # Protocol for port. Must be UDP, TCP, or SCTP.
     # Defaults to "TCP".
     @typechecked
     def protocol(self) -> Optional[Protocol]:
-        if 'protocol' in self._kwargs:
-            return self._kwargs['protocol']
-        if 'protocol' in self._context and check_return_type(self._context['protocol']):
-            return self._context['protocol']
-        return Protocol['TCP']
-    
+        if "protocol" in self._kwargs:
+            return self._kwargs["protocol"]
+        if "protocol" in self._context and check_return_type(self._context["protocol"]):
+            return self._context["protocol"]
+        return Protocol["TCP"]
+
     # What host IP to bind the external port to.
     @typechecked
     def hostIP(self) -> Optional[str]:
-        if 'hostIP' in self._kwargs:
-            return self._kwargs['hostIP']
-        if 'hostIP' in self._context and check_return_type(self._context['hostIP']):
-            return self._context['hostIP']
+        if "hostIP" in self._kwargs:
+            return self._kwargs["hostIP"]
+        if "hostIP" in self._context and check_return_type(self._context["hostIP"]):
+            return self._context["hostIP"]
         return None
 
 
 # SecretEnvSource selects a Secret to populate the environment
 # variables with.
-# 
+#
 # The contents of the target Secret's Data field will represent the
 # key-value pairs as environment variables.
 class SecretEnvSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     # The Secret to select from.
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # Specify whether the Secret must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # EnvFromSource represents the source of a set of ConfigMaps
 class EnvFromSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         prefix = self.prefix()
         if prefix:  # omit empty
-            v['prefix'] = prefix
+            v["prefix"] = prefix
         configMapRef = self.configMapRef()
         if configMapRef is not None:  # omit empty
-            v['configMapRef'] = configMapRef
+            v["configMapRef"] = configMapRef
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         return v
-    
+
     # An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
     @typechecked
     def prefix(self) -> Optional[str]:
-        if 'prefix' in self._kwargs:
-            return self._kwargs['prefix']
-        if 'prefix' in self._context and check_return_type(self._context['prefix']):
-            return self._context['prefix']
+        if "prefix" in self._kwargs:
+            return self._kwargs["prefix"]
+        if "prefix" in self._context and check_return_type(self._context["prefix"]):
+            return self._context["prefix"]
         return None
-    
+
     # The ConfigMap to select from
     @typechecked
     def configMapRef(self) -> Optional[ConfigMapEnvSource]:
-        if 'configMapRef' in self._kwargs:
-            return self._kwargs['configMapRef']
-        if 'configMapRef' in self._context and check_return_type(self._context['configMapRef']):
-            return self._context['configMapRef']
+        if "configMapRef" in self._kwargs:
+            return self._kwargs["configMapRef"]
+        if "configMapRef" in self._context and check_return_type(
+            self._context["configMapRef"]
+        ):
+            return self._context["configMapRef"]
         return None
-    
+
     # The Secret to select from
     @typechecked
     def secretRef(self) -> Optional[SecretEnvSource]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
 
 
 # ObjectFieldSelector selects an APIVersioned field of an object.
 class ObjectFieldSelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         apiVersion = self.apiVersion()
         if apiVersion:  # omit empty
-            v['apiVersion'] = apiVersion
-        v['fieldPath'] = self.fieldPath()
+            v["apiVersion"] = apiVersion
+        v["fieldPath"] = self.fieldPath()
         return v
-    
+
     # Version of the schema the FieldPath is written in terms of, defaults to "v1".
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if 'apiVersion' in self._kwargs:
-            return self._kwargs['apiVersion']
-        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
-            return self._context['apiVersion']
-        return 'v1'
-    
+        if "apiVersion" in self._kwargs:
+            return self._kwargs["apiVersion"]
+        if "apiVersion" in self._context and check_return_type(
+            self._context["apiVersion"]
+        ):
+            return self._context["apiVersion"]
+        return "v1"
+
     # Path of the field to select in the specified API version.
     @typechecked
     def fieldPath(self) -> str:
-        if 'fieldPath' in self._kwargs:
-            return self._kwargs['fieldPath']
-        if 'fieldPath' in self._context and check_return_type(self._context['fieldPath']):
-            return self._context['fieldPath']
-        return ''
+        if "fieldPath" in self._kwargs:
+            return self._kwargs["fieldPath"]
+        if "fieldPath" in self._context and check_return_type(
+            self._context["fieldPath"]
+        ):
+            return self._context["fieldPath"]
+        return ""
 
 
 # ResourceFieldSelector represents container resources (cpu, memory) and their output format
 class ResourceFieldSelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         containerName = self.containerName()
         if containerName:  # omit empty
-            v['containerName'] = containerName
-        v['resource'] = self.resource()
-        v['divisor'] = self.divisor()
+            v["containerName"] = containerName
+        v["resource"] = self.resource()
+        v["divisor"] = self.divisor()
         return v
-    
+
     # Container name: required for volumes, optional for env vars
     @typechecked
     def containerName(self) -> Optional[str]:
-        if 'containerName' in self._kwargs:
-            return self._kwargs['containerName']
-        if 'containerName' in self._context and check_return_type(self._context['containerName']):
-            return self._context['containerName']
+        if "containerName" in self._kwargs:
+            return self._kwargs["containerName"]
+        if "containerName" in self._context and check_return_type(
+            self._context["containerName"]
+        ):
+            return self._context["containerName"]
         return None
-    
+
     # Required: resource to select
     @typechecked
     def resource(self) -> str:
-        if 'resource' in self._kwargs:
-            return self._kwargs['resource']
-        if 'resource' in self._context and check_return_type(self._context['resource']):
-            return self._context['resource']
-        return ''
-    
+        if "resource" in self._kwargs:
+            return self._kwargs["resource"]
+        if "resource" in self._context and check_return_type(self._context["resource"]):
+            return self._context["resource"]
+        return ""
+
     # Specifies the output format of the exposed resources, defaults to "1"
     @typechecked
-    def divisor(self) -> 'resource.Quantity':
-        if 'divisor' in self._kwargs:
-            return self._kwargs['divisor']
-        if 'divisor' in self._context and check_return_type(self._context['divisor']):
-            return self._context['divisor']
+    def divisor(self) -> "resource.Quantity":
+        if "divisor" in self._kwargs:
+            return self._kwargs["divisor"]
+        if "divisor" in self._context and check_return_type(self._context["divisor"]):
+            return self._context["divisor"]
         with context.Scope(**self._context):
             return resource.Quantity()
 
 
 # SecretKeySelector selects a key of a Secret.
 class SecretKeySelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
-        v['key'] = self.key()
+        v["key"] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     # The name of the secret in the pod's namespace to select from.
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # The key of the secret to select from.  Must be a valid secret key.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # Specify whether the Secret or its key must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # EnvVarSource represents a source for the value of an EnvVar.
 class EnvVarSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         fieldRef = self.fieldRef()
         if fieldRef is not None:  # omit empty
-            v['fieldRef'] = fieldRef
+            v["fieldRef"] = fieldRef
         resourceFieldRef = self.resourceFieldRef()
         if resourceFieldRef is not None:  # omit empty
-            v['resourceFieldRef'] = resourceFieldRef
+            v["resourceFieldRef"] = resourceFieldRef
         configMapKeyRef = self.configMapKeyRef()
         if configMapKeyRef is not None:  # omit empty
-            v['configMapKeyRef'] = configMapKeyRef
+            v["configMapKeyRef"] = configMapKeyRef
         secretKeyRef = self.secretKeyRef()
         if secretKeyRef is not None:  # omit empty
-            v['secretKeyRef'] = secretKeyRef
+            v["secretKeyRef"] = secretKeyRef
         return v
-    
+
     # Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations,
     # spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
     @typechecked
     def fieldRef(self) -> Optional[ObjectFieldSelector]:
-        if 'fieldRef' in self._kwargs:
-            return self._kwargs['fieldRef']
-        if 'fieldRef' in self._context and check_return_type(self._context['fieldRef']):
-            return self._context['fieldRef']
+        if "fieldRef" in self._kwargs:
+            return self._kwargs["fieldRef"]
+        if "fieldRef" in self._context and check_return_type(self._context["fieldRef"]):
+            return self._context["fieldRef"]
         return None
-    
+
     # Selects a resource of the container: only resources limits and requests
     # (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
     @typechecked
     def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
-        if 'resourceFieldRef' in self._kwargs:
-            return self._kwargs['resourceFieldRef']
-        if 'resourceFieldRef' in self._context and check_return_type(self._context['resourceFieldRef']):
-            return self._context['resourceFieldRef']
+        if "resourceFieldRef" in self._kwargs:
+            return self._kwargs["resourceFieldRef"]
+        if "resourceFieldRef" in self._context and check_return_type(
+            self._context["resourceFieldRef"]
+        ):
+            return self._context["resourceFieldRef"]
         return None
-    
+
     # Selects a key of a ConfigMap.
     @typechecked
     def configMapKeyRef(self) -> Optional[ConfigMapKeySelector]:
-        if 'configMapKeyRef' in self._kwargs:
-            return self._kwargs['configMapKeyRef']
-        if 'configMapKeyRef' in self._context and check_return_type(self._context['configMapKeyRef']):
-            return self._context['configMapKeyRef']
+        if "configMapKeyRef" in self._kwargs:
+            return self._kwargs["configMapKeyRef"]
+        if "configMapKeyRef" in self._context and check_return_type(
+            self._context["configMapKeyRef"]
+        ):
+            return self._context["configMapKeyRef"]
         return None
-    
+
     # Selects a key of a secret in the pod's namespace
     @typechecked
     def secretKeyRef(self) -> Optional[SecretKeySelector]:
-        if 'secretKeyRef' in self._kwargs:
-            return self._kwargs['secretKeyRef']
-        if 'secretKeyRef' in self._context and check_return_type(self._context['secretKeyRef']):
-            return self._context['secretKeyRef']
+        if "secretKeyRef" in self._kwargs:
+            return self._kwargs["secretKeyRef"]
+        if "secretKeyRef" in self._context and check_return_type(
+            self._context["secretKeyRef"]
+        ):
+            return self._context["secretKeyRef"]
         return None
 
 
 # EnvVar represents an environment variable present in a Container.
 class EnvVar(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
+        v["name"] = self.name()
         value = self.value()
         if value:  # omit empty
-            v['value'] = value
+            v["value"] = value
         valueFrom = self.valueFrom()
         if valueFrom is not None:  # omit empty
-            v['valueFrom'] = valueFrom
+            v["valueFrom"] = valueFrom
         return v
-    
+
     # Name of the environment variable. Must be a C_IDENTIFIER.
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # Variable references $(VAR_NAME) are expanded
     # using the previous defined environment variables in the container and
     # any service environment variables. If a variable cannot be resolved,
@@ -2739,33 +2949,34 @@ class EnvVar(types.Object):
     # Defaults to "".
     @typechecked
     def value(self) -> Optional[str]:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
         return None
-    
+
     # Source for the environment variable's value. Cannot be used if value is not empty.
     @typechecked
     def valueFrom(self) -> Optional[EnvVarSource]:
-        if 'valueFrom' in self._kwargs:
-            return self._kwargs['valueFrom']
-        if 'valueFrom' in self._context and check_return_type(self._context['valueFrom']):
-            return self._context['valueFrom']
+        if "valueFrom" in self._kwargs:
+            return self._kwargs["valueFrom"]
+        if "valueFrom" in self._context and check_return_type(
+            self._context["valueFrom"]
+        ):
+            return self._context["valueFrom"]
         return None
 
 
 # ExecAction describes a "run in container" action.
 class ExecAction(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         command = self.command()
         if command:  # omit empty
-            v['command'] = command
+            v["command"] = command
         return v
-    
+
     # Command is the command line to execute inside the container, the working directory for the
     # command  is root ('/') in the container's filesystem. The command is simply exec'd, it is
     # not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
@@ -2773,192 +2984,192 @@ class ExecAction(types.Object):
     # Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
     @typechecked
     def command(self) -> List[str]:
-        if 'command' in self._kwargs:
-            return self._kwargs['command']
-        if 'command' in self._context and check_return_type(self._context['command']):
-            return self._context['command']
+        if "command" in self._kwargs:
+            return self._kwargs["command"]
+        if "command" in self._context and check_return_type(self._context["command"]):
+            return self._context["command"]
         return []
 
 
 # HTTPHeader describes a custom header to be used in HTTP probes
 class HTTPHeader(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
-        v['value'] = self.value()
+        v["name"] = self.name()
+        v["value"] = self.value()
         return v
-    
+
     # The header field name
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # The header field value
     @typechecked
     def value(self) -> str:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
-        return ''
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
+        return ""
 
 
 # HTTPGetAction describes an action based on HTTP Get requests.
 class HTTPGetAction(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
-        v['port'] = self.port()
+            v["path"] = path
+        v["port"] = self.port()
         host = self.host()
         if host:  # omit empty
-            v['host'] = host
+            v["host"] = host
         scheme = self.scheme()
         if scheme:  # omit empty
-            v['scheme'] = scheme
+            v["scheme"] = scheme
         httpHeaders = self.httpHeaders()
         if httpHeaders:  # omit empty
-            v['httpHeaders'] = httpHeaders.values()  # named list
+            v["httpHeaders"] = httpHeaders.values()  # named list
         return v
-    
+
     # Path to access on the HTTP server.
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return '/'
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return "/"
+
     # Name or number of the port to access on the container.
     # Number must be in the range 1 to 65535.
     # Name must be an IANA_SVC_NAME.
     @typechecked
     def port(self) -> Union[int, str]:
-        if 'port' in self._kwargs:
-            return self._kwargs['port']
-        if 'port' in self._context and check_return_type(self._context['port']):
-            return self._context['port']
+        if "port" in self._kwargs:
+            return self._kwargs["port"]
+        if "port" in self._context and check_return_type(self._context["port"]):
+            return self._context["port"]
         return 0
-    
+
     # Host name to connect to, defaults to the pod IP. You probably want to set
     # "Host" in httpHeaders instead.
     @typechecked
     def host(self) -> Optional[str]:
-        if 'host' in self._kwargs:
-            return self._kwargs['host']
-        if 'host' in self._context and check_return_type(self._context['host']):
-            return self._context['host']
+        if "host" in self._kwargs:
+            return self._kwargs["host"]
+        if "host" in self._context and check_return_type(self._context["host"]):
+            return self._context["host"]
         return None
-    
+
     # Scheme to use for connecting to the host.
     # Defaults to HTTP.
     @typechecked
     def scheme(self) -> Optional[URIScheme]:
-        if 'scheme' in self._kwargs:
-            return self._kwargs['scheme']
-        if 'scheme' in self._context and check_return_type(self._context['scheme']):
-            return self._context['scheme']
-        return URIScheme['HTTP']
-    
+        if "scheme" in self._kwargs:
+            return self._kwargs["scheme"]
+        if "scheme" in self._context and check_return_type(self._context["scheme"]):
+            return self._context["scheme"]
+        return URIScheme["HTTP"]
+
     # Custom headers to set in the request. HTTP allows repeated headers.
     @typechecked
     def httpHeaders(self) -> Dict[str, HTTPHeader]:
-        if 'httpHeaders' in self._kwargs:
-            return self._kwargs['httpHeaders']
-        if 'httpHeaders' in self._context and check_return_type(self._context['httpHeaders']):
-            return self._context['httpHeaders']
+        if "httpHeaders" in self._kwargs:
+            return self._kwargs["httpHeaders"]
+        if "httpHeaders" in self._context and check_return_type(
+            self._context["httpHeaders"]
+        ):
+            return self._context["httpHeaders"]
         return {}
 
 
 # TCPSocketAction describes an action based on opening a socket
 class TCPSocketAction(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['port'] = self.port()
+        v["port"] = self.port()
         host = self.host()
         if host:  # omit empty
-            v['host'] = host
+            v["host"] = host
         return v
-    
+
     # Number or name of the port to access on the container.
     # Number must be in the range 1 to 65535.
     # Name must be an IANA_SVC_NAME.
     @typechecked
     def port(self) -> Union[int, str]:
-        if 'port' in self._kwargs:
-            return self._kwargs['port']
-        if 'port' in self._context and check_return_type(self._context['port']):
-            return self._context['port']
+        if "port" in self._kwargs:
+            return self._kwargs["port"]
+        if "port" in self._context and check_return_type(self._context["port"]):
+            return self._context["port"]
         return 0
-    
+
     # Optional: Host name to connect to, defaults to the pod IP.
     @typechecked
     def host(self) -> Optional[str]:
-        if 'host' in self._kwargs:
-            return self._kwargs['host']
-        if 'host' in self._context and check_return_type(self._context['host']):
-            return self._context['host']
+        if "host" in self._kwargs:
+            return self._kwargs["host"]
+        if "host" in self._context and check_return_type(self._context["host"]):
+            return self._context["host"]
         return None
 
 
 # Handler defines a specific action that should be taken
 # TODO: pass structured data to these actions, and document that data here.
 class Handler(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         exec_ = self.exec_()
         if exec_ is not None:  # omit empty
-            v['exec'] = exec_
+            v["exec"] = exec_
         httpGet = self.httpGet()
         if httpGet is not None:  # omit empty
-            v['httpGet'] = httpGet
+            v["httpGet"] = httpGet
         tcpSocket = self.tcpSocket()
         if tcpSocket is not None:  # omit empty
-            v['tcpSocket'] = tcpSocket
+            v["tcpSocket"] = tcpSocket
         return v
-    
+
     # One and only one of the following should be specified.
     # Exec specifies the action to take.
     @typechecked
     def exec_(self) -> Optional[ExecAction]:
-        if 'exec' in self._kwargs:
-            return self._kwargs['exec']
-        if 'exec' in self._context and check_return_type(self._context['exec']):
-            return self._context['exec']
+        if "exec" in self._kwargs:
+            return self._kwargs["exec"]
+        if "exec" in self._context and check_return_type(self._context["exec"]):
+            return self._context["exec"]
         return None
-    
+
     # HTTPGet specifies the http request to perform.
     @typechecked
     def httpGet(self) -> Optional[HTTPGetAction]:
-        if 'httpGet' in self._kwargs:
-            return self._kwargs['httpGet']
-        if 'httpGet' in self._context and check_return_type(self._context['httpGet']):
-            return self._context['httpGet']
+        if "httpGet" in self._kwargs:
+            return self._kwargs["httpGet"]
+        if "httpGet" in self._context and check_return_type(self._context["httpGet"]):
+            return self._context["httpGet"]
         return None
-    
+
     # TCPSocket specifies an action involving a TCP port.
     # TCP hooks not yet supported
     # TODO: implement a realistic TCP lifecycle hook
     @typechecked
     def tcpSocket(self) -> Optional[TCPSocketAction]:
-        if 'tcpSocket' in self._kwargs:
-            return self._kwargs['tcpSocket']
-        if 'tcpSocket' in self._context and check_return_type(self._context['tcpSocket']):
-            return self._context['tcpSocket']
+        if "tcpSocket" in self._kwargs:
+            return self._kwargs["tcpSocket"]
+        if "tcpSocket" in self._context and check_return_type(
+            self._context["tcpSocket"]
+        ):
+            return self._context["tcpSocket"]
         return None
 
 
@@ -2966,30 +3177,31 @@ class Handler(types.Object):
 # events. For the PostStart and PreStop lifecycle handlers, management of the container blocks
 # until the action is complete, unless the container process fails, in which case the handler is aborted.
 class Lifecycle(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         postStart = self.postStart()
         if postStart is not None:  # omit empty
-            v['postStart'] = postStart
+            v["postStart"] = postStart
         preStop = self.preStop()
         if preStop is not None:  # omit empty
-            v['preStop'] = preStop
+            v["preStop"] = preStop
         return v
-    
+
     # PostStart is called immediately after a container is created. If the handler fails,
     # the container is terminated and restarted according to its restart policy.
     # Other management of the container blocks until the hook completes.
     # More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
     @typechecked
     def postStart(self) -> Optional[Handler]:
-        if 'postStart' in self._kwargs:
-            return self._kwargs['postStart']
-        if 'postStart' in self._context and check_return_type(self._context['postStart']):
-            return self._context['postStart']
+        if "postStart" in self._kwargs:
+            return self._kwargs["postStart"]
+        if "postStart" in self._context and check_return_type(
+            self._context["postStart"]
+        ):
+            return self._context["postStart"]
         return None
-    
+
     # PreStop is called immediately before a container is terminated due to an
     # API request or management event such as liveness/startup probe failure,
     # preemption, resource contention, etc. The handler is not called if the
@@ -3002,233 +3214,243 @@ class Lifecycle(types.Object):
     # More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
     @typechecked
     def preStop(self) -> Optional[Handler]:
-        if 'preStop' in self._kwargs:
-            return self._kwargs['preStop']
-        if 'preStop' in self._context and check_return_type(self._context['preStop']):
-            return self._context['preStop']
+        if "preStop" in self._kwargs:
+            return self._kwargs["preStop"]
+        if "preStop" in self._context and check_return_type(self._context["preStop"]):
+            return self._context["preStop"]
         return None
 
 
 # Probe describes a health check to be performed against a container to determine whether it is
 # alive or ready to receive traffic.
 class Probe(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.handler().render())  # inline
         initialDelaySeconds = self.initialDelaySeconds()
         if initialDelaySeconds:  # omit empty
-            v['initialDelaySeconds'] = initialDelaySeconds
+            v["initialDelaySeconds"] = initialDelaySeconds
         timeoutSeconds = self.timeoutSeconds()
         if timeoutSeconds:  # omit empty
-            v['timeoutSeconds'] = timeoutSeconds
+            v["timeoutSeconds"] = timeoutSeconds
         periodSeconds = self.periodSeconds()
         if periodSeconds:  # omit empty
-            v['periodSeconds'] = periodSeconds
+            v["periodSeconds"] = periodSeconds
         successThreshold = self.successThreshold()
         if successThreshold:  # omit empty
-            v['successThreshold'] = successThreshold
+            v["successThreshold"] = successThreshold
         failureThreshold = self.failureThreshold()
         if failureThreshold:  # omit empty
-            v['failureThreshold'] = failureThreshold
+            v["failureThreshold"] = failureThreshold
         return v
-    
+
     # The action taken to determine the health of a container
     @typechecked
     def handler(self) -> Handler:
-        if 'handler' in self._kwargs:
-            return self._kwargs['handler']
-        if 'handler' in self._context and check_return_type(self._context['handler']):
-            return self._context['handler']
+        if "handler" in self._kwargs:
+            return self._kwargs["handler"]
+        if "handler" in self._context and check_return_type(self._context["handler"]):
+            return self._context["handler"]
         with context.Scope(**self._context):
             return Handler()
-    
+
     # Number of seconds after the container has started before liveness probes are initiated.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     @typechecked
     def initialDelaySeconds(self) -> Optional[int]:
-        if 'initialDelaySeconds' in self._kwargs:
-            return self._kwargs['initialDelaySeconds']
-        if 'initialDelaySeconds' in self._context and check_return_type(self._context['initialDelaySeconds']):
-            return self._context['initialDelaySeconds']
+        if "initialDelaySeconds" in self._kwargs:
+            return self._kwargs["initialDelaySeconds"]
+        if "initialDelaySeconds" in self._context and check_return_type(
+            self._context["initialDelaySeconds"]
+        ):
+            return self._context["initialDelaySeconds"]
         return None
-    
+
     # Number of seconds after which the probe times out.
     # Defaults to 1 second. Minimum value is 1.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     @typechecked
     def timeoutSeconds(self) -> Optional[int]:
-        if 'timeoutSeconds' in self._kwargs:
-            return self._kwargs['timeoutSeconds']
-        if 'timeoutSeconds' in self._context and check_return_type(self._context['timeoutSeconds']):
-            return self._context['timeoutSeconds']
+        if "timeoutSeconds" in self._kwargs:
+            return self._kwargs["timeoutSeconds"]
+        if "timeoutSeconds" in self._context and check_return_type(
+            self._context["timeoutSeconds"]
+        ):
+            return self._context["timeoutSeconds"]
         return 1
-    
+
     # How often (in seconds) to perform the probe.
     # Default to 10 seconds. Minimum value is 1.
     @typechecked
     def periodSeconds(self) -> Optional[int]:
-        if 'periodSeconds' in self._kwargs:
-            return self._kwargs['periodSeconds']
-        if 'periodSeconds' in self._context and check_return_type(self._context['periodSeconds']):
-            return self._context['periodSeconds']
+        if "periodSeconds" in self._kwargs:
+            return self._kwargs["periodSeconds"]
+        if "periodSeconds" in self._context and check_return_type(
+            self._context["periodSeconds"]
+        ):
+            return self._context["periodSeconds"]
         return 10
-    
+
     # Minimum consecutive successes for the probe to be considered successful after having failed.
     # Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
     @typechecked
     def successThreshold(self) -> Optional[int]:
-        if 'successThreshold' in self._kwargs:
-            return self._kwargs['successThreshold']
-        if 'successThreshold' in self._context and check_return_type(self._context['successThreshold']):
-            return self._context['successThreshold']
+        if "successThreshold" in self._kwargs:
+            return self._kwargs["successThreshold"]
+        if "successThreshold" in self._context and check_return_type(
+            self._context["successThreshold"]
+        ):
+            return self._context["successThreshold"]
         return 1
-    
+
     # Minimum consecutive failures for the probe to be considered failed after having succeeded.
     # Defaults to 3. Minimum value is 1.
     @typechecked
     def failureThreshold(self) -> Optional[int]:
-        if 'failureThreshold' in self._kwargs:
-            return self._kwargs['failureThreshold']
-        if 'failureThreshold' in self._context and check_return_type(self._context['failureThreshold']):
-            return self._context['failureThreshold']
+        if "failureThreshold" in self._kwargs:
+            return self._kwargs["failureThreshold"]
+        if "failureThreshold" in self._context and check_return_type(
+            self._context["failureThreshold"]
+        ):
+            return self._context["failureThreshold"]
         return 3
 
 
 # ResourceRequirements describes the compute resource requirements.
 class ResourceRequirements(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         limits = self.limits()
         if limits:  # omit empty
-            v['limits'] = limits
+            v["limits"] = limits
         requests = self.requests()
         if requests:  # omit empty
-            v['requests'] = requests
+            v["requests"] = requests
         return v
-    
+
     # Limits describes the maximum amount of compute resources allowed.
     # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     @typechecked
-    def limits(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'limits' in self._kwargs:
-            return self._kwargs['limits']
-        if 'limits' in self._context and check_return_type(self._context['limits']):
-            return self._context['limits']
+    def limits(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "limits" in self._kwargs:
+            return self._kwargs["limits"]
+        if "limits" in self._context and check_return_type(self._context["limits"]):
+            return self._context["limits"]
         return {}
-    
+
     # Requests describes the minimum amount of compute resources required.
     # If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
     # otherwise to an implementation-defined value.
     # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     @typechecked
-    def requests(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'requests' in self._kwargs:
-            return self._kwargs['requests']
-        if 'requests' in self._context and check_return_type(self._context['requests']):
-            return self._context['requests']
+    def requests(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "requests" in self._kwargs:
+            return self._kwargs["requests"]
+        if "requests" in self._context and check_return_type(self._context["requests"]):
+            return self._context["requests"]
         return {}
 
 
 # SELinuxOptions are the labels to be applied to the container
 class SELinuxOptions(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         role = self.role()
         if role:  # omit empty
-            v['role'] = role
+            v["role"] = role
         type = self.type()
         if type:  # omit empty
-            v['type'] = type
+            v["type"] = type
         level = self.level()
         if level:  # omit empty
-            v['level'] = level
+            v["level"] = level
         return v
-    
+
     # User is a SELinux user label that applies to the container.
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
         return None
-    
+
     # Role is a SELinux role label that applies to the container.
     @typechecked
     def role(self) -> Optional[str]:
-        if 'role' in self._kwargs:
-            return self._kwargs['role']
-        if 'role' in self._context and check_return_type(self._context['role']):
-            return self._context['role']
+        if "role" in self._kwargs:
+            return self._kwargs["role"]
+        if "role" in self._context and check_return_type(self._context["role"]):
+            return self._context["role"]
         return None
-    
+
     # Type is a SELinux type label that applies to the container.
     @typechecked
     def type(self) -> Optional[str]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
         return None
-    
+
     # Level is SELinux level label that applies to the container.
     @typechecked
     def level(self) -> Optional[str]:
-        if 'level' in self._kwargs:
-            return self._kwargs['level']
-        if 'level' in self._context and check_return_type(self._context['level']):
-            return self._context['level']
+        if "level" in self._kwargs:
+            return self._kwargs["level"]
+        if "level" in self._context and check_return_type(self._context["level"]):
+            return self._context["level"]
         return None
 
 
 # WindowsSecurityContextOptions contain Windows-specific options and credentials.
 class WindowsSecurityContextOptions(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         gmsaCredentialSpecName = self.gmsaCredentialSpecName()
         if gmsaCredentialSpecName is not None:  # omit empty
-            v['gmsaCredentialSpecName'] = gmsaCredentialSpecName
+            v["gmsaCredentialSpecName"] = gmsaCredentialSpecName
         gmsaCredentialSpec = self.gmsaCredentialSpec()
         if gmsaCredentialSpec is not None:  # omit empty
-            v['gmsaCredentialSpec'] = gmsaCredentialSpec
+            v["gmsaCredentialSpec"] = gmsaCredentialSpec
         runAsUserName = self.runAsUserName()
         if runAsUserName is not None:  # omit empty
-            v['runAsUserName'] = runAsUserName
+            v["runAsUserName"] = runAsUserName
         return v
-    
+
     # GMSACredentialSpecName is the name of the GMSA credential spec to use.
     # This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
     @typechecked
     def gmsaCredentialSpecName(self) -> Optional[str]:
-        if 'gmsaCredentialSpecName' in self._kwargs:
-            return self._kwargs['gmsaCredentialSpecName']
-        if 'gmsaCredentialSpecName' in self._context and check_return_type(self._context['gmsaCredentialSpecName']):
-            return self._context['gmsaCredentialSpecName']
+        if "gmsaCredentialSpecName" in self._kwargs:
+            return self._kwargs["gmsaCredentialSpecName"]
+        if "gmsaCredentialSpecName" in self._context and check_return_type(
+            self._context["gmsaCredentialSpecName"]
+        ):
+            return self._context["gmsaCredentialSpecName"]
         return None
-    
+
     # GMSACredentialSpec is where the GMSA admission webhook
     # (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
     # GMSA credential spec named by the GMSACredentialSpecName field.
     # This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
     @typechecked
     def gmsaCredentialSpec(self) -> Optional[str]:
-        if 'gmsaCredentialSpec' in self._kwargs:
-            return self._kwargs['gmsaCredentialSpec']
-        if 'gmsaCredentialSpec' in self._context and check_return_type(self._context['gmsaCredentialSpec']):
-            return self._context['gmsaCredentialSpec']
+        if "gmsaCredentialSpec" in self._kwargs:
+            return self._kwargs["gmsaCredentialSpec"]
+        if "gmsaCredentialSpec" in self._context and check_return_type(
+            self._context["gmsaCredentialSpec"]
+        ):
+            return self._context["gmsaCredentialSpec"]
         return None
-    
+
     # The UserName in Windows to run the entrypoint of the container process.
     # Defaults to the user specified in image metadata if unspecified.
     # May also be set in PodSecurityContext. If set in both SecurityContext and
@@ -3236,10 +3458,12 @@ class WindowsSecurityContextOptions(types.Object):
     # This field is alpha-level and it is only honored by servers that enable the WindowsRunAsUserName feature flag.
     @typechecked
     def runAsUserName(self) -> Optional[str]:
-        if 'runAsUserName' in self._kwargs:
-            return self._kwargs['runAsUserName']
-        if 'runAsUserName' in self._context and check_return_type(self._context['runAsUserName']):
-            return self._context['runAsUserName']
+        if "runAsUserName" in self._kwargs:
+            return self._kwargs["runAsUserName"]
+        if "runAsUserName" in self._context and check_return_type(
+            self._context["runAsUserName"]
+        ):
+            return self._context["runAsUserName"]
         return None
 
 
@@ -3247,110 +3471,121 @@ class WindowsSecurityContextOptions(types.Object):
 # Some fields are present in both SecurityContext and PodSecurityContext.  When both
 # are set, the values in SecurityContext take precedence.
 class SecurityContext(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         capabilities = self.capabilities()
         if capabilities is not None:  # omit empty
-            v['capabilities'] = capabilities
+            v["capabilities"] = capabilities
         privileged = self.privileged()
         if privileged is not None:  # omit empty
-            v['privileged'] = privileged
+            v["privileged"] = privileged
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
-            v['seLinuxOptions'] = seLinuxOptions
+            v["seLinuxOptions"] = seLinuxOptions
         windowsOptions = self.windowsOptions()
         if windowsOptions is not None:  # omit empty
-            v['windowsOptions'] = windowsOptions
+            v["windowsOptions"] = windowsOptions
         runAsUser = self.runAsUser()
         if runAsUser is not None:  # omit empty
-            v['runAsUser'] = runAsUser
+            v["runAsUser"] = runAsUser
         runAsGroup = self.runAsGroup()
         if runAsGroup is not None:  # omit empty
-            v['runAsGroup'] = runAsGroup
+            v["runAsGroup"] = runAsGroup
         runAsNonRoot = self.runAsNonRoot()
         if runAsNonRoot is not None:  # omit empty
-            v['runAsNonRoot'] = runAsNonRoot
+            v["runAsNonRoot"] = runAsNonRoot
         readOnlyRootFilesystem = self.readOnlyRootFilesystem()
         if readOnlyRootFilesystem is not None:  # omit empty
-            v['readOnlyRootFilesystem'] = readOnlyRootFilesystem
+            v["readOnlyRootFilesystem"] = readOnlyRootFilesystem
         allowPrivilegeEscalation = self.allowPrivilegeEscalation()
         if allowPrivilegeEscalation is not None:  # omit empty
-            v['allowPrivilegeEscalation'] = allowPrivilegeEscalation
+            v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
         procMount = self.procMount()
         if procMount is not None:  # omit empty
-            v['procMount'] = procMount
+            v["procMount"] = procMount
         return v
-    
+
     # The capabilities to add/drop when running containers.
     # Defaults to the default set of capabilities granted by the container runtime.
     @typechecked
     def capabilities(self) -> Optional[Capabilities]:
-        if 'capabilities' in self._kwargs:
-            return self._kwargs['capabilities']
-        if 'capabilities' in self._context and check_return_type(self._context['capabilities']):
-            return self._context['capabilities']
+        if "capabilities" in self._kwargs:
+            return self._kwargs["capabilities"]
+        if "capabilities" in self._context and check_return_type(
+            self._context["capabilities"]
+        ):
+            return self._context["capabilities"]
         return None
-    
+
     # Run container in privileged mode.
     # Processes in privileged containers are essentially equivalent to root on the host.
     # Defaults to false.
     @typechecked
     def privileged(self) -> Optional[bool]:
-        if 'privileged' in self._kwargs:
-            return self._kwargs['privileged']
-        if 'privileged' in self._context and check_return_type(self._context['privileged']):
-            return self._context['privileged']
+        if "privileged" in self._kwargs:
+            return self._kwargs["privileged"]
+        if "privileged" in self._context and check_return_type(
+            self._context["privileged"]
+        ):
+            return self._context["privileged"]
         return None
-    
+
     # The SELinux context to be applied to the container.
     # If unspecified, the container runtime will allocate a random SELinux context for each
     # container.  May also be set in PodSecurityContext.  If set in both SecurityContext and
     # PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def seLinuxOptions(self) -> Optional[SELinuxOptions]:
-        if 'seLinuxOptions' in self._kwargs:
-            return self._kwargs['seLinuxOptions']
-        if 'seLinuxOptions' in self._context and check_return_type(self._context['seLinuxOptions']):
-            return self._context['seLinuxOptions']
+        if "seLinuxOptions" in self._kwargs:
+            return self._kwargs["seLinuxOptions"]
+        if "seLinuxOptions" in self._context and check_return_type(
+            self._context["seLinuxOptions"]
+        ):
+            return self._context["seLinuxOptions"]
         return None
-    
+
     # The Windows specific settings applied to all containers.
     # If unspecified, the options from the PodSecurityContext will be used.
     # If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
-        if 'windowsOptions' in self._kwargs:
-            return self._kwargs['windowsOptions']
-        if 'windowsOptions' in self._context and check_return_type(self._context['windowsOptions']):
-            return self._context['windowsOptions']
+        if "windowsOptions" in self._kwargs:
+            return self._kwargs["windowsOptions"]
+        if "windowsOptions" in self._context and check_return_type(
+            self._context["windowsOptions"]
+        ):
+            return self._context["windowsOptions"]
         return None
-    
+
     # The UID to run the entrypoint of the container process.
     # Defaults to user specified in image metadata if unspecified.
     # May also be set in PodSecurityContext.  If set in both SecurityContext and
     # PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def runAsUser(self) -> Optional[int]:
-        if 'runAsUser' in self._kwargs:
-            return self._kwargs['runAsUser']
-        if 'runAsUser' in self._context and check_return_type(self._context['runAsUser']):
-            return self._context['runAsUser']
+        if "runAsUser" in self._kwargs:
+            return self._kwargs["runAsUser"]
+        if "runAsUser" in self._context and check_return_type(
+            self._context["runAsUser"]
+        ):
+            return self._context["runAsUser"]
         return None
-    
+
     # The GID to run the entrypoint of the container process.
     # Uses runtime default if unset.
     # May also be set in PodSecurityContext.  If set in both SecurityContext and
     # PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def runAsGroup(self) -> Optional[int]:
-        if 'runAsGroup' in self._kwargs:
-            return self._kwargs['runAsGroup']
-        if 'runAsGroup' in self._context and check_return_type(self._context['runAsGroup']):
-            return self._context['runAsGroup']
+        if "runAsGroup" in self._kwargs:
+            return self._kwargs["runAsGroup"]
+        if "runAsGroup" in self._context and check_return_type(
+            self._context["runAsGroup"]
+        ):
+            return self._context["runAsGroup"]
         return None
-    
+
     # Indicates that the container must run as a non-root user.
     # If true, the Kubelet will validate the image at runtime to ensure that it
     # does not run as UID 0 (root) and fail to start the container if it does.
@@ -3359,22 +3594,26 @@ class SecurityContext(types.Object):
     # PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def runAsNonRoot(self) -> Optional[bool]:
-        if 'runAsNonRoot' in self._kwargs:
-            return self._kwargs['runAsNonRoot']
-        if 'runAsNonRoot' in self._context and check_return_type(self._context['runAsNonRoot']):
-            return self._context['runAsNonRoot']
+        if "runAsNonRoot" in self._kwargs:
+            return self._kwargs["runAsNonRoot"]
+        if "runAsNonRoot" in self._context and check_return_type(
+            self._context["runAsNonRoot"]
+        ):
+            return self._context["runAsNonRoot"]
         return None
-    
+
     # Whether this container has a read-only root filesystem.
     # Default is false.
     @typechecked
     def readOnlyRootFilesystem(self) -> Optional[bool]:
-        if 'readOnlyRootFilesystem' in self._kwargs:
-            return self._kwargs['readOnlyRootFilesystem']
-        if 'readOnlyRootFilesystem' in self._context and check_return_type(self._context['readOnlyRootFilesystem']):
-            return self._context['readOnlyRootFilesystem']
+        if "readOnlyRootFilesystem" in self._kwargs:
+            return self._kwargs["readOnlyRootFilesystem"]
+        if "readOnlyRootFilesystem" in self._context and check_return_type(
+            self._context["readOnlyRootFilesystem"]
+        ):
+            return self._context["readOnlyRootFilesystem"]
         return None
-    
+
     # AllowPrivilegeEscalation controls whether a process can gain more
     # privileges than its parent process. This bool directly controls if
     # the no_new_privs flag will be set on the container process.
@@ -3383,127 +3622,135 @@ class SecurityContext(types.Object):
     # 2) has CAP_SYS_ADMIN
     @typechecked
     def allowPrivilegeEscalation(self) -> Optional[bool]:
-        if 'allowPrivilegeEscalation' in self._kwargs:
-            return self._kwargs['allowPrivilegeEscalation']
-        if 'allowPrivilegeEscalation' in self._context and check_return_type(self._context['allowPrivilegeEscalation']):
-            return self._context['allowPrivilegeEscalation']
+        if "allowPrivilegeEscalation" in self._kwargs:
+            return self._kwargs["allowPrivilegeEscalation"]
+        if "allowPrivilegeEscalation" in self._context and check_return_type(
+            self._context["allowPrivilegeEscalation"]
+        ):
+            return self._context["allowPrivilegeEscalation"]
         return None
-    
+
     # procMount denotes the type of proc mount to use for the containers.
     # The default is DefaultProcMount which uses the container runtime defaults for
     # readonly paths and masked paths.
     # This requires the ProcMountType feature flag to be enabled.
     @typechecked
     def procMount(self) -> Optional[ProcMountType]:
-        if 'procMount' in self._kwargs:
-            return self._kwargs['procMount']
-        if 'procMount' in self._context and check_return_type(self._context['procMount']):
-            return self._context['procMount']
+        if "procMount" in self._kwargs:
+            return self._kwargs["procMount"]
+        if "procMount" in self._context and check_return_type(
+            self._context["procMount"]
+        ):
+            return self._context["procMount"]
         return None
 
 
 # volumeDevice describes a mapping of a raw block device within a container.
 class VolumeDevice(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
-        v['devicePath'] = self.devicePath()
+        v["name"] = self.name()
+        v["devicePath"] = self.devicePath()
         return v
-    
+
     # name must match the name of a persistentVolumeClaim in the pod
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # devicePath is the path inside of the container that the device will be mapped to.
     @typechecked
     def devicePath(self) -> str:
-        if 'devicePath' in self._kwargs:
-            return self._kwargs['devicePath']
-        if 'devicePath' in self._context and check_return_type(self._context['devicePath']):
-            return self._context['devicePath']
-        return ''
+        if "devicePath" in self._kwargs:
+            return self._kwargs["devicePath"]
+        if "devicePath" in self._context and check_return_type(
+            self._context["devicePath"]
+        ):
+            return self._context["devicePath"]
+        return ""
 
 
 # VolumeMount describes a mounting of a Volume within a container.
 class VolumeMount(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
+        v["name"] = self.name()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
-        v['mountPath'] = self.mountPath()
+            v["readOnly"] = readOnly
+        v["mountPath"] = self.mountPath()
         subPath = self.subPath()
         if subPath:  # omit empty
-            v['subPath'] = subPath
+            v["subPath"] = subPath
         mountPropagation = self.mountPropagation()
         if mountPropagation is not None:  # omit empty
-            v['mountPropagation'] = mountPropagation
+            v["mountPropagation"] = mountPropagation
         subPathExpr = self.subPathExpr()
         if subPathExpr:  # omit empty
-            v['subPathExpr'] = subPathExpr
+            v["subPathExpr"] = subPathExpr
         return v
-    
+
     # This must match the Name of a Volume.
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # Mounted read-only if true, read-write otherwise (false or unspecified).
     # Defaults to false.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Path within the container at which the volume should be mounted.  Must
     # not contain ':'.
     @typechecked
     def mountPath(self) -> str:
-        if 'mountPath' in self._kwargs:
-            return self._kwargs['mountPath']
-        if 'mountPath' in self._context and check_return_type(self._context['mountPath']):
-            return self._context['mountPath']
-        return ''
-    
+        if "mountPath" in self._kwargs:
+            return self._kwargs["mountPath"]
+        if "mountPath" in self._context and check_return_type(
+            self._context["mountPath"]
+        ):
+            return self._context["mountPath"]
+        return ""
+
     # Path within the volume from which the container's volume should be mounted.
     # Defaults to "" (volume's root).
     @typechecked
     def subPath(self) -> Optional[str]:
-        if 'subPath' in self._kwargs:
-            return self._kwargs['subPath']
-        if 'subPath' in self._context and check_return_type(self._context['subPath']):
-            return self._context['subPath']
+        if "subPath" in self._kwargs:
+            return self._kwargs["subPath"]
+        if "subPath" in self._context and check_return_type(self._context["subPath"]):
+            return self._context["subPath"]
         return None
-    
+
     # mountPropagation determines how mounts are propagated from the host
     # to container and the other way around.
     # When not set, MountPropagationNone is used.
     # This field is beta in 1.10.
     @typechecked
     def mountPropagation(self) -> Optional[MountPropagationMode]:
-        if 'mountPropagation' in self._kwargs:
-            return self._kwargs['mountPropagation']
-        if 'mountPropagation' in self._context and check_return_type(self._context['mountPropagation']):
-            return self._context['mountPropagation']
+        if "mountPropagation" in self._kwargs:
+            return self._kwargs["mountPropagation"]
+        if "mountPropagation" in self._context and check_return_type(
+            self._context["mountPropagation"]
+        ):
+            return self._context["mountPropagation"]
         return None
-    
+
     # Expanded path within the volume from which the container's volume should be mounted.
     # Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment.
     # Defaults to "" (volume's root).
@@ -3511,106 +3758,107 @@ class VolumeMount(types.Object):
     # This field is beta in 1.15.
     @typechecked
     def subPathExpr(self) -> Optional[str]:
-        if 'subPathExpr' in self._kwargs:
-            return self._kwargs['subPathExpr']
-        if 'subPathExpr' in self._context and check_return_type(self._context['subPathExpr']):
-            return self._context['subPathExpr']
+        if "subPathExpr" in self._kwargs:
+            return self._kwargs["subPathExpr"]
+        if "subPathExpr" in self._context and check_return_type(
+            self._context["subPathExpr"]
+        ):
+            return self._context["subPathExpr"]
         return None
 
 
 # A single application container that you want to run within a pod.
 class Container(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
+        v["name"] = self.name()
         image = self.image()
         if image:  # omit empty
-            v['image'] = image
+            v["image"] = image
         command = self.command()
         if command:  # omit empty
-            v['command'] = command
+            v["command"] = command
         args = self.args()
         if args:  # omit empty
-            v['args'] = args
+            v["args"] = args
         workingDir = self.workingDir()
         if workingDir:  # omit empty
-            v['workingDir'] = workingDir
+            v["workingDir"] = workingDir
         ports = self.ports()
         if ports:  # omit empty
-            v['ports'] = ports.values()  # named list
+            v["ports"] = ports.values()  # named list
         envFrom = self.envFrom()
         if envFrom:  # omit empty
-            v['envFrom'] = envFrom
+            v["envFrom"] = envFrom
         env = self.env()
         if env:  # omit empty
-            v['env'] = env.values()  # named list
-        v['resources'] = self.resources()
+            v["env"] = env.values()  # named list
+        v["resources"] = self.resources()
         volumeMounts = self.volumeMounts()
         if volumeMounts:  # omit empty
-            v['volumeMounts'] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts.values()  # named list
         volumeDevices = self.volumeDevices()
         if volumeDevices:  # omit empty
-            v['volumeDevices'] = volumeDevices.values()  # named list
+            v["volumeDevices"] = volumeDevices.values()  # named list
         livenessProbe = self.livenessProbe()
         if livenessProbe is not None:  # omit empty
-            v['livenessProbe'] = livenessProbe
+            v["livenessProbe"] = livenessProbe
         readinessProbe = self.readinessProbe()
         if readinessProbe is not None:  # omit empty
-            v['readinessProbe'] = readinessProbe
+            v["readinessProbe"] = readinessProbe
         startupProbe = self.startupProbe()
         if startupProbe is not None:  # omit empty
-            v['startupProbe'] = startupProbe
+            v["startupProbe"] = startupProbe
         lifecycle = self.lifecycle()
         if lifecycle is not None:  # omit empty
-            v['lifecycle'] = lifecycle
+            v["lifecycle"] = lifecycle
         terminationMessagePath = self.terminationMessagePath()
         if terminationMessagePath:  # omit empty
-            v['terminationMessagePath'] = terminationMessagePath
+            v["terminationMessagePath"] = terminationMessagePath
         terminationMessagePolicy = self.terminationMessagePolicy()
         if terminationMessagePolicy:  # omit empty
-            v['terminationMessagePolicy'] = terminationMessagePolicy
+            v["terminationMessagePolicy"] = terminationMessagePolicy
         imagePullPolicy = self.imagePullPolicy()
         if imagePullPolicy:  # omit empty
-            v['imagePullPolicy'] = imagePullPolicy
+            v["imagePullPolicy"] = imagePullPolicy
         securityContext = self.securityContext()
         if securityContext is not None:  # omit empty
-            v['securityContext'] = securityContext
+            v["securityContext"] = securityContext
         stdin = self.stdin()
         if stdin:  # omit empty
-            v['stdin'] = stdin
+            v["stdin"] = stdin
         stdinOnce = self.stdinOnce()
         if stdinOnce:  # omit empty
-            v['stdinOnce'] = stdinOnce
+            v["stdinOnce"] = stdinOnce
         tty = self.tty()
         if tty:  # omit empty
-            v['tty'] = tty
+            v["tty"] = tty
         return v
-    
+
     # Name of the container specified as a DNS_LABEL.
     # Each container in a pod must have a unique name (DNS_LABEL).
     # Cannot be updated.
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # Docker image name.
     # More info: https://kubernetes.io/docs/concepts/containers/images
     # This field is optional to allow higher level config management to default or override
     # container images in workload controllers like Deployments and StatefulSets.
     @typechecked
     def image(self) -> Optional[str]:
-        if 'image' in self._kwargs:
-            return self._kwargs['image']
-        if 'image' in self._context and check_return_type(self._context['image']):
-            return self._context['image']
+        if "image" in self._kwargs:
+            return self._kwargs["image"]
+        if "image" in self._context and check_return_type(self._context["image"]):
+            return self._context["image"]
         return None
-    
+
     # Entrypoint array. Not executed within a shell.
     # The docker image's ENTRYPOINT is used if this is not provided.
     # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -3621,12 +3869,12 @@ class Container(types.Object):
     # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     @typechecked
     def command(self) -> List[str]:
-        if 'command' in self._kwargs:
-            return self._kwargs['command']
-        if 'command' in self._context and check_return_type(self._context['command']):
-            return self._context['command']
+        if "command" in self._kwargs:
+            return self._kwargs["command"]
+        if "command" in self._context and check_return_type(self._context["command"]):
+            return self._context["command"]
         return []
-    
+
     # Arguments to the entrypoint.
     # The docker image's CMD is used if this is not provided.
     # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -3637,24 +3885,26 @@ class Container(types.Object):
     # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     @typechecked
     def args(self) -> List[str]:
-        if 'args' in self._kwargs:
-            return self._kwargs['args']
-        if 'args' in self._context and check_return_type(self._context['args']):
-            return self._context['args']
+        if "args" in self._kwargs:
+            return self._kwargs["args"]
+        if "args" in self._context and check_return_type(self._context["args"]):
+            return self._context["args"]
         return []
-    
+
     # Container's working directory.
     # If not specified, the container runtime's default will be used, which
     # might be configured in the container image.
     # Cannot be updated.
     @typechecked
     def workingDir(self) -> Optional[str]:
-        if 'workingDir' in self._kwargs:
-            return self._kwargs['workingDir']
-        if 'workingDir' in self._context and check_return_type(self._context['workingDir']):
-            return self._context['workingDir']
+        if "workingDir" in self._kwargs:
+            return self._kwargs["workingDir"]
+        if "workingDir" in self._context and check_return_type(
+            self._context["workingDir"]
+        ):
+            return self._context["workingDir"]
         return None
-    
+
     # List of ports to expose from the container. Exposing a port here gives
     # the system additional information about the network connections a
     # container uses, but is primarily informational. Not specifying a port here
@@ -3667,12 +3917,12 @@ class Container(types.Object):
     # +listMapKey=protocol
     @typechecked
     def ports(self) -> Dict[str, ContainerPort]:
-        if 'ports' in self._kwargs:
-            return self._kwargs['ports']
-        if 'ports' in self._context and check_return_type(self._context['ports']):
-            return self._context['ports']
+        if "ports" in self._kwargs:
+            return self._kwargs["ports"]
+        if "ports" in self._context and check_return_type(self._context["ports"]):
+            return self._context["ports"]
         return {}
-    
+
     # List of sources to populate environment variables in the container.
     # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
     # will be reported as an event when the container is starting. When a key exists in multiple
@@ -3681,78 +3931,88 @@ class Container(types.Object):
     # Cannot be updated.
     @typechecked
     def envFrom(self) -> List[EnvFromSource]:
-        if 'envFrom' in self._kwargs:
-            return self._kwargs['envFrom']
-        if 'envFrom' in self._context and check_return_type(self._context['envFrom']):
-            return self._context['envFrom']
+        if "envFrom" in self._kwargs:
+            return self._kwargs["envFrom"]
+        if "envFrom" in self._context and check_return_type(self._context["envFrom"]):
+            return self._context["envFrom"]
         return []
-    
+
     # List of environment variables to set in the container.
     # Cannot be updated.
     @typechecked
     def env(self) -> Dict[str, EnvVar]:
-        if 'env' in self._kwargs:
-            return self._kwargs['env']
-        if 'env' in self._context and check_return_type(self._context['env']):
-            return self._context['env']
+        if "env" in self._kwargs:
+            return self._kwargs["env"]
+        if "env" in self._context and check_return_type(self._context["env"]):
+            return self._context["env"]
         return {}
-    
+
     # Compute Resources required by this container.
     # Cannot be updated.
     # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     @typechecked
     def resources(self) -> ResourceRequirements:
-        if 'resources' in self._kwargs:
-            return self._kwargs['resources']
-        if 'resources' in self._context and check_return_type(self._context['resources']):
-            return self._context['resources']
+        if "resources" in self._kwargs:
+            return self._kwargs["resources"]
+        if "resources" in self._context and check_return_type(
+            self._context["resources"]
+        ):
+            return self._context["resources"]
         with context.Scope(**self._context):
             return ResourceRequirements()
-    
+
     # Pod volumes to mount into the container's filesystem.
     # Cannot be updated.
     @typechecked
     def volumeMounts(self) -> Dict[str, VolumeMount]:
-        if 'volumeMounts' in self._kwargs:
-            return self._kwargs['volumeMounts']
-        if 'volumeMounts' in self._context and check_return_type(self._context['volumeMounts']):
-            return self._context['volumeMounts']
+        if "volumeMounts" in self._kwargs:
+            return self._kwargs["volumeMounts"]
+        if "volumeMounts" in self._context and check_return_type(
+            self._context["volumeMounts"]
+        ):
+            return self._context["volumeMounts"]
         return {}
-    
+
     # volumeDevices is the list of block devices to be used by the container.
     # This is a beta feature.
     @typechecked
     def volumeDevices(self) -> Dict[str, VolumeDevice]:
-        if 'volumeDevices' in self._kwargs:
-            return self._kwargs['volumeDevices']
-        if 'volumeDevices' in self._context and check_return_type(self._context['volumeDevices']):
-            return self._context['volumeDevices']
+        if "volumeDevices" in self._kwargs:
+            return self._kwargs["volumeDevices"]
+        if "volumeDevices" in self._context and check_return_type(
+            self._context["volumeDevices"]
+        ):
+            return self._context["volumeDevices"]
         return {}
-    
+
     # Periodic probe of container liveness.
     # Container will be restarted if the probe fails.
     # Cannot be updated.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     @typechecked
     def livenessProbe(self) -> Optional[Probe]:
-        if 'livenessProbe' in self._kwargs:
-            return self._kwargs['livenessProbe']
-        if 'livenessProbe' in self._context and check_return_type(self._context['livenessProbe']):
-            return self._context['livenessProbe']
+        if "livenessProbe" in self._kwargs:
+            return self._kwargs["livenessProbe"]
+        if "livenessProbe" in self._context and check_return_type(
+            self._context["livenessProbe"]
+        ):
+            return self._context["livenessProbe"]
         return None
-    
+
     # Periodic probe of container service readiness.
     # Container will be removed from service endpoints if the probe fails.
     # Cannot be updated.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     @typechecked
     def readinessProbe(self) -> Optional[Probe]:
-        if 'readinessProbe' in self._kwargs:
-            return self._kwargs['readinessProbe']
-        if 'readinessProbe' in self._context and check_return_type(self._context['readinessProbe']):
-            return self._context['readinessProbe']
+        if "readinessProbe" in self._kwargs:
+            return self._kwargs["readinessProbe"]
+        if "readinessProbe" in self._context and check_return_type(
+            self._context["readinessProbe"]
+        ):
+            return self._context["readinessProbe"]
         return None
-    
+
     # StartupProbe indicates that the Pod has successfully initialized.
     # If specified, no other probes are executed until this completes successfully.
     # If this probe fails, the Pod will be restarted, just as if the livenessProbe failed.
@@ -3763,22 +4023,26 @@ class Container(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     @typechecked
     def startupProbe(self) -> Optional[Probe]:
-        if 'startupProbe' in self._kwargs:
-            return self._kwargs['startupProbe']
-        if 'startupProbe' in self._context and check_return_type(self._context['startupProbe']):
-            return self._context['startupProbe']
+        if "startupProbe" in self._kwargs:
+            return self._kwargs["startupProbe"]
+        if "startupProbe" in self._context and check_return_type(
+            self._context["startupProbe"]
+        ):
+            return self._context["startupProbe"]
         return None
-    
+
     # Actions that the management system should take in response to container lifecycle events.
     # Cannot be updated.
     @typechecked
     def lifecycle(self) -> Optional[Lifecycle]:
-        if 'lifecycle' in self._kwargs:
-            return self._kwargs['lifecycle']
-        if 'lifecycle' in self._context and check_return_type(self._context['lifecycle']):
-            return self._context['lifecycle']
+        if "lifecycle" in self._kwargs:
+            return self._kwargs["lifecycle"]
+        if "lifecycle" in self._context and check_return_type(
+            self._context["lifecycle"]
+        ):
+            return self._context["lifecycle"]
         return None
-    
+
     # Optional: Path at which the file to which the container's termination message
     # will be written is mounted into the container's filesystem.
     # Message written is intended to be brief final status, such as an assertion failure message.
@@ -3788,12 +4052,14 @@ class Container(types.Object):
     # Cannot be updated.
     @typechecked
     def terminationMessagePath(self) -> Optional[str]:
-        if 'terminationMessagePath' in self._kwargs:
-            return self._kwargs['terminationMessagePath']
-        if 'terminationMessagePath' in self._context and check_return_type(self._context['terminationMessagePath']):
-            return self._context['terminationMessagePath']
-        return '/dev/termination-log'
-    
+        if "terminationMessagePath" in self._kwargs:
+            return self._kwargs["terminationMessagePath"]
+        if "terminationMessagePath" in self._context and check_return_type(
+            self._context["terminationMessagePath"]
+        ):
+            return self._context["terminationMessagePath"]
+        return "/dev/termination-log"
+
     # Indicate how the termination message should be populated. File will use the contents of
     # terminationMessagePath to populate the container status message on both success and failure.
     # FallbackToLogsOnError will use the last chunk of container log output if the termination
@@ -3803,12 +4069,14 @@ class Container(types.Object):
     # Cannot be updated.
     @typechecked
     def terminationMessagePolicy(self) -> Optional[TerminationMessagePolicy]:
-        if 'terminationMessagePolicy' in self._kwargs:
-            return self._kwargs['terminationMessagePolicy']
-        if 'terminationMessagePolicy' in self._context and check_return_type(self._context['terminationMessagePolicy']):
-            return self._context['terminationMessagePolicy']
-        return TerminationMessagePolicy['File']
-    
+        if "terminationMessagePolicy" in self._kwargs:
+            return self._kwargs["terminationMessagePolicy"]
+        if "terminationMessagePolicy" in self._context and check_return_type(
+            self._context["terminationMessagePolicy"]
+        ):
+            return self._context["terminationMessagePolicy"]
+        return TerminationMessagePolicy["File"]
+
     # Image pull policy.
     # One of Always, Never, IfNotPresent.
     # Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
@@ -3816,34 +4084,38 @@ class Container(types.Object):
     # More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
     @typechecked
     def imagePullPolicy(self) -> Optional[PullPolicy]:
-        if 'imagePullPolicy' in self._kwargs:
-            return self._kwargs['imagePullPolicy']
-        if 'imagePullPolicy' in self._context and check_return_type(self._context['imagePullPolicy']):
-            return self._context['imagePullPolicy']
-        return PullPolicy['IfNotPresent']
-    
+        if "imagePullPolicy" in self._kwargs:
+            return self._kwargs["imagePullPolicy"]
+        if "imagePullPolicy" in self._context and check_return_type(
+            self._context["imagePullPolicy"]
+        ):
+            return self._context["imagePullPolicy"]
+        return PullPolicy["IfNotPresent"]
+
     # Security options the pod should run with.
     # More info: https://kubernetes.io/docs/concepts/policy/security-context/
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     @typechecked
     def securityContext(self) -> Optional[SecurityContext]:
-        if 'securityContext' in self._kwargs:
-            return self._kwargs['securityContext']
-        if 'securityContext' in self._context and check_return_type(self._context['securityContext']):
-            return self._context['securityContext']
+        if "securityContext" in self._kwargs:
+            return self._kwargs["securityContext"]
+        if "securityContext" in self._context and check_return_type(
+            self._context["securityContext"]
+        ):
+            return self._context["securityContext"]
         return None
-    
+
     # Whether this container should allocate a buffer for stdin in the container runtime. If this
     # is not set, reads from stdin in the container will always result in EOF.
     # Default is false.
     @typechecked
     def stdin(self) -> Optional[bool]:
-        if 'stdin' in self._kwargs:
-            return self._kwargs['stdin']
-        if 'stdin' in self._context and check_return_type(self._context['stdin']):
-            return self._context['stdin']
+        if "stdin" in self._kwargs:
+            return self._kwargs["stdin"]
+        if "stdin" in self._context and check_return_type(self._context["stdin"]):
+            return self._context["stdin"]
         return None
-    
+
     # Whether the container runtime should close the stdin channel after it has been opened by
     # a single attach. When stdin is true the stdin stream will remain open across multiple attach
     # sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
@@ -3853,79 +4125,82 @@ class Container(types.Object):
     # Default is false
     @typechecked
     def stdinOnce(self) -> Optional[bool]:
-        if 'stdinOnce' in self._kwargs:
-            return self._kwargs['stdinOnce']
-        if 'stdinOnce' in self._context and check_return_type(self._context['stdinOnce']):
-            return self._context['stdinOnce']
+        if "stdinOnce" in self._kwargs:
+            return self._kwargs["stdinOnce"]
+        if "stdinOnce" in self._context and check_return_type(
+            self._context["stdinOnce"]
+        ):
+            return self._context["stdinOnce"]
         return None
-    
+
     # Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
     # Default is false.
     @typechecked
     def tty(self) -> Optional[bool]:
-        if 'tty' in self._kwargs:
-            return self._kwargs['tty']
-        if 'tty' in self._context and check_return_type(self._context['tty']):
-            return self._context['tty']
+        if "tty" in self._kwargs:
+            return self._kwargs["tty"]
+        if "tty" in self._context and check_return_type(self._context["tty"]):
+            return self._context["tty"]
         return None
 
 
 # DownwardAPIVolumeFile represents information to create the file containing the pod field
 class DownwardAPIVolumeFile(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['path'] = self.path()
+        v["path"] = self.path()
         fieldRef = self.fieldRef()
         if fieldRef is not None:  # omit empty
-            v['fieldRef'] = fieldRef
+            v["fieldRef"] = fieldRef
         resourceFieldRef = self.resourceFieldRef()
         if resourceFieldRef is not None:  # omit empty
-            v['resourceFieldRef'] = resourceFieldRef
+            v["resourceFieldRef"] = resourceFieldRef
         mode = self.mode()
         if mode is not None:  # omit empty
-            v['mode'] = mode
+            v["mode"] = mode
         return v
-    
+
     # Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
     @typechecked
     def fieldRef(self) -> Optional[ObjectFieldSelector]:
-        if 'fieldRef' in self._kwargs:
-            return self._kwargs['fieldRef']
-        if 'fieldRef' in self._context and check_return_type(self._context['fieldRef']):
-            return self._context['fieldRef']
+        if "fieldRef" in self._kwargs:
+            return self._kwargs["fieldRef"]
+        if "fieldRef" in self._context and check_return_type(self._context["fieldRef"]):
+            return self._context["fieldRef"]
         return None
-    
+
     # Selects a resource of the container: only resources limits and requests
     # (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
     @typechecked
     def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
-        if 'resourceFieldRef' in self._kwargs:
-            return self._kwargs['resourceFieldRef']
-        if 'resourceFieldRef' in self._context and check_return_type(self._context['resourceFieldRef']):
-            return self._context['resourceFieldRef']
+        if "resourceFieldRef" in self._kwargs:
+            return self._kwargs["resourceFieldRef"]
+        if "resourceFieldRef" in self._context and check_return_type(
+            self._context["resourceFieldRef"]
+        ):
+            return self._context["resourceFieldRef"]
         return None
-    
+
     # Optional: mode bits to use on this file, must be a value between 0
     # and 0777. If not specified, the volume defaultMode will be used.
     # This might be in conflict with other options that affect the file
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def mode(self) -> Optional[int]:
-        if 'mode' in self._kwargs:
-            return self._kwargs['mode']
-        if 'mode' in self._context and check_return_type(self._context['mode']):
-            return self._context['mode']
+        if "mode" in self._kwargs:
+            return self._kwargs["mode"]
+        if "mode" in self._context and check_return_type(self._context["mode"]):
+            return self._context["mode"]
         return None
 
 
@@ -3933,49 +4208,47 @@ class DownwardAPIVolumeFile(types.Object):
 # Note that this is identical to a downwardAPI volume source without the default
 # mode.
 class DownwardAPIProjection(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         return v
-    
+
     # Items is a list of DownwardAPIVolume file
     @typechecked
     def items(self) -> List[DownwardAPIVolumeFile]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
 
 
 # DownwardAPIVolumeSource represents a volume containing downward API info.
 # Downward API volumes support ownership management and SELinux relabeling.
 class DownwardAPIVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         defaultMode = self.defaultMode()
         if defaultMode is not None:  # omit empty
-            v['defaultMode'] = defaultMode
+            v["defaultMode"] = defaultMode
         return v
-    
+
     # Items is a list of downward API volume file
     @typechecked
     def items(self) -> List[DownwardAPIVolumeFile]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
-    
+
     # Optional: mode bits to use on created files by default. Must be a
     # value between 0 and 0777. Defaults to 0644.
     # Directories within the path are not affected by this setting.
@@ -3983,40 +4256,41 @@ class DownwardAPIVolumeSource(types.Object):
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def defaultMode(self) -> Optional[int]:
-        if 'defaultMode' in self._kwargs:
-            return self._kwargs['defaultMode']
-        if 'defaultMode' in self._context and check_return_type(self._context['defaultMode']):
-            return self._context['defaultMode']
+        if "defaultMode" in self._kwargs:
+            return self._kwargs["defaultMode"]
+        if "defaultMode" in self._context and check_return_type(
+            self._context["defaultMode"]
+        ):
+            return self._context["defaultMode"]
         return 420
 
 
 # Represents an empty directory for a pod.
 # Empty directory volumes support ownership management and SELinux relabeling.
 class EmptyDirVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         medium = self.medium()
         if medium:  # omit empty
-            v['medium'] = medium
+            v["medium"] = medium
         sizeLimit = self.sizeLimit()
         if sizeLimit is not None:  # omit empty
-            v['sizeLimit'] = sizeLimit
+            v["sizeLimit"] = sizeLimit
         return v
-    
+
     # What type of storage medium should back this directory.
     # The default is "" which means to use the node's default medium.
     # Must be an empty string (default) or Memory.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
     @typechecked
     def medium(self) -> Optional[StorageMedium]:
-        if 'medium' in self._kwargs:
-            return self._kwargs['medium']
-        if 'medium' in self._context and check_return_type(self._context['medium']):
-            return self._context['medium']
+        if "medium" in self._kwargs:
+            return self._kwargs["medium"]
+        if "medium" in self._context and check_return_type(self._context["medium"]):
+            return self._context["medium"]
         return None
-    
+
     # Total amount of local storage required for this EmptyDir volume.
     # The size limit is also applicable for memory medium.
     # The maximum usage on memory medium EmptyDir would be the minimum value between
@@ -4024,32 +4298,33 @@ class EmptyDirVolumeSource(types.Object):
     # The default is nil which means that the limit is undefined.
     # More info: http://kubernetes.io/docs/user-guide/volumes#emptydir
     @typechecked
-    def sizeLimit(self) -> Optional['resource.Quantity']:
-        if 'sizeLimit' in self._kwargs:
-            return self._kwargs['sizeLimit']
-        if 'sizeLimit' in self._context and check_return_type(self._context['sizeLimit']):
-            return self._context['sizeLimit']
+    def sizeLimit(self) -> Optional["resource.Quantity"]:
+        if "sizeLimit" in self._kwargs:
+            return self._kwargs["sizeLimit"]
+        if "sizeLimit" in self._context and check_return_type(
+            self._context["sizeLimit"]
+        ):
+            return self._context["sizeLimit"]
         return None
 
 
 # EndpointAddress is a tuple that describes single IP address.
 class EndpointAddress(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['ip'] = self.ip()
+        v["ip"] = self.ip()
         hostname = self.hostname()
         if hostname:  # omit empty
-            v['hostname'] = hostname
+            v["hostname"] = hostname
         nodeName = self.nodeName()
         if nodeName is not None:  # omit empty
-            v['nodeName'] = nodeName
+            v["nodeName"] = nodeName
         targetRef = self.targetRef()
         if targetRef is not None:  # omit empty
-            v['targetRef'] = targetRef
+            v["targetRef"] = targetRef
         return v
-    
+
     # The IP of this endpoint.
     # May not be loopback (127.0.0.0/8), link-local (169.254.0.0/16),
     # or link-local multicast ((224.0.0.0/24).
@@ -4058,85 +4333,86 @@ class EndpointAddress(types.Object):
     # TODO: This should allow hostname or IP, See #4447.
     @typechecked
     def ip(self) -> str:
-        if 'ip' in self._kwargs:
-            return self._kwargs['ip']
-        if 'ip' in self._context and check_return_type(self._context['ip']):
-            return self._context['ip']
-        return ''
-    
+        if "ip" in self._kwargs:
+            return self._kwargs["ip"]
+        if "ip" in self._context and check_return_type(self._context["ip"]):
+            return self._context["ip"]
+        return ""
+
     # The Hostname of this endpoint
     @typechecked
     def hostname(self) -> Optional[str]:
-        if 'hostname' in self._kwargs:
-            return self._kwargs['hostname']
-        if 'hostname' in self._context and check_return_type(self._context['hostname']):
-            return self._context['hostname']
+        if "hostname" in self._kwargs:
+            return self._kwargs["hostname"]
+        if "hostname" in self._context and check_return_type(self._context["hostname"]):
+            return self._context["hostname"]
         return None
-    
+
     # Optional: Node hosting this endpoint. This can be used to determine endpoints local to a node.
     @typechecked
     def nodeName(self) -> Optional[str]:
-        if 'nodeName' in self._kwargs:
-            return self._kwargs['nodeName']
-        if 'nodeName' in self._context and check_return_type(self._context['nodeName']):
-            return self._context['nodeName']
+        if "nodeName" in self._kwargs:
+            return self._kwargs["nodeName"]
+        if "nodeName" in self._context and check_return_type(self._context["nodeName"]):
+            return self._context["nodeName"]
         return None
-    
+
     # Reference to object providing the endpoint.
     @typechecked
     def targetRef(self) -> Optional[ObjectReference]:
-        if 'targetRef' in self._kwargs:
-            return self._kwargs['targetRef']
-        if 'targetRef' in self._context and check_return_type(self._context['targetRef']):
-            return self._context['targetRef']
+        if "targetRef" in self._kwargs:
+            return self._kwargs["targetRef"]
+        if "targetRef" in self._context and check_return_type(
+            self._context["targetRef"]
+        ):
+            return self._context["targetRef"]
         return None
 
 
 # EndpointPort is a tuple that describes a single port.
 class EndpointPort(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
-        v['port'] = self.port()
+            v["name"] = name
+        v["port"] = self.port()
         protocol = self.protocol()
         if protocol:  # omit empty
-            v['protocol'] = protocol
+            v["protocol"] = protocol
         return v
-    
+
     # The name of this port.  This must match the 'name' field in the
     # corresponding ServicePort.
     # Must be a DNS_LABEL.
     # Optional only if one port is defined.
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     # The port number of the endpoint.
     @typechecked
     def port(self) -> int:
-        if 'port' in self._kwargs:
-            return self._kwargs['port']
-        if 'port' in self._context and check_return_type(self._context['port']):
-            return self._context['port']
+        if "port" in self._kwargs:
+            return self._kwargs["port"]
+        if "port" in self._context and check_return_type(self._context["port"]):
+            return self._context["port"]
         return 0
-    
+
     # The IP protocol for this port.
     # Must be UDP, TCP, or SCTP.
     # Default is TCP.
     @typechecked
     def protocol(self) -> Optional[Protocol]:
-        if 'protocol' in self._kwargs:
-            return self._kwargs['protocol']
-        if 'protocol' in self._context and check_return_type(self._context['protocol']):
-            return self._context['protocol']
+        if "protocol" in self._kwargs:
+            return self._kwargs["protocol"]
+        if "protocol" in self._context and check_return_type(self._context["protocol"]):
+            return self._context["protocol"]
         return None
 
 
@@ -4151,49 +4427,52 @@ class EndpointPort(types.Object):
 #     a: [ 10.10.1.1:8675, 10.10.2.2:8675 ],
 #     b: [ 10.10.1.1:309, 10.10.2.2:309 ]
 class EndpointSubset(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         addresses = self.addresses()
         if addresses:  # omit empty
-            v['addresses'] = addresses
+            v["addresses"] = addresses
         notReadyAddresses = self.notReadyAddresses()
         if notReadyAddresses:  # omit empty
-            v['notReadyAddresses'] = notReadyAddresses
+            v["notReadyAddresses"] = notReadyAddresses
         ports = self.ports()
         if ports:  # omit empty
-            v['ports'] = ports.values()  # named list
+            v["ports"] = ports.values()  # named list
         return v
-    
+
     # IP addresses which offer the related ports that are marked as ready. These endpoints
     # should be considered safe for load balancers and clients to utilize.
     @typechecked
     def addresses(self) -> List[EndpointAddress]:
-        if 'addresses' in self._kwargs:
-            return self._kwargs['addresses']
-        if 'addresses' in self._context and check_return_type(self._context['addresses']):
-            return self._context['addresses']
+        if "addresses" in self._kwargs:
+            return self._kwargs["addresses"]
+        if "addresses" in self._context and check_return_type(
+            self._context["addresses"]
+        ):
+            return self._context["addresses"]
         return []
-    
+
     # IP addresses which offer the related ports but are not currently marked as ready
     # because they have not yet finished starting, have recently failed a readiness check,
     # or have recently failed a liveness check.
     @typechecked
     def notReadyAddresses(self) -> List[EndpointAddress]:
-        if 'notReadyAddresses' in self._kwargs:
-            return self._kwargs['notReadyAddresses']
-        if 'notReadyAddresses' in self._context and check_return_type(self._context['notReadyAddresses']):
-            return self._context['notReadyAddresses']
+        if "notReadyAddresses" in self._kwargs:
+            return self._kwargs["notReadyAddresses"]
+        if "notReadyAddresses" in self._context and check_return_type(
+            self._context["notReadyAddresses"]
+        ):
+            return self._context["notReadyAddresses"]
         return []
-    
+
     # Port numbers available on the related IP addresses.
     @typechecked
     def ports(self) -> Dict[str, EndpointPort]:
-        if 'ports' in self._kwargs:
-            return self._kwargs['ports']
-        if 'ports' in self._context and check_return_type(self._context['ports']):
-            return self._context['ports']
+        if "ports" in self._kwargs:
+            return self._kwargs["ports"]
+        if "ports" in self._context and check_return_type(self._context["ports"]):
+            return self._context["ports"]
         return {}
 
 
@@ -4210,23 +4489,22 @@ class EndpointSubset(types.Object):
 #     },
 #  ]
 class Endpoints(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         subsets = self.subsets()
         if subsets:  # omit empty
-            v['subsets'] = subsets
+            v["subsets"] = subsets
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Endpoints'
-    
+        return "Endpoints"
+
     # The set of all endpoints is the union of all subsets. Addresses are placed into
     # subsets according to the IPs they share. A single address with multiple ports,
     # some of which are ready and some of which are not (because they come from
@@ -4236,10 +4514,10 @@ class Endpoints(base.TypedObject, base.MetadataObject):
     # Sets of addresses and ports that comprise a service.
     @typechecked
     def subsets(self) -> List[EndpointSubset]:
-        if 'subsets' in self._kwargs:
-            return self._kwargs['subsets']
-        if 'subsets' in self._context and check_return_type(self._context['subsets']):
-            return self._context['subsets']
+        if "subsets" in self._kwargs:
+            return self._kwargs["subsets"]
+        if "subsets" in self._context and check_return_type(self._context["subsets"]):
+            return self._context["subsets"]
         return []
 
 
@@ -4248,94 +4526,93 @@ class Endpoints(base.TypedObject, base.MetadataObject):
 # to Container and allows separate documentation for the fields of EphemeralContainer.
 # When a new field is added to Container it must be added here as well.
 class EphemeralContainerCommon(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
+        v["name"] = self.name()
         image = self.image()
         if image:  # omit empty
-            v['image'] = image
+            v["image"] = image
         command = self.command()
         if command:  # omit empty
-            v['command'] = command
+            v["command"] = command
         args = self.args()
         if args:  # omit empty
-            v['args'] = args
+            v["args"] = args
         workingDir = self.workingDir()
         if workingDir:  # omit empty
-            v['workingDir'] = workingDir
+            v["workingDir"] = workingDir
         ports = self.ports()
         if ports:  # omit empty
-            v['ports'] = ports.values()  # named list
+            v["ports"] = ports.values()  # named list
         envFrom = self.envFrom()
         if envFrom:  # omit empty
-            v['envFrom'] = envFrom
+            v["envFrom"] = envFrom
         env = self.env()
         if env:  # omit empty
-            v['env'] = env.values()  # named list
-        v['resources'] = self.resources()
+            v["env"] = env.values()  # named list
+        v["resources"] = self.resources()
         volumeMounts = self.volumeMounts()
         if volumeMounts:  # omit empty
-            v['volumeMounts'] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts.values()  # named list
         volumeDevices = self.volumeDevices()
         if volumeDevices:  # omit empty
-            v['volumeDevices'] = volumeDevices.values()  # named list
+            v["volumeDevices"] = volumeDevices.values()  # named list
         livenessProbe = self.livenessProbe()
         if livenessProbe is not None:  # omit empty
-            v['livenessProbe'] = livenessProbe
+            v["livenessProbe"] = livenessProbe
         readinessProbe = self.readinessProbe()
         if readinessProbe is not None:  # omit empty
-            v['readinessProbe'] = readinessProbe
+            v["readinessProbe"] = readinessProbe
         startupProbe = self.startupProbe()
         if startupProbe is not None:  # omit empty
-            v['startupProbe'] = startupProbe
+            v["startupProbe"] = startupProbe
         lifecycle = self.lifecycle()
         if lifecycle is not None:  # omit empty
-            v['lifecycle'] = lifecycle
+            v["lifecycle"] = lifecycle
         terminationMessagePath = self.terminationMessagePath()
         if terminationMessagePath:  # omit empty
-            v['terminationMessagePath'] = terminationMessagePath
+            v["terminationMessagePath"] = terminationMessagePath
         terminationMessagePolicy = self.terminationMessagePolicy()
         if terminationMessagePolicy:  # omit empty
-            v['terminationMessagePolicy'] = terminationMessagePolicy
+            v["terminationMessagePolicy"] = terminationMessagePolicy
         imagePullPolicy = self.imagePullPolicy()
         if imagePullPolicy:  # omit empty
-            v['imagePullPolicy'] = imagePullPolicy
+            v["imagePullPolicy"] = imagePullPolicy
         securityContext = self.securityContext()
         if securityContext is not None:  # omit empty
-            v['securityContext'] = securityContext
+            v["securityContext"] = securityContext
         stdin = self.stdin()
         if stdin:  # omit empty
-            v['stdin'] = stdin
+            v["stdin"] = stdin
         stdinOnce = self.stdinOnce()
         if stdinOnce:  # omit empty
-            v['stdinOnce'] = stdinOnce
+            v["stdinOnce"] = stdinOnce
         tty = self.tty()
         if tty:  # omit empty
-            v['tty'] = tty
+            v["tty"] = tty
         return v
-    
+
     # Name of the ephemeral container specified as a DNS_LABEL.
     # This name must be unique among all containers, init containers and ephemeral containers.
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # Docker image name.
     # More info: https://kubernetes.io/docs/concepts/containers/images
     @typechecked
     def image(self) -> Optional[str]:
-        if 'image' in self._kwargs:
-            return self._kwargs['image']
-        if 'image' in self._context and check_return_type(self._context['image']):
-            return self._context['image']
+        if "image" in self._kwargs:
+            return self._kwargs["image"]
+        if "image" in self._context and check_return_type(self._context["image"]):
+            return self._context["image"]
         return None
-    
+
     # Entrypoint array. Not executed within a shell.
     # The docker image's ENTRYPOINT is used if this is not provided.
     # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -4346,12 +4623,12 @@ class EphemeralContainerCommon(types.Object):
     # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     @typechecked
     def command(self) -> List[str]:
-        if 'command' in self._kwargs:
-            return self._kwargs['command']
-        if 'command' in self._context and check_return_type(self._context['command']):
-            return self._context['command']
+        if "command" in self._kwargs:
+            return self._kwargs["command"]
+        if "command" in self._context and check_return_type(self._context["command"]):
+            return self._context["command"]
         return []
-    
+
     # Arguments to the entrypoint.
     # The docker image's CMD is used if this is not provided.
     # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
@@ -4362,33 +4639,35 @@ class EphemeralContainerCommon(types.Object):
     # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     @typechecked
     def args(self) -> List[str]:
-        if 'args' in self._kwargs:
-            return self._kwargs['args']
-        if 'args' in self._context and check_return_type(self._context['args']):
-            return self._context['args']
+        if "args" in self._kwargs:
+            return self._kwargs["args"]
+        if "args" in self._context and check_return_type(self._context["args"]):
+            return self._context["args"]
         return []
-    
+
     # Container's working directory.
     # If not specified, the container runtime's default will be used, which
     # might be configured in the container image.
     # Cannot be updated.
     @typechecked
     def workingDir(self) -> Optional[str]:
-        if 'workingDir' in self._kwargs:
-            return self._kwargs['workingDir']
-        if 'workingDir' in self._context and check_return_type(self._context['workingDir']):
-            return self._context['workingDir']
+        if "workingDir" in self._kwargs:
+            return self._kwargs["workingDir"]
+        if "workingDir" in self._context and check_return_type(
+            self._context["workingDir"]
+        ):
+            return self._context["workingDir"]
         return None
-    
+
     # Ports are not allowed for ephemeral containers.
     @typechecked
     def ports(self) -> Dict[str, ContainerPort]:
-        if 'ports' in self._kwargs:
-            return self._kwargs['ports']
-        if 'ports' in self._context and check_return_type(self._context['ports']):
-            return self._context['ports']
+        if "ports" in self._kwargs:
+            return self._kwargs["ports"]
+        if "ports" in self._context and check_return_type(self._context["ports"]):
+            return self._context["ports"]
         return {}
-    
+
     # List of sources to populate environment variables in the container.
     # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
     # will be reported as an event when the container is starting. When a key exists in multiple
@@ -4397,89 +4676,103 @@ class EphemeralContainerCommon(types.Object):
     # Cannot be updated.
     @typechecked
     def envFrom(self) -> List[EnvFromSource]:
-        if 'envFrom' in self._kwargs:
-            return self._kwargs['envFrom']
-        if 'envFrom' in self._context and check_return_type(self._context['envFrom']):
-            return self._context['envFrom']
+        if "envFrom" in self._kwargs:
+            return self._kwargs["envFrom"]
+        if "envFrom" in self._context and check_return_type(self._context["envFrom"]):
+            return self._context["envFrom"]
         return []
-    
+
     # List of environment variables to set in the container.
     # Cannot be updated.
     @typechecked
     def env(self) -> Dict[str, EnvVar]:
-        if 'env' in self._kwargs:
-            return self._kwargs['env']
-        if 'env' in self._context and check_return_type(self._context['env']):
-            return self._context['env']
+        if "env" in self._kwargs:
+            return self._kwargs["env"]
+        if "env" in self._context and check_return_type(self._context["env"]):
+            return self._context["env"]
         return {}
-    
+
     # Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources
     # already allocated to the pod.
     @typechecked
     def resources(self) -> ResourceRequirements:
-        if 'resources' in self._kwargs:
-            return self._kwargs['resources']
-        if 'resources' in self._context and check_return_type(self._context['resources']):
-            return self._context['resources']
+        if "resources" in self._kwargs:
+            return self._kwargs["resources"]
+        if "resources" in self._context and check_return_type(
+            self._context["resources"]
+        ):
+            return self._context["resources"]
         with context.Scope(**self._context):
             return ResourceRequirements()
-    
+
     # Pod volumes to mount into the container's filesystem.
     # Cannot be updated.
     @typechecked
     def volumeMounts(self) -> Dict[str, VolumeMount]:
-        if 'volumeMounts' in self._kwargs:
-            return self._kwargs['volumeMounts']
-        if 'volumeMounts' in self._context and check_return_type(self._context['volumeMounts']):
-            return self._context['volumeMounts']
+        if "volumeMounts" in self._kwargs:
+            return self._kwargs["volumeMounts"]
+        if "volumeMounts" in self._context and check_return_type(
+            self._context["volumeMounts"]
+        ):
+            return self._context["volumeMounts"]
         return {}
-    
+
     # volumeDevices is the list of block devices to be used by the container.
     # This is a beta feature.
     @typechecked
     def volumeDevices(self) -> Dict[str, VolumeDevice]:
-        if 'volumeDevices' in self._kwargs:
-            return self._kwargs['volumeDevices']
-        if 'volumeDevices' in self._context and check_return_type(self._context['volumeDevices']):
-            return self._context['volumeDevices']
+        if "volumeDevices" in self._kwargs:
+            return self._kwargs["volumeDevices"]
+        if "volumeDevices" in self._context and check_return_type(
+            self._context["volumeDevices"]
+        ):
+            return self._context["volumeDevices"]
         return {}
-    
+
     # Probes are not allowed for ephemeral containers.
     @typechecked
     def livenessProbe(self) -> Optional[Probe]:
-        if 'livenessProbe' in self._kwargs:
-            return self._kwargs['livenessProbe']
-        if 'livenessProbe' in self._context and check_return_type(self._context['livenessProbe']):
-            return self._context['livenessProbe']
+        if "livenessProbe" in self._kwargs:
+            return self._kwargs["livenessProbe"]
+        if "livenessProbe" in self._context and check_return_type(
+            self._context["livenessProbe"]
+        ):
+            return self._context["livenessProbe"]
         return None
-    
+
     # Probes are not allowed for ephemeral containers.
     @typechecked
     def readinessProbe(self) -> Optional[Probe]:
-        if 'readinessProbe' in self._kwargs:
-            return self._kwargs['readinessProbe']
-        if 'readinessProbe' in self._context and check_return_type(self._context['readinessProbe']):
-            return self._context['readinessProbe']
+        if "readinessProbe" in self._kwargs:
+            return self._kwargs["readinessProbe"]
+        if "readinessProbe" in self._context and check_return_type(
+            self._context["readinessProbe"]
+        ):
+            return self._context["readinessProbe"]
         return None
-    
+
     # Probes are not allowed for ephemeral containers.
     @typechecked
     def startupProbe(self) -> Optional[Probe]:
-        if 'startupProbe' in self._kwargs:
-            return self._kwargs['startupProbe']
-        if 'startupProbe' in self._context and check_return_type(self._context['startupProbe']):
-            return self._context['startupProbe']
+        if "startupProbe" in self._kwargs:
+            return self._kwargs["startupProbe"]
+        if "startupProbe" in self._context and check_return_type(
+            self._context["startupProbe"]
+        ):
+            return self._context["startupProbe"]
         return None
-    
+
     # Lifecycle is not allowed for ephemeral containers.
     @typechecked
     def lifecycle(self) -> Optional[Lifecycle]:
-        if 'lifecycle' in self._kwargs:
-            return self._kwargs['lifecycle']
-        if 'lifecycle' in self._context and check_return_type(self._context['lifecycle']):
-            return self._context['lifecycle']
+        if "lifecycle" in self._kwargs:
+            return self._kwargs["lifecycle"]
+        if "lifecycle" in self._context and check_return_type(
+            self._context["lifecycle"]
+        ):
+            return self._context["lifecycle"]
         return None
-    
+
     # Optional: Path at which the file to which the container's termination message
     # will be written is mounted into the container's filesystem.
     # Message written is intended to be brief final status, such as an assertion failure message.
@@ -4489,12 +4782,14 @@ class EphemeralContainerCommon(types.Object):
     # Cannot be updated.
     @typechecked
     def terminationMessagePath(self) -> Optional[str]:
-        if 'terminationMessagePath' in self._kwargs:
-            return self._kwargs['terminationMessagePath']
-        if 'terminationMessagePath' in self._context and check_return_type(self._context['terminationMessagePath']):
-            return self._context['terminationMessagePath']
+        if "terminationMessagePath" in self._kwargs:
+            return self._kwargs["terminationMessagePath"]
+        if "terminationMessagePath" in self._context and check_return_type(
+            self._context["terminationMessagePath"]
+        ):
+            return self._context["terminationMessagePath"]
         return None
-    
+
     # Indicate how the termination message should be populated. File will use the contents of
     # terminationMessagePath to populate the container status message on both success and failure.
     # FallbackToLogsOnError will use the last chunk of container log output if the termination
@@ -4504,12 +4799,14 @@ class EphemeralContainerCommon(types.Object):
     # Cannot be updated.
     @typechecked
     def terminationMessagePolicy(self) -> Optional[TerminationMessagePolicy]:
-        if 'terminationMessagePolicy' in self._kwargs:
-            return self._kwargs['terminationMessagePolicy']
-        if 'terminationMessagePolicy' in self._context and check_return_type(self._context['terminationMessagePolicy']):
-            return self._context['terminationMessagePolicy']
+        if "terminationMessagePolicy" in self._kwargs:
+            return self._kwargs["terminationMessagePolicy"]
+        if "terminationMessagePolicy" in self._context and check_return_type(
+            self._context["terminationMessagePolicy"]
+        ):
+            return self._context["terminationMessagePolicy"]
         return None
-    
+
     # Image pull policy.
     # One of Always, Never, IfNotPresent.
     # Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
@@ -4517,32 +4814,36 @@ class EphemeralContainerCommon(types.Object):
     # More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
     @typechecked
     def imagePullPolicy(self) -> Optional[PullPolicy]:
-        if 'imagePullPolicy' in self._kwargs:
-            return self._kwargs['imagePullPolicy']
-        if 'imagePullPolicy' in self._context and check_return_type(self._context['imagePullPolicy']):
-            return self._context['imagePullPolicy']
+        if "imagePullPolicy" in self._kwargs:
+            return self._kwargs["imagePullPolicy"]
+        if "imagePullPolicy" in self._context and check_return_type(
+            self._context["imagePullPolicy"]
+        ):
+            return self._context["imagePullPolicy"]
         return None
-    
+
     # SecurityContext is not allowed for ephemeral containers.
     @typechecked
     def securityContext(self) -> Optional[SecurityContext]:
-        if 'securityContext' in self._kwargs:
-            return self._kwargs['securityContext']
-        if 'securityContext' in self._context and check_return_type(self._context['securityContext']):
-            return self._context['securityContext']
+        if "securityContext" in self._kwargs:
+            return self._kwargs["securityContext"]
+        if "securityContext" in self._context and check_return_type(
+            self._context["securityContext"]
+        ):
+            return self._context["securityContext"]
         return None
-    
+
     # Whether this container should allocate a buffer for stdin in the container runtime. If this
     # is not set, reads from stdin in the container will always result in EOF.
     # Default is false.
     @typechecked
     def stdin(self) -> Optional[bool]:
-        if 'stdin' in self._kwargs:
-            return self._kwargs['stdin']
-        if 'stdin' in self._context and check_return_type(self._context['stdin']):
-            return self._context['stdin']
+        if "stdin" in self._kwargs:
+            return self._kwargs["stdin"]
+        if "stdin" in self._context and check_return_type(self._context["stdin"]):
+            return self._context["stdin"]
         return None
-    
+
     # Whether the container runtime should close the stdin channel after it has been opened by
     # a single attach. When stdin is true the stdin stream will remain open across multiple attach
     # sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
@@ -4552,20 +4853,22 @@ class EphemeralContainerCommon(types.Object):
     # Default is false
     @typechecked
     def stdinOnce(self) -> Optional[bool]:
-        if 'stdinOnce' in self._kwargs:
-            return self._kwargs['stdinOnce']
-        if 'stdinOnce' in self._context and check_return_type(self._context['stdinOnce']):
-            return self._context['stdinOnce']
+        if "stdinOnce" in self._kwargs:
+            return self._kwargs["stdinOnce"]
+        if "stdinOnce" in self._context and check_return_type(
+            self._context["stdinOnce"]
+        ):
+            return self._context["stdinOnce"]
         return None
-    
+
     # Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
     # Default is false.
     @typechecked
     def tty(self) -> Optional[bool]:
-        if 'tty' in self._kwargs:
-            return self._kwargs['tty']
-        if 'tty' in self._context and check_return_type(self._context['tty']):
-            return self._context['tty']
+        if "tty" in self._kwargs:
+            return self._kwargs["tty"]
+        if "tty" in self._context and check_return_type(self._context["tty"]):
+            return self._context["tty"]
         return None
 
 
@@ -4579,430 +4882,447 @@ class EphemeralContainerCommon(types.Object):
 # once added.
 # This is an alpha feature enabled by the EphemeralContainers feature flag.
 class EphemeralContainer(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.ephemeralContainerCommon().render())  # inline
         targetContainerName = self.targetContainerName()
         if targetContainerName:  # omit empty
-            v['targetContainerName'] = targetContainerName
+            v["targetContainerName"] = targetContainerName
         return v
-    
+
     # Ephemeral containers have all of the fields of Container, plus additional fields
     # specific to ephemeral containers. Fields in common with Container are in the
     # following inlined struct so than an EphemeralContainer may easily be converted
     # to a Container.
     @typechecked
     def ephemeralContainerCommon(self) -> EphemeralContainerCommon:
-        if 'ephemeralContainerCommon' in self._kwargs:
-            return self._kwargs['ephemeralContainerCommon']
-        if 'ephemeralContainerCommon' in self._context and check_return_type(self._context['ephemeralContainerCommon']):
-            return self._context['ephemeralContainerCommon']
+        if "ephemeralContainerCommon" in self._kwargs:
+            return self._kwargs["ephemeralContainerCommon"]
+        if "ephemeralContainerCommon" in self._context and check_return_type(
+            self._context["ephemeralContainerCommon"]
+        ):
+            return self._context["ephemeralContainerCommon"]
         with context.Scope(**self._context):
             return EphemeralContainerCommon()
-    
+
     # If set, the name of the container from PodSpec that this ephemeral container targets.
     # The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container.
     # If not set then the ephemeral container is run in whatever namespaces are shared
     # for the pod. Note that the container runtime must support this feature.
     @typechecked
     def targetContainerName(self) -> Optional[str]:
-        if 'targetContainerName' in self._kwargs:
-            return self._kwargs['targetContainerName']
-        if 'targetContainerName' in self._context and check_return_type(self._context['targetContainerName']):
-            return self._context['targetContainerName']
+        if "targetContainerName" in self._kwargs:
+            return self._kwargs["targetContainerName"]
+        if "targetContainerName" in self._context and check_return_type(
+            self._context["targetContainerName"]
+        ):
+            return self._context["targetContainerName"]
         return None
 
 
 # A list of ephemeral containers used with the Pod ephemeralcontainers subresource.
 class EphemeralContainers(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['ephemeralContainers'] = self.ephemeralContainers()
+        v["ephemeralContainers"] = self.ephemeralContainers()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'EphemeralContainers'
-    
+        return "EphemeralContainers"
+
     # A list of ephemeral containers associated with this pod. New ephemeral containers
     # may be appended to this list, but existing ephemeral containers may not be removed
     # or modified.
     @typechecked
     def ephemeralContainers(self) -> List[EphemeralContainer]:
-        if 'ephemeralContainers' in self._kwargs:
-            return self._kwargs['ephemeralContainers']
-        if 'ephemeralContainers' in self._context and check_return_type(self._context['ephemeralContainers']):
-            return self._context['ephemeralContainers']
+        if "ephemeralContainers" in self._kwargs:
+            return self._kwargs["ephemeralContainers"]
+        if "ephemeralContainers" in self._context and check_return_type(
+            self._context["ephemeralContainers"]
+        ):
+            return self._context["ephemeralContainers"]
         return []
 
 
 # EventSeries contain information on series of events, i.e. thing that was/is happening
 # continuously for some time.
 class EventSeries(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         count = self.count()
         if count:  # omit empty
-            v['count'] = count
-        v['lastObservedTime'] = self.lastObservedTime()
+            v["count"] = count
+        v["lastObservedTime"] = self.lastObservedTime()
         return v
-    
+
     # Number of occurrences in this series up to the last heartbeat time
     @typechecked
     def count(self) -> Optional[int]:
-        if 'count' in self._kwargs:
-            return self._kwargs['count']
-        if 'count' in self._context and check_return_type(self._context['count']):
-            return self._context['count']
+        if "count" in self._kwargs:
+            return self._kwargs["count"]
+        if "count" in self._context and check_return_type(self._context["count"]):
+            return self._context["count"]
         return None
-    
+
     # Time of the last occurrence observed
     @typechecked
-    def lastObservedTime(self) -> 'base.MicroTime':
-        if 'lastObservedTime' in self._kwargs:
-            return self._kwargs['lastObservedTime']
-        if 'lastObservedTime' in self._context and check_return_type(self._context['lastObservedTime']):
-            return self._context['lastObservedTime']
+    def lastObservedTime(self) -> "base.MicroTime":
+        if "lastObservedTime" in self._kwargs:
+            return self._kwargs["lastObservedTime"]
+        if "lastObservedTime" in self._context and check_return_type(
+            self._context["lastObservedTime"]
+        ):
+            return self._context["lastObservedTime"]
         return None
 
 
 # EventSource contains information for an event.
 class EventSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         component = self.component()
         if component:  # omit empty
-            v['component'] = component
+            v["component"] = component
         host = self.host()
         if host:  # omit empty
-            v['host'] = host
+            v["host"] = host
         return v
-    
+
     # Component from which the event is generated.
     @typechecked
     def component(self) -> Optional[str]:
-        if 'component' in self._kwargs:
-            return self._kwargs['component']
-        if 'component' in self._context and check_return_type(self._context['component']):
-            return self._context['component']
+        if "component" in self._kwargs:
+            return self._kwargs["component"]
+        if "component" in self._context and check_return_type(
+            self._context["component"]
+        ):
+            return self._context["component"]
         return None
-    
+
     # Node name on which the event is generated.
     @typechecked
     def host(self) -> Optional[str]:
-        if 'host' in self._kwargs:
-            return self._kwargs['host']
-        if 'host' in self._context and check_return_type(self._context['host']):
-            return self._context['host']
+        if "host" in self._kwargs:
+            return self._kwargs["host"]
+        if "host" in self._context and check_return_type(self._context["host"]):
+            return self._context["host"]
         return None
 
 
 # Event is a report of an event somewhere in the cluster.
 class Event(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['involvedObject'] = self.involvedObject()
+        v["involvedObject"] = self.involvedObject()
         reason = self.reason()
         if reason:  # omit empty
-            v['reason'] = reason
+            v["reason"] = reason
         message = self.message()
         if message:  # omit empty
-            v['message'] = message
-        v['source'] = self.source()
-        v['firstTimestamp'] = self.firstTimestamp()
-        v['lastTimestamp'] = self.lastTimestamp()
+            v["message"] = message
+        v["source"] = self.source()
+        v["firstTimestamp"] = self.firstTimestamp()
+        v["lastTimestamp"] = self.lastTimestamp()
         count = self.count()
         if count:  # omit empty
-            v['count'] = count
+            v["count"] = count
         type = self.type()
         if type:  # omit empty
-            v['type'] = type
-        v['eventTime'] = self.eventTime()
+            v["type"] = type
+        v["eventTime"] = self.eventTime()
         series = self.series()
         if series is not None:  # omit empty
-            v['series'] = series
+            v["series"] = series
         action = self.action()
         if action:  # omit empty
-            v['action'] = action
+            v["action"] = action
         related = self.related()
         if related is not None:  # omit empty
-            v['related'] = related
-        v['reportingComponent'] = self.reportingComponent()
-        v['reportingInstance'] = self.reportingInstance()
+            v["related"] = related
+        v["reportingComponent"] = self.reportingComponent()
+        v["reportingInstance"] = self.reportingInstance()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Event'
-    
+        return "Event"
+
     # The object that this event is about.
     @typechecked
     def involvedObject(self) -> ObjectReference:
-        if 'involvedObject' in self._kwargs:
-            return self._kwargs['involvedObject']
-        if 'involvedObject' in self._context and check_return_type(self._context['involvedObject']):
-            return self._context['involvedObject']
+        if "involvedObject" in self._kwargs:
+            return self._kwargs["involvedObject"]
+        if "involvedObject" in self._context and check_return_type(
+            self._context["involvedObject"]
+        ):
+            return self._context["involvedObject"]
         with context.Scope(**self._context):
             return ObjectReference()
-    
+
     # This should be a short, machine understandable string that gives the reason
     # for the transition into the object's current status.
     # TODO: provide exact specification for format.
     @typechecked
     def reason(self) -> Optional[str]:
-        if 'reason' in self._kwargs:
-            return self._kwargs['reason']
-        if 'reason' in self._context and check_return_type(self._context['reason']):
-            return self._context['reason']
+        if "reason" in self._kwargs:
+            return self._kwargs["reason"]
+        if "reason" in self._context and check_return_type(self._context["reason"]):
+            return self._context["reason"]
         return None
-    
+
     # A human-readable description of the status of this operation.
     # TODO: decide on maximum length.
     @typechecked
     def message(self) -> Optional[str]:
-        if 'message' in self._kwargs:
-            return self._kwargs['message']
-        if 'message' in self._context and check_return_type(self._context['message']):
-            return self._context['message']
+        if "message" in self._kwargs:
+            return self._kwargs["message"]
+        if "message" in self._context and check_return_type(self._context["message"]):
+            return self._context["message"]
         return None
-    
+
     # The component reporting this event. Should be a short machine understandable string.
     @typechecked
     def source(self) -> EventSource:
-        if 'source' in self._kwargs:
-            return self._kwargs['source']
-        if 'source' in self._context and check_return_type(self._context['source']):
-            return self._context['source']
+        if "source" in self._kwargs:
+            return self._kwargs["source"]
+        if "source" in self._context and check_return_type(self._context["source"]):
+            return self._context["source"]
         with context.Scope(**self._context):
             return EventSource()
-    
+
     # The time at which the event was first recorded. (Time of server receipt is in TypeMeta.)
     @typechecked
-    def firstTimestamp(self) -> 'base.Time':
-        if 'firstTimestamp' in self._kwargs:
-            return self._kwargs['firstTimestamp']
-        if 'firstTimestamp' in self._context and check_return_type(self._context['firstTimestamp']):
-            return self._context['firstTimestamp']
+    def firstTimestamp(self) -> "base.Time":
+        if "firstTimestamp" in self._kwargs:
+            return self._kwargs["firstTimestamp"]
+        if "firstTimestamp" in self._context and check_return_type(
+            self._context["firstTimestamp"]
+        ):
+            return self._context["firstTimestamp"]
         return None
-    
+
     # The time at which the most recent occurrence of this event was recorded.
     @typechecked
-    def lastTimestamp(self) -> 'base.Time':
-        if 'lastTimestamp' in self._kwargs:
-            return self._kwargs['lastTimestamp']
-        if 'lastTimestamp' in self._context and check_return_type(self._context['lastTimestamp']):
-            return self._context['lastTimestamp']
+    def lastTimestamp(self) -> "base.Time":
+        if "lastTimestamp" in self._kwargs:
+            return self._kwargs["lastTimestamp"]
+        if "lastTimestamp" in self._context and check_return_type(
+            self._context["lastTimestamp"]
+        ):
+            return self._context["lastTimestamp"]
         return None
-    
+
     # The number of times this event has occurred.
     @typechecked
     def count(self) -> Optional[int]:
-        if 'count' in self._kwargs:
-            return self._kwargs['count']
-        if 'count' in self._context and check_return_type(self._context['count']):
-            return self._context['count']
+        if "count" in self._kwargs:
+            return self._kwargs["count"]
+        if "count" in self._context and check_return_type(self._context["count"]):
+            return self._context["count"]
         return None
-    
+
     # Type of this event (Normal, Warning), new types could be added in the future
     @typechecked
     def type(self) -> Optional[str]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
         return None
-    
+
     # Time when this Event was first observed.
     @typechecked
-    def eventTime(self) -> 'base.MicroTime':
-        if 'eventTime' in self._kwargs:
-            return self._kwargs['eventTime']
-        if 'eventTime' in self._context and check_return_type(self._context['eventTime']):
-            return self._context['eventTime']
+    def eventTime(self) -> "base.MicroTime":
+        if "eventTime" in self._kwargs:
+            return self._kwargs["eventTime"]
+        if "eventTime" in self._context and check_return_type(
+            self._context["eventTime"]
+        ):
+            return self._context["eventTime"]
         return None
-    
+
     # Data about the Event series this event represents or nil if it's a singleton Event.
     @typechecked
     def series(self) -> Optional[EventSeries]:
-        if 'series' in self._kwargs:
-            return self._kwargs['series']
-        if 'series' in self._context and check_return_type(self._context['series']):
-            return self._context['series']
+        if "series" in self._kwargs:
+            return self._kwargs["series"]
+        if "series" in self._context and check_return_type(self._context["series"]):
+            return self._context["series"]
         return None
-    
+
     # What action was taken/failed regarding to the Regarding object.
     @typechecked
     def action(self) -> Optional[str]:
-        if 'action' in self._kwargs:
-            return self._kwargs['action']
-        if 'action' in self._context and check_return_type(self._context['action']):
-            return self._context['action']
+        if "action" in self._kwargs:
+            return self._kwargs["action"]
+        if "action" in self._context and check_return_type(self._context["action"]):
+            return self._context["action"]
         return None
-    
+
     # Optional secondary object for more complex actions.
     @typechecked
     def related(self) -> Optional[ObjectReference]:
-        if 'related' in self._kwargs:
-            return self._kwargs['related']
-        if 'related' in self._context and check_return_type(self._context['related']):
-            return self._context['related']
+        if "related" in self._kwargs:
+            return self._kwargs["related"]
+        if "related" in self._context and check_return_type(self._context["related"]):
+            return self._context["related"]
         return None
-    
+
     # Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
     @typechecked
     def reportingComponent(self) -> str:
-        if 'reportingComponent' in self._kwargs:
-            return self._kwargs['reportingComponent']
-        if 'reportingComponent' in self._context and check_return_type(self._context['reportingComponent']):
-            return self._context['reportingComponent']
-        return ''
-    
+        if "reportingComponent" in self._kwargs:
+            return self._kwargs["reportingComponent"]
+        if "reportingComponent" in self._context and check_return_type(
+            self._context["reportingComponent"]
+        ):
+            return self._context["reportingComponent"]
+        return ""
+
     # ID of the controller instance, e.g. `kubelet-xyzf`.
     @typechecked
     def reportingInstance(self) -> str:
-        if 'reportingInstance' in self._kwargs:
-            return self._kwargs['reportingInstance']
-        if 'reportingInstance' in self._context and check_return_type(self._context['reportingInstance']):
-            return self._context['reportingInstance']
-        return ''
+        if "reportingInstance" in self._kwargs:
+            return self._kwargs["reportingInstance"]
+        if "reportingInstance" in self._context and check_return_type(
+            self._context["reportingInstance"]
+        ):
+            return self._context["reportingInstance"]
+        return ""
 
 
 # Represents a Fibre Channel volume.
 # Fibre Channel volumes can only be mounted as read/write once.
 # Fibre Channel volumes support ownership management and SELinux relabeling.
 class FCVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         targetWWNs = self.targetWWNs()
         if targetWWNs:  # omit empty
-            v['targetWWNs'] = targetWWNs
+            v["targetWWNs"] = targetWWNs
         lun = self.lun()
         if lun is not None:  # omit empty
-            v['lun'] = lun
+            v["lun"] = lun
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         wwids = self.wwids()
         if wwids:  # omit empty
-            v['wwids'] = wwids
+            v["wwids"] = wwids
         return v
-    
+
     # Optional: FC target worldwide names (WWNs)
     @typechecked
     def targetWWNs(self) -> List[str]:
-        if 'targetWWNs' in self._kwargs:
-            return self._kwargs['targetWWNs']
-        if 'targetWWNs' in self._context and check_return_type(self._context['targetWWNs']):
-            return self._context['targetWWNs']
+        if "targetWWNs" in self._kwargs:
+            return self._kwargs["targetWWNs"]
+        if "targetWWNs" in self._context and check_return_type(
+            self._context["targetWWNs"]
+        ):
+            return self._context["targetWWNs"]
         return []
-    
+
     # Optional: FC target lun number
     @typechecked
     def lun(self) -> Optional[int]:
-        if 'lun' in self._kwargs:
-            return self._kwargs['lun']
-        if 'lun' in self._context and check_return_type(self._context['lun']):
-            return self._context['lun']
+        if "lun" in self._kwargs:
+            return self._kwargs["lun"]
+        if "lun" in self._context and check_return_type(self._context["lun"]):
+            return self._context["lun"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Optional: FC volume world wide identifiers (wwids)
     # Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
     @typechecked
     def wwids(self) -> List[str]:
-        if 'wwids' in self._kwargs:
-            return self._kwargs['wwids']
-        if 'wwids' in self._context and check_return_type(self._context['wwids']):
-            return self._context['wwids']
+        if "wwids" in self._kwargs:
+            return self._kwargs["wwids"]
+        if "wwids" in self._context and check_return_type(self._context["wwids"]):
+            return self._context["wwids"]
         return []
 
 
 # FlexPersistentVolumeSource represents a generic persistent volume resource that is
 # provisioned/attached using an exec based plugin.
 class FlexPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['driver'] = self.driver()
+        v["driver"] = self.driver()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         options = self.options()
         if options:  # omit empty
-            v['options'] = options
+            v["options"] = options
         return v
-    
+
     # Driver is the name of the driver to use for this volume.
     @typechecked
     def driver(self) -> str:
-        if 'driver' in self._kwargs:
-            return self._kwargs['driver']
-        if 'driver' in self._context and check_return_type(self._context['driver']):
-            return self._context['driver']
-        return ''
-    
+        if "driver" in self._kwargs:
+            return self._kwargs["driver"]
+        if "driver" in self._context and check_return_type(self._context["driver"]):
+            return self._context["driver"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Optional: SecretRef is reference to the secret object containing
     # sensitive information to pass to the plugin scripts. This may be
     # empty if no secret object is specified. If the secret object
@@ -5010,74 +5330,75 @@ class FlexPersistentVolumeSource(types.Object):
     # scripts.
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Optional: Extra command options if any.
     @typechecked
     def options(self) -> Dict[str, str]:
-        if 'options' in self._kwargs:
-            return self._kwargs['options']
-        if 'options' in self._context and check_return_type(self._context['options']):
-            return self._context['options']
+        if "options" in self._kwargs:
+            return self._kwargs["options"]
+        if "options" in self._context and check_return_type(self._context["options"]):
+            return self._context["options"]
         return {}
 
 
 # FlexVolume represents a generic volume resource that is
 # provisioned/attached using an exec based plugin.
 class FlexVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['driver'] = self.driver()
+        v["driver"] = self.driver()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         options = self.options()
         if options:  # omit empty
-            v['options'] = options
+            v["options"] = options
         return v
-    
+
     # Driver is the name of the driver to use for this volume.
     @typechecked
     def driver(self) -> str:
-        if 'driver' in self._kwargs:
-            return self._kwargs['driver']
-        if 'driver' in self._context and check_return_type(self._context['driver']):
-            return self._context['driver']
-        return ''
-    
+        if "driver" in self._kwargs:
+            return self._kwargs["driver"]
+        if "driver" in self._context and check_return_type(self._context["driver"]):
+            return self._context["driver"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Optional: SecretRef is reference to the secret object containing
     # sensitive information to pass to the plugin scripts. This may be
     # empty if no secret object is specified. If the secret object
@@ -5085,29 +5406,31 @@ class FlexVolumeSource(types.Object):
     # scripts.
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Optional: Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # Optional: Extra command options if any.
     @typechecked
     def options(self) -> Dict[str, str]:
-        if 'options' in self._kwargs:
-            return self._kwargs['options']
-        if 'options' in self._context and check_return_type(self._context['options']):
-            return self._context['options']
+        if "options" in self._kwargs:
+            return self._kwargs["options"]
+        if "options" in self._context and check_return_type(self._context["options"]):
+            return self._context["options"]
         return {}
 
 
@@ -5115,71 +5438,73 @@ class FlexVolumeSource(types.Object):
 # One and only one of datasetName and datasetUUID should be set.
 # Flocker volumes do not support ownership management or SELinux relabeling.
 class FlockerVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         datasetName = self.datasetName()
         if datasetName:  # omit empty
-            v['datasetName'] = datasetName
+            v["datasetName"] = datasetName
         datasetUUID = self.datasetUUID()
         if datasetUUID:  # omit empty
-            v['datasetUUID'] = datasetUUID
+            v["datasetUUID"] = datasetUUID
         return v
-    
+
     # Name of the dataset stored as metadata -> name on the dataset for Flocker
     # should be considered as deprecated
     @typechecked
     def datasetName(self) -> Optional[str]:
-        if 'datasetName' in self._kwargs:
-            return self._kwargs['datasetName']
-        if 'datasetName' in self._context and check_return_type(self._context['datasetName']):
-            return self._context['datasetName']
+        if "datasetName" in self._kwargs:
+            return self._kwargs["datasetName"]
+        if "datasetName" in self._context and check_return_type(
+            self._context["datasetName"]
+        ):
+            return self._context["datasetName"]
         return None
-    
+
     # UUID of the dataset. This is unique identifier of a Flocker dataset
     @typechecked
     def datasetUUID(self) -> Optional[str]:
-        if 'datasetUUID' in self._kwargs:
-            return self._kwargs['datasetUUID']
-        if 'datasetUUID' in self._context and check_return_type(self._context['datasetUUID']):
-            return self._context['datasetUUID']
+        if "datasetUUID" in self._kwargs:
+            return self._kwargs["datasetUUID"]
+        if "datasetUUID" in self._context and check_return_type(
+            self._context["datasetUUID"]
+        ):
+            return self._context["datasetUUID"]
         return None
 
 
 # Represents a Persistent Disk resource in Google Compute Engine.
-# 
+#
 # A GCE PD must exist before mounting to a container. The disk must
 # also be in the same GCE project and zone as the kubelet. A GCE PD
 # can only be mounted as read/write once or read-only many times. GCE
 # PDs support ownership management and SELinux relabeling.
 class GCEPersistentDiskVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['pdName'] = self.pdName()
+        v["pdName"] = self.pdName()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         partition = self.partition()
         if partition:  # omit empty
-            v['partition'] = partition
+            v["partition"] = partition
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # Unique name of the PD resource in GCE. Used to identify the disk in GCE.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     @typechecked
     def pdName(self) -> str:
-        if 'pdName' in self._kwargs:
-            return self._kwargs['pdName']
-        if 'pdName' in self._context and check_return_type(self._context['pdName']):
-            return self._context['pdName']
-        return ''
-    
+        if "pdName" in self._kwargs:
+            return self._kwargs["pdName"]
+        if "pdName" in self._context and check_return_type(self._context["pdName"]):
+            return self._context["pdName"]
+        return ""
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -5187,12 +5512,12 @@ class GCEPersistentDiskVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # The partition in the volume that you want to mount.
     # If omitted, the default is to mount by volume name.
     # Examples: For volume /dev/sda1, you specify the partition as "1".
@@ -5200,197 +5525,203 @@ class GCEPersistentDiskVolumeSource(types.Object):
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     @typechecked
     def partition(self) -> Optional[int]:
-        if 'partition' in self._kwargs:
-            return self._kwargs['partition']
-        if 'partition' in self._context and check_return_type(self._context['partition']):
-            return self._context['partition']
+        if "partition" in self._kwargs:
+            return self._kwargs["partition"]
+        if "partition" in self._context and check_return_type(
+            self._context["partition"]
+        ):
+            return self._context["partition"]
         return None
-    
+
     # ReadOnly here will force the ReadOnly setting in VolumeMounts.
     # Defaults to false.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # Represents a Glusterfs mount that lasts the lifetime of a pod.
 # Glusterfs volumes do not support ownership management or SELinux relabeling.
 class GlusterfsPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['endpoints'] = self.endpoints()
-        v['path'] = self.path()
+        v["endpoints"] = self.endpoints()
+        v["path"] = self.path()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         endpointsNamespace = self.endpointsNamespace()
         if endpointsNamespace is not None:  # omit empty
-            v['endpointsNamespace'] = endpointsNamespace
+            v["endpointsNamespace"] = endpointsNamespace
         return v
-    
+
     # EndpointsName is the endpoint name that details Glusterfs topology.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def endpoints(self) -> str:
-        if 'endpoints' in self._kwargs:
-            return self._kwargs['endpoints']
-        if 'endpoints' in self._context and check_return_type(self._context['endpoints']):
-            return self._context['endpoints']
-        return ''
-    
+        if "endpoints" in self._kwargs:
+            return self._kwargs["endpoints"]
+        if "endpoints" in self._context and check_return_type(
+            self._context["endpoints"]
+        ):
+            return self._context["endpoints"]
+        return ""
+
     # Path is the Glusterfs volume path.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
     # Defaults to false.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # EndpointsNamespace is the namespace that contains Glusterfs endpoint.
     # If this field is empty, the EndpointNamespace defaults to the same namespace as the bound PVC.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def endpointsNamespace(self) -> Optional[str]:
-        if 'endpointsNamespace' in self._kwargs:
-            return self._kwargs['endpointsNamespace']
-        if 'endpointsNamespace' in self._context and check_return_type(self._context['endpointsNamespace']):
-            return self._context['endpointsNamespace']
+        if "endpointsNamespace" in self._kwargs:
+            return self._kwargs["endpointsNamespace"]
+        if "endpointsNamespace" in self._context and check_return_type(
+            self._context["endpointsNamespace"]
+        ):
+            return self._context["endpointsNamespace"]
         return None
 
 
 # Represents a Glusterfs mount that lasts the lifetime of a pod.
 # Glusterfs volumes do not support ownership management or SELinux relabeling.
 class GlusterfsVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['endpoints'] = self.endpoints()
-        v['path'] = self.path()
+        v["endpoints"] = self.endpoints()
+        v["path"] = self.path()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # EndpointsName is the endpoint name that details Glusterfs topology.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def endpoints(self) -> str:
-        if 'endpoints' in self._kwargs:
-            return self._kwargs['endpoints']
-        if 'endpoints' in self._context and check_return_type(self._context['endpoints']):
-            return self._context['endpoints']
-        return ''
-    
+        if "endpoints" in self._kwargs:
+            return self._kwargs["endpoints"]
+        if "endpoints" in self._context and check_return_type(
+            self._context["endpoints"]
+        ):
+            return self._context["endpoints"]
+        return ""
+
     # Path is the Glusterfs volume path.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
     # Defaults to false.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the
 # pod's hosts file.
 class HostAlias(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         ip = self.ip()
         if ip:  # omit empty
-            v['ip'] = ip
+            v["ip"] = ip
         hostnames = self.hostnames()
         if hostnames:  # omit empty
-            v['hostnames'] = hostnames
+            v["hostnames"] = hostnames
         return v
-    
+
     # IP address of the host file entry.
     @typechecked
     def ip(self) -> Optional[str]:
-        if 'ip' in self._kwargs:
-            return self._kwargs['ip']
-        if 'ip' in self._context and check_return_type(self._context['ip']):
-            return self._context['ip']
+        if "ip" in self._kwargs:
+            return self._kwargs["ip"]
+        if "ip" in self._context and check_return_type(self._context["ip"]):
+            return self._context["ip"]
         return None
-    
+
     # Hostnames for the above IP address.
     @typechecked
     def hostnames(self) -> List[str]:
-        if 'hostnames' in self._kwargs:
-            return self._kwargs['hostnames']
-        if 'hostnames' in self._context and check_return_type(self._context['hostnames']):
-            return self._context['hostnames']
+        if "hostnames" in self._kwargs:
+            return self._kwargs["hostnames"]
+        if "hostnames" in self._context and check_return_type(
+            self._context["hostnames"]
+        ):
+            return self._context["hostnames"]
         return []
 
 
 # Represents a host path mapped into a pod.
 # Host path volumes do not support ownership management or SELinux relabeling.
 class HostPathVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['path'] = self.path()
+        v["path"] = self.path()
         type = self.type()
         if type is not None:  # omit empty
-            v['type'] = type
+            v["type"] = type
         return v
-    
+
     # Path of the directory on the host.
     # If the path is a symlink, it will follow the link to the real path.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # Type for HostPath Volume
     # Defaults to ""
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     @typechecked
     def type(self) -> Optional[HostPathType]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
         return None
 
 
@@ -5398,77 +5729,80 @@ class HostPathVolumeSource(types.Object):
 # ISCSI volumes can only be mounted as read/write once.
 # ISCSI volumes support ownership management and SELinux relabeling.
 class ISCSIPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['targetPortal'] = self.targetPortal()
-        v['iqn'] = self.iqn()
-        v['lun'] = self.lun()
+        v["targetPortal"] = self.targetPortal()
+        v["iqn"] = self.iqn()
+        v["lun"] = self.lun()
         iscsiInterface = self.iscsiInterface()
         if iscsiInterface:  # omit empty
-            v['iscsiInterface'] = iscsiInterface
+            v["iscsiInterface"] = iscsiInterface
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         portals = self.portals()
         if portals:  # omit empty
-            v['portals'] = portals
+            v["portals"] = portals
         chapAuthDiscovery = self.chapAuthDiscovery()
         if chapAuthDiscovery:  # omit empty
-            v['chapAuthDiscovery'] = chapAuthDiscovery
+            v["chapAuthDiscovery"] = chapAuthDiscovery
         chapAuthSession = self.chapAuthSession()
         if chapAuthSession:  # omit empty
-            v['chapAuthSession'] = chapAuthSession
+            v["chapAuthSession"] = chapAuthSession
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         initiatorName = self.initiatorName()
         if initiatorName is not None:  # omit empty
-            v['initiatorName'] = initiatorName
+            v["initiatorName"] = initiatorName
         return v
-    
+
     # iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
     # is other than default (typically TCP ports 860 and 3260).
     @typechecked
     def targetPortal(self) -> str:
-        if 'targetPortal' in self._kwargs:
-            return self._kwargs['targetPortal']
-        if 'targetPortal' in self._context and check_return_type(self._context['targetPortal']):
-            return self._context['targetPortal']
-        return ''
-    
+        if "targetPortal" in self._kwargs:
+            return self._kwargs["targetPortal"]
+        if "targetPortal" in self._context and check_return_type(
+            self._context["targetPortal"]
+        ):
+            return self._context["targetPortal"]
+        return ""
+
     # Target iSCSI Qualified Name.
     @typechecked
     def iqn(self) -> str:
-        if 'iqn' in self._kwargs:
-            return self._kwargs['iqn']
-        if 'iqn' in self._context and check_return_type(self._context['iqn']):
-            return self._context['iqn']
-        return ''
-    
+        if "iqn" in self._kwargs:
+            return self._kwargs["iqn"]
+        if "iqn" in self._context and check_return_type(self._context["iqn"]):
+            return self._context["iqn"]
+        return ""
+
     # iSCSI Target Lun number.
     @typechecked
     def lun(self) -> int:
-        if 'lun' in self._kwargs:
-            return self._kwargs['lun']
-        if 'lun' in self._context and check_return_type(self._context['lun']):
-            return self._context['lun']
+        if "lun" in self._kwargs:
+            return self._kwargs["lun"]
+        if "lun" in self._context and check_return_type(self._context["lun"]):
+            return self._context["lun"]
         return 0
-    
+
     # iSCSI Interface Name that uses an iSCSI transport.
     # Defaults to 'default' (tcp).
     @typechecked
     def iscsiInterface(self) -> Optional[str]:
-        if 'iscsiInterface' in self._kwargs:
-            return self._kwargs['iscsiInterface']
-        if 'iscsiInterface' in self._context and check_return_type(self._context['iscsiInterface']):
-            return self._context['iscsiInterface']
-        return 'default'
-    
+        if "iscsiInterface" in self._kwargs:
+            return self._kwargs["iscsiInterface"]
+        if "iscsiInterface" in self._context and check_return_type(
+            self._context["iscsiInterface"]
+        ):
+            return self._context["iscsiInterface"]
+        return "default"
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -5476,68 +5810,76 @@ class ISCSIPersistentVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # ReadOnly here will force the ReadOnly setting in VolumeMounts.
     # Defaults to false.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # iSCSI Target Portal List. The Portal is either an IP or ip_addr:port if the port
     # is other than default (typically TCP ports 860 and 3260).
     @typechecked
     def portals(self) -> List[str]:
-        if 'portals' in self._kwargs:
-            return self._kwargs['portals']
-        if 'portals' in self._context and check_return_type(self._context['portals']):
-            return self._context['portals']
+        if "portals" in self._kwargs:
+            return self._kwargs["portals"]
+        if "portals" in self._context and check_return_type(self._context["portals"]):
+            return self._context["portals"]
         return []
-    
+
     # whether support iSCSI Discovery CHAP authentication
     @typechecked
     def chapAuthDiscovery(self) -> Optional[bool]:
-        if 'chapAuthDiscovery' in self._kwargs:
-            return self._kwargs['chapAuthDiscovery']
-        if 'chapAuthDiscovery' in self._context and check_return_type(self._context['chapAuthDiscovery']):
-            return self._context['chapAuthDiscovery']
+        if "chapAuthDiscovery" in self._kwargs:
+            return self._kwargs["chapAuthDiscovery"]
+        if "chapAuthDiscovery" in self._context and check_return_type(
+            self._context["chapAuthDiscovery"]
+        ):
+            return self._context["chapAuthDiscovery"]
         return None
-    
+
     # whether support iSCSI Session CHAP authentication
     @typechecked
     def chapAuthSession(self) -> Optional[bool]:
-        if 'chapAuthSession' in self._kwargs:
-            return self._kwargs['chapAuthSession']
-        if 'chapAuthSession' in self._context and check_return_type(self._context['chapAuthSession']):
-            return self._context['chapAuthSession']
+        if "chapAuthSession" in self._kwargs:
+            return self._kwargs["chapAuthSession"]
+        if "chapAuthSession" in self._context and check_return_type(
+            self._context["chapAuthSession"]
+        ):
+            return self._context["chapAuthSession"]
         return None
-    
+
     # CHAP Secret for iSCSI target and initiator authentication
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Custom iSCSI Initiator Name.
     # If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
     # <target portal>:<volume name> will be created for the connection.
     @typechecked
     def initiatorName(self) -> Optional[str]:
-        if 'initiatorName' in self._kwargs:
-            return self._kwargs['initiatorName']
-        if 'initiatorName' in self._context and check_return_type(self._context['initiatorName']):
-            return self._context['initiatorName']
+        if "initiatorName" in self._kwargs:
+            return self._kwargs["initiatorName"]
+        if "initiatorName" in self._context and check_return_type(
+            self._context["initiatorName"]
+        ):
+            return self._context["initiatorName"]
         return None
 
 
@@ -5545,77 +5887,80 @@ class ISCSIPersistentVolumeSource(types.Object):
 # ISCSI volumes can only be mounted as read/write once.
 # ISCSI volumes support ownership management and SELinux relabeling.
 class ISCSIVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['targetPortal'] = self.targetPortal()
-        v['iqn'] = self.iqn()
-        v['lun'] = self.lun()
+        v["targetPortal"] = self.targetPortal()
+        v["iqn"] = self.iqn()
+        v["lun"] = self.lun()
         iscsiInterface = self.iscsiInterface()
         if iscsiInterface:  # omit empty
-            v['iscsiInterface'] = iscsiInterface
+            v["iscsiInterface"] = iscsiInterface
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         portals = self.portals()
         if portals:  # omit empty
-            v['portals'] = portals
+            v["portals"] = portals
         chapAuthDiscovery = self.chapAuthDiscovery()
         if chapAuthDiscovery:  # omit empty
-            v['chapAuthDiscovery'] = chapAuthDiscovery
+            v["chapAuthDiscovery"] = chapAuthDiscovery
         chapAuthSession = self.chapAuthSession()
         if chapAuthSession:  # omit empty
-            v['chapAuthSession'] = chapAuthSession
+            v["chapAuthSession"] = chapAuthSession
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         initiatorName = self.initiatorName()
         if initiatorName is not None:  # omit empty
-            v['initiatorName'] = initiatorName
+            v["initiatorName"] = initiatorName
         return v
-    
+
     # iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
     # is other than default (typically TCP ports 860 and 3260).
     @typechecked
     def targetPortal(self) -> str:
-        if 'targetPortal' in self._kwargs:
-            return self._kwargs['targetPortal']
-        if 'targetPortal' in self._context and check_return_type(self._context['targetPortal']):
-            return self._context['targetPortal']
-        return ''
-    
+        if "targetPortal" in self._kwargs:
+            return self._kwargs["targetPortal"]
+        if "targetPortal" in self._context and check_return_type(
+            self._context["targetPortal"]
+        ):
+            return self._context["targetPortal"]
+        return ""
+
     # Target iSCSI Qualified Name.
     @typechecked
     def iqn(self) -> str:
-        if 'iqn' in self._kwargs:
-            return self._kwargs['iqn']
-        if 'iqn' in self._context and check_return_type(self._context['iqn']):
-            return self._context['iqn']
-        return ''
-    
+        if "iqn" in self._kwargs:
+            return self._kwargs["iqn"]
+        if "iqn" in self._context and check_return_type(self._context["iqn"]):
+            return self._context["iqn"]
+        return ""
+
     # iSCSI Target Lun number.
     @typechecked
     def lun(self) -> int:
-        if 'lun' in self._kwargs:
-            return self._kwargs['lun']
-        if 'lun' in self._context and check_return_type(self._context['lun']):
-            return self._context['lun']
+        if "lun" in self._kwargs:
+            return self._kwargs["lun"]
+        if "lun" in self._context and check_return_type(self._context["lun"]):
+            return self._context["lun"]
         return 0
-    
+
     # iSCSI Interface Name that uses an iSCSI transport.
     # Defaults to 'default' (tcp).
     @typechecked
     def iscsiInterface(self) -> Optional[str]:
-        if 'iscsiInterface' in self._kwargs:
-            return self._kwargs['iscsiInterface']
-        if 'iscsiInterface' in self._context and check_return_type(self._context['iscsiInterface']):
-            return self._context['iscsiInterface']
-        return 'default'
-    
+        if "iscsiInterface" in self._kwargs:
+            return self._kwargs["iscsiInterface"]
+        if "iscsiInterface" in self._context and check_return_type(
+            self._context["iscsiInterface"]
+        ):
+            return self._context["iscsiInterface"]
+        return "default"
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -5623,768 +5968,776 @@ class ISCSIVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # ReadOnly here will force the ReadOnly setting in VolumeMounts.
     # Defaults to false.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port
     # is other than default (typically TCP ports 860 and 3260).
     @typechecked
     def portals(self) -> List[str]:
-        if 'portals' in self._kwargs:
-            return self._kwargs['portals']
-        if 'portals' in self._context and check_return_type(self._context['portals']):
-            return self._context['portals']
+        if "portals" in self._kwargs:
+            return self._kwargs["portals"]
+        if "portals" in self._context and check_return_type(self._context["portals"]):
+            return self._context["portals"]
         return []
-    
+
     # whether support iSCSI Discovery CHAP authentication
     @typechecked
     def chapAuthDiscovery(self) -> Optional[bool]:
-        if 'chapAuthDiscovery' in self._kwargs:
-            return self._kwargs['chapAuthDiscovery']
-        if 'chapAuthDiscovery' in self._context and check_return_type(self._context['chapAuthDiscovery']):
-            return self._context['chapAuthDiscovery']
+        if "chapAuthDiscovery" in self._kwargs:
+            return self._kwargs["chapAuthDiscovery"]
+        if "chapAuthDiscovery" in self._context and check_return_type(
+            self._context["chapAuthDiscovery"]
+        ):
+            return self._context["chapAuthDiscovery"]
         return None
-    
+
     # whether support iSCSI Session CHAP authentication
     @typechecked
     def chapAuthSession(self) -> Optional[bool]:
-        if 'chapAuthSession' in self._kwargs:
-            return self._kwargs['chapAuthSession']
-        if 'chapAuthSession' in self._context and check_return_type(self._context['chapAuthSession']):
-            return self._context['chapAuthSession']
+        if "chapAuthSession" in self._kwargs:
+            return self._kwargs["chapAuthSession"]
+        if "chapAuthSession" in self._context and check_return_type(
+            self._context["chapAuthSession"]
+        ):
+            return self._context["chapAuthSession"]
         return None
-    
+
     # CHAP Secret for iSCSI target and initiator authentication
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Custom iSCSI Initiator Name.
     # If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
     # <target portal>:<volume name> will be created for the connection.
     @typechecked
     def initiatorName(self) -> Optional[str]:
-        if 'initiatorName' in self._kwargs:
-            return self._kwargs['initiatorName']
-        if 'initiatorName' in self._context and check_return_type(self._context['initiatorName']):
-            return self._context['initiatorName']
+        if "initiatorName" in self._kwargs:
+            return self._kwargs["initiatorName"]
+        if "initiatorName" in self._context and check_return_type(
+            self._context["initiatorName"]
+        ):
+            return self._context["initiatorName"]
         return None
 
 
 # LimitRangeItem defines a min/max usage limit for any resource that matches on kind.
 class LimitRangeItem(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         type = self.type()
         if type:  # omit empty
-            v['type'] = type
+            v["type"] = type
         max = self.max()
         if max:  # omit empty
-            v['max'] = max
+            v["max"] = max
         min = self.min()
         if min:  # omit empty
-            v['min'] = min
+            v["min"] = min
         default = self.default()
         if default:  # omit empty
-            v['default'] = default
+            v["default"] = default
         defaultRequest = self.defaultRequest()
         if defaultRequest:  # omit empty
-            v['defaultRequest'] = defaultRequest
+            v["defaultRequest"] = defaultRequest
         maxLimitRequestRatio = self.maxLimitRequestRatio()
         if maxLimitRequestRatio:  # omit empty
-            v['maxLimitRequestRatio'] = maxLimitRequestRatio
+            v["maxLimitRequestRatio"] = maxLimitRequestRatio
         return v
-    
+
     # Type of resource that this limit applies to.
     @typechecked
     def type(self) -> Optional[LimitType]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
         return None
-    
+
     # Max usage constraints on this kind by resource name.
     @typechecked
-    def max(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'max' in self._kwargs:
-            return self._kwargs['max']
-        if 'max' in self._context and check_return_type(self._context['max']):
-            return self._context['max']
+    def max(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "max" in self._kwargs:
+            return self._kwargs["max"]
+        if "max" in self._context and check_return_type(self._context["max"]):
+            return self._context["max"]
         return {}
-    
+
     # Min usage constraints on this kind by resource name.
     @typechecked
-    def min(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'min' in self._kwargs:
-            return self._kwargs['min']
-        if 'min' in self._context and check_return_type(self._context['min']):
-            return self._context['min']
+    def min(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "min" in self._kwargs:
+            return self._kwargs["min"]
+        if "min" in self._context and check_return_type(self._context["min"]):
+            return self._context["min"]
         return {}
-    
+
     # Default resource requirement limit value by resource name if resource limit is omitted.
     @typechecked
-    def default(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'default' in self._kwargs:
-            return self._kwargs['default']
-        if 'default' in self._context and check_return_type(self._context['default']):
-            return self._context['default']
+    def default(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "default" in self._kwargs:
+            return self._kwargs["default"]
+        if "default" in self._context and check_return_type(self._context["default"]):
+            return self._context["default"]
         return {}
-    
+
     # DefaultRequest is the default resource requirement request value by resource name if resource request is omitted.
     @typechecked
-    def defaultRequest(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'defaultRequest' in self._kwargs:
-            return self._kwargs['defaultRequest']
-        if 'defaultRequest' in self._context and check_return_type(self._context['defaultRequest']):
-            return self._context['defaultRequest']
+    def defaultRequest(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "defaultRequest" in self._kwargs:
+            return self._kwargs["defaultRequest"]
+        if "defaultRequest" in self._context and check_return_type(
+            self._context["defaultRequest"]
+        ):
+            return self._context["defaultRequest"]
         return {}
-    
+
     # MaxLimitRequestRatio if specified, the named resource must have a request and limit that are both non-zero where limit divided by request is less than or equal to the enumerated value; this represents the max burst for the named resource.
     @typechecked
-    def maxLimitRequestRatio(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'maxLimitRequestRatio' in self._kwargs:
-            return self._kwargs['maxLimitRequestRatio']
-        if 'maxLimitRequestRatio' in self._context and check_return_type(self._context['maxLimitRequestRatio']):
-            return self._context['maxLimitRequestRatio']
+    def maxLimitRequestRatio(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "maxLimitRequestRatio" in self._kwargs:
+            return self._kwargs["maxLimitRequestRatio"]
+        if "maxLimitRequestRatio" in self._context and check_return_type(
+            self._context["maxLimitRequestRatio"]
+        ):
+            return self._context["maxLimitRequestRatio"]
         return {}
 
 
 # LimitRangeSpec defines a min/max usage limit for resources that match on kind.
 class LimitRangeSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['limits'] = self.limits()
+        v["limits"] = self.limits()
         return v
-    
+
     # Limits is the list of LimitRangeItem objects that are enforced.
     @typechecked
     def limits(self) -> List[LimitRangeItem]:
-        if 'limits' in self._kwargs:
-            return self._kwargs['limits']
-        if 'limits' in self._context and check_return_type(self._context['limits']):
-            return self._context['limits']
+        if "limits" in self._kwargs:
+            return self._kwargs["limits"]
+        if "limits" in self._context and check_return_type(self._context["limits"]):
+            return self._context["limits"]
         return []
 
 
 # LimitRange sets resource usage limits for each kind of resource in a Namespace.
 class LimitRange(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'LimitRange'
-    
+        return "LimitRange"
+
     # Spec defines the limits enforced.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> LimitRangeSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return LimitRangeSpec()
 
 
 # Local represents directly-attached storage with node affinity (Beta feature)
 class LocalVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['path'] = self.path()
+        v["path"] = self.path()
         fsType = self.fsType()
         if fsType is not None:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         return v
-    
+
     # The full path to the volume on the node.
     # It can be either a directory or block device (disk, partition, ...).
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # Filesystem type to mount.
     # It applies only when the Path is a block device.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". The default value is to auto-select a fileystem if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
 
 
 # Represents an NFS mount that lasts the lifetime of a pod.
 # NFS volumes do not support ownership management or SELinux relabeling.
 class NFSVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['server'] = self.server()
-        v['path'] = self.path()
+        v["server"] = self.server()
+        v["path"] = self.path()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # Server is the hostname or IP address of the NFS server.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     @typechecked
     def server(self) -> str:
-        if 'server' in self._kwargs:
-            return self._kwargs['server']
-        if 'server' in self._context and check_return_type(self._context['server']):
-            return self._context['server']
-        return ''
-    
+        if "server" in self._kwargs:
+            return self._kwargs["server"]
+        if "server" in self._context and check_return_type(self._context["server"]):
+            return self._context["server"]
+        return ""
+
     # Path that is exported by the NFS server.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
-    
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
+
     # ReadOnly here will force
     # the NFS export to be mounted with read-only permissions.
     # Defaults to false.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # NamespaceSpec describes the attributes on a Namespace.
 class NamespaceSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         finalizers = self.finalizers()
         if finalizers:  # omit empty
-            v['finalizers'] = finalizers
+            v["finalizers"] = finalizers
         return v
-    
+
     # Finalizers is an opaque list of values that must be empty to permanently remove object from storage.
     # More info: https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
     @typechecked
     def finalizers(self) -> List[FinalizerName]:
-        if 'finalizers' in self._kwargs:
-            return self._kwargs['finalizers']
-        if 'finalizers' in self._context and check_return_type(self._context['finalizers']):
-            return self._context['finalizers']
+        if "finalizers" in self._kwargs:
+            return self._kwargs["finalizers"]
+        if "finalizers" in self._context and check_return_type(
+            self._context["finalizers"]
+        ):
+            return self._context["finalizers"]
         return []
 
 
 # Namespace provides a scope for Names.
 # Use of multiple namespaces is optional.
 class Namespace(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Namespace'
-    
+        return "Namespace"
+
     # Spec defines the behavior of the Namespace.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> NamespaceSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return NamespaceSpec()
 
 
 # NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil.
 class NodeConfigSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         configMap = self.configMap()
         if configMap is not None:  # omit empty
-            v['configMap'] = configMap
+            v["configMap"] = configMap
         return v
-    
+
     # ConfigMap is a reference to a Node's ConfigMap
     @typechecked
     def configMap(self) -> Optional[ConfigMapNodeConfigSource]:
-        if 'configMap' in self._kwargs:
-            return self._kwargs['configMap']
-        if 'configMap' in self._context and check_return_type(self._context['configMap']):
-            return self._context['configMap']
+        if "configMap" in self._kwargs:
+            return self._kwargs["configMap"]
+        if "configMap" in self._context and check_return_type(
+            self._context["configMap"]
+        ):
+            return self._context["configMap"]
         return None
 
 
 # The node this Taint is attached to has the "effect" on
 # any pod that does not tolerate the Taint.
 class Taint(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['key'] = self.key()
+        v["key"] = self.key()
         value = self.value()
         if value:  # omit empty
-            v['value'] = value
-        v['effect'] = self.effect()
+            v["value"] = value
+        v["effect"] = self.effect()
         timeAdded = self.timeAdded()
         if timeAdded is not None:  # omit empty
-            v['timeAdded'] = timeAdded
+            v["timeAdded"] = timeAdded
         return v
-    
+
     # Required. The taint key to be applied to a node.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # Required. The taint value corresponding to the taint key.
     @typechecked
     def value(self) -> Optional[str]:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
         return None
-    
+
     # Required. The effect of the taint on pods
     # that do not tolerate the taint.
     # Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
     @typechecked
     def effect(self) -> TaintEffect:
-        if 'effect' in self._kwargs:
-            return self._kwargs['effect']
-        if 'effect' in self._context and check_return_type(self._context['effect']):
-            return self._context['effect']
+        if "effect" in self._kwargs:
+            return self._kwargs["effect"]
+        if "effect" in self._context and check_return_type(self._context["effect"]):
+            return self._context["effect"]
         return None
-    
+
     # TimeAdded represents the time at which the taint was added.
     # It is only written for NoExecute taints.
     @typechecked
-    def timeAdded(self) -> Optional['base.Time']:
-        if 'timeAdded' in self._kwargs:
-            return self._kwargs['timeAdded']
-        if 'timeAdded' in self._context and check_return_type(self._context['timeAdded']):
-            return self._context['timeAdded']
+    def timeAdded(self) -> Optional["base.Time"]:
+        if "timeAdded" in self._kwargs:
+            return self._kwargs["timeAdded"]
+        if "timeAdded" in self._context and check_return_type(
+            self._context["timeAdded"]
+        ):
+            return self._context["timeAdded"]
         return None
 
 
 # NodeSpec describes the attributes that a node is created with.
 class NodeSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         podCIDR = self.podCIDR()
         if podCIDR:  # omit empty
-            v['podCIDR'] = podCIDR
+            v["podCIDR"] = podCIDR
         podCIDRs = self.podCIDRs()
         if podCIDRs:  # omit empty
-            v['podCIDRs'] = podCIDRs
+            v["podCIDRs"] = podCIDRs
         providerID = self.providerID()
         if providerID:  # omit empty
-            v['providerID'] = providerID
+            v["providerID"] = providerID
         unschedulable = self.unschedulable()
         if unschedulable:  # omit empty
-            v['unschedulable'] = unschedulable
+            v["unschedulable"] = unschedulable
         taints = self.taints()
         if taints:  # omit empty
-            v['taints'] = taints
+            v["taints"] = taints
         configSource = self.configSource()
         if configSource is not None:  # omit empty
-            v['configSource'] = configSource
+            v["configSource"] = configSource
         return v
-    
+
     # PodCIDR represents the pod IP range assigned to the node.
     @typechecked
     def podCIDR(self) -> Optional[str]:
-        if 'podCIDR' in self._kwargs:
-            return self._kwargs['podCIDR']
-        if 'podCIDR' in self._context and check_return_type(self._context['podCIDR']):
-            return self._context['podCIDR']
+        if "podCIDR" in self._kwargs:
+            return self._kwargs["podCIDR"]
+        if "podCIDR" in self._context and check_return_type(self._context["podCIDR"]):
+            return self._context["podCIDR"]
         return None
-    
+
     # podCIDRs represents the IP ranges assigned to the node for usage by Pods on that node. If this
     # field is specified, the 0th entry must match the podCIDR field. It may contain at most 1 value for
     # each of IPv4 and IPv6.
     @typechecked
     def podCIDRs(self) -> List[str]:
-        if 'podCIDRs' in self._kwargs:
-            return self._kwargs['podCIDRs']
-        if 'podCIDRs' in self._context and check_return_type(self._context['podCIDRs']):
-            return self._context['podCIDRs']
+        if "podCIDRs" in self._kwargs:
+            return self._kwargs["podCIDRs"]
+        if "podCIDRs" in self._context and check_return_type(self._context["podCIDRs"]):
+            return self._context["podCIDRs"]
         return []
-    
+
     # ID of the node assigned by the cloud provider in the format: <ProviderName>://<ProviderSpecificNodeID>
     @typechecked
     def providerID(self) -> Optional[str]:
-        if 'providerID' in self._kwargs:
-            return self._kwargs['providerID']
-        if 'providerID' in self._context and check_return_type(self._context['providerID']):
-            return self._context['providerID']
+        if "providerID" in self._kwargs:
+            return self._kwargs["providerID"]
+        if "providerID" in self._context and check_return_type(
+            self._context["providerID"]
+        ):
+            return self._context["providerID"]
         return None
-    
+
     # Unschedulable controls node schedulability of new pods. By default, node is schedulable.
     # More info: https://kubernetes.io/docs/concepts/nodes/node/#manual-node-administration
     @typechecked
     def unschedulable(self) -> Optional[bool]:
-        if 'unschedulable' in self._kwargs:
-            return self._kwargs['unschedulable']
-        if 'unschedulable' in self._context and check_return_type(self._context['unschedulable']):
-            return self._context['unschedulable']
+        if "unschedulable" in self._kwargs:
+            return self._kwargs["unschedulable"]
+        if "unschedulable" in self._context and check_return_type(
+            self._context["unschedulable"]
+        ):
+            return self._context["unschedulable"]
         return None
-    
+
     # If specified, the node's taints.
     @typechecked
     def taints(self) -> List[Taint]:
-        if 'taints' in self._kwargs:
-            return self._kwargs['taints']
-        if 'taints' in self._context and check_return_type(self._context['taints']):
-            return self._context['taints']
+        if "taints" in self._kwargs:
+            return self._kwargs["taints"]
+        if "taints" in self._context and check_return_type(self._context["taints"]):
+            return self._context["taints"]
         return []
-    
+
     # If specified, the source to get node configuration from
     # The DynamicKubeletConfig feature gate must be enabled for the Kubelet to use this field
     @typechecked
     def configSource(self) -> Optional[NodeConfigSource]:
-        if 'configSource' in self._kwargs:
-            return self._kwargs['configSource']
-        if 'configSource' in self._context and check_return_type(self._context['configSource']):
-            return self._context['configSource']
+        if "configSource" in self._kwargs:
+            return self._kwargs["configSource"]
+        if "configSource" in self._context and check_return_type(
+            self._context["configSource"]
+        ):
+            return self._context["configSource"]
         return None
 
 
 # Node is a worker node in Kubernetes.
 # Each node will have a unique identifier in the cache (i.e. in etcd).
 class Node(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Node'
-    
+        return "Node"
+
     # Spec defines the behavior of a node.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> NodeSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return NodeSpec()
 
 
 # NodeProxyOptions is the query options to a Node's proxy call.
 class NodeProxyOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
+            v["path"] = path
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'NodeProxyOptions'
-    
+        return "NodeProxyOptions"
+
     # Path is the URL path to use for the current proxy request to node.
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
         return None
 
 
 # Represents a Photon Controller persistent disk resource.
 class PhotonPersistentDiskVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['pdID'] = self.pdID()
+        v["pdID"] = self.pdID()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         return v
-    
+
     # ID that identifies Photon Controller persistent disk
     @typechecked
     def pdID(self) -> str:
-        if 'pdID' in self._kwargs:
-            return self._kwargs['pdID']
-        if 'pdID' in self._context and check_return_type(self._context['pdID']):
-            return self._context['pdID']
-        return ''
-    
+        if "pdID" in self._kwargs:
+            return self._kwargs["pdID"]
+        if "pdID" in self._context and check_return_type(self._context["pdID"]):
+            return self._context["pdID"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
 
 
 # PortworxVolumeSource represents a Portworx volume resource.
 class PortworxVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['volumeID'] = self.volumeID()
+        v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # VolumeID uniquely identifies a Portworx volume
     @typechecked
     def volumeID(self) -> str:
-        if 'volumeID' in self._kwargs:
-            return self._kwargs['volumeID']
-        if 'volumeID' in self._context and check_return_type(self._context['volumeID']):
-            return self._context['volumeID']
-        return ''
-    
+        if "volumeID" in self._kwargs:
+            return self._kwargs["volumeID"]
+        if "volumeID" in self._context and check_return_type(self._context["volumeID"]):
+            return self._context["volumeID"]
+        return ""
+
     # FSType represents the filesystem type to mount
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # Represents a Quobyte mount that lasts the lifetime of a pod.
 # Quobyte volumes do not support ownership management or SELinux relabeling.
 class QuobyteVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['registry'] = self.registry()
-        v['volume'] = self.volume()
+        v["registry"] = self.registry()
+        v["volume"] = self.volume()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         group = self.group()
         if group:  # omit empty
-            v['group'] = group
+            v["group"] = group
         tenant = self.tenant()
         if tenant:  # omit empty
-            v['tenant'] = tenant
+            v["tenant"] = tenant
         return v
-    
+
     # Registry represents a single or multiple Quobyte Registry services
     # specified as a string as host:port pair (multiple entries are separated with commas)
     # which acts as the central registry for volumes
     @typechecked
     def registry(self) -> str:
-        if 'registry' in self._kwargs:
-            return self._kwargs['registry']
-        if 'registry' in self._context and check_return_type(self._context['registry']):
-            return self._context['registry']
-        return ''
-    
+        if "registry" in self._kwargs:
+            return self._kwargs["registry"]
+        if "registry" in self._context and check_return_type(self._context["registry"]):
+            return self._context["registry"]
+        return ""
+
     # Volume is a string that references an already created Quobyte volume by name.
     @typechecked
     def volume(self) -> str:
-        if 'volume' in self._kwargs:
-            return self._kwargs['volume']
-        if 'volume' in self._context and check_return_type(self._context['volume']):
-            return self._context['volume']
-        return ''
-    
+        if "volume" in self._kwargs:
+            return self._kwargs["volume"]
+        if "volume" in self._context and check_return_type(self._context["volume"]):
+            return self._context["volume"]
+        return ""
+
     # ReadOnly here will force the Quobyte volume to be mounted with read-only permissions.
     # Defaults to false.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # User to map volume access to
     # Defaults to serivceaccount user
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
         return None
-    
+
     # Group to map volume access to
     # Default is no group
     @typechecked
     def group(self) -> Optional[str]:
-        if 'group' in self._kwargs:
-            return self._kwargs['group']
-        if 'group' in self._context and check_return_type(self._context['group']):
-            return self._context['group']
+        if "group" in self._kwargs:
+            return self._kwargs["group"]
+        if "group" in self._context and check_return_type(self._context["group"]):
+            return self._context["group"]
         return None
-    
+
     # Tenant owning the given Quobyte volume in the Backend
     # Used with dynamically provisioned Quobyte volumes, value is set by the plugin
     @typechecked
     def tenant(self) -> Optional[str]:
-        if 'tenant' in self._kwargs:
-            return self._kwargs['tenant']
-        if 'tenant' in self._context and check_return_type(self._context['tenant']):
-            return self._context['tenant']
+        if "tenant" in self._kwargs:
+            return self._kwargs["tenant"]
+        if "tenant" in self._context and check_return_type(self._context["tenant"]):
+            return self._context["tenant"]
         return None
 
 
 # Represents a Rados Block Device mount that lasts the lifetime of a pod.
 # RBD volumes support ownership management and SELinux relabeling.
 class RBDPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['monitors'] = self.monitors()
-        v['image'] = self.image()
+        v["monitors"] = self.monitors()
+        v["image"] = self.image()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         pool = self.pool()
         if pool:  # omit empty
-            v['pool'] = pool
+            v["pool"] = pool
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         keyring = self.keyring()
         if keyring:  # omit empty
-            v['keyring'] = keyring
+            v["keyring"] = keyring
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # A collection of Ceph monitors.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def monitors(self) -> List[str]:
-        if 'monitors' in self._kwargs:
-            return self._kwargs['monitors']
-        if 'monitors' in self._context and check_return_type(self._context['monitors']):
-            return self._context['monitors']
+        if "monitors" in self._kwargs:
+            return self._kwargs["monitors"]
+        if "monitors" in self._context and check_return_type(self._context["monitors"]):
+            return self._context["monitors"]
         return []
-    
+
     # The rados image name.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def image(self) -> str:
-        if 'image' in self._kwargs:
-            return self._kwargs['image']
-        if 'image' in self._context and check_return_type(self._context['image']):
-            return self._context['image']
-        return ''
-    
+        if "image" in self._kwargs:
+            return self._kwargs["image"]
+        if "image" in self._context and check_return_type(self._context["image"]):
+            return self._context["image"]
+        return ""
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -6392,232 +6745,246 @@ class RBDPersistentVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # The rados pool name.
     # Default is rbd.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def pool(self) -> Optional[str]:
-        if 'pool' in self._kwargs:
-            return self._kwargs['pool']
-        if 'pool' in self._context and check_return_type(self._context['pool']):
-            return self._context['pool']
-        return 'rbd'
-    
+        if "pool" in self._kwargs:
+            return self._kwargs["pool"]
+        if "pool" in self._context and check_return_type(self._context["pool"]):
+            return self._context["pool"]
+        return "rbd"
+
     # The rados user name.
     # Default is admin.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
-        return 'admin'
-    
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
+        return "admin"
+
     # Keyring is the path to key ring for RBDUser.
     # Default is /etc/ceph/keyring.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def keyring(self) -> Optional[str]:
-        if 'keyring' in self._kwargs:
-            return self._kwargs['keyring']
-        if 'keyring' in self._context and check_return_type(self._context['keyring']):
-            return self._context['keyring']
-        return '/etc/ceph/keyring'
-    
+        if "keyring" in self._kwargs:
+            return self._kwargs["keyring"]
+        if "keyring" in self._context and check_return_type(self._context["keyring"]):
+            return self._context["keyring"]
+        return "/etc/ceph/keyring"
+
     # SecretRef is name of the authentication secret for RBDUser. If provided
     # overrides keyring.
     # Default is nil.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # ReadOnly here will force the ReadOnly setting in VolumeMounts.
     # Defaults to false.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # ScaleIOPersistentVolumeSource represents a persistent ScaleIO volume
 class ScaleIOPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['gateway'] = self.gateway()
-        v['system'] = self.system()
-        v['secretRef'] = self.secretRef()
+        v["gateway"] = self.gateway()
+        v["system"] = self.system()
+        v["secretRef"] = self.secretRef()
         sslEnabled = self.sslEnabled()
         if sslEnabled:  # omit empty
-            v['sslEnabled'] = sslEnabled
+            v["sslEnabled"] = sslEnabled
         protectionDomain = self.protectionDomain()
         if protectionDomain:  # omit empty
-            v['protectionDomain'] = protectionDomain
+            v["protectionDomain"] = protectionDomain
         storagePool = self.storagePool()
         if storagePool:  # omit empty
-            v['storagePool'] = storagePool
+            v["storagePool"] = storagePool
         storageMode = self.storageMode()
         if storageMode:  # omit empty
-            v['storageMode'] = storageMode
+            v["storageMode"] = storageMode
         volumeName = self.volumeName()
         if volumeName:  # omit empty
-            v['volumeName'] = volumeName
+            v["volumeName"] = volumeName
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # The host address of the ScaleIO API Gateway.
     @typechecked
     def gateway(self) -> str:
-        if 'gateway' in self._kwargs:
-            return self._kwargs['gateway']
-        if 'gateway' in self._context and check_return_type(self._context['gateway']):
-            return self._context['gateway']
-        return ''
-    
+        if "gateway" in self._kwargs:
+            return self._kwargs["gateway"]
+        if "gateway" in self._context and check_return_type(self._context["gateway"]):
+            return self._context["gateway"]
+        return ""
+
     # The name of the storage system as configured in ScaleIO.
     @typechecked
     def system(self) -> str:
-        if 'system' in self._kwargs:
-            return self._kwargs['system']
-        if 'system' in self._context and check_return_type(self._context['system']):
-            return self._context['system']
-        return ''
-    
+        if "system" in self._kwargs:
+            return self._kwargs["system"]
+        if "system" in self._context and check_return_type(self._context["system"]):
+            return self._context["system"]
+        return ""
+
     # SecretRef references to the secret for ScaleIO user and other
     # sensitive information. If this is not provided, Login operation will fail.
     @typechecked
     def secretRef(self) -> Optional[SecretReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Flag to enable/disable SSL communication with Gateway, default false
     @typechecked
     def sslEnabled(self) -> Optional[bool]:
-        if 'sslEnabled' in self._kwargs:
-            return self._kwargs['sslEnabled']
-        if 'sslEnabled' in self._context and check_return_type(self._context['sslEnabled']):
-            return self._context['sslEnabled']
+        if "sslEnabled" in self._kwargs:
+            return self._kwargs["sslEnabled"]
+        if "sslEnabled" in self._context and check_return_type(
+            self._context["sslEnabled"]
+        ):
+            return self._context["sslEnabled"]
         return None
-    
+
     # The name of the ScaleIO Protection Domain for the configured storage.
     @typechecked
     def protectionDomain(self) -> Optional[str]:
-        if 'protectionDomain' in self._kwargs:
-            return self._kwargs['protectionDomain']
-        if 'protectionDomain' in self._context and check_return_type(self._context['protectionDomain']):
-            return self._context['protectionDomain']
+        if "protectionDomain" in self._kwargs:
+            return self._kwargs["protectionDomain"]
+        if "protectionDomain" in self._context and check_return_type(
+            self._context["protectionDomain"]
+        ):
+            return self._context["protectionDomain"]
         return None
-    
+
     # The ScaleIO Storage Pool associated with the protection domain.
     @typechecked
     def storagePool(self) -> Optional[str]:
-        if 'storagePool' in self._kwargs:
-            return self._kwargs['storagePool']
-        if 'storagePool' in self._context and check_return_type(self._context['storagePool']):
-            return self._context['storagePool']
+        if "storagePool" in self._kwargs:
+            return self._kwargs["storagePool"]
+        if "storagePool" in self._context and check_return_type(
+            self._context["storagePool"]
+        ):
+            return self._context["storagePool"]
         return None
-    
+
     # Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
     # Default is ThinProvisioned.
     @typechecked
     def storageMode(self) -> Optional[str]:
-        if 'storageMode' in self._kwargs:
-            return self._kwargs['storageMode']
-        if 'storageMode' in self._context and check_return_type(self._context['storageMode']):
-            return self._context['storageMode']
-        return 'ThinProvisioned'
-    
+        if "storageMode" in self._kwargs:
+            return self._kwargs["storageMode"]
+        if "storageMode" in self._context and check_return_type(
+            self._context["storageMode"]
+        ):
+            return self._context["storageMode"]
+        return "ThinProvisioned"
+
     # The name of a volume already created in the ScaleIO system
     # that is associated with this volume source.
     @typechecked
     def volumeName(self) -> Optional[str]:
-        if 'volumeName' in self._kwargs:
-            return self._kwargs['volumeName']
-        if 'volumeName' in self._context and check_return_type(self._context['volumeName']):
-            return self._context['volumeName']
+        if "volumeName" in self._kwargs:
+            return self._kwargs["volumeName"]
+        if "volumeName" in self._context and check_return_type(
+            self._context["volumeName"]
+        ):
+            return self._context["volumeName"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs".
     # Default is "xfs"
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
-        return 'xfs'
-    
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
+        return "xfs"
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # Represents a StorageOS persistent volume resource.
 class StorageOSPersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
-            v['volumeName'] = volumeName
+            v["volumeName"] = volumeName
         volumeNamespace = self.volumeNamespace()
         if volumeNamespace:  # omit empty
-            v['volumeNamespace'] = volumeNamespace
+            v["volumeNamespace"] = volumeNamespace
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         return v
-    
+
     # VolumeName is the human-readable name of the StorageOS volume.  Volume
     # names are only unique within a namespace.
     @typechecked
     def volumeName(self) -> Optional[str]:
-        if 'volumeName' in self._kwargs:
-            return self._kwargs['volumeName']
-        if 'volumeName' in self._context and check_return_type(self._context['volumeName']):
-            return self._context['volumeName']
+        if "volumeName" in self._kwargs:
+            return self._kwargs["volumeName"]
+        if "volumeName" in self._context and check_return_type(
+            self._context["volumeName"]
+        ):
+            return self._context["volumeName"]
         return None
-    
+
     # VolumeNamespace specifies the scope of the volume within StorageOS.  If no
     # namespace is specified then the Pod's namespace will be used.  This allows the
     # Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
@@ -6626,198 +6993,210 @@ class StorageOSPersistentVolumeSource(types.Object):
     # Namespaces that do not pre-exist within StorageOS will be created.
     @typechecked
     def volumeNamespace(self) -> Optional[str]:
-        if 'volumeNamespace' in self._kwargs:
-            return self._kwargs['volumeNamespace']
-        if 'volumeNamespace' in self._context and check_return_type(self._context['volumeNamespace']):
-            return self._context['volumeNamespace']
+        if "volumeNamespace" in self._kwargs:
+            return self._kwargs["volumeNamespace"]
+        if "volumeNamespace" in self._context and check_return_type(
+            self._context["volumeNamespace"]
+        ):
+            return self._context["volumeNamespace"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # SecretRef specifies the secret to use for obtaining the StorageOS API
     # credentials.  If not specified, default values will be attempted.
     @typechecked
     def secretRef(self) -> Optional[ObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
 
 
 # Represents a vSphere volume resource.
 class VsphereVirtualDiskVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['volumePath'] = self.volumePath()
+        v["volumePath"] = self.volumePath()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         storagePolicyName = self.storagePolicyName()
         if storagePolicyName:  # omit empty
-            v['storagePolicyName'] = storagePolicyName
+            v["storagePolicyName"] = storagePolicyName
         storagePolicyID = self.storagePolicyID()
         if storagePolicyID:  # omit empty
-            v['storagePolicyID'] = storagePolicyID
+            v["storagePolicyID"] = storagePolicyID
         return v
-    
+
     # Path that identifies vSphere volume vmdk
     @typechecked
     def volumePath(self) -> str:
-        if 'volumePath' in self._kwargs:
-            return self._kwargs['volumePath']
-        if 'volumePath' in self._context and check_return_type(self._context['volumePath']):
-            return self._context['volumePath']
-        return ''
-    
+        if "volumePath" in self._kwargs:
+            return self._kwargs["volumePath"]
+        if "volumePath" in self._context and check_return_type(
+            self._context["volumePath"]
+        ):
+            return self._context["volumePath"]
+        return ""
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Storage Policy Based Management (SPBM) profile name.
     @typechecked
     def storagePolicyName(self) -> Optional[str]:
-        if 'storagePolicyName' in self._kwargs:
-            return self._kwargs['storagePolicyName']
-        if 'storagePolicyName' in self._context and check_return_type(self._context['storagePolicyName']):
-            return self._context['storagePolicyName']
+        if "storagePolicyName" in self._kwargs:
+            return self._kwargs["storagePolicyName"]
+        if "storagePolicyName" in self._context and check_return_type(
+            self._context["storagePolicyName"]
+        ):
+            return self._context["storagePolicyName"]
         return None
-    
+
     # Storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
     @typechecked
     def storagePolicyID(self) -> Optional[str]:
-        if 'storagePolicyID' in self._kwargs:
-            return self._kwargs['storagePolicyID']
-        if 'storagePolicyID' in self._context and check_return_type(self._context['storagePolicyID']):
-            return self._context['storagePolicyID']
+        if "storagePolicyID" in self._kwargs:
+            return self._kwargs["storagePolicyID"]
+        if "storagePolicyID" in self._context and check_return_type(
+            self._context["storagePolicyID"]
+        ):
+            return self._context["storagePolicyID"]
         return None
 
 
 # PersistentVolumeSource is similar to VolumeSource but meant for the
 # administrator who creates PVs. Exactly one of its members must be set.
 class PersistentVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         gcePersistentDisk = self.gcePersistentDisk()
         if gcePersistentDisk is not None:  # omit empty
-            v['gcePersistentDisk'] = gcePersistentDisk
+            v["gcePersistentDisk"] = gcePersistentDisk
         awsElasticBlockStore = self.awsElasticBlockStore()
         if awsElasticBlockStore is not None:  # omit empty
-            v['awsElasticBlockStore'] = awsElasticBlockStore
+            v["awsElasticBlockStore"] = awsElasticBlockStore
         hostPath = self.hostPath()
         if hostPath is not None:  # omit empty
-            v['hostPath'] = hostPath
+            v["hostPath"] = hostPath
         glusterfs = self.glusterfs()
         if glusterfs is not None:  # omit empty
-            v['glusterfs'] = glusterfs
+            v["glusterfs"] = glusterfs
         nfs = self.nfs()
         if nfs is not None:  # omit empty
-            v['nfs'] = nfs
+            v["nfs"] = nfs
         rbd = self.rbd()
         if rbd is not None:  # omit empty
-            v['rbd'] = rbd
+            v["rbd"] = rbd
         iscsi = self.iscsi()
         if iscsi is not None:  # omit empty
-            v['iscsi'] = iscsi
+            v["iscsi"] = iscsi
         cinder = self.cinder()
         if cinder is not None:  # omit empty
-            v['cinder'] = cinder
+            v["cinder"] = cinder
         cephfs = self.cephfs()
         if cephfs is not None:  # omit empty
-            v['cephfs'] = cephfs
+            v["cephfs"] = cephfs
         fc = self.fc()
         if fc is not None:  # omit empty
-            v['fc'] = fc
+            v["fc"] = fc
         flocker = self.flocker()
         if flocker is not None:  # omit empty
-            v['flocker'] = flocker
+            v["flocker"] = flocker
         flexVolume = self.flexVolume()
         if flexVolume is not None:  # omit empty
-            v['flexVolume'] = flexVolume
+            v["flexVolume"] = flexVolume
         azureFile = self.azureFile()
         if azureFile is not None:  # omit empty
-            v['azureFile'] = azureFile
+            v["azureFile"] = azureFile
         vsphereVolume = self.vsphereVolume()
         if vsphereVolume is not None:  # omit empty
-            v['vsphereVolume'] = vsphereVolume
+            v["vsphereVolume"] = vsphereVolume
         quobyte = self.quobyte()
         if quobyte is not None:  # omit empty
-            v['quobyte'] = quobyte
+            v["quobyte"] = quobyte
         azureDisk = self.azureDisk()
         if azureDisk is not None:  # omit empty
-            v['azureDisk'] = azureDisk
+            v["azureDisk"] = azureDisk
         photonPersistentDisk = self.photonPersistentDisk()
         if photonPersistentDisk is not None:  # omit empty
-            v['photonPersistentDisk'] = photonPersistentDisk
+            v["photonPersistentDisk"] = photonPersistentDisk
         portworxVolume = self.portworxVolume()
         if portworxVolume is not None:  # omit empty
-            v['portworxVolume'] = portworxVolume
+            v["portworxVolume"] = portworxVolume
         scaleIO = self.scaleIO()
         if scaleIO is not None:  # omit empty
-            v['scaleIO'] = scaleIO
+            v["scaleIO"] = scaleIO
         local = self.local()
         if local is not None:  # omit empty
-            v['local'] = local
+            v["local"] = local
         storageos = self.storageos()
         if storageos is not None:  # omit empty
-            v['storageos'] = storageos
+            v["storageos"] = storageos
         csi = self.csi()
         if csi is not None:  # omit empty
-            v['csi'] = csi
+            v["csi"] = csi
         return v
-    
+
     # GCEPersistentDisk represents a GCE Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod. Provisioned by an admin.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     @typechecked
     def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
-        if 'gcePersistentDisk' in self._kwargs:
-            return self._kwargs['gcePersistentDisk']
-        if 'gcePersistentDisk' in self._context and check_return_type(self._context['gcePersistentDisk']):
-            return self._context['gcePersistentDisk']
+        if "gcePersistentDisk" in self._kwargs:
+            return self._kwargs["gcePersistentDisk"]
+        if "gcePersistentDisk" in self._context and check_return_type(
+            self._context["gcePersistentDisk"]
+        ):
+            return self._context["gcePersistentDisk"]
         return None
-    
+
     # AWSElasticBlockStore represents an AWS Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     @typechecked
     def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
-        if 'awsElasticBlockStore' in self._kwargs:
-            return self._kwargs['awsElasticBlockStore']
-        if 'awsElasticBlockStore' in self._context and check_return_type(self._context['awsElasticBlockStore']):
-            return self._context['awsElasticBlockStore']
+        if "awsElasticBlockStore" in self._kwargs:
+            return self._kwargs["awsElasticBlockStore"]
+        if "awsElasticBlockStore" in self._context and check_return_type(
+            self._context["awsElasticBlockStore"]
+        ):
+            return self._context["awsElasticBlockStore"]
         return None
-    
+
     # HostPath represents a directory on the host.
     # Provisioned by a developer or tester.
     # This is useful for single-node development and testing only!
@@ -6825,288 +7204,306 @@ class PersistentVolumeSource(types.Object):
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     @typechecked
     def hostPath(self) -> Optional[HostPathVolumeSource]:
-        if 'hostPath' in self._kwargs:
-            return self._kwargs['hostPath']
-        if 'hostPath' in self._context and check_return_type(self._context['hostPath']):
-            return self._context['hostPath']
+        if "hostPath" in self._kwargs:
+            return self._kwargs["hostPath"]
+        if "hostPath" in self._context and check_return_type(self._context["hostPath"]):
+            return self._context["hostPath"]
         return None
-    
+
     # Glusterfs represents a Glusterfs volume that is attached to a host and
     # exposed to the pod. Provisioned by an admin.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md
     @typechecked
     def glusterfs(self) -> Optional[GlusterfsPersistentVolumeSource]:
-        if 'glusterfs' in self._kwargs:
-            return self._kwargs['glusterfs']
-        if 'glusterfs' in self._context and check_return_type(self._context['glusterfs']):
-            return self._context['glusterfs']
+        if "glusterfs" in self._kwargs:
+            return self._kwargs["glusterfs"]
+        if "glusterfs" in self._context and check_return_type(
+            self._context["glusterfs"]
+        ):
+            return self._context["glusterfs"]
         return None
-    
+
     # NFS represents an NFS mount on the host. Provisioned by an admin.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     @typechecked
     def nfs(self) -> Optional[NFSVolumeSource]:
-        if 'nfs' in self._kwargs:
-            return self._kwargs['nfs']
-        if 'nfs' in self._context and check_return_type(self._context['nfs']):
-            return self._context['nfs']
+        if "nfs" in self._kwargs:
+            return self._kwargs["nfs"]
+        if "nfs" in self._context and check_return_type(self._context["nfs"]):
+            return self._context["nfs"]
         return None
-    
+
     # RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
     # More info: https://examples.k8s.io/volumes/rbd/README.md
     @typechecked
     def rbd(self) -> Optional[RBDPersistentVolumeSource]:
-        if 'rbd' in self._kwargs:
-            return self._kwargs['rbd']
-        if 'rbd' in self._context and check_return_type(self._context['rbd']):
-            return self._context['rbd']
+        if "rbd" in self._kwargs:
+            return self._kwargs["rbd"]
+        if "rbd" in self._context and check_return_type(self._context["rbd"]):
+            return self._context["rbd"]
         return None
-    
+
     # ISCSI represents an ISCSI Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod. Provisioned by an admin.
     @typechecked
     def iscsi(self) -> Optional[ISCSIPersistentVolumeSource]:
-        if 'iscsi' in self._kwargs:
-            return self._kwargs['iscsi']
-        if 'iscsi' in self._context and check_return_type(self._context['iscsi']):
-            return self._context['iscsi']
+        if "iscsi" in self._kwargs:
+            return self._kwargs["iscsi"]
+        if "iscsi" in self._context and check_return_type(self._context["iscsi"]):
+            return self._context["iscsi"]
         return None
-    
+
     # Cinder represents a cinder volume attached and mounted on kubelets host machine.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def cinder(self) -> Optional[CinderPersistentVolumeSource]:
-        if 'cinder' in self._kwargs:
-            return self._kwargs['cinder']
-        if 'cinder' in self._context and check_return_type(self._context['cinder']):
-            return self._context['cinder']
+        if "cinder" in self._kwargs:
+            return self._kwargs["cinder"]
+        if "cinder" in self._context and check_return_type(self._context["cinder"]):
+            return self._context["cinder"]
         return None
-    
+
     # CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
     @typechecked
     def cephfs(self) -> Optional[CephFSPersistentVolumeSource]:
-        if 'cephfs' in self._kwargs:
-            return self._kwargs['cephfs']
-        if 'cephfs' in self._context and check_return_type(self._context['cephfs']):
-            return self._context['cephfs']
+        if "cephfs" in self._kwargs:
+            return self._kwargs["cephfs"]
+        if "cephfs" in self._context and check_return_type(self._context["cephfs"]):
+            return self._context["cephfs"]
         return None
-    
+
     # FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
     @typechecked
     def fc(self) -> Optional[FCVolumeSource]:
-        if 'fc' in self._kwargs:
-            return self._kwargs['fc']
-        if 'fc' in self._context and check_return_type(self._context['fc']):
-            return self._context['fc']
+        if "fc" in self._kwargs:
+            return self._kwargs["fc"]
+        if "fc" in self._context and check_return_type(self._context["fc"]):
+            return self._context["fc"]
         return None
-    
+
     # Flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running
     @typechecked
     def flocker(self) -> Optional[FlockerVolumeSource]:
-        if 'flocker' in self._kwargs:
-            return self._kwargs['flocker']
-        if 'flocker' in self._context and check_return_type(self._context['flocker']):
-            return self._context['flocker']
+        if "flocker" in self._kwargs:
+            return self._kwargs["flocker"]
+        if "flocker" in self._context and check_return_type(self._context["flocker"]):
+            return self._context["flocker"]
         return None
-    
+
     # FlexVolume represents a generic volume resource that is
     # provisioned/attached using an exec based plugin.
     @typechecked
     def flexVolume(self) -> Optional[FlexPersistentVolumeSource]:
-        if 'flexVolume' in self._kwargs:
-            return self._kwargs['flexVolume']
-        if 'flexVolume' in self._context and check_return_type(self._context['flexVolume']):
-            return self._context['flexVolume']
+        if "flexVolume" in self._kwargs:
+            return self._kwargs["flexVolume"]
+        if "flexVolume" in self._context and check_return_type(
+            self._context["flexVolume"]
+        ):
+            return self._context["flexVolume"]
         return None
-    
+
     # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
     @typechecked
     def azureFile(self) -> Optional[AzureFilePersistentVolumeSource]:
-        if 'azureFile' in self._kwargs:
-            return self._kwargs['azureFile']
-        if 'azureFile' in self._context and check_return_type(self._context['azureFile']):
-            return self._context['azureFile']
+        if "azureFile" in self._kwargs:
+            return self._kwargs["azureFile"]
+        if "azureFile" in self._context and check_return_type(
+            self._context["azureFile"]
+        ):
+            return self._context["azureFile"]
         return None
-    
+
     # VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
     @typechecked
     def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
-        if 'vsphereVolume' in self._kwargs:
-            return self._kwargs['vsphereVolume']
-        if 'vsphereVolume' in self._context and check_return_type(self._context['vsphereVolume']):
-            return self._context['vsphereVolume']
+        if "vsphereVolume" in self._kwargs:
+            return self._kwargs["vsphereVolume"]
+        if "vsphereVolume" in self._context and check_return_type(
+            self._context["vsphereVolume"]
+        ):
+            return self._context["vsphereVolume"]
         return None
-    
+
     # Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
     @typechecked
     def quobyte(self) -> Optional[QuobyteVolumeSource]:
-        if 'quobyte' in self._kwargs:
-            return self._kwargs['quobyte']
-        if 'quobyte' in self._context and check_return_type(self._context['quobyte']):
-            return self._context['quobyte']
+        if "quobyte" in self._kwargs:
+            return self._kwargs["quobyte"]
+        if "quobyte" in self._context and check_return_type(self._context["quobyte"]):
+            return self._context["quobyte"]
         return None
-    
+
     # AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
     @typechecked
     def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
-        if 'azureDisk' in self._kwargs:
-            return self._kwargs['azureDisk']
-        if 'azureDisk' in self._context and check_return_type(self._context['azureDisk']):
-            return self._context['azureDisk']
+        if "azureDisk" in self._kwargs:
+            return self._kwargs["azureDisk"]
+        if "azureDisk" in self._context and check_return_type(
+            self._context["azureDisk"]
+        ):
+            return self._context["azureDisk"]
         return None
-    
+
     # PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
     @typechecked
     def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
-        if 'photonPersistentDisk' in self._kwargs:
-            return self._kwargs['photonPersistentDisk']
-        if 'photonPersistentDisk' in self._context and check_return_type(self._context['photonPersistentDisk']):
-            return self._context['photonPersistentDisk']
+        if "photonPersistentDisk" in self._kwargs:
+            return self._kwargs["photonPersistentDisk"]
+        if "photonPersistentDisk" in self._context and check_return_type(
+            self._context["photonPersistentDisk"]
+        ):
+            return self._context["photonPersistentDisk"]
         return None
-    
+
     # PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
     @typechecked
     def portworxVolume(self) -> Optional[PortworxVolumeSource]:
-        if 'portworxVolume' in self._kwargs:
-            return self._kwargs['portworxVolume']
-        if 'portworxVolume' in self._context and check_return_type(self._context['portworxVolume']):
-            return self._context['portworxVolume']
+        if "portworxVolume" in self._kwargs:
+            return self._kwargs["portworxVolume"]
+        if "portworxVolume" in self._context and check_return_type(
+            self._context["portworxVolume"]
+        ):
+            return self._context["portworxVolume"]
         return None
-    
+
     # ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
     @typechecked
     def scaleIO(self) -> Optional[ScaleIOPersistentVolumeSource]:
-        if 'scaleIO' in self._kwargs:
-            return self._kwargs['scaleIO']
-        if 'scaleIO' in self._context and check_return_type(self._context['scaleIO']):
-            return self._context['scaleIO']
+        if "scaleIO" in self._kwargs:
+            return self._kwargs["scaleIO"]
+        if "scaleIO" in self._context and check_return_type(self._context["scaleIO"]):
+            return self._context["scaleIO"]
         return None
-    
+
     # Local represents directly-attached storage with node affinity
     @typechecked
     def local(self) -> Optional[LocalVolumeSource]:
-        if 'local' in self._kwargs:
-            return self._kwargs['local']
-        if 'local' in self._context and check_return_type(self._context['local']):
-            return self._context['local']
+        if "local" in self._kwargs:
+            return self._kwargs["local"]
+        if "local" in self._context and check_return_type(self._context["local"]):
+            return self._context["local"]
         return None
-    
+
     # StorageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod
     # More info: https://examples.k8s.io/volumes/storageos/README.md
     @typechecked
     def storageos(self) -> Optional[StorageOSPersistentVolumeSource]:
-        if 'storageos' in self._kwargs:
-            return self._kwargs['storageos']
-        if 'storageos' in self._context and check_return_type(self._context['storageos']):
-            return self._context['storageos']
+        if "storageos" in self._kwargs:
+            return self._kwargs["storageos"]
+        if "storageos" in self._context and check_return_type(
+            self._context["storageos"]
+        ):
+            return self._context["storageos"]
         return None
-    
+
     # CSI represents storage that is handled by an external CSI driver (Beta feature).
     @typechecked
     def csi(self) -> Optional[CSIPersistentVolumeSource]:
-        if 'csi' in self._kwargs:
-            return self._kwargs['csi']
-        if 'csi' in self._context and check_return_type(self._context['csi']):
-            return self._context['csi']
+        if "csi" in self._kwargs:
+            return self._kwargs["csi"]
+        if "csi" in self._context and check_return_type(self._context["csi"]):
+            return self._context["csi"]
         return None
 
 
 # VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from.
 class VolumeNodeAffinity(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         required = self.required()
         if required is not None:  # omit empty
-            v['required'] = required
+            v["required"] = required
         return v
-    
+
     # Required specifies hard node constraints that must be met.
     @typechecked
     def required(self) -> Optional[NodeSelector]:
-        if 'required' in self._kwargs:
-            return self._kwargs['required']
-        if 'required' in self._context and check_return_type(self._context['required']):
-            return self._context['required']
+        if "required" in self._kwargs:
+            return self._kwargs["required"]
+        if "required" in self._context and check_return_type(self._context["required"]):
+            return self._context["required"]
         return None
 
 
 # PersistentVolumeSpec is the specification of a persistent volume.
 class PersistentVolumeSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         capacity = self.capacity()
         if capacity:  # omit empty
-            v['capacity'] = capacity
+            v["capacity"] = capacity
         v.update(self.persistentVolumeSource().render())  # inline
         accessModes = self.accessModes()
         if accessModes:  # omit empty
-            v['accessModes'] = accessModes
+            v["accessModes"] = accessModes
         claimRef = self.claimRef()
         if claimRef is not None:  # omit empty
-            v['claimRef'] = claimRef
+            v["claimRef"] = claimRef
         persistentVolumeReclaimPolicy = self.persistentVolumeReclaimPolicy()
         if persistentVolumeReclaimPolicy:  # omit empty
-            v['persistentVolumeReclaimPolicy'] = persistentVolumeReclaimPolicy
+            v["persistentVolumeReclaimPolicy"] = persistentVolumeReclaimPolicy
         storageClassName = self.storageClassName()
         if storageClassName:  # omit empty
-            v['storageClassName'] = storageClassName
+            v["storageClassName"] = storageClassName
         mountOptions = self.mountOptions()
         if mountOptions:  # omit empty
-            v['mountOptions'] = mountOptions
+            v["mountOptions"] = mountOptions
         volumeMode = self.volumeMode()
         if volumeMode is not None:  # omit empty
-            v['volumeMode'] = volumeMode
+            v["volumeMode"] = volumeMode
         nodeAffinity = self.nodeAffinity()
         if nodeAffinity is not None:  # omit empty
-            v['nodeAffinity'] = nodeAffinity
+            v["nodeAffinity"] = nodeAffinity
         return v
-    
+
     # A description of the persistent volume's resources and capacity.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
     @typechecked
-    def capacity(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'capacity' in self._kwargs:
-            return self._kwargs['capacity']
-        if 'capacity' in self._context and check_return_type(self._context['capacity']):
-            return self._context['capacity']
+    def capacity(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "capacity" in self._kwargs:
+            return self._kwargs["capacity"]
+        if "capacity" in self._context and check_return_type(self._context["capacity"]):
+            return self._context["capacity"]
         return {}
-    
+
     # The actual volume backing the persistent volume.
     @typechecked
     def persistentVolumeSource(self) -> PersistentVolumeSource:
-        if 'persistentVolumeSource' in self._kwargs:
-            return self._kwargs['persistentVolumeSource']
-        if 'persistentVolumeSource' in self._context and check_return_type(self._context['persistentVolumeSource']):
-            return self._context['persistentVolumeSource']
+        if "persistentVolumeSource" in self._kwargs:
+            return self._kwargs["persistentVolumeSource"]
+        if "persistentVolumeSource" in self._context and check_return_type(
+            self._context["persistentVolumeSource"]
+        ):
+            return self._context["persistentVolumeSource"]
         with context.Scope(**self._context):
             return PersistentVolumeSource()
-    
+
     # AccessModes contains all ways the volume can be mounted.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes
     @typechecked
     def accessModes(self) -> List[PersistentVolumeAccessMode]:
-        if 'accessModes' in self._kwargs:
-            return self._kwargs['accessModes']
-        if 'accessModes' in self._context and check_return_type(self._context['accessModes']):
-            return self._context['accessModes']
+        if "accessModes" in self._kwargs:
+            return self._kwargs["accessModes"]
+        if "accessModes" in self._context and check_return_type(
+            self._context["accessModes"]
+        ):
+            return self._context["accessModes"]
         return []
-    
+
     # ClaimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim.
     # Expected to be non-nil when bound.
     # claim.VolumeName is the authoritative bind between PV and PVC.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding
     @typechecked
     def claimRef(self) -> Optional[ObjectReference]:
-        if 'claimRef' in self._kwargs:
-            return self._kwargs['claimRef']
-        if 'claimRef' in self._context and check_return_type(self._context['claimRef']):
-            return self._context['claimRef']
+        if "claimRef" in self._kwargs:
+            return self._kwargs["claimRef"]
+        if "claimRef" in self._context and check_return_type(self._context["claimRef"]):
+            return self._context["claimRef"]
         return None
-    
+
     # What happens to a persistent volume when released from its claim.
     # Valid options are Retain (default for manually created PersistentVolumes), Delete (default
     # for dynamically provisioned PersistentVolumes), and Recycle (deprecated).
@@ -7114,52 +7511,62 @@ class PersistentVolumeSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming
     @typechecked
     def persistentVolumeReclaimPolicy(self) -> Optional[PersistentVolumeReclaimPolicy]:
-        if 'persistentVolumeReclaimPolicy' in self._kwargs:
-            return self._kwargs['persistentVolumeReclaimPolicy']
-        if 'persistentVolumeReclaimPolicy' in self._context and check_return_type(self._context['persistentVolumeReclaimPolicy']):
-            return self._context['persistentVolumeReclaimPolicy']
-        return PersistentVolumeReclaimPolicy['Retain']
-    
+        if "persistentVolumeReclaimPolicy" in self._kwargs:
+            return self._kwargs["persistentVolumeReclaimPolicy"]
+        if "persistentVolumeReclaimPolicy" in self._context and check_return_type(
+            self._context["persistentVolumeReclaimPolicy"]
+        ):
+            return self._context["persistentVolumeReclaimPolicy"]
+        return PersistentVolumeReclaimPolicy["Retain"]
+
     # Name of StorageClass to which this persistent volume belongs. Empty value
     # means that this volume does not belong to any StorageClass.
     @typechecked
     def storageClassName(self) -> Optional[str]:
-        if 'storageClassName' in self._kwargs:
-            return self._kwargs['storageClassName']
-        if 'storageClassName' in self._context and check_return_type(self._context['storageClassName']):
-            return self._context['storageClassName']
+        if "storageClassName" in self._kwargs:
+            return self._kwargs["storageClassName"]
+        if "storageClassName" in self._context and check_return_type(
+            self._context["storageClassName"]
+        ):
+            return self._context["storageClassName"]
         return None
-    
+
     # A list of mount options, e.g. ["ro", "soft"]. Not validated - mount will
     # simply fail if one is invalid.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options
     @typechecked
     def mountOptions(self) -> List[str]:
-        if 'mountOptions' in self._kwargs:
-            return self._kwargs['mountOptions']
-        if 'mountOptions' in self._context and check_return_type(self._context['mountOptions']):
-            return self._context['mountOptions']
+        if "mountOptions" in self._kwargs:
+            return self._kwargs["mountOptions"]
+        if "mountOptions" in self._context and check_return_type(
+            self._context["mountOptions"]
+        ):
+            return self._context["mountOptions"]
         return []
-    
+
     # volumeMode defines if a volume is intended to be used with a formatted filesystem
     # or to remain in raw block state. Value of Filesystem is implied when not included in spec.
     # This is a beta feature.
     @typechecked
     def volumeMode(self) -> Optional[PersistentVolumeMode]:
-        if 'volumeMode' in self._kwargs:
-            return self._kwargs['volumeMode']
-        if 'volumeMode' in self._context and check_return_type(self._context['volumeMode']):
-            return self._context['volumeMode']
-        return PersistentVolumeMode['Filesystem']
-    
+        if "volumeMode" in self._kwargs:
+            return self._kwargs["volumeMode"]
+        if "volumeMode" in self._context and check_return_type(
+            self._context["volumeMode"]
+        ):
+            return self._context["volumeMode"]
+        return PersistentVolumeMode["Filesystem"]
+
     # NodeAffinity defines constraints that limit what nodes this volume can be accessed from.
     # This field influences the scheduling of pods that use this volume.
     @typechecked
     def nodeAffinity(self) -> Optional[VolumeNodeAffinity]:
-        if 'nodeAffinity' in self._kwargs:
-            return self._kwargs['nodeAffinity']
-        if 'nodeAffinity' in self._context and check_return_type(self._context['nodeAffinity']):
-            return self._context['nodeAffinity']
+        if "nodeAffinity" in self._kwargs:
+            return self._kwargs["nodeAffinity"]
+        if "nodeAffinity" in self._context and check_return_type(
+            self._context["nodeAffinity"]
+        ):
+            return self._context["nodeAffinity"]
         return None
 
 
@@ -7167,30 +7574,29 @@ class PersistentVolumeSpec(types.Object):
 # It is analogous to a node.
 # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes
 class PersistentVolume(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PersistentVolume'
-    
+        return "PersistentVolume"
+
     # Spec defines a specification of a persistent volume owned by the cluster.
     # Provisioned by an administrator.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes
     @typechecked
     def spec(self) -> PersistentVolumeSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return PersistentVolumeSpec()
 
@@ -7198,133 +7604,141 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
 # TypedLocalObjectReference contains enough information to let you locate the
 # typed referenced object inside the same namespace.
 class TypedLocalObjectReference(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['apiGroup'] = self.apiGroup()
-        v['kind'] = self.kind()
-        v['name'] = self.name()
+        v["apiGroup"] = self.apiGroup()
+        v["kind"] = self.kind()
+        v["name"] = self.name()
         return v
-    
+
     # APIGroup is the group for the resource being referenced.
     # If APIGroup is not specified, the specified Kind must be in the core API group.
     # For any other third-party types, APIGroup is required.
     @typechecked
     def apiGroup(self) -> Optional[str]:
-        if 'apiGroup' in self._kwargs:
-            return self._kwargs['apiGroup']
-        if 'apiGroup' in self._context and check_return_type(self._context['apiGroup']):
-            return self._context['apiGroup']
+        if "apiGroup" in self._kwargs:
+            return self._kwargs["apiGroup"]
+        if "apiGroup" in self._context and check_return_type(self._context["apiGroup"]):
+            return self._context["apiGroup"]
         return None
-    
+
     # Kind is the type of resource being referenced
     @typechecked
     def kind(self) -> str:
-        if 'kind' in self._kwargs:
-            return self._kwargs['kind']
-        if 'kind' in self._context and check_return_type(self._context['kind']):
-            return self._context['kind']
-        return ''
-    
+        if "kind" in self._kwargs:
+            return self._kwargs["kind"]
+        if "kind" in self._context and check_return_type(self._context["kind"]):
+            return self._context["kind"]
+        return ""
+
     # Name is the name of resource being referenced
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
 
 
 # PersistentVolumeClaimSpec describes the common attributes of storage devices
 # and allows a Source for provider-specific attributes
 class PersistentVolumeClaimSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         accessModes = self.accessModes()
         if accessModes:  # omit empty
-            v['accessModes'] = accessModes
+            v["accessModes"] = accessModes
         selector = self.selector()
         if selector is not None:  # omit empty
-            v['selector'] = selector
-        v['resources'] = self.resources()
+            v["selector"] = selector
+        v["resources"] = self.resources()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
-            v['volumeName'] = volumeName
+            v["volumeName"] = volumeName
         storageClassName = self.storageClassName()
         if storageClassName is not None:  # omit empty
-            v['storageClassName'] = storageClassName
+            v["storageClassName"] = storageClassName
         volumeMode = self.volumeMode()
         if volumeMode is not None:  # omit empty
-            v['volumeMode'] = volumeMode
+            v["volumeMode"] = volumeMode
         dataSource = self.dataSource()
         if dataSource is not None:  # omit empty
-            v['dataSource'] = dataSource
+            v["dataSource"] = dataSource
         return v
-    
+
     # AccessModes contains the desired access modes the volume should have.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
     @typechecked
     def accessModes(self) -> List[PersistentVolumeAccessMode]:
-        if 'accessModes' in self._kwargs:
-            return self._kwargs['accessModes']
-        if 'accessModes' in self._context and check_return_type(self._context['accessModes']):
-            return self._context['accessModes']
+        if "accessModes" in self._kwargs:
+            return self._kwargs["accessModes"]
+        if "accessModes" in self._context and check_return_type(
+            self._context["accessModes"]
+        ):
+            return self._context["accessModes"]
         return []
-    
+
     # A label query over volumes to consider for binding.
     @typechecked
-    def selector(self) -> Optional['metav1.LabelSelector']:
-        if 'selector' in self._kwargs:
-            return self._kwargs['selector']
-        if 'selector' in self._context and check_return_type(self._context['selector']):
-            return self._context['selector']
+    def selector(self) -> Optional["metav1.LabelSelector"]:
+        if "selector" in self._kwargs:
+            return self._kwargs["selector"]
+        if "selector" in self._context and check_return_type(self._context["selector"]):
+            return self._context["selector"]
         return None
-    
+
     # Resources represents the minimum resources the volume should have.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
     @typechecked
     def resources(self) -> ResourceRequirements:
-        if 'resources' in self._kwargs:
-            return self._kwargs['resources']
-        if 'resources' in self._context and check_return_type(self._context['resources']):
-            return self._context['resources']
+        if "resources" in self._kwargs:
+            return self._kwargs["resources"]
+        if "resources" in self._context and check_return_type(
+            self._context["resources"]
+        ):
+            return self._context["resources"]
         with context.Scope(**self._context):
             return ResourceRequirements()
-    
+
     # VolumeName is the binding reference to the PersistentVolume backing this claim.
     @typechecked
     def volumeName(self) -> Optional[str]:
-        if 'volumeName' in self._kwargs:
-            return self._kwargs['volumeName']
-        if 'volumeName' in self._context and check_return_type(self._context['volumeName']):
-            return self._context['volumeName']
+        if "volumeName" in self._kwargs:
+            return self._kwargs["volumeName"]
+        if "volumeName" in self._context and check_return_type(
+            self._context["volumeName"]
+        ):
+            return self._context["volumeName"]
         return None
-    
+
     # Name of the StorageClass required by the claim.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
     @typechecked
     def storageClassName(self) -> Optional[str]:
-        if 'storageClassName' in self._kwargs:
-            return self._kwargs['storageClassName']
-        if 'storageClassName' in self._context and check_return_type(self._context['storageClassName']):
-            return self._context['storageClassName']
+        if "storageClassName" in self._kwargs:
+            return self._kwargs["storageClassName"]
+        if "storageClassName" in self._context and check_return_type(
+            self._context["storageClassName"]
+        ):
+            return self._context["storageClassName"]
         return None
-    
+
     # volumeMode defines what type of volume is required by the claim.
     # Value of Filesystem is implied when not included in claim spec.
     # This is a beta feature.
     @typechecked
     def volumeMode(self) -> Optional[PersistentVolumeMode]:
-        if 'volumeMode' in self._kwargs:
-            return self._kwargs['volumeMode']
-        if 'volumeMode' in self._context and check_return_type(self._context['volumeMode']):
-            return self._context['volumeMode']
-        return PersistentVolumeMode['Filesystem']
-    
+        if "volumeMode" in self._kwargs:
+            return self._kwargs["volumeMode"]
+        if "volumeMode" in self._context and check_return_type(
+            self._context["volumeMode"]
+        ):
+            return self._context["volumeMode"]
+        return PersistentVolumeMode["Filesystem"]
+
     # This field requires the VolumeSnapshotDataSource alpha feature gate to be
     # enabled and currently VolumeSnapshot is the only supported data source.
     # If the provisioner can support VolumeSnapshot data source, it will create
@@ -7335,38 +7749,39 @@ class PersistentVolumeClaimSpec(types.Object):
     # of the provisioner may change.
     @typechecked
     def dataSource(self) -> Optional[TypedLocalObjectReference]:
-        if 'dataSource' in self._kwargs:
-            return self._kwargs['dataSource']
-        if 'dataSource' in self._context and check_return_type(self._context['dataSource']):
-            return self._context['dataSource']
+        if "dataSource" in self._kwargs:
+            return self._kwargs["dataSource"]
+        if "dataSource" in self._context and check_return_type(
+            self._context["dataSource"]
+        ):
+            return self._context["dataSource"]
         return None
 
 
 # PersistentVolumeClaim is a user's request for and claim to a persistent volume
 class PersistentVolumeClaim(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PersistentVolumeClaim'
-    
+        return "PersistentVolumeClaim"
+
     # Spec defines the desired characteristics of a volume requested by a pod author.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     @typechecked
     def spec(self) -> PersistentVolumeClaimSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return PersistentVolumeClaimSpec()
 
@@ -7376,204 +7791,204 @@ class PersistentVolumeClaim(base.TypedObject, base.MetadataObject):
 # PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
 # type of volume that is owned by someone else (the system).
 class PersistentVolumeClaimVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['claimName'] = self.claimName()
+        v["claimName"] = self.claimName()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # ClaimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     @typechecked
     def claimName(self) -> str:
-        if 'claimName' in self._kwargs:
-            return self._kwargs['claimName']
-        if 'claimName' in self._context and check_return_type(self._context['claimName']):
-            return self._context['claimName']
-        return ''
-    
+        if "claimName" in self._kwargs:
+            return self._kwargs["claimName"]
+        if "claimName" in self._context and check_return_type(
+            self._context["claimName"]
+        ):
+            return self._context["claimName"]
+        return ""
+
     # Will force the ReadOnly setting in VolumeMounts.
     # Default false.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # PodDNSConfigOption defines DNS resolver options of a pod.
 class PodDNSConfigOption(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         value = self.value()
         if value is not None:  # omit empty
-            v['value'] = value
+            v["value"] = value
         return v
-    
+
     # Required.
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     @typechecked
     def value(self) -> Optional[str]:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
         return None
 
 
 # PodDNSConfig defines the DNS parameters of a pod in addition to
 # those generated from DNSPolicy.
 class PodDNSConfig(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         nameservers = self.nameservers()
         if nameservers:  # omit empty
-            v['nameservers'] = nameservers
+            v["nameservers"] = nameservers
         searches = self.searches()
         if searches:  # omit empty
-            v['searches'] = searches
+            v["searches"] = searches
         options = self.options()
         if options:  # omit empty
-            v['options'] = options.values()  # named list
+            v["options"] = options.values()  # named list
         return v
-    
+
     # A list of DNS name server IP addresses.
     # This will be appended to the base nameservers generated from DNSPolicy.
     # Duplicated nameservers will be removed.
     @typechecked
     def nameservers(self) -> List[str]:
-        if 'nameservers' in self._kwargs:
-            return self._kwargs['nameservers']
-        if 'nameservers' in self._context and check_return_type(self._context['nameservers']):
-            return self._context['nameservers']
+        if "nameservers" in self._kwargs:
+            return self._kwargs["nameservers"]
+        if "nameservers" in self._context and check_return_type(
+            self._context["nameservers"]
+        ):
+            return self._context["nameservers"]
         return []
-    
+
     # A list of DNS search domains for host-name lookup.
     # This will be appended to the base search paths generated from DNSPolicy.
     # Duplicated search paths will be removed.
     @typechecked
     def searches(self) -> List[str]:
-        if 'searches' in self._kwargs:
-            return self._kwargs['searches']
-        if 'searches' in self._context and check_return_type(self._context['searches']):
-            return self._context['searches']
+        if "searches" in self._kwargs:
+            return self._kwargs["searches"]
+        if "searches" in self._context and check_return_type(self._context["searches"]):
+            return self._context["searches"]
         return []
-    
+
     # A list of DNS resolver options.
     # This will be merged with the base options generated from DNSPolicy.
     # Duplicated entries will be removed. Resolution options given in Options
     # will override those that appear in the base DNSPolicy.
     @typechecked
     def options(self) -> Dict[str, PodDNSConfigOption]:
-        if 'options' in self._kwargs:
-            return self._kwargs['options']
-        if 'options' in self._context and check_return_type(self._context['options']):
-            return self._context['options']
+        if "options" in self._kwargs:
+            return self._kwargs["options"]
+        if "options" in self._context and check_return_type(self._context["options"]):
+            return self._context["options"]
         return {}
 
 
 # PodReadinessGate contains the reference to a pod condition
 class PodReadinessGate(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['conditionType'] = self.conditionType()
+        v["conditionType"] = self.conditionType()
         return v
-    
+
     # ConditionType refers to a condition in the pod's condition list with matching type.
     @typechecked
     def conditionType(self) -> PodConditionType:
-        if 'conditionType' in self._kwargs:
-            return self._kwargs['conditionType']
-        if 'conditionType' in self._context and check_return_type(self._context['conditionType']):
-            return self._context['conditionType']
+        if "conditionType" in self._kwargs:
+            return self._kwargs["conditionType"]
+        if "conditionType" in self._context and check_return_type(
+            self._context["conditionType"]
+        ):
+            return self._context["conditionType"]
         return None
 
 
 # Sysctl defines a kernel parameter to be set
 class Sysctl(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
-        v['value'] = self.value()
+        v["name"] = self.name()
+        v["value"] = self.value()
         return v
-    
+
     # Name of a property to set
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # Value of a property to set
     @typechecked
     def value(self) -> str:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
-        return ''
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
+        return ""
 
 
 # PodSecurityContext holds pod-level security attributes and common container settings.
 # Some fields are also present in container.securityContext.  Field values of
 # container.securityContext take precedence over field values of PodSecurityContext.
 class PodSecurityContext(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
-            v['seLinuxOptions'] = seLinuxOptions
+            v["seLinuxOptions"] = seLinuxOptions
         windowsOptions = self.windowsOptions()
         if windowsOptions is not None:  # omit empty
-            v['windowsOptions'] = windowsOptions
+            v["windowsOptions"] = windowsOptions
         runAsUser = self.runAsUser()
         if runAsUser is not None:  # omit empty
-            v['runAsUser'] = runAsUser
+            v["runAsUser"] = runAsUser
         runAsGroup = self.runAsGroup()
         if runAsGroup is not None:  # omit empty
-            v['runAsGroup'] = runAsGroup
+            v["runAsGroup"] = runAsGroup
         runAsNonRoot = self.runAsNonRoot()
         if runAsNonRoot is not None:  # omit empty
-            v['runAsNonRoot'] = runAsNonRoot
+            v["runAsNonRoot"] = runAsNonRoot
         supplementalGroups = self.supplementalGroups()
         if supplementalGroups:  # omit empty
-            v['supplementalGroups'] = supplementalGroups
+            v["supplementalGroups"] = supplementalGroups
         fsGroup = self.fsGroup()
         if fsGroup is not None:  # omit empty
-            v['fsGroup'] = fsGroup
+            v["fsGroup"] = fsGroup
         sysctls = self.sysctls()
         if sysctls:  # omit empty
-            v['sysctls'] = sysctls.values()  # named list
+            v["sysctls"] = sysctls.values()  # named list
         return v
-    
+
     # The SELinux context to be applied to all containers.
     # If unspecified, the container runtime will allocate a random SELinux context for each
     # container.  May also be set in SecurityContext.  If set in
@@ -7581,23 +7996,27 @@ class PodSecurityContext(types.Object):
     # takes precedence for that container.
     @typechecked
     def seLinuxOptions(self) -> Optional[SELinuxOptions]:
-        if 'seLinuxOptions' in self._kwargs:
-            return self._kwargs['seLinuxOptions']
-        if 'seLinuxOptions' in self._context and check_return_type(self._context['seLinuxOptions']):
-            return self._context['seLinuxOptions']
+        if "seLinuxOptions" in self._kwargs:
+            return self._kwargs["seLinuxOptions"]
+        if "seLinuxOptions" in self._context and check_return_type(
+            self._context["seLinuxOptions"]
+        ):
+            return self._context["seLinuxOptions"]
         return None
-    
+
     # The Windows specific settings applied to all containers.
     # If unspecified, the options within a container's SecurityContext will be used.
     # If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
-        if 'windowsOptions' in self._kwargs:
-            return self._kwargs['windowsOptions']
-        if 'windowsOptions' in self._context and check_return_type(self._context['windowsOptions']):
-            return self._context['windowsOptions']
+        if "windowsOptions" in self._kwargs:
+            return self._kwargs["windowsOptions"]
+        if "windowsOptions" in self._context and check_return_type(
+            self._context["windowsOptions"]
+        ):
+            return self._context["windowsOptions"]
         return None
-    
+
     # The UID to run the entrypoint of the container process.
     # Defaults to user specified in image metadata if unspecified.
     # May also be set in SecurityContext.  If set in both SecurityContext and
@@ -7605,12 +8024,14 @@ class PodSecurityContext(types.Object):
     # for that container.
     @typechecked
     def runAsUser(self) -> Optional[int]:
-        if 'runAsUser' in self._kwargs:
-            return self._kwargs['runAsUser']
-        if 'runAsUser' in self._context and check_return_type(self._context['runAsUser']):
-            return self._context['runAsUser']
+        if "runAsUser" in self._kwargs:
+            return self._kwargs["runAsUser"]
+        if "runAsUser" in self._context and check_return_type(
+            self._context["runAsUser"]
+        ):
+            return self._context["runAsUser"]
         return None
-    
+
     # The GID to run the entrypoint of the container process.
     # Uses runtime default if unset.
     # May also be set in SecurityContext.  If set in both SecurityContext and
@@ -7618,12 +8039,14 @@ class PodSecurityContext(types.Object):
     # for that container.
     @typechecked
     def runAsGroup(self) -> Optional[int]:
-        if 'runAsGroup' in self._kwargs:
-            return self._kwargs['runAsGroup']
-        if 'runAsGroup' in self._context and check_return_type(self._context['runAsGroup']):
-            return self._context['runAsGroup']
+        if "runAsGroup" in self._kwargs:
+            return self._kwargs["runAsGroup"]
+        if "runAsGroup" in self._context and check_return_type(
+            self._context["runAsGroup"]
+        ):
+            return self._context["runAsGroup"]
         return None
-    
+
     # Indicates that the container must run as a non-root user.
     # If true, the Kubelet will validate the image at runtime to ensure that it
     # does not run as UID 0 (root) and fail to start the container if it does.
@@ -7632,144 +8055,148 @@ class PodSecurityContext(types.Object):
     # PodSecurityContext, the value specified in SecurityContext takes precedence.
     @typechecked
     def runAsNonRoot(self) -> Optional[bool]:
-        if 'runAsNonRoot' in self._kwargs:
-            return self._kwargs['runAsNonRoot']
-        if 'runAsNonRoot' in self._context and check_return_type(self._context['runAsNonRoot']):
-            return self._context['runAsNonRoot']
+        if "runAsNonRoot" in self._kwargs:
+            return self._kwargs["runAsNonRoot"]
+        if "runAsNonRoot" in self._context and check_return_type(
+            self._context["runAsNonRoot"]
+        ):
+            return self._context["runAsNonRoot"]
         return None
-    
+
     # A list of groups applied to the first process run in each container, in addition
     # to the container's primary GID.  If unspecified, no groups will be added to
     # any container.
     @typechecked
     def supplementalGroups(self) -> List[int]:
-        if 'supplementalGroups' in self._kwargs:
-            return self._kwargs['supplementalGroups']
-        if 'supplementalGroups' in self._context and check_return_type(self._context['supplementalGroups']):
-            return self._context['supplementalGroups']
+        if "supplementalGroups" in self._kwargs:
+            return self._kwargs["supplementalGroups"]
+        if "supplementalGroups" in self._context and check_return_type(
+            self._context["supplementalGroups"]
+        ):
+            return self._context["supplementalGroups"]
         return []
-    
+
     # A special supplemental group that applies to all containers in a pod.
     # Some volume types allow the Kubelet to change the ownership of that volume
     # to be owned by the pod:
-    # 
+    #
     # 1. The owning GID will be the FSGroup
     # 2. The setgid bit is set (new files created in the volume will be owned by FSGroup)
     # 3. The permission bits are OR'd with rw-rw----
-    # 
+    #
     # If unset, the Kubelet will not modify the ownership and permissions of any volume.
     @typechecked
     def fsGroup(self) -> Optional[int]:
-        if 'fsGroup' in self._kwargs:
-            return self._kwargs['fsGroup']
-        if 'fsGroup' in self._context and check_return_type(self._context['fsGroup']):
-            return self._context['fsGroup']
+        if "fsGroup" in self._kwargs:
+            return self._kwargs["fsGroup"]
+        if "fsGroup" in self._context and check_return_type(self._context["fsGroup"]):
+            return self._context["fsGroup"]
         return None
-    
+
     # Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
     # sysctls (by the container runtime) might fail to launch.
     @typechecked
     def sysctls(self) -> Dict[str, Sysctl]:
-        if 'sysctls' in self._kwargs:
-            return self._kwargs['sysctls']
-        if 'sysctls' in self._context and check_return_type(self._context['sysctls']):
-            return self._context['sysctls']
+        if "sysctls" in self._kwargs:
+            return self._kwargs["sysctls"]
+        if "sysctls" in self._context and check_return_type(self._context["sysctls"]):
+            return self._context["sysctls"]
         return {}
 
 
 # The pod this Toleration is attached to tolerates any taint that matches
 # the triple <key,value,effect> using the matching operator <operator>.
 class Toleration(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         key = self.key()
         if key:  # omit empty
-            v['key'] = key
+            v["key"] = key
         operator = self.operator()
         if operator:  # omit empty
-            v['operator'] = operator
+            v["operator"] = operator
         value = self.value()
         if value:  # omit empty
-            v['value'] = value
+            v["value"] = value
         effect = self.effect()
         if effect:  # omit empty
-            v['effect'] = effect
+            v["effect"] = effect
         tolerationSeconds = self.tolerationSeconds()
         if tolerationSeconds is not None:  # omit empty
-            v['tolerationSeconds'] = tolerationSeconds
+            v["tolerationSeconds"] = tolerationSeconds
         return v
-    
+
     # Key is the taint key that the toleration applies to. Empty means match all taint keys.
     # If the key is empty, operator must be Exists; this combination means to match all values and all keys.
     @typechecked
     def key(self) -> Optional[str]:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
         return None
-    
+
     # Operator represents a key's relationship to the value.
     # Valid operators are Exists and Equal. Defaults to Equal.
     # Exists is equivalent to wildcard for value, so that a pod can
     # tolerate all taints of a particular category.
     @typechecked
     def operator(self) -> Optional[TolerationOperator]:
-        if 'operator' in self._kwargs:
-            return self._kwargs['operator']
-        if 'operator' in self._context and check_return_type(self._context['operator']):
-            return self._context['operator']
+        if "operator" in self._kwargs:
+            return self._kwargs["operator"]
+        if "operator" in self._context and check_return_type(self._context["operator"]):
+            return self._context["operator"]
         return None
-    
+
     # Value is the taint value the toleration matches to.
     # If the operator is Exists, the value should be empty, otherwise just a regular string.
     @typechecked
     def value(self) -> Optional[str]:
-        if 'value' in self._kwargs:
-            return self._kwargs['value']
-        if 'value' in self._context and check_return_type(self._context['value']):
-            return self._context['value']
+        if "value" in self._kwargs:
+            return self._kwargs["value"]
+        if "value" in self._context and check_return_type(self._context["value"]):
+            return self._context["value"]
         return None
-    
+
     # Effect indicates the taint effect to match. Empty means match all taint effects.
     # When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
     @typechecked
     def effect(self) -> Optional[TaintEffect]:
-        if 'effect' in self._kwargs:
-            return self._kwargs['effect']
-        if 'effect' in self._context and check_return_type(self._context['effect']):
-            return self._context['effect']
+        if "effect" in self._kwargs:
+            return self._kwargs["effect"]
+        if "effect" in self._context and check_return_type(self._context["effect"]):
+            return self._context["effect"]
         return None
-    
+
     # TolerationSeconds represents the period of time the toleration (which must be
     # of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
     # it is not set, which means tolerate the taint forever (do not evict). Zero and
     # negative values will be treated as 0 (evict immediately) by the system.
     @typechecked
     def tolerationSeconds(self) -> Optional[int]:
-        if 'tolerationSeconds' in self._kwargs:
-            return self._kwargs['tolerationSeconds']
-        if 'tolerationSeconds' in self._context and check_return_type(self._context['tolerationSeconds']):
-            return self._context['tolerationSeconds']
+        if "tolerationSeconds" in self._kwargs:
+            return self._kwargs["tolerationSeconds"]
+        if "tolerationSeconds" in self._context and check_return_type(
+            self._context["tolerationSeconds"]
+        ):
+            return self._context["tolerationSeconds"]
         return None
 
 
 # TopologySpreadConstraint specifies how to spread matching pods among the given topology.
 class TopologySpreadConstraint(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['maxSkew'] = self.maxSkew()
-        v['topologyKey'] = self.topologyKey()
-        v['whenUnsatisfiable'] = self.whenUnsatisfiable()
+        v["maxSkew"] = self.maxSkew()
+        v["topologyKey"] = self.topologyKey()
+        v["whenUnsatisfiable"] = self.whenUnsatisfiable()
         labelSelector = self.labelSelector()
         if labelSelector is not None:  # omit empty
-            v['labelSelector'] = labelSelector
+            v["labelSelector"] = labelSelector
         return v
-    
+
     # MaxSkew describes the degree to which pods may be unevenly distributed.
     # It's the maximum permitted difference between the number of matching pods in
     # any two topology domains of a given topology type.
@@ -7787,12 +8214,12 @@ class TopologySpreadConstraint(types.Object):
     # It's a required field. Default value is 1 and 0 is not allowed.
     @typechecked
     def maxSkew(self) -> int:
-        if 'maxSkew' in self._kwargs:
-            return self._kwargs['maxSkew']
-        if 'maxSkew' in self._context and check_return_type(self._context['maxSkew']):
-            return self._context['maxSkew']
+        if "maxSkew" in self._kwargs:
+            return self._kwargs["maxSkew"]
+        if "maxSkew" in self._context and check_return_type(self._context["maxSkew"]):
+            return self._context["maxSkew"]
         return 0
-    
+
     # TopologyKey is the key of node labels. Nodes that have a label with this key
     # and identical values are considered to be in the same topology.
     # We consider each <key, value> as a "bucket", and try to put balanced number
@@ -7800,12 +8227,14 @@ class TopologySpreadConstraint(types.Object):
     # It's a required field.
     @typechecked
     def topologyKey(self) -> str:
-        if 'topologyKey' in self._kwargs:
-            return self._kwargs['topologyKey']
-        if 'topologyKey' in self._context and check_return_type(self._context['topologyKey']):
-            return self._context['topologyKey']
-        return ''
-    
+        if "topologyKey" in self._kwargs:
+            return self._kwargs["topologyKey"]
+        if "topologyKey" in self._context and check_return_type(
+            self._context["topologyKey"]
+        ):
+            return self._context["topologyKey"]
+        return ""
+
     # WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
     # the spread constraint.
     # - DoNotSchedule (default) tells the scheduler not to schedule it
@@ -7826,53 +8255,58 @@ class TopologySpreadConstraint(types.Object):
     # It's a required field.
     @typechecked
     def whenUnsatisfiable(self) -> UnsatisfiableConstraintAction:
-        if 'whenUnsatisfiable' in self._kwargs:
-            return self._kwargs['whenUnsatisfiable']
-        if 'whenUnsatisfiable' in self._context and check_return_type(self._context['whenUnsatisfiable']):
-            return self._context['whenUnsatisfiable']
+        if "whenUnsatisfiable" in self._kwargs:
+            return self._kwargs["whenUnsatisfiable"]
+        if "whenUnsatisfiable" in self._context and check_return_type(
+            self._context["whenUnsatisfiable"]
+        ):
+            return self._context["whenUnsatisfiable"]
         return None
-    
+
     # LabelSelector is used to find matching pods.
     # Pods that match this label selector are counted to determine the number of pods
     # in their corresponding topology domain.
     @typechecked
-    def labelSelector(self) -> Optional['metav1.LabelSelector']:
-        if 'labelSelector' in self._kwargs:
-            return self._kwargs['labelSelector']
-        if 'labelSelector' in self._context and check_return_type(self._context['labelSelector']):
-            return self._context['labelSelector']
+    def labelSelector(self) -> Optional["metav1.LabelSelector"]:
+        if "labelSelector" in self._kwargs:
+            return self._kwargs["labelSelector"]
+        if "labelSelector" in self._context and check_return_type(
+            self._context["labelSelector"]
+        ):
+            return self._context["labelSelector"]
         return None
 
 
 # Adapts a secret into a projected volume.
-# 
+#
 # The contents of the target Secret's Data field will be presented in a
 # projected volume as files using the keys in the Data field as the file names.
 # Note that this is identical to a secret volume source without the default
 # mode.
 class SecretProjection(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v.update(self.localObjectReference().render())  # inline
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     @typechecked
     def localObjectReference(self) -> LocalObjectReference:
-        if 'localObjectReference' in self._kwargs:
-            return self._kwargs['localObjectReference']
-        if 'localObjectReference' in self._context and check_return_type(self._context['localObjectReference']):
-            return self._context['localObjectReference']
+        if "localObjectReference" in self._kwargs:
+            return self._kwargs["localObjectReference"]
+        if "localObjectReference" in self._context and check_return_type(
+            self._context["localObjectReference"]
+        ):
+            return self._context["localObjectReference"]
         with context.Scope(**self._context):
             return LocalObjectReference()
-    
+
     # If unspecified, each key-value pair in the Data field of the referenced
     # Secret will be projected into the volume as a file whose name is the
     # key and content is the value. If specified, the listed keys will be
@@ -7882,19 +8316,19 @@ class SecretProjection(types.Object):
     # relative and may not contain the '..' path or start with '..'.
     @typechecked
     def items(self) -> List[KeyToPath]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
-    
+
     # Specify whether the Secret or its key must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
@@ -7903,31 +8337,30 @@ class SecretProjection(types.Object):
 # the pods runtime filesystem for use against APIs (Kubernetes API Server or
 # otherwise).
 class ServiceAccountTokenProjection(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         audience = self.audience()
         if audience:  # omit empty
-            v['audience'] = audience
+            v["audience"] = audience
         expirationSeconds = self.expirationSeconds()
         if expirationSeconds is not None:  # omit empty
-            v['expirationSeconds'] = expirationSeconds
-        v['path'] = self.path()
+            v["expirationSeconds"] = expirationSeconds
+        v["path"] = self.path()
         return v
-    
+
     # Audience is the intended audience of the token. A recipient of a token
     # must identify itself with an identifier specified in the audience of the
     # token, and otherwise should reject the token. The audience defaults to the
     # identifier of the apiserver.
     @typechecked
     def audience(self) -> Optional[str]:
-        if 'audience' in self._kwargs:
-            return self._kwargs['audience']
-        if 'audience' in self._context and check_return_type(self._context['audience']):
-            return self._context['audience']
+        if "audience" in self._kwargs:
+            return self._kwargs["audience"]
+        if "audience" in self._context and check_return_type(self._context["audience"]):
+            return self._context["audience"]
         return None
-    
+
     # ExpirationSeconds is the requested duration of validity of the service
     # account token. As the token approaches expiration, the kubelet volume
     # plugin will proactively rotate the service account token. The kubelet will
@@ -7936,101 +8369,107 @@ class ServiceAccountTokenProjection(types.Object):
     # and must be at least 10 minutes.
     @typechecked
     def expirationSeconds(self) -> Optional[int]:
-        if 'expirationSeconds' in self._kwargs:
-            return self._kwargs['expirationSeconds']
-        if 'expirationSeconds' in self._context and check_return_type(self._context['expirationSeconds']):
-            return self._context['expirationSeconds']
+        if "expirationSeconds" in self._kwargs:
+            return self._kwargs["expirationSeconds"]
+        if "expirationSeconds" in self._context and check_return_type(
+            self._context["expirationSeconds"]
+        ):
+            return self._context["expirationSeconds"]
         return 3600
-    
+
     # Path is the path relative to the mount point of the file to project the
     # token into.
     @typechecked
     def path(self) -> str:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
-        return ''
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
+        return ""
 
 
 # Projection that may be projected along with other supported volume types
 class VolumeProjection(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         secret = self.secret()
         if secret is not None:  # omit empty
-            v['secret'] = secret
+            v["secret"] = secret
         downwardAPI = self.downwardAPI()
         if downwardAPI is not None:  # omit empty
-            v['downwardAPI'] = downwardAPI
+            v["downwardAPI"] = downwardAPI
         configMap = self.configMap()
         if configMap is not None:  # omit empty
-            v['configMap'] = configMap
+            v["configMap"] = configMap
         serviceAccountToken = self.serviceAccountToken()
         if serviceAccountToken is not None:  # omit empty
-            v['serviceAccountToken'] = serviceAccountToken
+            v["serviceAccountToken"] = serviceAccountToken
         return v
-    
+
     # information about the secret data to project
     @typechecked
     def secret(self) -> Optional[SecretProjection]:
-        if 'secret' in self._kwargs:
-            return self._kwargs['secret']
-        if 'secret' in self._context and check_return_type(self._context['secret']):
-            return self._context['secret']
+        if "secret" in self._kwargs:
+            return self._kwargs["secret"]
+        if "secret" in self._context and check_return_type(self._context["secret"]):
+            return self._context["secret"]
         return None
-    
+
     # information about the downwardAPI data to project
     @typechecked
     def downwardAPI(self) -> Optional[DownwardAPIProjection]:
-        if 'downwardAPI' in self._kwargs:
-            return self._kwargs['downwardAPI']
-        if 'downwardAPI' in self._context and check_return_type(self._context['downwardAPI']):
-            return self._context['downwardAPI']
+        if "downwardAPI" in self._kwargs:
+            return self._kwargs["downwardAPI"]
+        if "downwardAPI" in self._context and check_return_type(
+            self._context["downwardAPI"]
+        ):
+            return self._context["downwardAPI"]
         return None
-    
+
     # information about the configMap data to project
     @typechecked
     def configMap(self) -> Optional[ConfigMapProjection]:
-        if 'configMap' in self._kwargs:
-            return self._kwargs['configMap']
-        if 'configMap' in self._context and check_return_type(self._context['configMap']):
-            return self._context['configMap']
+        if "configMap" in self._kwargs:
+            return self._kwargs["configMap"]
+        if "configMap" in self._context and check_return_type(
+            self._context["configMap"]
+        ):
+            return self._context["configMap"]
         return None
-    
+
     # information about the serviceAccountToken data to project
     @typechecked
     def serviceAccountToken(self) -> Optional[ServiceAccountTokenProjection]:
-        if 'serviceAccountToken' in self._kwargs:
-            return self._kwargs['serviceAccountToken']
-        if 'serviceAccountToken' in self._context and check_return_type(self._context['serviceAccountToken']):
-            return self._context['serviceAccountToken']
+        if "serviceAccountToken" in self._kwargs:
+            return self._kwargs["serviceAccountToken"]
+        if "serviceAccountToken" in self._context and check_return_type(
+            self._context["serviceAccountToken"]
+        ):
+            return self._context["serviceAccountToken"]
         return None
 
 
 # Represents a projected volume source
 class ProjectedVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['sources'] = self.sources()
+        v["sources"] = self.sources()
         defaultMode = self.defaultMode()
         if defaultMode is not None:  # omit empty
-            v['defaultMode'] = defaultMode
+            v["defaultMode"] = defaultMode
         return v
-    
+
     # list of volume projections
     @typechecked
     def sources(self) -> List[VolumeProjection]:
-        if 'sources' in self._kwargs:
-            return self._kwargs['sources']
-        if 'sources' in self._context and check_return_type(self._context['sources']):
-            return self._context['sources']
+        if "sources" in self._kwargs:
+            return self._kwargs["sources"]
+        if "sources" in self._context and check_return_type(self._context["sources"]):
+            return self._context["sources"]
         return []
-    
+
     # Mode bits to use on created files by default. Must be a value between
     # 0 and 0777.
     # Directories within the path are not affected by this setting.
@@ -8038,62 +8477,63 @@ class ProjectedVolumeSource(types.Object):
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def defaultMode(self) -> Optional[int]:
-        if 'defaultMode' in self._kwargs:
-            return self._kwargs['defaultMode']
-        if 'defaultMode' in self._context and check_return_type(self._context['defaultMode']):
-            return self._context['defaultMode']
+        if "defaultMode" in self._kwargs:
+            return self._kwargs["defaultMode"]
+        if "defaultMode" in self._context and check_return_type(
+            self._context["defaultMode"]
+        ):
+            return self._context["defaultMode"]
         return 420
 
 
 # Represents a Rados Block Device mount that lasts the lifetime of a pod.
 # RBD volumes support ownership management and SELinux relabeling.
 class RBDVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['monitors'] = self.monitors()
-        v['image'] = self.image()
+        v["monitors"] = self.monitors()
+        v["image"] = self.image()
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         pool = self.pool()
         if pool:  # omit empty
-            v['pool'] = pool
+            v["pool"] = pool
         user = self.user()
         if user:  # omit empty
-            v['user'] = user
+            v["user"] = user
         keyring = self.keyring()
         if keyring:  # omit empty
-            v['keyring'] = keyring
+            v["keyring"] = keyring
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # A collection of Ceph monitors.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def monitors(self) -> List[str]:
-        if 'monitors' in self._kwargs:
-            return self._kwargs['monitors']
-        if 'monitors' in self._context and check_return_type(self._context['monitors']):
-            return self._context['monitors']
+        if "monitors" in self._kwargs:
+            return self._kwargs["monitors"]
+        if "monitors" in self._context and check_return_type(self._context["monitors"]):
+            return self._context["monitors"]
         return []
-    
+
     # The rados image name.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def image(self) -> str:
-        if 'image' in self._kwargs:
-            return self._kwargs['image']
-        if 'image' in self._context and check_return_type(self._context['image']):
-            return self._context['image']
-        return ''
-    
+        if "image" in self._kwargs:
+            return self._kwargs["image"]
+        if "image" in self._context and check_return_type(self._context["image"]):
+            return self._context["image"]
+        return ""
+
     # Filesystem type of the volume that you want to mount.
     # Tip: Ensure that the filesystem type is supported by the host operating system.
     # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
@@ -8101,233 +8541,247 @@ class RBDVolumeSource(types.Object):
     # TODO: how do we prevent errors in the filesystem from compromising the machine
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # The rados pool name.
     # Default is rbd.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def pool(self) -> Optional[str]:
-        if 'pool' in self._kwargs:
-            return self._kwargs['pool']
-        if 'pool' in self._context and check_return_type(self._context['pool']):
-            return self._context['pool']
-        return 'rbd'
-    
+        if "pool" in self._kwargs:
+            return self._kwargs["pool"]
+        if "pool" in self._context and check_return_type(self._context["pool"]):
+            return self._context["pool"]
+        return "rbd"
+
     # The rados user name.
     # Default is admin.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def user(self) -> Optional[str]:
-        if 'user' in self._kwargs:
-            return self._kwargs['user']
-        if 'user' in self._context and check_return_type(self._context['user']):
-            return self._context['user']
-        return 'admin'
-    
+        if "user" in self._kwargs:
+            return self._kwargs["user"]
+        if "user" in self._context and check_return_type(self._context["user"]):
+            return self._context["user"]
+        return "admin"
+
     # Keyring is the path to key ring for RBDUser.
     # Default is /etc/ceph/keyring.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def keyring(self) -> Optional[str]:
-        if 'keyring' in self._kwargs:
-            return self._kwargs['keyring']
-        if 'keyring' in self._context and check_return_type(self._context['keyring']):
-            return self._context['keyring']
-        return '/etc/ceph/keyring'
-    
+        if "keyring" in self._kwargs:
+            return self._kwargs["keyring"]
+        if "keyring" in self._context and check_return_type(self._context["keyring"]):
+            return self._context["keyring"]
+        return "/etc/ceph/keyring"
+
     # SecretRef is name of the authentication secret for RBDUser. If provided
     # overrides keyring.
     # Default is nil.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # ReadOnly here will force the ReadOnly setting in VolumeMounts.
     # Defaults to false.
     # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # ScaleIOVolumeSource represents a persistent ScaleIO volume
 class ScaleIOVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['gateway'] = self.gateway()
-        v['system'] = self.system()
-        v['secretRef'] = self.secretRef()
+        v["gateway"] = self.gateway()
+        v["system"] = self.system()
+        v["secretRef"] = self.secretRef()
         sslEnabled = self.sslEnabled()
         if sslEnabled:  # omit empty
-            v['sslEnabled'] = sslEnabled
+            v["sslEnabled"] = sslEnabled
         protectionDomain = self.protectionDomain()
         if protectionDomain:  # omit empty
-            v['protectionDomain'] = protectionDomain
+            v["protectionDomain"] = protectionDomain
         storagePool = self.storagePool()
         if storagePool:  # omit empty
-            v['storagePool'] = storagePool
+            v["storagePool"] = storagePool
         storageMode = self.storageMode()
         if storageMode:  # omit empty
-            v['storageMode'] = storageMode
+            v["storageMode"] = storageMode
         volumeName = self.volumeName()
         if volumeName:  # omit empty
-            v['volumeName'] = volumeName
+            v["volumeName"] = volumeName
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         return v
-    
+
     # The host address of the ScaleIO API Gateway.
     @typechecked
     def gateway(self) -> str:
-        if 'gateway' in self._kwargs:
-            return self._kwargs['gateway']
-        if 'gateway' in self._context and check_return_type(self._context['gateway']):
-            return self._context['gateway']
-        return ''
-    
+        if "gateway" in self._kwargs:
+            return self._kwargs["gateway"]
+        if "gateway" in self._context and check_return_type(self._context["gateway"]):
+            return self._context["gateway"]
+        return ""
+
     # The name of the storage system as configured in ScaleIO.
     @typechecked
     def system(self) -> str:
-        if 'system' in self._kwargs:
-            return self._kwargs['system']
-        if 'system' in self._context and check_return_type(self._context['system']):
-            return self._context['system']
-        return ''
-    
+        if "system" in self._kwargs:
+            return self._kwargs["system"]
+        if "system" in self._context and check_return_type(self._context["system"]):
+            return self._context["system"]
+        return ""
+
     # SecretRef references to the secret for ScaleIO user and other
     # sensitive information. If this is not provided, Login operation will fail.
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
-    
+
     # Flag to enable/disable SSL communication with Gateway, default false
     @typechecked
     def sslEnabled(self) -> Optional[bool]:
-        if 'sslEnabled' in self._kwargs:
-            return self._kwargs['sslEnabled']
-        if 'sslEnabled' in self._context and check_return_type(self._context['sslEnabled']):
-            return self._context['sslEnabled']
+        if "sslEnabled" in self._kwargs:
+            return self._kwargs["sslEnabled"]
+        if "sslEnabled" in self._context and check_return_type(
+            self._context["sslEnabled"]
+        ):
+            return self._context["sslEnabled"]
         return None
-    
+
     # The name of the ScaleIO Protection Domain for the configured storage.
     @typechecked
     def protectionDomain(self) -> Optional[str]:
-        if 'protectionDomain' in self._kwargs:
-            return self._kwargs['protectionDomain']
-        if 'protectionDomain' in self._context and check_return_type(self._context['protectionDomain']):
-            return self._context['protectionDomain']
+        if "protectionDomain" in self._kwargs:
+            return self._kwargs["protectionDomain"]
+        if "protectionDomain" in self._context and check_return_type(
+            self._context["protectionDomain"]
+        ):
+            return self._context["protectionDomain"]
         return None
-    
+
     # The ScaleIO Storage Pool associated with the protection domain.
     @typechecked
     def storagePool(self) -> Optional[str]:
-        if 'storagePool' in self._kwargs:
-            return self._kwargs['storagePool']
-        if 'storagePool' in self._context and check_return_type(self._context['storagePool']):
-            return self._context['storagePool']
+        if "storagePool" in self._kwargs:
+            return self._kwargs["storagePool"]
+        if "storagePool" in self._context and check_return_type(
+            self._context["storagePool"]
+        ):
+            return self._context["storagePool"]
         return None
-    
+
     # Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
     # Default is ThinProvisioned.
     @typechecked
     def storageMode(self) -> Optional[str]:
-        if 'storageMode' in self._kwargs:
-            return self._kwargs['storageMode']
-        if 'storageMode' in self._context and check_return_type(self._context['storageMode']):
-            return self._context['storageMode']
-        return 'ThinProvisioned'
-    
+        if "storageMode" in self._kwargs:
+            return self._kwargs["storageMode"]
+        if "storageMode" in self._context and check_return_type(
+            self._context["storageMode"]
+        ):
+            return self._context["storageMode"]
+        return "ThinProvisioned"
+
     # The name of a volume already created in the ScaleIO system
     # that is associated with this volume source.
     @typechecked
     def volumeName(self) -> Optional[str]:
-        if 'volumeName' in self._kwargs:
-            return self._kwargs['volumeName']
-        if 'volumeName' in self._context and check_return_type(self._context['volumeName']):
-            return self._context['volumeName']
+        if "volumeName" in self._kwargs:
+            return self._kwargs["volumeName"]
+        if "volumeName" in self._context and check_return_type(
+            self._context["volumeName"]
+        ):
+            return self._context["volumeName"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs".
     # Default is "xfs".
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
-        return 'xfs'
-    
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
+        return "xfs"
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
 
 
 # Adapts a Secret into a volume.
-# 
+#
 # The contents of the target Secret's Data field will be presented in a volume
 # as files using the keys in the Data field as the file names.
 # Secret volumes support ownership management and SELinux relabeling.
 class SecretVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         secretName = self.secretName()
         if secretName:  # omit empty
-            v['secretName'] = secretName
+            v["secretName"] = secretName
         items = self.items()
         if items:  # omit empty
-            v['items'] = items
+            v["items"] = items
         defaultMode = self.defaultMode()
         if defaultMode is not None:  # omit empty
-            v['defaultMode'] = defaultMode
+            v["defaultMode"] = defaultMode
         optional = self.optional()
         if optional is not None:  # omit empty
-            v['optional'] = optional
+            v["optional"] = optional
         return v
-    
+
     # Name of the secret in the pod's namespace to use.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
     @typechecked
     def secretName(self) -> Optional[str]:
-        if 'secretName' in self._kwargs:
-            return self._kwargs['secretName']
-        if 'secretName' in self._context and check_return_type(self._context['secretName']):
-            return self._context['secretName']
+        if "secretName" in self._kwargs:
+            return self._kwargs["secretName"]
+        if "secretName" in self._context and check_return_type(
+            self._context["secretName"]
+        ):
+            return self._context["secretName"]
         return None
-    
+
     # If unspecified, each key-value pair in the Data field of the referenced
     # Secret will be projected into the volume as a file whose name is the
     # key and content is the value. If specified, the listed keys will be
@@ -8337,12 +8791,12 @@ class SecretVolumeSource(types.Object):
     # relative and may not contain the '..' path or start with '..'.
     @typechecked
     def items(self) -> List[KeyToPath]:
-        if 'items' in self._kwargs:
-            return self._kwargs['items']
-        if 'items' in self._context and check_return_type(self._context['items']):
-            return self._context['items']
+        if "items" in self._kwargs:
+            return self._kwargs["items"]
+        if "items" in self._context and check_return_type(self._context["items"]):
+            return self._context["items"]
         return []
-    
+
     # Optional: mode bits to use on created files by default. Must be a
     # value between 0 and 0777. Defaults to 0644.
     # Directories within the path are not affected by this setting.
@@ -8350,55 +8804,58 @@ class SecretVolumeSource(types.Object):
     # mode, like fsGroup, and the result can be other mode bits set.
     @typechecked
     def defaultMode(self) -> Optional[int]:
-        if 'defaultMode' in self._kwargs:
-            return self._kwargs['defaultMode']
-        if 'defaultMode' in self._context and check_return_type(self._context['defaultMode']):
-            return self._context['defaultMode']
+        if "defaultMode" in self._kwargs:
+            return self._kwargs["defaultMode"]
+        if "defaultMode" in self._context and check_return_type(
+            self._context["defaultMode"]
+        ):
+            return self._context["defaultMode"]
         return 420
-    
+
     # Specify whether the Secret or its keys must be defined
     @typechecked
     def optional(self) -> Optional[bool]:
-        if 'optional' in self._kwargs:
-            return self._kwargs['optional']
-        if 'optional' in self._context and check_return_type(self._context['optional']):
-            return self._context['optional']
+        if "optional" in self._kwargs:
+            return self._kwargs["optional"]
+        if "optional" in self._context and check_return_type(self._context["optional"]):
+            return self._context["optional"]
         return None
 
 
 # Represents a StorageOS persistent volume resource.
 class StorageOSVolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
-            v['volumeName'] = volumeName
+            v["volumeName"] = volumeName
         volumeNamespace = self.volumeNamespace()
         if volumeNamespace:  # omit empty
-            v['volumeNamespace'] = volumeNamespace
+            v["volumeNamespace"] = volumeNamespace
         fsType = self.fsType()
         if fsType:  # omit empty
-            v['fsType'] = fsType
+            v["fsType"] = fsType
         readOnly = self.readOnly()
         if readOnly:  # omit empty
-            v['readOnly'] = readOnly
+            v["readOnly"] = readOnly
         secretRef = self.secretRef()
         if secretRef is not None:  # omit empty
-            v['secretRef'] = secretRef
+            v["secretRef"] = secretRef
         return v
-    
+
     # VolumeName is the human-readable name of the StorageOS volume.  Volume
     # names are only unique within a namespace.
     @typechecked
     def volumeName(self) -> Optional[str]:
-        if 'volumeName' in self._kwargs:
-            return self._kwargs['volumeName']
-        if 'volumeName' in self._context and check_return_type(self._context['volumeName']):
-            return self._context['volumeName']
+        if "volumeName" in self._kwargs:
+            return self._kwargs["volumeName"]
+        if "volumeName" in self._context and check_return_type(
+            self._context["volumeName"]
+        ):
+            return self._context["volumeName"]
         return None
-    
+
     # VolumeNamespace specifies the scope of the volume within StorageOS.  If no
     # namespace is specified then the Pod's namespace will be used.  This allows the
     # Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
@@ -8407,134 +8864,137 @@ class StorageOSVolumeSource(types.Object):
     # Namespaces that do not pre-exist within StorageOS will be created.
     @typechecked
     def volumeNamespace(self) -> Optional[str]:
-        if 'volumeNamespace' in self._kwargs:
-            return self._kwargs['volumeNamespace']
-        if 'volumeNamespace' in self._context and check_return_type(self._context['volumeNamespace']):
-            return self._context['volumeNamespace']
+        if "volumeNamespace" in self._kwargs:
+            return self._kwargs["volumeNamespace"]
+        if "volumeNamespace" in self._context and check_return_type(
+            self._context["volumeNamespace"]
+        ):
+            return self._context["volumeNamespace"]
         return None
-    
+
     # Filesystem type to mount.
     # Must be a filesystem type supported by the host operating system.
     # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     @typechecked
     def fsType(self) -> Optional[str]:
-        if 'fsType' in self._kwargs:
-            return self._kwargs['fsType']
-        if 'fsType' in self._context and check_return_type(self._context['fsType']):
-            return self._context['fsType']
+        if "fsType" in self._kwargs:
+            return self._kwargs["fsType"]
+        if "fsType" in self._context and check_return_type(self._context["fsType"]):
+            return self._context["fsType"]
         return None
-    
+
     # Defaults to false (read/write). ReadOnly here will force
     # the ReadOnly setting in VolumeMounts.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if 'readOnly' in self._kwargs:
-            return self._kwargs['readOnly']
-        if 'readOnly' in self._context and check_return_type(self._context['readOnly']):
-            return self._context['readOnly']
+        if "readOnly" in self._kwargs:
+            return self._kwargs["readOnly"]
+        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
+            return self._context["readOnly"]
         return None
-    
+
     # SecretRef specifies the secret to use for obtaining the StorageOS API
     # credentials.  If not specified, default values will be attempted.
     @typechecked
     def secretRef(self) -> Optional[LocalObjectReference]:
-        if 'secretRef' in self._kwargs:
-            return self._kwargs['secretRef']
-        if 'secretRef' in self._context and check_return_type(self._context['secretRef']):
-            return self._context['secretRef']
+        if "secretRef" in self._kwargs:
+            return self._kwargs["secretRef"]
+        if "secretRef" in self._context and check_return_type(
+            self._context["secretRef"]
+        ):
+            return self._context["secretRef"]
         return None
 
 
 # Represents the source of a volume to mount.
 # Only one of its members may be specified.
 class VolumeSource(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         hostPath = self.hostPath()
         if hostPath is not None:  # omit empty
-            v['hostPath'] = hostPath
+            v["hostPath"] = hostPath
         emptyDir = self.emptyDir()
         if emptyDir is not None:  # omit empty
-            v['emptyDir'] = emptyDir
+            v["emptyDir"] = emptyDir
         gcePersistentDisk = self.gcePersistentDisk()
         if gcePersistentDisk is not None:  # omit empty
-            v['gcePersistentDisk'] = gcePersistentDisk
+            v["gcePersistentDisk"] = gcePersistentDisk
         awsElasticBlockStore = self.awsElasticBlockStore()
         if awsElasticBlockStore is not None:  # omit empty
-            v['awsElasticBlockStore'] = awsElasticBlockStore
+            v["awsElasticBlockStore"] = awsElasticBlockStore
         secret = self.secret()
         if secret is not None:  # omit empty
-            v['secret'] = secret
+            v["secret"] = secret
         nfs = self.nfs()
         if nfs is not None:  # omit empty
-            v['nfs'] = nfs
+            v["nfs"] = nfs
         iscsi = self.iscsi()
         if iscsi is not None:  # omit empty
-            v['iscsi'] = iscsi
+            v["iscsi"] = iscsi
         glusterfs = self.glusterfs()
         if glusterfs is not None:  # omit empty
-            v['glusterfs'] = glusterfs
+            v["glusterfs"] = glusterfs
         persistentVolumeClaim = self.persistentVolumeClaim()
         if persistentVolumeClaim is not None:  # omit empty
-            v['persistentVolumeClaim'] = persistentVolumeClaim
+            v["persistentVolumeClaim"] = persistentVolumeClaim
         rbd = self.rbd()
         if rbd is not None:  # omit empty
-            v['rbd'] = rbd
+            v["rbd"] = rbd
         flexVolume = self.flexVolume()
         if flexVolume is not None:  # omit empty
-            v['flexVolume'] = flexVolume
+            v["flexVolume"] = flexVolume
         cinder = self.cinder()
         if cinder is not None:  # omit empty
-            v['cinder'] = cinder
+            v["cinder"] = cinder
         cephfs = self.cephfs()
         if cephfs is not None:  # omit empty
-            v['cephfs'] = cephfs
+            v["cephfs"] = cephfs
         flocker = self.flocker()
         if flocker is not None:  # omit empty
-            v['flocker'] = flocker
+            v["flocker"] = flocker
         downwardAPI = self.downwardAPI()
         if downwardAPI is not None:  # omit empty
-            v['downwardAPI'] = downwardAPI
+            v["downwardAPI"] = downwardAPI
         fc = self.fc()
         if fc is not None:  # omit empty
-            v['fc'] = fc
+            v["fc"] = fc
         azureFile = self.azureFile()
         if azureFile is not None:  # omit empty
-            v['azureFile'] = azureFile
+            v["azureFile"] = azureFile
         configMap = self.configMap()
         if configMap is not None:  # omit empty
-            v['configMap'] = configMap
+            v["configMap"] = configMap
         vsphereVolume = self.vsphereVolume()
         if vsphereVolume is not None:  # omit empty
-            v['vsphereVolume'] = vsphereVolume
+            v["vsphereVolume"] = vsphereVolume
         quobyte = self.quobyte()
         if quobyte is not None:  # omit empty
-            v['quobyte'] = quobyte
+            v["quobyte"] = quobyte
         azureDisk = self.azureDisk()
         if azureDisk is not None:  # omit empty
-            v['azureDisk'] = azureDisk
+            v["azureDisk"] = azureDisk
         photonPersistentDisk = self.photonPersistentDisk()
         if photonPersistentDisk is not None:  # omit empty
-            v['photonPersistentDisk'] = photonPersistentDisk
+            v["photonPersistentDisk"] = photonPersistentDisk
         projected = self.projected()
         if projected is not None:  # omit empty
-            v['projected'] = projected
+            v["projected"] = projected
         portworxVolume = self.portworxVolume()
         if portworxVolume is not None:  # omit empty
-            v['portworxVolume'] = portworxVolume
+            v["portworxVolume"] = portworxVolume
         scaleIO = self.scaleIO()
         if scaleIO is not None:  # omit empty
-            v['scaleIO'] = scaleIO
+            v["scaleIO"] = scaleIO
         storageos = self.storageos()
         if storageos is not None:  # omit empty
-            v['storageos'] = storageos
+            v["storageos"] = storageos
         csi = self.csi()
         if csi is not None:  # omit empty
-            v['csi'] = csi
+            v["csi"] = csi
         return v
-    
+
     # HostPath represents a pre-existing file or directory on the host
     # machine that is directly exposed to the container. This is generally
     # used for system agents or other privileged things that are allowed
@@ -8545,411 +9005,439 @@ class VolumeSource(types.Object):
     # mount host directories as read/write.
     @typechecked
     def hostPath(self) -> Optional[HostPathVolumeSource]:
-        if 'hostPath' in self._kwargs:
-            return self._kwargs['hostPath']
-        if 'hostPath' in self._context and check_return_type(self._context['hostPath']):
-            return self._context['hostPath']
+        if "hostPath" in self._kwargs:
+            return self._kwargs["hostPath"]
+        if "hostPath" in self._context and check_return_type(self._context["hostPath"]):
+            return self._context["hostPath"]
         return None
-    
+
     # EmptyDir represents a temporary directory that shares a pod's lifetime.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
     @typechecked
     def emptyDir(self) -> Optional[EmptyDirVolumeSource]:
-        if 'emptyDir' in self._kwargs:
-            return self._kwargs['emptyDir']
-        if 'emptyDir' in self._context and check_return_type(self._context['emptyDir']):
-            return self._context['emptyDir']
+        if "emptyDir" in self._kwargs:
+            return self._kwargs["emptyDir"]
+        if "emptyDir" in self._context and check_return_type(self._context["emptyDir"]):
+            return self._context["emptyDir"]
         return None
-    
+
     # GCEPersistentDisk represents a GCE Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     @typechecked
     def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
-        if 'gcePersistentDisk' in self._kwargs:
-            return self._kwargs['gcePersistentDisk']
-        if 'gcePersistentDisk' in self._context and check_return_type(self._context['gcePersistentDisk']):
-            return self._context['gcePersistentDisk']
+        if "gcePersistentDisk" in self._kwargs:
+            return self._kwargs["gcePersistentDisk"]
+        if "gcePersistentDisk" in self._context and check_return_type(
+            self._context["gcePersistentDisk"]
+        ):
+            return self._context["gcePersistentDisk"]
         return None
-    
+
     # AWSElasticBlockStore represents an AWS Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     @typechecked
     def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
-        if 'awsElasticBlockStore' in self._kwargs:
-            return self._kwargs['awsElasticBlockStore']
-        if 'awsElasticBlockStore' in self._context and check_return_type(self._context['awsElasticBlockStore']):
-            return self._context['awsElasticBlockStore']
+        if "awsElasticBlockStore" in self._kwargs:
+            return self._kwargs["awsElasticBlockStore"]
+        if "awsElasticBlockStore" in self._context and check_return_type(
+            self._context["awsElasticBlockStore"]
+        ):
+            return self._context["awsElasticBlockStore"]
         return None
-    
+
     # Secret represents a secret that should populate this volume.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
     @typechecked
     def secret(self) -> Optional[SecretVolumeSource]:
-        if 'secret' in self._kwargs:
-            return self._kwargs['secret']
-        if 'secret' in self._context and check_return_type(self._context['secret']):
-            return self._context['secret']
+        if "secret" in self._kwargs:
+            return self._kwargs["secret"]
+        if "secret" in self._context and check_return_type(self._context["secret"]):
+            return self._context["secret"]
         return None
-    
+
     # NFS represents an NFS mount on the host that shares a pod's lifetime
     # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     @typechecked
     def nfs(self) -> Optional[NFSVolumeSource]:
-        if 'nfs' in self._kwargs:
-            return self._kwargs['nfs']
-        if 'nfs' in self._context and check_return_type(self._context['nfs']):
-            return self._context['nfs']
+        if "nfs" in self._kwargs:
+            return self._kwargs["nfs"]
+        if "nfs" in self._context and check_return_type(self._context["nfs"]):
+            return self._context["nfs"]
         return None
-    
+
     # ISCSI represents an ISCSI Disk resource that is attached to a
     # kubelet's host machine and then exposed to the pod.
     # More info: https://examples.k8s.io/volumes/iscsi/README.md
     @typechecked
     def iscsi(self) -> Optional[ISCSIVolumeSource]:
-        if 'iscsi' in self._kwargs:
-            return self._kwargs['iscsi']
-        if 'iscsi' in self._context and check_return_type(self._context['iscsi']):
-            return self._context['iscsi']
+        if "iscsi" in self._kwargs:
+            return self._kwargs["iscsi"]
+        if "iscsi" in self._context and check_return_type(self._context["iscsi"]):
+            return self._context["iscsi"]
         return None
-    
+
     # Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime.
     # More info: https://examples.k8s.io/volumes/glusterfs/README.md
     @typechecked
     def glusterfs(self) -> Optional[GlusterfsVolumeSource]:
-        if 'glusterfs' in self._kwargs:
-            return self._kwargs['glusterfs']
-        if 'glusterfs' in self._context and check_return_type(self._context['glusterfs']):
-            return self._context['glusterfs']
+        if "glusterfs" in self._kwargs:
+            return self._kwargs["glusterfs"]
+        if "glusterfs" in self._context and check_return_type(
+            self._context["glusterfs"]
+        ):
+            return self._context["glusterfs"]
         return None
-    
+
     # PersistentVolumeClaimVolumeSource represents a reference to a
     # PersistentVolumeClaim in the same namespace.
     # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     @typechecked
     def persistentVolumeClaim(self) -> Optional[PersistentVolumeClaimVolumeSource]:
-        if 'persistentVolumeClaim' in self._kwargs:
-            return self._kwargs['persistentVolumeClaim']
-        if 'persistentVolumeClaim' in self._context and check_return_type(self._context['persistentVolumeClaim']):
-            return self._context['persistentVolumeClaim']
+        if "persistentVolumeClaim" in self._kwargs:
+            return self._kwargs["persistentVolumeClaim"]
+        if "persistentVolumeClaim" in self._context and check_return_type(
+            self._context["persistentVolumeClaim"]
+        ):
+            return self._context["persistentVolumeClaim"]
         return None
-    
+
     # RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
     # More info: https://examples.k8s.io/volumes/rbd/README.md
     @typechecked
     def rbd(self) -> Optional[RBDVolumeSource]:
-        if 'rbd' in self._kwargs:
-            return self._kwargs['rbd']
-        if 'rbd' in self._context and check_return_type(self._context['rbd']):
-            return self._context['rbd']
+        if "rbd" in self._kwargs:
+            return self._kwargs["rbd"]
+        if "rbd" in self._context and check_return_type(self._context["rbd"]):
+            return self._context["rbd"]
         return None
-    
+
     # FlexVolume represents a generic volume resource that is
     # provisioned/attached using an exec based plugin.
     @typechecked
     def flexVolume(self) -> Optional[FlexVolumeSource]:
-        if 'flexVolume' in self._kwargs:
-            return self._kwargs['flexVolume']
-        if 'flexVolume' in self._context and check_return_type(self._context['flexVolume']):
-            return self._context['flexVolume']
+        if "flexVolume" in self._kwargs:
+            return self._kwargs["flexVolume"]
+        if "flexVolume" in self._context and check_return_type(
+            self._context["flexVolume"]
+        ):
+            return self._context["flexVolume"]
         return None
-    
+
     # Cinder represents a cinder volume attached and mounted on kubelets host machine.
     # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     @typechecked
     def cinder(self) -> Optional[CinderVolumeSource]:
-        if 'cinder' in self._kwargs:
-            return self._kwargs['cinder']
-        if 'cinder' in self._context and check_return_type(self._context['cinder']):
-            return self._context['cinder']
+        if "cinder" in self._kwargs:
+            return self._kwargs["cinder"]
+        if "cinder" in self._context and check_return_type(self._context["cinder"]):
+            return self._context["cinder"]
         return None
-    
+
     # CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
     @typechecked
     def cephfs(self) -> Optional[CephFSVolumeSource]:
-        if 'cephfs' in self._kwargs:
-            return self._kwargs['cephfs']
-        if 'cephfs' in self._context and check_return_type(self._context['cephfs']):
-            return self._context['cephfs']
+        if "cephfs" in self._kwargs:
+            return self._kwargs["cephfs"]
+        if "cephfs" in self._context and check_return_type(self._context["cephfs"]):
+            return self._context["cephfs"]
         return None
-    
+
     # Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
     @typechecked
     def flocker(self) -> Optional[FlockerVolumeSource]:
-        if 'flocker' in self._kwargs:
-            return self._kwargs['flocker']
-        if 'flocker' in self._context and check_return_type(self._context['flocker']):
-            return self._context['flocker']
+        if "flocker" in self._kwargs:
+            return self._kwargs["flocker"]
+        if "flocker" in self._context and check_return_type(self._context["flocker"]):
+            return self._context["flocker"]
         return None
-    
+
     # DownwardAPI represents downward API about the pod that should populate this volume
     @typechecked
     def downwardAPI(self) -> Optional[DownwardAPIVolumeSource]:
-        if 'downwardAPI' in self._kwargs:
-            return self._kwargs['downwardAPI']
-        if 'downwardAPI' in self._context and check_return_type(self._context['downwardAPI']):
-            return self._context['downwardAPI']
+        if "downwardAPI" in self._kwargs:
+            return self._kwargs["downwardAPI"]
+        if "downwardAPI" in self._context and check_return_type(
+            self._context["downwardAPI"]
+        ):
+            return self._context["downwardAPI"]
         return None
-    
+
     # FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
     @typechecked
     def fc(self) -> Optional[FCVolumeSource]:
-        if 'fc' in self._kwargs:
-            return self._kwargs['fc']
-        if 'fc' in self._context and check_return_type(self._context['fc']):
-            return self._context['fc']
+        if "fc" in self._kwargs:
+            return self._kwargs["fc"]
+        if "fc" in self._context and check_return_type(self._context["fc"]):
+            return self._context["fc"]
         return None
-    
+
     # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
     @typechecked
     def azureFile(self) -> Optional[AzureFileVolumeSource]:
-        if 'azureFile' in self._kwargs:
-            return self._kwargs['azureFile']
-        if 'azureFile' in self._context and check_return_type(self._context['azureFile']):
-            return self._context['azureFile']
+        if "azureFile" in self._kwargs:
+            return self._kwargs["azureFile"]
+        if "azureFile" in self._context and check_return_type(
+            self._context["azureFile"]
+        ):
+            return self._context["azureFile"]
         return None
-    
+
     # ConfigMap represents a configMap that should populate this volume
     @typechecked
     def configMap(self) -> Optional[ConfigMapVolumeSource]:
-        if 'configMap' in self._kwargs:
-            return self._kwargs['configMap']
-        if 'configMap' in self._context and check_return_type(self._context['configMap']):
-            return self._context['configMap']
+        if "configMap" in self._kwargs:
+            return self._kwargs["configMap"]
+        if "configMap" in self._context and check_return_type(
+            self._context["configMap"]
+        ):
+            return self._context["configMap"]
         return None
-    
+
     # VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
     @typechecked
     def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
-        if 'vsphereVolume' in self._kwargs:
-            return self._kwargs['vsphereVolume']
-        if 'vsphereVolume' in self._context and check_return_type(self._context['vsphereVolume']):
-            return self._context['vsphereVolume']
+        if "vsphereVolume" in self._kwargs:
+            return self._kwargs["vsphereVolume"]
+        if "vsphereVolume" in self._context and check_return_type(
+            self._context["vsphereVolume"]
+        ):
+            return self._context["vsphereVolume"]
         return None
-    
+
     # Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
     @typechecked
     def quobyte(self) -> Optional[QuobyteVolumeSource]:
-        if 'quobyte' in self._kwargs:
-            return self._kwargs['quobyte']
-        if 'quobyte' in self._context and check_return_type(self._context['quobyte']):
-            return self._context['quobyte']
+        if "quobyte" in self._kwargs:
+            return self._kwargs["quobyte"]
+        if "quobyte" in self._context and check_return_type(self._context["quobyte"]):
+            return self._context["quobyte"]
         return None
-    
+
     # AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
     @typechecked
     def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
-        if 'azureDisk' in self._kwargs:
-            return self._kwargs['azureDisk']
-        if 'azureDisk' in self._context and check_return_type(self._context['azureDisk']):
-            return self._context['azureDisk']
+        if "azureDisk" in self._kwargs:
+            return self._kwargs["azureDisk"]
+        if "azureDisk" in self._context and check_return_type(
+            self._context["azureDisk"]
+        ):
+            return self._context["azureDisk"]
         return None
-    
+
     # PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
     @typechecked
     def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
-        if 'photonPersistentDisk' in self._kwargs:
-            return self._kwargs['photonPersistentDisk']
-        if 'photonPersistentDisk' in self._context and check_return_type(self._context['photonPersistentDisk']):
-            return self._context['photonPersistentDisk']
+        if "photonPersistentDisk" in self._kwargs:
+            return self._kwargs["photonPersistentDisk"]
+        if "photonPersistentDisk" in self._context and check_return_type(
+            self._context["photonPersistentDisk"]
+        ):
+            return self._context["photonPersistentDisk"]
         return None
-    
+
     # Items for all in one resources secrets, configmaps, and downward API
     @typechecked
     def projected(self) -> Optional[ProjectedVolumeSource]:
-        if 'projected' in self._kwargs:
-            return self._kwargs['projected']
-        if 'projected' in self._context and check_return_type(self._context['projected']):
-            return self._context['projected']
+        if "projected" in self._kwargs:
+            return self._kwargs["projected"]
+        if "projected" in self._context and check_return_type(
+            self._context["projected"]
+        ):
+            return self._context["projected"]
         return None
-    
+
     # PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
     @typechecked
     def portworxVolume(self) -> Optional[PortworxVolumeSource]:
-        if 'portworxVolume' in self._kwargs:
-            return self._kwargs['portworxVolume']
-        if 'portworxVolume' in self._context and check_return_type(self._context['portworxVolume']):
-            return self._context['portworxVolume']
+        if "portworxVolume" in self._kwargs:
+            return self._kwargs["portworxVolume"]
+        if "portworxVolume" in self._context and check_return_type(
+            self._context["portworxVolume"]
+        ):
+            return self._context["portworxVolume"]
         return None
-    
+
     # ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
     @typechecked
     def scaleIO(self) -> Optional[ScaleIOVolumeSource]:
-        if 'scaleIO' in self._kwargs:
-            return self._kwargs['scaleIO']
-        if 'scaleIO' in self._context and check_return_type(self._context['scaleIO']):
-            return self._context['scaleIO']
+        if "scaleIO" in self._kwargs:
+            return self._kwargs["scaleIO"]
+        if "scaleIO" in self._context and check_return_type(self._context["scaleIO"]):
+            return self._context["scaleIO"]
         return None
-    
+
     # StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
     @typechecked
     def storageos(self) -> Optional[StorageOSVolumeSource]:
-        if 'storageos' in self._kwargs:
-            return self._kwargs['storageos']
-        if 'storageos' in self._context and check_return_type(self._context['storageos']):
-            return self._context['storageos']
+        if "storageos" in self._kwargs:
+            return self._kwargs["storageos"]
+        if "storageos" in self._context and check_return_type(
+            self._context["storageos"]
+        ):
+            return self._context["storageos"]
         return None
-    
+
     # CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).
     @typechecked
     def csi(self) -> Optional[CSIVolumeSource]:
-        if 'csi' in self._kwargs:
-            return self._kwargs['csi']
-        if 'csi' in self._context and check_return_type(self._context['csi']):
-            return self._context['csi']
+        if "csi" in self._kwargs:
+            return self._kwargs["csi"]
+        if "csi" in self._context and check_return_type(self._context["csi"]):
+            return self._context["csi"]
         return None
 
 
 # Volume represents a named volume in a pod that may be accessed by any container in the pod.
 class Volume(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['name'] = self.name()
+        v["name"] = self.name()
         v.update(self.volumeSource().render())  # inline
         return v
-    
+
     # Volume's name.
     # Must be a DNS_LABEL and unique within the pod.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
     @typechecked
     def name(self) -> str:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
-        return ''
-    
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
+        return ""
+
     # VolumeSource represents the location and type of the mounted volume.
     # If not specified, the Volume is implied to be an EmptyDir.
     # This implied behavior is deprecated and will be removed in a future version.
     @typechecked
     def volumeSource(self) -> VolumeSource:
-        if 'volumeSource' in self._kwargs:
-            return self._kwargs['volumeSource']
-        if 'volumeSource' in self._context and check_return_type(self._context['volumeSource']):
-            return self._context['volumeSource']
+        if "volumeSource" in self._kwargs:
+            return self._kwargs["volumeSource"]
+        if "volumeSource" in self._context and check_return_type(
+            self._context["volumeSource"]
+        ):
+            return self._context["volumeSource"]
         with context.Scope(**self._context):
             return VolumeSource()
 
 
 # PodSpec is a description of a pod.
 class PodSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         volumes = self.volumes()
         if volumes:  # omit empty
-            v['volumes'] = volumes.values()  # named list
+            v["volumes"] = volumes.values()  # named list
         initContainers = self.initContainers()
         if initContainers:  # omit empty
-            v['initContainers'] = initContainers.values()  # named list
-        v['containers'] = self.containers().values()  # named list
+            v["initContainers"] = initContainers.values()  # named list
+        v["containers"] = self.containers().values()  # named list
         ephemeralContainers = self.ephemeralContainers()
         if ephemeralContainers:  # omit empty
-            v['ephemeralContainers'] = ephemeralContainers
+            v["ephemeralContainers"] = ephemeralContainers
         restartPolicy = self.restartPolicy()
         if restartPolicy:  # omit empty
-            v['restartPolicy'] = restartPolicy
+            v["restartPolicy"] = restartPolicy
         terminationGracePeriodSeconds = self.terminationGracePeriodSeconds()
         if terminationGracePeriodSeconds is not None:  # omit empty
-            v['terminationGracePeriodSeconds'] = terminationGracePeriodSeconds
+            v["terminationGracePeriodSeconds"] = terminationGracePeriodSeconds
         activeDeadlineSeconds = self.activeDeadlineSeconds()
         if activeDeadlineSeconds is not None:  # omit empty
-            v['activeDeadlineSeconds'] = activeDeadlineSeconds
+            v["activeDeadlineSeconds"] = activeDeadlineSeconds
         dnsPolicy = self.dnsPolicy()
         if dnsPolicy:  # omit empty
-            v['dnsPolicy'] = dnsPolicy
+            v["dnsPolicy"] = dnsPolicy
         nodeSelector = self.nodeSelector()
         if nodeSelector:  # omit empty
-            v['nodeSelector'] = nodeSelector
+            v["nodeSelector"] = nodeSelector
         serviceAccountName = self.serviceAccountName()
         if serviceAccountName:  # omit empty
-            v['serviceAccountName'] = serviceAccountName
+            v["serviceAccountName"] = serviceAccountName
         automountServiceAccountToken = self.automountServiceAccountToken()
         if automountServiceAccountToken is not None:  # omit empty
-            v['automountServiceAccountToken'] = automountServiceAccountToken
+            v["automountServiceAccountToken"] = automountServiceAccountToken
         nodeName = self.nodeName()
         if nodeName:  # omit empty
-            v['nodeName'] = nodeName
+            v["nodeName"] = nodeName
         hostNetwork = self.hostNetwork()
         if hostNetwork:  # omit empty
-            v['hostNetwork'] = hostNetwork
+            v["hostNetwork"] = hostNetwork
         hostPID = self.hostPID()
         if hostPID:  # omit empty
-            v['hostPID'] = hostPID
+            v["hostPID"] = hostPID
         hostIPC = self.hostIPC()
         if hostIPC:  # omit empty
-            v['hostIPC'] = hostIPC
+            v["hostIPC"] = hostIPC
         shareProcessNamespace = self.shareProcessNamespace()
         if shareProcessNamespace is not None:  # omit empty
-            v['shareProcessNamespace'] = shareProcessNamespace
+            v["shareProcessNamespace"] = shareProcessNamespace
         securityContext = self.securityContext()
         if securityContext is not None:  # omit empty
-            v['securityContext'] = securityContext
+            v["securityContext"] = securityContext
         imagePullSecrets = self.imagePullSecrets()
         if imagePullSecrets:  # omit empty
-            v['imagePullSecrets'] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
         hostname = self.hostname()
         if hostname:  # omit empty
-            v['hostname'] = hostname
+            v["hostname"] = hostname
         subdomain = self.subdomain()
         if subdomain:  # omit empty
-            v['subdomain'] = subdomain
+            v["subdomain"] = subdomain
         affinity = self.affinity()
         if affinity is not None:  # omit empty
-            v['affinity'] = affinity
+            v["affinity"] = affinity
         schedulerName = self.schedulerName()
         if schedulerName:  # omit empty
-            v['schedulerName'] = schedulerName
+            v["schedulerName"] = schedulerName
         tolerations = self.tolerations()
         if tolerations:  # omit empty
-            v['tolerations'] = tolerations
+            v["tolerations"] = tolerations
         hostAliases = self.hostAliases()
         if hostAliases:  # omit empty
-            v['hostAliases'] = hostAliases
+            v["hostAliases"] = hostAliases
         priorityClassName = self.priorityClassName()
         if priorityClassName:  # omit empty
-            v['priorityClassName'] = priorityClassName
+            v["priorityClassName"] = priorityClassName
         priority = self.priority()
         if priority is not None:  # omit empty
-            v['priority'] = priority
+            v["priority"] = priority
         dnsConfig = self.dnsConfig()
         if dnsConfig is not None:  # omit empty
-            v['dnsConfig'] = dnsConfig
+            v["dnsConfig"] = dnsConfig
         readinessGates = self.readinessGates()
         if readinessGates:  # omit empty
-            v['readinessGates'] = readinessGates
+            v["readinessGates"] = readinessGates
         runtimeClassName = self.runtimeClassName()
         if runtimeClassName is not None:  # omit empty
-            v['runtimeClassName'] = runtimeClassName
+            v["runtimeClassName"] = runtimeClassName
         enableServiceLinks = self.enableServiceLinks()
         if enableServiceLinks is not None:  # omit empty
-            v['enableServiceLinks'] = enableServiceLinks
+            v["enableServiceLinks"] = enableServiceLinks
         preemptionPolicy = self.preemptionPolicy()
         if preemptionPolicy is not None:  # omit empty
-            v['preemptionPolicy'] = preemptionPolicy
+            v["preemptionPolicy"] = preemptionPolicy
         overhead = self.overhead()
         if overhead:  # omit empty
-            v['overhead'] = overhead
+            v["overhead"] = overhead
         topologySpreadConstraints = self.topologySpreadConstraints()
         if topologySpreadConstraints:  # omit empty
-            v['topologySpreadConstraints'] = topologySpreadConstraints
+            v["topologySpreadConstraints"] = topologySpreadConstraints
         return v
-    
+
     # List of volumes that can be mounted by containers belonging to the pod.
     # More info: https://kubernetes.io/docs/concepts/storage/volumes
     @typechecked
     def volumes(self) -> Dict[str, Volume]:
-        if 'volumes' in self._kwargs:
-            return self._kwargs['volumes']
-        if 'volumes' in self._context and check_return_type(self._context['volumes']):
-            return self._context['volumes']
+        if "volumes" in self._kwargs:
+            return self._kwargs["volumes"]
+        if "volumes" in self._context and check_return_type(self._context["volumes"]):
+            return self._context["volumes"]
         return {}
-    
+
     # List of initialization containers belonging to the pod.
     # Init containers are executed in order prior to containers being started. If any
     # init container fails, the pod is considered to have failed and is handled according
@@ -8965,24 +9453,28 @@ class PodSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
     @typechecked
     def initContainers(self) -> Dict[str, Container]:
-        if 'initContainers' in self._kwargs:
-            return self._kwargs['initContainers']
-        if 'initContainers' in self._context and check_return_type(self._context['initContainers']):
-            return self._context['initContainers']
+        if "initContainers" in self._kwargs:
+            return self._kwargs["initContainers"]
+        if "initContainers" in self._context and check_return_type(
+            self._context["initContainers"]
+        ):
+            return self._context["initContainers"]
         return {}
-    
+
     # List of containers belonging to the pod.
     # Containers cannot currently be added or removed.
     # There must be at least one container in a Pod.
     # Cannot be updated.
     @typechecked
     def containers(self) -> Dict[str, Container]:
-        if 'containers' in self._kwargs:
-            return self._kwargs['containers']
-        if 'containers' in self._context and check_return_type(self._context['containers']):
-            return self._context['containers']
+        if "containers" in self._kwargs:
+            return self._kwargs["containers"]
+        if "containers" in self._context and check_return_type(
+            self._context["containers"]
+        ):
+            return self._context["containers"]
         return {}
-    
+
     # List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
     # pod to perform user-initiated actions such as debugging. This list cannot be specified when
     # creating a pod, and it cannot be modified by updating the pod spec. In order to add an
@@ -8990,24 +9482,28 @@ class PodSpec(types.Object):
     # This field is alpha-level and is only honored by servers that enable the EphemeralContainers feature.
     @typechecked
     def ephemeralContainers(self) -> List[EphemeralContainer]:
-        if 'ephemeralContainers' in self._kwargs:
-            return self._kwargs['ephemeralContainers']
-        if 'ephemeralContainers' in self._context and check_return_type(self._context['ephemeralContainers']):
-            return self._context['ephemeralContainers']
+        if "ephemeralContainers" in self._kwargs:
+            return self._kwargs["ephemeralContainers"]
+        if "ephemeralContainers" in self._context and check_return_type(
+            self._context["ephemeralContainers"]
+        ):
+            return self._context["ephemeralContainers"]
         return []
-    
+
     # Restart policy for all containers within the pod.
     # One of Always, OnFailure, Never.
     # Default to Always.
     # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
     @typechecked
     def restartPolicy(self) -> Optional[RestartPolicy]:
-        if 'restartPolicy' in self._kwargs:
-            return self._kwargs['restartPolicy']
-        if 'restartPolicy' in self._context and check_return_type(self._context['restartPolicy']):
-            return self._context['restartPolicy']
-        return RestartPolicy['Always']
-    
+        if "restartPolicy" in self._kwargs:
+            return self._kwargs["restartPolicy"]
+        if "restartPolicy" in self._context and check_return_type(
+            self._context["restartPolicy"]
+        ):
+            return self._context["restartPolicy"]
+        return RestartPolicy["Always"]
+
     # Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request.
     # Value must be non-negative integer. The value zero indicates delete immediately.
     # If this value is nil, the default grace period will be used instead.
@@ -9017,23 +9513,27 @@ class PodSpec(types.Object):
     # Defaults to 30 seconds.
     @typechecked
     def terminationGracePeriodSeconds(self) -> Optional[int]:
-        if 'terminationGracePeriodSeconds' in self._kwargs:
-            return self._kwargs['terminationGracePeriodSeconds']
-        if 'terminationGracePeriodSeconds' in self._context and check_return_type(self._context['terminationGracePeriodSeconds']):
-            return self._context['terminationGracePeriodSeconds']
+        if "terminationGracePeriodSeconds" in self._kwargs:
+            return self._kwargs["terminationGracePeriodSeconds"]
+        if "terminationGracePeriodSeconds" in self._context and check_return_type(
+            self._context["terminationGracePeriodSeconds"]
+        ):
+            return self._context["terminationGracePeriodSeconds"]
         return 30
-    
+
     # Optional duration in seconds the pod may be active on the node relative to
     # StartTime before the system will actively try to mark it failed and kill associated containers.
     # Value must be a positive integer.
     @typechecked
     def activeDeadlineSeconds(self) -> Optional[int]:
-        if 'activeDeadlineSeconds' in self._kwargs:
-            return self._kwargs['activeDeadlineSeconds']
-        if 'activeDeadlineSeconds' in self._context and check_return_type(self._context['activeDeadlineSeconds']):
-            return self._context['activeDeadlineSeconds']
+        if "activeDeadlineSeconds" in self._kwargs:
+            return self._kwargs["activeDeadlineSeconds"]
+        if "activeDeadlineSeconds" in self._context and check_return_type(
+            self._context["activeDeadlineSeconds"]
+        ):
+            return self._context["activeDeadlineSeconds"]
         return None
-    
+
     # Set DNS policy for the pod.
     # Defaults to "ClusterFirst".
     # Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'.
@@ -9042,84 +9542,94 @@ class PodSpec(types.Object):
     # explicitly to 'ClusterFirstWithHostNet'.
     @typechecked
     def dnsPolicy(self) -> Optional[DNSPolicy]:
-        if 'dnsPolicy' in self._kwargs:
-            return self._kwargs['dnsPolicy']
-        if 'dnsPolicy' in self._context and check_return_type(self._context['dnsPolicy']):
-            return self._context['dnsPolicy']
-        return DNSPolicy['ClusterFirst']
-    
+        if "dnsPolicy" in self._kwargs:
+            return self._kwargs["dnsPolicy"]
+        if "dnsPolicy" in self._context and check_return_type(
+            self._context["dnsPolicy"]
+        ):
+            return self._context["dnsPolicy"]
+        return DNSPolicy["ClusterFirst"]
+
     # NodeSelector is a selector which must be true for the pod to fit on a node.
     # Selector which must match a node's labels for the pod to be scheduled on that node.
     # More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        if 'nodeSelector' in self._kwargs:
-            return self._kwargs['nodeSelector']
-        if 'nodeSelector' in self._context and check_return_type(self._context['nodeSelector']):
-            return self._context['nodeSelector']
+        if "nodeSelector" in self._kwargs:
+            return self._kwargs["nodeSelector"]
+        if "nodeSelector" in self._context and check_return_type(
+            self._context["nodeSelector"]
+        ):
+            return self._context["nodeSelector"]
         return {}
-    
+
     # ServiceAccountName is the name of the ServiceAccount to use to run this pod.
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
     @typechecked
     def serviceAccountName(self) -> Optional[str]:
-        if 'serviceAccountName' in self._kwargs:
-            return self._kwargs['serviceAccountName']
-        if 'serviceAccountName' in self._context and check_return_type(self._context['serviceAccountName']):
-            return self._context['serviceAccountName']
+        if "serviceAccountName" in self._kwargs:
+            return self._kwargs["serviceAccountName"]
+        if "serviceAccountName" in self._context and check_return_type(
+            self._context["serviceAccountName"]
+        ):
+            return self._context["serviceAccountName"]
         return None
-    
+
     # AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
     @typechecked
     def automountServiceAccountToken(self) -> Optional[bool]:
-        if 'automountServiceAccountToken' in self._kwargs:
-            return self._kwargs['automountServiceAccountToken']
-        if 'automountServiceAccountToken' in self._context and check_return_type(self._context['automountServiceAccountToken']):
-            return self._context['automountServiceAccountToken']
+        if "automountServiceAccountToken" in self._kwargs:
+            return self._kwargs["automountServiceAccountToken"]
+        if "automountServiceAccountToken" in self._context and check_return_type(
+            self._context["automountServiceAccountToken"]
+        ):
+            return self._context["automountServiceAccountToken"]
         return None
-    
+
     # NodeName is a request to schedule this pod onto a specific node. If it is non-empty,
     # the scheduler simply schedules this pod onto that node, assuming that it fits resource
     # requirements.
     @typechecked
     def nodeName(self) -> Optional[str]:
-        if 'nodeName' in self._kwargs:
-            return self._kwargs['nodeName']
-        if 'nodeName' in self._context and check_return_type(self._context['nodeName']):
-            return self._context['nodeName']
+        if "nodeName" in self._kwargs:
+            return self._kwargs["nodeName"]
+        if "nodeName" in self._context and check_return_type(self._context["nodeName"]):
+            return self._context["nodeName"]
         return None
-    
+
     # Host networking requested for this pod. Use the host's network namespace.
     # If this option is set, the ports that will be used must be specified.
     # Default to false.
     @typechecked
     def hostNetwork(self) -> Optional[bool]:
-        if 'hostNetwork' in self._kwargs:
-            return self._kwargs['hostNetwork']
-        if 'hostNetwork' in self._context and check_return_type(self._context['hostNetwork']):
-            return self._context['hostNetwork']
+        if "hostNetwork" in self._kwargs:
+            return self._kwargs["hostNetwork"]
+        if "hostNetwork" in self._context and check_return_type(
+            self._context["hostNetwork"]
+        ):
+            return self._context["hostNetwork"]
         return None
-    
+
     # Use the host's pid namespace.
     # Optional: Default to false.
     @typechecked
     def hostPID(self) -> Optional[bool]:
-        if 'hostPID' in self._kwargs:
-            return self._kwargs['hostPID']
-        if 'hostPID' in self._context and check_return_type(self._context['hostPID']):
-            return self._context['hostPID']
+        if "hostPID" in self._kwargs:
+            return self._kwargs["hostPID"]
+        if "hostPID" in self._context and check_return_type(self._context["hostPID"]):
+            return self._context["hostPID"]
         return None
-    
+
     # Use the host's ipc namespace.
     # Optional: Default to false.
     @typechecked
     def hostIPC(self) -> Optional[bool]:
-        if 'hostIPC' in self._kwargs:
-            return self._kwargs['hostIPC']
-        if 'hostIPC' in self._context and check_return_type(self._context['hostIPC']):
-            return self._context['hostIPC']
+        if "hostIPC" in self._kwargs:
+            return self._kwargs["hostIPC"]
+        if "hostIPC" in self._context and check_return_type(self._context["hostIPC"]):
+            return self._context["hostIPC"]
         return None
-    
+
     # Share a single process namespace between all of the containers in a pod.
     # When this is set containers will be able to view and signal processes from other containers
     # in the same pod, and the first process in each container will not be assigned PID 1.
@@ -9128,92 +9638,106 @@ class PodSpec(types.Object):
     # This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
     @typechecked
     def shareProcessNamespace(self) -> Optional[bool]:
-        if 'shareProcessNamespace' in self._kwargs:
-            return self._kwargs['shareProcessNamespace']
-        if 'shareProcessNamespace' in self._context and check_return_type(self._context['shareProcessNamespace']):
-            return self._context['shareProcessNamespace']
+        if "shareProcessNamespace" in self._kwargs:
+            return self._kwargs["shareProcessNamespace"]
+        if "shareProcessNamespace" in self._context and check_return_type(
+            self._context["shareProcessNamespace"]
+        ):
+            return self._context["shareProcessNamespace"]
         return None
-    
+
     # SecurityContext holds pod-level security attributes and common container settings.
     # Optional: Defaults to empty.  See type description for default values of each field.
     @typechecked
     def securityContext(self) -> Optional[PodSecurityContext]:
-        if 'securityContext' in self._kwargs:
-            return self._kwargs['securityContext']
-        if 'securityContext' in self._context and check_return_type(self._context['securityContext']):
-            return self._context['securityContext']
+        if "securityContext" in self._kwargs:
+            return self._kwargs["securityContext"]
+        if "securityContext" in self._context and check_return_type(
+            self._context["securityContext"]
+        ):
+            return self._context["securityContext"]
         return None
-    
+
     # ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
     # If specified, these secrets will be passed to individual puller implementations for them to use. For example,
     # in the case of docker, only DockerConfig type secrets are honored.
     # More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
     @typechecked
     def imagePullSecrets(self) -> Dict[str, LocalObjectReference]:
-        if 'imagePullSecrets' in self._kwargs:
-            return self._kwargs['imagePullSecrets']
-        if 'imagePullSecrets' in self._context and check_return_type(self._context['imagePullSecrets']):
-            return self._context['imagePullSecrets']
+        if "imagePullSecrets" in self._kwargs:
+            return self._kwargs["imagePullSecrets"]
+        if "imagePullSecrets" in self._context and check_return_type(
+            self._context["imagePullSecrets"]
+        ):
+            return self._context["imagePullSecrets"]
         return {}
-    
+
     # Specifies the hostname of the Pod
     # If not specified, the pod's hostname will be set to a system-defined value.
     @typechecked
     def hostname(self) -> Optional[str]:
-        if 'hostname' in self._kwargs:
-            return self._kwargs['hostname']
-        if 'hostname' in self._context and check_return_type(self._context['hostname']):
-            return self._context['hostname']
+        if "hostname" in self._kwargs:
+            return self._kwargs["hostname"]
+        if "hostname" in self._context and check_return_type(self._context["hostname"]):
+            return self._context["hostname"]
         return None
-    
+
     # If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>".
     # If not specified, the pod will not have a domainname at all.
     @typechecked
     def subdomain(self) -> Optional[str]:
-        if 'subdomain' in self._kwargs:
-            return self._kwargs['subdomain']
-        if 'subdomain' in self._context and check_return_type(self._context['subdomain']):
-            return self._context['subdomain']
+        if "subdomain" in self._kwargs:
+            return self._kwargs["subdomain"]
+        if "subdomain" in self._context and check_return_type(
+            self._context["subdomain"]
+        ):
+            return self._context["subdomain"]
         return None
-    
+
     # If specified, the pod's scheduling constraints
     @typechecked
     def affinity(self) -> Optional[Affinity]:
-        if 'affinity' in self._kwargs:
-            return self._kwargs['affinity']
-        if 'affinity' in self._context and check_return_type(self._context['affinity']):
-            return self._context['affinity']
+        if "affinity" in self._kwargs:
+            return self._kwargs["affinity"]
+        if "affinity" in self._context and check_return_type(self._context["affinity"]):
+            return self._context["affinity"]
         return None
-    
+
     # If specified, the pod will be dispatched by specified scheduler.
     # If not specified, the pod will be dispatched by default scheduler.
     @typechecked
     def schedulerName(self) -> Optional[str]:
-        if 'schedulerName' in self._kwargs:
-            return self._kwargs['schedulerName']
-        if 'schedulerName' in self._context and check_return_type(self._context['schedulerName']):
-            return self._context['schedulerName']
-        return 'default-scheduler'
-    
+        if "schedulerName" in self._kwargs:
+            return self._kwargs["schedulerName"]
+        if "schedulerName" in self._context and check_return_type(
+            self._context["schedulerName"]
+        ):
+            return self._context["schedulerName"]
+        return "default-scheduler"
+
     # If specified, the pod's tolerations.
     @typechecked
     def tolerations(self) -> List[Toleration]:
-        if 'tolerations' in self._kwargs:
-            return self._kwargs['tolerations']
-        if 'tolerations' in self._context and check_return_type(self._context['tolerations']):
-            return self._context['tolerations']
+        if "tolerations" in self._kwargs:
+            return self._kwargs["tolerations"]
+        if "tolerations" in self._context and check_return_type(
+            self._context["tolerations"]
+        ):
+            return self._context["tolerations"]
         return []
-    
+
     # HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts
     # file if specified. This is only valid for non-hostNetwork pods.
     @typechecked
     def hostAliases(self) -> List[HostAlias]:
-        if 'hostAliases' in self._kwargs:
-            return self._kwargs['hostAliases']
-        if 'hostAliases' in self._context and check_return_type(self._context['hostAliases']):
-            return self._context['hostAliases']
+        if "hostAliases" in self._kwargs:
+            return self._kwargs["hostAliases"]
+        if "hostAliases" in self._context and check_return_type(
+            self._context["hostAliases"]
+        ):
+            return self._context["hostAliases"]
         return []
-    
+
     # If specified, indicates the pod's priority. "system-node-critical" and
     # "system-cluster-critical" are two special keywords which indicate the
     # highest priorities with the former being the highest priority. Any other
@@ -9222,12 +9746,14 @@ class PodSpec(types.Object):
     # default.
     @typechecked
     def priorityClassName(self) -> Optional[str]:
-        if 'priorityClassName' in self._kwargs:
-            return self._kwargs['priorityClassName']
-        if 'priorityClassName' in self._context and check_return_type(self._context['priorityClassName']):
-            return self._context['priorityClassName']
+        if "priorityClassName" in self._kwargs:
+            return self._kwargs["priorityClassName"]
+        if "priorityClassName" in self._context and check_return_type(
+            self._context["priorityClassName"]
+        ):
+            return self._context["priorityClassName"]
         return None
-    
+
     # The priority value. Various system components use this field to find the
     # priority of the pod. When Priority Admission Controller is enabled, it
     # prevents users from setting this field. The admission controller populates
@@ -9235,35 +9761,39 @@ class PodSpec(types.Object):
     # The higher the value, the higher the priority.
     @typechecked
     def priority(self) -> Optional[int]:
-        if 'priority' in self._kwargs:
-            return self._kwargs['priority']
-        if 'priority' in self._context and check_return_type(self._context['priority']):
-            return self._context['priority']
+        if "priority" in self._kwargs:
+            return self._kwargs["priority"]
+        if "priority" in self._context and check_return_type(self._context["priority"]):
+            return self._context["priority"]
         return None
-    
+
     # Specifies the DNS parameters of a pod.
     # Parameters specified here will be merged to the generated DNS
     # configuration based on DNSPolicy.
     @typechecked
     def dnsConfig(self) -> Optional[PodDNSConfig]:
-        if 'dnsConfig' in self._kwargs:
-            return self._kwargs['dnsConfig']
-        if 'dnsConfig' in self._context and check_return_type(self._context['dnsConfig']):
-            return self._context['dnsConfig']
+        if "dnsConfig" in self._kwargs:
+            return self._kwargs["dnsConfig"]
+        if "dnsConfig" in self._context and check_return_type(
+            self._context["dnsConfig"]
+        ):
+            return self._context["dnsConfig"]
         return None
-    
+
     # If specified, all readiness gates will be evaluated for pod readiness.
     # A pod is ready when all its containers are ready AND
     # all conditions specified in the readiness gates have status equal to "True"
     # More info: https://git.k8s.io/enhancements/keps/sig-network/0007-pod-ready%2B%2B.md
     @typechecked
     def readinessGates(self) -> List[PodReadinessGate]:
-        if 'readinessGates' in self._kwargs:
-            return self._kwargs['readinessGates']
-        if 'readinessGates' in self._context and check_return_type(self._context['readinessGates']):
-            return self._context['readinessGates']
+        if "readinessGates" in self._kwargs:
+            return self._kwargs["readinessGates"]
+        if "readinessGates" in self._context and check_return_type(
+            self._context["readinessGates"]
+        ):
+            return self._context["readinessGates"]
         return []
-    
+
     # RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used
     # to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run.
     # If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an
@@ -9272,35 +9802,41 @@ class PodSpec(types.Object):
     # This is a beta feature as of Kubernetes v1.14.
     @typechecked
     def runtimeClassName(self) -> Optional[str]:
-        if 'runtimeClassName' in self._kwargs:
-            return self._kwargs['runtimeClassName']
-        if 'runtimeClassName' in self._context and check_return_type(self._context['runtimeClassName']):
-            return self._context['runtimeClassName']
+        if "runtimeClassName" in self._kwargs:
+            return self._kwargs["runtimeClassName"]
+        if "runtimeClassName" in self._context and check_return_type(
+            self._context["runtimeClassName"]
+        ):
+            return self._context["runtimeClassName"]
         return None
-    
+
     # EnableServiceLinks indicates whether information about services should be injected into pod's
     # environment variables, matching the syntax of Docker links.
     # Optional: Defaults to true.
     @typechecked
     def enableServiceLinks(self) -> Optional[bool]:
-        if 'enableServiceLinks' in self._kwargs:
-            return self._kwargs['enableServiceLinks']
-        if 'enableServiceLinks' in self._context and check_return_type(self._context['enableServiceLinks']):
-            return self._context['enableServiceLinks']
+        if "enableServiceLinks" in self._kwargs:
+            return self._kwargs["enableServiceLinks"]
+        if "enableServiceLinks" in self._context and check_return_type(
+            self._context["enableServiceLinks"]
+        ):
+            return self._context["enableServiceLinks"]
         return None
-    
+
     # PreemptionPolicy is the Policy for preempting pods with lower priority.
     # One of Never, PreemptLowerPriority.
     # Defaults to PreemptLowerPriority if unset.
     # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     @typechecked
     def preemptionPolicy(self) -> Optional[PreemptionPolicy]:
-        if 'preemptionPolicy' in self._kwargs:
-            return self._kwargs['preemptionPolicy']
-        if 'preemptionPolicy' in self._context and check_return_type(self._context['preemptionPolicy']):
-            return self._context['preemptionPolicy']
+        if "preemptionPolicy" in self._kwargs:
+            return self._kwargs["preemptionPolicy"]
+        if "preemptionPolicy" in self._context and check_return_type(
+            self._context["preemptionPolicy"]
+        ):
+            return self._context["preemptionPolicy"]
         return None
-    
+
     # Overhead represents the resource overhead associated with running a pod for a given RuntimeClass.
     # This field will be autopopulated at admission time by the RuntimeClass admission controller. If
     # the RuntimeClass admission controller is enabled, overhead must not be set in Pod create requests.
@@ -9310,13 +9846,13 @@ class PodSpec(types.Object):
     # More info: https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
     # This field is alpha-level as of Kubernetes v1.16, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
-    def overhead(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'overhead' in self._kwargs:
-            return self._kwargs['overhead']
-        if 'overhead' in self._context and check_return_type(self._context['overhead']):
-            return self._context['overhead']
+    def overhead(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "overhead" in self._kwargs:
+            return self._kwargs["overhead"]
+        if "overhead" in self._context and check_return_type(self._context["overhead"]):
+            return self._context["overhead"]
         return {}
-    
+
     # TopologySpreadConstraints describes how a group of pods ought to spread across topology
     # domains. Scheduler will schedule pods in a way which abides by the constraints.
     # This field is alpha-level and is only honored by clusters that enables the EvenPodsSpread
@@ -9327,39 +9863,40 @@ class PodSpec(types.Object):
     # +listMapKey=whenUnsatisfiable
     @typechecked
     def topologySpreadConstraints(self) -> List[TopologySpreadConstraint]:
-        if 'topologySpreadConstraints' in self._kwargs:
-            return self._kwargs['topologySpreadConstraints']
-        if 'topologySpreadConstraints' in self._context and check_return_type(self._context['topologySpreadConstraints']):
-            return self._context['topologySpreadConstraints']
+        if "topologySpreadConstraints" in self._kwargs:
+            return self._kwargs["topologySpreadConstraints"]
+        if "topologySpreadConstraints" in self._context and check_return_type(
+            self._context["topologySpreadConstraints"]
+        ):
+            return self._context["topologySpreadConstraints"]
         return []
 
 
 # Pod is a collection of containers that can run on a host. This resource is created
 # by clients and scheduled onto hosts.
 class Pod(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Pod'
-    
+        return "Pod"
+
     # Specification of the desired behavior of the pod.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> PodSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return PodSpec()
 
@@ -9369,85 +9906,86 @@ class Pod(base.TypedObject, base.MetadataObject):
 # TODO: merge w/ PodExecOptions below for stdin, stdout, etc
 # and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
 class PodAttachOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         stdin = self.stdin()
         if stdin:  # omit empty
-            v['stdin'] = stdin
+            v["stdin"] = stdin
         stdout = self.stdout()
         if stdout:  # omit empty
-            v['stdout'] = stdout
+            v["stdout"] = stdout
         stderr = self.stderr()
         if stderr:  # omit empty
-            v['stderr'] = stderr
+            v["stderr"] = stderr
         tty = self.tty()
         if tty:  # omit empty
-            v['tty'] = tty
+            v["tty"] = tty
         container = self.container()
         if container:  # omit empty
-            v['container'] = container
+            v["container"] = container
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodAttachOptions'
-    
+        return "PodAttachOptions"
+
     # Stdin if true, redirects the standard input stream of the pod for this call.
     # Defaults to false.
     @typechecked
     def stdin(self) -> Optional[bool]:
-        if 'stdin' in self._kwargs:
-            return self._kwargs['stdin']
-        if 'stdin' in self._context and check_return_type(self._context['stdin']):
-            return self._context['stdin']
+        if "stdin" in self._kwargs:
+            return self._kwargs["stdin"]
+        if "stdin" in self._context and check_return_type(self._context["stdin"]):
+            return self._context["stdin"]
         return None
-    
+
     # Stdout if true indicates that stdout is to be redirected for the attach call.
     # Defaults to true.
     @typechecked
     def stdout(self) -> Optional[bool]:
-        if 'stdout' in self._kwargs:
-            return self._kwargs['stdout']
-        if 'stdout' in self._context and check_return_type(self._context['stdout']):
-            return self._context['stdout']
+        if "stdout" in self._kwargs:
+            return self._kwargs["stdout"]
+        if "stdout" in self._context and check_return_type(self._context["stdout"]):
+            return self._context["stdout"]
         return None
-    
+
     # Stderr if true indicates that stderr is to be redirected for the attach call.
     # Defaults to true.
     @typechecked
     def stderr(self) -> Optional[bool]:
-        if 'stderr' in self._kwargs:
-            return self._kwargs['stderr']
-        if 'stderr' in self._context and check_return_type(self._context['stderr']):
-            return self._context['stderr']
+        if "stderr" in self._kwargs:
+            return self._kwargs["stderr"]
+        if "stderr" in self._context and check_return_type(self._context["stderr"]):
+            return self._context["stderr"]
         return None
-    
+
     # TTY if true indicates that a tty will be allocated for the attach call.
     # This is passed through the container runtime so the tty
     # is allocated on the worker node by the container runtime.
     # Defaults to false.
     @typechecked
     def tty(self) -> Optional[bool]:
-        if 'tty' in self._kwargs:
-            return self._kwargs['tty']
-        if 'tty' in self._context and check_return_type(self._context['tty']):
-            return self._context['tty']
+        if "tty" in self._kwargs:
+            return self._kwargs["tty"]
+        if "tty" in self._context and check_return_type(self._context["tty"]):
+            return self._context["tty"]
         return None
-    
+
     # The container in which to execute the command.
     # Defaults to only container if there is only one container in the pod.
     @typechecked
     def container(self) -> Optional[str]:
-        if 'container' in self._kwargs:
-            return self._kwargs['container']
-        if 'container' in self._context and check_return_type(self._context['container']):
-            return self._context['container']
+        if "container" in self._kwargs:
+            return self._kwargs["container"]
+        if "container" in self._context and check_return_type(
+            self._context["container"]
+        ):
+            return self._context["container"]
         return None
 
 
@@ -9456,216 +9994,228 @@ class PodAttachOptions(base.TypedObject):
 # TODO: This is largely identical to PodAttachOptions above, make sure they stay in sync and see about merging
 # and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
 class PodExecOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         stdin = self.stdin()
         if stdin:  # omit empty
-            v['stdin'] = stdin
+            v["stdin"] = stdin
         stdout = self.stdout()
         if stdout:  # omit empty
-            v['stdout'] = stdout
+            v["stdout"] = stdout
         stderr = self.stderr()
         if stderr:  # omit empty
-            v['stderr'] = stderr
+            v["stderr"] = stderr
         tty = self.tty()
         if tty:  # omit empty
-            v['tty'] = tty
+            v["tty"] = tty
         container = self.container()
         if container:  # omit empty
-            v['container'] = container
-        v['command'] = self.command()
+            v["container"] = container
+        v["command"] = self.command()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodExecOptions'
-    
+        return "PodExecOptions"
+
     # Redirect the standard input stream of the pod for this call.
     # Defaults to false.
     @typechecked
     def stdin(self) -> Optional[bool]:
-        if 'stdin' in self._kwargs:
-            return self._kwargs['stdin']
-        if 'stdin' in self._context and check_return_type(self._context['stdin']):
-            return self._context['stdin']
+        if "stdin" in self._kwargs:
+            return self._kwargs["stdin"]
+        if "stdin" in self._context and check_return_type(self._context["stdin"]):
+            return self._context["stdin"]
         return None
-    
+
     # Redirect the standard output stream of the pod for this call.
     # Defaults to true.
     @typechecked
     def stdout(self) -> Optional[bool]:
-        if 'stdout' in self._kwargs:
-            return self._kwargs['stdout']
-        if 'stdout' in self._context and check_return_type(self._context['stdout']):
-            return self._context['stdout']
+        if "stdout" in self._kwargs:
+            return self._kwargs["stdout"]
+        if "stdout" in self._context and check_return_type(self._context["stdout"]):
+            return self._context["stdout"]
         return None
-    
+
     # Redirect the standard error stream of the pod for this call.
     # Defaults to true.
     @typechecked
     def stderr(self) -> Optional[bool]:
-        if 'stderr' in self._kwargs:
-            return self._kwargs['stderr']
-        if 'stderr' in self._context and check_return_type(self._context['stderr']):
-            return self._context['stderr']
+        if "stderr" in self._kwargs:
+            return self._kwargs["stderr"]
+        if "stderr" in self._context and check_return_type(self._context["stderr"]):
+            return self._context["stderr"]
         return None
-    
+
     # TTY if true indicates that a tty will be allocated for the exec call.
     # Defaults to false.
     @typechecked
     def tty(self) -> Optional[bool]:
-        if 'tty' in self._kwargs:
-            return self._kwargs['tty']
-        if 'tty' in self._context and check_return_type(self._context['tty']):
-            return self._context['tty']
+        if "tty" in self._kwargs:
+            return self._kwargs["tty"]
+        if "tty" in self._context and check_return_type(self._context["tty"]):
+            return self._context["tty"]
         return None
-    
+
     # Container in which to execute the command.
     # Defaults to only container if there is only one container in the pod.
     @typechecked
     def container(self) -> Optional[str]:
-        if 'container' in self._kwargs:
-            return self._kwargs['container']
-        if 'container' in self._context and check_return_type(self._context['container']):
-            return self._context['container']
+        if "container" in self._kwargs:
+            return self._kwargs["container"]
+        if "container" in self._context and check_return_type(
+            self._context["container"]
+        ):
+            return self._context["container"]
         return None
-    
+
     # Command is the remote command to execute. argv array. Not executed within a shell.
     @typechecked
     def command(self) -> List[str]:
-        if 'command' in self._kwargs:
-            return self._kwargs['command']
-        if 'command' in self._context and check_return_type(self._context['command']):
-            return self._context['command']
+        if "command" in self._kwargs:
+            return self._kwargs["command"]
+        if "command" in self._context and check_return_type(self._context["command"]):
+            return self._context["command"]
         return []
 
 
 # PodLogOptions is the query options for a Pod's logs REST call.
 class PodLogOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         container = self.container()
         if container:  # omit empty
-            v['container'] = container
+            v["container"] = container
         follow = self.follow()
         if follow:  # omit empty
-            v['follow'] = follow
+            v["follow"] = follow
         previous = self.previous()
         if previous:  # omit empty
-            v['previous'] = previous
+            v["previous"] = previous
         sinceSeconds = self.sinceSeconds()
         if sinceSeconds is not None:  # omit empty
-            v['sinceSeconds'] = sinceSeconds
+            v["sinceSeconds"] = sinceSeconds
         sinceTime = self.sinceTime()
         if sinceTime is not None:  # omit empty
-            v['sinceTime'] = sinceTime
+            v["sinceTime"] = sinceTime
         timestamps = self.timestamps()
         if timestamps:  # omit empty
-            v['timestamps'] = timestamps
+            v["timestamps"] = timestamps
         tailLines = self.tailLines()
         if tailLines is not None:  # omit empty
-            v['tailLines'] = tailLines
+            v["tailLines"] = tailLines
         limitBytes = self.limitBytes()
         if limitBytes is not None:  # omit empty
-            v['limitBytes'] = limitBytes
+            v["limitBytes"] = limitBytes
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodLogOptions'
-    
+        return "PodLogOptions"
+
     # The container for which to stream logs. Defaults to only container if there is one container in the pod.
     @typechecked
     def container(self) -> Optional[str]:
-        if 'container' in self._kwargs:
-            return self._kwargs['container']
-        if 'container' in self._context and check_return_type(self._context['container']):
-            return self._context['container']
+        if "container" in self._kwargs:
+            return self._kwargs["container"]
+        if "container" in self._context and check_return_type(
+            self._context["container"]
+        ):
+            return self._context["container"]
         return None
-    
+
     # Follow the log stream of the pod. Defaults to false.
     @typechecked
     def follow(self) -> Optional[bool]:
-        if 'follow' in self._kwargs:
-            return self._kwargs['follow']
-        if 'follow' in self._context and check_return_type(self._context['follow']):
-            return self._context['follow']
+        if "follow" in self._kwargs:
+            return self._kwargs["follow"]
+        if "follow" in self._context and check_return_type(self._context["follow"]):
+            return self._context["follow"]
         return None
-    
+
     # Return previous terminated container logs. Defaults to false.
     @typechecked
     def previous(self) -> Optional[bool]:
-        if 'previous' in self._kwargs:
-            return self._kwargs['previous']
-        if 'previous' in self._context and check_return_type(self._context['previous']):
-            return self._context['previous']
+        if "previous" in self._kwargs:
+            return self._kwargs["previous"]
+        if "previous" in self._context and check_return_type(self._context["previous"]):
+            return self._context["previous"]
         return None
-    
+
     # A relative time in seconds before the current time from which to show logs. If this value
     # precedes the time a pod was started, only logs since the pod start will be returned.
     # If this value is in the future, no logs will be returned.
     # Only one of sinceSeconds or sinceTime may be specified.
     @typechecked
     def sinceSeconds(self) -> Optional[int]:
-        if 'sinceSeconds' in self._kwargs:
-            return self._kwargs['sinceSeconds']
-        if 'sinceSeconds' in self._context and check_return_type(self._context['sinceSeconds']):
-            return self._context['sinceSeconds']
+        if "sinceSeconds" in self._kwargs:
+            return self._kwargs["sinceSeconds"]
+        if "sinceSeconds" in self._context and check_return_type(
+            self._context["sinceSeconds"]
+        ):
+            return self._context["sinceSeconds"]
         return None
-    
+
     # An RFC3339 timestamp from which to show logs. If this value
     # precedes the time a pod was started, only logs since the pod start will be returned.
     # If this value is in the future, no logs will be returned.
     # Only one of sinceSeconds or sinceTime may be specified.
     @typechecked
-    def sinceTime(self) -> Optional['base.Time']:
-        if 'sinceTime' in self._kwargs:
-            return self._kwargs['sinceTime']
-        if 'sinceTime' in self._context and check_return_type(self._context['sinceTime']):
-            return self._context['sinceTime']
+    def sinceTime(self) -> Optional["base.Time"]:
+        if "sinceTime" in self._kwargs:
+            return self._kwargs["sinceTime"]
+        if "sinceTime" in self._context and check_return_type(
+            self._context["sinceTime"]
+        ):
+            return self._context["sinceTime"]
         return None
-    
+
     # If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line
     # of log output. Defaults to false.
     @typechecked
     def timestamps(self) -> Optional[bool]:
-        if 'timestamps' in self._kwargs:
-            return self._kwargs['timestamps']
-        if 'timestamps' in self._context and check_return_type(self._context['timestamps']):
-            return self._context['timestamps']
+        if "timestamps" in self._kwargs:
+            return self._kwargs["timestamps"]
+        if "timestamps" in self._context and check_return_type(
+            self._context["timestamps"]
+        ):
+            return self._context["timestamps"]
         return None
-    
+
     # If set, the number of lines from the end of the logs to show. If not specified,
     # logs are shown from the creation of the container or sinceSeconds or sinceTime
     @typechecked
     def tailLines(self) -> Optional[int]:
-        if 'tailLines' in self._kwargs:
-            return self._kwargs['tailLines']
-        if 'tailLines' in self._context and check_return_type(self._context['tailLines']):
-            return self._context['tailLines']
+        if "tailLines" in self._kwargs:
+            return self._kwargs["tailLines"]
+        if "tailLines" in self._context and check_return_type(
+            self._context["tailLines"]
+        ):
+            return self._context["tailLines"]
         return None
-    
+
     # If set, the number of bytes to read from the server before terminating the
     # log output. This may not display a complete final line of logging, and may return
     # slightly more or slightly less than the specified limit.
     @typechecked
     def limitBytes(self) -> Optional[int]:
-        if 'limitBytes' in self._kwargs:
-            return self._kwargs['limitBytes']
-        if 'limitBytes' in self._context and check_return_type(self._context['limitBytes']):
-            return self._context['limitBytes']
+        if "limitBytes" in self._kwargs:
+            return self._kwargs["limitBytes"]
+        if "limitBytes" in self._context and check_return_type(
+            self._context["limitBytes"]
+        ):
+            return self._context["limitBytes"]
         return None
 
 
@@ -9676,210 +10226,205 @@ class PodLogOptions(base.TypedObject):
 # Port forwarding over SPDY does not use these options. It requires the port
 # to be passed in the `port` header as part of request.
 class PodPortForwardOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
-            v['ports'] = ports
+            v["ports"] = ports
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodPortForwardOptions'
-    
+        return "PodPortForwardOptions"
+
     # List of ports to forward
     # Required when using WebSockets
     @typechecked
     def ports(self) -> List[int]:
-        if 'ports' in self._kwargs:
-            return self._kwargs['ports']
-        if 'ports' in self._context and check_return_type(self._context['ports']):
-            return self._context['ports']
+        if "ports" in self._kwargs:
+            return self._kwargs["ports"]
+        if "ports" in self._context and check_return_type(self._context["ports"]):
+            return self._context["ports"]
         return []
 
 
 # PodProxyOptions is the query options to a Pod's proxy call.
 class PodProxyOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
+            v["path"] = path
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodProxyOptions'
-    
+        return "PodProxyOptions"
+
     # Path is the URL path to use for the current proxy request to pod.
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
         return None
 
 
 # PodStatusResult is a wrapper for PodStatus returned by kubelet that can be encode/decoded
 class PodStatusResult(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodStatusResult'
+        return "PodStatusResult"
 
 
 # PodTemplateSpec describes the data a pod should have when created from a template
 class PodTemplateSpec(base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     # Specification of the desired behavior of the pod.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> PodSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return PodSpec()
 
 
 # PodTemplate describes a template for creating copies of a predefined pod.
 class PodTemplate(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['template'] = self.template()
+        v["template"] = self.template()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'PodTemplate'
-    
+        return "PodTemplate"
+
     # Template defines the pods that will be created from this pod template.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def template(self) -> PodTemplateSpec:
-        if 'template' in self._kwargs:
-            return self._kwargs['template']
-        if 'template' in self._context and check_return_type(self._context['template']):
-            return self._context['template']
+        if "template" in self._kwargs:
+            return self._kwargs["template"]
+        if "template" in self._context and check_return_type(self._context["template"]):
+            return self._context["template"]
         with context.Scope(**self._context):
             return PodTemplateSpec()
 
 
 # RangeAllocation is not a public type.
 class RangeAllocation(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['range'] = self.range()
-        v['data'] = self.data()
+        v["range"] = self.range()
+        v["data"] = self.data()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'RangeAllocation'
-    
+        return "RangeAllocation"
+
     # Range is string that identifies the range represented by 'data'.
     @typechecked
     def range(self) -> str:
-        if 'range' in self._kwargs:
-            return self._kwargs['range']
-        if 'range' in self._context and check_return_type(self._context['range']):
-            return self._context['range']
-        return ''
-    
+        if "range" in self._kwargs:
+            return self._kwargs["range"]
+        if "range" in self._context and check_return_type(self._context["range"]):
+            return self._context["range"]
+        return ""
+
     # Data is a bit array containing all allocated addresses in the previous segment.
     @typechecked
     def data(self) -> bytes:
-        if 'data' in self._kwargs:
-            return self._kwargs['data']
-        if 'data' in self._context and check_return_type(self._context['data']):
-            return self._context['data']
-        return b''
+        if "data" in self._kwargs:
+            return self._kwargs["data"]
+        if "data" in self._context and check_return_type(self._context["data"]):
+            return self._context["data"]
+        return b""
 
 
 # ReplicationControllerSpec is the specification of a replication controller.
 class ReplicationControllerSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
-            v['replicas'] = replicas
+            v["replicas"] = replicas
         minReadySeconds = self.minReadySeconds()
         if minReadySeconds:  # omit empty
-            v['minReadySeconds'] = minReadySeconds
+            v["minReadySeconds"] = minReadySeconds
         selector = self.selector()
         if selector:  # omit empty
-            v['selector'] = selector
+            v["selector"] = selector
         template = self.template()
         if template is not None:  # omit empty
-            v['template'] = template
+            v["template"] = template
         return v
-    
+
     # Replicas is the number of desired replicas.
     # This is a pointer to distinguish between explicit zero and unspecified.
     # Defaults to 1.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#what-is-a-replicationcontroller
     @typechecked
     def replicas(self) -> Optional[int]:
-        if 'replicas' in self._kwargs:
-            return self._kwargs['replicas']
-        if 'replicas' in self._context and check_return_type(self._context['replicas']):
-            return self._context['replicas']
+        if "replicas" in self._kwargs:
+            return self._kwargs["replicas"]
+        if "replicas" in self._context and check_return_type(self._context["replicas"]):
+            return self._context["replicas"]
         return 1
-    
+
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if 'minReadySeconds' in self._kwargs:
-            return self._kwargs['minReadySeconds']
-        if 'minReadySeconds' in self._context and check_return_type(self._context['minReadySeconds']):
-            return self._context['minReadySeconds']
+        if "minReadySeconds" in self._kwargs:
+            return self._kwargs["minReadySeconds"]
+        if "minReadySeconds" in self._context and check_return_type(
+            self._context["minReadySeconds"]
+        ):
+            return self._context["minReadySeconds"]
         return None
-    
+
     # Selector is a label query over pods that should match the Replicas count.
     # If Selector is empty, it is defaulted to the labels present on the Pod template.
     # Label keys and values that must match in order to be controlled by this replication
@@ -9887,49 +10432,48 @@ class ReplicationControllerSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Dict[str, str]:
-        if 'selector' in self._kwargs:
-            return self._kwargs['selector']
-        if 'selector' in self._context and check_return_type(self._context['selector']):
-            return self._context['selector']
+        if "selector" in self._kwargs:
+            return self._kwargs["selector"]
+        if "selector" in self._context and check_return_type(self._context["selector"]):
+            return self._context["selector"]
         return {}
-    
+
     # Template is the object that describes the pod that will be created if
     # insufficient replicas are detected. This takes precedence over a TemplateRef.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
     def template(self) -> Optional[PodTemplateSpec]:
-        if 'template' in self._kwargs:
-            return self._kwargs['template']
-        if 'template' in self._context and check_return_type(self._context['template']):
-            return self._context['template']
+        if "template" in self._kwargs:
+            return self._kwargs["template"]
+        if "template" in self._context and check_return_type(self._context["template"]):
+            return self._context["template"]
         return None
 
 
 # ReplicationController represents the configuration of a replication controller.
 class ReplicationController(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ReplicationController'
-    
+        return "ReplicationController"
+
     # Spec defines the specification of the desired behavior of the replication controller.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> ReplicationControllerSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return ReplicationControllerSpec()
 
@@ -9937,145 +10481,147 @@ class ReplicationController(base.TypedObject, base.MetadataObject):
 # A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator
 # that relates the scope name and values.
 class ScopedResourceSelectorRequirement(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['scopeName'] = self.scopeName()
-        v['operator'] = self.operator()
+        v["scopeName"] = self.scopeName()
+        v["operator"] = self.operator()
         values = self.values()
         if values:  # omit empty
-            v['values'] = values
+            v["values"] = values
         return v
-    
+
     # The name of the scope that the selector applies to.
     @typechecked
     def scopeName(self) -> ResourceQuotaScope:
-        if 'scopeName' in self._kwargs:
-            return self._kwargs['scopeName']
-        if 'scopeName' in self._context and check_return_type(self._context['scopeName']):
-            return self._context['scopeName']
+        if "scopeName" in self._kwargs:
+            return self._kwargs["scopeName"]
+        if "scopeName" in self._context and check_return_type(
+            self._context["scopeName"]
+        ):
+            return self._context["scopeName"]
         return None
-    
+
     # Represents a scope's relationship to a set of values.
     # Valid operators are In, NotIn, Exists, DoesNotExist.
     @typechecked
     def operator(self) -> ScopeSelectorOperator:
-        if 'operator' in self._kwargs:
-            return self._kwargs['operator']
-        if 'operator' in self._context and check_return_type(self._context['operator']):
-            return self._context['operator']
+        if "operator" in self._kwargs:
+            return self._kwargs["operator"]
+        if "operator" in self._context and check_return_type(self._context["operator"]):
+            return self._context["operator"]
         return None
-    
+
     # An array of string values. If the operator is In or NotIn,
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
     # the values array must be empty.
     # This array is replaced during a strategic merge patch.
     @typechecked
     def values(self) -> List[str]:
-        if 'values' in self._kwargs:
-            return self._kwargs['values']
-        if 'values' in self._context and check_return_type(self._context['values']):
-            return self._context['values']
+        if "values" in self._kwargs:
+            return self._kwargs["values"]
+        if "values" in self._context and check_return_type(self._context["values"]):
+            return self._context["values"]
         return []
 
 
 # A scope selector represents the AND of the selectors represented
 # by the scoped-resource selector requirements.
 class ScopeSelector(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
-            v['matchExpressions'] = matchExpressions
+            v["matchExpressions"] = matchExpressions
         return v
-    
+
     # A list of scope selector requirements by scope of the resources.
     @typechecked
     def matchExpressions(self) -> List[ScopedResourceSelectorRequirement]:
-        if 'matchExpressions' in self._kwargs:
-            return self._kwargs['matchExpressions']
-        if 'matchExpressions' in self._context and check_return_type(self._context['matchExpressions']):
-            return self._context['matchExpressions']
+        if "matchExpressions" in self._kwargs:
+            return self._kwargs["matchExpressions"]
+        if "matchExpressions" in self._context and check_return_type(
+            self._context["matchExpressions"]
+        ):
+            return self._context["matchExpressions"]
         return []
 
 
 # ResourceQuotaSpec defines the desired hard limits to enforce for Quota.
 class ResourceQuotaSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         hard = self.hard()
         if hard:  # omit empty
-            v['hard'] = hard
+            v["hard"] = hard
         scopes = self.scopes()
         if scopes:  # omit empty
-            v['scopes'] = scopes
+            v["scopes"] = scopes
         scopeSelector = self.scopeSelector()
         if scopeSelector is not None:  # omit empty
-            v['scopeSelector'] = scopeSelector
+            v["scopeSelector"] = scopeSelector
         return v
-    
+
     # hard is the set of desired hard limits for each named resource.
     # More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
     @typechecked
-    def hard(self) -> Dict[ResourceName, 'resource.Quantity']:
-        if 'hard' in self._kwargs:
-            return self._kwargs['hard']
-        if 'hard' in self._context and check_return_type(self._context['hard']):
-            return self._context['hard']
+    def hard(self) -> Dict[ResourceName, "resource.Quantity"]:
+        if "hard" in self._kwargs:
+            return self._kwargs["hard"]
+        if "hard" in self._context and check_return_type(self._context["hard"]):
+            return self._context["hard"]
         return {}
-    
+
     # A collection of filters that must match each object tracked by a quota.
     # If not specified, the quota matches all objects.
     @typechecked
     def scopes(self) -> List[ResourceQuotaScope]:
-        if 'scopes' in self._kwargs:
-            return self._kwargs['scopes']
-        if 'scopes' in self._context and check_return_type(self._context['scopes']):
-            return self._context['scopes']
+        if "scopes" in self._kwargs:
+            return self._kwargs["scopes"]
+        if "scopes" in self._context and check_return_type(self._context["scopes"]):
+            return self._context["scopes"]
         return []
-    
+
     # scopeSelector is also a collection of filters like scopes that must match each object tracked by a quota
     # but expressed using ScopeSelectorOperator in combination with possible values.
     # For a resource to match, both scopes AND scopeSelector (if specified in spec), must be matched.
     @typechecked
     def scopeSelector(self) -> Optional[ScopeSelector]:
-        if 'scopeSelector' in self._kwargs:
-            return self._kwargs['scopeSelector']
-        if 'scopeSelector' in self._context and check_return_type(self._context['scopeSelector']):
-            return self._context['scopeSelector']
+        if "scopeSelector" in self._kwargs:
+            return self._kwargs["scopeSelector"]
+        if "scopeSelector" in self._context and check_return_type(
+            self._context["scopeSelector"]
+        ):
+            return self._context["scopeSelector"]
         return None
 
 
 # ResourceQuota sets aggregate quota restrictions enforced per namespace
 class ResourceQuota(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ResourceQuota'
-    
+        return "ResourceQuota"
+
     # Spec defines the desired quota.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> ResourceQuotaSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return ResourceQuotaSpec()
 
@@ -10083,110 +10629,111 @@ class ResourceQuota(base.TypedObject, base.MetadataObject):
 # Secret holds secret data of a certain type. The total bytes of the values in
 # the Data field must be less than MaxSecretSize bytes.
 class Secret(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         data = self.data()
         if data:  # omit empty
-            v['data'] = data
+            v["data"] = data
         stringData = self.stringData()
         if stringData:  # omit empty
-            v['stringData'] = stringData
+            v["stringData"] = stringData
         type = self.type()
         if type:  # omit empty
-            v['type'] = type
+            v["type"] = type
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Secret'
-    
+        return "Secret"
+
     # Data contains the secret data. Each key must consist of alphanumeric
     # characters, '-', '_' or '.'. The serialized form of the secret data is a
     # base64 encoded string, representing the arbitrary (possibly non-string)
     # data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
     @typechecked
     def data(self) -> Dict[str, bytes]:
-        if 'data' in self._kwargs:
-            return self._kwargs['data']
-        if 'data' in self._context and check_return_type(self._context['data']):
-            return self._context['data']
+        if "data" in self._kwargs:
+            return self._kwargs["data"]
+        if "data" in self._context and check_return_type(self._context["data"]):
+            return self._context["data"]
         return {}
-    
+
     # stringData allows specifying non-binary secret data in string form.
     # It is provided as a write-only convenience method.
     # All keys and values are merged into the data field on write, overwriting any existing values.
     # It is never output when reading from the API.
     @typechecked
     def stringData(self) -> Dict[str, str]:
-        if 'stringData' in self._kwargs:
-            return self._kwargs['stringData']
-        if 'stringData' in self._context and check_return_type(self._context['stringData']):
-            return self._context['stringData']
+        if "stringData" in self._kwargs:
+            return self._kwargs["stringData"]
+        if "stringData" in self._context and check_return_type(
+            self._context["stringData"]
+        ):
+            return self._context["stringData"]
         return {}
-    
+
     # Used to facilitate programmatic handling of secret data.
     @typechecked
     def type(self) -> Optional[SecretType]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
-        return SecretType['Opaque']
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
+        return SecretType["Opaque"]
 
 
 # SerializedReference is a reference to serialized object.
 class SerializedReference(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['reference'] = self.reference()
+        v["reference"] = self.reference()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'SerializedReference'
-    
+        return "SerializedReference"
+
     # The reference to an object in the system.
     @typechecked
     def reference(self) -> ObjectReference:
-        if 'reference' in self._kwargs:
-            return self._kwargs['reference']
-        if 'reference' in self._context and check_return_type(self._context['reference']):
-            return self._context['reference']
+        if "reference" in self._kwargs:
+            return self._kwargs["reference"]
+        if "reference" in self._context and check_return_type(
+            self._context["reference"]
+        ):
+            return self._context["reference"]
         with context.Scope(**self._context):
             return ObjectReference()
 
 
 # ServicePort contains information on service's port.
 class ServicePort(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         name = self.name()
         if name:  # omit empty
-            v['name'] = name
+            v["name"] = name
         protocol = self.protocol()
         if protocol:  # omit empty
-            v['protocol'] = protocol
-        v['port'] = self.port()
-        v['targetPort'] = self.targetPort()
+            v["protocol"] = protocol
+        v["port"] = self.port()
+        v["targetPort"] = self.targetPort()
         nodePort = self.nodePort()
         if nodePort:  # omit empty
-            v['nodePort'] = nodePort
+            v["nodePort"] = nodePort
         return v
-    
+
     # The name of this port within the service. This must be a DNS_LABEL.
     # All ports within a ServiceSpec must have unique names. When considering
     # the endpoints for a Service, this must match the 'name' field in the
@@ -10194,31 +10741,31 @@ class ServicePort(types.Object):
     # Optional if only one ServicePort is defined on this service.
     @typechecked
     def name(self) -> Optional[str]:
-        if 'name' in self._kwargs:
-            return self._kwargs['name']
-        if 'name' in self._context and check_return_type(self._context['name']):
-            return self._context['name']
+        if "name" in self._kwargs:
+            return self._kwargs["name"]
+        if "name" in self._context and check_return_type(self._context["name"]):
+            return self._context["name"]
         return None
-    
+
     # The IP protocol for this port. Supports "TCP", "UDP", and "SCTP".
     # Default is TCP.
     @typechecked
     def protocol(self) -> Optional[Protocol]:
-        if 'protocol' in self._kwargs:
-            return self._kwargs['protocol']
-        if 'protocol' in self._context and check_return_type(self._context['protocol']):
-            return self._context['protocol']
+        if "protocol" in self._kwargs:
+            return self._kwargs["protocol"]
+        if "protocol" in self._context and check_return_type(self._context["protocol"]):
+            return self._context["protocol"]
         return None
-    
+
     # The port that will be exposed by this service.
     @typechecked
     def port(self) -> int:
-        if 'port' in self._kwargs:
-            return self._kwargs['port']
-        if 'port' in self._context and check_return_type(self._context['port']):
-            return self._context['port']
+        if "port" in self._kwargs:
+            return self._kwargs["port"]
+        if "port" in self._context and check_return_type(self._context["port"]):
+            return self._context["port"]
         return 0
-    
+
     # Number or name of the port to access on the pods targeted by the service.
     # Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
     # If this is a string, it will be looked up as a named port in the
@@ -10229,12 +10776,14 @@ class ServicePort(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
     @typechecked
     def targetPort(self) -> Union[int, str]:
-        if 'targetPort' in self._kwargs:
-            return self._kwargs['targetPort']
-        if 'targetPort' in self._context and check_return_type(self._context['targetPort']):
-            return self._context['targetPort']
+        if "targetPort" in self._kwargs:
+            return self._kwargs["targetPort"]
+        if "targetPort" in self._context and check_return_type(
+            self._context["targetPort"]
+        ):
+            return self._context["targetPort"]
         return 0
-    
+
     # The port on each node on which this service is exposed when type=NodePort or LoadBalancer.
     # Usually assigned by the system. If specified, it will be allocated to the service
     # if unused or else creation of the service will fail.
@@ -10242,84 +10791,82 @@ class ServicePort(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     @typechecked
     def nodePort(self) -> Optional[int]:
-        if 'nodePort' in self._kwargs:
-            return self._kwargs['nodePort']
-        if 'nodePort' in self._context and check_return_type(self._context['nodePort']):
-            return self._context['nodePort']
+        if "nodePort" in self._kwargs:
+            return self._kwargs["nodePort"]
+        if "nodePort" in self._context and check_return_type(self._context["nodePort"]):
+            return self._context["nodePort"]
         return None
 
 
 # SessionAffinityConfig represents the configurations of session affinity.
 class SessionAffinityConfig(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         clientIP = self.clientIP()
         if clientIP is not None:  # omit empty
-            v['clientIP'] = clientIP
+            v["clientIP"] = clientIP
         return v
-    
+
     # clientIP contains the configurations of Client IP based session affinity.
     @typechecked
     def clientIP(self) -> Optional[ClientIPConfig]:
-        if 'clientIP' in self._kwargs:
-            return self._kwargs['clientIP']
-        if 'clientIP' in self._context and check_return_type(self._context['clientIP']):
-            return self._context['clientIP']
+        if "clientIP" in self._kwargs:
+            return self._kwargs["clientIP"]
+        if "clientIP" in self._context and check_return_type(self._context["clientIP"]):
+            return self._context["clientIP"]
         return None
 
 
 # ServiceSpec describes the attributes that a user creates on a service.
 class ServiceSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         ports = self.ports()
         if ports:  # omit empty
-            v['ports'] = ports.values()  # named list
+            v["ports"] = ports.values()  # named list
         selector = self.selector()
         if selector:  # omit empty
-            v['selector'] = selector
+            v["selector"] = selector
         clusterIP = self.clusterIP()
         if clusterIP:  # omit empty
-            v['clusterIP'] = clusterIP
+            v["clusterIP"] = clusterIP
         type = self.type()
         if type:  # omit empty
-            v['type'] = type
+            v["type"] = type
         externalIPs = self.externalIPs()
         if externalIPs:  # omit empty
-            v['externalIPs'] = externalIPs
+            v["externalIPs"] = externalIPs
         sessionAffinity = self.sessionAffinity()
         if sessionAffinity:  # omit empty
-            v['sessionAffinity'] = sessionAffinity
+            v["sessionAffinity"] = sessionAffinity
         loadBalancerIP = self.loadBalancerIP()
         if loadBalancerIP:  # omit empty
-            v['loadBalancerIP'] = loadBalancerIP
+            v["loadBalancerIP"] = loadBalancerIP
         loadBalancerSourceRanges = self.loadBalancerSourceRanges()
         if loadBalancerSourceRanges:  # omit empty
-            v['loadBalancerSourceRanges'] = loadBalancerSourceRanges
+            v["loadBalancerSourceRanges"] = loadBalancerSourceRanges
         externalName = self.externalName()
         if externalName:  # omit empty
-            v['externalName'] = externalName
+            v["externalName"] = externalName
         externalTrafficPolicy = self.externalTrafficPolicy()
         if externalTrafficPolicy:  # omit empty
-            v['externalTrafficPolicy'] = externalTrafficPolicy
+            v["externalTrafficPolicy"] = externalTrafficPolicy
         healthCheckNodePort = self.healthCheckNodePort()
         if healthCheckNodePort:  # omit empty
-            v['healthCheckNodePort'] = healthCheckNodePort
+            v["healthCheckNodePort"] = healthCheckNodePort
         publishNotReadyAddresses = self.publishNotReadyAddresses()
         if publishNotReadyAddresses:  # omit empty
-            v['publishNotReadyAddresses'] = publishNotReadyAddresses
+            v["publishNotReadyAddresses"] = publishNotReadyAddresses
         sessionAffinityConfig = self.sessionAffinityConfig()
         if sessionAffinityConfig is not None:  # omit empty
-            v['sessionAffinityConfig'] = sessionAffinityConfig
+            v["sessionAffinityConfig"] = sessionAffinityConfig
         ipFamily = self.ipFamily()
         if ipFamily is not None:  # omit empty
-            v['ipFamily'] = ipFamily
+            v["ipFamily"] = ipFamily
         return v
-    
+
     # The list of ports that are exposed by this service.
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     # +listType=map
@@ -10327,12 +10874,12 @@ class ServiceSpec(types.Object):
     # +listMapKey=protocol
     @typechecked
     def ports(self) -> Dict[str, ServicePort]:
-        if 'ports' in self._kwargs:
-            return self._kwargs['ports']
-        if 'ports' in self._context and check_return_type(self._context['ports']):
-            return self._context['ports']
+        if "ports" in self._kwargs:
+            return self._kwargs["ports"]
+        if "ports" in self._context and check_return_type(self._context["ports"]):
+            return self._context["ports"]
         return {}
-    
+
     # Route service traffic to pods with label keys and values matching this
     # selector. If empty or not present, the service is assumed to have an
     # external process managing its endpoints, which Kubernetes will not
@@ -10341,12 +10888,12 @@ class ServiceSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/
     @typechecked
     def selector(self) -> Dict[str, str]:
-        if 'selector' in self._kwargs:
-            return self._kwargs['selector']
-        if 'selector' in self._context and check_return_type(self._context['selector']):
-            return self._context['selector']
+        if "selector" in self._kwargs:
+            return self._kwargs["selector"]
+        if "selector" in self._context and check_return_type(self._context["selector"]):
+            return self._context["selector"]
         return {}
-    
+
     # clusterIP is the IP address of the service and is usually assigned
     # randomly by the master. If an address is specified manually and is not in
     # use by others, it will be allocated to the service; otherwise, creation
@@ -10358,12 +10905,14 @@ class ServiceSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     @typechecked
     def clusterIP(self) -> Optional[str]:
-        if 'clusterIP' in self._kwargs:
-            return self._kwargs['clusterIP']
-        if 'clusterIP' in self._context and check_return_type(self._context['clusterIP']):
-            return self._context['clusterIP']
+        if "clusterIP" in self._kwargs:
+            return self._kwargs["clusterIP"]
+        if "clusterIP" in self._context and check_return_type(
+            self._context["clusterIP"]
+        ):
+            return self._context["clusterIP"]
         return None
-    
+
     # type determines how the Service is exposed. Defaults to ClusterIP. Valid
     # options are ExternalName, ClusterIP, NodePort, and LoadBalancer.
     # "ExternalName" maps to the specified externalName.
@@ -10380,12 +10929,12 @@ class ServiceSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
     @typechecked
     def type(self) -> Optional[ServiceType]:
-        if 'type' in self._kwargs:
-            return self._kwargs['type']
-        if 'type' in self._context and check_return_type(self._context['type']):
-            return self._context['type']
-        return ServiceType['ClusterIP']
-    
+        if "type" in self._kwargs:
+            return self._kwargs["type"]
+        if "type" in self._context and check_return_type(self._context["type"]):
+            return self._context["type"]
+        return ServiceType["ClusterIP"]
+
     # externalIPs is a list of IP addresses for which nodes in the cluster
     # will also accept traffic for this service.  These IPs are not managed by
     # Kubernetes.  The user is responsible for ensuring that traffic arrives
@@ -10393,12 +10942,14 @@ class ServiceSpec(types.Object):
     # that are not part of the Kubernetes system.
     @typechecked
     def externalIPs(self) -> List[str]:
-        if 'externalIPs' in self._kwargs:
-            return self._kwargs['externalIPs']
-        if 'externalIPs' in self._context and check_return_type(self._context['externalIPs']):
-            return self._context['externalIPs']
+        if "externalIPs" in self._kwargs:
+            return self._kwargs["externalIPs"]
+        if "externalIPs" in self._context and check_return_type(
+            self._context["externalIPs"]
+        ):
+            return self._context["externalIPs"]
         return []
-    
+
     # Supports "ClientIP" and "None". Used to maintain session affinity.
     # Enable client IP based session affinity.
     # Must be ClientIP or None.
@@ -10406,12 +10957,14 @@ class ServiceSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     @typechecked
     def sessionAffinity(self) -> Optional[ServiceAffinity]:
-        if 'sessionAffinity' in self._kwargs:
-            return self._kwargs['sessionAffinity']
-        if 'sessionAffinity' in self._context and check_return_type(self._context['sessionAffinity']):
-            return self._context['sessionAffinity']
-        return ServiceAffinity['None']
-    
+        if "sessionAffinity" in self._kwargs:
+            return self._kwargs["sessionAffinity"]
+        if "sessionAffinity" in self._context and check_return_type(
+            self._context["sessionAffinity"]
+        ):
+            return self._context["sessionAffinity"]
+        return ServiceAffinity["None"]
+
     # Only applies to Service Type: LoadBalancer
     # LoadBalancer will get created with the IP specified in this field.
     # This feature depends on whether the underlying cloud-provider supports specifying
@@ -10419,36 +10972,42 @@ class ServiceSpec(types.Object):
     # This field will be ignored if the cloud-provider does not support the feature.
     @typechecked
     def loadBalancerIP(self) -> Optional[str]:
-        if 'loadBalancerIP' in self._kwargs:
-            return self._kwargs['loadBalancerIP']
-        if 'loadBalancerIP' in self._context and check_return_type(self._context['loadBalancerIP']):
-            return self._context['loadBalancerIP']
+        if "loadBalancerIP" in self._kwargs:
+            return self._kwargs["loadBalancerIP"]
+        if "loadBalancerIP" in self._context and check_return_type(
+            self._context["loadBalancerIP"]
+        ):
+            return self._context["loadBalancerIP"]
         return None
-    
+
     # If specified and supported by the platform, this will restrict traffic through the cloud-provider
     # load-balancer will be restricted to the specified client IPs. This field will be ignored if the
     # cloud-provider does not support the feature."
     # More info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/
     @typechecked
     def loadBalancerSourceRanges(self) -> List[str]:
-        if 'loadBalancerSourceRanges' in self._kwargs:
-            return self._kwargs['loadBalancerSourceRanges']
-        if 'loadBalancerSourceRanges' in self._context and check_return_type(self._context['loadBalancerSourceRanges']):
-            return self._context['loadBalancerSourceRanges']
+        if "loadBalancerSourceRanges" in self._kwargs:
+            return self._kwargs["loadBalancerSourceRanges"]
+        if "loadBalancerSourceRanges" in self._context and check_return_type(
+            self._context["loadBalancerSourceRanges"]
+        ):
+            return self._context["loadBalancerSourceRanges"]
         return []
-    
+
     # externalName is the external reference that kubedns or equivalent will
     # return as a CNAME record for this service. No proxying will be involved.
     # Must be a valid RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
     # and requires Type to be ExternalName.
     @typechecked
     def externalName(self) -> Optional[str]:
-        if 'externalName' in self._kwargs:
-            return self._kwargs['externalName']
-        if 'externalName' in self._context and check_return_type(self._context['externalName']):
-            return self._context['externalName']
+        if "externalName" in self._kwargs:
+            return self._kwargs["externalName"]
+        if "externalName" in self._context and check_return_type(
+            self._context["externalName"]
+        ):
+            return self._context["externalName"]
         return None
-    
+
     # externalTrafficPolicy denotes if this Service desires to route external
     # traffic to node-local or cluster-wide endpoints. "Local" preserves the
     # client source IP and avoids a second hop for LoadBalancer and Nodeport
@@ -10457,12 +11016,14 @@ class ServiceSpec(types.Object):
     # another node, but should have good overall load-spreading.
     @typechecked
     def externalTrafficPolicy(self) -> Optional[ServiceExternalTrafficPolicyType]:
-        if 'externalTrafficPolicy' in self._kwargs:
-            return self._kwargs['externalTrafficPolicy']
-        if 'externalTrafficPolicy' in self._context and check_return_type(self._context['externalTrafficPolicy']):
-            return self._context['externalTrafficPolicy']
+        if "externalTrafficPolicy" in self._kwargs:
+            return self._kwargs["externalTrafficPolicy"]
+        if "externalTrafficPolicy" in self._context and check_return_type(
+            self._context["externalTrafficPolicy"]
+        ):
+            return self._context["externalTrafficPolicy"]
         return None
-    
+
     # healthCheckNodePort specifies the healthcheck nodePort for the service.
     # If not specified, HealthCheckNodePort is created by the service api
     # backend with the allocated nodePort. Will use user-specified nodePort value
@@ -10470,12 +11031,14 @@ class ServiceSpec(types.Object):
     # and ExternalTrafficPolicy is set to Local.
     @typechecked
     def healthCheckNodePort(self) -> Optional[int]:
-        if 'healthCheckNodePort' in self._kwargs:
-            return self._kwargs['healthCheckNodePort']
-        if 'healthCheckNodePort' in self._context and check_return_type(self._context['healthCheckNodePort']):
-            return self._context['healthCheckNodePort']
+        if "healthCheckNodePort" in self._kwargs:
+            return self._kwargs["healthCheckNodePort"]
+        if "healthCheckNodePort" in self._context and check_return_type(
+            self._context["healthCheckNodePort"]
+        ):
+            return self._context["healthCheckNodePort"]
         return None
-    
+
     # publishNotReadyAddresses, when set to true, indicates that DNS implementations
     # must publish the notReadyAddresses of subsets for the Endpoints associated with
     # the Service. The default value is false.
@@ -10484,21 +11047,25 @@ class ServiceSpec(types.Object):
     # of peer discovery.
     @typechecked
     def publishNotReadyAddresses(self) -> Optional[bool]:
-        if 'publishNotReadyAddresses' in self._kwargs:
-            return self._kwargs['publishNotReadyAddresses']
-        if 'publishNotReadyAddresses' in self._context and check_return_type(self._context['publishNotReadyAddresses']):
-            return self._context['publishNotReadyAddresses']
+        if "publishNotReadyAddresses" in self._kwargs:
+            return self._kwargs["publishNotReadyAddresses"]
+        if "publishNotReadyAddresses" in self._context and check_return_type(
+            self._context["publishNotReadyAddresses"]
+        ):
+            return self._context["publishNotReadyAddresses"]
         return None
-    
+
     # sessionAffinityConfig contains the configurations of session affinity.
     @typechecked
     def sessionAffinityConfig(self) -> Optional[SessionAffinityConfig]:
-        if 'sessionAffinityConfig' in self._kwargs:
-            return self._kwargs['sessionAffinityConfig']
-        if 'sessionAffinityConfig' in self._context and check_return_type(self._context['sessionAffinityConfig']):
-            return self._context['sessionAffinityConfig']
+        if "sessionAffinityConfig" in self._kwargs:
+            return self._kwargs["sessionAffinityConfig"]
+        if "sessionAffinityConfig" in self._context and check_return_type(
+            self._context["sessionAffinityConfig"]
+        ):
+            return self._context["sessionAffinityConfig"]
         return None
-    
+
     # ipFamily specifies whether this Service has a preference for a particular IP family (e.g. IPv4 vs.
     # IPv6).  If a specific IP family is requested, the clusterIP field will be allocated from that family, if it is
     # available in the cluster.  If no IP family is requested, the cluster's primary IP family will be used.
@@ -10508,10 +11075,10 @@ class ServiceSpec(types.Object):
     # cluster (e.g. IPv6 in IPv4 only cluster) is an error condition and will fail during clusterIP assignment.
     @typechecked
     def ipFamily(self) -> Optional[IPFamily]:
-        if 'ipFamily' in self._kwargs:
-            return self._kwargs['ipFamily']
-        if 'ipFamily' in self._context and check_return_type(self._context['ipFamily']):
-            return self._context['ipFamily']
+        if "ipFamily" in self._kwargs:
+            return self._kwargs["ipFamily"]
+        if "ipFamily" in self._context and check_return_type(self._context["ipFamily"]):
+            return self._context["ipFamily"]
         return None
 
 
@@ -10519,29 +11086,28 @@ class ServiceSpec(types.Object):
 # (for example 3306) that the proxy listens on, and the selector that determines which pods
 # will answer requests sent through the proxy.
 class Service(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'Service'
-    
+        return "Service"
+
     # Spec defines the behavior of a service.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> ServiceSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return ServiceSpec()
 
@@ -10551,81 +11117,83 @@ class Service(base.TypedObject, base.MetadataObject):
 # * a principal that can be authenticated and authorized
 # * a set of secrets
 class ServiceAccount(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         secrets = self.secrets()
         if secrets:  # omit empty
-            v['secrets'] = secrets.values()  # named list
+            v["secrets"] = secrets.values()  # named list
         imagePullSecrets = self.imagePullSecrets()
         if imagePullSecrets:  # omit empty
-            v['imagePullSecrets'] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
         automountServiceAccountToken = self.automountServiceAccountToken()
         if automountServiceAccountToken is not None:  # omit empty
-            v['automountServiceAccountToken'] = automountServiceAccountToken
+            v["automountServiceAccountToken"] = automountServiceAccountToken
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ServiceAccount'
-    
+        return "ServiceAccount"
+
     # Secrets is the list of secrets allowed to be used by pods running using this ServiceAccount.
     # More info: https://kubernetes.io/docs/concepts/configuration/secret
     @typechecked
     def secrets(self) -> Dict[str, ObjectReference]:
-        if 'secrets' in self._kwargs:
-            return self._kwargs['secrets']
-        if 'secrets' in self._context and check_return_type(self._context['secrets']):
-            return self._context['secrets']
+        if "secrets" in self._kwargs:
+            return self._kwargs["secrets"]
+        if "secrets" in self._context and check_return_type(self._context["secrets"]):
+            return self._context["secrets"]
         return {}
-    
+
     # ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
     # in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
     # can be mounted in the pod, but ImagePullSecrets are only accessed by the kubelet.
     # More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
     @typechecked
     def imagePullSecrets(self) -> Dict[str, LocalObjectReference]:
-        if 'imagePullSecrets' in self._kwargs:
-            return self._kwargs['imagePullSecrets']
-        if 'imagePullSecrets' in self._context and check_return_type(self._context['imagePullSecrets']):
-            return self._context['imagePullSecrets']
+        if "imagePullSecrets" in self._kwargs:
+            return self._kwargs["imagePullSecrets"]
+        if "imagePullSecrets" in self._context and check_return_type(
+            self._context["imagePullSecrets"]
+        ):
+            return self._context["imagePullSecrets"]
         return {}
-    
+
     # AutomountServiceAccountToken indicates whether pods running as this service account should have an API token automatically mounted.
     # Can be overridden at the pod level.
     @typechecked
     def automountServiceAccountToken(self) -> Optional[bool]:
-        if 'automountServiceAccountToken' in self._kwargs:
-            return self._kwargs['automountServiceAccountToken']
-        if 'automountServiceAccountToken' in self._context and check_return_type(self._context['automountServiceAccountToken']):
-            return self._context['automountServiceAccountToken']
+        if "automountServiceAccountToken" in self._kwargs:
+            return self._kwargs["automountServiceAccountToken"]
+        if "automountServiceAccountToken" in self._context and check_return_type(
+            self._context["automountServiceAccountToken"]
+        ):
+            return self._context["automountServiceAccountToken"]
         return None
 
 
 # ServiceProxyOptions is the query options to a Service's proxy call.
 class ServiceProxyOptions(base.TypedObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         path = self.path()
         if path:  # omit empty
-            v['path'] = path
+            v["path"] = path
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'v1'
-    
+        return "v1"
+
     @typechecked
     def kind(self) -> str:
-        return 'ServiceProxyOptions'
-    
+        return "ServiceProxyOptions"
+
     # Path is the part of URLs that include service endpoints, suffixes,
     # and parameters to use for the current proxy request to service.
     # For example, the whole request URL is
@@ -10633,41 +11201,40 @@ class ServiceProxyOptions(base.TypedObject):
     # Path is _search?q=user:kimchy.
     @typechecked
     def path(self) -> Optional[str]:
-        if 'path' in self._kwargs:
-            return self._kwargs['path']
-        if 'path' in self._context and check_return_type(self._context['path']):
-            return self._context['path']
+        if "path" in self._kwargs:
+            return self._kwargs["path"]
+        if "path" in self._context and check_return_type(self._context["path"]):
+            return self._context["path"]
         return None
 
 
 # A topology selector requirement is a selector that matches given label.
 # This is an alpha feature and may change in the future.
 class TopologySelectorLabelRequirement(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['key'] = self.key()
-        v['values'] = self.values()
+        v["key"] = self.key()
+        v["values"] = self.values()
         return v
-    
+
     # The label key that the selector applies to.
     @typechecked
     def key(self) -> str:
-        if 'key' in self._kwargs:
-            return self._kwargs['key']
-        if 'key' in self._context and check_return_type(self._context['key']):
-            return self._context['key']
-        return ''
-    
+        if "key" in self._kwargs:
+            return self._kwargs["key"]
+        if "key" in self._context and check_return_type(self._context["key"]):
+            return self._context["key"]
+        return ""
+
     # An array of string values. One value must match the label to be selected.
     # Each entry in Values is ORed.
     @typechecked
     def values(self) -> List[str]:
-        if 'values' in self._kwargs:
-            return self._kwargs['values']
-        if 'values' in self._context and check_return_type(self._context['values']):
-            return self._context['values']
+        if "values" in self._kwargs:
+            return self._kwargs["values"]
+        if "values" in self._context and check_return_type(self._context["values"]):
+            return self._context["values"]
         return []
 
 
@@ -10677,20 +11244,21 @@ class TopologySelectorLabelRequirement(types.Object):
 # It provides a subset of functionality as NodeSelectorTerm.
 # This is an alpha feature and may change in the future.
 class TopologySelectorTerm(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         matchLabelExpressions = self.matchLabelExpressions()
         if matchLabelExpressions:  # omit empty
-            v['matchLabelExpressions'] = matchLabelExpressions
+            v["matchLabelExpressions"] = matchLabelExpressions
         return v
-    
+
     # A list of topology selector requirements by labels.
     @typechecked
     def matchLabelExpressions(self) -> List[TopologySelectorLabelRequirement]:
-        if 'matchLabelExpressions' in self._kwargs:
-            return self._kwargs['matchLabelExpressions']
-        if 'matchLabelExpressions' in self._context and check_return_type(self._context['matchLabelExpressions']):
-            return self._context['matchLabelExpressions']
+        if "matchLabelExpressions" in self._kwargs:
+            return self._kwargs["matchLabelExpressions"]
+        if "matchLabelExpressions" in self._context and check_return_type(
+            self._context["matchLabelExpressions"]
+        ):
+            return self._context["matchLabelExpressions"]
         return []

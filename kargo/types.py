@@ -10,17 +10,15 @@ from typeguard import typechecked
 
 
 class Renderable:
-
     def render(self) -> Any:
         return self
 
 
 class Object(Renderable):
-
     def __init__(self, **kwargs):
         self._context = context.currentscope()
         self._kwargs = kwargs
-    
+
     def _get(self, key: str, default: Any = None) -> Any:
         return self._kwargs.get(key, self._context.get(key, default))
 
@@ -30,7 +28,6 @@ class Object(Renderable):
 
 @typechecked
 def render(obj: Union[Dict[str, Object], Object]) -> dict:
-
     def _render(value):
         if isinstance(value, Renderable):
             value = value.render()
@@ -41,7 +38,7 @@ def render(obj: Union[Dict[str, Object], Object]) -> dict:
             return base
         # Base64 encode bytes
         if isinstance(value, bytes):
-            return base64.b64encode(value).decode('UTF-8')
+            return base64.b64encode(value).decode("UTF-8")
         # Don't convert strings into lists
         if isinstance(value, str):
             return value

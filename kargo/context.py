@@ -7,7 +7,7 @@ import functools
 from typing import Any, Dict
 
 
-_current_scope = contextvars.ContextVar('kargo.context')
+_current_scope = contextvars.ContextVar("kargo.context")
 
 
 def currentscope() -> Dict[str, Any]:
@@ -20,11 +20,11 @@ def scoped(func):
         scope = _current_scope.get({}).copy()
         scope.update(**kwargs)
         func(*args, **scope)
+
     return wrapper
 
 
 class Scope:
-
     def __init__(self, **kwargs):
         self.kwargs = kwargs
 

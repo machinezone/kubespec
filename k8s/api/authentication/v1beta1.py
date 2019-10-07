@@ -14,27 +14,26 @@ from typeguard import check_return_type, typechecked
 
 # TokenReviewSpec is a description of the token authentication request.
 class TokenReviewSpec(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         token = self.token()
         if token:  # omit empty
-            v['token'] = token
+            v["token"] = token
         audiences = self.audiences()
         if audiences:  # omit empty
-            v['audiences'] = audiences
+            v["audiences"] = audiences
         return v
-    
+
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        if 'token' in self._kwargs:
-            return self._kwargs['token']
-        if 'token' in self._context and check_return_type(self._context['token']):
-            return self._context['token']
+        if "token" in self._kwargs:
+            return self._kwargs["token"]
+        if "token" in self._context and check_return_type(self._context["token"]):
+            return self._context["token"]
         return None
-    
+
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
     # verify that the token was intended for at least one of the audiences in
@@ -42,10 +41,12 @@ class TokenReviewSpec(types.Object):
     # audience of the Kubernetes apiserver.
     @typechecked
     def audiences(self) -> List[str]:
-        if 'audiences' in self._kwargs:
-            return self._kwargs['audiences']
-        if 'audiences' in self._context and check_return_type(self._context['audiences']):
-            return self._context['audiences']
+        if "audiences" in self._kwargs:
+            return self._kwargs["audiences"]
+        if "audiences" in self._context and check_return_type(
+            self._context["audiences"]
+        ):
+            return self._context["audiences"]
         return []
 
 
@@ -53,27 +54,26 @@ class TokenReviewSpec(types.Object):
 # Note: TokenReview requests may be cached by the webhook token authenticator
 # plugin in the kube-apiserver.
 class TokenReview(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['spec'] = self.spec()
+        v["spec"] = self.spec()
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'authentication.k8s.io/v1beta1'
-    
+        return "authentication.k8s.io/v1beta1"
+
     @typechecked
     def kind(self) -> str:
-        return 'TokenReview'
-    
+        return "TokenReview"
+
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        if 'spec' in self._kwargs:
-            return self._kwargs['spec']
-        if 'spec' in self._context and check_return_type(self._context['spec']):
-            return self._context['spec']
+        if "spec" in self._kwargs:
+            return self._kwargs["spec"]
+        if "spec" in self._context and check_return_type(self._context["spec"]):
+            return self._context["spec"]
         with context.Scope(**self._context):
             return TokenReviewSpec()

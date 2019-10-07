@@ -16,40 +16,38 @@ from typeguard import check_return_type, typechecked
 
 # Overhead structure represents the resource overhead associated with running a pod.
 class Overhead(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         podFixed = self.podFixed()
         if podFixed:  # omit empty
-            v['podFixed'] = podFixed
+            v["podFixed"] = podFixed
         return v
-    
+
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
-    def podFixed(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        if 'podFixed' in self._kwargs:
-            return self._kwargs['podFixed']
-        if 'podFixed' in self._context and check_return_type(self._context['podFixed']):
-            return self._context['podFixed']
+    def podFixed(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
+        if "podFixed" in self._kwargs:
+            return self._kwargs["podFixed"]
+        if "podFixed" in self._context and check_return_type(self._context["podFixed"]):
+            return self._context["podFixed"]
         return {}
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
 # RuntimeClass.
 class Scheduling(types.Object):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         nodeSelector = self.nodeSelector()
         if nodeSelector:  # omit empty
-            v['nodeSelector'] = nodeSelector
+            v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
         if tolerations:  # omit empty
-            v['tolerations'] = tolerations
+            v["tolerations"] = tolerations
         return v
-    
+
     # nodeSelector lists labels that must be present on nodes that support this
     # RuntimeClass. Pods using this RuntimeClass can only be scheduled to a
     # node matched by this selector. The RuntimeClass nodeSelector is merged
@@ -57,22 +55,26 @@ class Scheduling(types.Object):
     # be rejected in admission.
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        if 'nodeSelector' in self._kwargs:
-            return self._kwargs['nodeSelector']
-        if 'nodeSelector' in self._context and check_return_type(self._context['nodeSelector']):
-            return self._context['nodeSelector']
+        if "nodeSelector" in self._kwargs:
+            return self._kwargs["nodeSelector"]
+        if "nodeSelector" in self._context and check_return_type(
+            self._context["nodeSelector"]
+        ):
+            return self._context["nodeSelector"]
         return {}
-    
+
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
     # tolerated by the pod and the RuntimeClass.
     # +listType=atomic
     @typechecked
-    def tolerations(self) -> List['corev1.Toleration']:
-        if 'tolerations' in self._kwargs:
-            return self._kwargs['tolerations']
-        if 'tolerations' in self._context and check_return_type(self._context['tolerations']):
-            return self._context['tolerations']
+    def tolerations(self) -> List["corev1.Toleration"]:
+        if "tolerations" in self._kwargs:
+            return self._kwargs["tolerations"]
+        if "tolerations" in self._context and check_return_type(
+            self._context["tolerations"]
+        ):
+            return self._context["tolerations"]
         return []
 
 
@@ -84,27 +86,26 @@ class Scheduling(types.Object):
 # pod.  For more details, see
 # https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
 class RuntimeClass(base.TypedObject, base.MetadataObject):
-
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
-        v['handler'] = self.handler()
+        v["handler"] = self.handler()
         overhead = self.overhead()
         if overhead is not None:  # omit empty
-            v['overhead'] = overhead
+            v["overhead"] = overhead
         scheduling = self.scheduling()
         if scheduling is not None:  # omit empty
-            v['scheduling'] = scheduling
+            v["scheduling"] = scheduling
         return v
-    
+
     @typechecked
     def apiVersion(self) -> str:
-        return 'node.k8s.io/v1beta1'
-    
+        return "node.k8s.io/v1beta1"
+
     @typechecked
     def kind(self) -> str:
-        return 'RuntimeClass'
-    
+        return "RuntimeClass"
+
     # Handler specifies the underlying runtime and configuration that the CRI
     # implementation will use to handle pods of this class. The possible values
     # are specific to the node & CRI configuration.  It is assumed that all
@@ -117,32 +118,34 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # immutable.
     @typechecked
     def handler(self) -> str:
-        if 'handler' in self._kwargs:
-            return self._kwargs['handler']
-        if 'handler' in self._context and check_return_type(self._context['handler']):
-            return self._context['handler']
-        return ''
-    
+        if "handler" in self._kwargs:
+            return self._kwargs["handler"]
+        if "handler" in self._context and check_return_type(self._context["handler"]):
+            return self._context["handler"]
+        return ""
+
     # Overhead represents the resource overhead associated with running a pod for a
     # given RuntimeClass. For more details, see
     # https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Optional[Overhead]:
-        if 'overhead' in self._kwargs:
-            return self._kwargs['overhead']
-        if 'overhead' in self._context and check_return_type(self._context['overhead']):
-            return self._context['overhead']
+        if "overhead" in self._kwargs:
+            return self._kwargs["overhead"]
+        if "overhead" in self._context and check_return_type(self._context["overhead"]):
+            return self._context["overhead"]
         return None
-    
+
     # Scheduling holds the scheduling constraints to ensure that pods running
     # with this RuntimeClass are scheduled to nodes that support it.
     # If scheduling is nil, this RuntimeClass is assumed to be supported by all
     # nodes.
     @typechecked
     def scheduling(self) -> Optional[Scheduling]:
-        if 'scheduling' in self._kwargs:
-            return self._kwargs['scheduling']
-        if 'scheduling' in self._context and check_return_type(self._context['scheduling']):
-            return self._context['scheduling']
+        if "scheduling" in self._kwargs:
+            return self._kwargs["scheduling"]
+        if "scheduling" in self._context and check_return_type(
+            self._context["scheduling"]
+        ):
+            return self._context["scheduling"]
         return None
