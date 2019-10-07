@@ -9,8 +9,9 @@ from typing import Any, Dict, List, Optional
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # Overhead structure represents the resource overhead associated with running a pod.
@@ -27,7 +28,11 @@ class Overhead(types.Object):
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
     def podFixed(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._get('podFixed', {})
+        if 'podFixed' in self._kwargs:
+            return self._kwargs['podFixed']
+        if 'podFixed' in self._context and check_return_type(self._context['podFixed']):
+            return self._context['podFixed']
+        return {}
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
@@ -52,7 +57,11 @@ class Scheduling(types.Object):
     # be rejected in admission.
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        return self._get('nodeSelector', {})
+        if 'nodeSelector' in self._kwargs:
+            return self._kwargs['nodeSelector']
+        if 'nodeSelector' in self._context and check_return_type(self._context['nodeSelector']):
+            return self._context['nodeSelector']
+        return {}
     
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
@@ -60,7 +69,11 @@ class Scheduling(types.Object):
     # +listType=atomic
     @typechecked
     def tolerations(self) -> List['corev1.Toleration']:
-        return self._get('tolerations', [])
+        if 'tolerations' in self._kwargs:
+            return self._kwargs['tolerations']
+        if 'tolerations' in self._context and check_return_type(self._context['tolerations']):
+            return self._context['tolerations']
+        return []
 
 
 # RuntimeClassSpec is a specification of a RuntimeClass. It contains parameters
@@ -93,7 +106,11 @@ class RuntimeClassSpec(types.Object):
     # and is immutable.
     @typechecked
     def runtimeHandler(self) -> str:
-        return self._get('runtimeHandler', '')
+        if 'runtimeHandler' in self._kwargs:
+            return self._kwargs['runtimeHandler']
+        if 'runtimeHandler' in self._context and check_return_type(self._context['runtimeHandler']):
+            return self._context['runtimeHandler']
+        return ''
     
     # Overhead represents the resource overhead associated with running a pod for a
     # given RuntimeClass. For more details, see
@@ -101,7 +118,11 @@ class RuntimeClassSpec(types.Object):
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Optional[Overhead]:
-        return self._get('overhead')
+        if 'overhead' in self._kwargs:
+            return self._kwargs['overhead']
+        if 'overhead' in self._context and check_return_type(self._context['overhead']):
+            return self._context['overhead']
+        return None
     
     # Scheduling holds the scheduling constraints to ensure that pods running
     # with this RuntimeClass are scheduled to nodes that support it.
@@ -109,7 +130,11 @@ class RuntimeClassSpec(types.Object):
     # nodes.
     @typechecked
     def scheduling(self) -> Optional[Scheduling]:
-        return self._get('scheduling')
+        if 'scheduling' in self._kwargs:
+            return self._kwargs['scheduling']
+        if 'scheduling' in self._context and check_return_type(self._context['scheduling']):
+            return self._context['scheduling']
+        return None
 
 
 # RuntimeClass defines a class of container runtime supported in the cluster.
@@ -139,4 +164,9 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> RuntimeClassSpec:
-        return self._get('spec', RuntimeClassSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return RuntimeClassSpec()

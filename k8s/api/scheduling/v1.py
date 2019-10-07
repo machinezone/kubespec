@@ -8,8 +8,9 @@ from typing import Any, Dict, Optional
 
 from k8s import base
 from k8s.api.core import v1 as corev1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # PriorityClass defines mapping from a priority class name to the priority
@@ -43,7 +44,11 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # receive when they have the name of this class in their pod spec.
     @typechecked
     def value(self) -> int:
-        return self._get('value', 0)
+        if 'value' in self._kwargs:
+            return self._kwargs['value']
+        if 'value' in self._context and check_return_type(self._context['value']):
+            return self._context['value']
+        return 0
     
     # globalDefault specifies whether this PriorityClass should be considered as
     # the default priority for pods that do not have any priority class.
@@ -52,13 +57,21 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # the smallest value of such global default PriorityClasses will be used as the default priority.
     @typechecked
     def globalDefault(self) -> Optional[bool]:
-        return self._get('globalDefault')
+        if 'globalDefault' in self._kwargs:
+            return self._kwargs['globalDefault']
+        if 'globalDefault' in self._context and check_return_type(self._context['globalDefault']):
+            return self._context['globalDefault']
+        return None
     
     # description is an arbitrary string that usually provides guidelines on
     # when this priority class should be used.
     @typechecked
     def description(self) -> Optional[str]:
-        return self._get('description')
+        if 'description' in self._kwargs:
+            return self._kwargs['description']
+        if 'description' in self._context and check_return_type(self._context['description']):
+            return self._context['description']
+        return None
     
     # PreemptionPolicy is the Policy for preempting pods with lower priority.
     # One of Never, PreemptLowerPriority.
@@ -66,4 +79,8 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     @typechecked
     def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
-        return self._get('preemptionPolicy')
+        if 'preemptionPolicy' in self._kwargs:
+            return self._kwargs['preemptionPolicy']
+        if 'preemptionPolicy' in self._context and check_return_type(self._context['preemptionPolicy']):
+            return self._context['preemptionPolicy']
+        return None

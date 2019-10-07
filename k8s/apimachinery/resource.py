@@ -7,8 +7,9 @@
 from typing import Any, Dict
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # Format lists the three possible formattings of a quantity.
@@ -85,4 +86,8 @@ class Quantity(types.Object):
     # more details.
     @typechecked
     def format(self) -> Format:
-        return self._get('Format')
+        if 'Format' in self._kwargs:
+            return self._kwargs['Format']
+        if 'Format' in self._context and check_return_type(self._context['Format']):
+            return self._context['Format']
+        return None

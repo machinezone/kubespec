@@ -7,8 +7,9 @@
 from typing import Any, Dict, List, Optional
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
@@ -28,12 +29,20 @@ class NonResourceAttributes(types.Object):
     # Path is the URL path of the request
     @typechecked
     def path(self) -> Optional[str]:
-        return self._get('path')
+        if 'path' in self._kwargs:
+            return self._kwargs['path']
+        if 'path' in self._context and check_return_type(self._context['path']):
+            return self._context['path']
+        return None
     
     # Verb is the standard HTTP verb
     @typechecked
     def verb(self) -> Optional[str]:
-        return self._get('verb')
+        if 'verb' in self._kwargs:
+            return self._kwargs['verb']
+        if 'verb' in self._context and check_return_type(self._context['verb']):
+            return self._context['verb']
+        return None
 
 
 # ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface
@@ -71,37 +80,65 @@ class ResourceAttributes(types.Object):
     # "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._get('namespace')
+        if 'namespace' in self._kwargs:
+            return self._kwargs['namespace']
+        if 'namespace' in self._context and check_return_type(self._context['namespace']):
+            return self._context['namespace']
+        return None
     
     # Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
     @typechecked
     def verb(self) -> Optional[str]:
-        return self._get('verb')
+        if 'verb' in self._kwargs:
+            return self._kwargs['verb']
+        if 'verb' in self._context and check_return_type(self._context['verb']):
+            return self._context['verb']
+        return None
     
     # Group is the API Group of the Resource.  "*" means all.
     @typechecked
     def group(self) -> Optional[str]:
-        return self._get('group')
+        if 'group' in self._kwargs:
+            return self._kwargs['group']
+        if 'group' in self._context and check_return_type(self._context['group']):
+            return self._context['group']
+        return None
     
     # Version is the API Version of the Resource.  "*" means all.
     @typechecked
     def version(self) -> Optional[str]:
-        return self._get('version')
+        if 'version' in self._kwargs:
+            return self._kwargs['version']
+        if 'version' in self._context and check_return_type(self._context['version']):
+            return self._context['version']
+        return None
     
     # Resource is one of the existing resource types.  "*" means all.
     @typechecked
     def resource(self) -> Optional[str]:
-        return self._get('resource')
+        if 'resource' in self._kwargs:
+            return self._kwargs['resource']
+        if 'resource' in self._context and check_return_type(self._context['resource']):
+            return self._context['resource']
+        return None
     
     # Subresource is one of the existing resource types.  "" means none.
     @typechecked
     def subresource(self) -> Optional[str]:
-        return self._get('subresource')
+        if 'subresource' in self._kwargs:
+            return self._kwargs['subresource']
+        if 'subresource' in self._context and check_return_type(self._context['subresource']):
+            return self._context['subresource']
+        return None
     
     # Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
 
 
 # SubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
@@ -134,34 +171,58 @@ class SubjectAccessReviewSpec(types.Object):
     # ResourceAuthorizationAttributes describes information for a resource access request
     @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
-        return self._get('resourceAttributes')
+        if 'resourceAttributes' in self._kwargs:
+            return self._kwargs['resourceAttributes']
+        if 'resourceAttributes' in self._context and check_return_type(self._context['resourceAttributes']):
+            return self._context['resourceAttributes']
+        return None
     
     # NonResourceAttributes describes information for a non-resource access request
     @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
-        return self._get('nonResourceAttributes')
+        if 'nonResourceAttributes' in self._kwargs:
+            return self._kwargs['nonResourceAttributes']
+        if 'nonResourceAttributes' in self._context and check_return_type(self._context['nonResourceAttributes']):
+            return self._context['nonResourceAttributes']
+        return None
     
     # User is the user you're testing for.
     # If you specify "User" but not "Group", then is it interpreted as "What if User were not a member of any groups
     @typechecked
     def user(self) -> Optional[str]:
-        return self._get('user')
+        if 'user' in self._kwargs:
+            return self._kwargs['user']
+        if 'user' in self._context and check_return_type(self._context['user']):
+            return self._context['user']
+        return None
     
     # Groups is the groups you're testing for.
     @typechecked
     def group(self) -> List[str]:
-        return self._get('group', [])
+        if 'group' in self._kwargs:
+            return self._kwargs['group']
+        if 'group' in self._context and check_return_type(self._context['group']):
+            return self._context['group']
+        return []
     
     # Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
     # it needs a reflection here.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._get('extra', {})
+        if 'extra' in self._kwargs:
+            return self._kwargs['extra']
+        if 'extra' in self._context and check_return_type(self._context['extra']):
+            return self._context['extra']
+        return {}
     
     # UID information about the requesting user.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._get('uid')
+        if 'uid' in self._kwargs:
+            return self._kwargs['uid']
+        if 'uid' in self._context and check_return_type(self._context['uid']):
+            return self._context['uid']
+        return None
 
 
 # LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace.
@@ -187,7 +248,12 @@ class LocalSubjectAccessReview(base.TypedObject, base.MetadataObject):
     # you made the request against.  If empty, it is defaulted.
     @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
-        return self._get('spec', SubjectAccessReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return SubjectAccessReviewSpec()
 
 
 # SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
@@ -208,12 +274,20 @@ class SelfSubjectAccessReviewSpec(types.Object):
     # ResourceAuthorizationAttributes describes information for a resource access request
     @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
-        return self._get('resourceAttributes')
+        if 'resourceAttributes' in self._kwargs:
+            return self._kwargs['resourceAttributes']
+        if 'resourceAttributes' in self._context and check_return_type(self._context['resourceAttributes']):
+            return self._context['resourceAttributes']
+        return None
     
     # NonResourceAttributes describes information for a non-resource access request
     @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
-        return self._get('nonResourceAttributes')
+        if 'nonResourceAttributes' in self._kwargs:
+            return self._kwargs['nonResourceAttributes']
+        if 'nonResourceAttributes' in self._context and check_return_type(self._context['nonResourceAttributes']):
+            return self._context['nonResourceAttributes']
+        return None
 
 
 # SelfSubjectAccessReview checks whether or the current user can perform an action.  Not filling in a
@@ -238,7 +312,12 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated.  user and groups must be empty
     @typechecked
     def spec(self) -> SelfSubjectAccessReviewSpec:
-        return self._get('spec', SelfSubjectAccessReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return SelfSubjectAccessReviewSpec()
 
 
 class SelfSubjectRulesReviewSpec(types.Object):
@@ -254,7 +333,11 @@ class SelfSubjectRulesReviewSpec(types.Object):
     # Namespace to evaluate rules for. Required.
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._get('namespace')
+        if 'namespace' in self._kwargs:
+            return self._kwargs['namespace']
+        if 'namespace' in self._context and check_return_type(self._context['namespace']):
+            return self._context['namespace']
+        return None
 
 
 # SelfSubjectRulesReview enumerates the set of actions the current user can perform within a namespace.
@@ -282,7 +365,12 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated.
     @typechecked
     def spec(self) -> SelfSubjectRulesReviewSpec:
-        return self._get('spec', SelfSubjectRulesReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return SelfSubjectRulesReviewSpec()
 
 
 # SubjectAccessReview checks whether or not a user or group can perform an action.
@@ -305,4 +393,9 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
-        return self._get('spec', SubjectAccessReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return SubjectAccessReviewSpec()

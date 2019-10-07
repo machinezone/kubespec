@@ -9,8 +9,9 @@ from typing import Any, Dict, List, Optional
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # Overhead structure represents the resource overhead associated with running a pod.
@@ -27,7 +28,11 @@ class Overhead(types.Object):
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
     def podFixed(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._get('podFixed', {})
+        if 'podFixed' in self._kwargs:
+            return self._kwargs['podFixed']
+        if 'podFixed' in self._context and check_return_type(self._context['podFixed']):
+            return self._context['podFixed']
+        return {}
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
@@ -52,7 +57,11 @@ class Scheduling(types.Object):
     # be rejected in admission.
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        return self._get('nodeSelector', {})
+        if 'nodeSelector' in self._kwargs:
+            return self._kwargs['nodeSelector']
+        if 'nodeSelector' in self._context and check_return_type(self._context['nodeSelector']):
+            return self._context['nodeSelector']
+        return {}
     
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
@@ -60,7 +69,11 @@ class Scheduling(types.Object):
     # +listType=atomic
     @typechecked
     def tolerations(self) -> List['corev1.Toleration']:
-        return self._get('tolerations', [])
+        if 'tolerations' in self._kwargs:
+            return self._kwargs['tolerations']
+        if 'tolerations' in self._context and check_return_type(self._context['tolerations']):
+            return self._context['tolerations']
+        return []
 
 
 # RuntimeClass defines a class of container runtime supported in the cluster.
@@ -104,7 +117,11 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # immutable.
     @typechecked
     def handler(self) -> str:
-        return self._get('handler', '')
+        if 'handler' in self._kwargs:
+            return self._kwargs['handler']
+        if 'handler' in self._context and check_return_type(self._context['handler']):
+            return self._context['handler']
+        return ''
     
     # Overhead represents the resource overhead associated with running a pod for a
     # given RuntimeClass. For more details, see
@@ -112,7 +129,11 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Optional[Overhead]:
-        return self._get('overhead')
+        if 'overhead' in self._kwargs:
+            return self._kwargs['overhead']
+        if 'overhead' in self._context and check_return_type(self._context['overhead']):
+            return self._context['overhead']
+        return None
     
     # Scheduling holds the scheduling constraints to ensure that pods running
     # with this RuntimeClass are scheduled to nodes that support it.
@@ -120,4 +141,8 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # nodes.
     @typechecked
     def scheduling(self) -> Optional[Scheduling]:
-        return self._get('scheduling')
+        if 'scheduling' in self._kwargs:
+            return self._kwargs['scheduling']
+        if 'scheduling' in self._context and check_return_type(self._context['scheduling']):
+            return self._context['scheduling']
+        return None

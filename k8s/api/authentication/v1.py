@@ -7,8 +7,9 @@
 from typing import Any, Dict, List, Optional
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # BoundObjectReference is a reference to an object that a token is bound to.
@@ -34,22 +35,38 @@ class BoundObjectReference(types.Object):
     # Kind of the referent. Valid kinds are 'Pod' and 'Secret'.
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._get('kind')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return None
     
     # API version of the referent.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._get('apiVersion')
+        if 'apiVersion' in self._kwargs:
+            return self._kwargs['apiVersion']
+        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
+            return self._context['apiVersion']
+        return None
     
     # Name of the referent.
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
     
     # UID of the referent.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._get('uid')
+        if 'uid' in self._kwargs:
+            return self._kwargs['uid']
+        if 'uid' in self._context and check_return_type(self._context['uid']):
+            return self._context['uid']
+        return None
 
 
 # TokenRequestSpec contains client provided parameters of a token request.
@@ -71,14 +88,22 @@ class TokenRequestSpec(types.Object):
     # trust between the target audiences.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._get('audiences', [])
+        if 'audiences' in self._kwargs:
+            return self._kwargs['audiences']
+        if 'audiences' in self._context and check_return_type(self._context['audiences']):
+            return self._context['audiences']
+        return []
     
     # ExpirationSeconds is the requested duration of validity of the request. The
     # token issuer may return a token with a different validity duration so a
     # client needs to check the 'expiration' field in a response.
     @typechecked
     def expirationSeconds(self) -> Optional[int]:
-        return self._get('expirationSeconds', 3600)
+        if 'expirationSeconds' in self._kwargs:
+            return self._kwargs['expirationSeconds']
+        if 'expirationSeconds' in self._context and check_return_type(self._context['expirationSeconds']):
+            return self._context['expirationSeconds']
+        return 3600
     
     # BoundObjectRef is a reference to an object that the token will be bound to.
     # The token will only be valid for as long as the bound object exists.
@@ -87,7 +112,11 @@ class TokenRequestSpec(types.Object):
     # small if you want prompt revocation.
     @typechecked
     def boundObjectRef(self) -> Optional[BoundObjectReference]:
-        return self._get('boundObjectRef')
+        if 'boundObjectRef' in self._kwargs:
+            return self._kwargs['boundObjectRef']
+        if 'boundObjectRef' in self._context and check_return_type(self._context['boundObjectRef']):
+            return self._context['boundObjectRef']
+        return None
 
 
 # TokenRequest requests a token for a given service account.
@@ -109,7 +138,12 @@ class TokenRequest(base.TypedObject, base.MetadataObject):
     
     @typechecked
     def spec(self) -> TokenRequestSpec:
-        return self._get('spec', TokenRequestSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return TokenRequestSpec()
 
 
 # TokenReviewSpec is a description of the token authentication request.
@@ -129,7 +163,11 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        return self._get('token')
+        if 'token' in self._kwargs:
+            return self._kwargs['token']
+        if 'token' in self._context and check_return_type(self._context['token']):
+            return self._context['token']
+        return None
     
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -138,7 +176,11 @@ class TokenReviewSpec(types.Object):
     # audience of the Kubernetes apiserver.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._get('audiences', [])
+        if 'audiences' in self._kwargs:
+            return self._kwargs['audiences']
+        if 'audiences' in self._context and check_return_type(self._context['audiences']):
+            return self._context['audiences']
+        return []
 
 
 # TokenReview attempts to authenticate a token to a known user.
@@ -163,7 +205,12 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        return self._get('spec', TokenReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return TokenReviewSpec()
 
 
 # UserInfo holds the information about the user needed to implement the
@@ -190,21 +237,37 @@ class UserInfo(types.Object):
     # The name that uniquely identifies this user among all active users.
     @typechecked
     def username(self) -> Optional[str]:
-        return self._get('username')
+        if 'username' in self._kwargs:
+            return self._kwargs['username']
+        if 'username' in self._context and check_return_type(self._context['username']):
+            return self._context['username']
+        return None
     
     # A unique value that identifies this user across time. If this user is
     # deleted and another user by the same name is added, they will have
     # different UIDs.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._get('uid')
+        if 'uid' in self._kwargs:
+            return self._kwargs['uid']
+        if 'uid' in self._context and check_return_type(self._context['uid']):
+            return self._context['uid']
+        return None
     
     # The names of groups this user is a part of.
     @typechecked
     def groups(self) -> List[str]:
-        return self._get('groups', [])
+        if 'groups' in self._kwargs:
+            return self._kwargs['groups']
+        if 'groups' in self._context and check_return_type(self._context['groups']):
+            return self._context['groups']
+        return []
     
     # Any additional information provided by the authenticator.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._get('extra', {})
+        if 'extra' in self._kwargs:
+            return self._kwargs['extra']
+        if 'extra' in self._context and check_return_type(self._context['extra']):
+            return self._context['extra']
+        return {}

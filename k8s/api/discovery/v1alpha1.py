@@ -8,8 +8,9 @@ from typing import Any, Dict, List, Optional
 
 from k8s import base
 from k8s.api.core import v1 as corev1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # AddressType represents the type of address referred to by an endpoint.
@@ -36,7 +37,11 @@ class EndpointConditions(types.Object):
     # unknown state as ready.
     @typechecked
     def ready(self) -> Optional[bool]:
-        return self._get('ready')
+        if 'ready' in self._kwargs:
+            return self._kwargs['ready']
+        if 'ready' in self._context and check_return_type(self._context['ready']):
+            return self._context['ready']
+        return None
 
 
 # Endpoint represents a single logical "backend" implementing a service.
@@ -67,12 +72,21 @@ class Endpoint(types.Object):
     # +listType=set
     @typechecked
     def addresses(self) -> List[str]:
-        return self._get('addresses', [])
+        if 'addresses' in self._kwargs:
+            return self._kwargs['addresses']
+        if 'addresses' in self._context and check_return_type(self._context['addresses']):
+            return self._context['addresses']
+        return []
     
     # conditions contains information about the current status of the endpoint.
     @typechecked
     def conditions(self) -> EndpointConditions:
-        return self._get('conditions', EndpointConditions())
+        if 'conditions' in self._kwargs:
+            return self._kwargs['conditions']
+        if 'conditions' in self._context and check_return_type(self._context['conditions']):
+            return self._context['conditions']
+        with context.Scope(**self._context):
+            return EndpointConditions()
     
     # hostname of this endpoint. This field may be used by consumers of
     # endpoints to distinguish endpoints from each other (e.g. in DNS names).
@@ -81,13 +95,21 @@ class Endpoint(types.Object):
     # validation.
     @typechecked
     def hostname(self) -> Optional[str]:
-        return self._get('hostname')
+        if 'hostname' in self._kwargs:
+            return self._kwargs['hostname']
+        if 'hostname' in self._context and check_return_type(self._context['hostname']):
+            return self._context['hostname']
+        return None
     
     # targetRef is a reference to a Kubernetes object that represents this
     # endpoint.
     @typechecked
     def targetRef(self) -> Optional['corev1.ObjectReference']:
-        return self._get('targetRef')
+        if 'targetRef' in self._kwargs:
+            return self._kwargs['targetRef']
+        if 'targetRef' in self._context and check_return_type(self._context['targetRef']):
+            return self._context['targetRef']
+        return None
     
     # topology contains arbitrary topology information associated with the
     # endpoint. These key/value pairs must conform with the label format.
@@ -103,7 +125,11 @@ class Endpoint(types.Object):
     #   endpoint is located. This should match the corresponding node label.
     @typechecked
     def topology(self) -> Dict[str, str]:
-        return self._get('topology', {})
+        if 'topology' in self._kwargs:
+            return self._kwargs['topology']
+        if 'topology' in self._context and check_return_type(self._context['topology']):
+            return self._context['topology']
+        return {}
 
 
 # EndpointPort represents a Port used by an EndpointSlice
@@ -134,21 +160,33 @@ class EndpointPort(types.Object):
     # Default is empty string.
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
     
     # The IP protocol for this port.
     # Must be UDP, TCP, or SCTP.
     # Default is TCP.
     @typechecked
     def protocol(self) -> Optional[corev1.Protocol]:
-        return self._get('protocol', corev1.Protocol['TCP'])
+        if 'protocol' in self._kwargs:
+            return self._kwargs['protocol']
+        if 'protocol' in self._context and check_return_type(self._context['protocol']):
+            return self._context['protocol']
+        return corev1.Protocol['TCP']
     
     # The port number of the endpoint.
     # If this is not specified, ports are not restricted and must be
     # interpreted in the context of the specific consumer.
     @typechecked
     def port(self) -> Optional[int]:
-        return self._get('port')
+        if 'port' in self._kwargs:
+            return self._kwargs['port']
+        if 'port' in self._context and check_return_type(self._context['port']):
+            return self._context['port']
+        return None
 
 
 # EndpointSlice represents a subset of the endpoints that implement a service.
@@ -177,14 +215,22 @@ class EndpointSlice(base.TypedObject, base.MetadataObject):
     # Default is IP
     @typechecked
     def addressType(self) -> Optional[AddressType]:
-        return self._get('addressType', AddressType['IP'])
+        if 'addressType' in self._kwargs:
+            return self._kwargs['addressType']
+        if 'addressType' in self._context and check_return_type(self._context['addressType']):
+            return self._context['addressType']
+        return AddressType['IP']
     
     # endpoints is a list of unique endpoints in this slice. Each slice may
     # include a maximum of 1000 endpoints.
     # +listType=atomic
     @typechecked
     def endpoints(self) -> List[Endpoint]:
-        return self._get('endpoints', [])
+        if 'endpoints' in self._kwargs:
+            return self._kwargs['endpoints']
+        if 'endpoints' in self._context and check_return_type(self._context['endpoints']):
+            return self._context['endpoints']
+        return []
     
     # ports specifies the list of network ports exposed by each endpoint in
     # this slice. Each port must have a unique name. When ports is empty, it
@@ -194,4 +240,8 @@ class EndpointSlice(base.TypedObject, base.MetadataObject):
     # +listType=atomic
     @typechecked
     def ports(self) -> List[EndpointPort]:
-        return self._get('ports', [])
+        if 'ports' in self._kwargs:
+            return self._kwargs['ports']
+        if 'ports' in self._context and check_return_type(self._context['ports']):
+            return self._context['ports']
+        return []

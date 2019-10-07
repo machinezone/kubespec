@@ -7,8 +7,9 @@
 from typing import Any, Dict, List, Optional
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # TokenReviewSpec is a description of the token authentication request.
@@ -28,7 +29,11 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        return self._get('token')
+        if 'token' in self._kwargs:
+            return self._kwargs['token']
+        if 'token' in self._context and check_return_type(self._context['token']):
+            return self._context['token']
+        return None
     
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -37,7 +42,11 @@ class TokenReviewSpec(types.Object):
     # audience of the Kubernetes apiserver.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._get('audiences', [])
+        if 'audiences' in self._kwargs:
+            return self._kwargs['audiences']
+        if 'audiences' in self._context and check_return_type(self._context['audiences']):
+            return self._context['audiences']
+        return []
 
 
 # TokenReview attempts to authenticate a token to a known user.
@@ -62,4 +71,9 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        return self._get('spec', TokenReviewSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return TokenReviewSpec()

@@ -7,8 +7,9 @@
 from typing import Any, Dict, Optional
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # CrossVersionObjectReference contains enough information to let you identify the referred resource.
@@ -27,17 +28,29 @@ class CrossVersionObjectReference(types.Object):
     # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
     @typechecked
     def kind(self) -> str:
-        return self._get('kind', '')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return ''
     
     # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> str:
-        return self._get('name', '')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return ''
     
     # API version of the referent
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._get('apiVersion')
+        if 'apiVersion' in self._kwargs:
+            return self._kwargs['apiVersion']
+        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
+            return self._context['apiVersion']
+        return None
 
 
 # specification of a horizontal pod autoscaler.
@@ -60,7 +73,12 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # and will set the desired number of pods by using its Scale subresource.
     @typechecked
     def scaleTargetRef(self) -> CrossVersionObjectReference:
-        return self._get('scaleTargetRef', CrossVersionObjectReference())
+        if 'scaleTargetRef' in self._kwargs:
+            return self._kwargs['scaleTargetRef']
+        if 'scaleTargetRef' in self._context and check_return_type(self._context['scaleTargetRef']):
+            return self._context['scaleTargetRef']
+        with context.Scope(**self._context):
+            return CrossVersionObjectReference()
     
     # minReplicas is the lower limit for the number of replicas to which the autoscaler
     # can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
@@ -69,18 +87,30 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # available.
     @typechecked
     def minReplicas(self) -> Optional[int]:
-        return self._get('minReplicas', 1)
+        if 'minReplicas' in self._kwargs:
+            return self._kwargs['minReplicas']
+        if 'minReplicas' in self._context and check_return_type(self._context['minReplicas']):
+            return self._context['minReplicas']
+        return 1
     
     # upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
     @typechecked
     def maxReplicas(self) -> int:
-        return self._get('maxReplicas', 0)
+        if 'maxReplicas' in self._kwargs:
+            return self._kwargs['maxReplicas']
+        if 'maxReplicas' in self._context and check_return_type(self._context['maxReplicas']):
+            return self._context['maxReplicas']
+        return 0
     
     # target average CPU utilization (represented as a percentage of requested CPU) over all the pods;
     # if not specified the default autoscaling policy will be used.
     @typechecked
     def targetCPUUtilizationPercentage(self) -> Optional[int]:
-        return self._get('targetCPUUtilizationPercentage')
+        if 'targetCPUUtilizationPercentage' in self._kwargs:
+            return self._kwargs['targetCPUUtilizationPercentage']
+        if 'targetCPUUtilizationPercentage' in self._context and check_return_type(self._context['targetCPUUtilizationPercentage']):
+            return self._context['targetCPUUtilizationPercentage']
+        return None
 
 
 # configuration of a horizontal pod autoscaler.
@@ -103,7 +133,12 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
     # behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
     def spec(self) -> HorizontalPodAutoscalerSpec:
-        return self._get('spec', HorizontalPodAutoscalerSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return HorizontalPodAutoscalerSpec()
 
 
 # ScaleSpec describes the attributes of a scale subresource.
@@ -120,7 +155,11 @@ class ScaleSpec(types.Object):
     # desired number of instances for the scaled object.
     @typechecked
     def replicas(self) -> Optional[int]:
-        return self._get('replicas')
+        if 'replicas' in self._kwargs:
+            return self._kwargs['replicas']
+        if 'replicas' in self._context and check_return_type(self._context['replicas']):
+            return self._context['replicas']
+        return None
 
 
 # Scale represents a scaling request for a resource.
@@ -143,4 +182,9 @@ class Scale(base.TypedObject, base.MetadataObject):
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
     def spec(self) -> ScaleSpec:
-        return self._get('spec', ScaleSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return ScaleSpec()

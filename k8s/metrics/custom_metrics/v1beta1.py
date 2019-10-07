@@ -10,8 +10,9 @@ from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
 from k8s.apimachinery.meta import v1 as metav1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # MetricListOptions is used to select metrics by their label selectors
@@ -40,12 +41,20 @@ class MetricListOptions(base.TypedObject):
     # Defaults to everything.
     @typechecked
     def labelSelector(self) -> Optional[str]:
-        return self._get('labelSelector')
+        if 'labelSelector' in self._kwargs:
+            return self._kwargs['labelSelector']
+        if 'labelSelector' in self._context and check_return_type(self._context['labelSelector']):
+            return self._context['labelSelector']
+        return None
     
     # A selector to restrict the list of returned metrics by their labels
     @typechecked
     def metricLabelSelector(self) -> Optional[str]:
-        return self._get('metricLabelSelector')
+        if 'metricLabelSelector' in self._kwargs:
+            return self._kwargs['metricLabelSelector']
+        if 'metricLabelSelector' in self._context and check_return_type(self._context['metricLabelSelector']):
+            return self._context['metricLabelSelector']
+        return None
 
 
 # MetricValue is a metric value for some object
@@ -75,17 +84,30 @@ class MetricValue(base.TypedObject):
     # a reference to the described object
     @typechecked
     def describedObject(self) -> 'corev1.ObjectReference':
-        return self._get('describedObject', corev1.ObjectReference())
+        if 'describedObject' in self._kwargs:
+            return self._kwargs['describedObject']
+        if 'describedObject' in self._context and check_return_type(self._context['describedObject']):
+            return self._context['describedObject']
+        with context.Scope(**self._context):
+            return corev1.ObjectReference()
     
     # the name of the metric
     @typechecked
     def metricName(self) -> str:
-        return self._get('metricName', '')
+        if 'metricName' in self._kwargs:
+            return self._kwargs['metricName']
+        if 'metricName' in self._context and check_return_type(self._context['metricName']):
+            return self._context['metricName']
+        return ''
     
     # indicates the time at which the metrics were produced
     @typechecked
     def timestamp(self) -> 'base.Time':
-        return self._get('timestamp')
+        if 'timestamp' in self._kwargs:
+            return self._kwargs['timestamp']
+        if 'timestamp' in self._context and check_return_type(self._context['timestamp']):
+            return self._context['timestamp']
+        return None
     
     # indicates the window ([Timestamp-Window, Timestamp]) from
     # which these metrics were calculated, when returning rate
@@ -93,12 +115,21 @@ class MetricValue(base.TypedObject):
     # non-calculated instantaneous metrics).
     @typechecked
     def window(self) -> Optional[int]:
-        return self._get('window')
+        if 'window' in self._kwargs:
+            return self._kwargs['window']
+        if 'window' in self._context and check_return_type(self._context['window']):
+            return self._context['window']
+        return None
     
     # the value of the metric for this
     @typechecked
     def value(self) -> 'resource.Quantity':
-        return self._get('value', resource.Quantity())
+        if 'value' in self._kwargs:
+            return self._kwargs['value']
+        if 'value' in self._context and check_return_type(self._context['value']):
+            return self._context['value']
+        with context.Scope(**self._context):
+            return resource.Quantity()
     
     # selector represents the label selector that could be used to select
     # this metric, and will generally just be the selector passed in to
@@ -106,4 +137,8 @@ class MetricValue(base.TypedObject):
     # When left blank, only the metric's Name will be used to gather metrics.
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._get('selector')
+        if 'selector' in self._kwargs:
+            return self._kwargs['selector']
+        if 'selector' in self._context and check_return_type(self._context['selector']):
+            return self._context['selector']
+        return None

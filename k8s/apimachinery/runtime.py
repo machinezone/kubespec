@@ -7,8 +7,9 @@
 from typing import Any, Dict
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # RawExtension is used to hold extensions in external versions.
@@ -76,16 +77,28 @@ class Unknown(base.TypedObject):
     # except for passing it through the system.
     @typechecked
     def raw(self) -> bytes:
-        return self._get('Raw', b'')
+        if 'Raw' in self._kwargs:
+            return self._kwargs['Raw']
+        if 'Raw' in self._context and check_return_type(self._context['Raw']):
+            return self._context['Raw']
+        return b''
     
     # ContentEncoding is encoding used to encode 'Raw' data.
     # Unspecified means no encoding.
     @typechecked
     def contentEncoding(self) -> str:
-        return self._get('ContentEncoding', '')
+        if 'ContentEncoding' in self._kwargs:
+            return self._kwargs['ContentEncoding']
+        if 'ContentEncoding' in self._context and check_return_type(self._context['ContentEncoding']):
+            return self._context['ContentEncoding']
+        return ''
     
     # ContentType  is serialization method used to serialize 'Raw'.
     # Unspecified means ContentTypeJSON.
     @typechecked
     def contentType(self) -> str:
-        return self._get('ContentType', '')
+        if 'ContentType' in self._kwargs:
+            return self._kwargs['ContentType']
+        if 'ContentType' in self._context and check_return_type(self._context['ContentType']):
+            return self._context['ContentType']
+        return ''

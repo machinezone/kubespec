@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 import pytz
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 @typechecked
@@ -41,7 +41,11 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._get('apiVersion')
+        if 'apiVersion' in self._kwargs:
+            return self._kwargs['apiVersion']
+        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
+            return self._context['apiVersion']
+        return None
 
     # Kind is a string value representing the REST resource this object represents.
     # Servers may infer this from the endpoint the client submits requests to.
@@ -50,7 +54,11 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._get('kind')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return None
 
 
 class MetadataObject(types.Object):
@@ -82,7 +90,11 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
 
     # Namespace defines the space within each name must be unique. An empty namespace is
     # equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -94,15 +106,22 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._get('namespace')
-
+        if 'namespace' in self._kwargs:
+            return self._kwargs['namespace']
+        if 'namespace' in self._context and check_return_type(self._context['namespace']):
+            return self._context['namespace']
+        return None
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
     # and services.
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        return self._get('labels', {})
+        if 'labels' in self._kwargs:
+            return self._kwargs['labels']
+        if 'labels' in self._context and check_return_type(self._context['labels']):
+            return self._context['labels']
+        return {}
 
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -110,8 +129,11 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._get('annotations', {})
-
+        if 'annotations' in self._kwargs:
+            return self._kwargs['annotations']
+        if 'annotations' in self._context and check_return_type(self._context['annotations']):
+            return self._context['annotations']
+        return {}
 
 class Time(types.Renderable):
 

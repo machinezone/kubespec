@@ -8,8 +8,9 @@ from typing import Any, Dict, Optional
 
 from k8s import base
 from k8s.apimachinery import runtime
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # AdmissionPluginConfiguration provides the configuration for a single plug-in.
@@ -27,19 +28,31 @@ class AdmissionPluginConfiguration(types.Object):
     # It must match the registered admission plugin name.
     @typechecked
     def name(self) -> str:
-        return self._get('name', '')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return ''
     
     # Path is the path to a configuration file that contains the plugin's
     # configuration
     @typechecked
     def path(self) -> str:
-        return self._get('path', '')
+        if 'path' in self._kwargs:
+            return self._kwargs['path']
+        if 'path' in self._context and check_return_type(self._context['path']):
+            return self._context['path']
+        return ''
     
     # Configuration is an embedded configuration object to be used as the plugin's
     # configuration. If present, it will be used instead of the path to the configuration file.
     @typechecked
     def configuration(self) -> Optional['runtime.Unknown']:
-        return self._get('configuration')
+        if 'configuration' in self._kwargs:
+            return self._kwargs['configuration']
+        if 'configuration' in self._context and check_return_type(self._context['configuration']):
+            return self._context['configuration']
+        return None
 
 
 # AdmissionConfiguration provides versioned configuration for admission controllers.
@@ -62,7 +75,11 @@ class AdmissionConfiguration(base.TypedObject):
     # Plugins allows specifying a configuration per admission control plugin.
     @typechecked
     def plugins(self) -> Dict[str, AdmissionPluginConfiguration]:
-        return self._get('plugins', {})
+        if 'plugins' in self._kwargs:
+            return self._kwargs['plugins']
+        if 'plugins' in self._context and check_return_type(self._context['plugins']):
+            return self._context['plugins']
+        return {}
 
 
 class HTTPConnectConfig(types.Object):
@@ -86,7 +103,11 @@ class HTTPConnectConfig(types.Object):
     # As an example it might be "https://127.0.0.1:8131"
     @typechecked
     def url(self) -> str:
-        return self._get('url', '')
+        if 'url' in self._kwargs:
+            return self._kwargs['url']
+        if 'url' in self._context and check_return_type(self._context['url']):
+            return self._context['url']
+        return ''
     
     # caBundle is the file location of the CA to be used to determine trust with the konnectivity server.
     # Must be absent/empty http-connect using the plain http
@@ -94,7 +115,11 @@ class HTTPConnectConfig(types.Object):
     # Misconfiguration will cause an error
     @typechecked
     def caBundle(self) -> Optional[str]:
-        return self._get('caBundle')
+        if 'caBundle' in self._kwargs:
+            return self._kwargs['caBundle']
+        if 'caBundle' in self._context and check_return_type(self._context['caBundle']):
+            return self._context['caBundle']
+        return None
     
     # clientKey is the file location of the client key to be used in mtls handshakes with the konnectivity server.
     # Must be absent/empty http-connect using the plain http
@@ -102,7 +127,11 @@ class HTTPConnectConfig(types.Object):
     # Misconfiguration will cause an error
     @typechecked
     def clientKey(self) -> Optional[str]:
-        return self._get('clientKey')
+        if 'clientKey' in self._kwargs:
+            return self._kwargs['clientKey']
+        if 'clientKey' in self._context and check_return_type(self._context['clientKey']):
+            return self._context['clientKey']
+        return None
     
     # clientCert is the file location of the client certificate to be used in mtls handshakes with the konnectivity server.
     # Must be absent/empty http-connect using the plain http
@@ -110,7 +139,11 @@ class HTTPConnectConfig(types.Object):
     # Misconfiguration will cause an error
     @typechecked
     def clientCert(self) -> Optional[str]:
-        return self._get('clientCert')
+        if 'clientCert' in self._kwargs:
+            return self._kwargs['clientCert']
+        if 'clientCert' in self._context and check_return_type(self._context['clientCert']):
+            return self._context['clientCert']
+        return None
 
 
 # Connection provides the configuration for a single egress selection client.
@@ -129,14 +162,22 @@ class Connection(types.Object):
     # Currently supported values are "http-connect" and "direct".
     @typechecked
     def type(self) -> str:
-        return self._get('type', '')
+        if 'type' in self._kwargs:
+            return self._kwargs['type']
+        if 'type' in self._context and check_return_type(self._context['type']):
+            return self._context['type']
+        return ''
     
     # httpConnect is the config needed to use http-connect to the konnectivity server.
     # Absence when the type is "http-connect" will cause an error
     # Presence when the type is "direct" will also cause an error
     @typechecked
     def httpConnect(self) -> Optional[HTTPConnectConfig]:
-        return self._get('httpConnect')
+        if 'httpConnect' in self._kwargs:
+            return self._kwargs['httpConnect']
+        if 'httpConnect' in self._context and check_return_type(self._context['httpConnect']):
+            return self._context['httpConnect']
+        return None
 
 
 # EgressSelection provides the configuration for a single egress selection client.
@@ -153,12 +194,21 @@ class EgressSelection(types.Object):
     # Currently supported values are "Master", "Etcd" and "Cluster"
     @typechecked
     def name(self) -> str:
-        return self._get('name', '')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return ''
     
     # connection is the exact information used to configure the egress selection
     @typechecked
     def connection(self) -> Connection:
-        return self._get('connection', Connection())
+        if 'connection' in self._kwargs:
+            return self._kwargs['connection']
+        if 'connection' in self._context and check_return_type(self._context['connection']):
+            return self._context['connection']
+        with context.Scope(**self._context):
+            return Connection()
 
 
 # EgressSelectorConfiguration provides versioned configuration for egress selector clients.
@@ -181,4 +231,8 @@ class EgressSelectorConfiguration(base.TypedObject):
     # connectionServices contains a list of egress selection client configurations
     @typechecked
     def egressSelections(self) -> Dict[str, EgressSelection]:
-        return self._get('egressSelections', {})
+        if 'egressSelections' in self._kwargs:
+            return self._kwargs['egressSelections']
+        if 'egressSelections' in self._context and check_return_type(self._context['egressSelections']):
+            return self._context['egressSelections']
+        return {}

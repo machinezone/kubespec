@@ -8,8 +8,9 @@ from typing import Any, Dict, Optional
 
 from k8s import base
 from k8s.api.batch import v1 as batchv1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # ConcurrencyPolicy describes how the job will be handled.
@@ -40,7 +41,12 @@ class JobTemplateSpec(base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> 'batchv1.JobSpec':
-        return self._get('spec', batchv1.JobSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return batchv1.JobSpec()
 
 
 # CronJobSpec describes how the job execution will look like and when it will actually run.
@@ -71,13 +77,21 @@ class CronJobSpec(types.Object):
     # The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
     @typechecked
     def schedule(self) -> str:
-        return self._get('schedule', '')
+        if 'schedule' in self._kwargs:
+            return self._kwargs['schedule']
+        if 'schedule' in self._context and check_return_type(self._context['schedule']):
+            return self._context['schedule']
+        return ''
     
     # Optional deadline in seconds for starting the job if it misses scheduled
     # time for any reason.  Missed jobs executions will be counted as failed ones.
     @typechecked
     def startingDeadlineSeconds(self) -> Optional[int]:
-        return self._get('startingDeadlineSeconds')
+        if 'startingDeadlineSeconds' in self._kwargs:
+            return self._kwargs['startingDeadlineSeconds']
+        if 'startingDeadlineSeconds' in self._context and check_return_type(self._context['startingDeadlineSeconds']):
+            return self._context['startingDeadlineSeconds']
+        return None
     
     # Specifies how to treat concurrent executions of a Job.
     # Valid values are:
@@ -86,32 +100,53 @@ class CronJobSpec(types.Object):
     # - "Replace": cancels currently running job and replaces it with a new one
     @typechecked
     def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
-        return self._get('concurrencyPolicy', ConcurrencyPolicy['Allow'])
+        if 'concurrencyPolicy' in self._kwargs:
+            return self._kwargs['concurrencyPolicy']
+        if 'concurrencyPolicy' in self._context and check_return_type(self._context['concurrencyPolicy']):
+            return self._context['concurrencyPolicy']
+        return ConcurrencyPolicy['Allow']
     
     # This flag tells the controller to suspend subsequent executions, it does
     # not apply to already started executions.  Defaults to false.
     @typechecked
     def suspend(self) -> Optional[bool]:
-        return self._get('suspend')
+        if 'suspend' in self._kwargs:
+            return self._kwargs['suspend']
+        if 'suspend' in self._context and check_return_type(self._context['suspend']):
+            return self._context['suspend']
+        return None
     
     # Specifies the job that will be created when executing a CronJob.
     @typechecked
     def jobTemplate(self) -> JobTemplateSpec:
-        return self._get('jobTemplate', JobTemplateSpec())
+        if 'jobTemplate' in self._kwargs:
+            return self._kwargs['jobTemplate']
+        if 'jobTemplate' in self._context and check_return_type(self._context['jobTemplate']):
+            return self._context['jobTemplate']
+        with context.Scope(**self._context):
+            return JobTemplateSpec()
     
     # The number of successful finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 3.
     @typechecked
     def successfulJobsHistoryLimit(self) -> Optional[int]:
-        return self._get('successfulJobsHistoryLimit', 3)
+        if 'successfulJobsHistoryLimit' in self._kwargs:
+            return self._kwargs['successfulJobsHistoryLimit']
+        if 'successfulJobsHistoryLimit' in self._context and check_return_type(self._context['successfulJobsHistoryLimit']):
+            return self._context['successfulJobsHistoryLimit']
+        return 3
     
     # The number of failed finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 1.
     @typechecked
     def failedJobsHistoryLimit(self) -> Optional[int]:
-        return self._get('failedJobsHistoryLimit', 1)
+        if 'failedJobsHistoryLimit' in self._kwargs:
+            return self._kwargs['failedJobsHistoryLimit']
+        if 'failedJobsHistoryLimit' in self._context and check_return_type(self._context['failedJobsHistoryLimit']):
+            return self._context['failedJobsHistoryLimit']
+        return 1
 
 
 # CronJob represents the configuration of a single cron job.
@@ -135,7 +170,12 @@ class CronJob(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> CronJobSpec:
-        return self._get('spec', CronJobSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return CronJobSpec()
 
 
 # JobTemplate describes a template for creating copies of a predefined pod.
@@ -159,4 +199,9 @@ class JobTemplate(base.TypedObject, base.MetadataObject):
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def template(self) -> JobTemplateSpec:
-        return self._get('template', JobTemplateSpec())
+        if 'template' in self._kwargs:
+            return self._kwargs['template']
+        if 'template' in self._context and check_return_type(self._context['template']):
+            return self._context['template']
+        with context.Scope(**self._context):
+            return JobTemplateSpec()

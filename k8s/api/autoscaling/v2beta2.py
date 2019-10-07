@@ -10,8 +10,9 @@ from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
 from k8s.apimachinery.meta import v1 as metav1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # MetricSourceType indicates the type of metric.
@@ -66,17 +67,29 @@ class CrossVersionObjectReference(types.Object):
     # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
     @typechecked
     def kind(self) -> str:
-        return self._get('kind', '')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return ''
     
     # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> str:
-        return self._get('name', '')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return ''
     
     # API version of the referent
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._get('apiVersion')
+        if 'apiVersion' in self._kwargs:
+            return self._kwargs['apiVersion']
+        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
+            return self._context['apiVersion']
+        return None
 
 
 # MetricIdentifier defines the name and optionally selector for a metric
@@ -94,14 +107,22 @@ class MetricIdentifier(types.Object):
     # name is the name of the given metric
     @typechecked
     def name(self) -> str:
-        return self._get('name', '')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return ''
     
     # selector is the string-encoded form of a standard kubernetes label selector for the given metric
     # When set, it is passed as an additional parameter to the metrics server for more specific metrics scoping.
     # When unset, just the metricName will be used to gather metrics.
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._get('selector')
+        if 'selector' in self._kwargs:
+            return self._kwargs['selector']
+        if 'selector' in self._context and check_return_type(self._context['selector']):
+            return self._context['selector']
+        return None
 
 
 # MetricTarget defines the target value, average value, or average utilization of a specific metric
@@ -125,18 +146,30 @@ class MetricTarget(types.Object):
     # type represents whether the metric type is Utilization, Value, or AverageValue
     @typechecked
     def type(self) -> MetricTargetType:
-        return self._get('type')
+        if 'type' in self._kwargs:
+            return self._kwargs['type']
+        if 'type' in self._context and check_return_type(self._context['type']):
+            return self._context['type']
+        return None
     
     # value is the target value of the metric (as a quantity).
     @typechecked
     def value(self) -> Optional['resource.Quantity']:
-        return self._get('value')
+        if 'value' in self._kwargs:
+            return self._kwargs['value']
+        if 'value' in self._context and check_return_type(self._context['value']):
+            return self._context['value']
+        return None
     
     # averageValue is the target value of the average of the
     # metric across all relevant pods (as a quantity)
     @typechecked
     def averageValue(self) -> Optional['resource.Quantity']:
-        return self._get('averageValue')
+        if 'averageValue' in self._kwargs:
+            return self._kwargs['averageValue']
+        if 'averageValue' in self._context and check_return_type(self._context['averageValue']):
+            return self._context['averageValue']
+        return None
     
     # averageUtilization is the target value of the average of the
     # resource metric across all relevant pods, represented as a percentage of
@@ -144,7 +177,11 @@ class MetricTarget(types.Object):
     # Currently only valid for Resource metric source type
     @typechecked
     def averageUtilization(self) -> Optional[int]:
-        return self._get('averageUtilization')
+        if 'averageUtilization' in self._kwargs:
+            return self._kwargs['averageUtilization']
+        if 'averageUtilization' in self._context and check_return_type(self._context['averageUtilization']):
+            return self._context['averageUtilization']
+        return None
 
 
 # ExternalMetricSource indicates how to scale on a metric not associated with
@@ -162,12 +199,22 @@ class ExternalMetricSource(types.Object):
     # metric identifies the target metric by name and selector
     @typechecked
     def metric(self) -> MetricIdentifier:
-        return self._get('metric', MetricIdentifier())
+        if 'metric' in self._kwargs:
+            return self._kwargs['metric']
+        if 'metric' in self._context and check_return_type(self._context['metric']):
+            return self._context['metric']
+        with context.Scope(**self._context):
+            return MetricIdentifier()
     
     # target specifies the target value for the given metric
     @typechecked
     def target(self) -> MetricTarget:
-        return self._get('target', MetricTarget())
+        if 'target' in self._kwargs:
+            return self._kwargs['target']
+        if 'target' in self._context and check_return_type(self._context['target']):
+            return self._context['target']
+        with context.Scope(**self._context):
+            return MetricTarget()
 
 
 # ObjectMetricSource indicates how to scale on a metric describing a
@@ -184,17 +231,32 @@ class ObjectMetricSource(types.Object):
     
     @typechecked
     def describedObject(self) -> CrossVersionObjectReference:
-        return self._get('describedObject', CrossVersionObjectReference())
+        if 'describedObject' in self._kwargs:
+            return self._kwargs['describedObject']
+        if 'describedObject' in self._context and check_return_type(self._context['describedObject']):
+            return self._context['describedObject']
+        with context.Scope(**self._context):
+            return CrossVersionObjectReference()
     
     # target specifies the target value for the given metric
     @typechecked
     def target(self) -> MetricTarget:
-        return self._get('target', MetricTarget())
+        if 'target' in self._kwargs:
+            return self._kwargs['target']
+        if 'target' in self._context and check_return_type(self._context['target']):
+            return self._context['target']
+        with context.Scope(**self._context):
+            return MetricTarget()
     
     # metric identifies the target metric by name and selector
     @typechecked
     def metric(self) -> MetricIdentifier:
-        return self._get('metric', MetricIdentifier())
+        if 'metric' in self._kwargs:
+            return self._kwargs['metric']
+        if 'metric' in self._context and check_return_type(self._context['metric']):
+            return self._context['metric']
+        with context.Scope(**self._context):
+            return MetricIdentifier()
 
 
 # PodsMetricSource indicates how to scale on a metric describing each pod in
@@ -213,12 +275,22 @@ class PodsMetricSource(types.Object):
     # metric identifies the target metric by name and selector
     @typechecked
     def metric(self) -> MetricIdentifier:
-        return self._get('metric', MetricIdentifier())
+        if 'metric' in self._kwargs:
+            return self._kwargs['metric']
+        if 'metric' in self._context and check_return_type(self._context['metric']):
+            return self._context['metric']
+        with context.Scope(**self._context):
+            return MetricIdentifier()
     
     # target specifies the target value for the given metric
     @typechecked
     def target(self) -> MetricTarget:
-        return self._get('target', MetricTarget())
+        if 'target' in self._kwargs:
+            return self._kwargs['target']
+        if 'target' in self._context and check_return_type(self._context['target']):
+            return self._context['target']
+        with context.Scope(**self._context):
+            return MetricTarget()
 
 
 # ResourceMetricSource indicates how to scale on a resource metric known to
@@ -240,12 +312,21 @@ class ResourceMetricSource(types.Object):
     # name is the name of the resource in question.
     @typechecked
     def name(self) -> corev1.ResourceName:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
     
     # target specifies the target value for the given metric
     @typechecked
     def target(self) -> MetricTarget:
-        return self._get('target', MetricTarget())
+        if 'target' in self._kwargs:
+            return self._kwargs['target']
+        if 'target' in self._context and check_return_type(self._context['target']):
+            return self._context['target']
+        with context.Scope(**self._context):
+            return MetricTarget()
 
 
 # MetricSpec specifies how to scale based on a single metric
@@ -274,20 +355,32 @@ class MetricSpec(types.Object):
     # "Pods" or "Resource", each mapping to a matching field in the object.
     @typechecked
     def type(self) -> MetricSourceType:
-        return self._get('type')
+        if 'type' in self._kwargs:
+            return self._kwargs['type']
+        if 'type' in self._context and check_return_type(self._context['type']):
+            return self._context['type']
+        return None
     
     # object refers to a metric describing a single kubernetes object
     # (for example, hits-per-second on an Ingress object).
     @typechecked
     def object(self) -> Optional[ObjectMetricSource]:
-        return self._get('object')
+        if 'object' in self._kwargs:
+            return self._kwargs['object']
+        if 'object' in self._context and check_return_type(self._context['object']):
+            return self._context['object']
+        return None
     
     # pods refers to a metric describing each pod in the current scale target
     # (for example, transactions-processed-per-second).  The values will be
     # averaged together before being compared to the target value.
     @typechecked
     def pods(self) -> Optional[PodsMetricSource]:
-        return self._get('pods')
+        if 'pods' in self._kwargs:
+            return self._kwargs['pods']
+        if 'pods' in self._context and check_return_type(self._context['pods']):
+            return self._context['pods']
+        return None
     
     # resource refers to a resource metric (such as those specified in
     # requests and limits) known to Kubernetes describing each pod in the
@@ -296,7 +389,11 @@ class MetricSpec(types.Object):
     # to normal per-pod metrics using the "pods" source.
     @typechecked
     def resource(self) -> Optional[ResourceMetricSource]:
-        return self._get('resource')
+        if 'resource' in self._kwargs:
+            return self._kwargs['resource']
+        if 'resource' in self._context and check_return_type(self._context['resource']):
+            return self._context['resource']
+        return None
     
     # external refers to a global metric that is not associated
     # with any Kubernetes object. It allows autoscaling based on information
@@ -305,7 +402,11 @@ class MetricSpec(types.Object):
     # QPS from loadbalancer running outside of cluster).
     @typechecked
     def external(self) -> Optional[ExternalMetricSource]:
-        return self._get('external')
+        if 'external' in self._kwargs:
+            return self._kwargs['external']
+        if 'external' in self._context and check_return_type(self._context['external']):
+            return self._context['external']
+        return None
 
 
 # HorizontalPodAutoscalerSpec describes the desired functionality of the HorizontalPodAutoscaler.
@@ -328,7 +429,12 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # should be collected, as well as to actually change the replica count.
     @typechecked
     def scaleTargetRef(self) -> CrossVersionObjectReference:
-        return self._get('scaleTargetRef', CrossVersionObjectReference())
+        if 'scaleTargetRef' in self._kwargs:
+            return self._kwargs['scaleTargetRef']
+        if 'scaleTargetRef' in self._context and check_return_type(self._context['scaleTargetRef']):
+            return self._context['scaleTargetRef']
+        with context.Scope(**self._context):
+            return CrossVersionObjectReference()
     
     # minReplicas is the lower limit for the number of replicas to which the autoscaler
     # can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
@@ -337,13 +443,21 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # available.
     @typechecked
     def minReplicas(self) -> Optional[int]:
-        return self._get('minReplicas')
+        if 'minReplicas' in self._kwargs:
+            return self._kwargs['minReplicas']
+        if 'minReplicas' in self._context and check_return_type(self._context['minReplicas']):
+            return self._context['minReplicas']
+        return None
     
     # maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
     # It cannot be less that minReplicas.
     @typechecked
     def maxReplicas(self) -> int:
-        return self._get('maxReplicas', 0)
+        if 'maxReplicas' in self._kwargs:
+            return self._kwargs['maxReplicas']
+        if 'maxReplicas' in self._context and check_return_type(self._context['maxReplicas']):
+            return self._context['maxReplicas']
+        return 0
     
     # metrics contains the specifications for which to use to calculate the
     # desired replica count (the maximum replica count across all metrics will
@@ -355,7 +469,11 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # If not set, the default metric will be set to 80% average CPU utilization.
     @typechecked
     def metrics(self) -> List[MetricSpec]:
-        return self._get('metrics', [])
+        if 'metrics' in self._kwargs:
+            return self._kwargs['metrics']
+        if 'metrics' in self._context and check_return_type(self._context['metrics']):
+            return self._context['metrics']
+        return []
 
 
 # HorizontalPodAutoscaler is the configuration for a horizontal pod
@@ -381,4 +499,9 @@ class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
     def spec(self) -> HorizontalPodAutoscalerSpec:
-        return self._get('spec', HorizontalPodAutoscalerSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return HorizontalPodAutoscalerSpec()

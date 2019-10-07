@@ -9,8 +9,9 @@ from typing import Any, Dict, Optional
 from k8s import base
 from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # JobSpec describes how the job execution will look like.
@@ -50,7 +51,11 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def parallelism(self) -> Optional[int]:
-        return self._get('parallelism', 1)
+        if 'parallelism' in self._kwargs:
+            return self._kwargs['parallelism']
+        if 'parallelism' in self._context and check_return_type(self._context['parallelism']):
+            return self._context['parallelism']
+        return 1
     
     # Specifies the desired number of successfully finished pods the
     # job should be run with.  Setting to nil means that the success of any
@@ -60,26 +65,42 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def completions(self) -> Optional[int]:
-        return self._get('completions', 1)
+        if 'completions' in self._kwargs:
+            return self._kwargs['completions']
+        if 'completions' in self._context and check_return_type(self._context['completions']):
+            return self._context['completions']
+        return 1
     
     # Specifies the duration in seconds relative to the startTime that the job may be active
     # before the system tries to terminate it; value must be positive integer
     @typechecked
     def activeDeadlineSeconds(self) -> Optional[int]:
-        return self._get('activeDeadlineSeconds')
+        if 'activeDeadlineSeconds' in self._kwargs:
+            return self._kwargs['activeDeadlineSeconds']
+        if 'activeDeadlineSeconds' in self._context and check_return_type(self._context['activeDeadlineSeconds']):
+            return self._context['activeDeadlineSeconds']
+        return None
     
     # Specifies the number of retries before marking this job failed.
     # Defaults to 6
     @typechecked
     def backoffLimit(self) -> Optional[int]:
-        return self._get('backoffLimit', 6)
+        if 'backoffLimit' in self._kwargs:
+            return self._kwargs['backoffLimit']
+        if 'backoffLimit' in self._context and check_return_type(self._context['backoffLimit']):
+            return self._context['backoffLimit']
+        return 6
     
     # A label query over pods that should match the pod count.
     # Normally, the system sets this field for you.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._get('selector')
+        if 'selector' in self._kwargs:
+            return self._kwargs['selector']
+        if 'selector' in self._context and check_return_type(self._context['selector']):
+            return self._context['selector']
+        return None
     
     # manualSelector controls generation of pod labels and pod selectors.
     # Leave `manualSelector` unset unless you are certain what you are doing.
@@ -93,13 +114,22 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#specifying-your-own-pod-selector
     @typechecked
     def manualSelector(self) -> Optional[bool]:
-        return self._get('manualSelector')
+        if 'manualSelector' in self._kwargs:
+            return self._kwargs['manualSelector']
+        if 'manualSelector' in self._context and check_return_type(self._context['manualSelector']):
+            return self._context['manualSelector']
+        return None
     
     # Describes the pod that will be created when executing a job.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def template(self) -> 'corev1.PodTemplateSpec':
-        return self._get('template', corev1.PodTemplateSpec())
+        if 'template' in self._kwargs:
+            return self._kwargs['template']
+        if 'template' in self._context and check_return_type(self._context['template']):
+            return self._context['template']
+        with context.Scope(**self._context):
+            return corev1.PodTemplateSpec()
     
     # ttlSecondsAfterFinished limits the lifetime of a Job that has finished
     # execution (either Complete or Failed). If this field is set,
@@ -112,7 +142,11 @@ class JobSpec(types.Object):
     # TTLAfterFinished feature.
     @typechecked
     def ttlSecondsAfterFinished(self) -> Optional[int]:
-        return self._get('ttlSecondsAfterFinished')
+        if 'ttlSecondsAfterFinished' in self._kwargs:
+            return self._kwargs['ttlSecondsAfterFinished']
+        if 'ttlSecondsAfterFinished' in self._context and check_return_type(self._context['ttlSecondsAfterFinished']):
+            return self._context['ttlSecondsAfterFinished']
+        return None
 
 
 # Job represents the configuration of a single job.
@@ -136,4 +170,9 @@ class Job(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> JobSpec:
-        return self._get('spec', JobSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return JobSpec()

@@ -8,8 +8,9 @@ from typing import Any, Dict, List, Optional
 
 from k8s import base
 from k8s.api.core import v1 as corev1
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # VolumeBindingMode indicates how PersistentVolumeClaims should be bound.
@@ -67,38 +68,62 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # Provisioner indicates the type of the provisioner.
     @typechecked
     def provisioner(self) -> str:
-        return self._get('provisioner', '')
+        if 'provisioner' in self._kwargs:
+            return self._kwargs['provisioner']
+        if 'provisioner' in self._context and check_return_type(self._context['provisioner']):
+            return self._context['provisioner']
+        return ''
     
     # Parameters holds the parameters for the provisioner that should
     # create volumes of this storage class.
     @typechecked
     def parameters(self) -> Dict[str, str]:
-        return self._get('parameters', {})
+        if 'parameters' in self._kwargs:
+            return self._kwargs['parameters']
+        if 'parameters' in self._context and check_return_type(self._context['parameters']):
+            return self._context['parameters']
+        return {}
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
     @typechecked
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
-        return self._get('reclaimPolicy', corev1.PersistentVolumeReclaimPolicy['Delete'])
+        if 'reclaimPolicy' in self._kwargs:
+            return self._kwargs['reclaimPolicy']
+        if 'reclaimPolicy' in self._context and check_return_type(self._context['reclaimPolicy']):
+            return self._context['reclaimPolicy']
+        return corev1.PersistentVolumeReclaimPolicy['Delete']
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
     # mount of the PVs will simply fail if one is invalid.
     @typechecked
     def mountOptions(self) -> List[str]:
-        return self._get('mountOptions', [])
+        if 'mountOptions' in self._kwargs:
+            return self._kwargs['mountOptions']
+        if 'mountOptions' in self._context and check_return_type(self._context['mountOptions']):
+            return self._context['mountOptions']
+        return []
     
     # AllowVolumeExpansion shows whether the storage class allow volume expand
     @typechecked
     def allowVolumeExpansion(self) -> Optional[bool]:
-        return self._get('allowVolumeExpansion')
+        if 'allowVolumeExpansion' in self._kwargs:
+            return self._kwargs['allowVolumeExpansion']
+        if 'allowVolumeExpansion' in self._context and check_return_type(self._context['allowVolumeExpansion']):
+            return self._context['allowVolumeExpansion']
+        return None
     
     # VolumeBindingMode indicates how PersistentVolumeClaims should be
     # provisioned and bound.  When unset, VolumeBindingImmediate is used.
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
-        return self._get('volumeBindingMode', VolumeBindingMode['Immediate'])
+        if 'volumeBindingMode' in self._kwargs:
+            return self._kwargs['volumeBindingMode']
+        if 'volumeBindingMode' in self._context and check_return_type(self._context['volumeBindingMode']):
+            return self._context['volumeBindingMode']
+        return VolumeBindingMode['Immediate']
     
     # Restrict the node topologies where volumes can be dynamically provisioned.
     # Each volume plugin defines its own supported topology specifications.
@@ -106,7 +131,11 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def allowedTopologies(self) -> List['corev1.TopologySelectorTerm']:
-        return self._get('allowedTopologies', [])
+        if 'allowedTopologies' in self._kwargs:
+            return self._kwargs['allowedTopologies']
+        if 'allowedTopologies' in self._context and check_return_type(self._context['allowedTopologies']):
+            return self._context['allowedTopologies']
+        return []
 
 
 # VolumeAttachmentSource represents a volume that should be attached.
@@ -129,7 +158,11 @@ class VolumeAttachmentSource(types.Object):
     # Name of the persistent volume to attach.
     @typechecked
     def persistentVolumeName(self) -> Optional[str]:
-        return self._get('persistentVolumeName')
+        if 'persistentVolumeName' in self._kwargs:
+            return self._kwargs['persistentVolumeName']
+        if 'persistentVolumeName' in self._context and check_return_type(self._context['persistentVolumeName']):
+            return self._context['persistentVolumeName']
+        return None
     
     # inlineVolumeSpec contains all the information necessary to attach
     # a persistent volume defined by a pod's inline VolumeSource. This field
@@ -139,7 +172,11 @@ class VolumeAttachmentSource(types.Object):
     # honored by servers that enabled the CSIMigration feature.
     @typechecked
     def inlineVolumeSpec(self) -> Optional['corev1.PersistentVolumeSpec']:
-        return self._get('inlineVolumeSpec')
+        if 'inlineVolumeSpec' in self._kwargs:
+            return self._kwargs['inlineVolumeSpec']
+        if 'inlineVolumeSpec' in self._context and check_return_type(self._context['inlineVolumeSpec']):
+            return self._context['inlineVolumeSpec']
+        return None
 
 
 # VolumeAttachmentSpec is the specification of a VolumeAttachment request.
@@ -157,17 +194,30 @@ class VolumeAttachmentSpec(types.Object):
     # request. This is the name returned by GetPluginName().
     @typechecked
     def attacher(self) -> str:
-        return self._get('attacher', '')
+        if 'attacher' in self._kwargs:
+            return self._kwargs['attacher']
+        if 'attacher' in self._context and check_return_type(self._context['attacher']):
+            return self._context['attacher']
+        return ''
     
     # Source represents the volume that should be attached.
     @typechecked
     def source(self) -> VolumeAttachmentSource:
-        return self._get('source', VolumeAttachmentSource())
+        if 'source' in self._kwargs:
+            return self._kwargs['source']
+        if 'source' in self._context and check_return_type(self._context['source']):
+            return self._context['source']
+        with context.Scope(**self._context):
+            return VolumeAttachmentSource()
     
     # The node that the volume should be attached to.
     @typechecked
     def nodeName(self) -> str:
-        return self._get('nodeName', '')
+        if 'nodeName' in self._kwargs:
+            return self._kwargs['nodeName']
+        if 'nodeName' in self._context and check_return_type(self._context['nodeName']):
+            return self._context['nodeName']
+        return ''
 
 
 # VolumeAttachment captures the intent to attach or detach the specified volume
@@ -194,4 +244,9 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     # Populated by the Kubernetes system.
     @typechecked
     def spec(self) -> VolumeAttachmentSpec:
-        return self._get('spec', VolumeAttachmentSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return VolumeAttachmentSpec()

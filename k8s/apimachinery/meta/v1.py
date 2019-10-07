@@ -7,8 +7,9 @@
 from typing import Any, Dict, List, Optional
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # CauseType is a machine readable value providing more detail about what
@@ -216,12 +217,20 @@ class Preconditions(types.Object):
     # Specifies the target UID.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._get('uid')
+        if 'uid' in self._kwargs:
+            return self._kwargs['uid']
+        if 'uid' in self._context and check_return_type(self._context['uid']):
+            return self._context['uid']
+        return None
     
     # Specifies the target ResourceVersion
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        return self._get('resourceVersion')
+        if 'resourceVersion' in self._kwargs:
+            return self._kwargs['resourceVersion']
+        if 'resourceVersion' in self._context and check_return_type(self._context['resourceVersion']):
+            return self._context['resourceVersion']
+        return None
 
 
 # TypeMeta describes an individual object in an API response or request
@@ -247,7 +256,11 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._get('kind')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return None
     
     # APIVersion defines the versioned schema of this representation of an object.
     # Servers should convert recognized schemas to the latest internal value, and
@@ -255,7 +268,11 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._get('apiVersion')
+        if 'apiVersion' in self._kwargs:
+            return self._kwargs['apiVersion']
+        if 'apiVersion' in self._context and check_return_type(self._context['apiVersion']):
+            return self._context['apiVersion']
+        return None
 
 
 # DeleteOptions may be provided when deleting an API object.
@@ -284,13 +301,21 @@ class DeleteOptions(base.TypedObject):
     # Defaults to a per object value if not specified. zero means delete immediately.
     @typechecked
     def gracePeriodSeconds(self) -> Optional[int]:
-        return self._get('gracePeriodSeconds')
+        if 'gracePeriodSeconds' in self._kwargs:
+            return self._kwargs['gracePeriodSeconds']
+        if 'gracePeriodSeconds' in self._context and check_return_type(self._context['gracePeriodSeconds']):
+            return self._context['gracePeriodSeconds']
+        return None
     
     # Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
     # returned.
     @typechecked
     def preconditions(self) -> Optional[Preconditions]:
-        return self._get('preconditions')
+        if 'preconditions' in self._kwargs:
+            return self._kwargs['preconditions']
+        if 'preconditions' in self._context and check_return_type(self._context['preconditions']):
+            return self._context['preconditions']
+        return None
     
     # Whether and how garbage collection will be performed.
     # Either this field or OrphanDependents may be set, but not both.
@@ -302,7 +327,11 @@ class DeleteOptions(base.TypedObject):
     # foreground.
     @typechecked
     def propagationPolicy(self) -> Optional[DeletionPropagation]:
-        return self._get('propagationPolicy')
+        if 'propagationPolicy' in self._kwargs:
+            return self._kwargs['propagationPolicy']
+        if 'propagationPolicy' in self._context and check_return_type(self._context['propagationPolicy']):
+            return self._context['propagationPolicy']
+        return None
     
     # When present, indicates that modifications should not be
     # persisted. An invalid or unrecognized dryRun directive will
@@ -311,7 +340,11 @@ class DeleteOptions(base.TypedObject):
     # - All: all dry run stages will be processed
     @typechecked
     def dryRun(self) -> List[str]:
-        return self._get('dryRun', [])
+        if 'dryRun' in self._kwargs:
+            return self._kwargs['dryRun']
+        if 'dryRun' in self._context and check_return_type(self._context['dryRun']):
+            return self._context['dryRun']
+        return []
 
 
 # Duration is a wrapper around time.Duration which supports correct
@@ -327,7 +360,11 @@ class Duration(types.Object):
     
     @typechecked
     def duration(self) -> int:
-        return self._get('Duration', 0)
+        if 'Duration' in self._kwargs:
+            return self._kwargs['Duration']
+        if 'Duration' in self._context and check_return_type(self._context['Duration']):
+            return self._context['Duration']
+        return 0
 
 
 # GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
@@ -344,15 +381,27 @@ class GroupVersionKind(types.Object):
     
     @typechecked
     def group(self) -> str:
-        return self._get('group', '')
+        if 'group' in self._kwargs:
+            return self._kwargs['group']
+        if 'group' in self._context and check_return_type(self._context['group']):
+            return self._context['group']
+        return ''
     
     @typechecked
     def version(self) -> str:
-        return self._get('version', '')
+        if 'version' in self._kwargs:
+            return self._kwargs['version']
+        if 'version' in self._context and check_return_type(self._context['version']):
+            return self._context['version']
+        return ''
     
     @typechecked
     def kind(self) -> str:
-        return self._get('kind', '')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return ''
 
 
 # GroupVersionResource unambiguously identifies a resource.  It doesn't anonymously include GroupVersion
@@ -369,15 +418,27 @@ class GroupVersionResource(types.Object):
     
     @typechecked
     def group(self) -> str:
-        return self._get('group', '')
+        if 'group' in self._kwargs:
+            return self._kwargs['group']
+        if 'group' in self._context and check_return_type(self._context['group']):
+            return self._context['group']
+        return ''
     
     @typechecked
     def version(self) -> str:
-        return self._get('version', '')
+        if 'version' in self._kwargs:
+            return self._kwargs['version']
+        if 'version' in self._context and check_return_type(self._context['version']):
+            return self._context['version']
+        return ''
     
     @typechecked
     def resource(self) -> str:
-        return self._get('resource', '')
+        if 'resource' in self._kwargs:
+            return self._kwargs['resource']
+        if 'resource' in self._context and check_return_type(self._context['resource']):
+            return self._context['resource']
+        return ''
 
 
 # A label selector requirement is a selector that contains values, a key, and an operator that
@@ -397,13 +458,21 @@ class LabelSelectorRequirement(types.Object):
     # key is the label key that the selector applies to.
     @typechecked
     def key(self) -> str:
-        return self._get('key', '')
+        if 'key' in self._kwargs:
+            return self._kwargs['key']
+        if 'key' in self._context and check_return_type(self._context['key']):
+            return self._context['key']
+        return ''
     
     # operator represents a key's relationship to a set of values.
     # Valid operators are In, NotIn, Exists and DoesNotExist.
     @typechecked
     def operator(self) -> LabelSelectorOperator:
-        return self._get('operator')
+        if 'operator' in self._kwargs:
+            return self._kwargs['operator']
+        if 'operator' in self._context and check_return_type(self._context['operator']):
+            return self._context['operator']
+        return None
     
     # values is an array of string values. If the operator is In or NotIn,
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
@@ -411,7 +480,11 @@ class LabelSelectorRequirement(types.Object):
     # merge patch.
     @typechecked
     def values(self) -> List[str]:
-        return self._get('values', [])
+        if 'values' in self._kwargs:
+            return self._kwargs['values']
+        if 'values' in self._context and check_return_type(self._context['values']):
+            return self._context['values']
+        return []
 
 
 # A label selector is a label query over a set of resources. The result of matchLabels and
@@ -435,12 +508,20 @@ class LabelSelector(types.Object):
     # operator is "In", and the values array contains only "value". The requirements are ANDed.
     @typechecked
     def matchLabels(self) -> Dict[str, str]:
-        return self._get('matchLabels', {})
+        if 'matchLabels' in self._kwargs:
+            return self._kwargs['matchLabels']
+        if 'matchLabels' in self._context and check_return_type(self._context['matchLabels']):
+            return self._context['matchLabels']
+        return {}
     
     # matchExpressions is a list of label selector requirements. The requirements are ANDed.
     @typechecked
     def matchExpressions(self) -> List[LabelSelectorRequirement]:
-        return self._get('matchExpressions', [])
+        if 'matchExpressions' in self._kwargs:
+            return self._kwargs['matchExpressions']
+        if 'matchExpressions' in self._context and check_return_type(self._context['matchExpressions']):
+            return self._context['matchExpressions']
+        return []
 
 
 # ListMeta describes metadata that synthetic resources must have, including lists and
@@ -467,7 +548,11 @@ class ListMeta(types.Object):
     # message.
     @typechecked
     def continue_(self) -> Optional[str]:
-        return self._get('continue')
+        if 'continue' in self._kwargs:
+            return self._kwargs['continue']
+        if 'continue' in self._context and check_return_type(self._context['continue']):
+            return self._context['continue']
+        return None
     
     # remainingItemCount is the number of subsequent items in the list which are not included in this
     # list response. If the list request contained label or field selectors, then the number of
@@ -480,7 +565,11 @@ class ListMeta(types.Object):
     # should not rely on the remainingItemCount to be set or to be exact.
     @typechecked
     def remainingItemCount(self) -> Optional[int]:
-        return self._get('remainingItemCount')
+        if 'remainingItemCount' in self._kwargs:
+            return self._kwargs['remainingItemCount']
+        if 'remainingItemCount' in self._context and check_return_type(self._context['remainingItemCount']):
+            return self._context['remainingItemCount']
+        return None
 
 
 # ObjectMeta is metadata that all persisted resources must have, which includes all objects
@@ -512,7 +601,11 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
     
     # Namespace defines the space within each name must be unique. An empty namespace is
     # equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -524,7 +617,11 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._get('namespace')
+        if 'namespace' in self._kwargs:
+            return self._kwargs['namespace']
+        if 'namespace' in self._context and check_return_type(self._context['namespace']):
+            return self._context['namespace']
+        return None
     
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
@@ -532,7 +629,11 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        return self._get('labels', {})
+        if 'labels' in self._kwargs:
+            return self._kwargs['labels']
+        if 'labels' in self._context and check_return_type(self._context['labels']):
+            return self._context['labels']
+        return {}
     
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -540,7 +641,11 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._get('annotations', {})
+        if 'annotations' in self._kwargs:
+            return self._kwargs['annotations']
+        if 'annotations' in self._context and check_return_type(self._context['annotations']):
+            return self._context['annotations']
+        return {}
 
 
 # StatusCause provides more information about an api.Status failure, including
@@ -565,13 +670,21 @@ class StatusCause(types.Object):
     # empty there is no information available.
     @typechecked
     def reason(self) -> Optional[CauseType]:
-        return self._get('reason')
+        if 'reason' in self._kwargs:
+            return self._kwargs['reason']
+        if 'reason' in self._context and check_return_type(self._context['reason']):
+            return self._context['reason']
+        return None
     
     # A human-readable description of the cause of the error.  This field may be
     # presented as-is to a reader.
     @typechecked
     def message(self) -> Optional[str]:
-        return self._get('message')
+        if 'message' in self._kwargs:
+            return self._kwargs['message']
+        if 'message' in self._context and check_return_type(self._context['message']):
+            return self._context['message']
+        return None
     
     # The field of the resource that has caused this error, as named by its JSON
     # serialization. May include dot and postfix notation for nested attributes.
@@ -584,7 +697,11 @@ class StatusCause(types.Object):
     #   "items[0].name" - the field "name" on the first array entry in "items"
     @typechecked
     def field(self) -> Optional[str]:
-        return self._get('field')
+        if 'field' in self._kwargs:
+            return self._kwargs['field']
+        if 'field' in self._context and check_return_type(self._context['field']):
+            return self._context['field']
+        return None
 
 
 # StatusDetails is a set of additional properties that MAY be set by the
@@ -622,39 +739,63 @@ class StatusDetails(types.Object):
     # (when there is a single name which can be described).
     @typechecked
     def name(self) -> Optional[str]:
-        return self._get('name')
+        if 'name' in self._kwargs:
+            return self._kwargs['name']
+        if 'name' in self._context and check_return_type(self._context['name']):
+            return self._context['name']
+        return None
     
     # The group attribute of the resource associated with the status StatusReason.
     @typechecked
     def group(self) -> Optional[str]:
-        return self._get('group')
+        if 'group' in self._kwargs:
+            return self._kwargs['group']
+        if 'group' in self._context and check_return_type(self._context['group']):
+            return self._context['group']
+        return None
     
     # The kind attribute of the resource associated with the status StatusReason.
     # On some operations may differ from the requested resource Kind.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._get('kind')
+        if 'kind' in self._kwargs:
+            return self._kwargs['kind']
+        if 'kind' in self._context and check_return_type(self._context['kind']):
+            return self._context['kind']
+        return None
     
     # UID of the resource.
     # (when there is a single resource which can be described).
     # More info: http://kubernetes.io/docs/user-guide/identifiers#uids
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._get('uid')
+        if 'uid' in self._kwargs:
+            return self._kwargs['uid']
+        if 'uid' in self._context and check_return_type(self._context['uid']):
+            return self._context['uid']
+        return None
     
     # The Causes array includes more details associated with the StatusReason
     # failure. Not all StatusReasons may provide detailed causes.
     @typechecked
     def causes(self) -> List[StatusCause]:
-        return self._get('causes', [])
+        if 'causes' in self._kwargs:
+            return self._kwargs['causes']
+        if 'causes' in self._context and check_return_type(self._context['causes']):
+            return self._context['causes']
+        return []
     
     # If specified, the time in seconds before the operation should be retried. Some errors may indicate
     # the client must take an alternate action - for those errors this field may indicate how long to wait
     # before taking the alternate action.
     @typechecked
     def retryAfterSeconds(self) -> Optional[int]:
-        return self._get('retryAfterSeconds')
+        if 'retryAfterSeconds' in self._kwargs:
+            return self._kwargs['retryAfterSeconds']
+        if 'retryAfterSeconds' in self._context and check_return_type(self._context['retryAfterSeconds']):
+            return self._context['retryAfterSeconds']
+        return None
 
 
 # Status is a return value for calls that don't return other objects.
@@ -685,19 +826,32 @@ class Status(base.TypedObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def metadata(self) -> ListMeta:
-        return self._get('metadata', ListMeta())
+        if 'metadata' in self._kwargs:
+            return self._kwargs['metadata']
+        if 'metadata' in self._context and check_return_type(self._context['metadata']):
+            return self._context['metadata']
+        with context.Scope(**self._context):
+            return ListMeta()
     
     # Status of the operation.
     # One of: "Success" or "Failure".
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def status(self) -> Optional[str]:
-        return self._get('status')
+        if 'status' in self._kwargs:
+            return self._kwargs['status']
+        if 'status' in self._context and check_return_type(self._context['status']):
+            return self._context['status']
+        return None
     
     # A human-readable description of the status of this operation.
     @typechecked
     def message(self) -> Optional[str]:
-        return self._get('message')
+        if 'message' in self._kwargs:
+            return self._kwargs['message']
+        if 'message' in self._context and check_return_type(self._context['message']):
+            return self._context['message']
+        return None
     
     # A machine-readable description of why this operation is in the
     # "Failure" status. If this value is empty there
@@ -705,7 +859,11 @@ class Status(base.TypedObject):
     # code but does not override it.
     @typechecked
     def reason(self) -> Optional[StatusReason]:
-        return self._get('reason')
+        if 'reason' in self._kwargs:
+            return self._kwargs['reason']
+        if 'reason' in self._context and check_return_type(self._context['reason']):
+            return self._context['reason']
+        return None
     
     # Extended data associated with the reason.  Each reason may define its
     # own extended details. This field is optional and the data returned
@@ -713,9 +871,17 @@ class Status(base.TypedObject):
     # the reason type.
     @typechecked
     def details(self) -> Optional[StatusDetails]:
-        return self._get('details')
+        if 'details' in self._kwargs:
+            return self._kwargs['details']
+        if 'details' in self._context and check_return_type(self._context['details']):
+            return self._context['details']
+        return None
     
     # Suggested HTTP return code for this status, 0 if not set.
     @typechecked
     def code(self) -> Optional[int]:
-        return self._get('code')
+        if 'code' in self._kwargs:
+            return self._kwargs['code']
+        if 'code' in self._context and check_return_type(self._context['code']):
+            return self._context['code']
+        return None

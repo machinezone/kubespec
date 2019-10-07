@@ -7,8 +7,9 @@
 from typing import Any, Dict, List, Optional, Union
 
 from k8s import base
+from kargo import context
 from kargo import types
-from typeguard import typechecked
+from typeguard import check_return_type, typechecked
 
 
 # IngressBackend describes all endpoints for a given service and port.
@@ -24,12 +25,20 @@ class IngressBackend(types.Object):
     # Specifies the name of the referenced service.
     @typechecked
     def serviceName(self) -> str:
-        return self._get('serviceName', '')
+        if 'serviceName' in self._kwargs:
+            return self._kwargs['serviceName']
+        if 'serviceName' in self._context and check_return_type(self._context['serviceName']):
+            return self._context['serviceName']
+        return ''
     
     # Specifies the port of the referenced service.
     @typechecked
     def servicePort(self) -> Union[int, str]:
-        return self._get('servicePort', 0)
+        if 'servicePort' in self._kwargs:
+            return self._kwargs['servicePort']
+        if 'servicePort' in self._context and check_return_type(self._context['servicePort']):
+            return self._context['servicePort']
+        return 0
 
 
 # HTTPIngressPath associates a path regex with a backend. Incoming urls matching
@@ -54,13 +63,22 @@ class HTTPIngressPath(types.Object):
     # traffic to the backend.
     @typechecked
     def path(self) -> Optional[str]:
-        return self._get('path')
+        if 'path' in self._kwargs:
+            return self._kwargs['path']
+        if 'path' in self._context and check_return_type(self._context['path']):
+            return self._context['path']
+        return None
     
     # Backend defines the referenced service endpoint to which the traffic
     # will be forwarded to.
     @typechecked
     def backend(self) -> IngressBackend:
-        return self._get('backend', IngressBackend())
+        if 'backend' in self._kwargs:
+            return self._kwargs['backend']
+        if 'backend' in self._context and check_return_type(self._context['backend']):
+            return self._context['backend']
+        with context.Scope(**self._context):
+            return IngressBackend()
 
 
 # HTTPIngressRuleValue is a list of http selectors pointing to backends.
@@ -79,7 +97,11 @@ class HTTPIngressRuleValue(types.Object):
     # A collection of paths that map requests to backends.
     @typechecked
     def paths(self) -> List[HTTPIngressPath]:
-        return self._get('paths', [])
+        if 'paths' in self._kwargs:
+            return self._kwargs['paths']
+        if 'paths' in self._context and check_return_type(self._context['paths']):
+            return self._context['paths']
+        return []
 
 
 # IngressRuleValue represents a rule to apply against incoming requests. If the
@@ -98,7 +120,11 @@ class IngressRuleValue(types.Object):
     
     @typechecked
     def http(self) -> Optional[HTTPIngressRuleValue]:
-        return self._get('http')
+        if 'http' in self._kwargs:
+            return self._kwargs['http']
+        if 'http' in self._context and check_return_type(self._context['http']):
+            return self._context['http']
+        return None
 
 
 # IngressRule represents the rules mapping the paths under a specified host to
@@ -129,7 +155,11 @@ class IngressRule(types.Object):
     # specified IngressRuleValue.
     @typechecked
     def host(self) -> Optional[str]:
-        return self._get('host')
+        if 'host' in self._kwargs:
+            return self._kwargs['host']
+        if 'host' in self._context and check_return_type(self._context['host']):
+            return self._context['host']
+        return None
     
     # IngressRuleValue represents a rule to route requests for this IngressRule.
     # If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -138,7 +168,12 @@ class IngressRule(types.Object):
     # currently the only supported IngressRuleValue.
     @typechecked
     def ingressRuleValue(self) -> IngressRuleValue:
-        return self._get('ingressRuleValue', IngressRuleValue())
+        if 'ingressRuleValue' in self._kwargs:
+            return self._kwargs['ingressRuleValue']
+        if 'ingressRuleValue' in self._context and check_return_type(self._context['ingressRuleValue']):
+            return self._context['ingressRuleValue']
+        with context.Scope(**self._context):
+            return IngressRuleValue()
 
 
 # IngressTLS describes the transport layer security associated with an Ingress.
@@ -161,7 +196,11 @@ class IngressTLS(types.Object):
     # Ingress, if left unspecified.
     @typechecked
     def hosts(self) -> List[str]:
-        return self._get('hosts', [])
+        if 'hosts' in self._kwargs:
+            return self._kwargs['hosts']
+        if 'hosts' in self._context and check_return_type(self._context['hosts']):
+            return self._context['hosts']
+        return []
     
     # SecretName is the name of the secret used to terminate SSL traffic on 443.
     # Field is left optional to allow SSL routing based on SNI hostname alone.
@@ -170,7 +209,11 @@ class IngressTLS(types.Object):
     # Host header is used for routing.
     @typechecked
     def secretName(self) -> Optional[str]:
-        return self._get('secretName')
+        if 'secretName' in self._kwargs:
+            return self._kwargs['secretName']
+        if 'secretName' in self._context and check_return_type(self._context['secretName']):
+            return self._context['secretName']
+        return None
 
 
 # IngressSpec describes the Ingress the user wishes to exist.
@@ -196,7 +239,11 @@ class IngressSpec(types.Object):
     # specify a global default.
     @typechecked
     def backend(self) -> Optional[IngressBackend]:
-        return self._get('backend')
+        if 'backend' in self._kwargs:
+            return self._kwargs['backend']
+        if 'backend' in self._context and check_return_type(self._context['backend']):
+            return self._context['backend']
+        return None
     
     # TLS configuration. Currently the Ingress only supports a single TLS
     # port, 443. If multiple members of this list specify different hosts, they
@@ -205,13 +252,21 @@ class IngressSpec(types.Object):
     # ingress supports SNI.
     @typechecked
     def tls(self) -> List[IngressTLS]:
-        return self._get('tls', [])
+        if 'tls' in self._kwargs:
+            return self._kwargs['tls']
+        if 'tls' in self._context and check_return_type(self._context['tls']):
+            return self._context['tls']
+        return []
     
     # A list of host rules used to configure the Ingress. If unspecified, or
     # no rule matches, all traffic is sent to the default backend.
     @typechecked
     def rules(self) -> List[IngressRule]:
-        return self._get('rules', [])
+        if 'rules' in self._kwargs:
+            return self._kwargs['rules']
+        if 'rules' in self._context and check_return_type(self._context['rules']):
+            return self._context['rules']
+        return []
 
 
 # Ingress is a collection of rules that allow inbound connections to reach the
@@ -238,4 +293,9 @@ class Ingress(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> IngressSpec:
-        return self._get('spec', IngressSpec())
+        if 'spec' in self._kwargs:
+            return self._kwargs['spec']
+        if 'spec' in self._context and check_return_type(self._context['spec']):
+            return self._context['spec']
+        with context.Scope(**self._context):
+            return IngressSpec()
