@@ -27,7 +27,7 @@ class MetricIdentifier(types.Object):
     # name is the name of the given metric
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # selector represents the label selector that could be used to select
     # this metric, and will generally just be the selector passed in to
@@ -35,7 +35,7 @@ class MetricIdentifier(types.Object):
     # When left blank, only the metric's Name will be used to gather metrics.
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('selector')
+        return self._get('selector')
 
 
 # MetricListOptions is used to select metrics by their label selectors
@@ -64,12 +64,12 @@ class MetricListOptions(base.TypedObject):
     # Defaults to everything.
     @typechecked
     def labelSelector(self) -> Optional[str]:
-        return self._kwargs.get('labelSelector')
+        return self._get('labelSelector')
     
     # A selector to restrict the list of returned metrics by their labels
     @typechecked
     def metricLabelSelector(self) -> Optional[str]:
-        return self._kwargs.get('metricLabelSelector')
+        return self._get('metricLabelSelector')
 
 
 # MetricValue is the metric value for some object
@@ -98,16 +98,16 @@ class MetricValue(base.TypedObject):
     # a reference to the described object
     @typechecked
     def describedObject(self) -> 'corev1.ObjectReference':
-        return self._kwargs.get('describedObject', corev1.ObjectReference())
+        return self._get('describedObject', corev1.ObjectReference())
     
     @typechecked
     def metric(self) -> MetricIdentifier:
-        return self._kwargs.get('metric', MetricIdentifier())
+        return self._get('metric', MetricIdentifier())
     
     # indicates the time at which the metrics were produced
     @typechecked
     def timestamp(self) -> 'base.Time':
-        return self._kwargs.get('timestamp')
+        return self._get('timestamp')
     
     # indicates the window ([Timestamp-Window, Timestamp]) from
     # which these metrics were calculated, when returning rate
@@ -115,9 +115,9 @@ class MetricValue(base.TypedObject):
     # non-calculated instantaneous metrics).
     @typechecked
     def windowSeconds(self) -> Optional[int]:
-        return self._kwargs.get('windowSeconds')
+        return self._get('windowSeconds')
     
     # the value of the metric for this
     @typechecked
     def value(self) -> 'resource.Quantity':
-        return self._kwargs.get('value', resource.Quantity())
+        return self._get('value', resource.Quantity())

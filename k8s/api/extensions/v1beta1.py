@@ -152,7 +152,7 @@ class AllowedCSIDriver(types.Object):
     # Name is the registered name of the CSI driver
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
 
 
 # AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
@@ -168,7 +168,7 @@ class AllowedFlexVolume(types.Object):
     # driver is the name of the Flexvolume driver.
     @typechecked
     def driver(self) -> str:
-        return self._kwargs.get('driver', '')
+        return self._get('driver', '')
 
 
 # AllowedHostPath defines the host volume conditions that will be enabled by a policy
@@ -196,12 +196,12 @@ class AllowedHostPath(types.Object):
     # `/foo` would not allow `/food` or `/etc/foo`
     @typechecked
     def pathPrefix(self) -> Optional[str]:
-        return self._kwargs.get('pathPrefix')
+        return self._get('pathPrefix')
     
     # when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        return self._kwargs.get('readOnly')
+        return self._get('readOnly')
 
 
 # Spec to control the desired behavior of daemon set rolling update.
@@ -231,7 +231,7 @@ class RollingUpdateDaemonSet(types.Object):
     # all times during the update.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        return self._kwargs.get('maxUnavailable')
+        return self._get('maxUnavailable')
 
 
 class DaemonSetUpdateStrategy(types.Object):
@@ -251,7 +251,7 @@ class DaemonSetUpdateStrategy(types.Object):
     # Default is OnDelete.
     @typechecked
     def type(self) -> Optional[DaemonSetUpdateStrategyType]:
-        return self._kwargs.get('type', DaemonSetUpdateStrategyType['OnDelete'])
+        return self._get('type', DaemonSetUpdateStrategyType['OnDelete'])
     
     # Rolling update config params. Present only if type = "RollingUpdate".
     # ---
@@ -260,7 +260,7 @@ class DaemonSetUpdateStrategy(types.Object):
     # See https://github.com/kubernetes/kubernetes/issues/35345
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
-        return self._kwargs.get('rollingUpdate')
+        return self._get('rollingUpdate')
 
 
 # DaemonSetSpec is the specification of a daemon set.
@@ -288,7 +288,7 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('selector')
+        return self._get('selector')
     
     # An object that describes the pod that will be created.
     # The DaemonSet will create exactly one copy of this pod on every node
@@ -297,12 +297,12 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
     def template(self) -> 'corev1.PodTemplateSpec':
-        return self._kwargs.get('template', corev1.PodTemplateSpec())
+        return self._get('template', corev1.PodTemplateSpec())
     
     # An update strategy to replace existing DaemonSet pods with new pods.
     @typechecked
     def updateStrategy(self) -> DaemonSetUpdateStrategy:
-        return self._kwargs.get('updateStrategy', DaemonSetUpdateStrategy())
+        return self._get('updateStrategy', DaemonSetUpdateStrategy())
     
     # The minimum number of seconds for which a newly created DaemonSet pod should
     # be ready without any of its container crashing, for it to be considered
@@ -310,14 +310,14 @@ class DaemonSetSpec(types.Object):
     # is ready).
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        return self._kwargs.get('minReadySeconds')
+        return self._get('minReadySeconds')
     
     # The number of old history to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 10.
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        return self._kwargs.get('revisionHistoryLimit', 10)
+        return self._get('revisionHistoryLimit', 10)
 
 
 # DEPRECATED - This group version of DaemonSet is deprecated by apps/v1beta2/DaemonSet. See the release notes for
@@ -343,7 +343,7 @@ class DaemonSet(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> DaemonSetSpec:
-        return self._kwargs.get('spec', DaemonSetSpec())
+        return self._get('spec', DaemonSetSpec())
 
 
 # Spec to control the desired behavior of rolling update.
@@ -372,7 +372,7 @@ class RollingUpdateDeployment(types.Object):
     # least 70% of desired pods.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        return self._kwargs.get('maxUnavailable', 1)
+        return self._get('maxUnavailable', 1)
     
     # The maximum number of pods that can be scheduled above the desired number of
     # pods.
@@ -387,7 +387,7 @@ class RollingUpdateDeployment(types.Object):
     # at any time during the update is at most 130% of desired pods.
     @typechecked
     def maxSurge(self) -> Optional[Union[int, str]]:
-        return self._kwargs.get('maxSurge', 1)
+        return self._get('maxSurge', 1)
 
 
 # DeploymentStrategy describes how to replace existing pods with new ones.
@@ -407,7 +407,7 @@ class DeploymentStrategy(types.Object):
     # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
     @typechecked
     def type(self) -> Optional[DeploymentStrategyType]:
-        return self._kwargs.get('type', DeploymentStrategyType['RollingUpdate'])
+        return self._get('type', DeploymentStrategyType['RollingUpdate'])
     
     # Rolling update config params. Present only if DeploymentStrategyType =
     # RollingUpdate.
@@ -416,7 +416,7 @@ class DeploymentStrategy(types.Object):
     # to be.
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
-        return self._kwargs.get('rollingUpdate', RollingUpdateDeployment())
+        return self._get('rollingUpdate', RollingUpdateDeployment())
 
 
 # DeploymentSpec is the specification of the desired behavior of the Deployment.
@@ -451,30 +451,30 @@ class DeploymentSpec(types.Object):
     # zero and not specified. Defaults to 1.
     @typechecked
     def replicas(self) -> Optional[int]:
-        return self._kwargs.get('replicas', 1)
+        return self._get('replicas', 1)
     
     # Label selector for pods. Existing ReplicaSets whose pods are
     # selected by this will be the ones affected by this deployment.
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('selector')
+        return self._get('selector')
     
     # Template describes the pods that will be created.
     @typechecked
     def template(self) -> 'corev1.PodTemplateSpec':
-        return self._kwargs.get('template', corev1.PodTemplateSpec())
+        return self._get('template', corev1.PodTemplateSpec())
     
     # The deployment strategy to use to replace existing pods with new ones.
     @typechecked
     def strategy(self) -> DeploymentStrategy:
-        return self._kwargs.get('strategy', DeploymentStrategy())
+        return self._get('strategy', DeploymentStrategy())
     
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        return self._kwargs.get('minReadySeconds')
+        return self._get('minReadySeconds')
     
     # The number of old ReplicaSets to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
@@ -482,13 +482,13 @@ class DeploymentSpec(types.Object):
     # means "retaining all old RelicaSets".
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        return self._kwargs.get('revisionHistoryLimit', 2147483647)
+        return self._get('revisionHistoryLimit', 2147483647)
     
     # Indicates that the deployment is paused and will not be processed by the
     # deployment controller.
     @typechecked
     def paused(self) -> Optional[bool]:
-        return self._kwargs.get('paused')
+        return self._get('paused')
     
     # The maximum time in seconds for a deployment to make progress before it
     # is considered to be failed. The deployment controller will continue to
@@ -498,7 +498,7 @@ class DeploymentSpec(types.Object):
     # the max value of int32 (i.e. 2147483647) by default, which means "no deadline".
     @typechecked
     def progressDeadlineSeconds(self) -> Optional[int]:
-        return self._kwargs.get('progressDeadlineSeconds', 2147483647)
+        return self._get('progressDeadlineSeconds', 2147483647)
 
 
 # DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
@@ -523,7 +523,7 @@ class Deployment(base.TypedObject, base.MetadataObject):
     # Specification of the desired behavior of the Deployment.
     @typechecked
     def spec(self) -> DeploymentSpec:
-        return self._kwargs.get('spec', DeploymentSpec())
+        return self._get('spec', DeploymentSpec())
 
 
 # DEPRECATED.
@@ -540,7 +540,7 @@ class RollbackConfig(types.Object):
     # The revision to rollback to. If set to 0, rollback to the last revision.
     @typechecked
     def revision(self) -> Optional[int]:
-        return self._kwargs.get('revision')
+        return self._get('revision')
 
 
 # DEPRECATED.
@@ -568,17 +568,17 @@ class DeploymentRollback(base.TypedObject):
     # Required: This must match the Name of a deployment.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # The annotations to be updated to a deployment
     @typechecked
     def updatedAnnotations(self) -> Dict[str, str]:
-        return self._kwargs.get('updatedAnnotations', {})
+        return self._get('updatedAnnotations', {})
     
     # The config of this deployment rollback.
     @typechecked
     def rollbackTo(self) -> RollbackConfig:
-        return self._kwargs.get('rollbackTo', RollbackConfig())
+        return self._get('rollbackTo', RollbackConfig())
 
 
 # IDRange provides a min/max of an allowed range of IDs.
@@ -595,12 +595,12 @@ class IDRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        return self._kwargs.get('min', 0)
+        return self._get('min', 0)
     
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        return self._kwargs.get('max', 0)
+        return self._get('max', 0)
 
 
 # FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
@@ -621,13 +621,13 @@ class FSGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[FSGroupStrategyType]:
-        return self._kwargs.get('rule')
+        return self._get('rule')
     
     # ranges are the allowed ranges of fs groups.  If you would like to force a single
     # fs group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
     def ranges(self) -> List[IDRange]:
-        return self._kwargs.get('ranges', [])
+        return self._get('ranges', [])
 
 
 # IngressBackend describes all endpoints for a given service and port.
@@ -643,12 +643,12 @@ class IngressBackend(types.Object):
     # Specifies the name of the referenced service.
     @typechecked
     def serviceName(self) -> str:
-        return self._kwargs.get('serviceName', '')
+        return self._get('serviceName', '')
     
     # Specifies the port of the referenced service.
     @typechecked
     def servicePort(self) -> Union[int, str]:
-        return self._kwargs.get('servicePort', 0)
+        return self._get('servicePort', 0)
 
 
 # HTTPIngressPath associates a path regex with a backend. Incoming urls matching
@@ -673,13 +673,13 @@ class HTTPIngressPath(types.Object):
     # traffic to the backend.
     @typechecked
     def path(self) -> Optional[str]:
-        return self._kwargs.get('path')
+        return self._get('path')
     
     # Backend defines the referenced service endpoint to which the traffic
     # will be forwarded to.
     @typechecked
     def backend(self) -> IngressBackend:
-        return self._kwargs.get('backend', IngressBackend())
+        return self._get('backend', IngressBackend())
 
 
 # HTTPIngressRuleValue is a list of http selectors pointing to backends.
@@ -698,7 +698,7 @@ class HTTPIngressRuleValue(types.Object):
     # A collection of paths that map requests to backends.
     @typechecked
     def paths(self) -> List[HTTPIngressPath]:
-        return self._kwargs.get('paths', [])
+        return self._get('paths', [])
 
 
 # HostPortRange defines a range of host ports that will be enabled by a policy
@@ -716,12 +716,12 @@ class HostPortRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        return self._kwargs.get('min', 0)
+        return self._get('min', 0)
     
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        return self._kwargs.get('max', 0)
+        return self._get('max', 0)
 
 
 # DEPRECATED 1.9 - This group version of IPBlock is deprecated by networking/v1/IPBlock.
@@ -743,14 +743,14 @@ class IPBlock(types.Object):
     # Valid examples are "192.168.1.1/24"
     @typechecked
     def cidr(self) -> str:
-        return self._kwargs.get('cidr', '')
+        return self._get('cidr', '')
     
     # Except is a slice of CIDRs that should not be included within an IP Block
     # Valid examples are "192.168.1.1/24"
     # Except values will be rejected if they are outside the CIDR range
     @typechecked
     def except_(self) -> List[str]:
-        return self._kwargs.get('except', [])
+        return self._get('except', [])
 
 
 # IngressRuleValue represents a rule to apply against incoming requests. If the
@@ -769,7 +769,7 @@ class IngressRuleValue(types.Object):
     
     @typechecked
     def http(self) -> Optional[HTTPIngressRuleValue]:
-        return self._kwargs.get('http')
+        return self._get('http')
 
 
 # IngressRule represents the rules mapping the paths under a specified host to
@@ -800,7 +800,7 @@ class IngressRule(types.Object):
     # specified IngressRuleValue.
     @typechecked
     def host(self) -> Optional[str]:
-        return self._kwargs.get('host')
+        return self._get('host')
     
     # IngressRuleValue represents a rule to route requests for this IngressRule.
     # If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -809,7 +809,7 @@ class IngressRule(types.Object):
     # currently the only supported IngressRuleValue.
     @typechecked
     def ingressRuleValue(self) -> IngressRuleValue:
-        return self._kwargs.get('ingressRuleValue', IngressRuleValue())
+        return self._get('ingressRuleValue', IngressRuleValue())
 
 
 # IngressTLS describes the transport layer security associated with an Ingress.
@@ -832,7 +832,7 @@ class IngressTLS(types.Object):
     # Ingress, if left unspecified.
     @typechecked
     def hosts(self) -> List[str]:
-        return self._kwargs.get('hosts', [])
+        return self._get('hosts', [])
     
     # SecretName is the name of the secret used to terminate SSL traffic on 443.
     # Field is left optional to allow SSL routing based on SNI hostname alone.
@@ -841,7 +841,7 @@ class IngressTLS(types.Object):
     # Host header is used for routing.
     @typechecked
     def secretName(self) -> Optional[str]:
-        return self._kwargs.get('secretName')
+        return self._get('secretName')
 
 
 # IngressSpec describes the Ingress the user wishes to exist.
@@ -867,7 +867,7 @@ class IngressSpec(types.Object):
     # specify a global default.
     @typechecked
     def backend(self) -> Optional[IngressBackend]:
-        return self._kwargs.get('backend')
+        return self._get('backend')
     
     # TLS configuration. Currently the Ingress only supports a single TLS
     # port, 443. If multiple members of this list specify different hosts, they
@@ -876,13 +876,13 @@ class IngressSpec(types.Object):
     # ingress supports SNI.
     @typechecked
     def tls(self) -> List[IngressTLS]:
-        return self._kwargs.get('tls', [])
+        return self._get('tls', [])
     
     # A list of host rules used to configure the Ingress. If unspecified, or
     # no rule matches, all traffic is sent to the default backend.
     @typechecked
     def rules(self) -> List[IngressRule]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
 
 
 # Ingress is a collection of rules that allow inbound connections to reach the
@@ -910,7 +910,7 @@ class Ingress(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> IngressSpec:
-        return self._kwargs.get('spec', IngressSpec())
+        return self._get('spec', IngressSpec())
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyPeer is deprecated by networking/v1/NetworkPolicyPeer.
@@ -938,7 +938,7 @@ class NetworkPolicyPeer(types.Object):
     # Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
     @typechecked
     def podSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('podSelector')
+        return self._get('podSelector')
     
     # Selects Namespaces using cluster-scoped labels. This field follows standard label
     # selector semantics; if present but empty, it selects all namespaces.
@@ -948,13 +948,13 @@ class NetworkPolicyPeer(types.Object):
     # Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
     @typechecked
     def namespaceSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('namespaceSelector')
+        return self._get('namespaceSelector')
     
     # IPBlock defines policy on a particular IPBlock. If this field is set then
     # neither of the other fields can be.
     @typechecked
     def ipBlock(self) -> Optional[IPBlock]:
-        return self._kwargs.get('ipBlock')
+        return self._get('ipBlock')
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyPort is deprecated by networking/v1/NetworkPolicyPort.
@@ -975,7 +975,7 @@ class NetworkPolicyPort(types.Object):
     # If not specified, this field defaults to TCP.
     @typechecked
     def protocol(self) -> Optional[corev1.Protocol]:
-        return self._kwargs.get('protocol')
+        return self._get('protocol')
     
     # If specified, the port on the given protocol.  This can
     # either be a numerical or named port on a pod.  If this field is not provided,
@@ -984,7 +984,7 @@ class NetworkPolicyPort(types.Object):
     # will be matched.
     @typechecked
     def port(self) -> Optional[Union[int, str]]:
-        return self._kwargs.get('port')
+        return self._get('port')
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyEgressRule is deprecated by networking/v1/NetworkPolicyEgressRule.
@@ -1011,7 +1011,7 @@ class NetworkPolicyEgressRule(types.Object):
     # traffic only if the traffic matches at least one port in the list.
     @typechecked
     def ports(self) -> List[NetworkPolicyPort]:
-        return self._kwargs.get('ports', [])
+        return self._get('ports', [])
     
     # List of destinations for outgoing traffic of pods selected for this rule.
     # Items in this list are combined using a logical OR operation. If this field is
@@ -1020,7 +1020,7 @@ class NetworkPolicyEgressRule(types.Object):
     # allows traffic only if the traffic matches at least one item in the to list.
     @typechecked
     def to(self) -> List[NetworkPolicyPeer]:
-        return self._kwargs.get('to', [])
+        return self._get('to', [])
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyIngressRule is deprecated by networking/v1/NetworkPolicyIngressRule.
@@ -1045,7 +1045,7 @@ class NetworkPolicyIngressRule(types.Object):
     # only if the traffic matches at least one port in the list.
     @typechecked
     def ports(self) -> List[NetworkPolicyPort]:
-        return self._kwargs.get('ports', [])
+        return self._get('ports', [])
     
     # List of sources which should be able to access the pods selected for this rule.
     # Items in this list are combined using a logical OR operation.
@@ -1054,7 +1054,7 @@ class NetworkPolicyIngressRule(types.Object):
     # traffic matches at least one item in the from list.
     @typechecked
     def from_(self) -> List[NetworkPolicyPeer]:
-        return self._kwargs.get('from', [])
+        return self._get('from', [])
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicySpec is deprecated by networking/v1/NetworkPolicySpec.
@@ -1082,7 +1082,7 @@ class NetworkPolicySpec(types.Object):
     # An empty podSelector matches all pods in this namespace.
     @typechecked
     def podSelector(self) -> 'metav1.LabelSelector':
-        return self._kwargs.get('podSelector', metav1.LabelSelector())
+        return self._get('podSelector', metav1.LabelSelector())
     
     # List of ingress rules to be applied to the selected pods.
     # Traffic is allowed to a pod if there are no NetworkPolicies selecting the pod
@@ -1093,7 +1093,7 @@ class NetworkPolicySpec(types.Object):
     # (and serves solely to ensure that the pods it selects are isolated by default).
     @typechecked
     def ingress(self) -> List[NetworkPolicyIngressRule]:
-        return self._kwargs.get('ingress', [])
+        return self._get('ingress', [])
     
     # List of egress rules to be applied to the selected pods. Outgoing traffic is
     # allowed if there are no NetworkPolicies selecting the pod (and cluster policy
@@ -1104,7 +1104,7 @@ class NetworkPolicySpec(types.Object):
     # This field is beta-level in 1.8
     @typechecked
     def egress(self) -> List[NetworkPolicyEgressRule]:
-        return self._kwargs.get('egress', [])
+        return self._get('egress', [])
     
     # List of rule types that the NetworkPolicy relates to.
     # Valid options are "Ingress", "Egress", or "Ingress,Egress".
@@ -1118,7 +1118,7 @@ class NetworkPolicySpec(types.Object):
     # This field is beta-level in 1.8
     @typechecked
     def policyTypes(self) -> List[PolicyType]:
-        return self._kwargs.get('policyTypes', [])
+        return self._get('policyTypes', [])
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicy is deprecated by networking/v1/NetworkPolicy.
@@ -1142,7 +1142,7 @@ class NetworkPolicy(base.TypedObject, base.MetadataObject):
     # Specification of the desired behavior for this NetworkPolicy.
     @typechecked
     def spec(self) -> NetworkPolicySpec:
-        return self._kwargs.get('spec', NetworkPolicySpec())
+        return self._get('spec', NetworkPolicySpec())
 
 
 # RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
@@ -1161,13 +1161,13 @@ class RunAsGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
     @typechecked
     def rule(self) -> RunAsGroupStrategy:
-        return self._kwargs.get('rule')
+        return self._get('rule')
     
     # ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
     def ranges(self) -> List[IDRange]:
-        return self._kwargs.get('ranges', [])
+        return self._get('ranges', [])
 
 
 # RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
@@ -1186,13 +1186,13 @@ class RunAsUserStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def rule(self) -> RunAsUserStrategy:
-        return self._kwargs.get('rule')
+        return self._get('rule')
     
     # ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
     def ranges(self) -> List[IDRange]:
-        return self._kwargs.get('ranges', [])
+        return self._get('ranges', [])
 
 
 # RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
@@ -1213,14 +1213,14 @@ class RuntimeClassStrategyOptions(types.Object):
     # list. An empty list requires the RuntimeClassName field to be unset.
     @typechecked
     def allowedRuntimeClassNames(self) -> List[str]:
-        return self._kwargs.get('allowedRuntimeClassNames', [])
+        return self._get('allowedRuntimeClassNames', [])
     
     # defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
     # The default MUST be allowed by the allowedRuntimeClassNames list.
     # A value of nil does not mutate the Pod.
     @typechecked
     def defaultRuntimeClassName(self) -> Optional[str]:
-        return self._kwargs.get('defaultRuntimeClassName')
+        return self._get('defaultRuntimeClassName')
 
 
 # SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
@@ -1239,13 +1239,13 @@ class SELinuxStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def rule(self) -> SELinuxStrategy:
-        return self._kwargs.get('rule')
+        return self._get('rule')
     
     # seLinuxOptions required to run as; required for MustRunAs
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     @typechecked
     def seLinuxOptions(self) -> Optional['corev1.SELinuxOptions']:
-        return self._kwargs.get('seLinuxOptions')
+        return self._get('seLinuxOptions')
 
 
 # SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
@@ -1266,13 +1266,13 @@ class SupplementalGroupsStrategyOptions(types.Object):
     # rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[SupplementalGroupsStrategyType]:
-        return self._kwargs.get('rule')
+        return self._get('rule')
     
     # ranges are the allowed ranges of supplemental groups.  If you would like to force a single
     # supplemental group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
     def ranges(self) -> List[IDRange]:
-        return self._kwargs.get('ranges', [])
+        return self._get('ranges', [])
 
 
 # PodSecurityPolicySpec defines the policy enforced.
@@ -1351,7 +1351,7 @@ class PodSecurityPolicySpec(types.Object):
     # privileged determines if a pod can request to be run as privileged.
     @typechecked
     def privileged(self) -> Optional[bool]:
-        return self._kwargs.get('privileged')
+        return self._get('privileged')
     
     # defaultAddCapabilities is the default set of capabilities that will be added to the container
     # unless the pod spec specifically drops the capability.  You may not list a capability in both
@@ -1359,73 +1359,73 @@ class PodSecurityPolicySpec(types.Object):
     # allowed, and need not be included in the allowedCapabilities list.
     @typechecked
     def defaultAddCapabilities(self) -> List[corev1.Capability]:
-        return self._kwargs.get('defaultAddCapabilities', [])
+        return self._get('defaultAddCapabilities', [])
     
     # requiredDropCapabilities are the capabilities that will be dropped from the container.  These
     # are required to be dropped and cannot be added.
     @typechecked
     def requiredDropCapabilities(self) -> List[corev1.Capability]:
-        return self._kwargs.get('requiredDropCapabilities', [])
+        return self._get('requiredDropCapabilities', [])
     
     # allowedCapabilities is a list of capabilities that can be requested to add to the container.
     # Capabilities in this field may be added at the pod author's discretion.
     # You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
     @typechecked
     def allowedCapabilities(self) -> List[corev1.Capability]:
-        return self._kwargs.get('allowedCapabilities', [])
+        return self._get('allowedCapabilities', [])
     
     # volumes is a white list of allowed volume plugins. Empty indicates that
     # no volumes may be used. To allow all volumes you may use '*'.
     @typechecked
     def volumes(self) -> List[FSType]:
-        return self._kwargs.get('volumes', [])
+        return self._get('volumes', [])
     
     # hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
     @typechecked
     def hostNetwork(self) -> Optional[bool]:
-        return self._kwargs.get('hostNetwork')
+        return self._get('hostNetwork')
     
     # hostPorts determines which host port ranges are allowed to be exposed.
     @typechecked
     def hostPorts(self) -> List[HostPortRange]:
-        return self._kwargs.get('hostPorts', [])
+        return self._get('hostPorts', [])
     
     # hostPID determines if the policy allows the use of HostPID in the pod spec.
     @typechecked
     def hostPID(self) -> Optional[bool]:
-        return self._kwargs.get('hostPID')
+        return self._get('hostPID')
     
     # hostIPC determines if the policy allows the use of HostIPC in the pod spec.
     @typechecked
     def hostIPC(self) -> Optional[bool]:
-        return self._kwargs.get('hostIPC')
+        return self._get('hostIPC')
     
     # seLinux is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def seLinux(self) -> SELinuxStrategyOptions:
-        return self._kwargs.get('seLinux', SELinuxStrategyOptions())
+        return self._get('seLinux', SELinuxStrategyOptions())
     
     # runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def runAsUser(self) -> RunAsUserStrategyOptions:
-        return self._kwargs.get('runAsUser', RunAsUserStrategyOptions())
+        return self._get('runAsUser', RunAsUserStrategyOptions())
     
     # RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
     # If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
     # RunAsGroup feature gate to be enabled.
     @typechecked
     def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
-        return self._kwargs.get('runAsGroup')
+        return self._get('runAsGroup')
     
     # supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
     @typechecked
     def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
-        return self._kwargs.get('supplementalGroups', SupplementalGroupsStrategyOptions())
+        return self._get('supplementalGroups', SupplementalGroupsStrategyOptions())
     
     # fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
     @typechecked
     def fsGroup(self) -> FSGroupStrategyOptions:
-        return self._kwargs.get('fsGroup', FSGroupStrategyOptions())
+        return self._get('fsGroup', FSGroupStrategyOptions())
     
     # readOnlyRootFilesystem when set to true will force containers to run with a read only root file
     # system.  If the container specifically requests to run with a non-read only root file system
@@ -1434,38 +1434,38 @@ class PodSecurityPolicySpec(types.Object):
     # will not be forced to.
     @typechecked
     def readOnlyRootFilesystem(self) -> Optional[bool]:
-        return self._kwargs.get('readOnlyRootFilesystem')
+        return self._get('readOnlyRootFilesystem')
     
     # defaultAllowPrivilegeEscalation controls the default setting for whether a
     # process can gain more privileges than its parent process.
     @typechecked
     def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
-        return self._kwargs.get('defaultAllowPrivilegeEscalation')
+        return self._get('defaultAllowPrivilegeEscalation')
     
     # allowPrivilegeEscalation determines if a pod can request to allow
     # privilege escalation. If unspecified, defaults to true.
     @typechecked
     def allowPrivilegeEscalation(self) -> Optional[bool]:
-        return self._kwargs.get('allowPrivilegeEscalation', True)
+        return self._get('allowPrivilegeEscalation', True)
     
     # allowedHostPaths is a white list of allowed host paths. Empty indicates
     # that all host paths may be used.
     @typechecked
     def allowedHostPaths(self) -> List[AllowedHostPath]:
-        return self._kwargs.get('allowedHostPaths', [])
+        return self._get('allowedHostPaths', [])
     
     # allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
     # Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
     # is allowed in the "volumes" field.
     @typechecked
     def allowedFlexVolumes(self) -> List[AllowedFlexVolume]:
-        return self._kwargs.get('allowedFlexVolumes', [])
+        return self._get('allowedFlexVolumes', [])
     
     # AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
     # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
     @typechecked
     def allowedCSIDrivers(self) -> Dict[str, AllowedCSIDriver]:
-        return self._kwargs.get('allowedCSIDrivers', {})
+        return self._get('allowedCSIDrivers', {})
     
     # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1477,7 +1477,7 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
     @typechecked
     def allowedUnsafeSysctls(self) -> List[str]:
-        return self._kwargs.get('allowedUnsafeSysctls', [])
+        return self._get('allowedUnsafeSysctls', [])
     
     # forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1488,21 +1488,21 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
     @typechecked
     def forbiddenSysctls(self) -> List[str]:
-        return self._kwargs.get('forbiddenSysctls', [])
+        return self._get('forbiddenSysctls', [])
     
     # AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
     # Empty or nil indicates that only the DefaultProcMountType may be used.
     # This requires the ProcMountType feature flag to be enabled.
     @typechecked
     def allowedProcMountTypes(self) -> List[corev1.ProcMountType]:
-        return self._kwargs.get('allowedProcMountTypes', [])
+        return self._get('allowedProcMountTypes', [])
     
     # runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
     # If this field is omitted, the pod's runtimeClassName field is unrestricted.
     # Enforcement of this field depends on the RuntimeClass feature gate being enabled.
     @typechecked
     def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
-        return self._kwargs.get('runtimeClass')
+        return self._get('runtimeClass')
 
 
 # PodSecurityPolicy governs the ability to make requests that affect the Security Context
@@ -1527,7 +1527,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
     # spec defines the policy enforced.
     @typechecked
     def spec(self) -> PodSecurityPolicySpec:
-        return self._kwargs.get('spec', PodSecurityPolicySpec())
+        return self._get('spec', PodSecurityPolicySpec())
 
 
 # ReplicaSetSpec is the specification of a ReplicaSet.
@@ -1554,14 +1554,14 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
     @typechecked
     def replicas(self) -> Optional[int]:
-        return self._kwargs.get('replicas', 1)
+        return self._get('replicas', 1)
     
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        return self._kwargs.get('minReadySeconds')
+        return self._get('minReadySeconds')
     
     # Selector is a label query over pods that should match the replica count.
     # If the selector is empty, it is defaulted to the labels present on the pod template.
@@ -1569,14 +1569,14 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('selector')
+        return self._get('selector')
     
     # Template is the object that describes the pod that will be created if
     # insufficient replicas are detected.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
     def template(self) -> 'corev1.PodTemplateSpec':
-        return self._kwargs.get('template', corev1.PodTemplateSpec())
+        return self._get('template', corev1.PodTemplateSpec())
 
 
 # DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1beta2/ReplicaSet. See the release notes for
@@ -1602,7 +1602,7 @@ class ReplicaSet(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> ReplicaSetSpec:
-        return self._kwargs.get('spec', ReplicaSetSpec())
+        return self._get('spec', ReplicaSetSpec())
 
 
 # Dummy definition
@@ -1636,7 +1636,7 @@ class ScaleSpec(types.Object):
     # desired number of instances for the scaled object.
     @typechecked
     def replicas(self) -> Optional[int]:
-        return self._kwargs.get('replicas')
+        return self._get('replicas')
 
 
 # represents a scaling request for a resource.
@@ -1659,4 +1659,4 @@ class Scale(base.TypedObject, base.MetadataObject):
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
     def spec(self) -> ScaleSpec:
-        return self._kwargs.get('spec', ScaleSpec())
+        return self._get('spec', ScaleSpec())

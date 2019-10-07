@@ -67,38 +67,38 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # Provisioner indicates the type of the provisioner.
     @typechecked
     def provisioner(self) -> str:
-        return self._kwargs.get('provisioner', '')
+        return self._get('provisioner', '')
     
     # Parameters holds the parameters for the provisioner that should
     # create volumes of this storage class.
     @typechecked
     def parameters(self) -> Dict[str, str]:
-        return self._kwargs.get('parameters', {})
+        return self._get('parameters', {})
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
     @typechecked
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
-        return self._kwargs.get('reclaimPolicy', corev1.PersistentVolumeReclaimPolicy['Delete'])
+        return self._get('reclaimPolicy', corev1.PersistentVolumeReclaimPolicy['Delete'])
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
     # mount of the PVs will simply fail if one is invalid.
     @typechecked
     def mountOptions(self) -> List[str]:
-        return self._kwargs.get('mountOptions', [])
+        return self._get('mountOptions', [])
     
     # AllowVolumeExpansion shows whether the storage class allow volume expand
     @typechecked
     def allowVolumeExpansion(self) -> Optional[bool]:
-        return self._kwargs.get('allowVolumeExpansion')
+        return self._get('allowVolumeExpansion')
     
     # VolumeBindingMode indicates how PersistentVolumeClaims should be
     # provisioned and bound.  When unset, VolumeBindingImmediate is used.
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
-        return self._kwargs.get('volumeBindingMode', VolumeBindingMode['Immediate'])
+        return self._get('volumeBindingMode', VolumeBindingMode['Immediate'])
     
     # Restrict the node topologies where volumes can be dynamically provisioned.
     # Each volume plugin defines its own supported topology specifications.
@@ -106,7 +106,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def allowedTopologies(self) -> List['corev1.TopologySelectorTerm']:
-        return self._kwargs.get('allowedTopologies', [])
+        return self._get('allowedTopologies', [])
 
 
 # VolumeAttachmentSource represents a volume that should be attached.
@@ -129,7 +129,7 @@ class VolumeAttachmentSource(types.Object):
     # Name of the persistent volume to attach.
     @typechecked
     def persistentVolumeName(self) -> Optional[str]:
-        return self._kwargs.get('persistentVolumeName')
+        return self._get('persistentVolumeName')
     
     # inlineVolumeSpec contains all the information necessary to attach
     # a persistent volume defined by a pod's inline VolumeSource. This field
@@ -139,7 +139,7 @@ class VolumeAttachmentSource(types.Object):
     # honored by servers that enabled the CSIMigration feature.
     @typechecked
     def inlineVolumeSpec(self) -> Optional['corev1.PersistentVolumeSpec']:
-        return self._kwargs.get('inlineVolumeSpec')
+        return self._get('inlineVolumeSpec')
 
 
 # VolumeAttachmentSpec is the specification of a VolumeAttachment request.
@@ -157,17 +157,17 @@ class VolumeAttachmentSpec(types.Object):
     # request. This is the name returned by GetPluginName().
     @typechecked
     def attacher(self) -> str:
-        return self._kwargs.get('attacher', '')
+        return self._get('attacher', '')
     
     # Source represents the volume that should be attached.
     @typechecked
     def source(self) -> VolumeAttachmentSource:
-        return self._kwargs.get('source', VolumeAttachmentSource())
+        return self._get('source', VolumeAttachmentSource())
     
     # The node that the volume should be attached to.
     @typechecked
     def nodeName(self) -> str:
-        return self._kwargs.get('nodeName', '')
+        return self._get('nodeName', '')
 
 
 # VolumeAttachment captures the intent to attach or detach the specified volume
@@ -194,4 +194,4 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     # Populated by the Kubernetes system.
     @typechecked
     def spec(self) -> VolumeAttachmentSpec:
-        return self._kwargs.get('spec', VolumeAttachmentSpec())
+        return self._get('spec', VolumeAttachmentSpec())

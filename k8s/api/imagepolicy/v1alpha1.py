@@ -25,7 +25,7 @@ class ImageReviewContainerSpec(types.Object):
     # This can be in the form image:tag or image@SHA:012345679abcdef.
     @typechecked
     def image(self) -> Optional[str]:
-        return self._kwargs.get('image')
+        return self._get('image')
 
 
 # ImageReviewSpec is a description of the pod creation request.
@@ -48,19 +48,19 @@ class ImageReviewSpec(types.Object):
     # Containers is a list of a subset of the information in each container of the Pod being created.
     @typechecked
     def containers(self) -> List[ImageReviewContainerSpec]:
-        return self._kwargs.get('containers', [])
+        return self._get('containers', [])
     
     # Annotations is a list of key-value pairs extracted from the Pod's annotations.
     # It only includes keys which match the pattern `*.image-policy.k8s.io/*`.
     # It is up to each webhook backend to determine how to interpret these annotations, if at all.
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', {})
+        return self._get('annotations', {})
     
     # Namespace is the namespace the pod is being created in.
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._kwargs.get('namespace')
+        return self._get('namespace')
 
 
 # ImageReview checks if the set of images in a pod are allowed.
@@ -83,4 +83,4 @@ class ImageReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the pod being evaluated
     @typechecked
     def spec(self) -> ImageReviewSpec:
-        return self._kwargs.get('spec', ImageReviewSpec())
+        return self._get('spec', ImageReviewSpec())

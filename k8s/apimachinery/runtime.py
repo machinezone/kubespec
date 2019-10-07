@@ -76,16 +76,16 @@ class Unknown(base.TypedObject):
     # except for passing it through the system.
     @typechecked
     def raw(self) -> bytes:
-        return self._kwargs.get('Raw', b'')
+        return self._get('Raw', b'')
     
     # ContentEncoding is encoding used to encode 'Raw' data.
     # Unspecified means no encoding.
     @typechecked
     def contentEncoding(self) -> str:
-        return self._kwargs.get('ContentEncoding', '')
+        return self._get('ContentEncoding', '')
     
     # ContentType  is serialization method used to serialize 'Raw'.
     # Unspecified means ContentTypeJSON.
     @typechecked
     def contentType(self) -> str:
-        return self._kwargs.get('ContentType', '')
+        return self._get('ContentType', '')

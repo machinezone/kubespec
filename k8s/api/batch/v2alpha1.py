@@ -40,7 +40,7 @@ class JobTemplateSpec(base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> 'batchv1.JobSpec':
-        return self._kwargs.get('spec', batchv1.JobSpec())
+        return self._get('spec', batchv1.JobSpec())
 
 
 # CronJobSpec describes how the job execution will look like and when it will actually run.
@@ -71,13 +71,13 @@ class CronJobSpec(types.Object):
     # The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
     @typechecked
     def schedule(self) -> str:
-        return self._kwargs.get('schedule', '')
+        return self._get('schedule', '')
     
     # Optional deadline in seconds for starting the job if it misses scheduled
     # time for any reason.  Missed jobs executions will be counted as failed ones.
     @typechecked
     def startingDeadlineSeconds(self) -> Optional[int]:
-        return self._kwargs.get('startingDeadlineSeconds')
+        return self._get('startingDeadlineSeconds')
     
     # Specifies how to treat concurrent executions of a Job.
     # Valid values are:
@@ -86,30 +86,30 @@ class CronJobSpec(types.Object):
     # - "Replace": cancels currently running job and replaces it with a new one
     @typechecked
     def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
-        return self._kwargs.get('concurrencyPolicy', ConcurrencyPolicy['Allow'])
+        return self._get('concurrencyPolicy', ConcurrencyPolicy['Allow'])
     
     # This flag tells the controller to suspend subsequent executions, it does
     # not apply to already started executions.  Defaults to false.
     @typechecked
     def suspend(self) -> Optional[bool]:
-        return self._kwargs.get('suspend')
+        return self._get('suspend')
     
     # Specifies the job that will be created when executing a CronJob.
     @typechecked
     def jobTemplate(self) -> JobTemplateSpec:
-        return self._kwargs.get('jobTemplate', JobTemplateSpec())
+        return self._get('jobTemplate', JobTemplateSpec())
     
     # The number of successful finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     @typechecked
     def successfulJobsHistoryLimit(self) -> Optional[int]:
-        return self._kwargs.get('successfulJobsHistoryLimit')
+        return self._get('successfulJobsHistoryLimit')
     
     # The number of failed finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     @typechecked
     def failedJobsHistoryLimit(self) -> Optional[int]:
-        return self._kwargs.get('failedJobsHistoryLimit')
+        return self._get('failedJobsHistoryLimit')
 
 
 # CronJob represents the configuration of a single cron job.
@@ -133,7 +133,7 @@ class CronJob(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> CronJobSpec:
-        return self._kwargs.get('spec', CronJobSpec())
+        return self._get('spec', CronJobSpec())
 
 
 # JobTemplate describes a template for creating copies of a predefined pod.
@@ -157,4 +157,4 @@ class JobTemplate(base.TypedObject, base.MetadataObject):
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def template(self) -> JobTemplateSpec:
-        return self._kwargs.get('template', JobTemplateSpec())
+        return self._get('template', JobTemplateSpec())

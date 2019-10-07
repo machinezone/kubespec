@@ -38,27 +38,27 @@ class PodPresetSpec(types.Object):
     # Required.
     @typechecked
     def selector(self) -> 'metav1.LabelSelector':
-        return self._kwargs.get('selector', metav1.LabelSelector())
+        return self._get('selector', metav1.LabelSelector())
     
     # Env defines the collection of EnvVar to inject into containers.
     @typechecked
     def env(self) -> Dict[str, 'corev1.EnvVar']:
-        return self._kwargs.get('env', {})
+        return self._get('env', {})
     
     # EnvFrom defines the collection of EnvFromSource to inject into containers.
     @typechecked
     def envFrom(self) -> List['corev1.EnvFromSource']:
-        return self._kwargs.get('envFrom', [])
+        return self._get('envFrom', [])
     
     # Volumes defines the collection of Volume to inject into the pod.
     @typechecked
     def volumes(self) -> Dict[str, 'corev1.Volume']:
-        return self._kwargs.get('volumes', {})
+        return self._get('volumes', {})
     
     # VolumeMounts defines the collection of VolumeMount to inject into containers.
     @typechecked
     def volumeMounts(self) -> Dict[str, 'corev1.VolumeMount']:
-        return self._kwargs.get('volumeMounts', {})
+        return self._get('volumeMounts', {})
 
 
 # PodPreset is a policy resource that defines additional runtime
@@ -81,4 +81,4 @@ class PodPreset(base.TypedObject, base.MetadataObject):
     
     @typechecked
     def spec(self) -> PodPresetSpec:
-        return self._kwargs.get('spec', PodPresetSpec())
+        return self._get('spec', PodPresetSpec())

@@ -26,12 +26,12 @@ class EventSeries(types.Object):
     # Number of occurrences in this series up to the last heartbeat time
     @typechecked
     def count(self) -> int:
-        return self._kwargs.get('count', 0)
+        return self._get('count', 0)
     
     # Time when last Event from the series was seen before last heartbeat.
     @typechecked
     def lastObservedTime(self) -> 'base.MicroTime':
-        return self._kwargs.get('lastObservedTime')
+        return self._get('lastObservedTime')
 
 
 # Event is a report of an event somewhere in the cluster. It generally denotes some state change in the system.
@@ -79,55 +79,55 @@ class Event(base.TypedObject, base.MetadataObject):
     # Required. Time when this Event was first observed.
     @typechecked
     def eventTime(self) -> 'base.MicroTime':
-        return self._kwargs.get('eventTime')
+        return self._get('eventTime')
     
     # Data about the Event series this event represents or nil if it's a singleton Event.
     @typechecked
     def series(self) -> Optional[EventSeries]:
-        return self._kwargs.get('series')
+        return self._get('series')
     
     # Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
     @typechecked
     def reportingController(self) -> Optional[str]:
-        return self._kwargs.get('reportingController')
+        return self._get('reportingController')
     
     # ID of the controller instance, e.g. `kubelet-xyzf`.
     @typechecked
     def reportingInstance(self) -> Optional[str]:
-        return self._kwargs.get('reportingInstance')
+        return self._get('reportingInstance')
     
     # What action was taken/failed regarding to the regarding object.
     @typechecked
     def action(self) -> Optional[str]:
-        return self._kwargs.get('action')
+        return self._get('action')
     
     # Why the action was taken.
     @typechecked
     def reason(self) -> Optional[str]:
-        return self._kwargs.get('reason')
+        return self._get('reason')
     
     # The object this Event is about. In most cases it's an Object reporting controller implements.
     # E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
     # it acts on some changes in a ReplicaSet object.
     @typechecked
     def regarding(self) -> 'corev1.ObjectReference':
-        return self._kwargs.get('regarding', corev1.ObjectReference())
+        return self._get('regarding', corev1.ObjectReference())
     
     # Optional secondary object for more complex actions. E.g. when regarding object triggers
     # a creation or deletion of related object.
     @typechecked
     def related(self) -> Optional['corev1.ObjectReference']:
-        return self._kwargs.get('related')
+        return self._get('related')
     
     # Optional. A human-readable description of the status of this operation.
     # Maximal length of the note is 1kB, but libraries should be prepared to
     # handle values up to 64kB.
     @typechecked
     def note(self) -> Optional[str]:
-        return self._kwargs.get('note')
+        return self._get('note')
     
     # Type of this event (Normal, Warning), new types could be added in the
     # future.
     @typechecked
     def type(self) -> Optional[str]:
-        return self._kwargs.get('type')
+        return self._get('type')

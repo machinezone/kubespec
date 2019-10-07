@@ -40,17 +40,17 @@ class ExternalMetricValue(base.TypedObject):
     # the name of the metric
     @typechecked
     def metricName(self) -> str:
-        return self._kwargs.get('metricName', '')
+        return self._get('metricName', '')
     
     # a set of labels that identify a single time series for the metric
     @typechecked
     def metricLabels(self) -> Dict[str, str]:
-        return self._kwargs.get('metricLabels', {})
+        return self._get('metricLabels', {})
     
     # indicates the time at which the metrics were produced
     @typechecked
     def timestamp(self) -> 'base.Time':
-        return self._kwargs.get('timestamp')
+        return self._get('timestamp')
     
     # indicates the window ([Timestamp-Window, Timestamp]) from
     # which these metrics were calculated, when returning rate
@@ -58,9 +58,9 @@ class ExternalMetricValue(base.TypedObject):
     # non-calculated instantaneous metrics).
     @typechecked
     def window(self) -> Optional[int]:
-        return self._kwargs.get('window')
+        return self._get('window')
     
     # the value of the metric
     @typechecked
     def value(self) -> 'resource.Quantity':
-        return self._kwargs.get('value', resource.Quantity())
+        return self._get('value', resource.Quantity())

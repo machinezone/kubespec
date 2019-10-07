@@ -79,38 +79,38 @@ class ObjectReference(types.Object):
     
     @typechecked
     def resource(self) -> Optional[str]:
-        return self._kwargs.get('resource')
+        return self._get('resource')
     
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._kwargs.get('namespace')
+        return self._get('namespace')
     
     @typechecked
     def name(self) -> Optional[str]:
-        return self._kwargs.get('name')
+        return self._get('name')
     
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
     
     # APIGroup is the name of the API group that contains the referred object.
     # The empty string represents the core API group.
     @typechecked
     def apiGroup(self) -> Optional[str]:
-        return self._kwargs.get('apiGroup')
+        return self._get('apiGroup')
     
     # APIVersion is the version of the API group that contains the referred object.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._kwargs.get('apiVersion')
+        return self._get('apiVersion')
     
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        return self._kwargs.get('resourceVersion')
+        return self._get('resourceVersion')
     
     @typechecked
     def subresource(self) -> Optional[str]:
-        return self._kwargs.get('subresource')
+        return self._get('subresource')
 
 
 # Event captures all the information that can be included in an API audit log.
@@ -164,62 +164,62 @@ class Event(base.TypedObject):
     # AuditLevel at which event was generated
     @typechecked
     def level(self) -> Level:
-        return self._kwargs.get('level')
+        return self._get('level')
     
     # Unique audit ID, generated for each request.
     @typechecked
     def auditID(self) -> str:
-        return self._kwargs.get('auditID', '')
+        return self._get('auditID', '')
     
     # Stage of the request handling when this event instance was generated.
     @typechecked
     def stage(self) -> Stage:
-        return self._kwargs.get('stage')
+        return self._get('stage')
     
     # RequestURI is the request URI as sent by the client to a server.
     @typechecked
     def requestURI(self) -> str:
-        return self._kwargs.get('requestURI', '')
+        return self._get('requestURI', '')
     
     # Verb is the kubernetes verb associated with the request.
     # For non-resource requests, this is the lower-cased HTTP method.
     @typechecked
     def verb(self) -> str:
-        return self._kwargs.get('verb', '')
+        return self._get('verb', '')
     
     # Authenticated user information.
     @typechecked
     def user(self) -> 'authenticationv1.UserInfo':
-        return self._kwargs.get('user', authenticationv1.UserInfo())
+        return self._get('user', authenticationv1.UserInfo())
     
     # Impersonated user information.
     @typechecked
     def impersonatedUser(self) -> Optional['authenticationv1.UserInfo']:
-        return self._kwargs.get('impersonatedUser')
+        return self._get('impersonatedUser')
     
     # Source IPs, from where the request originated and intermediate proxies.
     @typechecked
     def sourceIPs(self) -> List[str]:
-        return self._kwargs.get('sourceIPs', [])
+        return self._get('sourceIPs', [])
     
     # UserAgent records the user agent string reported by the client.
     # Note that the UserAgent is provided by the client, and must not be trusted.
     @typechecked
     def userAgent(self) -> Optional[str]:
-        return self._kwargs.get('userAgent')
+        return self._get('userAgent')
     
     # Object reference this request is targeted at.
     # Does not apply for List-type requests, or non-resource requests.
     @typechecked
     def objectRef(self) -> Optional[ObjectReference]:
-        return self._kwargs.get('objectRef')
+        return self._get('objectRef')
     
     # The response status, populated even when the ResponseObject is not a Status type.
     # For successful responses, this will only include the Code and StatusSuccess.
     # For non-status type error responses, this will be auto-populated with the error Message.
     @typechecked
     def responseStatus(self) -> Optional['metav1.Status']:
-        return self._kwargs.get('responseStatus')
+        return self._get('responseStatus')
     
     # API object from the request, in JSON format. The RequestObject is recorded as-is in the request
     # (possibly re-encoded as JSON), prior to version conversion, defaulting, admission or
@@ -227,24 +227,24 @@ class Event(base.TypedObject):
     # Omitted for non-resource requests.  Only logged at Request Level and higher.
     @typechecked
     def requestObject(self) -> Optional['runtime.Unknown']:
-        return self._kwargs.get('requestObject')
+        return self._get('requestObject')
     
     # API object returned in the response, in JSON. The ResponseObject is recorded after conversion
     # to the external type, and serialized as JSON.  Omitted for non-resource requests.  Only logged
     # at Response Level.
     @typechecked
     def responseObject(self) -> Optional['runtime.Unknown']:
-        return self._kwargs.get('responseObject')
+        return self._get('responseObject')
     
     # Time the request reached the apiserver.
     @typechecked
     def requestReceivedTimestamp(self) -> 'base.MicroTime':
-        return self._kwargs.get('requestReceivedTimestamp')
+        return self._get('requestReceivedTimestamp')
     
     # Time the request reached current audit stage.
     @typechecked
     def stageTimestamp(self) -> 'base.MicroTime':
-        return self._kwargs.get('stageTimestamp')
+        return self._get('stageTimestamp')
     
     # Annotations is an unstructured key value map stored with an audit event that may be set by
     # plugins invoked in the request serving chain, including authentication, authorization and
@@ -254,7 +254,7 @@ class Event(base.TypedObject):
     # should be short. Annotations are included in the Metadata level.
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', {})
+        return self._get('annotations', {})
 
 
 # GroupResources represents resource kinds in an API group.
@@ -278,7 +278,7 @@ class GroupResources(types.Object):
     # The empty string represents the core API group.
     @typechecked
     def group(self) -> Optional[str]:
-        return self._kwargs.get('group')
+        return self._get('group')
     
     # Resources is a list of resources this rule applies to.
     # 
@@ -295,14 +295,14 @@ class GroupResources(types.Object):
     # An empty list implies all resources and subresources in this API groups apply.
     @typechecked
     def resources(self) -> List[str]:
-        return self._kwargs.get('resources', [])
+        return self._get('resources', [])
     
     # ResourceNames is a list of resource instance names that the policy matches.
     # Using this field requires Resources to be specified.
     # An empty list implies that every instance of the resource is matched.
     @typechecked
     def resourceNames(self) -> List[str]:
-        return self._kwargs.get('resourceNames', [])
+        return self._get('resourceNames', [])
 
 
 # PolicyRule maps requests based off metadata to an audit Level.
@@ -339,38 +339,38 @@ class PolicyRule(types.Object):
     # The Level that requests matching this rule are recorded at.
     @typechecked
     def level(self) -> Level:
-        return self._kwargs.get('level')
+        return self._get('level')
     
     # The users (by authenticated user name) this rule applies to.
     # An empty list implies every user.
     @typechecked
     def users(self) -> List[str]:
-        return self._kwargs.get('users', [])
+        return self._get('users', [])
     
     # The user groups this rule applies to. A user is considered matching
     # if it is a member of any of the UserGroups.
     # An empty list implies every user group.
     @typechecked
     def userGroups(self) -> List[str]:
-        return self._kwargs.get('userGroups', [])
+        return self._get('userGroups', [])
     
     # The verbs that match this rule.
     # An empty list implies every verb.
     @typechecked
     def verbs(self) -> List[str]:
-        return self._kwargs.get('verbs', [])
+        return self._get('verbs', [])
     
     # Resources that this rule matches. An empty list implies all kinds in all API groups.
     @typechecked
     def resources(self) -> List[GroupResources]:
-        return self._kwargs.get('resources', [])
+        return self._get('resources', [])
     
     # Namespaces that this rule matches.
     # The empty string "" matches non-namespaced resources.
     # An empty list implies every namespace.
     @typechecked
     def namespaces(self) -> List[str]:
-        return self._kwargs.get('namespaces', [])
+        return self._get('namespaces', [])
     
     # NonResourceURLs is a set of URL paths that should be audited.
     # *s are allowed, but only as the full, final step in the path.
@@ -379,14 +379,14 @@ class PolicyRule(types.Object):
     #  "/healthz*" - Log all health checks
     @typechecked
     def nonResourceURLs(self) -> List[str]:
-        return self._kwargs.get('nonResourceURLs', [])
+        return self._get('nonResourceURLs', [])
     
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified policy wide in which case the union of both are omitted.
     # An empty list means no restrictions will apply.
     @typechecked
     def omitStages(self) -> List[Stage]:
-        return self._kwargs.get('omitStages', [])
+        return self._get('omitStages', [])
 
 
 # Policy defines the configuration of audit logging, and the rules for how different request
@@ -416,10 +416,10 @@ class Policy(base.TypedObject, base.MetadataObject):
     # PolicyRules are strictly ordered.
     @typechecked
     def rules(self) -> List[PolicyRule]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
     
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified per rule in which case the union of both are omitted.
     @typechecked
     def omitStages(self) -> List[Stage]:
-        return self._kwargs.get('omitStages', [])
+        return self._get('omitStages', [])

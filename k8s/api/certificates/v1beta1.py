@@ -70,7 +70,7 @@ class CertificateSigningRequestSpec(types.Object):
     # Base64-encoded PKCS#10 CSR data
     @typechecked
     def request(self) -> bytes:
-        return self._kwargs.get('request', b'')
+        return self._get('request', b'')
     
     # allowedUsages specifies a set of usage contexts the key will be
     # valid for.
@@ -78,31 +78,31 @@ class CertificateSigningRequestSpec(types.Object):
     #      https://tools.ietf.org/html/rfc5280#section-4.2.1.12
     @typechecked
     def usages(self) -> List[KeyUsage]:
-        return self._kwargs.get('usages', [])
+        return self._get('usages', [])
     
     # Information about the requesting user.
     # See user.Info interface for details.
     @typechecked
     def username(self) -> Optional[str]:
-        return self._kwargs.get('username')
+        return self._get('username')
     
     # UID information about the requesting user.
     # See user.Info interface for details.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
     
     # Group information about the requesting user.
     # See user.Info interface for details.
     @typechecked
     def groups(self) -> List[str]:
-        return self._kwargs.get('groups', [])
+        return self._get('groups', [])
     
     # Extra information about the requesting user.
     # See user.Info interface for details.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', {})
+        return self._get('extra', {})
 
 
 # Describes a certificate signing request
@@ -125,4 +125,4 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
     # The certificate request itself and any additional information.
     @typechecked
     def spec(self) -> CertificateSigningRequestSpec:
-        return self._kwargs.get('spec', CertificateSigningRequestSpec())
+        return self._get('spec', CertificateSigningRequestSpec())

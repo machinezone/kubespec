@@ -41,7 +41,7 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._kwargs.get('apiVersion')
+        return self._get('apiVersion')
 
     # Kind is a string value representing the REST resource this object represents.
     # Servers may infer this from the endpoint the client submits requests to.
@@ -50,7 +50,7 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._kwargs.get('kind')
+        return self._get('kind')
 
 
 class MetadataObject(types.Object):
@@ -82,7 +82,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        return self._kwargs.get('name')
+        return self._get('name')
 
     # Namespace defines the space within each name must be unique. An empty namespace is
     # equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -94,7 +94,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._kwargs.get('namespace')
+        return self._get('namespace')
 
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
@@ -102,7 +102,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        return self._kwargs.get('labels', {})
+        return self._get('labels', {})
 
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -110,7 +110,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', {})
+        return self._get('annotations', {})
 
 
 class Time(types.Renderable):

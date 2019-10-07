@@ -77,7 +77,7 @@ class CSIDriverSpec(types.Object):
     # Otherwise the attach operation will be called.
     @typechecked
     def attachRequired(self) -> Optional[bool]:
-        return self._kwargs.get('attachRequired', True)
+        return self._get('attachRequired', True)
     
     # If set to true, podInfoOnMount indicates this CSI volume driver
     # requires additional pod information (like podName, podUID, etc.) during
@@ -105,7 +105,7 @@ class CSIDriverSpec(types.Object):
     # via a command line parameter of the driver.
     @typechecked
     def podInfoOnMount(self) -> Optional[bool]:
-        return self._kwargs.get('podInfoOnMount')
+        return self._get('podInfoOnMount')
     
     # VolumeLifecycleModes defines what kind of volumes this CSI volume driver supports.
     # The default if the list is empty is "Persistent", which is the usage
@@ -121,7 +121,7 @@ class CSIDriverSpec(types.Object):
     # more modes may be added in the future.
     @typechecked
     def volumeLifecycleModes(self) -> List[VolumeLifecycleMode]:
-        return self._kwargs.get('volumeLifecycleModes', [])
+        return self._get('volumeLifecycleModes', [])
 
 
 # CSIDriver captures information about a Container Storage Interface (CSI)
@@ -151,7 +151,7 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
     # Specification of the CSI Driver.
     @typechecked
     def spec(self) -> CSIDriverSpec:
-        return self._kwargs.get('spec', CSIDriverSpec())
+        return self._get('spec', CSIDriverSpec())
 
 
 # VolumeNodeResources is a set of resource limits for scheduling of volumes.
@@ -171,7 +171,7 @@ class VolumeNodeResources(types.Object):
     # If this field is nil, then the supported number of volumes on this node is unbounded.
     @typechecked
     def count(self) -> Optional[int]:
-        return self._kwargs.get('count')
+        return self._get('count')
 
 
 # CSINodeDriver holds information about the specification of one CSI driver installed on a node
@@ -193,7 +193,7 @@ class CSINodeDriver(types.Object):
     # that driver.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # nodeID of the node from the driver point of view.
     # This field enables Kubernetes to communicate with storage systems that do
@@ -205,7 +205,7 @@ class CSINodeDriver(types.Object):
     # understand, e.g. "nodeA" instead of "node1". This field is required.
     @typechecked
     def nodeID(self) -> str:
-        return self._kwargs.get('nodeID', '')
+        return self._get('nodeID', '')
     
     # topologyKeys is the list of keys supported by the driver.
     # When a driver is initialized on a cluster, it provides a set of topology
@@ -220,12 +220,12 @@ class CSINodeDriver(types.Object):
     # This can be empty if driver does not support topology.
     @typechecked
     def topologyKeys(self) -> List[str]:
-        return self._kwargs.get('topologyKeys', [])
+        return self._get('topologyKeys', [])
     
     # allocatable represents the volume resources of a node that are available for scheduling.
     @typechecked
     def allocatable(self) -> Optional[VolumeNodeResources]:
-        return self._kwargs.get('allocatable')
+        return self._get('allocatable')
 
 
 # CSINodeSpec holds information about the specification of all CSI drivers installed on a node
@@ -241,7 +241,7 @@ class CSINodeSpec(types.Object):
     # If all drivers in the list are uninstalled, this can become empty.
     @typechecked
     def drivers(self) -> Dict[str, CSINodeDriver]:
-        return self._kwargs.get('drivers', {})
+        return self._get('drivers', {})
 
 
 # CSINode holds information about all CSI drivers installed on a node.
@@ -272,7 +272,7 @@ class CSINode(base.TypedObject, base.MetadataObject):
     # spec is the specification of CSINode
     @typechecked
     def spec(self) -> CSINodeSpec:
-        return self._kwargs.get('spec', CSINodeSpec())
+        return self._get('spec', CSINodeSpec())
 
 
 # StorageClass describes the parameters for a class of storage for
@@ -317,38 +317,38 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # Provisioner indicates the type of the provisioner.
     @typechecked
     def provisioner(self) -> str:
-        return self._kwargs.get('provisioner', '')
+        return self._get('provisioner', '')
     
     # Parameters holds the parameters for the provisioner that should
     # create volumes of this storage class.
     @typechecked
     def parameters(self) -> Dict[str, str]:
-        return self._kwargs.get('parameters', {})
+        return self._get('parameters', {})
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
     @typechecked
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
-        return self._kwargs.get('reclaimPolicy', corev1.PersistentVolumeReclaimPolicy['Delete'])
+        return self._get('reclaimPolicy', corev1.PersistentVolumeReclaimPolicy['Delete'])
     
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
     # mount of the PVs will simply fail if one is invalid.
     @typechecked
     def mountOptions(self) -> List[str]:
-        return self._kwargs.get('mountOptions', [])
+        return self._get('mountOptions', [])
     
     # AllowVolumeExpansion shows whether the storage class allow volume expand
     @typechecked
     def allowVolumeExpansion(self) -> Optional[bool]:
-        return self._kwargs.get('allowVolumeExpansion')
+        return self._get('allowVolumeExpansion')
     
     # VolumeBindingMode indicates how PersistentVolumeClaims should be
     # provisioned and bound.  When unset, VolumeBindingImmediate is used.
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
-        return self._kwargs.get('volumeBindingMode', VolumeBindingMode['Immediate'])
+        return self._get('volumeBindingMode', VolumeBindingMode['Immediate'])
     
     # Restrict the node topologies where volumes can be dynamically provisioned.
     # Each volume plugin defines its own supported topology specifications.
@@ -356,7 +356,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # This field is only honored by servers that enable the VolumeScheduling feature.
     @typechecked
     def allowedTopologies(self) -> List['corev1.TopologySelectorTerm']:
-        return self._kwargs.get('allowedTopologies', [])
+        return self._get('allowedTopologies', [])
 
 
 # VolumeAttachmentSource represents a volume that should be attached.
@@ -379,7 +379,7 @@ class VolumeAttachmentSource(types.Object):
     # Name of the persistent volume to attach.
     @typechecked
     def persistentVolumeName(self) -> Optional[str]:
-        return self._kwargs.get('persistentVolumeName')
+        return self._get('persistentVolumeName')
     
     # inlineVolumeSpec contains all the information necessary to attach
     # a persistent volume defined by a pod's inline VolumeSource. This field
@@ -389,7 +389,7 @@ class VolumeAttachmentSource(types.Object):
     # honored by servers that enabled the CSIMigration feature.
     @typechecked
     def inlineVolumeSpec(self) -> Optional['corev1.PersistentVolumeSpec']:
-        return self._kwargs.get('inlineVolumeSpec')
+        return self._get('inlineVolumeSpec')
 
 
 # VolumeAttachmentSpec is the specification of a VolumeAttachment request.
@@ -407,17 +407,17 @@ class VolumeAttachmentSpec(types.Object):
     # request. This is the name returned by GetPluginName().
     @typechecked
     def attacher(self) -> str:
-        return self._kwargs.get('attacher', '')
+        return self._get('attacher', '')
     
     # Source represents the volume that should be attached.
     @typechecked
     def source(self) -> VolumeAttachmentSource:
-        return self._kwargs.get('source', VolumeAttachmentSource())
+        return self._get('source', VolumeAttachmentSource())
     
     # The node that the volume should be attached to.
     @typechecked
     def nodeName(self) -> str:
-        return self._kwargs.get('nodeName', '')
+        return self._get('nodeName', '')
 
 
 # VolumeAttachment captures the intent to attach or detach the specified volume
@@ -444,4 +444,4 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     # Populated by the Kubernetes system.
     @typechecked
     def spec(self) -> VolumeAttachmentSpec:
-        return self._kwargs.get('spec', VolumeAttachmentSpec())
+        return self._get('spec', VolumeAttachmentSpec())

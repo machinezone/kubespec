@@ -85,4 +85,4 @@ class Quantity(types.Object):
     # more details.
     @typechecked
     def format(self) -> Format:
-        return self._kwargs.get('Format')
+        return self._get('Format')

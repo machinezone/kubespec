@@ -4,9 +4,14 @@
 
 import contextvars
 import functools
+from typing import Any, Dict
 
 
 _current_scope = contextvars.ContextVar('kargo.context')
+
+
+def currentscope() -> Dict[str, Any]:
+    return _current_scope.get({}).copy()
 
 
 def scoped(func):

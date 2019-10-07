@@ -102,14 +102,14 @@ class Rule(types.Object):
     # Required.
     @typechecked
     def apiGroups(self) -> List[str]:
-        return self._kwargs.get('apiGroups', [])
+        return self._get('apiGroups', [])
     
     # APIVersions is the API versions the resources belong to. '*' is all versions.
     # If '*' is present, the length of the slice must be one.
     # Required.
     @typechecked
     def apiVersions(self) -> List[str]:
-        return self._kwargs.get('apiVersions', [])
+        return self._get('apiVersions', [])
     
     # Resources is a list of resources this rule applies to.
     # 
@@ -128,7 +128,7 @@ class Rule(types.Object):
     # Required.
     @typechecked
     def resources(self) -> List[str]:
-        return self._kwargs.get('resources', [])
+        return self._get('resources', [])
     
     # scope specifies the scope of this rule.
     # Valid values are "Cluster", "Namespaced", and "*"
@@ -140,7 +140,7 @@ class Rule(types.Object):
     # Default is "*".
     @typechecked
     def scope(self) -> Optional[ScopeType]:
-        return self._kwargs.get('scope')
+        return self._get('scope')
 
 
 # RuleWithOperations is a tuple of Operations and Resources. It is recommended to make
@@ -162,13 +162,13 @@ class RuleWithOperations(types.Object):
     # Required.
     @typechecked
     def operations(self) -> List[OperationType]:
-        return self._kwargs.get('operations', [])
+        return self._get('operations', [])
     
     # Rule is embedded, it describes other criteria of the rule, like
     # APIGroups, APIVersions, Resources, etc.
     @typechecked
     def rule(self) -> Rule:
-        return self._kwargs.get('rule', Rule())
+        return self._get('rule', Rule())
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
@@ -191,26 +191,26 @@ class ServiceReference(types.Object):
     # Required
     @typechecked
     def namespace(self) -> str:
-        return self._kwargs.get('namespace', '')
+        return self._get('namespace', '')
     
     # `name` is the name of the service.
     # Required
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # `path` is an optional URL path which will be sent in any request to
     # this service.
     @typechecked
     def path(self) -> Optional[str]:
-        return self._kwargs.get('path')
+        return self._get('path')
     
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
     @typechecked
     def port(self) -> Optional[int]:
-        return self._kwargs.get('port', 443)
+        return self._get('port', 443)
 
 
 # WebhookClientConfig contains the information to make a TLS
@@ -258,7 +258,7 @@ class WebhookClientConfig(types.Object):
     # allowed, either.
     @typechecked
     def url(self) -> Optional[str]:
-        return self._kwargs.get('url')
+        return self._get('url')
     
     # `service` is a reference to the service for this webhook. Either
     # `service` or `url` must be specified.
@@ -266,13 +266,13 @@ class WebhookClientConfig(types.Object):
     # If the webhook is running within the cluster, then you should use `service`.
     @typechecked
     def service(self) -> Optional[ServiceReference]:
-        return self._kwargs.get('service')
+        return self._get('service')
     
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
     def caBundle(self) -> bytes:
-        return self._kwargs.get('caBundle', b'')
+        return self._get('caBundle', b'')
 
 
 # MutatingWebhook describes an admission webhook and the resources and operations it applies to.
@@ -315,13 +315,13 @@ class MutatingWebhook(types.Object):
     # Required.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # ClientConfig defines how to communicate with the hook.
     # Required
     @typechecked
     def clientConfig(self) -> WebhookClientConfig:
-        return self._kwargs.get('clientConfig', WebhookClientConfig())
+        return self._get('clientConfig', WebhookClientConfig())
     
     # Rules describes what operations on what resources/subresources the webhook cares about.
     # The webhook cares about an operation if it matches _any_ Rule.
@@ -331,13 +331,13 @@ class MutatingWebhook(types.Object):
     # on admission requests for ValidatingWebhookConfiguration and MutatingWebhookConfiguration objects.
     @typechecked
     def rules(self) -> List[RuleWithOperations]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
     
     # FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
     # allowed values are Ignore or Fail. Defaults to Fail.
     @typechecked
     def failurePolicy(self) -> Optional[FailurePolicyType]:
-        return self._kwargs.get('failurePolicy', FailurePolicyType['Fail'])
+        return self._get('failurePolicy', FailurePolicyType['Fail'])
     
     # matchPolicy defines how the "rules" list is used to match incoming requests.
     # Allowed values are "Exact" or "Equivalent".
@@ -355,7 +355,7 @@ class MutatingWebhook(types.Object):
     # Defaults to "Equivalent"
     @typechecked
     def matchPolicy(self) -> Optional[MatchPolicyType]:
-        return self._kwargs.get('matchPolicy', MatchPolicyType['Equivalent'])
+        return self._get('matchPolicy', MatchPolicyType['Equivalent'])
     
     # NamespaceSelector decides whether to run the webhook on an object based
     # on whether the namespace for that object matches the selector. If the
@@ -402,7 +402,7 @@ class MutatingWebhook(types.Object):
     # Default to the empty LabelSelector, which matches everything.
     @typechecked
     def namespaceSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('namespaceSelector')
+        return self._get('namespaceSelector')
     
     # ObjectSelector decides whether to run the webhook based on if the
     # object has matching labels. objectSelector is evaluated against both
@@ -417,7 +417,7 @@ class MutatingWebhook(types.Object):
     # Default to the empty LabelSelector, which matches everything.
     @typechecked
     def objectSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('objectSelector')
+        return self._get('objectSelector')
     
     # SideEffects states whether this webhook has side effects.
     # Acceptable values are: None, NoneOnDryRun (webhooks created via v1beta1 may also specify Some or Unknown).
@@ -427,7 +427,7 @@ class MutatingWebhook(types.Object):
     # sideEffects == Unknown or Some.
     @typechecked
     def sideEffects(self) -> Optional[SideEffectClass]:
-        return self._kwargs.get('sideEffects')
+        return self._get('sideEffects')
     
     # TimeoutSeconds specifies the timeout for this webhook. After the timeout passes,
     # the webhook call will be ignored or the API call will fail based on the
@@ -436,7 +436,7 @@ class MutatingWebhook(types.Object):
     # Default to 10 seconds.
     @typechecked
     def timeoutSeconds(self) -> Optional[int]:
-        return self._kwargs.get('timeoutSeconds', 10)
+        return self._get('timeoutSeconds', 10)
     
     # AdmissionReviewVersions is an ordered list of preferred `AdmissionReview`
     # versions the Webhook expects. API server will try to use first version in
@@ -447,7 +447,7 @@ class MutatingWebhook(types.Object):
     # and be subject to the failure policy.
     @typechecked
     def admissionReviewVersions(self) -> List[str]:
-        return self._kwargs.get('admissionReviewVersions', [])
+        return self._get('admissionReviewVersions', [])
     
     # reinvocationPolicy indicates whether this webhook should be called multiple times as part of a single admission evaluation.
     # Allowed values are "Never" and "IfNeeded".
@@ -466,7 +466,7 @@ class MutatingWebhook(types.Object):
     # Defaults to "Never".
     @typechecked
     def reinvocationPolicy(self) -> Optional[ReinvocationPolicyType]:
-        return self._kwargs.get('reinvocationPolicy', ReinvocationPolicyType['Never'])
+        return self._get('reinvocationPolicy', ReinvocationPolicyType['Never'])
 
 
 # MutatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and may change the object.
@@ -491,7 +491,7 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     # Webhooks is a list of webhooks and the affected resources and operations.
     @typechecked
     def webhooks(self) -> Dict[str, MutatingWebhook]:
-        return self._kwargs.get('webhooks', {})
+        return self._get('webhooks', {})
 
 
 # ValidatingWebhook describes an admission webhook and the resources and operations it applies to.
@@ -531,13 +531,13 @@ class ValidatingWebhook(types.Object):
     # Required.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # ClientConfig defines how to communicate with the hook.
     # Required
     @typechecked
     def clientConfig(self) -> WebhookClientConfig:
-        return self._kwargs.get('clientConfig', WebhookClientConfig())
+        return self._get('clientConfig', WebhookClientConfig())
     
     # Rules describes what operations on what resources/subresources the webhook cares about.
     # The webhook cares about an operation if it matches _any_ Rule.
@@ -547,13 +547,13 @@ class ValidatingWebhook(types.Object):
     # on admission requests for ValidatingWebhookConfiguration and MutatingWebhookConfiguration objects.
     @typechecked
     def rules(self) -> List[RuleWithOperations]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
     
     # FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
     # allowed values are Ignore or Fail. Defaults to Fail.
     @typechecked
     def failurePolicy(self) -> Optional[FailurePolicyType]:
-        return self._kwargs.get('failurePolicy', FailurePolicyType['Fail'])
+        return self._get('failurePolicy', FailurePolicyType['Fail'])
     
     # matchPolicy defines how the "rules" list is used to match incoming requests.
     # Allowed values are "Exact" or "Equivalent".
@@ -571,7 +571,7 @@ class ValidatingWebhook(types.Object):
     # Defaults to "Equivalent"
     @typechecked
     def matchPolicy(self) -> Optional[MatchPolicyType]:
-        return self._kwargs.get('matchPolicy', MatchPolicyType['Equivalent'])
+        return self._get('matchPolicy', MatchPolicyType['Equivalent'])
     
     # NamespaceSelector decides whether to run the webhook on an object based
     # on whether the namespace for that object matches the selector. If the
@@ -618,7 +618,7 @@ class ValidatingWebhook(types.Object):
     # Default to the empty LabelSelector, which matches everything.
     @typechecked
     def namespaceSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('namespaceSelector')
+        return self._get('namespaceSelector')
     
     # ObjectSelector decides whether to run the webhook based on if the
     # object has matching labels. objectSelector is evaluated against both
@@ -633,7 +633,7 @@ class ValidatingWebhook(types.Object):
     # Default to the empty LabelSelector, which matches everything.
     @typechecked
     def objectSelector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('objectSelector')
+        return self._get('objectSelector')
     
     # SideEffects states whether this webhook has side effects.
     # Acceptable values are: None, NoneOnDryRun (webhooks created via v1beta1 may also specify Some or Unknown).
@@ -643,7 +643,7 @@ class ValidatingWebhook(types.Object):
     # sideEffects == Unknown or Some.
     @typechecked
     def sideEffects(self) -> Optional[SideEffectClass]:
-        return self._kwargs.get('sideEffects')
+        return self._get('sideEffects')
     
     # TimeoutSeconds specifies the timeout for this webhook. After the timeout passes,
     # the webhook call will be ignored or the API call will fail based on the
@@ -652,7 +652,7 @@ class ValidatingWebhook(types.Object):
     # Default to 10 seconds.
     @typechecked
     def timeoutSeconds(self) -> Optional[int]:
-        return self._kwargs.get('timeoutSeconds', 10)
+        return self._get('timeoutSeconds', 10)
     
     # AdmissionReviewVersions is an ordered list of preferred `AdmissionReview`
     # versions the Webhook expects. API server will try to use first version in
@@ -663,7 +663,7 @@ class ValidatingWebhook(types.Object):
     # and be subject to the failure policy.
     @typechecked
     def admissionReviewVersions(self) -> List[str]:
-        return self._kwargs.get('admissionReviewVersions', [])
+        return self._get('admissionReviewVersions', [])
 
 
 # ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it.
@@ -688,4 +688,4 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     # Webhooks is a list of webhooks and the affected resources and operations.
     @typechecked
     def webhooks(self) -> Dict[str, ValidatingWebhook]:
-        return self._kwargs.get('webhooks', {})
+        return self._get('webhooks', {})

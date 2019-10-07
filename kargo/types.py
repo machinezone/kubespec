@@ -17,9 +17,12 @@ class Renderable:
 
 class Object(Renderable):
 
-    @context.scoped
     def __init__(self, **kwargs):
+        self._scope = context.currentscope()
         self._kwargs = kwargs
+    
+    def _get(self, key: str, default: Any = None) -> Any:
+        return self._kwargs.get(key, self._scope.get(key, default))
 
     def render(self) -> Dict[str, Any]:
         return {}

@@ -27,12 +27,12 @@ class ContainerMetrics(types.Object):
     # Container name corresponding to the one from pod.spec.containers.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('usage', {})
+        return self._get('usage', {})
 
 
 # NodeMetrics sets resource usage metrics of a node.
@@ -58,16 +58,16 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
     # collected from the interval [Timestamp-Window, Timestamp].
     @typechecked
     def timestamp(self) -> 'base.Time':
-        return self._kwargs.get('timestamp')
+        return self._get('timestamp')
     
     @typechecked
     def window(self) -> 'metav1.Duration':
-        return self._kwargs.get('window', metav1.Duration())
+        return self._get('window', metav1.Duration())
     
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('usage', {})
+        return self._get('usage', {})
 
 
 # PodMetrics sets resource usage metrics of a pod.
@@ -93,13 +93,13 @@ class PodMetrics(base.TypedObject, base.MetadataObject):
     # collected from the interval [Timestamp-Window, Timestamp].
     @typechecked
     def timestamp(self) -> 'base.Time':
-        return self._kwargs.get('timestamp')
+        return self._get('timestamp')
     
     @typechecked
     def window(self) -> 'metav1.Duration':
-        return self._kwargs.get('window', metav1.Duration())
+        return self._get('window', metav1.Duration())
     
     # Metrics for all containers are collected within the same time window.
     @typechecked
     def containers(self) -> Dict[str, ContainerMetrics]:
-        return self._kwargs.get('containers', {})
+        return self._get('containers', {})

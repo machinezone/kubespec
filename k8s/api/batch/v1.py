@@ -50,7 +50,7 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def parallelism(self) -> Optional[int]:
-        return self._kwargs.get('parallelism', 1)
+        return self._get('parallelism', 1)
     
     # Specifies the desired number of successfully finished pods the
     # job should be run with.  Setting to nil means that the success of any
@@ -60,26 +60,26 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def completions(self) -> Optional[int]:
-        return self._kwargs.get('completions', 1)
+        return self._get('completions', 1)
     
     # Specifies the duration in seconds relative to the startTime that the job may be active
     # before the system tries to terminate it; value must be positive integer
     @typechecked
     def activeDeadlineSeconds(self) -> Optional[int]:
-        return self._kwargs.get('activeDeadlineSeconds')
+        return self._get('activeDeadlineSeconds')
     
     # Specifies the number of retries before marking this job failed.
     # Defaults to 6
     @typechecked
     def backoffLimit(self) -> Optional[int]:
-        return self._kwargs.get('backoffLimit', 6)
+        return self._get('backoffLimit', 6)
     
     # A label query over pods that should match the pod count.
     # Normally, the system sets this field for you.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional['metav1.LabelSelector']:
-        return self._kwargs.get('selector')
+        return self._get('selector')
     
     # manualSelector controls generation of pod labels and pod selectors.
     # Leave `manualSelector` unset unless you are certain what you are doing.
@@ -93,13 +93,13 @@ class JobSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#specifying-your-own-pod-selector
     @typechecked
     def manualSelector(self) -> Optional[bool]:
-        return self._kwargs.get('manualSelector')
+        return self._get('manualSelector')
     
     # Describes the pod that will be created when executing a job.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
     @typechecked
     def template(self) -> 'corev1.PodTemplateSpec':
-        return self._kwargs.get('template', corev1.PodTemplateSpec())
+        return self._get('template', corev1.PodTemplateSpec())
     
     # ttlSecondsAfterFinished limits the lifetime of a Job that has finished
     # execution (either Complete or Failed). If this field is set,
@@ -112,7 +112,7 @@ class JobSpec(types.Object):
     # TTLAfterFinished feature.
     @typechecked
     def ttlSecondsAfterFinished(self) -> Optional[int]:
-        return self._kwargs.get('ttlSecondsAfterFinished')
+        return self._get('ttlSecondsAfterFinished')
 
 
 # Job represents the configuration of a single job.
@@ -136,4 +136,4 @@ class Job(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> JobSpec:
-        return self._kwargs.get('spec', JobSpec())
+        return self._get('spec', JobSpec())

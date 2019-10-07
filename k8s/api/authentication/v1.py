@@ -34,22 +34,22 @@ class BoundObjectReference(types.Object):
     # Kind of the referent. Valid kinds are 'Pod' and 'Secret'.
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._kwargs.get('kind')
+        return self._get('kind')
     
     # API version of the referent.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._kwargs.get('apiVersion')
+        return self._get('apiVersion')
     
     # Name of the referent.
     @typechecked
     def name(self) -> Optional[str]:
-        return self._kwargs.get('name')
+        return self._get('name')
     
     # UID of the referent.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
 
 
 # TokenRequestSpec contains client provided parameters of a token request.
@@ -71,14 +71,14 @@ class TokenRequestSpec(types.Object):
     # trust between the target audiences.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._kwargs.get('audiences', [])
+        return self._get('audiences', [])
     
     # ExpirationSeconds is the requested duration of validity of the request. The
     # token issuer may return a token with a different validity duration so a
     # client needs to check the 'expiration' field in a response.
     @typechecked
     def expirationSeconds(self) -> Optional[int]:
-        return self._kwargs.get('expirationSeconds', 3600)
+        return self._get('expirationSeconds', 3600)
     
     # BoundObjectRef is a reference to an object that the token will be bound to.
     # The token will only be valid for as long as the bound object exists.
@@ -87,7 +87,7 @@ class TokenRequestSpec(types.Object):
     # small if you want prompt revocation.
     @typechecked
     def boundObjectRef(self) -> Optional[BoundObjectReference]:
-        return self._kwargs.get('boundObjectRef')
+        return self._get('boundObjectRef')
 
 
 # TokenRequest requests a token for a given service account.
@@ -109,7 +109,7 @@ class TokenRequest(base.TypedObject, base.MetadataObject):
     
     @typechecked
     def spec(self) -> TokenRequestSpec:
-        return self._kwargs.get('spec', TokenRequestSpec())
+        return self._get('spec', TokenRequestSpec())
 
 
 # TokenReviewSpec is a description of the token authentication request.
@@ -129,7 +129,7 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        return self._kwargs.get('token')
+        return self._get('token')
     
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -138,7 +138,7 @@ class TokenReviewSpec(types.Object):
     # audience of the Kubernetes apiserver.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._kwargs.get('audiences', [])
+        return self._get('audiences', [])
 
 
 # TokenReview attempts to authenticate a token to a known user.
@@ -163,7 +163,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        return self._kwargs.get('spec', TokenReviewSpec())
+        return self._get('spec', TokenReviewSpec())
 
 
 # UserInfo holds the information about the user needed to implement the
@@ -190,21 +190,21 @@ class UserInfo(types.Object):
     # The name that uniquely identifies this user among all active users.
     @typechecked
     def username(self) -> Optional[str]:
-        return self._kwargs.get('username')
+        return self._get('username')
     
     # A unique value that identifies this user across time. If this user is
     # deleted and another user by the same name is added, they will have
     # different UIDs.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
     
     # The names of groups this user is a part of.
     @typechecked
     def groups(self) -> List[str]:
-        return self._kwargs.get('groups', [])
+        return self._get('groups', [])
     
     # Any additional information provided by the authenticator.
     @typechecked
     def extra(self) -> Dict[str, List[str]]:
-        return self._kwargs.get('extra', {})
+        return self._get('extra', {})

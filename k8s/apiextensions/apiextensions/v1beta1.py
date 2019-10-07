@@ -51,17 +51,17 @@ class ConversionRequest(types.Object):
     # It is suitable for correlating log entries between the webhook and apiserver, for either auditing or debugging.
     @typechecked
     def uid(self) -> str:
-        return self._kwargs.get('uid', '')
+        return self._get('uid', '')
     
     # desiredAPIVersion is the version to convert given objects to. e.g. "myapi.example.com/v1"
     @typechecked
     def desiredAPIVersion(self) -> str:
-        return self._kwargs.get('desiredAPIVersion', '')
+        return self._get('desiredAPIVersion', '')
     
     # objects is the list of custom resource objects to be converted.
     @typechecked
     def objects(self) -> List['runtime.RawExtension']:
-        return self._kwargs.get('objects', [])
+        return self._get('objects', [])
 
 
 # ConversionResponse describes a conversion response.
@@ -79,7 +79,7 @@ class ConversionResponse(types.Object):
     # This should be copied over from the corresponding `request.uid`.
     @typechecked
     def uid(self) -> str:
-        return self._kwargs.get('uid', '')
+        return self._get('uid', '')
     
     # convertedObjects is the list of converted version of `request.objects` if the `result` is successful, otherwise empty.
     # The webhook is expected to set `apiVersion` of these objects to the `request.desiredAPIVersion`. The list
@@ -87,7 +87,7 @@ class ConversionResponse(types.Object):
     # The webhook is allowed to mutate labels and annotations. Any other change to the metadata is silently ignored.
     @typechecked
     def convertedObjects(self) -> List['runtime.RawExtension']:
-        return self._kwargs.get('convertedObjects', [])
+        return self._get('convertedObjects', [])
     
     # result contains the result of conversion with extra details if the conversion failed. `result.status` determines if
     # the conversion failed or succeeded. The `result.status` field is required and represents the success or failure of the
@@ -96,7 +96,7 @@ class ConversionResponse(types.Object):
     # will be used to construct an error message for the end user.
     @typechecked
     def result(self) -> 'metav1.Status':
-        return self._kwargs.get('result', metav1.Status())
+        return self._get('result', metav1.Status())
 
 
 # ConversionReview describes a conversion request/response.
@@ -124,12 +124,12 @@ class ConversionReview(base.TypedObject):
     # request describes the attributes for the conversion request.
     @typechecked
     def request(self) -> Optional[ConversionRequest]:
-        return self._kwargs.get('request')
+        return self._get('request')
     
     # response describes the attributes for the conversion response.
     @typechecked
     def response(self) -> Optional[ConversionResponse]:
-        return self._kwargs.get('response')
+        return self._get('response')
 
 
 # CustomResourceColumnDefinition specifies a column for server side printing.
@@ -155,38 +155,38 @@ class CustomResourceColumnDefinition(types.Object):
     # name is a human readable name for the column.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # type is an OpenAPI type definition for this column.
     # See https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#data-types for details.
     @typechecked
     def type(self) -> str:
-        return self._kwargs.get('type', '')
+        return self._get('type', '')
     
     # format is an optional OpenAPI type definition for this column. The 'name' format is applied
     # to the primary identifier column to assist in clients identifying column is the resource name.
     # See https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#data-types for details.
     @typechecked
     def format(self) -> Optional[str]:
-        return self._kwargs.get('format')
+        return self._get('format')
     
     # description is a human readable description of this column.
     @typechecked
     def description(self) -> Optional[str]:
-        return self._kwargs.get('description')
+        return self._get('description')
     
     # priority is an integer defining the relative importance of this column compared to others. Lower
     # numbers are considered higher priority. Columns that may be omitted in limited space scenarios
     # should be given a priority greater than 0.
     @typechecked
     def priority(self) -> Optional[int]:
-        return self._kwargs.get('priority')
+        return self._get('priority')
     
     # JSONPath is a simple JSON path (i.e. with array notation) which is evaluated against
     # each custom resource to produce the value for this column.
     @typechecked
     def jSONPath(self) -> str:
-        return self._kwargs.get('JSONPath', '')
+        return self._get('JSONPath', '')
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
@@ -209,25 +209,25 @@ class ServiceReference(types.Object):
     # Required
     @typechecked
     def namespace(self) -> str:
-        return self._kwargs.get('namespace', '')
+        return self._get('namespace', '')
     
     # name is the name of the service.
     # Required
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # path is an optional URL path at which the webhook will be contacted.
     @typechecked
     def path(self) -> Optional[str]:
-        return self._kwargs.get('path')
+        return self._get('path')
     
     # port is an optional service port at which the webhook will be contacted.
     # `port` should be a valid port number (1-65535, inclusive).
     # Defaults to 443 for backward compatibility.
     @typechecked
     def port(self) -> Optional[int]:
-        return self._kwargs.get('port', 443)
+        return self._get('port', 443)
 
 
 # WebhookClientConfig contains the information to make a TLS connection with the webhook.
@@ -274,7 +274,7 @@ class WebhookClientConfig(types.Object):
     # allowed, either.
     @typechecked
     def url(self) -> Optional[str]:
-        return self._kwargs.get('url')
+        return self._get('url')
     
     # service is a reference to the service for this webhook. Either
     # service or url must be specified.
@@ -282,13 +282,13 @@ class WebhookClientConfig(types.Object):
     # If the webhook is running within the cluster, then you should use `service`.
     @typechecked
     def service(self) -> Optional[ServiceReference]:
-        return self._kwargs.get('service')
+        return self._get('service')
     
     # caBundle is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
     def caBundle(self) -> bytes:
-        return self._kwargs.get('caBundle', b'')
+        return self._get('caBundle', b'')
 
 
 # CustomResourceConversion describes how to convert different versions of a CR.
@@ -312,13 +312,13 @@ class CustomResourceConversion(types.Object):
     #   is needed for this option. This requires spec.preserveUnknownFields to be false, and spec.conversion.webhookClientConfig to be set.
     @typechecked
     def strategy(self) -> ConversionStrategyType:
-        return self._kwargs.get('strategy', ConversionStrategyType['None'])
+        return self._get('strategy', ConversionStrategyType['None'])
     
     # webhookClientConfig is the instructions for how to call the webhook if strategy is `Webhook`.
     # Required when `strategy` is set to `Webhook`.
     @typechecked
     def webhookClientConfig(self) -> Optional[WebhookClientConfig]:
-        return self._kwargs.get('webhookClientConfig')
+        return self._get('webhookClientConfig')
     
     # conversionReviewVersions is an ordered list of preferred `ConversionReview`
     # versions the Webhook expects. The API server will use the first version in
@@ -329,7 +329,7 @@ class CustomResourceConversion(types.Object):
     # Defaults to `["v1beta1"]`.
     @typechecked
     def conversionReviewVersions(self) -> List[str]:
-        return self._kwargs.get('conversionReviewVersions', [])
+        return self._get('conversionReviewVersions', [])
 
 
 # CustomResourceDefinitionNames indicates the names to serve this CustomResourceDefinition
@@ -360,37 +360,37 @@ class CustomResourceDefinitionNames(types.Object):
     # Must be all lowercase.
     @typechecked
     def plural(self) -> str:
-        return self._kwargs.get('plural', '')
+        return self._get('plural', '')
     
     # singular is the singular name of the resource. It must be all lowercase. Defaults to lowercased `kind`.
     @typechecked
     def singular(self) -> Optional[str]:
-        return self._kwargs.get('singular')
+        return self._get('singular')
     
     # shortNames are short names for the resource, exposed in API discovery documents,
     # and used by clients to support invocations like `kubectl get <shortname>`.
     # It must be all lowercase.
     @typechecked
     def shortNames(self) -> List[str]:
-        return self._kwargs.get('shortNames', [])
+        return self._get('shortNames', [])
     
     # kind is the serialized kind of the resource. It is normally CamelCase and singular.
     # Custom resource instances will use this value as the `kind` attribute in API calls.
     @typechecked
     def kind(self) -> str:
-        return self._kwargs.get('kind', '')
+        return self._get('kind', '')
     
     # listKind is the serialized kind of the list for this resource. Defaults to "`kind`List".
     @typechecked
     def listKind(self) -> Optional[str]:
-        return self._kwargs.get('listKind')
+        return self._get('listKind')
     
     # categories is a list of grouped resources this custom resource belongs to (e.g. 'all').
     # This is published in API discovery documents, and used by clients to support invocations like
     # `kubectl get all`.
     @typechecked
     def categories(self) -> List[str]:
-        return self._kwargs.get('categories', [])
+        return self._get('categories', [])
 
 
 # CustomResourceSubresourceScale defines how to serve the scale subresource for CustomResources.
@@ -412,7 +412,7 @@ class CustomResourceSubresourceScale(types.Object):
     # If there is no value under the given path in the custom resource, the `/scale` subresource will return an error on GET.
     @typechecked
     def specReplicasPath(self) -> str:
-        return self._kwargs.get('specReplicasPath', '')
+        return self._get('specReplicasPath', '')
     
     # statusReplicasPath defines the JSON path inside of a custom resource that corresponds to Scale `status.replicas`.
     # Only JSON paths without the array notation are allowed.
@@ -421,7 +421,7 @@ class CustomResourceSubresourceScale(types.Object):
     # will default to 0.
     @typechecked
     def statusReplicasPath(self) -> str:
-        return self._kwargs.get('statusReplicasPath', '')
+        return self._get('statusReplicasPath', '')
     
     # labelSelectorPath defines the JSON path inside of a custom resource that corresponds to Scale `status.selector`.
     # Only JSON paths without the array notation are allowed.
@@ -434,7 +434,7 @@ class CustomResourceSubresourceScale(types.Object):
     # subresource will default to the empty string.
     @typechecked
     def labelSelectorPath(self) -> Optional[str]:
-        return self._kwargs.get('labelSelectorPath')
+        return self._get('labelSelectorPath')
 
 
 # CustomResourceSubresourceStatus defines how to serve the status subresource for CustomResources.
@@ -466,12 +466,12 @@ class CustomResourceSubresources(types.Object):
     # 2. requests to the custom resource `/status` subresource ignore changes to anything other than the `status` stanza of the object.
     @typechecked
     def status(self) -> Optional[CustomResourceSubresourceStatus]:
-        return self._kwargs.get('status')
+        return self._get('status')
     
     # scale indicates the custom resource should serve a `/scale` subresource that returns an `autoscaling/v1` Scale object.
     @typechecked
     def scale(self) -> Optional[CustomResourceSubresourceScale]:
-        return self._kwargs.get('scale')
+        return self._get('scale')
 
 
 # ExternalDocumentation allows referencing an external resource for extended documentation.
@@ -490,11 +490,11 @@ class ExternalDocumentation(types.Object):
     
     @typechecked
     def description(self) -> Optional[str]:
-        return self._kwargs.get('description')
+        return self._get('description')
     
     @typechecked
     def url(self) -> Optional[str]:
-        return self._kwargs.get('url')
+        return self._get('url')
 
 
 # JSON represents any valid JSON value.
@@ -509,7 +509,7 @@ class JSON(types.Object):
     
     @typechecked
     def raw(self) -> bytes:
-        return self._kwargs.get('Raw', b'')
+        return self._get('Raw', b'')
 
 
 # JSONSchemaPropsOrArray represents a value that can either be a JSONSchemaProps
@@ -525,11 +525,11 @@ class JSONSchemaPropsOrArray(types.Object):
     
     @typechecked
     def schema(self) -> Optional[JSONSchemaProps]:
-        return self._kwargs.get('Schema')
+        return self._get('Schema')
     
     @typechecked
     def jSONSchemas(self) -> List[JSONSchemaProps]:
-        return self._kwargs.get('JSONSchemas', [])
+        return self._get('JSONSchemas', [])
 
 
 # JSONSchemaPropsOrBool represents JSONSchemaProps or a boolean value.
@@ -545,11 +545,11 @@ class JSONSchemaPropsOrBool(types.Object):
     
     @typechecked
     def allows(self) -> bool:
-        return self._kwargs.get('Allows', False)
+        return self._get('Allows', False)
     
     @typechecked
     def schema(self) -> Optional[JSONSchemaProps]:
-        return self._kwargs.get('Schema')
+        return self._get('Schema')
 
 
 # JSONSchemaPropsOrStringArray represents a JSONSchemaProps or a string array.
@@ -564,11 +564,11 @@ class JSONSchemaPropsOrStringArray(types.Object):
     
     @typechecked
     def schema(self) -> Optional[JSONSchemaProps]:
-        return self._kwargs.get('Schema')
+        return self._get('Schema')
     
     @typechecked
     def property(self) -> List[str]:
-        return self._kwargs.get('Property', [])
+        return self._get('Property', [])
 
 
 # JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/).
@@ -707,154 +707,154 @@ class JSONSchemaProps(types.Object):
     
     @typechecked
     def id(self) -> Optional[str]:
-        return self._kwargs.get('id')
+        return self._get('id')
     
     @typechecked
     def schema(self) -> Optional[JSONSchemaURL]:
-        return self._kwargs.get('$schema')
+        return self._get('$schema')
     
     @typechecked
     def ref(self) -> Optional[str]:
-        return self._kwargs.get('$ref')
+        return self._get('$ref')
     
     @typechecked
     def description(self) -> Optional[str]:
-        return self._kwargs.get('description')
+        return self._get('description')
     
     @typechecked
     def type(self) -> Optional[str]:
-        return self._kwargs.get('type')
+        return self._get('type')
     
     @typechecked
     def format(self) -> Optional[str]:
-        return self._kwargs.get('format')
+        return self._get('format')
     
     @typechecked
     def title(self) -> Optional[str]:
-        return self._kwargs.get('title')
+        return self._get('title')
     
     # default is a default value for undefined object fields.
     # Defaulting is a beta feature under the CustomResourceDefaulting feature gate.
     # CustomResourceDefinitions with defaults must be created using the v1 (or newer) CustomResourceDefinition API.
     @typechecked
     def default(self) -> Optional[JSON]:
-        return self._kwargs.get('default')
+        return self._get('default')
     
     @typechecked
     def maximum(self) -> Optional[float]:
-        return self._kwargs.get('maximum')
+        return self._get('maximum')
     
     @typechecked
     def exclusiveMaximum(self) -> Optional[bool]:
-        return self._kwargs.get('exclusiveMaximum')
+        return self._get('exclusiveMaximum')
     
     @typechecked
     def minimum(self) -> Optional[float]:
-        return self._kwargs.get('minimum')
+        return self._get('minimum')
     
     @typechecked
     def exclusiveMinimum(self) -> Optional[bool]:
-        return self._kwargs.get('exclusiveMinimum')
+        return self._get('exclusiveMinimum')
     
     @typechecked
     def maxLength(self) -> Optional[int]:
-        return self._kwargs.get('maxLength')
+        return self._get('maxLength')
     
     @typechecked
     def minLength(self) -> Optional[int]:
-        return self._kwargs.get('minLength')
+        return self._get('minLength')
     
     @typechecked
     def pattern(self) -> Optional[str]:
-        return self._kwargs.get('pattern')
+        return self._get('pattern')
     
     @typechecked
     def maxItems(self) -> Optional[int]:
-        return self._kwargs.get('maxItems')
+        return self._get('maxItems')
     
     @typechecked
     def minItems(self) -> Optional[int]:
-        return self._kwargs.get('minItems')
+        return self._get('minItems')
     
     @typechecked
     def uniqueItems(self) -> Optional[bool]:
-        return self._kwargs.get('uniqueItems')
+        return self._get('uniqueItems')
     
     @typechecked
     def multipleOf(self) -> Optional[float]:
-        return self._kwargs.get('multipleOf')
+        return self._get('multipleOf')
     
     @typechecked
     def enum(self) -> List[JSON]:
-        return self._kwargs.get('enum', [])
+        return self._get('enum', [])
     
     @typechecked
     def maxProperties(self) -> Optional[int]:
-        return self._kwargs.get('maxProperties')
+        return self._get('maxProperties')
     
     @typechecked
     def minProperties(self) -> Optional[int]:
-        return self._kwargs.get('minProperties')
+        return self._get('minProperties')
     
     @typechecked
     def required(self) -> List[str]:
-        return self._kwargs.get('required', [])
+        return self._get('required', [])
     
     @typechecked
     def items(self) -> Optional[JSONSchemaPropsOrArray]:
-        return self._kwargs.get('items')
+        return self._get('items')
     
     @typechecked
     def allOf(self) -> List[JSONSchemaProps]:
-        return self._kwargs.get('allOf', [])
+        return self._get('allOf', [])
     
     @typechecked
     def oneOf(self) -> List[JSONSchemaProps]:
-        return self._kwargs.get('oneOf', [])
+        return self._get('oneOf', [])
     
     @typechecked
     def anyOf(self) -> List[JSONSchemaProps]:
-        return self._kwargs.get('anyOf', [])
+        return self._get('anyOf', [])
     
     @typechecked
     def not_(self) -> Optional[JSONSchemaProps]:
-        return self._kwargs.get('not')
+        return self._get('not')
     
     @typechecked
     def properties(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('properties', {})
+        return self._get('properties', {})
     
     @typechecked
     def additionalProperties(self) -> Optional[JSONSchemaPropsOrBool]:
-        return self._kwargs.get('additionalProperties')
+        return self._get('additionalProperties')
     
     @typechecked
     def patternProperties(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('patternProperties', {})
+        return self._get('patternProperties', {})
     
     @typechecked
     def dependencies(self) -> Dict[str, JSONSchemaPropsOrStringArray]:
-        return self._kwargs.get('dependencies', {})
+        return self._get('dependencies', {})
     
     @typechecked
     def additionalItems(self) -> Optional[JSONSchemaPropsOrBool]:
-        return self._kwargs.get('additionalItems')
+        return self._get('additionalItems')
     
     @typechecked
     def definitions(self) -> Dict[str, JSONSchemaProps]:
-        return self._kwargs.get('definitions', {})
+        return self._get('definitions', {})
     
     @typechecked
     def externalDocs(self) -> Optional[ExternalDocumentation]:
-        return self._kwargs.get('externalDocs')
+        return self._get('externalDocs')
     
     @typechecked
     def example(self) -> Optional[JSON]:
-        return self._kwargs.get('example')
+        return self._get('example')
     
     @typechecked
     def nullable(self) -> Optional[bool]:
-        return self._kwargs.get('nullable')
+        return self._get('nullable')
     
     # x-kubernetes-preserve-unknown-fields stops the API server
     # decoding step from pruning fields which are not specified
@@ -864,7 +864,7 @@ class JSONSchemaProps(types.Object):
     # This can either be true or undefined. False is forbidden.
     @typechecked
     def xKubernetesPreserveUnknownFields(self) -> Optional[bool]:
-        return self._kwargs.get('x-kubernetes-preserve-unknown-fields')
+        return self._get('x-kubernetes-preserve-unknown-fields')
     
     # x-kubernetes-embedded-resource defines that the value is an
     # embedded Kubernetes runtime.Object, with TypeMeta and
@@ -875,7 +875,7 @@ class JSONSchemaProps(types.Object):
     # is fully specified (up to kind, apiVersion, metadata).
     @typechecked
     def xKubernetesEmbeddedResource(self) -> Optional[bool]:
-        return self._kwargs.get('x-kubernetes-embedded-resource')
+        return self._get('x-kubernetes-embedded-resource')
     
     # x-kubernetes-int-or-string specifies that this value is
     # either an integer or a string. If this is true, an empty
@@ -892,7 +892,7 @@ class JSONSchemaProps(types.Object):
     #    - ... zero or more
     @typechecked
     def xKubernetesIntOrString(self) -> Optional[bool]:
-        return self._kwargs.get('x-kubernetes-int-or-string')
+        return self._get('x-kubernetes-int-or-string')
     
     # x-kubernetes-list-map-keys annotates an array with the x-kubernetes-list-type `map` by specifying the keys used
     # as the index of the map.
@@ -902,7 +902,7 @@ class JSONSchemaProps(types.Object):
     # be a scalar typed field of the child structure (no nesting is supported).
     @typechecked
     def xKubernetesListMapKeys(self) -> List[str]:
-        return self._kwargs.get('x-kubernetes-list-map-keys', [])
+        return self._get('x-kubernetes-list-map-keys', [])
     
     # x-kubernetes-list-type annotates an array to further describe its topology.
     # This extension must only be used on lists and may have 3 possible values:
@@ -920,7 +920,7 @@ class JSONSchemaProps(types.Object):
     # Defaults to atomic for arrays.
     @typechecked
     def xKubernetesListType(self) -> Optional[str]:
-        return self._kwargs.get('x-kubernetes-list-type')
+        return self._get('x-kubernetes-list-type')
 
 
 # CustomResourceValidation is a list of validation methods for CustomResources.
@@ -937,7 +937,7 @@ class CustomResourceValidation(types.Object):
     # openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.
     @typechecked
     def openAPIV3Schema(self) -> Optional[JSONSchemaProps]:
-        return self._kwargs.get('openAPIV3Schema')
+        return self._get('openAPIV3Schema')
 
 
 # CustomResourceDefinitionVersion describes a version for CRD.
@@ -964,32 +964,32 @@ class CustomResourceDefinitionVersion(types.Object):
     # The custom resources are served under this version at `/apis/<group>/<version>/...` if `served` is true.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # served is a flag enabling/disabling this version from being served via REST APIs
     @typechecked
     def served(self) -> bool:
-        return self._kwargs.get('served', False)
+        return self._get('served', False)
     
     # storage indicates this version should be used when persisting custom resources to storage.
     # There must be exactly one version with storage=true.
     @typechecked
     def storage(self) -> bool:
-        return self._kwargs.get('storage', False)
+        return self._get('storage', False)
     
     # schema describes the schema used for validation and pruning of this version of the custom resource.
     # Top-level and per-version schemas are mutually exclusive.
     # Per-version schemas must not all be set to identical values (top-level validation schema should be used instead).
     @typechecked
     def schema(self) -> Optional[CustomResourceValidation]:
-        return self._kwargs.get('schema')
+        return self._get('schema')
     
     # subresources specify what subresources this version of the defined custom resource have.
     # Top-level and per-version subresources are mutually exclusive.
     # Per-version subresources must not all be set to identical values (top-level subresources should be used instead).
     @typechecked
     def subresources(self) -> Optional[CustomResourceSubresources]:
-        return self._kwargs.get('subresources')
+        return self._get('subresources')
     
     # additionalPrinterColumns specifies additional columns returned in Table output.
     # See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
@@ -998,7 +998,7 @@ class CustomResourceDefinitionVersion(types.Object):
     # If no top-level or per-version columns are specified, a single column displaying the age of the custom resource is used.
     @typechecked
     def additionalPrinterColumns(self) -> Dict[str, CustomResourceColumnDefinition]:
-        return self._kwargs.get('additionalPrinterColumns', {})
+        return self._get('additionalPrinterColumns', {})
 
 
 # CustomResourceDefinitionSpec describes how a user wants their resource to appear
@@ -1032,32 +1032,32 @@ class CustomResourceDefinitionSpec(types.Object):
     # Must match the name of the CustomResourceDefinition (in the form `<names.plural>.<group>`).
     @typechecked
     def group(self) -> str:
-        return self._kwargs.get('group', '')
+        return self._get('group', '')
     
     # names specify the resource and kind names for the custom resource.
     @typechecked
     def names(self) -> CustomResourceDefinitionNames:
-        return self._kwargs.get('names', CustomResourceDefinitionNames())
+        return self._get('names', CustomResourceDefinitionNames())
     
     # scope indicates whether the defined custom resource is cluster- or namespace-scoped.
     # Allowed values are `Cluster` and `Namespaced`. Default is `Namespaced`.
     @typechecked
     def scope(self) -> ResourceScope:
-        return self._kwargs.get('scope', ResourceScope['NamespaceScoped'])
+        return self._get('scope', ResourceScope['NamespaceScoped'])
     
     # validation describes the schema used for validation and pruning of the custom resource.
     # If present, this validation schema is used to validate all versions.
     # Top-level and per-version schemas are mutually exclusive.
     @typechecked
     def validation(self) -> Optional[CustomResourceValidation]:
-        return self._kwargs.get('validation')
+        return self._get('validation')
     
     # subresources specify what subresources the defined custom resource has.
     # If present, this field configures subresources for all versions.
     # Top-level and per-version subresources are mutually exclusive.
     @typechecked
     def subresources(self) -> Optional[CustomResourceSubresources]:
-        return self._kwargs.get('subresources')
+        return self._get('subresources')
     
     # versions is the list of all API versions of the defined custom resource.
     # Optional if `version` is specified.
@@ -1071,7 +1071,7 @@ class CustomResourceDefinitionSpec(types.Object):
     # v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
     @typechecked
     def versions(self) -> Dict[str, CustomResourceDefinitionVersion]:
-        return self._kwargs.get('versions', {})
+        return self._get('versions', {})
     
     # additionalPrinterColumns specifies additional columns returned in Table output.
     # See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
@@ -1080,12 +1080,12 @@ class CustomResourceDefinitionSpec(types.Object):
     # If no top-level or per-version columns are specified, a single column displaying the age of the custom resource is used.
     @typechecked
     def additionalPrinterColumns(self) -> Dict[str, CustomResourceColumnDefinition]:
-        return self._kwargs.get('additionalPrinterColumns', {})
+        return self._get('additionalPrinterColumns', {})
     
     # conversion defines conversion settings for the CRD.
     @typechecked
     def conversion(self) -> Optional[CustomResourceConversion]:
-        return self._kwargs.get('conversion', CustomResourceConversion())
+        return self._get('conversion', CustomResourceConversion())
 
 
 # CustomResourceDefinition represents a resource that should be exposed on the API server.  Its name MUST be in the format
@@ -1110,4 +1110,4 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
     # spec describes how the user wants the resources to appear
     @typechecked
     def spec(self) -> CustomResourceDefinitionSpec:
-        return self._kwargs.get('spec', CustomResourceDefinitionSpec())
+        return self._get('spec', CustomResourceDefinitionSpec())

@@ -28,7 +28,7 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        return self._kwargs.get('token')
+        return self._get('token')
     
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -37,7 +37,7 @@ class TokenReviewSpec(types.Object):
     # audience of the Kubernetes apiserver.
     @typechecked
     def audiences(self) -> List[str]:
-        return self._kwargs.get('audiences', [])
+        return self._get('audiences', [])
 
 
 # TokenReview attempts to authenticate a token to a known user.
@@ -62,4 +62,4 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        return self._kwargs.get('spec', TokenReviewSpec())
+        return self._get('spec', TokenReviewSpec())

@@ -57,12 +57,12 @@ class Policy(types.Object):
     # required
     @typechecked
     def level(self) -> Level:
-        return self._kwargs.get('level')
+        return self._get('level')
     
     # Stages is a list of stages for which events are created.
     @typechecked
     def stages(self) -> List[Stage]:
-        return self._kwargs.get('stages', [])
+        return self._get('stages', [])
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
@@ -85,26 +85,26 @@ class ServiceReference(types.Object):
     # Required
     @typechecked
     def namespace(self) -> str:
-        return self._kwargs.get('namespace', '')
+        return self._get('namespace', '')
     
     # `name` is the name of the service.
     # Required
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # `path` is an optional URL path which will be sent in any request to
     # this service.
     @typechecked
     def path(self) -> Optional[str]:
-        return self._kwargs.get('path')
+        return self._get('path')
     
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
     @typechecked
     def port(self) -> Optional[int]:
-        return self._kwargs.get('port', 443)
+        return self._get('port', 443)
 
 
 # WebhookClientConfig contains the information to make a connection with the webhook
@@ -151,7 +151,7 @@ class WebhookClientConfig(types.Object):
     # allowed, either.
     @typechecked
     def url(self) -> Optional[str]:
-        return self._kwargs.get('url')
+        return self._get('url')
     
     # `service` is a reference to the service for this webhook. Either
     # `service` or `url` must be specified.
@@ -159,13 +159,13 @@ class WebhookClientConfig(types.Object):
     # If the webhook is running within the cluster, then you should use `service`.
     @typechecked
     def service(self) -> Optional[ServiceReference]:
-        return self._kwargs.get('service')
+        return self._get('service')
     
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
     def caBundle(self) -> bytes:
-        return self._kwargs.get('caBundle', b'')
+        return self._get('caBundle', b'')
 
 
 # WebhookThrottleConfig holds the configuration for throttling events
@@ -186,13 +186,13 @@ class WebhookThrottleConfig(types.Object):
     # default 10 QPS
     @typechecked
     def qps(self) -> Optional[int]:
-        return self._kwargs.get('qps', 10)
+        return self._get('qps', 10)
     
     # ThrottleBurst is the maximum number of events sent at the same moment
     # default 15 QPS
     @typechecked
     def burst(self) -> Optional[int]:
-        return self._kwargs.get('burst', 15)
+        return self._get('burst', 15)
 
 
 # Webhook holds the configuration of the webhook
@@ -210,13 +210,13 @@ class Webhook(types.Object):
     # Throttle holds the options for throttling the webhook
     @typechecked
     def throttle(self) -> Optional[WebhookThrottleConfig]:
-        return self._kwargs.get('throttle', WebhookThrottleConfig())
+        return self._get('throttle', WebhookThrottleConfig())
     
     # ClientConfig holds the connection parameters for the webhook
     # required
     @typechecked
     def clientConfig(self) -> WebhookClientConfig:
-        return self._kwargs.get('clientConfig', WebhookClientConfig())
+        return self._get('clientConfig', WebhookClientConfig())
 
 
 # AuditSinkSpec holds the spec for the audit sink
@@ -233,13 +233,13 @@ class AuditSinkSpec(types.Object):
     # required
     @typechecked
     def policy(self) -> Policy:
-        return self._kwargs.get('policy', Policy())
+        return self._get('policy', Policy())
     
     # Webhook to send events
     # required
     @typechecked
     def webhook(self) -> Webhook:
-        return self._kwargs.get('webhook', Webhook())
+        return self._get('webhook', Webhook())
 
 
 # AuditSink represents a cluster level audit sink
@@ -262,4 +262,4 @@ class AuditSink(base.TypedObject, base.MetadataObject):
     # Spec defines the audit configuration spec
     @typechecked
     def spec(self) -> AuditSinkSpec:
-        return self._kwargs.get('spec', AuditSinkSpec())
+        return self._get('spec', AuditSinkSpec())

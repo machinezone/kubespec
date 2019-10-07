@@ -27,7 +27,7 @@ class AggregationRule(types.Object):
     # If any of the selectors match, then the ClusterRole's permissions will be added
     @typechecked
     def clusterRoleSelectors(self) -> List['metav1.LabelSelector']:
-        return self._kwargs.get('clusterRoleSelectors', [])
+        return self._get('clusterRoleSelectors', [])
 
 
 # PolicyRule holds information that describes a policy rule, but does not contain information
@@ -55,31 +55,31 @@ class PolicyRule(types.Object):
     # Verbs is a list of Verbs that apply to ALL the ResourceKinds and AttributeRestrictions contained in this rule.  VerbAll represents all kinds.
     @typechecked
     def verbs(self) -> List[str]:
-        return self._kwargs.get('verbs', [])
+        return self._get('verbs', [])
     
     # APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
     # the enumerated resources in any API group will be allowed.
     @typechecked
     def apiGroups(self) -> List[str]:
-        return self._kwargs.get('apiGroups', [])
+        return self._get('apiGroups', [])
     
     # Resources is a list of resources this rule applies to.  '*' represents all resources in the specified apiGroups.
     # '*/foo' represents the subresource 'foo' for all resources in the specified apiGroups.
     @typechecked
     def resources(self) -> List[str]:
-        return self._kwargs.get('resources', [])
+        return self._get('resources', [])
     
     # ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
     @typechecked
     def resourceNames(self) -> List[str]:
-        return self._kwargs.get('resourceNames', [])
+        return self._get('resourceNames', [])
     
     # NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
     # Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding.
     # Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
     @typechecked
     def nonResourceURLs(self) -> List[str]:
-        return self._kwargs.get('nonResourceURLs', [])
+        return self._get('nonResourceURLs', [])
 
 
 # ClusterRole is a cluster level, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding or ClusterRoleBinding.
@@ -105,14 +105,14 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
     # Rules holds all the PolicyRules for this ClusterRole
     @typechecked
     def rules(self) -> List[PolicyRule]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
     
     # AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
     # If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
     # stomped by the controller.
     @typechecked
     def aggregationRule(self) -> Optional[AggregationRule]:
-        return self._kwargs.get('aggregationRule')
+        return self._get('aggregationRule')
 
 
 # RoleRef contains information that points to the role being used
@@ -129,17 +129,17 @@ class RoleRef(types.Object):
     # APIGroup is the group for the resource being referenced
     @typechecked
     def apiGroup(self) -> str:
-        return self._kwargs.get('apiGroup', 'rbac.authorization.k8s.io')
+        return self._get('apiGroup', 'rbac.authorization.k8s.io')
     
     # Kind is the type of resource being referenced
     @typechecked
     def kind(self) -> str:
-        return self._kwargs.get('kind', '')
+        return self._get('kind', '')
     
     # Name is the name of resource being referenced
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
 
 
 # Subject contains a reference to the object or user identities a role binding applies to.  This can either hold a direct API object reference,
@@ -163,25 +163,25 @@ class Subject(types.Object):
     # If the Authorizer does not recognized the kind value, the Authorizer should report an error.
     @typechecked
     def kind(self) -> str:
-        return self._kwargs.get('kind', '')
+        return self._get('kind', '')
     
     # APIGroup holds the API group of the referenced subject.
     # Defaults to "" for ServiceAccount subjects.
     # Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
     @typechecked
     def apiGroup(self) -> Optional[str]:
-        return self._kwargs.get('apiGroup')
+        return self._get('apiGroup')
     
     # Name of the object being referenced.
     @typechecked
     def name(self) -> str:
-        return self._kwargs.get('name', '')
+        return self._get('name', '')
     
     # Namespace of the referenced object.  If the object kind is non-namespace, such as "User" or "Group", and this value is not empty
     # the Authorizer should report an error.
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._kwargs.get('namespace')
+        return self._get('namespace')
 
 
 # ClusterRoleBinding references a ClusterRole, but not contain it.  It can reference a ClusterRole in the global namespace,
@@ -208,13 +208,13 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
     # Subjects holds references to the objects the role applies to.
     @typechecked
     def subjects(self) -> Dict[str, Subject]:
-        return self._kwargs.get('subjects', {})
+        return self._get('subjects', {})
     
     # RoleRef can only reference a ClusterRole in the global namespace.
     # If the RoleRef cannot be resolved, the Authorizer must return an error.
     @typechecked
     def roleRef(self) -> RoleRef:
-        return self._kwargs.get('roleRef', RoleRef())
+        return self._get('roleRef', RoleRef())
 
 
 # Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding.
@@ -237,7 +237,7 @@ class Role(base.TypedObject, base.MetadataObject):
     # Rules holds all the PolicyRules for this Role
     @typechecked
     def rules(self) -> List[PolicyRule]:
-        return self._kwargs.get('rules', [])
+        return self._get('rules', [])
 
 
 # RoleBinding references a role, but does not contain it.  It can reference a Role in the same namespace or a ClusterRole in the global namespace.
@@ -265,10 +265,10 @@ class RoleBinding(base.TypedObject, base.MetadataObject):
     # Subjects holds references to the objects the role applies to.
     @typechecked
     def subjects(self) -> Dict[str, Subject]:
-        return self._kwargs.get('subjects', {})
+        return self._get('subjects', {})
     
     # RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
     # If the RoleRef cannot be resolved, the Authorizer must return an error.
     @typechecked
     def roleRef(self) -> RoleRef:
-        return self._kwargs.get('roleRef', RoleRef())
+        return self._get('roleRef', RoleRef())

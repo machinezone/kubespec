@@ -216,12 +216,12 @@ class Preconditions(types.Object):
     # Specifies the target UID.
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
     
     # Specifies the target ResourceVersion
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        return self._kwargs.get('resourceVersion')
+        return self._get('resourceVersion')
 
 
 # TypeMeta describes an individual object in an API response or request
@@ -247,7 +247,7 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._kwargs.get('kind')
+        return self._get('kind')
     
     # APIVersion defines the versioned schema of this representation of an object.
     # Servers should convert recognized schemas to the latest internal value, and
@@ -255,7 +255,7 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        return self._kwargs.get('apiVersion')
+        return self._get('apiVersion')
 
 
 # DeleteOptions may be provided when deleting an API object.
@@ -284,13 +284,13 @@ class DeleteOptions(base.TypedObject):
     # Defaults to a per object value if not specified. zero means delete immediately.
     @typechecked
     def gracePeriodSeconds(self) -> Optional[int]:
-        return self._kwargs.get('gracePeriodSeconds')
+        return self._get('gracePeriodSeconds')
     
     # Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
     # returned.
     @typechecked
     def preconditions(self) -> Optional[Preconditions]:
-        return self._kwargs.get('preconditions')
+        return self._get('preconditions')
     
     # Whether and how garbage collection will be performed.
     # Either this field or OrphanDependents may be set, but not both.
@@ -302,7 +302,7 @@ class DeleteOptions(base.TypedObject):
     # foreground.
     @typechecked
     def propagationPolicy(self) -> Optional[DeletionPropagation]:
-        return self._kwargs.get('propagationPolicy')
+        return self._get('propagationPolicy')
     
     # When present, indicates that modifications should not be
     # persisted. An invalid or unrecognized dryRun directive will
@@ -311,7 +311,7 @@ class DeleteOptions(base.TypedObject):
     # - All: all dry run stages will be processed
     @typechecked
     def dryRun(self) -> List[str]:
-        return self._kwargs.get('dryRun', [])
+        return self._get('dryRun', [])
 
 
 # Duration is a wrapper around time.Duration which supports correct
@@ -327,7 +327,7 @@ class Duration(types.Object):
     
     @typechecked
     def duration(self) -> int:
-        return self._kwargs.get('Duration', 0)
+        return self._get('Duration', 0)
 
 
 # GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
@@ -344,15 +344,15 @@ class GroupVersionKind(types.Object):
     
     @typechecked
     def group(self) -> str:
-        return self._kwargs.get('group', '')
+        return self._get('group', '')
     
     @typechecked
     def version(self) -> str:
-        return self._kwargs.get('version', '')
+        return self._get('version', '')
     
     @typechecked
     def kind(self) -> str:
-        return self._kwargs.get('kind', '')
+        return self._get('kind', '')
 
 
 # GroupVersionResource unambiguously identifies a resource.  It doesn't anonymously include GroupVersion
@@ -369,15 +369,15 @@ class GroupVersionResource(types.Object):
     
     @typechecked
     def group(self) -> str:
-        return self._kwargs.get('group', '')
+        return self._get('group', '')
     
     @typechecked
     def version(self) -> str:
-        return self._kwargs.get('version', '')
+        return self._get('version', '')
     
     @typechecked
     def resource(self) -> str:
-        return self._kwargs.get('resource', '')
+        return self._get('resource', '')
 
 
 # A label selector requirement is a selector that contains values, a key, and an operator that
@@ -397,13 +397,13 @@ class LabelSelectorRequirement(types.Object):
     # key is the label key that the selector applies to.
     @typechecked
     def key(self) -> str:
-        return self._kwargs.get('key', '')
+        return self._get('key', '')
     
     # operator represents a key's relationship to a set of values.
     # Valid operators are In, NotIn, Exists and DoesNotExist.
     @typechecked
     def operator(self) -> LabelSelectorOperator:
-        return self._kwargs.get('operator')
+        return self._get('operator')
     
     # values is an array of string values. If the operator is In or NotIn,
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
@@ -411,7 +411,7 @@ class LabelSelectorRequirement(types.Object):
     # merge patch.
     @typechecked
     def values(self) -> List[str]:
-        return self._kwargs.get('values', [])
+        return self._get('values', [])
 
 
 # A label selector is a label query over a set of resources. The result of matchLabels and
@@ -435,12 +435,12 @@ class LabelSelector(types.Object):
     # operator is "In", and the values array contains only "value". The requirements are ANDed.
     @typechecked
     def matchLabels(self) -> Dict[str, str]:
-        return self._kwargs.get('matchLabels', {})
+        return self._get('matchLabels', {})
     
     # matchExpressions is a list of label selector requirements. The requirements are ANDed.
     @typechecked
     def matchExpressions(self) -> List[LabelSelectorRequirement]:
-        return self._kwargs.get('matchExpressions', [])
+        return self._get('matchExpressions', [])
 
 
 # ListMeta describes metadata that synthetic resources must have, including lists and
@@ -467,7 +467,7 @@ class ListMeta(types.Object):
     # message.
     @typechecked
     def continue_(self) -> Optional[str]:
-        return self._kwargs.get('continue')
+        return self._get('continue')
     
     # remainingItemCount is the number of subsequent items in the list which are not included in this
     # list response. If the list request contained label or field selectors, then the number of
@@ -480,7 +480,7 @@ class ListMeta(types.Object):
     # should not rely on the remainingItemCount to be set or to be exact.
     @typechecked
     def remainingItemCount(self) -> Optional[int]:
-        return self._kwargs.get('remainingItemCount')
+        return self._get('remainingItemCount')
 
 
 # ObjectMeta is metadata that all persisted resources must have, which includes all objects
@@ -512,7 +512,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        return self._kwargs.get('name')
+        return self._get('name')
     
     # Namespace defines the space within each name must be unique. An empty namespace is
     # equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -524,7 +524,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        return self._kwargs.get('namespace')
+        return self._get('namespace')
     
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
@@ -532,7 +532,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        return self._kwargs.get('labels', {})
+        return self._get('labels', {})
     
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -540,7 +540,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        return self._kwargs.get('annotations', {})
+        return self._get('annotations', {})
 
 
 # StatusCause provides more information about an api.Status failure, including
@@ -565,13 +565,13 @@ class StatusCause(types.Object):
     # empty there is no information available.
     @typechecked
     def reason(self) -> Optional[CauseType]:
-        return self._kwargs.get('reason')
+        return self._get('reason')
     
     # A human-readable description of the cause of the error.  This field may be
     # presented as-is to a reader.
     @typechecked
     def message(self) -> Optional[str]:
-        return self._kwargs.get('message')
+        return self._get('message')
     
     # The field of the resource that has caused this error, as named by its JSON
     # serialization. May include dot and postfix notation for nested attributes.
@@ -584,7 +584,7 @@ class StatusCause(types.Object):
     #   "items[0].name" - the field "name" on the first array entry in "items"
     @typechecked
     def field(self) -> Optional[str]:
-        return self._kwargs.get('field')
+        return self._get('field')
 
 
 # StatusDetails is a set of additional properties that MAY be set by the
@@ -622,39 +622,39 @@ class StatusDetails(types.Object):
     # (when there is a single name which can be described).
     @typechecked
     def name(self) -> Optional[str]:
-        return self._kwargs.get('name')
+        return self._get('name')
     
     # The group attribute of the resource associated with the status StatusReason.
     @typechecked
     def group(self) -> Optional[str]:
-        return self._kwargs.get('group')
+        return self._get('group')
     
     # The kind attribute of the resource associated with the status StatusReason.
     # On some operations may differ from the requested resource Kind.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        return self._kwargs.get('kind')
+        return self._get('kind')
     
     # UID of the resource.
     # (when there is a single resource which can be described).
     # More info: http://kubernetes.io/docs/user-guide/identifiers#uids
     @typechecked
     def uid(self) -> Optional[str]:
-        return self._kwargs.get('uid')
+        return self._get('uid')
     
     # The Causes array includes more details associated with the StatusReason
     # failure. Not all StatusReasons may provide detailed causes.
     @typechecked
     def causes(self) -> List[StatusCause]:
-        return self._kwargs.get('causes', [])
+        return self._get('causes', [])
     
     # If specified, the time in seconds before the operation should be retried. Some errors may indicate
     # the client must take an alternate action - for those errors this field may indicate how long to wait
     # before taking the alternate action.
     @typechecked
     def retryAfterSeconds(self) -> Optional[int]:
-        return self._kwargs.get('retryAfterSeconds')
+        return self._get('retryAfterSeconds')
 
 
 # Status is a return value for calls that don't return other objects.
@@ -685,19 +685,19 @@ class Status(base.TypedObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def metadata(self) -> ListMeta:
-        return self._kwargs.get('metadata', ListMeta())
+        return self._get('metadata', ListMeta())
     
     # Status of the operation.
     # One of: "Success" or "Failure".
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def status(self) -> Optional[str]:
-        return self._kwargs.get('status')
+        return self._get('status')
     
     # A human-readable description of the status of this operation.
     @typechecked
     def message(self) -> Optional[str]:
-        return self._kwargs.get('message')
+        return self._get('message')
     
     # A machine-readable description of why this operation is in the
     # "Failure" status. If this value is empty there
@@ -705,7 +705,7 @@ class Status(base.TypedObject):
     # code but does not override it.
     @typechecked
     def reason(self) -> Optional[StatusReason]:
-        return self._kwargs.get('reason')
+        return self._get('reason')
     
     # Extended data associated with the reason.  Each reason may define its
     # own extended details. This field is optional and the data returned
@@ -713,9 +713,9 @@ class Status(base.TypedObject):
     # the reason type.
     @typechecked
     def details(self) -> Optional[StatusDetails]:
-        return self._kwargs.get('details')
+        return self._get('details')
     
     # Suggested HTTP return code for this status, 0 if not set.
     @typechecked
     def code(self) -> Optional[int]:
-        return self._kwargs.get('code')
+        return self._get('code')

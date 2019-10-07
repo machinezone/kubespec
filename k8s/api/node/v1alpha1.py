@@ -27,7 +27,7 @@ class Overhead(types.Object):
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
     def podFixed(self) -> Dict[corev1.ResourceName, 'resource.Quantity']:
-        return self._kwargs.get('podFixed', {})
+        return self._get('podFixed', {})
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
@@ -52,7 +52,7 @@ class Scheduling(types.Object):
     # be rejected in admission.
     @typechecked
     def nodeSelector(self) -> Dict[str, str]:
-        return self._kwargs.get('nodeSelector', {})
+        return self._get('nodeSelector', {})
     
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
@@ -60,7 +60,7 @@ class Scheduling(types.Object):
     # +listType=atomic
     @typechecked
     def tolerations(self) -> List['corev1.Toleration']:
-        return self._kwargs.get('tolerations', [])
+        return self._get('tolerations', [])
 
 
 # RuntimeClassSpec is a specification of a RuntimeClass. It contains parameters
@@ -93,7 +93,7 @@ class RuntimeClassSpec(types.Object):
     # and is immutable.
     @typechecked
     def runtimeHandler(self) -> str:
-        return self._kwargs.get('runtimeHandler', '')
+        return self._get('runtimeHandler', '')
     
     # Overhead represents the resource overhead associated with running a pod for a
     # given RuntimeClass. For more details, see
@@ -101,7 +101,7 @@ class RuntimeClassSpec(types.Object):
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Optional[Overhead]:
-        return self._kwargs.get('overhead')
+        return self._get('overhead')
     
     # Scheduling holds the scheduling constraints to ensure that pods running
     # with this RuntimeClass are scheduled to nodes that support it.
@@ -109,7 +109,7 @@ class RuntimeClassSpec(types.Object):
     # nodes.
     @typechecked
     def scheduling(self) -> Optional[Scheduling]:
-        return self._kwargs.get('scheduling')
+        return self._get('scheduling')
 
 
 # RuntimeClass defines a class of container runtime supported in the cluster.
@@ -139,4 +139,4 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> RuntimeClassSpec:
-        return self._kwargs.get('spec', RuntimeClassSpec())
+        return self._get('spec', RuntimeClassSpec())

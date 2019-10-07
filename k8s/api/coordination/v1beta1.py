@@ -37,31 +37,31 @@ class LeaseSpec(types.Object):
     # holderIdentity contains the identity of the holder of a current lease.
     @typechecked
     def holderIdentity(self) -> Optional[str]:
-        return self._kwargs.get('holderIdentity')
+        return self._get('holderIdentity')
     
     # leaseDurationSeconds is a duration that candidates for a lease need
     # to wait to force acquire it. This is measure against time of last
     # observed RenewTime.
     @typechecked
     def leaseDurationSeconds(self) -> Optional[int]:
-        return self._kwargs.get('leaseDurationSeconds')
+        return self._get('leaseDurationSeconds')
     
     # acquireTime is a time when the current lease was acquired.
     @typechecked
     def acquireTime(self) -> Optional['base.MicroTime']:
-        return self._kwargs.get('acquireTime')
+        return self._get('acquireTime')
     
     # renewTime is a time when the current holder of a lease has last
     # updated the lease.
     @typechecked
     def renewTime(self) -> Optional['base.MicroTime']:
-        return self._kwargs.get('renewTime')
+        return self._get('renewTime')
     
     # leaseTransitions is the number of transitions of a lease between
     # holders.
     @typechecked
     def leaseTransitions(self) -> Optional[int]:
-        return self._kwargs.get('leaseTransitions')
+        return self._get('leaseTransitions')
 
 
 # Lease defines a lease concept.
@@ -85,4 +85,4 @@ class Lease(base.TypedObject, base.MetadataObject):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def spec(self) -> LeaseSpec:
-        return self._kwargs.get('spec', LeaseSpec())
+        return self._get('spec', LeaseSpec())

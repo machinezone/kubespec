@@ -44,7 +44,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # receive when they have the name of this class in their pod spec.
     @typechecked
     def value(self) -> int:
-        return self._kwargs.get('value', 0)
+        return self._get('value', 0)
     
     # globalDefault specifies whether this PriorityClass should be considered as
     # the default priority for pods that do not have any priority class.
@@ -53,13 +53,13 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # the smallest value of such global default PriorityClasses will be used as the default priority.
     @typechecked
     def globalDefault(self) -> Optional[bool]:
-        return self._kwargs.get('globalDefault')
+        return self._get('globalDefault')
     
     # description is an arbitrary string that usually provides guidelines on
     # when this priority class should be used.
     @typechecked
     def description(self) -> Optional[str]:
-        return self._kwargs.get('description')
+        return self._get('description')
     
     # PreemptionPolicy is the Policy for preempting pods with lower priority.
     # One of Never, PreemptLowerPriority.
@@ -67,4 +67,4 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     @typechecked
     def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
-        return self._kwargs.get('preemptionPolicy')
+        return self._get('preemptionPolicy')
