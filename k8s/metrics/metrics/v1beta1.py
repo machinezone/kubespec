@@ -74,7 +74,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         return None
 
     @typechecked
-    def window(self) -> "metav1.Duration":
+    def window(self) -> "base.Duration":
         if "window" in self._kwargs:
             return self._kwargs["window"]
         if "window" in self._context and check_return_type(self._context["window"]):
@@ -123,7 +123,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         return None
 
     @typechecked
-    def window(self) -> "metav1.Duration":
+    def window(self) -> "base.Duration":
         if "window" in self._kwargs:
             return self._kwargs["window"]
         if "window" in self._context and check_return_type(self._context["window"]):

@@ -3,7 +3,7 @@
 # license that can be found in the LICENSE file.
 
 import enum
-from datetime import datetime as DateTime
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
 import pytz
@@ -149,10 +149,9 @@ class NamespacedMetadataObject(MetadataObject):
 
 
 class Time(types.Renderable):
-
     _format = "%Y-%m-%dT%H:%M:%SZ"
 
-    def __init__(self, time: DateTime):
+    def __init__(self, time: datetime):
         self.time = time
 
     def render(self) -> str:
@@ -160,5 +159,23 @@ class Time(types.Renderable):
 
 
 class MicroTime(Time):
-
     _format = "%Y-%m-%dT%H:%M:%S.%fZ"
+
+
+class Duration(types.Renderable):
+    def __init__(self, duration: timedelta):
+        self.duration = duration
+
+    def render(self) -> str:
+        out = ""
+        secs = self.duration.total_seconds()
+        if secs < 0:
+            out = "-"
+            secs = -secs
+        hours, secs = divmod(secs, 3600)
+        if hours > 0:
+            out = out + hours + "h"
+        mins, secs = divmod(secs, 60)
+        if hours > 0 or mins > 0:
+            out = out + mins + "m"
+        return out + "{0:.9f}".format(secs).rstrip("0").rstrip(".") + "s"
