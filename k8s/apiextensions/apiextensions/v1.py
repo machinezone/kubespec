@@ -26,10 +26,6 @@ ConversionStrategyType = base.Enum(
 )
 
 
-# JSONSchemaURL represents a schema url.
-JSONSchemaURL = base.Enum("JSONSchemaURL", {})
-
-
 # ResourceScope is an enum defining the different scopes available to a custom resource
 ResourceScope = base.Enum(
     "ResourceScope", {"Cluster": "Cluster", "NamespaceScoped": "Namespaced"}
@@ -837,7 +833,7 @@ class JSONSchemaProps(types.Object):
         return None
 
     @typechecked
-    def schema(self) -> Optional[JSONSchemaURL]:
+    def schema(self) -> Optional[str]:
         if "$schema" in self._kwargs:
             return self._kwargs["$schema"]
         if "$schema" in self._context and check_return_type(self._context["$schema"]):
