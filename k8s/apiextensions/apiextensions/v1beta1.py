@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from k8s import base
 from k8s.apimachinery import runtime
@@ -679,88 +679,6 @@ class JSON(types.Object):
         return b""
 
 
-# JSONSchemaPropsOrArray represents a value that can either be a JSONSchemaProps
-# or an array of JSONSchemaProps. Mainly here for serialization purposes.
-class JSONSchemaPropsOrArray(types.Object):
-    @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v["Schema"] = self.schema()
-        v["JSONSchemas"] = self.jSONSchemas()
-        return v
-
-    @typechecked
-    def schema(self) -> Optional[JSONSchemaProps]:
-        if "Schema" in self._kwargs:
-            return self._kwargs["Schema"]
-        if "Schema" in self._context and check_return_type(self._context["Schema"]):
-            return self._context["Schema"]
-        return None
-
-    @typechecked
-    def jSONSchemas(self) -> List[JSONSchemaProps]:
-        if "JSONSchemas" in self._kwargs:
-            return self._kwargs["JSONSchemas"]
-        if "JSONSchemas" in self._context and check_return_type(
-            self._context["JSONSchemas"]
-        ):
-            return self._context["JSONSchemas"]
-        return []
-
-
-# JSONSchemaPropsOrBool represents JSONSchemaProps or a boolean value.
-# Defaults to true for the boolean property.
-class JSONSchemaPropsOrBool(types.Object):
-    @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v["Allows"] = self.allows()
-        v["Schema"] = self.schema()
-        return v
-
-    @typechecked
-    def allows(self) -> bool:
-        if "Allows" in self._kwargs:
-            return self._kwargs["Allows"]
-        if "Allows" in self._context and check_return_type(self._context["Allows"]):
-            return self._context["Allows"]
-        return False
-
-    @typechecked
-    def schema(self) -> Optional[JSONSchemaProps]:
-        if "Schema" in self._kwargs:
-            return self._kwargs["Schema"]
-        if "Schema" in self._context and check_return_type(self._context["Schema"]):
-            return self._context["Schema"]
-        return None
-
-
-# JSONSchemaPropsOrStringArray represents a JSONSchemaProps or a string array.
-class JSONSchemaPropsOrStringArray(types.Object):
-    @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v["Schema"] = self.schema()
-        v["Property"] = self.property()
-        return v
-
-    @typechecked
-    def schema(self) -> Optional[JSONSchemaProps]:
-        if "Schema" in self._kwargs:
-            return self._kwargs["Schema"]
-        if "Schema" in self._context and check_return_type(self._context["Schema"]):
-            return self._context["Schema"]
-        return None
-
-    @typechecked
-    def property(self) -> List[str]:
-        if "Property" in self._kwargs:
-            return self._kwargs["Property"]
-        if "Property" in self._context and check_return_type(self._context["Property"]):
-            return self._context["Property"]
-        return []
-
-
 # JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/).
 class JSONSchemaProps(types.Object):
     @typechecked
@@ -1100,7 +1018,7 @@ class JSONSchemaProps(types.Object):
         return []
 
     @typechecked
-    def items(self) -> Optional[JSONSchemaPropsOrArray]:
+    def items(self) -> Optional[Union[JSONSchemaProps, List[JSONSchemaProps]]]:
         if "items" in self._kwargs:
             return self._kwargs["items"]
         if "items" in self._context and check_return_type(self._context["items"]):
@@ -1150,7 +1068,7 @@ class JSONSchemaProps(types.Object):
         return {}
 
     @typechecked
-    def additionalProperties(self) -> Optional[JSONSchemaPropsOrBool]:
+    def additionalProperties(self) -> Optional[Union[JSONSchemaProps, bool]]:
         if "additionalProperties" in self._kwargs:
             return self._kwargs["additionalProperties"]
         if "additionalProperties" in self._context and check_return_type(
@@ -1170,7 +1088,7 @@ class JSONSchemaProps(types.Object):
         return {}
 
     @typechecked
-    def dependencies(self) -> Dict[str, JSONSchemaPropsOrStringArray]:
+    def dependencies(self) -> Dict[str, Union[JSONSchemaProps, List[str]]]:
         if "dependencies" in self._kwargs:
             return self._kwargs["dependencies"]
         if "dependencies" in self._context and check_return_type(
@@ -1180,7 +1098,7 @@ class JSONSchemaProps(types.Object):
         return {}
 
     @typechecked
-    def additionalItems(self) -> Optional[JSONSchemaPropsOrBool]:
+    def additionalItems(self) -> Optional[Union[JSONSchemaProps, bool]]:
         if "additionalItems" in self._kwargs:
             return self._kwargs["additionalItems"]
         if "additionalItems" in self._context and check_return_type(
