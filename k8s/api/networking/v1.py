@@ -325,7 +325,7 @@ class NetworkPolicySpec(types.Object):
 
 
 # NetworkPolicy describes what network traffic is allowed for a set of Pods
-class NetworkPolicy(base.TypedObject, base.MetadataObject):
+class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

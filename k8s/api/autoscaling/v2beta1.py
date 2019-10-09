@@ -486,7 +486,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
 # HorizontalPodAutoscaler is the configuration for a horizontal pod
 # autoscaler, which automatically manages the replica count of any resource
 # implementing the scale subresource based on the metrics specified.
-class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
+class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

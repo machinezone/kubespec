@@ -32,7 +32,7 @@ ConcurrencyPolicy = base.Enum(
 
 
 # JobTemplateSpec describes the data a Job should have when created from a template
-class JobTemplateSpec(base.MetadataObject):
+class JobTemplateSpec(base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -159,7 +159,7 @@ class CronJobSpec(types.Object):
 
 
 # CronJob represents the configuration of a single cron job.
-class CronJob(base.TypedObject, base.MetadataObject):
+class CronJob(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -187,7 +187,7 @@ class CronJob(base.TypedObject, base.MetadataObject):
 
 
 # JobTemplate describes a template for creating copies of a predefined pod.
-class JobTemplate(base.TypedObject, base.MetadataObject):
+class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

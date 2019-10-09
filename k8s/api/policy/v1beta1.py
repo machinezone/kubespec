@@ -207,7 +207,7 @@ class AllowedHostPath(types.Object):
 # Eviction evicts a pod from its node subject to certain policies and safety constraints.
 # This is a subresource of Pod.  A request to cause such an eviction is
 # created by POSTing to .../pods/<pod name>/evictions.
-class Eviction(base.TypedObject, base.MetadataObject):
+class Eviction(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -382,7 +382,7 @@ class PodDisruptionBudgetSpec(types.Object):
 
 
 # PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
-class PodDisruptionBudget(base.TypedObject, base.MetadataObject):
+class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

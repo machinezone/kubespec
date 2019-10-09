@@ -68,9 +68,6 @@ class MetadataObject(types.Object):
         name = self.name()
         if name:  # omitempty
             metadata["name"] = name
-        namespace = self.namespace()
-        if namespace:  # omitempty
-            metadata["namespace"] = namespace
         labels = self.labels()
         if labels:  # omitempty
             metadata["labels"] = labels
@@ -92,24 +89,6 @@ class MetadataObject(types.Object):
             return self._kwargs["name"]
         if "name" in self._context and check_return_type(self._context["name"]):
             return self._context["name"]
-        return None
-
-    # Namespace defines the space within each name must be unique. An empty namespace is
-    # equivalent to the "default" namespace, but "default" is the canonical representation.
-    # Not all objects are required to be scoped to a namespace - the value of this field for
-    # those objects will be empty.
-    #
-    # Must be a DNS_LABEL.
-    # Cannot be updated.
-    # More info: http://kubernetes.io/docs/user-guide/namespaces
-    @typechecked
-    def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
         return None
 
     # Map of string keys and values that can be used to organize and categorize
@@ -137,6 +116,36 @@ class MetadataObject(types.Object):
         ):
             return self._context["annotations"]
         return {}
+
+
+class NamespacedMetadataObject(MetadataObject):
+    @typechecked
+    def render(self) -> Dict[str, Any]:
+        v = super().render()
+        metadata = v.get("metadata", {})
+        namespace = self.namespace()
+        if namespace:  # omitempty
+            metadata["namespace"] = namespace
+        v["metadata"] = metadata
+        return v
+
+    # Namespace defines the space within each name must be unique. An empty namespace is
+    # equivalent to the "default" namespace, but "default" is the canonical representation.
+    # Not all objects are required to be scoped to a namespace - the value of this field for
+    # those objects will be empty.
+    #
+    # Must be a DNS_LABEL.
+    # Cannot be updated.
+    # More info: http://kubernetes.io/docs/user-guide/namespaces
+    @typechecked
+    def namespace(self) -> Optional[str]:
+        if "namespace" in self._kwargs:
+            return self._kwargs["namespace"]
+        if "namespace" in self._context and check_return_type(
+            self._context["namespace"]
+        ):
+            return self._context["namespace"]
+        return None
 
 
 class Time(types.Renderable):

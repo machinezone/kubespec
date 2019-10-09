@@ -407,7 +407,7 @@ class DaemonSetSpec(types.Object):
 # DEPRECATED - This group version of DaemonSet is deprecated by apps/v1beta2/DaemonSet. See the release notes for
 # more information.
 # DaemonSet represents the configuration of a daemon set.
-class DaemonSet(base.TypedObject, base.MetadataObject):
+class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -650,7 +650,7 @@ class DeploymentSpec(types.Object):
 # DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
 # more information.
 # Deployment enables declarative updates for Pods and ReplicaSets.
-class Deployment(base.TypedObject, base.MetadataObject):
+class Deployment(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1142,7 +1142,7 @@ class IngressSpec(types.Object):
 # externally-reachable urls, load balance traffic, terminate SSL, offer name
 # based virtual hosting etc.
 # DEPRECATED - This group version of Ingress is deprecated by networking.k8s.io/v1beta1 Ingress. See the release notes for more information.
-class Ingress(base.TypedObject, base.MetadataObject):
+class Ingress(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1435,7 +1435,7 @@ class NetworkPolicySpec(types.Object):
 
 # DEPRECATED 1.9 - This group version of NetworkPolicy is deprecated by networking/v1/NetworkPolicy.
 # NetworkPolicy describes what network traffic is allowed for a set of Pods
-class NetworkPolicy(base.TypedObject, base.MetadataObject):
+class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -2098,7 +2098,7 @@ class ReplicaSetSpec(types.Object):
 # DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1beta2/ReplicaSet. See the release notes for
 # more information.
 # ReplicaSet ensures that a specified number of pod replicas are running at any given time.
-class ReplicaSet(base.TypedObject, base.MetadataObject):
+class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -2162,7 +2162,7 @@ class ScaleSpec(types.Object):
 
 
 # represents a scaling request for a resource.
-class Scale(base.TypedObject, base.MetadataObject):
+class Scale(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

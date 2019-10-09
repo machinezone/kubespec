@@ -95,7 +95,7 @@ class LeaseSpec(types.Object):
 
 
 # Lease defines a lease concept.
-class Lease(base.TypedObject, base.MetadataObject):
+class Lease(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

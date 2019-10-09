@@ -233,7 +233,7 @@ class SubjectAccessReviewSpec(types.Object):
 # LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace.
 # Having a namespace scoped resource makes it much easier to grant namespace scoped policy that includes permissions
 # checking.
-class LocalSubjectAccessReview(base.TypedObject, base.MetadataObject):
+class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

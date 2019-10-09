@@ -126,7 +126,7 @@ class TokenRequestSpec(types.Object):
 
 
 # TokenRequest requests a token for a given service account.
-class TokenRequest(base.TypedObject, base.MetadataObject):
+class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

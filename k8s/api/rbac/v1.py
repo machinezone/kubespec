@@ -295,7 +295,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
 
 
 # Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding.
-class Role(base.TypedObject, base.MetadataObject):
+class Role(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -323,7 +323,7 @@ class Role(base.TypedObject, base.MetadataObject):
 # RoleBinding references a role, but does not contain it.  It can reference a Role in the same namespace or a ClusterRole in the global namespace.
 # It adds who information via Subjects and namespace information by which namespace it exists in.  RoleBindings in a given
 # namespace only have effect in that namespace.
-class RoleBinding(base.TypedObject, base.MetadataObject):
+class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

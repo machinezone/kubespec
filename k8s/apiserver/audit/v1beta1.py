@@ -579,7 +579,7 @@ class PolicyRule(types.Object):
 
 # Policy defines the configuration of audit logging, and the rules for how different request
 # categories are logged.
-class Policy(base.TypedObject, base.MetadataObject):
+class Policy(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

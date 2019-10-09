@@ -198,7 +198,7 @@ class EndpointPort(types.Object):
 # EndpointSlice represents a subset of the endpoints that implement a service.
 # For a given service there may be multiple EndpointSlice objects, selected by
 # labels, which must be joined to produce the full set of endpoints.
-class EndpointSlice(base.TypedObject, base.MetadataObject):
+class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

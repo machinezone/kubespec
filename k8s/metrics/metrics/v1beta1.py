@@ -93,7 +93,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
 
 
 # PodMetrics sets resource usage metrics of a pod.
-class PodMetrics(base.TypedObject, base.MetadataObject):
+class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

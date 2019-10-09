@@ -86,7 +86,7 @@ class PodPresetSpec(types.Object):
 
 # PodPreset is a policy resource that defines additional runtime
 # requirements for a Pod.
-class PodPreset(base.TypedObject, base.MetadataObject):
+class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

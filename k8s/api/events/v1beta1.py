@@ -45,7 +45,7 @@ class EventSeries(types.Object):
 
 
 # Event is a report of an event somewhere in the cluster. It generally denotes some state change in the system.
-class Event(base.TypedObject, base.MetadataObject):
+class Event(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

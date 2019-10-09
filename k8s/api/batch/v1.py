@@ -161,7 +161,7 @@ class JobSpec(types.Object):
 
 
 # Job represents the configuration of a single job.
-class Job(base.TypedObject, base.MetadataObject):
+class Job(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

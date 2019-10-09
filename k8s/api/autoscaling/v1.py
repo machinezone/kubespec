@@ -122,7 +122,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
 
 
 # configuration of a horizontal pod autoscaler.
-class HorizontalPodAutoscaler(base.TypedObject, base.MetadataObject):
+class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -169,7 +169,7 @@ class ScaleSpec(types.Object):
 
 
 # Scale represents a scaling request for a resource.
-class Scale(base.TypedObject, base.MetadataObject):
+class Scale(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

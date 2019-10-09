@@ -274,7 +274,7 @@ class IngressSpec(types.Object):
 # endpoints defined by a backend. An Ingress can be configured to give services
 # externally-reachable urls, load balance traffic, terminate SSL, offer name
 # based virtual hosting etc.
-class Ingress(base.TypedObject, base.MetadataObject):
+class Ingress(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

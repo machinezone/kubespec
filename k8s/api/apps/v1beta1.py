@@ -75,7 +75,7 @@ StatefulSetUpdateStrategyType = base.Enum(
 # the DaemonSet and StatefulSet controllers for update and rollback, this object is beta. However,
 # it may be subject to name and representation changes in future releases, and clients should not
 # depend on its stability. It is primarily for internal use by controllers.
-class ControllerRevision(base.TypedObject, base.MetadataObject):
+class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -324,7 +324,7 @@ class DeploymentSpec(types.Object):
 # DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
 # more information.
 # Deployment enables declarative updates for Pods and ReplicaSets.
-class Deployment(base.TypedObject, base.MetadataObject):
+class Deployment(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -468,7 +468,7 @@ class ScaleSpec(types.Object):
 
 
 # Scale represents a scaling request for a resource.
-class Scale(base.TypedObject, base.MetadataObject):
+class Scale(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -679,7 +679,7 @@ class StatefulSetSpec(types.Object):
 #  - Storage: As many VolumeClaims as requested.
 # The StatefulSet guarantees that a given network identity will always
 # map to the same storage identity.
-class StatefulSet(base.TypedObject, base.MetadataObject):
+class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()

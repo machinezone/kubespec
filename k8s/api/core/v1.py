@@ -1430,7 +1430,7 @@ class ObjectReference(types.Object):
 
 # Binding ties one object to another; for example, a pod is bound to a node by a scheduler.
 # Deprecated in 1.7, please use the bindings subresource of pods instead.
-class Binding(base.TypedObject, base.MetadataObject):
+class Binding(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -2193,7 +2193,7 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
 
 
 # ConfigMap holds configuration data for pods to consume.
-class ConfigMap(base.TypedObject, base.MetadataObject):
+class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -4488,7 +4488,7 @@ class EndpointSubset(types.Object):
 #       Ports: [{"name": "a", "port": 93}, {"name": "b", "port": 76}]
 #     },
 #  ]
-class Endpoints(base.TypedObject, base.MetadataObject):
+class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -4922,7 +4922,7 @@ class EphemeralContainer(types.Object):
 
 
 # A list of ephemeral containers used with the Pod ephemeralcontainers subresource.
-class EphemeralContainers(base.TypedObject, base.MetadataObject):
+class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -5019,7 +5019,7 @@ class EventSource(types.Object):
 
 
 # Event is a report of an event somewhere in the cluster.
-class Event(base.TypedObject, base.MetadataObject):
+class Event(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -6144,7 +6144,7 @@ class LimitRangeSpec(types.Object):
 
 
 # LimitRange sets resource usage limits for each kind of resource in a Namespace.
-class LimitRange(base.TypedObject, base.MetadataObject):
+class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -7759,7 +7759,7 @@ class PersistentVolumeClaimSpec(types.Object):
 
 
 # PersistentVolumeClaim is a user's request for and claim to a persistent volume
-class PersistentVolumeClaim(base.TypedObject, base.MetadataObject):
+class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -9874,7 +9874,7 @@ class PodSpec(types.Object):
 
 # Pod is a collection of containers that can run on a host. This resource is created
 # by clients and scheduled onto hosts.
-class Pod(base.TypedObject, base.MetadataObject):
+class Pod(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10282,7 +10282,7 @@ class PodProxyOptions(base.TypedObject):
 
 
 # PodStatusResult is a wrapper for PodStatus returned by kubelet that can be encode/decoded
-class PodStatusResult(base.TypedObject, base.MetadataObject):
+class PodStatusResult(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10298,7 +10298,7 @@ class PodStatusResult(base.TypedObject, base.MetadataObject):
 
 
 # PodTemplateSpec describes the data a pod should have when created from a template
-class PodTemplateSpec(base.MetadataObject):
+class PodTemplateSpec(base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10318,7 +10318,7 @@ class PodTemplateSpec(base.MetadataObject):
 
 
 # PodTemplate describes a template for creating copies of a predefined pod.
-class PodTemplate(base.TypedObject, base.MetadataObject):
+class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10346,7 +10346,7 @@ class PodTemplate(base.TypedObject, base.MetadataObject):
 
 
 # RangeAllocation is not a public type.
-class RangeAllocation(base.TypedObject, base.MetadataObject):
+class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10451,7 +10451,7 @@ class ReplicationControllerSpec(types.Object):
 
 
 # ReplicationController represents the configuration of a replication controller.
-class ReplicationController(base.TypedObject, base.MetadataObject):
+class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10599,7 +10599,7 @@ class ResourceQuotaSpec(types.Object):
 
 
 # ResourceQuota sets aggregate quota restrictions enforced per namespace
-class ResourceQuota(base.TypedObject, base.MetadataObject):
+class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -10628,7 +10628,7 @@ class ResourceQuota(base.TypedObject, base.MetadataObject):
 
 # Secret holds secret data of a certain type. The total bytes of the values in
 # the Data field must be less than MaxSecretSize bytes.
-class Secret(base.TypedObject, base.MetadataObject):
+class Secret(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -11085,7 +11085,7 @@ class ServiceSpec(types.Object):
 # Service is a named abstraction of software service (for example, mysql) consisting of local port
 # (for example 3306) that the proxy listens on, and the selector that determines which pods
 # will answer requests sent through the proxy.
-class Service(base.TypedObject, base.MetadataObject):
+class Service(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -11116,7 +11116,7 @@ class Service(base.TypedObject, base.MetadataObject):
 # * a name, understood by users, and perhaps by peripheral systems, for an identity
 # * a principal that can be authenticated and authorized
 # * a set of secrets
-class ServiceAccount(base.TypedObject, base.MetadataObject):
+class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
