@@ -87,6 +87,30 @@ StatefulSetUpdateStrategyType = base.Enum(
 # it may be subject to name and representation changes in future releases, and clients should not
 # depend on its stability. It is primarily for internal use by controllers.
 class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        data: "runtime.RawExtension" = None,
+        revision: int = 0,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "ControllerRevision",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__data = data if data is not None else runtime.RawExtension()
+        self.__revision = revision
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -94,36 +118,25 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         v["revision"] = self.revision()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "ControllerRevision"
-
     # Data is the serialized representation of the state.
     @typechecked
-    def data(self) -> "runtime.RawExtension":
-        if "data" in self._kwargs:
-            return self._kwargs["data"]
-        if "data" in self._context and check_return_type(self._context["data"]):
-            return self._context["data"]
-        with context.Scope(**self._context):
-            return runtime.RawExtension()
+    def data(self) -> Optional["runtime.RawExtension"]:
+        return self.__data
 
     # Revision indicates the revision of the state represented by Data.
     @typechecked
     def revision(self) -> int:
-        if "revision" in self._kwargs:
-            return self._kwargs["revision"]
-        if "revision" in self._context and check_return_type(self._context["revision"]):
-            return self._context["revision"]
-        return 0
+        return self.__revision
 
 
 # Spec to control the desired behavior of daemon set rolling update.
 class RollingUpdateDaemonSet(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, maxUnavailable: Union[int, str] = None):
+        super().__init__(**{})
+        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else 1
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -148,17 +161,26 @@ class RollingUpdateDaemonSet(types.Object):
     # all times during the update.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        if "maxUnavailable" in self._kwargs:
-            return self._kwargs["maxUnavailable"]
-        if "maxUnavailable" in self._context and check_return_type(
-            self._context["maxUnavailable"]
-        ):
-            return self._context["maxUnavailable"]
-        return 1
+        return self.__maxUnavailable
 
 
 # DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet.
 class DaemonSetUpdateStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType[
+            "RollingUpdate"
+        ],
+        rollingUpdate: RollingUpdateDaemonSet = None,
+    ):
+        super().__init__(**{})
+        self.__type = type
+        self.__rollingUpdate = (
+            rollingUpdate if rollingUpdate is not None else RollingUpdateDaemonSet()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -173,11 +195,7 @@ class DaemonSetUpdateStrategy(types.Object):
     # Type of daemon set update. Can be "RollingUpdate" or "OnDelete". Default is RollingUpdate.
     @typechecked
     def type(self) -> Optional[DaemonSetUpdateStrategyType]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return DaemonSetUpdateStrategyType["RollingUpdate"]
+        return self.__type
 
     # Rolling update config params. Present only if type = "RollingUpdate".
     # ---
@@ -186,18 +204,32 @@ class DaemonSetUpdateStrategy(types.Object):
     # See https://github.com/kubernetes/kubernetes/issues/35345
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
-        if "rollingUpdate" in self._kwargs:
-            return self._kwargs["rollingUpdate"]
-        if "rollingUpdate" in self._context and check_return_type(
-            self._context["rollingUpdate"]
-        ):
-            return self._context["rollingUpdate"]
-        with context.Scope(**self._context):
-            return RollingUpdateDaemonSet()
+        return self.__rollingUpdate
 
 
 # DaemonSetSpec is the specification of a daemon set.
 class DaemonSetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+        updateStrategy: DaemonSetUpdateStrategy = None,
+        minReadySeconds: int = None,
+        revisionHistoryLimit: int = None,
+    ):
+        super().__init__(**{})
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__updateStrategy = (
+            updateStrategy if updateStrategy is not None else DaemonSetUpdateStrategy()
+        )
+        self.__minReadySeconds = minReadySeconds
+        self.__revisionHistoryLimit = (
+            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -218,11 +250,7 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # An object that describes the pod that will be created.
     # The DaemonSet will create exactly one copy of this pod on every node
@@ -231,24 +259,12 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+        return self.__template
 
     # An update strategy to replace existing DaemonSet pods with new pods.
     @typechecked
-    def updateStrategy(self) -> DaemonSetUpdateStrategy:
-        if "updateStrategy" in self._kwargs:
-            return self._kwargs["updateStrategy"]
-        if "updateStrategy" in self._context and check_return_type(
-            self._context["updateStrategy"]
-        ):
-            return self._context["updateStrategy"]
-        with context.Scope(**self._context):
-            return DaemonSetUpdateStrategy()
+    def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+        return self.__updateStrategy
 
     # The minimum number of seconds for which a newly created DaemonSet pod should
     # be ready without any of its container crashing, for it to be considered
@@ -256,60 +272,66 @@ class DaemonSetSpec(types.Object):
     # is ready).
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # The number of old history to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 10.
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        if "revisionHistoryLimit" in self._kwargs:
-            return self._kwargs["revisionHistoryLimit"]
-        if "revisionHistoryLimit" in self._context and check_return_type(
-            self._context["revisionHistoryLimit"]
-        ):
-            return self._context["revisionHistoryLimit"]
-        return 10
+        return self.__revisionHistoryLimit
 
 
 # DEPRECATED - This group version of DaemonSet is deprecated by apps/v1/DaemonSet. See the release notes for
 # more information.
 # DaemonSet represents the configuration of a daemon set.
 class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: DaemonSetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "DaemonSet",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else DaemonSetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "DaemonSet"
-
     # The desired behavior of this daemon set.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> DaemonSetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return DaemonSetSpec()
+    def spec(self) -> Optional[DaemonSetSpec]:
+        return self.__spec
 
 
 # Spec to control the desired behavior of rolling update.
 class RollingUpdateDeployment(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
+    ):
+        super().__init__(**{})
+        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else "25%"
+        self.__maxSurge = maxSurge if maxSurge is not None else "25%"
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -333,13 +355,7 @@ class RollingUpdateDeployment(types.Object):
     # least 70% of desired pods.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        if "maxUnavailable" in self._kwargs:
-            return self._kwargs["maxUnavailable"]
-        if "maxUnavailable" in self._context and check_return_type(
-            self._context["maxUnavailable"]
-        ):
-            return self._context["maxUnavailable"]
-        return "25%"
+        return self.__maxUnavailable
 
     # The maximum number of pods that can be scheduled above the desired number of
     # pods.
@@ -354,15 +370,24 @@ class RollingUpdateDeployment(types.Object):
     # at any time during the update is at most 130% of desired pods.
     @typechecked
     def maxSurge(self) -> Optional[Union[int, str]]:
-        if "maxSurge" in self._kwargs:
-            return self._kwargs["maxSurge"]
-        if "maxSurge" in self._context and check_return_type(self._context["maxSurge"]):
-            return self._context["maxSurge"]
-        return "25%"
+        return self.__maxSurge
 
 
 # DeploymentStrategy describes how to replace existing pods with new ones.
 class DeploymentStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
+        rollingUpdate: RollingUpdateDeployment = None,
+    ):
+        super().__init__(**{})
+        self.__type = type
+        self.__rollingUpdate = (
+            rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -377,11 +402,7 @@ class DeploymentStrategy(types.Object):
     # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
     @typechecked
     def type(self) -> Optional[DeploymentStrategyType]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return DeploymentStrategyType["RollingUpdate"]
+        return self.__type
 
     # Rolling update config params. Present only if DeploymentStrategyType =
     # RollingUpdate.
@@ -390,18 +411,38 @@ class DeploymentStrategy(types.Object):
     # to be.
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
-        if "rollingUpdate" in self._kwargs:
-            return self._kwargs["rollingUpdate"]
-        if "rollingUpdate" in self._context and check_return_type(
-            self._context["rollingUpdate"]
-        ):
-            return self._context["rollingUpdate"]
-        with context.Scope(**self._context):
-            return RollingUpdateDeployment()
+        return self.__rollingUpdate
 
 
 # DeploymentSpec is the specification of the desired behavior of the Deployment.
 class DeploymentSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        replicas: int = None,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+        strategy: DeploymentStrategy = None,
+        minReadySeconds: int = None,
+        revisionHistoryLimit: int = None,
+        paused: bool = None,
+        progressDeadlineSeconds: int = None,
+    ):
+        super().__init__(**{})
+        self.__replicas = replicas if replicas is not None else 1
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__strategy = strategy if strategy is not None else DeploymentStrategy()
+        self.__minReadySeconds = minReadySeconds
+        self.__revisionHistoryLimit = (
+            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        )
+        self.__paused = paused
+        self.__progressDeadlineSeconds = (
+            progressDeadlineSeconds if progressDeadlineSeconds is not None else 600
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -429,77 +470,43 @@ class DeploymentSpec(types.Object):
     # zero and not specified. Defaults to 1.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return 1
+        return self.__replicas
 
     # Label selector for pods. Existing ReplicaSets whose pods are
     # selected by this will be the ones affected by this deployment.
     # It must match the pod template's labels.
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # Template describes the pods that will be created.
     @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+        return self.__template
 
     # The deployment strategy to use to replace existing pods with new ones.
     @typechecked
-    def strategy(self) -> DeploymentStrategy:
-        if "strategy" in self._kwargs:
-            return self._kwargs["strategy"]
-        if "strategy" in self._context and check_return_type(self._context["strategy"]):
-            return self._context["strategy"]
-        with context.Scope(**self._context):
-            return DeploymentStrategy()
+    def strategy(self) -> Optional[DeploymentStrategy]:
+        return self.__strategy
 
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # The number of old ReplicaSets to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 10.
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        if "revisionHistoryLimit" in self._kwargs:
-            return self._kwargs["revisionHistoryLimit"]
-        if "revisionHistoryLimit" in self._context and check_return_type(
-            self._context["revisionHistoryLimit"]
-        ):
-            return self._context["revisionHistoryLimit"]
-        return 10
+        return self.__revisionHistoryLimit
 
     # Indicates that the deployment is paused.
     @typechecked
     def paused(self) -> Optional[bool]:
-        if "paused" in self._kwargs:
-            return self._kwargs["paused"]
-        if "paused" in self._context and check_return_type(self._context["paused"]):
-            return self._context["paused"]
-        return None
+        return self.__paused
 
     # The maximum time in seconds for a deployment to make progress before it
     # is considered to be failed. The deployment controller will continue to
@@ -508,46 +515,64 @@ class DeploymentSpec(types.Object):
     # not be estimated during the time a deployment is paused. Defaults to 600s.
     @typechecked
     def progressDeadlineSeconds(self) -> Optional[int]:
-        if "progressDeadlineSeconds" in self._kwargs:
-            return self._kwargs["progressDeadlineSeconds"]
-        if "progressDeadlineSeconds" in self._context and check_return_type(
-            self._context["progressDeadlineSeconds"]
-        ):
-            return self._context["progressDeadlineSeconds"]
-        return 600
+        return self.__progressDeadlineSeconds
 
 
 # DEPRECATED - This group version of Deployment is deprecated by apps/v1/Deployment. See the release notes for
 # more information.
 # Deployment enables declarative updates for Pods and ReplicaSets.
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: DeploymentSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "Deployment",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else DeploymentSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Deployment"
-
     # Specification of the desired behavior of the Deployment.
     @typechecked
-    def spec(self) -> DeploymentSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return DeploymentSpec()
+    def spec(self) -> Optional[DeploymentSpec]:
+        return self.__spec
 
 
 # ReplicaSetSpec is the specification of a ReplicaSet.
 class ReplicaSetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        replicas: int = None,
+        minReadySeconds: int = None,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+    ):
+        super().__init__(**{})
+        self.__replicas = replicas if replicas is not None else 1
+        self.__minReadySeconds = minReadySeconds
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -567,24 +592,14 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return 1
+        return self.__replicas
 
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # Selector is a label query over pods that should match the replica count.
     # Label keys and values that must match in order to be controlled by this replica set.
@@ -592,57 +607,63 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # Template is the object that describes the pod that will be created if
     # insufficient replicas are detected.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
-    def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+    def template(self) -> Optional["corev1.PodTemplateSpec"]:
+        return self.__template
 
 
 # DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1/ReplicaSet. See the release notes for
 # more information.
 # ReplicaSet ensures that a specified number of pod replicas are running at any given time.
 class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: ReplicaSetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "ReplicaSet",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else ReplicaSetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "ReplicaSet"
-
     # Spec defines the specification of the desired behavior of the ReplicaSet.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> ReplicaSetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return ReplicaSetSpec()
+    def spec(self) -> Optional[ReplicaSetSpec]:
+        return self.__spec
 
 
 # RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.
 class RollingUpdateStatefulSetStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, partition: int = None):
+        super().__init__(**{})
+        self.__partition = partition
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -656,17 +677,17 @@ class RollingUpdateStatefulSetStrategy(types.Object):
     # Default value is 0.
     @typechecked
     def partition(self) -> Optional[int]:
-        if "partition" in self._kwargs:
-            return self._kwargs["partition"]
-        if "partition" in self._context and check_return_type(
-            self._context["partition"]
-        ):
-            return self._context["partition"]
-        return None
+        return self.__partition
 
 
 # ScaleSpec describes the attributes of a scale subresource
 class ScaleSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, replicas: int = None):
+        super().__init__(**{})
+        self.__replicas = replicas
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -678,44 +699,66 @@ class ScaleSpec(types.Object):
     # desired number of instances for the scaled object.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return None
+        return self.__replicas
 
 
 # Scale represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: ScaleSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "Scale",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else ScaleSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Scale"
-
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> ScaleSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return ScaleSpec()
+    def spec(self) -> Optional[ScaleSpec]:
+        return self.__spec
 
 
 # StatefulSetUpdateStrategy indicates the strategy that the StatefulSet
 # controller will use to perform updates. It includes any additional parameters
 # necessary to perform the update for the indicated strategy.
 class StatefulSetUpdateStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: StatefulSetUpdateStrategyType = StatefulSetUpdateStrategyType[
+            "RollingUpdate"
+        ],
+        rollingUpdate: RollingUpdateStatefulSetStrategy = None,
+    ):
+        super().__init__(**{})
+        self.__type = type
+        self.__rollingUpdate = (
+            rollingUpdate
+            if rollingUpdate is not None
+            else RollingUpdateStatefulSetStrategy()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -731,27 +774,49 @@ class StatefulSetUpdateStrategy(types.Object):
     # Default is RollingUpdate.
     @typechecked
     def type(self) -> Optional[StatefulSetUpdateStrategyType]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return StatefulSetUpdateStrategyType["RollingUpdate"]
+        return self.__type
 
     # RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateStatefulSetStrategy]:
-        if "rollingUpdate" in self._kwargs:
-            return self._kwargs["rollingUpdate"]
-        if "rollingUpdate" in self._context and check_return_type(
-            self._context["rollingUpdate"]
-        ):
-            return self._context["rollingUpdate"]
-        with context.Scope(**self._context):
-            return RollingUpdateStatefulSetStrategy()
+        return self.__rollingUpdate
 
 
 # A StatefulSetSpec is the specification of a StatefulSet.
 class StatefulSetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        replicas: int = None,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+        volumeClaimTemplates: List["corev1.PersistentVolumeClaim"] = None,
+        serviceName: str = "",
+        podManagementPolicy: PodManagementPolicyType = PodManagementPolicyType[
+            "OrderedReady"
+        ],
+        updateStrategy: StatefulSetUpdateStrategy = None,
+        revisionHistoryLimit: int = None,
+    ):
+        super().__init__(**{})
+        self.__replicas = replicas if replicas is not None else 1
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__volumeClaimTemplates = (
+            volumeClaimTemplates if volumeClaimTemplates is not None else []
+        )
+        self.__serviceName = serviceName
+        self.__podManagementPolicy = podManagementPolicy
+        self.__updateStrategy = (
+            updateStrategy
+            if updateStrategy is not None
+            else StatefulSetUpdateStrategy()
+        )
+        self.__revisionHistoryLimit = (
+            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -780,22 +845,14 @@ class StatefulSetSpec(types.Object):
     # TODO: Consider a rename of this field.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return 1
+        return self.__replicas
 
     # selector is a label query over pods that should match the replica count.
     # It must match the pod template's labels.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # template is the object that describes the pod that will be created if
     # insufficient replicas are detected. Each pod stamped out by the StatefulSet
@@ -803,12 +860,7 @@ class StatefulSetSpec(types.Object):
     # of the StatefulSet.
     @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+        return self.__template
 
     # volumeClaimTemplates is a list of claims that pods are allowed to reference.
     # The StatefulSet controller is responsible for mapping network identities to
@@ -818,14 +870,8 @@ class StatefulSetSpec(types.Object):
     # any volumes in the template, with the same name.
     # TODO: Define the behavior if a claim already exists with the same name.
     @typechecked
-    def volumeClaimTemplates(self) -> List["corev1.PersistentVolumeClaim"]:
-        if "volumeClaimTemplates" in self._kwargs:
-            return self._kwargs["volumeClaimTemplates"]
-        if "volumeClaimTemplates" in self._context and check_return_type(
-            self._context["volumeClaimTemplates"]
-        ):
-            return self._context["volumeClaimTemplates"]
-        return []
+    def volumeClaimTemplates(self) -> Optional[List["corev1.PersistentVolumeClaim"]]:
+        return self.__volumeClaimTemplates
 
     # serviceName is the name of the service that governs this StatefulSet.
     # This service must exist before the StatefulSet, and is responsible for
@@ -834,13 +880,7 @@ class StatefulSetSpec(types.Object):
     # where "pod-specific-string" is managed by the StatefulSet controller.
     @typechecked
     def serviceName(self) -> str:
-        if "serviceName" in self._kwargs:
-            return self._kwargs["serviceName"]
-        if "serviceName" in self._context and check_return_type(
-            self._context["serviceName"]
-        ):
-            return self._context["serviceName"]
-        return ""
+        return self.__serviceName
 
     # podManagementPolicy controls how pods are created during initial scale up,
     # when replacing pods on nodes, or when scaling down. The default policy is
@@ -852,27 +892,14 @@ class StatefulSetSpec(types.Object):
     # all pods at once.
     @typechecked
     def podManagementPolicy(self) -> Optional[PodManagementPolicyType]:
-        if "podManagementPolicy" in self._kwargs:
-            return self._kwargs["podManagementPolicy"]
-        if "podManagementPolicy" in self._context and check_return_type(
-            self._context["podManagementPolicy"]
-        ):
-            return self._context["podManagementPolicy"]
-        return PodManagementPolicyType["OrderedReady"]
+        return self.__podManagementPolicy
 
     # updateStrategy indicates the StatefulSetUpdateStrategy that will be
     # employed to update Pods in the StatefulSet when a revision is made to
     # Template.
     @typechecked
-    def updateStrategy(self) -> StatefulSetUpdateStrategy:
-        if "updateStrategy" in self._kwargs:
-            return self._kwargs["updateStrategy"]
-        if "updateStrategy" in self._context and check_return_type(
-            self._context["updateStrategy"]
-        ):
-            return self._context["updateStrategy"]
-        with context.Scope(**self._context):
-            return StatefulSetUpdateStrategy()
+    def updateStrategy(self) -> Optional[StatefulSetUpdateStrategy]:
+        return self.__updateStrategy
 
     # revisionHistoryLimit is the maximum number of revisions that will
     # be maintained in the StatefulSet's revision history. The revision history
@@ -880,13 +907,7 @@ class StatefulSetSpec(types.Object):
     # StatefulSetSpec version. The default value is 10.
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        if "revisionHistoryLimit" in self._kwargs:
-            return self._kwargs["revisionHistoryLimit"]
-        if "revisionHistoryLimit" in self._context and check_return_type(
-            self._context["revisionHistoryLimit"]
-        ):
-            return self._context["revisionHistoryLimit"]
-        return 10
+        return self.__revisionHistoryLimit
 
 
 # DEPRECATED - This group version of StatefulSet is deprecated by apps/v1/StatefulSet. See the release notes for
@@ -898,26 +919,35 @@ class StatefulSetSpec(types.Object):
 # The StatefulSet guarantees that a given network identity will always
 # map to the same storage identity.
 class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: StatefulSetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apps/v1beta2",
+                "kind": "StatefulSet",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else StatefulSetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apps/v1beta2"
-
-    @typechecked
-    def kind(self) -> str:
-        return "StatefulSet"
-
     # Spec defines the desired identities of pods in this set.
     @typechecked
-    def spec(self) -> StatefulSetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return StatefulSetSpec()
+    def spec(self) -> Optional[StatefulSetSpec]:
+        return self.__spec

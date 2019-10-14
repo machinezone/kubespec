@@ -16,6 +16,13 @@ from typeguard import check_return_type, typechecked
 # EventSeries contain information on series of events, i.e. thing that was/is happening
 # continuously for some time.
 class EventSeries(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, count: int = 0, lastObservedTime: "base.MicroTime" = None):
+        super().__init__(**{})
+        self.__count = count
+        self.__lastObservedTime = lastObservedTime
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -26,26 +33,58 @@ class EventSeries(types.Object):
     # Number of occurrences in this series up to the last heartbeat time
     @typechecked
     def count(self) -> int:
-        if "count" in self._kwargs:
-            return self._kwargs["count"]
-        if "count" in self._context and check_return_type(self._context["count"]):
-            return self._context["count"]
-        return 0
+        return self.__count
 
     # Time when last Event from the series was seen before last heartbeat.
     @typechecked
     def lastObservedTime(self) -> "base.MicroTime":
-        if "lastObservedTime" in self._kwargs:
-            return self._kwargs["lastObservedTime"]
-        if "lastObservedTime" in self._context and check_return_type(
-            self._context["lastObservedTime"]
-        ):
-            return self._context["lastObservedTime"]
-        return None
+        return self.__lastObservedTime
 
 
 # Event is a report of an event somewhere in the cluster. It generally denotes some state change in the system.
 class Event(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        eventTime: "base.MicroTime" = None,
+        series: EventSeries = None,
+        reportingController: str = None,
+        reportingInstance: str = None,
+        action: str = None,
+        reason: str = None,
+        regarding: "corev1.ObjectReference" = None,
+        related: "corev1.ObjectReference" = None,
+        note: str = None,
+        type: str = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "events.k8s.io/v1beta1",
+                "kind": "Event",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__eventTime = eventTime
+        self.__series = series
+        self.__reportingController = reportingController
+        self.__reportingInstance = reportingInstance
+        self.__action = action
+        self.__reason = reason
+        self.__regarding = (
+            regarding if regarding is not None else corev1.ObjectReference()
+        )
+        self.__related = related
+        self.__note = note
+        self.__type = type
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -77,115 +116,58 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
             v["type"] = type
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "events.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Event"
-
     # Required. Time when this Event was first observed.
     @typechecked
     def eventTime(self) -> "base.MicroTime":
-        if "eventTime" in self._kwargs:
-            return self._kwargs["eventTime"]
-        if "eventTime" in self._context and check_return_type(
-            self._context["eventTime"]
-        ):
-            return self._context["eventTime"]
-        return None
+        return self.__eventTime
 
     # Data about the Event series this event represents or nil if it's a singleton Event.
     @typechecked
     def series(self) -> Optional[EventSeries]:
-        if "series" in self._kwargs:
-            return self._kwargs["series"]
-        if "series" in self._context and check_return_type(self._context["series"]):
-            return self._context["series"]
-        return None
+        return self.__series
 
     # Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
     @typechecked
     def reportingController(self) -> Optional[str]:
-        if "reportingController" in self._kwargs:
-            return self._kwargs["reportingController"]
-        if "reportingController" in self._context and check_return_type(
-            self._context["reportingController"]
-        ):
-            return self._context["reportingController"]
-        return None
+        return self.__reportingController
 
     # ID of the controller instance, e.g. `kubelet-xyzf`.
     @typechecked
     def reportingInstance(self) -> Optional[str]:
-        if "reportingInstance" in self._kwargs:
-            return self._kwargs["reportingInstance"]
-        if "reportingInstance" in self._context and check_return_type(
-            self._context["reportingInstance"]
-        ):
-            return self._context["reportingInstance"]
-        return None
+        return self.__reportingInstance
 
     # What action was taken/failed regarding to the regarding object.
     @typechecked
     def action(self) -> Optional[str]:
-        if "action" in self._kwargs:
-            return self._kwargs["action"]
-        if "action" in self._context and check_return_type(self._context["action"]):
-            return self._context["action"]
-        return None
+        return self.__action
 
     # Why the action was taken.
     @typechecked
     def reason(self) -> Optional[str]:
-        if "reason" in self._kwargs:
-            return self._kwargs["reason"]
-        if "reason" in self._context and check_return_type(self._context["reason"]):
-            return self._context["reason"]
-        return None
+        return self.__reason
 
     # The object this Event is about. In most cases it's an Object reporting controller implements.
     # E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
     # it acts on some changes in a ReplicaSet object.
     @typechecked
-    def regarding(self) -> "corev1.ObjectReference":
-        if "regarding" in self._kwargs:
-            return self._kwargs["regarding"]
-        if "regarding" in self._context and check_return_type(
-            self._context["regarding"]
-        ):
-            return self._context["regarding"]
-        with context.Scope(**self._context):
-            return corev1.ObjectReference()
+    def regarding(self) -> Optional["corev1.ObjectReference"]:
+        return self.__regarding
 
     # Optional secondary object for more complex actions. E.g. when regarding object triggers
     # a creation or deletion of related object.
     @typechecked
     def related(self) -> Optional["corev1.ObjectReference"]:
-        if "related" in self._kwargs:
-            return self._kwargs["related"]
-        if "related" in self._context and check_return_type(self._context["related"]):
-            return self._context["related"]
-        return None
+        return self.__related
 
     # Optional. A human-readable description of the status of this operation.
     # Maximal length of the note is 1kB, but libraries should be prepared to
     # handle values up to 64kB.
     @typechecked
     def note(self) -> Optional[str]:
-        if "note" in self._kwargs:
-            return self._kwargs["note"]
-        if "note" in self._context and check_return_type(self._context["note"]):
-            return self._context["note"]
-        return None
+        return self.__note
 
     # Type of this event (Normal, Warning), new types could be added in the
     # future.
     @typechecked
     def type(self) -> Optional[str]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return None
+        return self.__type

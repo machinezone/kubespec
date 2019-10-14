@@ -54,6 +54,29 @@ Stage = base.Enum(
 
 # ObjectReference contains enough information to let you inspect or modify the referred object.
 class ObjectReference(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        resource: str = None,
+        namespace: str = None,
+        name: str = None,
+        uid: str = None,
+        apiGroup: str = None,
+        apiVersion: str = None,
+        resourceVersion: str = None,
+        subresource: str = None,
+    ):
+        super().__init__(**{})
+        self.__resource = resource
+        self.__namespace = namespace
+        self.__name = name
+        self.__uid = uid
+        self.__apiGroup = apiGroup
+        self.__apiVersion = apiVersion
+        self.__resourceVersion = resourceVersion
+        self.__subresource = subresource
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -85,82 +108,81 @@ class ObjectReference(types.Object):
 
     @typechecked
     def resource(self) -> Optional[str]:
-        if "resource" in self._kwargs:
-            return self._kwargs["resource"]
-        if "resource" in self._context and check_return_type(self._context["resource"]):
-            return self._context["resource"]
-        return None
+        return self.__resource
 
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
     # APIGroup is the name of the API group that contains the referred object.
     # The empty string represents the core API group.
     @typechecked
     def apiGroup(self) -> Optional[str]:
-        if "apiGroup" in self._kwargs:
-            return self._kwargs["apiGroup"]
-        if "apiGroup" in self._context and check_return_type(self._context["apiGroup"]):
-            return self._context["apiGroup"]
-        return None
+        return self.__apiGroup
 
     # APIVersion is the version of the API group that contains the referred object.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if "apiVersion" in self._kwargs:
-            return self._kwargs["apiVersion"]
-        if "apiVersion" in self._context and check_return_type(
-            self._context["apiVersion"]
-        ):
-            return self._context["apiVersion"]
-        return None
+        return self.__apiVersion
 
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        if "resourceVersion" in self._kwargs:
-            return self._kwargs["resourceVersion"]
-        if "resourceVersion" in self._context and check_return_type(
-            self._context["resourceVersion"]
-        ):
-            return self._context["resourceVersion"]
-        return None
+        return self.__resourceVersion
 
     @typechecked
     def subresource(self) -> Optional[str]:
-        if "subresource" in self._kwargs:
-            return self._kwargs["subresource"]
-        if "subresource" in self._context and check_return_type(
-            self._context["subresource"]
-        ):
-            return self._context["subresource"]
-        return None
+        return self.__subresource
 
 
 # Event captures all the information that can be included in an API audit log.
 class Event(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        level: Level = None,
+        auditID: str = "",
+        stage: Stage = None,
+        requestURI: str = "",
+        verb: str = "",
+        user: "authenticationv1.UserInfo" = None,
+        impersonatedUser: "authenticationv1.UserInfo" = None,
+        sourceIPs: List[str] = None,
+        userAgent: str = None,
+        objectRef: ObjectReference = None,
+        responseStatus: "metav1.Status" = None,
+        requestObject: "runtime.Unknown" = None,
+        responseObject: "runtime.Unknown" = None,
+        requestReceivedTimestamp: "base.MicroTime" = None,
+        stageTimestamp: "base.MicroTime" = None,
+        annotations: Dict[str, str] = None,
+    ):
+        super().__init__(**{"apiVersion": "audit.k8s.io/v1beta1", "kind": "Event"})
+        self.__level = level
+        self.__auditID = auditID
+        self.__stage = stage
+        self.__requestURI = requestURI
+        self.__verb = verb
+        self.__user = user if user is not None else authenticationv1.UserInfo()
+        self.__impersonatedUser = impersonatedUser
+        self.__sourceIPs = sourceIPs if sourceIPs is not None else []
+        self.__userAgent = userAgent
+        self.__objectRef = objectRef
+        self.__responseStatus = responseStatus
+        self.__requestObject = requestObject
+        self.__responseObject = responseObject
+        self.__requestReceivedTimestamp = requestReceivedTimestamp
+        self.__stageTimestamp = stageTimestamp
+        self.__annotations = annotations if annotations is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -198,130 +220,65 @@ class Event(base.TypedObject):
             v["annotations"] = annotations
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "audit.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Event"
-
     # AuditLevel at which event was generated
     @typechecked
     def level(self) -> Level:
-        if "level" in self._kwargs:
-            return self._kwargs["level"]
-        if "level" in self._context and check_return_type(self._context["level"]):
-            return self._context["level"]
-        return None
+        return self.__level
 
     # Unique audit ID, generated for each request.
     @typechecked
     def auditID(self) -> str:
-        if "auditID" in self._kwargs:
-            return self._kwargs["auditID"]
-        if "auditID" in self._context and check_return_type(self._context["auditID"]):
-            return self._context["auditID"]
-        return ""
+        return self.__auditID
 
     # Stage of the request handling when this event instance was generated.
     @typechecked
     def stage(self) -> Stage:
-        if "stage" in self._kwargs:
-            return self._kwargs["stage"]
-        if "stage" in self._context and check_return_type(self._context["stage"]):
-            return self._context["stage"]
-        return None
+        return self.__stage
 
     # RequestURI is the request URI as sent by the client to a server.
     @typechecked
     def requestURI(self) -> str:
-        if "requestURI" in self._kwargs:
-            return self._kwargs["requestURI"]
-        if "requestURI" in self._context and check_return_type(
-            self._context["requestURI"]
-        ):
-            return self._context["requestURI"]
-        return ""
+        return self.__requestURI
 
     # Verb is the kubernetes verb associated with the request.
     # For non-resource requests, this is the lower-cased HTTP method.
     @typechecked
     def verb(self) -> str:
-        if "verb" in self._kwargs:
-            return self._kwargs["verb"]
-        if "verb" in self._context and check_return_type(self._context["verb"]):
-            return self._context["verb"]
-        return ""
+        return self.__verb
 
     # Authenticated user information.
     @typechecked
     def user(self) -> "authenticationv1.UserInfo":
-        if "user" in self._kwargs:
-            return self._kwargs["user"]
-        if "user" in self._context and check_return_type(self._context["user"]):
-            return self._context["user"]
-        with context.Scope(**self._context):
-            return authenticationv1.UserInfo()
+        return self.__user
 
     # Impersonated user information.
     @typechecked
     def impersonatedUser(self) -> Optional["authenticationv1.UserInfo"]:
-        if "impersonatedUser" in self._kwargs:
-            return self._kwargs["impersonatedUser"]
-        if "impersonatedUser" in self._context and check_return_type(
-            self._context["impersonatedUser"]
-        ):
-            return self._context["impersonatedUser"]
-        return None
+        return self.__impersonatedUser
 
     # Source IPs, from where the request originated and intermediate proxies.
     @typechecked
-    def sourceIPs(self) -> List[str]:
-        if "sourceIPs" in self._kwargs:
-            return self._kwargs["sourceIPs"]
-        if "sourceIPs" in self._context and check_return_type(
-            self._context["sourceIPs"]
-        ):
-            return self._context["sourceIPs"]
-        return []
+    def sourceIPs(self) -> Optional[List[str]]:
+        return self.__sourceIPs
 
     # UserAgent records the user agent string reported by the client.
     # Note that the UserAgent is provided by the client, and must not be trusted.
     @typechecked
     def userAgent(self) -> Optional[str]:
-        if "userAgent" in self._kwargs:
-            return self._kwargs["userAgent"]
-        if "userAgent" in self._context and check_return_type(
-            self._context["userAgent"]
-        ):
-            return self._context["userAgent"]
-        return None
+        return self.__userAgent
 
     # Object reference this request is targeted at.
     # Does not apply for List-type requests, or non-resource requests.
     @typechecked
     def objectRef(self) -> Optional[ObjectReference]:
-        if "objectRef" in self._kwargs:
-            return self._kwargs["objectRef"]
-        if "objectRef" in self._context and check_return_type(
-            self._context["objectRef"]
-        ):
-            return self._context["objectRef"]
-        return None
+        return self.__objectRef
 
     # The response status, populated even when the ResponseObject is not a Status type.
     # For successful responses, this will only include the Code and StatusSuccess.
     # For non-status type error responses, this will be auto-populated with the error Message.
     @typechecked
     def responseStatus(self) -> Optional["metav1.Status"]:
-        if "responseStatus" in self._kwargs:
-            return self._kwargs["responseStatus"]
-        if "responseStatus" in self._context and check_return_type(
-            self._context["responseStatus"]
-        ):
-            return self._context["responseStatus"]
-        return None
+        return self.__responseStatus
 
     # API object from the request, in JSON format. The RequestObject is recorded as-is in the request
     # (possibly re-encoded as JSON), prior to version conversion, defaulting, admission or
@@ -329,48 +286,24 @@ class Event(base.TypedObject):
     # Omitted for non-resource requests.  Only logged at Request Level and higher.
     @typechecked
     def requestObject(self) -> Optional["runtime.Unknown"]:
-        if "requestObject" in self._kwargs:
-            return self._kwargs["requestObject"]
-        if "requestObject" in self._context and check_return_type(
-            self._context["requestObject"]
-        ):
-            return self._context["requestObject"]
-        return None
+        return self.__requestObject
 
     # API object returned in the response, in JSON. The ResponseObject is recorded after conversion
     # to the external type, and serialized as JSON.  Omitted for non-resource requests.  Only logged
     # at Response Level.
     @typechecked
     def responseObject(self) -> Optional["runtime.Unknown"]:
-        if "responseObject" in self._kwargs:
-            return self._kwargs["responseObject"]
-        if "responseObject" in self._context and check_return_type(
-            self._context["responseObject"]
-        ):
-            return self._context["responseObject"]
-        return None
+        return self.__responseObject
 
     # Time the request reached the apiserver.
     @typechecked
     def requestReceivedTimestamp(self) -> "base.MicroTime":
-        if "requestReceivedTimestamp" in self._kwargs:
-            return self._kwargs["requestReceivedTimestamp"]
-        if "requestReceivedTimestamp" in self._context and check_return_type(
-            self._context["requestReceivedTimestamp"]
-        ):
-            return self._context["requestReceivedTimestamp"]
-        return None
+        return self.__requestReceivedTimestamp
 
     # Time the request reached current audit stage.
     @typechecked
     def stageTimestamp(self) -> "base.MicroTime":
-        if "stageTimestamp" in self._kwargs:
-            return self._kwargs["stageTimestamp"]
-        if "stageTimestamp" in self._context and check_return_type(
-            self._context["stageTimestamp"]
-        ):
-            return self._context["stageTimestamp"]
-        return None
+        return self.__stageTimestamp
 
     # Annotations is an unstructured key value map stored with an audit event that may be set by
     # plugins invoked in the request serving chain, including authentication, authorization and
@@ -379,18 +312,25 @@ class Event(base.TypedObject):
     # component to avoid name collisions (e.g. podsecuritypolicy.admission.k8s.io/policy). Values
     # should be short. Annotations are included in the Metadata level.
     @typechecked
-    def annotations(self) -> Dict[str, str]:
-        if "annotations" in self._kwargs:
-            return self._kwargs["annotations"]
-        if "annotations" in self._context and check_return_type(
-            self._context["annotations"]
-        ):
-            return self._context["annotations"]
-        return {}
+    def annotations(self) -> Optional[Dict[str, str]]:
+        return self.__annotations
 
 
 # GroupResources represents resource kinds in an API group.
 class GroupResources(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        group: str = None,
+        resources: List[str] = None,
+        resourceNames: List[str] = None,
+    ):
+        super().__init__(**{})
+        self.__group = group
+        self.__resources = resources if resources is not None else []
+        self.__resourceNames = resourceNames if resourceNames is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -409,11 +349,7 @@ class GroupResources(types.Object):
     # The empty string represents the core API group.
     @typechecked
     def group(self) -> Optional[str]:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return None
+        return self.__group
 
     # Resources is a list of resources this rule applies to.
     #
@@ -429,32 +365,43 @@ class GroupResources(types.Object):
     #
     # An empty list implies all resources and subresources in this API groups apply.
     @typechecked
-    def resources(self) -> List[str]:
-        if "resources" in self._kwargs:
-            return self._kwargs["resources"]
-        if "resources" in self._context and check_return_type(
-            self._context["resources"]
-        ):
-            return self._context["resources"]
-        return []
+    def resources(self) -> Optional[List[str]]:
+        return self.__resources
 
     # ResourceNames is a list of resource instance names that the policy matches.
     # Using this field requires Resources to be specified.
     # An empty list implies that every instance of the resource is matched.
     @typechecked
-    def resourceNames(self) -> List[str]:
-        if "resourceNames" in self._kwargs:
-            return self._kwargs["resourceNames"]
-        if "resourceNames" in self._context and check_return_type(
-            self._context["resourceNames"]
-        ):
-            return self._context["resourceNames"]
-        return []
+    def resourceNames(self) -> Optional[List[str]]:
+        return self.__resourceNames
 
 
 # PolicyRule maps requests based off metadata to an audit Level.
 # Requests must match the rules of every field (an intersection of rules).
 class PolicyRule(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        level: Level = None,
+        users: List[str] = None,
+        userGroups: List[str] = None,
+        verbs: List[str] = None,
+        resources: List[GroupResources] = None,
+        namespaces: List[str] = None,
+        nonResourceURLs: List[str] = None,
+        omitStages: List[Stage] = None,
+    ):
+        super().__init__(**{})
+        self.__level = level
+        self.__users = users if users is not None else []
+        self.__userGroups = userGroups if userGroups is not None else []
+        self.__verbs = verbs if verbs is not None else []
+        self.__resources = resources if resources is not None else []
+        self.__namespaces = namespaces if namespaces is not None else []
+        self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
+        self.__omitStages = omitStages if omitStages is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -485,68 +432,38 @@ class PolicyRule(types.Object):
     # The Level that requests matching this rule are recorded at.
     @typechecked
     def level(self) -> Level:
-        if "level" in self._kwargs:
-            return self._kwargs["level"]
-        if "level" in self._context and check_return_type(self._context["level"]):
-            return self._context["level"]
-        return None
+        return self.__level
 
     # The users (by authenticated user name) this rule applies to.
     # An empty list implies every user.
     @typechecked
-    def users(self) -> List[str]:
-        if "users" in self._kwargs:
-            return self._kwargs["users"]
-        if "users" in self._context and check_return_type(self._context["users"]):
-            return self._context["users"]
-        return []
+    def users(self) -> Optional[List[str]]:
+        return self.__users
 
     # The user groups this rule applies to. A user is considered matching
     # if it is a member of any of the UserGroups.
     # An empty list implies every user group.
     @typechecked
-    def userGroups(self) -> List[str]:
-        if "userGroups" in self._kwargs:
-            return self._kwargs["userGroups"]
-        if "userGroups" in self._context and check_return_type(
-            self._context["userGroups"]
-        ):
-            return self._context["userGroups"]
-        return []
+    def userGroups(self) -> Optional[List[str]]:
+        return self.__userGroups
 
     # The verbs that match this rule.
     # An empty list implies every verb.
     @typechecked
-    def verbs(self) -> List[str]:
-        if "verbs" in self._kwargs:
-            return self._kwargs["verbs"]
-        if "verbs" in self._context and check_return_type(self._context["verbs"]):
-            return self._context["verbs"]
-        return []
+    def verbs(self) -> Optional[List[str]]:
+        return self.__verbs
 
     # Resources that this rule matches. An empty list implies all kinds in all API groups.
     @typechecked
-    def resources(self) -> List[GroupResources]:
-        if "resources" in self._kwargs:
-            return self._kwargs["resources"]
-        if "resources" in self._context and check_return_type(
-            self._context["resources"]
-        ):
-            return self._context["resources"]
-        return []
+    def resources(self) -> Optional[List[GroupResources]]:
+        return self.__resources
 
     # Namespaces that this rule matches.
     # The empty string "" matches non-namespaced resources.
     # An empty list implies every namespace.
     @typechecked
-    def namespaces(self) -> List[str]:
-        if "namespaces" in self._kwargs:
-            return self._kwargs["namespaces"]
-        if "namespaces" in self._context and check_return_type(
-            self._context["namespaces"]
-        ):
-            return self._context["namespaces"]
-        return []
+    def namespaces(self) -> Optional[List[str]]:
+        return self.__namespaces
 
     # NonResourceURLs is a set of URL paths that should be audited.
     # *s are allowed, but only as the full, final step in the path.
@@ -554,32 +471,44 @@ class PolicyRule(types.Object):
     #  "/metrics" - Log requests for apiserver metrics
     #  "/healthz*" - Log all health checks
     @typechecked
-    def nonResourceURLs(self) -> List[str]:
-        if "nonResourceURLs" in self._kwargs:
-            return self._kwargs["nonResourceURLs"]
-        if "nonResourceURLs" in self._context and check_return_type(
-            self._context["nonResourceURLs"]
-        ):
-            return self._context["nonResourceURLs"]
-        return []
+    def nonResourceURLs(self) -> Optional[List[str]]:
+        return self.__nonResourceURLs
 
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified policy wide in which case the union of both are omitted.
     # An empty list means no restrictions will apply.
     @typechecked
-    def omitStages(self) -> List[Stage]:
-        if "omitStages" in self._kwargs:
-            return self._kwargs["omitStages"]
-        if "omitStages" in self._context and check_return_type(
-            self._context["omitStages"]
-        ):
-            return self._context["omitStages"]
-        return []
+    def omitStages(self) -> Optional[List[Stage]]:
+        return self.__omitStages
 
 
 # Policy defines the configuration of audit logging, and the rules for how different request
 # categories are logged.
 class Policy(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        rules: List[PolicyRule] = None,
+        omitStages: List[Stage] = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "audit.k8s.io/v1beta1",
+                "kind": "Policy",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__rules = rules if rules is not None else []
+        self.__omitStages = omitStages if omitStages is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -589,34 +518,16 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
             v["omitStages"] = omitStages
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "audit.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Policy"
-
     # Rules specify the audit Level a request should be recorded at.
     # A request may match multiple rules, in which case the FIRST matching rule is used.
     # The default audit level is None, but can be overridden by a catch-all rule at the end of the list.
     # PolicyRules are strictly ordered.
     @typechecked
     def rules(self) -> List[PolicyRule]:
-        if "rules" in self._kwargs:
-            return self._kwargs["rules"]
-        if "rules" in self._context and check_return_type(self._context["rules"]):
-            return self._context["rules"]
-        return []
+        return self.__rules
 
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified per rule in which case the union of both are omitted.
     @typechecked
-    def omitStages(self) -> List[Stage]:
-        if "omitStages" in self._kwargs:
-            return self._kwargs["omitStages"]
-        if "omitStages" in self._context and check_return_type(
-            self._context["omitStages"]
-        ):
-            return self._context["omitStages"]
-        return []
+    def omitStages(self) -> Optional[List[Stage]]:
+        return self.__omitStages

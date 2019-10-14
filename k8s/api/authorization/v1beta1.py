@@ -14,6 +14,13 @@ from typeguard import check_return_type, typechecked
 
 # NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
 class NonResourceAttributes(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, path: str = None, verb: str = None):
+        super().__init__(**{})
+        self.__path = path
+        self.__verb = verb
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -28,24 +35,37 @@ class NonResourceAttributes(types.Object):
     # Path is the URL path of the request
     @typechecked
     def path(self) -> Optional[str]:
-        if "path" in self._kwargs:
-            return self._kwargs["path"]
-        if "path" in self._context and check_return_type(self._context["path"]):
-            return self._context["path"]
-        return None
+        return self.__path
 
     # Verb is the standard HTTP verb
     @typechecked
     def verb(self) -> Optional[str]:
-        if "verb" in self._kwargs:
-            return self._kwargs["verb"]
-        if "verb" in self._context and check_return_type(self._context["verb"]):
-            return self._context["verb"]
-        return None
+        return self.__verb
 
 
 # ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface
 class ResourceAttributes(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        verb: str = None,
+        group: str = None,
+        version: str = None,
+        resource: str = None,
+        subresource: str = None,
+        name: str = None,
+    ):
+        super().__init__(**{})
+        self.__namespace = namespace
+        self.__verb = verb
+        self.__group = group
+        self.__version = version
+        self.__resource = resource
+        self.__subresource = subresource
+        self.__name = name
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -78,74 +98,61 @@ class ResourceAttributes(types.Object):
     # "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
     # Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
     @typechecked
     def verb(self) -> Optional[str]:
-        if "verb" in self._kwargs:
-            return self._kwargs["verb"]
-        if "verb" in self._context and check_return_type(self._context["verb"]):
-            return self._context["verb"]
-        return None
+        return self.__verb
 
     # Group is the API Group of the Resource.  "*" means all.
     @typechecked
     def group(self) -> Optional[str]:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return None
+        return self.__group
 
     # Version is the API Version of the Resource.  "*" means all.
     @typechecked
     def version(self) -> Optional[str]:
-        if "version" in self._kwargs:
-            return self._kwargs["version"]
-        if "version" in self._context and check_return_type(self._context["version"]):
-            return self._context["version"]
-        return None
+        return self.__version
 
     # Resource is one of the existing resource types.  "*" means all.
     @typechecked
     def resource(self) -> Optional[str]:
-        if "resource" in self._kwargs:
-            return self._kwargs["resource"]
-        if "resource" in self._context and check_return_type(self._context["resource"]):
-            return self._context["resource"]
-        return None
+        return self.__resource
 
     # Subresource is one of the existing resource types.  "" means none.
     @typechecked
     def subresource(self) -> Optional[str]:
-        if "subresource" in self._kwargs:
-            return self._kwargs["subresource"]
-        if "subresource" in self._context and check_return_type(
-            self._context["subresource"]
-        ):
-            return self._context["subresource"]
-        return None
+        return self.__subresource
 
     # Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
 
 # SubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
 # and NonResourceAuthorizationAttributes must be set
 class SubjectAccessReviewSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        resourceAttributes: ResourceAttributes = None,
+        nonResourceAttributes: NonResourceAttributes = None,
+        user: str = None,
+        group: List[str] = None,
+        extra: Dict[str, List[str]] = None,
+        uid: str = None,
+    ):
+        super().__init__(**{})
+        self.__resourceAttributes = resourceAttributes
+        self.__nonResourceAttributes = nonResourceAttributes
+        self.__user = user
+        self.__group = group if group is not None else []
+        self.__extra = extra if extra is not None else {}
+        self.__uid = uid
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -172,97 +179,89 @@ class SubjectAccessReviewSpec(types.Object):
     # ResourceAuthorizationAttributes describes information for a resource access request
     @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
-        if "resourceAttributes" in self._kwargs:
-            return self._kwargs["resourceAttributes"]
-        if "resourceAttributes" in self._context and check_return_type(
-            self._context["resourceAttributes"]
-        ):
-            return self._context["resourceAttributes"]
-        return None
+        return self.__resourceAttributes
 
     # NonResourceAttributes describes information for a non-resource access request
     @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
-        if "nonResourceAttributes" in self._kwargs:
-            return self._kwargs["nonResourceAttributes"]
-        if "nonResourceAttributes" in self._context and check_return_type(
-            self._context["nonResourceAttributes"]
-        ):
-            return self._context["nonResourceAttributes"]
-        return None
+        return self.__nonResourceAttributes
 
     # User is the user you're testing for.
     # If you specify "User" but not "Group", then is it interpreted as "What if User were not a member of any groups
     @typechecked
     def user(self) -> Optional[str]:
-        if "user" in self._kwargs:
-            return self._kwargs["user"]
-        if "user" in self._context and check_return_type(self._context["user"]):
-            return self._context["user"]
-        return None
+        return self.__user
 
     # Groups is the groups you're testing for.
     @typechecked
-    def group(self) -> List[str]:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return []
+    def group(self) -> Optional[List[str]]:
+        return self.__group
 
     # Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
     # it needs a reflection here.
     @typechecked
-    def extra(self) -> Dict[str, List[str]]:
-        if "extra" in self._kwargs:
-            return self._kwargs["extra"]
-        if "extra" in self._context and check_return_type(self._context["extra"]):
-            return self._context["extra"]
-        return {}
+    def extra(self) -> Optional[Dict[str, List[str]]]:
+        return self.__extra
 
     # UID information about the requesting user.
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
 
 # LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace.
 # Having a namespace scoped resource makes it much easier to grant namespace scoped policy that includes permissions
 # checking.
 class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: SubjectAccessReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authorization.k8s.io/v1beta1",
+                "kind": "LocalSubjectAccessReview",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authorization.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "LocalSubjectAccessReview"
-
     # Spec holds information about the request being evaluated.  spec.namespace must be equal to the namespace
     # you made the request against.  If empty, it is defaulted.
     @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return SubjectAccessReviewSpec()
+        return self.__spec
 
 
 # SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
 # and NonResourceAuthorizationAttributes must be set
 class SelfSubjectAccessReviewSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        resourceAttributes: ResourceAttributes = None,
+        nonResourceAttributes: NonResourceAttributes = None,
+    ):
+        super().__init__(**{})
+        self.__resourceAttributes = resourceAttributes
+        self.__nonResourceAttributes = nonResourceAttributes
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -277,56 +276,57 @@ class SelfSubjectAccessReviewSpec(types.Object):
     # ResourceAuthorizationAttributes describes information for a resource access request
     @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
-        if "resourceAttributes" in self._kwargs:
-            return self._kwargs["resourceAttributes"]
-        if "resourceAttributes" in self._context and check_return_type(
-            self._context["resourceAttributes"]
-        ):
-            return self._context["resourceAttributes"]
-        return None
+        return self.__resourceAttributes
 
     # NonResourceAttributes describes information for a non-resource access request
     @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
-        if "nonResourceAttributes" in self._kwargs:
-            return self._kwargs["nonResourceAttributes"]
-        if "nonResourceAttributes" in self._context and check_return_type(
-            self._context["nonResourceAttributes"]
-        ):
-            return self._context["nonResourceAttributes"]
-        return None
+        return self.__nonResourceAttributes
 
 
 # SelfSubjectAccessReview checks whether or the current user can perform an action.  Not filling in a
 # spec.namespace means "in all namespaces".  Self is a special case, because users should always be able
 # to check whether they can perform an action
 class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: SelfSubjectAccessReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authorization.k8s.io/v1beta1",
+                "kind": "SelfSubjectAccessReview",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else SelfSubjectAccessReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authorization.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "SelfSubjectAccessReview"
-
     # Spec holds information about the request being evaluated.  user and groups must be empty
     @typechecked
     def spec(self) -> SelfSubjectAccessReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return SelfSubjectAccessReviewSpec()
+        return self.__spec
 
 
 class SelfSubjectRulesReviewSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, namespace: str = None):
+        super().__init__(**{})
+        self.__namespace = namespace
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -338,13 +338,7 @@ class SelfSubjectRulesReviewSpec(types.Object):
     # Namespace to evaluate rules for. Required.
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
 
 # SelfSubjectRulesReview enumerates the set of actions the current user can perform within a namespace.
@@ -354,53 +348,67 @@ class SelfSubjectRulesReviewSpec(types.Object):
 # drive authorization decisions as this raises confused deputy, cache lifetime/revocation, and correctness concerns.
 # SubjectAccessReview, and LocalAccessReview are the correct way to defer authorization decisions to the API server.
 class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: SelfSubjectRulesReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authorization.k8s.io/v1beta1",
+                "kind": "SelfSubjectRulesReview",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else SelfSubjectRulesReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
-
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authorization.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "SelfSubjectRulesReview"
 
     # Spec holds information about the request being evaluated.
     @typechecked
     def spec(self) -> SelfSubjectRulesReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return SelfSubjectRulesReviewSpec()
+        return self.__spec
 
 
 # SubjectAccessReview checks whether or not a user or group can perform an action.
 class SubjectAccessReview(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: SubjectAccessReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authorization.k8s.io/v1beta1",
+                "kind": "SubjectAccessReview",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authorization.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "SubjectAccessReview"
-
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return SubjectAccessReviewSpec()
+        return self.__spec

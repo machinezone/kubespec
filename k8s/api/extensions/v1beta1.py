@@ -170,6 +170,12 @@ SupplementalGroupsStrategyType = base.Enum(
 
 # AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
 class AllowedCSIDriver(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, name: str = ""):
+        super().__init__(**{})
+        self.__name = name
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -179,16 +185,18 @@ class AllowedCSIDriver(types.Object):
     # Name is the registered name of the CSI driver
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
 
 # AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
 # Deprecated: use AllowedFlexVolume from policy API Group instead.
 class AllowedFlexVolume(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, driver: str = ""):
+        super().__init__(**{})
+        self.__driver = driver
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -198,17 +206,20 @@ class AllowedFlexVolume(types.Object):
     # driver is the name of the Flexvolume driver.
     @typechecked
     def driver(self) -> str:
-        if "driver" in self._kwargs:
-            return self._kwargs["driver"]
-        if "driver" in self._context and check_return_type(self._context["driver"]):
-            return self._context["driver"]
-        return ""
+        return self.__driver
 
 
 # AllowedHostPath defines the host volume conditions that will be enabled by a policy
 # for pods to use. It requires the path prefix to be defined.
 # Deprecated: use AllowedHostPath from policy API Group instead.
 class AllowedHostPath(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, pathPrefix: str = None, readOnly: bool = None):
+        super().__init__(**{})
+        self.__pathPrefix = pathPrefix
+        self.__readOnly = readOnly
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -229,26 +240,22 @@ class AllowedHostPath(types.Object):
     # `/foo` would not allow `/food` or `/etc/foo`
     @typechecked
     def pathPrefix(self) -> Optional[str]:
-        if "pathPrefix" in self._kwargs:
-            return self._kwargs["pathPrefix"]
-        if "pathPrefix" in self._context and check_return_type(
-            self._context["pathPrefix"]
-        ):
-            return self._context["pathPrefix"]
-        return None
+        return self.__pathPrefix
 
     # when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if "readOnly" in self._kwargs:
-            return self._kwargs["readOnly"]
-        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
-            return self._context["readOnly"]
-        return None
+        return self.__readOnly
 
 
 # Spec to control the desired behavior of daemon set rolling update.
 class RollingUpdateDaemonSet(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, maxUnavailable: Union[int, str] = None):
+        super().__init__(**{})
+        self.__maxUnavailable = maxUnavailable
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -273,16 +280,21 @@ class RollingUpdateDaemonSet(types.Object):
     # all times during the update.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        if "maxUnavailable" in self._kwargs:
-            return self._kwargs["maxUnavailable"]
-        if "maxUnavailable" in self._context and check_return_type(
-            self._context["maxUnavailable"]
-        ):
-            return self._context["maxUnavailable"]
-        return None
+        return self.__maxUnavailable
 
 
 class DaemonSetUpdateStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType["OnDelete"],
+        rollingUpdate: RollingUpdateDaemonSet = None,
+    ):
+        super().__init__(**{})
+        self.__type = type
+        self.__rollingUpdate = rollingUpdate
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -298,11 +310,7 @@ class DaemonSetUpdateStrategy(types.Object):
     # Default is OnDelete.
     @typechecked
     def type(self) -> Optional[DaemonSetUpdateStrategyType]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return DaemonSetUpdateStrategyType["OnDelete"]
+        return self.__type
 
     # Rolling update config params. Present only if type = "RollingUpdate".
     # ---
@@ -311,17 +319,32 @@ class DaemonSetUpdateStrategy(types.Object):
     # See https://github.com/kubernetes/kubernetes/issues/35345
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
-        if "rollingUpdate" in self._kwargs:
-            return self._kwargs["rollingUpdate"]
-        if "rollingUpdate" in self._context and check_return_type(
-            self._context["rollingUpdate"]
-        ):
-            return self._context["rollingUpdate"]
-        return None
+        return self.__rollingUpdate
 
 
 # DaemonSetSpec is the specification of a daemon set.
 class DaemonSetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+        updateStrategy: DaemonSetUpdateStrategy = None,
+        minReadySeconds: int = None,
+        revisionHistoryLimit: int = None,
+    ):
+        super().__init__(**{})
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__updateStrategy = (
+            updateStrategy if updateStrategy is not None else DaemonSetUpdateStrategy()
+        )
+        self.__minReadySeconds = minReadySeconds
+        self.__revisionHistoryLimit = (
+            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -344,11 +367,7 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # An object that describes the pod that will be created.
     # The DaemonSet will create exactly one copy of this pod on every node
@@ -357,24 +376,12 @@ class DaemonSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+        return self.__template
 
     # An update strategy to replace existing DaemonSet pods with new pods.
     @typechecked
-    def updateStrategy(self) -> DaemonSetUpdateStrategy:
-        if "updateStrategy" in self._kwargs:
-            return self._kwargs["updateStrategy"]
-        if "updateStrategy" in self._context and check_return_type(
-            self._context["updateStrategy"]
-        ):
-            return self._context["updateStrategy"]
-        with context.Scope(**self._context):
-            return DaemonSetUpdateStrategy()
+    def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+        return self.__updateStrategy
 
     # The minimum number of seconds for which a newly created DaemonSet pod should
     # be ready without any of its container crashing, for it to be considered
@@ -382,60 +389,66 @@ class DaemonSetSpec(types.Object):
     # is ready).
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # The number of old history to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 10.
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        if "revisionHistoryLimit" in self._kwargs:
-            return self._kwargs["revisionHistoryLimit"]
-        if "revisionHistoryLimit" in self._context and check_return_type(
-            self._context["revisionHistoryLimit"]
-        ):
-            return self._context["revisionHistoryLimit"]
-        return 10
+        return self.__revisionHistoryLimit
 
 
 # DEPRECATED - This group version of DaemonSet is deprecated by apps/v1beta2/DaemonSet. See the release notes for
 # more information.
 # DaemonSet represents the configuration of a daemon set.
 class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: DaemonSetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "DaemonSet",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else DaemonSetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "DaemonSet"
-
     # The desired behavior of this daemon set.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> DaemonSetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return DaemonSetSpec()
+    def spec(self) -> Optional[DaemonSetSpec]:
+        return self.__spec
 
 
 # Spec to control the desired behavior of rolling update.
 class RollingUpdateDeployment(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
+    ):
+        super().__init__(**{})
+        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else 1
+        self.__maxSurge = maxSurge if maxSurge is not None else 1
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -459,13 +472,7 @@ class RollingUpdateDeployment(types.Object):
     # least 70% of desired pods.
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        if "maxUnavailable" in self._kwargs:
-            return self._kwargs["maxUnavailable"]
-        if "maxUnavailable" in self._context and check_return_type(
-            self._context["maxUnavailable"]
-        ):
-            return self._context["maxUnavailable"]
-        return 1
+        return self.__maxUnavailable
 
     # The maximum number of pods that can be scheduled above the desired number of
     # pods.
@@ -480,15 +487,24 @@ class RollingUpdateDeployment(types.Object):
     # at any time during the update is at most 130% of desired pods.
     @typechecked
     def maxSurge(self) -> Optional[Union[int, str]]:
-        if "maxSurge" in self._kwargs:
-            return self._kwargs["maxSurge"]
-        if "maxSurge" in self._context and check_return_type(self._context["maxSurge"]):
-            return self._context["maxSurge"]
-        return 1
+        return self.__maxSurge
 
 
 # DeploymentStrategy describes how to replace existing pods with new ones.
 class DeploymentStrategy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
+        rollingUpdate: RollingUpdateDeployment = None,
+    ):
+        super().__init__(**{})
+        self.__type = type
+        self.__rollingUpdate = (
+            rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -503,11 +519,7 @@ class DeploymentStrategy(types.Object):
     # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
     @typechecked
     def type(self) -> Optional[DeploymentStrategyType]:
-        if "type" in self._kwargs:
-            return self._kwargs["type"]
-        if "type" in self._context and check_return_type(self._context["type"]):
-            return self._context["type"]
-        return DeploymentStrategyType["RollingUpdate"]
+        return self.__type
 
     # Rolling update config params. Present only if DeploymentStrategyType =
     # RollingUpdate.
@@ -516,18 +528,40 @@ class DeploymentStrategy(types.Object):
     # to be.
     @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
-        if "rollingUpdate" in self._kwargs:
-            return self._kwargs["rollingUpdate"]
-        if "rollingUpdate" in self._context and check_return_type(
-            self._context["rollingUpdate"]
-        ):
-            return self._context["rollingUpdate"]
-        with context.Scope(**self._context):
-            return RollingUpdateDeployment()
+        return self.__rollingUpdate
 
 
 # DeploymentSpec is the specification of the desired behavior of the Deployment.
 class DeploymentSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        replicas: int = None,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+        strategy: DeploymentStrategy = None,
+        minReadySeconds: int = None,
+        revisionHistoryLimit: int = None,
+        paused: bool = None,
+        progressDeadlineSeconds: int = None,
+    ):
+        super().__init__(**{})
+        self.__replicas = replicas if replicas is not None else 1
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__strategy = strategy if strategy is not None else DeploymentStrategy()
+        self.__minReadySeconds = minReadySeconds
+        self.__revisionHistoryLimit = (
+            revisionHistoryLimit if revisionHistoryLimit is not None else 2147483647
+        )
+        self.__paused = paused
+        self.__progressDeadlineSeconds = (
+            progressDeadlineSeconds
+            if progressDeadlineSeconds is not None
+            else 2147483647
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -557,54 +591,30 @@ class DeploymentSpec(types.Object):
     # zero and not specified. Defaults to 1.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return 1
+        return self.__replicas
 
     # Label selector for pods. Existing ReplicaSets whose pods are
     # selected by this will be the ones affected by this deployment.
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # Template describes the pods that will be created.
     @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+        return self.__template
 
     # The deployment strategy to use to replace existing pods with new ones.
     @typechecked
-    def strategy(self) -> DeploymentStrategy:
-        if "strategy" in self._kwargs:
-            return self._kwargs["strategy"]
-        if "strategy" in self._context and check_return_type(self._context["strategy"]):
-            return self._context["strategy"]
-        with context.Scope(**self._context):
-            return DeploymentStrategy()
+    def strategy(self) -> Optional[DeploymentStrategy]:
+        return self.__strategy
 
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # The number of old ReplicaSets to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
@@ -612,23 +622,13 @@ class DeploymentSpec(types.Object):
     # means "retaining all old RelicaSets".
     @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
-        if "revisionHistoryLimit" in self._kwargs:
-            return self._kwargs["revisionHistoryLimit"]
-        if "revisionHistoryLimit" in self._context and check_return_type(
-            self._context["revisionHistoryLimit"]
-        ):
-            return self._context["revisionHistoryLimit"]
-        return 2147483647
+        return self.__revisionHistoryLimit
 
     # Indicates that the deployment is paused and will not be processed by the
     # deployment controller.
     @typechecked
     def paused(self) -> Optional[bool]:
-        if "paused" in self._kwargs:
-            return self._kwargs["paused"]
-        if "paused" in self._context and check_return_type(self._context["paused"]):
-            return self._context["paused"]
-        return None
+        return self.__paused
 
     # The maximum time in seconds for a deployment to make progress before it
     # is considered to be failed. The deployment controller will continue to
@@ -638,46 +638,55 @@ class DeploymentSpec(types.Object):
     # the max value of int32 (i.e. 2147483647) by default, which means "no deadline".
     @typechecked
     def progressDeadlineSeconds(self) -> Optional[int]:
-        if "progressDeadlineSeconds" in self._kwargs:
-            return self._kwargs["progressDeadlineSeconds"]
-        if "progressDeadlineSeconds" in self._context and check_return_type(
-            self._context["progressDeadlineSeconds"]
-        ):
-            return self._context["progressDeadlineSeconds"]
-        return 2147483647
+        return self.__progressDeadlineSeconds
 
 
 # DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
 # more information.
 # Deployment enables declarative updates for Pods and ReplicaSets.
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: DeploymentSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "Deployment",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else DeploymentSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Deployment"
-
     # Specification of the desired behavior of the Deployment.
     @typechecked
-    def spec(self) -> DeploymentSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return DeploymentSpec()
+    def spec(self) -> Optional[DeploymentSpec]:
+        return self.__spec
 
 
 # DEPRECATED.
 class RollbackConfig(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, revision: int = None):
+        super().__init__(**{})
+        self.__revision = revision
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -689,16 +698,29 @@ class RollbackConfig(types.Object):
     # The revision to rollback to. If set to 0, rollback to the last revision.
     @typechecked
     def revision(self) -> Optional[int]:
-        if "revision" in self._kwargs:
-            return self._kwargs["revision"]
-        if "revision" in self._context and check_return_type(self._context["revision"]):
-            return self._context["revision"]
-        return None
+        return self.__revision
 
 
 # DEPRECATED.
 # DeploymentRollback stores the information required to rollback a deployment.
 class DeploymentRollback(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = "",
+        updatedAnnotations: Dict[str, str] = None,
+        rollbackTo: RollbackConfig = None,
+    ):
+        super().__init__(
+            **{"apiVersion": "extensions/v1beta1", "kind": "DeploymentRollback"}
+        )
+        self.__name = name
+        self.__updatedAnnotations = (
+            updatedAnnotations if updatedAnnotations is not None else {}
+        )
+        self.__rollbackTo = rollbackTo if rollbackTo is not None else RollbackConfig()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -709,50 +731,32 @@ class DeploymentRollback(base.TypedObject):
         v["rollbackTo"] = self.rollbackTo()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "DeploymentRollback"
-
     # Required: This must match the Name of a deployment.
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
     # The annotations to be updated to a deployment
     @typechecked
-    def updatedAnnotations(self) -> Dict[str, str]:
-        if "updatedAnnotations" in self._kwargs:
-            return self._kwargs["updatedAnnotations"]
-        if "updatedAnnotations" in self._context and check_return_type(
-            self._context["updatedAnnotations"]
-        ):
-            return self._context["updatedAnnotations"]
-        return {}
+    def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+        return self.__updatedAnnotations
 
     # The config of this deployment rollback.
     @typechecked
     def rollbackTo(self) -> RollbackConfig:
-        if "rollbackTo" in self._kwargs:
-            return self._kwargs["rollbackTo"]
-        if "rollbackTo" in self._context and check_return_type(
-            self._context["rollbackTo"]
-        ):
-            return self._context["rollbackTo"]
-        with context.Scope(**self._context):
-            return RollbackConfig()
+        return self.__rollbackTo
 
 
 # IDRange provides a min/max of an allowed range of IDs.
 # Deprecated: use IDRange from policy API Group instead.
 class IDRange(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, min: int = 0, max: int = 0):
+        super().__init__(**{})
+        self.__min = min
+        self.__max = max
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -763,25 +767,24 @@ class IDRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        if "min" in self._kwargs:
-            return self._kwargs["min"]
-        if "min" in self._context and check_return_type(self._context["min"]):
-            return self._context["min"]
-        return 0
+        return self.__min
 
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        if "max" in self._kwargs:
-            return self._kwargs["max"]
-        if "max" in self._context and check_return_type(self._context["max"]):
-            return self._context["max"]
-        return 0
+        return self.__max
 
 
 # FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
 # Deprecated: use FSGroupStrategyOptions from policy API Group instead.
 class FSGroupStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -796,25 +799,24 @@ class FSGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[FSGroupStrategyType]:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of fs groups.  If you would like to force a single
     # fs group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # IngressBackend describes all endpoints for a given service and port.
 class IngressBackend(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
+        super().__init__(**{})
+        self.__serviceName = serviceName
+        self.__servicePort = servicePort if servicePort is not None else 0
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -825,29 +827,24 @@ class IngressBackend(types.Object):
     # Specifies the name of the referenced service.
     @typechecked
     def serviceName(self) -> str:
-        if "serviceName" in self._kwargs:
-            return self._kwargs["serviceName"]
-        if "serviceName" in self._context and check_return_type(
-            self._context["serviceName"]
-        ):
-            return self._context["serviceName"]
-        return ""
+        return self.__serviceName
 
     # Specifies the port of the referenced service.
     @typechecked
     def servicePort(self) -> Union[int, str]:
-        if "servicePort" in self._kwargs:
-            return self._kwargs["servicePort"]
-        if "servicePort" in self._context and check_return_type(
-            self._context["servicePort"]
-        ):
-            return self._context["servicePort"]
-        return 0
+        return self.__servicePort
 
 
 # HTTPIngressPath associates a path regex with a backend. Incoming urls matching
 # the path are forwarded to the backend.
 class HTTPIngressPath(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, path: str = None, backend: IngressBackend = None):
+        super().__init__(**{})
+        self.__path = path
+        self.__backend = backend if backend is not None else IngressBackend()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -866,22 +863,13 @@ class HTTPIngressPath(types.Object):
     # traffic to the backend.
     @typechecked
     def path(self) -> Optional[str]:
-        if "path" in self._kwargs:
-            return self._kwargs["path"]
-        if "path" in self._context and check_return_type(self._context["path"]):
-            return self._context["path"]
-        return None
+        return self.__path
 
     # Backend defines the referenced service endpoint to which the traffic
     # will be forwarded to.
     @typechecked
     def backend(self) -> IngressBackend:
-        if "backend" in self._kwargs:
-            return self._kwargs["backend"]
-        if "backend" in self._context and check_return_type(self._context["backend"]):
-            return self._context["backend"]
-        with context.Scope(**self._context):
-            return IngressBackend()
+        return self.__backend
 
 
 # HTTPIngressRuleValue is a list of http selectors pointing to backends.
@@ -890,6 +878,12 @@ class HTTPIngressPath(types.Object):
 # to match against everything after the last '/' and before the first '?'
 # or '#'.
 class HTTPIngressRuleValue(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, paths: List[HTTPIngressPath] = None):
+        super().__init__(**{})
+        self.__paths = paths if paths is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -899,17 +893,20 @@ class HTTPIngressRuleValue(types.Object):
     # A collection of paths that map requests to backends.
     @typechecked
     def paths(self) -> List[HTTPIngressPath]:
-        if "paths" in self._kwargs:
-            return self._kwargs["paths"]
-        if "paths" in self._context and check_return_type(self._context["paths"]):
-            return self._context["paths"]
-        return []
+        return self.__paths
 
 
 # HostPortRange defines a range of host ports that will be enabled by a policy
 # for pods to use.  It requires both the start and end to be defined.
 # Deprecated: use HostPortRange from policy API Group instead.
 class HostPortRange(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, min: int = 0, max: int = 0):
+        super().__init__(**{})
+        self.__min = min
+        self.__max = max
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -920,20 +917,12 @@ class HostPortRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        if "min" in self._kwargs:
-            return self._kwargs["min"]
-        if "min" in self._context and check_return_type(self._context["min"]):
-            return self._context["min"]
-        return 0
+        return self.__min
 
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        if "max" in self._kwargs:
-            return self._kwargs["max"]
-        if "max" in self._context and check_return_type(self._context["max"]):
-            return self._context["max"]
-        return 0
+        return self.__max
 
 
 # DEPRECATED 1.9 - This group version of IPBlock is deprecated by networking/v1/IPBlock.
@@ -941,6 +930,13 @@ class HostPortRange(types.Object):
 # matched by a NetworkPolicySpec's podSelector. The except entry describes CIDRs that should
 # not be included within this rule.
 class IPBlock(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, cidr: str = "", except_: List[str] = None):
+        super().__init__(**{})
+        self.__cidr = cidr
+        self.__except_ = except_ if except_ is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -954,22 +950,14 @@ class IPBlock(types.Object):
     # Valid examples are "192.168.1.1/24"
     @typechecked
     def cidr(self) -> str:
-        if "cidr" in self._kwargs:
-            return self._kwargs["cidr"]
-        if "cidr" in self._context and check_return_type(self._context["cidr"]):
-            return self._context["cidr"]
-        return ""
+        return self.__cidr
 
     # Except is a slice of CIDRs that should not be included within an IP Block
     # Valid examples are "192.168.1.1/24"
     # Except values will be rejected if they are outside the CIDR range
     @typechecked
-    def except_(self) -> List[str]:
-        if "except" in self._kwargs:
-            return self._kwargs["except"]
-        if "except" in self._context and check_return_type(self._context["except"]):
-            return self._context["except"]
-        return []
+    def except_(self) -> Optional[List[str]]:
+        return self.__except_
 
 
 # IngressRuleValue represents a rule to apply against incoming requests. If the
@@ -977,6 +965,12 @@ class IPBlock(types.Object):
 # mixing different types of rules in a single Ingress is disallowed, so exactly
 # one of the following must be set.
 class IngressRuleValue(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, http: HTTPIngressRuleValue = None):
+        super().__init__(**{})
+        self.__http = http
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -987,17 +981,22 @@ class IngressRuleValue(types.Object):
 
     @typechecked
     def http(self) -> Optional[HTTPIngressRuleValue]:
-        if "http" in self._kwargs:
-            return self._kwargs["http"]
-        if "http" in self._context and check_return_type(self._context["http"]):
-            return self._context["http"]
-        return None
+        return self.__http
 
 
 # IngressRule represents the rules mapping the paths under a specified host to
 # the related backend services. Incoming requests are first evaluated for a host
 # match, then routed to the backend associated with the matching IngressRuleValue.
 class IngressRule(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
+        super().__init__(**{})
+        self.__host = host
+        self.__ingressRuleValue = (
+            ingressRuleValue if ingressRuleValue is not None else IngressRuleValue()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1021,11 +1020,7 @@ class IngressRule(types.Object):
     # specified IngressRuleValue.
     @typechecked
     def host(self) -> Optional[str]:
-        if "host" in self._kwargs:
-            return self._kwargs["host"]
-        if "host" in self._context and check_return_type(self._context["host"]):
-            return self._context["host"]
-        return None
+        return self.__host
 
     # IngressRuleValue represents a rule to route requests for this IngressRule.
     # If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -1033,19 +1028,19 @@ class IngressRule(types.Object):
     # default backend, is left to the controller fulfilling the Ingress. Http is
     # currently the only supported IngressRuleValue.
     @typechecked
-    def ingressRuleValue(self) -> IngressRuleValue:
-        if "ingressRuleValue" in self._kwargs:
-            return self._kwargs["ingressRuleValue"]
-        if "ingressRuleValue" in self._context and check_return_type(
-            self._context["ingressRuleValue"]
-        ):
-            return self._context["ingressRuleValue"]
-        with context.Scope(**self._context):
-            return IngressRuleValue()
+    def ingressRuleValue(self) -> Optional[IngressRuleValue]:
+        return self.__ingressRuleValue
 
 
 # IngressTLS describes the transport layer security associated with an Ingress.
 class IngressTLS(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, hosts: List[str] = None, secretName: str = None):
+        super().__init__(**{})
+        self.__hosts = hosts if hosts is not None else []
+        self.__secretName = secretName
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1062,12 +1057,8 @@ class IngressTLS(types.Object):
     # wildcard host setting for the loadbalancer controller fulfilling this
     # Ingress, if left unspecified.
     @typechecked
-    def hosts(self) -> List[str]:
-        if "hosts" in self._kwargs:
-            return self._kwargs["hosts"]
-        if "hosts" in self._context and check_return_type(self._context["hosts"]):
-            return self._context["hosts"]
-        return []
+    def hosts(self) -> Optional[List[str]]:
+        return self.__hosts
 
     # SecretName is the name of the secret used to terminate SSL traffic on 443.
     # Field is left optional to allow SSL routing based on SNI hostname alone.
@@ -1076,17 +1067,24 @@ class IngressTLS(types.Object):
     # Host header is used for routing.
     @typechecked
     def secretName(self) -> Optional[str]:
-        if "secretName" in self._kwargs:
-            return self._kwargs["secretName"]
-        if "secretName" in self._context and check_return_type(
-            self._context["secretName"]
-        ):
-            return self._context["secretName"]
-        return None
+        return self.__secretName
 
 
 # IngressSpec describes the Ingress the user wishes to exist.
 class IngressSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        backend: IngressBackend = None,
+        tls: List[IngressTLS] = None,
+        rules: List[IngressRule] = None,
+    ):
+        super().__init__(**{})
+        self.__backend = backend
+        self.__tls = tls if tls is not None else []
+        self.__rules = rules if rules is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1107,11 +1105,7 @@ class IngressSpec(types.Object):
     # specify a global default.
     @typechecked
     def backend(self) -> Optional[IngressBackend]:
-        if "backend" in self._kwargs:
-            return self._kwargs["backend"]
-        if "backend" in self._context and check_return_type(self._context["backend"]):
-            return self._context["backend"]
-        return None
+        return self.__backend
 
     # TLS configuration. Currently the Ingress only supports a single TLS
     # port, 443. If multiple members of this list specify different hosts, they
@@ -1119,22 +1113,14 @@ class IngressSpec(types.Object):
     # through the SNI TLS extension, if the ingress controller fulfilling the
     # ingress supports SNI.
     @typechecked
-    def tls(self) -> List[IngressTLS]:
-        if "tls" in self._kwargs:
-            return self._kwargs["tls"]
-        if "tls" in self._context and check_return_type(self._context["tls"]):
-            return self._context["tls"]
-        return []
+    def tls(self) -> Optional[List[IngressTLS]]:
+        return self.__tls
 
     # A list of host rules used to configure the Ingress. If unspecified, or
     # no rule matches, all traffic is sent to the default backend.
     @typechecked
-    def rules(self) -> List[IngressRule]:
-        if "rules" in self._kwargs:
-            return self._kwargs["rules"]
-        if "rules" in self._context and check_return_type(self._context["rules"]):
-            return self._context["rules"]
-        return []
+    def rules(self) -> Optional[List[IngressRule]]:
+        return self.__rules
 
 
 # Ingress is a collection of rules that allow inbound connections to reach the
@@ -1143,34 +1129,56 @@ class IngressSpec(types.Object):
 # based virtual hosting etc.
 # DEPRECATED - This group version of Ingress is deprecated by networking.k8s.io/v1beta1 Ingress. See the release notes for more information.
 class Ingress(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: IngressSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "Ingress",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else IngressSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Ingress"
-
     # Spec is the desired state of the Ingress.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> IngressSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return IngressSpec()
+    def spec(self) -> Optional[IngressSpec]:
+        return self.__spec
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyPeer is deprecated by networking/v1/NetworkPolicyPeer.
 class NetworkPolicyPeer(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        podSelector: "metav1.LabelSelector" = None,
+        namespaceSelector: "metav1.LabelSelector" = None,
+        ipBlock: IPBlock = None,
+    ):
+        super().__init__(**{})
+        self.__podSelector = podSelector
+        self.__namespaceSelector = namespaceSelector
+        self.__ipBlock = ipBlock
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1193,13 +1201,7 @@ class NetworkPolicyPeer(types.Object):
     # Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
     @typechecked
     def podSelector(self) -> Optional["metav1.LabelSelector"]:
-        if "podSelector" in self._kwargs:
-            return self._kwargs["podSelector"]
-        if "podSelector" in self._context and check_return_type(
-            self._context["podSelector"]
-        ):
-            return self._context["podSelector"]
-        return None
+        return self.__podSelector
 
     # Selects Namespaces using cluster-scoped labels. This field follows standard label
     # selector semantics; if present but empty, it selects all namespaces.
@@ -1209,27 +1211,24 @@ class NetworkPolicyPeer(types.Object):
     # Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
     @typechecked
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
-        if "namespaceSelector" in self._kwargs:
-            return self._kwargs["namespaceSelector"]
-        if "namespaceSelector" in self._context and check_return_type(
-            self._context["namespaceSelector"]
-        ):
-            return self._context["namespaceSelector"]
-        return None
+        return self.__namespaceSelector
 
     # IPBlock defines policy on a particular IPBlock. If this field is set then
     # neither of the other fields can be.
     @typechecked
     def ipBlock(self) -> Optional[IPBlock]:
-        if "ipBlock" in self._kwargs:
-            return self._kwargs["ipBlock"]
-        if "ipBlock" in self._context and check_return_type(self._context["ipBlock"]):
-            return self._context["ipBlock"]
-        return None
+        return self.__ipBlock
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyPort is deprecated by networking/v1/NetworkPolicyPort.
 class NetworkPolicyPort(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
+        super().__init__(**{})
+        self.__protocol = protocol
+        self.__port = port
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1245,11 +1244,7 @@ class NetworkPolicyPort(types.Object):
     # If not specified, this field defaults to TCP.
     @typechecked
     def protocol(self) -> Optional[corev1.Protocol]:
-        if "protocol" in self._kwargs:
-            return self._kwargs["protocol"]
-        if "protocol" in self._context and check_return_type(self._context["protocol"]):
-            return self._context["protocol"]
-        return None
+        return self.__protocol
 
     # If specified, the port on the given protocol.  This can
     # either be a numerical or named port on a pod.  If this field is not provided,
@@ -1258,11 +1253,7 @@ class NetworkPolicyPort(types.Object):
     # will be matched.
     @typechecked
     def port(self) -> Optional[Union[int, str]]:
-        if "port" in self._kwargs:
-            return self._kwargs["port"]
-        if "port" in self._context and check_return_type(self._context["port"]):
-            return self._context["port"]
-        return None
+        return self.__port
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyEgressRule is deprecated by networking/v1/NetworkPolicyEgressRule.
@@ -1270,6 +1261,15 @@ class NetworkPolicyPort(types.Object):
 # matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to.
 # This type is beta-level in 1.8
 class NetworkPolicyEgressRule(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, ports: List[NetworkPolicyPort] = None, to: List[NetworkPolicyPeer] = None
+    ):
+        super().__init__(**{})
+        self.__ports = ports if ports is not None else []
+        self.__to = to if to is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1287,12 +1287,8 @@ class NetworkPolicyEgressRule(types.Object):
     # If this field is present and contains at least one item, then this rule allows
     # traffic only if the traffic matches at least one port in the list.
     @typechecked
-    def ports(self) -> List[NetworkPolicyPort]:
-        if "ports" in self._kwargs:
-            return self._kwargs["ports"]
-        if "ports" in self._context and check_return_type(self._context["ports"]):
-            return self._context["ports"]
-        return []
+    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        return self.__ports
 
     # List of destinations for outgoing traffic of pods selected for this rule.
     # Items in this list are combined using a logical OR operation. If this field is
@@ -1300,17 +1296,24 @@ class NetworkPolicyEgressRule(types.Object):
     # destination). If this field is present and contains at least one item, this rule
     # allows traffic only if the traffic matches at least one item in the to list.
     @typechecked
-    def to(self) -> List[NetworkPolicyPeer]:
-        if "to" in self._kwargs:
-            return self._kwargs["to"]
-        if "to" in self._context and check_return_type(self._context["to"]):
-            return self._context["to"]
-        return []
+    def to(self) -> Optional[List[NetworkPolicyPeer]]:
+        return self.__to
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicyIngressRule is deprecated by networking/v1/NetworkPolicyIngressRule.
 # This NetworkPolicyIngressRule matches traffic if and only if the traffic matches both ports AND from.
 class NetworkPolicyIngressRule(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        ports: List[NetworkPolicyPort] = None,
+        from_: List[NetworkPolicyPeer] = None,
+    ):
+        super().__init__(**{})
+        self.__ports = ports if ports is not None else []
+        self.__from_ = from_ if from_ is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1328,12 +1331,8 @@ class NetworkPolicyIngressRule(types.Object):
     # If this field is present and contains at least one item, then this rule allows traffic
     # only if the traffic matches at least one port in the list.
     @typechecked
-    def ports(self) -> List[NetworkPolicyPort]:
-        if "ports" in self._kwargs:
-            return self._kwargs["ports"]
-        if "ports" in self._context and check_return_type(self._context["ports"]):
-            return self._context["ports"]
-        return []
+    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        return self.__ports
 
     # List of sources which should be able to access the pods selected for this rule.
     # Items in this list are combined using a logical OR operation.
@@ -1341,16 +1340,29 @@ class NetworkPolicyIngressRule(types.Object):
     # If this field is present and contains at least one item, this rule allows traffic only if the
     # traffic matches at least one item in the from list.
     @typechecked
-    def from_(self) -> List[NetworkPolicyPeer]:
-        if "from" in self._kwargs:
-            return self._kwargs["from"]
-        if "from" in self._context and check_return_type(self._context["from"]):
-            return self._context["from"]
-        return []
+    def from_(self) -> Optional[List[NetworkPolicyPeer]]:
+        return self.__from_
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicySpec is deprecated by networking/v1/NetworkPolicySpec.
 class NetworkPolicySpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        podSelector: "metav1.LabelSelector" = None,
+        ingress: List[NetworkPolicyIngressRule] = None,
+        egress: List[NetworkPolicyEgressRule] = None,
+        policyTypes: List[PolicyType] = None,
+    ):
+        super().__init__(**{})
+        self.__podSelector = (
+            podSelector if podSelector is not None else metav1.LabelSelector()
+        )
+        self.__ingress = ingress if ingress is not None else []
+        self.__egress = egress if egress is not None else []
+        self.__policyTypes = policyTypes if policyTypes is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1373,14 +1385,7 @@ class NetworkPolicySpec(types.Object):
     # An empty podSelector matches all pods in this namespace.
     @typechecked
     def podSelector(self) -> "metav1.LabelSelector":
-        if "podSelector" in self._kwargs:
-            return self._kwargs["podSelector"]
-        if "podSelector" in self._context and check_return_type(
-            self._context["podSelector"]
-        ):
-            return self._context["podSelector"]
-        with context.Scope(**self._context):
-            return metav1.LabelSelector()
+        return self.__podSelector
 
     # List of ingress rules to be applied to the selected pods.
     # Traffic is allowed to a pod if there are no NetworkPolicies selecting the pod
@@ -1390,12 +1395,8 @@ class NetworkPolicySpec(types.Object):
     # If this field is empty then this NetworkPolicy does not allow any traffic
     # (and serves solely to ensure that the pods it selects are isolated by default).
     @typechecked
-    def ingress(self) -> List[NetworkPolicyIngressRule]:
-        if "ingress" in self._kwargs:
-            return self._kwargs["ingress"]
-        if "ingress" in self._context and check_return_type(self._context["ingress"]):
-            return self._context["ingress"]
-        return []
+    def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
+        return self.__ingress
 
     # List of egress rules to be applied to the selected pods. Outgoing traffic is
     # allowed if there are no NetworkPolicies selecting the pod (and cluster policy
@@ -1405,12 +1406,8 @@ class NetworkPolicySpec(types.Object):
     # solely to ensure that the pods it selects are isolated by default).
     # This field is beta-level in 1.8
     @typechecked
-    def egress(self) -> List[NetworkPolicyEgressRule]:
-        if "egress" in self._kwargs:
-            return self._kwargs["egress"]
-        if "egress" in self._context and check_return_type(self._context["egress"]):
-            return self._context["egress"]
-        return []
+    def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
+        return self.__egress
 
     # List of rule types that the NetworkPolicy relates to.
     # Valid options are "Ingress", "Egress", or "Ingress,Egress".
@@ -1423,47 +1420,57 @@ class NetworkPolicySpec(types.Object):
     # an Egress section and would otherwise default to just [ "Ingress" ]).
     # This field is beta-level in 1.8
     @typechecked
-    def policyTypes(self) -> List[PolicyType]:
-        if "policyTypes" in self._kwargs:
-            return self._kwargs["policyTypes"]
-        if "policyTypes" in self._context and check_return_type(
-            self._context["policyTypes"]
-        ):
-            return self._context["policyTypes"]
-        return []
+    def policyTypes(self) -> Optional[List[PolicyType]]:
+        return self.__policyTypes
 
 
 # DEPRECATED 1.9 - This group version of NetworkPolicy is deprecated by networking/v1/NetworkPolicy.
 # NetworkPolicy describes what network traffic is allowed for a set of Pods
 class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: NetworkPolicySpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "NetworkPolicy",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else NetworkPolicySpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "NetworkPolicy"
-
     # Specification of the desired behavior for this NetworkPolicy.
     @typechecked
-    def spec(self) -> NetworkPolicySpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return NetworkPolicySpec()
+    def spec(self) -> Optional[NetworkPolicySpec]:
+        return self.__spec
 
 
 # RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
 # Deprecated: use RunAsGroupStrategyOptions from policy API Group instead.
 class RunAsGroupStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1476,26 +1483,25 @@ class RunAsGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
     @typechecked
     def rule(self) -> RunAsGroupStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
 # Deprecated: use RunAsUserStrategyOptions from policy API Group instead.
 class RunAsUserStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1508,26 +1514,31 @@ class RunAsUserStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def rule(self) -> RunAsUserStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
 # for a pod.
 class RuntimeClassStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        allowedRuntimeClassNames: List[str] = None,
+        defaultRuntimeClassName: str = None,
+    ):
+        super().__init__(**{})
+        self.__allowedRuntimeClassNames = (
+            allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
+        )
+        self.__defaultRuntimeClassName = defaultRuntimeClassName
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1542,31 +1553,30 @@ class RuntimeClassStrategyOptions(types.Object):
     # list. An empty list requires the RuntimeClassName field to be unset.
     @typechecked
     def allowedRuntimeClassNames(self) -> List[str]:
-        if "allowedRuntimeClassNames" in self._kwargs:
-            return self._kwargs["allowedRuntimeClassNames"]
-        if "allowedRuntimeClassNames" in self._context and check_return_type(
-            self._context["allowedRuntimeClassNames"]
-        ):
-            return self._context["allowedRuntimeClassNames"]
-        return []
+        return self.__allowedRuntimeClassNames
 
     # defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
     # The default MUST be allowed by the allowedRuntimeClassNames list.
     # A value of nil does not mutate the Pod.
     @typechecked
     def defaultRuntimeClassName(self) -> Optional[str]:
-        if "defaultRuntimeClassName" in self._kwargs:
-            return self._kwargs["defaultRuntimeClassName"]
-        if "defaultRuntimeClassName" in self._context and check_return_type(
-            self._context["defaultRuntimeClassName"]
-        ):
-            return self._context["defaultRuntimeClassName"]
-        return None
+        return self.__defaultRuntimeClassName
 
 
 # SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
 # Deprecated: use SELinuxStrategyOptions from policy API Group instead.
 class SELinuxStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        rule: SELinuxStrategy = None,
+        seLinuxOptions: "corev1.SELinuxOptions" = None,
+    ):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__seLinuxOptions = seLinuxOptions
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1579,28 +1589,27 @@ class SELinuxStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def rule(self) -> SELinuxStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # seLinuxOptions required to run as; required for MustRunAs
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     @typechecked
     def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
-        if "seLinuxOptions" in self._kwargs:
-            return self._kwargs["seLinuxOptions"]
-        if "seLinuxOptions" in self._context and check_return_type(
-            self._context["seLinuxOptions"]
-        ):
-            return self._context["seLinuxOptions"]
-        return None
+        return self.__seLinuxOptions
 
 
 # SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
 # Deprecated: use SupplementalGroupsStrategyOptions from policy API Group instead.
 class SupplementalGroupsStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
+    ):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1615,26 +1624,99 @@ class SupplementalGroupsStrategyOptions(types.Object):
     # rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[SupplementalGroupsStrategyType]:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of supplemental groups.  If you would like to force a single
     # supplemental group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # PodSecurityPolicySpec defines the policy enforced.
 # Deprecated: use PodSecurityPolicySpec from policy API Group instead.
 class PodSecurityPolicySpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        privileged: bool = None,
+        defaultAddCapabilities: List[corev1.Capability] = None,
+        requiredDropCapabilities: List[corev1.Capability] = None,
+        allowedCapabilities: List[corev1.Capability] = None,
+        volumes: List[FSType] = None,
+        hostNetwork: bool = None,
+        hostPorts: List[HostPortRange] = None,
+        hostPID: bool = None,
+        hostIPC: bool = None,
+        seLinux: SELinuxStrategyOptions = None,
+        runAsUser: RunAsUserStrategyOptions = None,
+        runAsGroup: RunAsGroupStrategyOptions = None,
+        supplementalGroups: SupplementalGroupsStrategyOptions = None,
+        fsGroup: FSGroupStrategyOptions = None,
+        readOnlyRootFilesystem: bool = None,
+        defaultAllowPrivilegeEscalation: bool = None,
+        allowPrivilegeEscalation: bool = None,
+        allowedHostPaths: List[AllowedHostPath] = None,
+        allowedFlexVolumes: List[AllowedFlexVolume] = None,
+        allowedCSIDrivers: Dict[str, AllowedCSIDriver] = None,
+        allowedUnsafeSysctls: List[str] = None,
+        forbiddenSysctls: List[str] = None,
+        allowedProcMountTypes: List[corev1.ProcMountType] = None,
+        runtimeClass: RuntimeClassStrategyOptions = None,
+    ):
+        super().__init__(**{})
+        self.__privileged = privileged
+        self.__defaultAddCapabilities = (
+            defaultAddCapabilities if defaultAddCapabilities is not None else []
+        )
+        self.__requiredDropCapabilities = (
+            requiredDropCapabilities if requiredDropCapabilities is not None else []
+        )
+        self.__allowedCapabilities = (
+            allowedCapabilities if allowedCapabilities is not None else []
+        )
+        self.__volumes = volumes if volumes is not None else []
+        self.__hostNetwork = hostNetwork
+        self.__hostPorts = hostPorts if hostPorts is not None else []
+        self.__hostPID = hostPID
+        self.__hostIPC = hostIPC
+        self.__seLinux = seLinux if seLinux is not None else SELinuxStrategyOptions()
+        self.__runAsUser = (
+            runAsUser if runAsUser is not None else RunAsUserStrategyOptions()
+        )
+        self.__runAsGroup = runAsGroup
+        self.__supplementalGroups = (
+            supplementalGroups
+            if supplementalGroups is not None
+            else SupplementalGroupsStrategyOptions()
+        )
+        self.__fsGroup = fsGroup if fsGroup is not None else FSGroupStrategyOptions()
+        self.__readOnlyRootFilesystem = readOnlyRootFilesystem
+        self.__defaultAllowPrivilegeEscalation = defaultAllowPrivilegeEscalation
+        self.__allowPrivilegeEscalation = (
+            allowPrivilegeEscalation if allowPrivilegeEscalation is not None else True
+        )
+        self.__allowedHostPaths = (
+            allowedHostPaths if allowedHostPaths is not None else []
+        )
+        self.__allowedFlexVolumes = (
+            allowedFlexVolumes if allowedFlexVolumes is not None else []
+        )
+        self.__allowedCSIDrivers = (
+            allowedCSIDrivers if allowedCSIDrivers is not None else {}
+        )
+        self.__allowedUnsafeSysctls = (
+            allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
+        )
+        self.__forbiddenSysctls = (
+            forbiddenSysctls if forbiddenSysctls is not None else []
+        )
+        self.__allowedProcMountTypes = (
+            allowedProcMountTypes if allowedProcMountTypes is not None else []
+        )
+        self.__runtimeClass = runtimeClass
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -1707,159 +1789,81 @@ class PodSecurityPolicySpec(types.Object):
     # privileged determines if a pod can request to be run as privileged.
     @typechecked
     def privileged(self) -> Optional[bool]:
-        if "privileged" in self._kwargs:
-            return self._kwargs["privileged"]
-        if "privileged" in self._context and check_return_type(
-            self._context["privileged"]
-        ):
-            return self._context["privileged"]
-        return None
+        return self.__privileged
 
     # defaultAddCapabilities is the default set of capabilities that will be added to the container
     # unless the pod spec specifically drops the capability.  You may not list a capability in both
     # defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
     # allowed, and need not be included in the allowedCapabilities list.
     @typechecked
-    def defaultAddCapabilities(self) -> List[corev1.Capability]:
-        if "defaultAddCapabilities" in self._kwargs:
-            return self._kwargs["defaultAddCapabilities"]
-        if "defaultAddCapabilities" in self._context and check_return_type(
-            self._context["defaultAddCapabilities"]
-        ):
-            return self._context["defaultAddCapabilities"]
-        return []
+    def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__defaultAddCapabilities
 
     # requiredDropCapabilities are the capabilities that will be dropped from the container.  These
     # are required to be dropped and cannot be added.
     @typechecked
-    def requiredDropCapabilities(self) -> List[corev1.Capability]:
-        if "requiredDropCapabilities" in self._kwargs:
-            return self._kwargs["requiredDropCapabilities"]
-        if "requiredDropCapabilities" in self._context and check_return_type(
-            self._context["requiredDropCapabilities"]
-        ):
-            return self._context["requiredDropCapabilities"]
-        return []
+    def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__requiredDropCapabilities
 
     # allowedCapabilities is a list of capabilities that can be requested to add to the container.
     # Capabilities in this field may be added at the pod author's discretion.
     # You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
     @typechecked
-    def allowedCapabilities(self) -> List[corev1.Capability]:
-        if "allowedCapabilities" in self._kwargs:
-            return self._kwargs["allowedCapabilities"]
-        if "allowedCapabilities" in self._context and check_return_type(
-            self._context["allowedCapabilities"]
-        ):
-            return self._context["allowedCapabilities"]
-        return []
+    def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__allowedCapabilities
 
     # volumes is a white list of allowed volume plugins. Empty indicates that
     # no volumes may be used. To allow all volumes you may use '*'.
     @typechecked
-    def volumes(self) -> List[FSType]:
-        if "volumes" in self._kwargs:
-            return self._kwargs["volumes"]
-        if "volumes" in self._context and check_return_type(self._context["volumes"]):
-            return self._context["volumes"]
-        return []
+    def volumes(self) -> Optional[List[FSType]]:
+        return self.__volumes
 
     # hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
     @typechecked
     def hostNetwork(self) -> Optional[bool]:
-        if "hostNetwork" in self._kwargs:
-            return self._kwargs["hostNetwork"]
-        if "hostNetwork" in self._context and check_return_type(
-            self._context["hostNetwork"]
-        ):
-            return self._context["hostNetwork"]
-        return None
+        return self.__hostNetwork
 
     # hostPorts determines which host port ranges are allowed to be exposed.
     @typechecked
-    def hostPorts(self) -> List[HostPortRange]:
-        if "hostPorts" in self._kwargs:
-            return self._kwargs["hostPorts"]
-        if "hostPorts" in self._context and check_return_type(
-            self._context["hostPorts"]
-        ):
-            return self._context["hostPorts"]
-        return []
+    def hostPorts(self) -> Optional[List[HostPortRange]]:
+        return self.__hostPorts
 
     # hostPID determines if the policy allows the use of HostPID in the pod spec.
     @typechecked
     def hostPID(self) -> Optional[bool]:
-        if "hostPID" in self._kwargs:
-            return self._kwargs["hostPID"]
-        if "hostPID" in self._context and check_return_type(self._context["hostPID"]):
-            return self._context["hostPID"]
-        return None
+        return self.__hostPID
 
     # hostIPC determines if the policy allows the use of HostIPC in the pod spec.
     @typechecked
     def hostIPC(self) -> Optional[bool]:
-        if "hostIPC" in self._kwargs:
-            return self._kwargs["hostIPC"]
-        if "hostIPC" in self._context and check_return_type(self._context["hostIPC"]):
-            return self._context["hostIPC"]
-        return None
+        return self.__hostIPC
 
     # seLinux is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def seLinux(self) -> SELinuxStrategyOptions:
-        if "seLinux" in self._kwargs:
-            return self._kwargs["seLinux"]
-        if "seLinux" in self._context and check_return_type(self._context["seLinux"]):
-            return self._context["seLinux"]
-        with context.Scope(**self._context):
-            return SELinuxStrategyOptions()
+        return self.__seLinux
 
     # runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def runAsUser(self) -> RunAsUserStrategyOptions:
-        if "runAsUser" in self._kwargs:
-            return self._kwargs["runAsUser"]
-        if "runAsUser" in self._context and check_return_type(
-            self._context["runAsUser"]
-        ):
-            return self._context["runAsUser"]
-        with context.Scope(**self._context):
-            return RunAsUserStrategyOptions()
+        return self.__runAsUser
 
     # RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
     # If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
     # RunAsGroup feature gate to be enabled.
     @typechecked
     def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
-        if "runAsGroup" in self._kwargs:
-            return self._kwargs["runAsGroup"]
-        if "runAsGroup" in self._context and check_return_type(
-            self._context["runAsGroup"]
-        ):
-            return self._context["runAsGroup"]
-        return None
+        return self.__runAsGroup
 
     # supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
     @typechecked
     def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
-        if "supplementalGroups" in self._kwargs:
-            return self._kwargs["supplementalGroups"]
-        if "supplementalGroups" in self._context and check_return_type(
-            self._context["supplementalGroups"]
-        ):
-            return self._context["supplementalGroups"]
-        with context.Scope(**self._context):
-            return SupplementalGroupsStrategyOptions()
+        return self.__supplementalGroups
 
     # fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
     @typechecked
     def fsGroup(self) -> FSGroupStrategyOptions:
-        if "fsGroup" in self._kwargs:
-            return self._kwargs["fsGroup"]
-        if "fsGroup" in self._context and check_return_type(self._context["fsGroup"]):
-            return self._context["fsGroup"]
-        with context.Scope(**self._context):
-            return FSGroupStrategyOptions()
+        return self.__fsGroup
 
     # readOnlyRootFilesystem when set to true will force containers to run with a read only root file
     # system.  If the container specifically requests to run with a non-read only root file system
@@ -1868,74 +1872,38 @@ class PodSecurityPolicySpec(types.Object):
     # will not be forced to.
     @typechecked
     def readOnlyRootFilesystem(self) -> Optional[bool]:
-        if "readOnlyRootFilesystem" in self._kwargs:
-            return self._kwargs["readOnlyRootFilesystem"]
-        if "readOnlyRootFilesystem" in self._context and check_return_type(
-            self._context["readOnlyRootFilesystem"]
-        ):
-            return self._context["readOnlyRootFilesystem"]
-        return None
+        return self.__readOnlyRootFilesystem
 
     # defaultAllowPrivilegeEscalation controls the default setting for whether a
     # process can gain more privileges than its parent process.
     @typechecked
     def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
-        if "defaultAllowPrivilegeEscalation" in self._kwargs:
-            return self._kwargs["defaultAllowPrivilegeEscalation"]
-        if "defaultAllowPrivilegeEscalation" in self._context and check_return_type(
-            self._context["defaultAllowPrivilegeEscalation"]
-        ):
-            return self._context["defaultAllowPrivilegeEscalation"]
-        return None
+        return self.__defaultAllowPrivilegeEscalation
 
     # allowPrivilegeEscalation determines if a pod can request to allow
     # privilege escalation. If unspecified, defaults to true.
     @typechecked
     def allowPrivilegeEscalation(self) -> Optional[bool]:
-        if "allowPrivilegeEscalation" in self._kwargs:
-            return self._kwargs["allowPrivilegeEscalation"]
-        if "allowPrivilegeEscalation" in self._context and check_return_type(
-            self._context["allowPrivilegeEscalation"]
-        ):
-            return self._context["allowPrivilegeEscalation"]
-        return True
+        return self.__allowPrivilegeEscalation
 
     # allowedHostPaths is a white list of allowed host paths. Empty indicates
     # that all host paths may be used.
     @typechecked
-    def allowedHostPaths(self) -> List[AllowedHostPath]:
-        if "allowedHostPaths" in self._kwargs:
-            return self._kwargs["allowedHostPaths"]
-        if "allowedHostPaths" in self._context and check_return_type(
-            self._context["allowedHostPaths"]
-        ):
-            return self._context["allowedHostPaths"]
-        return []
+    def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+        return self.__allowedHostPaths
 
     # allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
     # Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
     # is allowed in the "volumes" field.
     @typechecked
-    def allowedFlexVolumes(self) -> List[AllowedFlexVolume]:
-        if "allowedFlexVolumes" in self._kwargs:
-            return self._kwargs["allowedFlexVolumes"]
-        if "allowedFlexVolumes" in self._context and check_return_type(
-            self._context["allowedFlexVolumes"]
-        ):
-            return self._context["allowedFlexVolumes"]
-        return []
+    def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+        return self.__allowedFlexVolumes
 
     # AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
     # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
     @typechecked
-    def allowedCSIDrivers(self) -> Dict[str, AllowedCSIDriver]:
-        if "allowedCSIDrivers" in self._kwargs:
-            return self._kwargs["allowedCSIDrivers"]
-        if "allowedCSIDrivers" in self._context and check_return_type(
-            self._context["allowedCSIDrivers"]
-        ):
-            return self._context["allowedCSIDrivers"]
-        return {}
+    def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+        return self.__allowedCSIDrivers
 
     # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1946,14 +1914,8 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
     # e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
     @typechecked
-    def allowedUnsafeSysctls(self) -> List[str]:
-        if "allowedUnsafeSysctls" in self._kwargs:
-            return self._kwargs["allowedUnsafeSysctls"]
-        if "allowedUnsafeSysctls" in self._context and check_return_type(
-            self._context["allowedUnsafeSysctls"]
-        ):
-            return self._context["allowedUnsafeSysctls"]
-        return []
+    def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+        return self.__allowedUnsafeSysctls
 
     # forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1963,73 +1925,77 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
     # e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
     @typechecked
-    def forbiddenSysctls(self) -> List[str]:
-        if "forbiddenSysctls" in self._kwargs:
-            return self._kwargs["forbiddenSysctls"]
-        if "forbiddenSysctls" in self._context and check_return_type(
-            self._context["forbiddenSysctls"]
-        ):
-            return self._context["forbiddenSysctls"]
-        return []
+    def forbiddenSysctls(self) -> Optional[List[str]]:
+        return self.__forbiddenSysctls
 
     # AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
     # Empty or nil indicates that only the DefaultProcMountType may be used.
     # This requires the ProcMountType feature flag to be enabled.
     @typechecked
-    def allowedProcMountTypes(self) -> List[corev1.ProcMountType]:
-        if "allowedProcMountTypes" in self._kwargs:
-            return self._kwargs["allowedProcMountTypes"]
-        if "allowedProcMountTypes" in self._context and check_return_type(
-            self._context["allowedProcMountTypes"]
-        ):
-            return self._context["allowedProcMountTypes"]
-        return []
+    def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+        return self.__allowedProcMountTypes
 
     # runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
     # If this field is omitted, the pod's runtimeClassName field is unrestricted.
     # Enforcement of this field depends on the RuntimeClass feature gate being enabled.
     @typechecked
     def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
-        if "runtimeClass" in self._kwargs:
-            return self._kwargs["runtimeClass"]
-        if "runtimeClass" in self._context and check_return_type(
-            self._context["runtimeClass"]
-        ):
-            return self._context["runtimeClass"]
-        return None
+        return self.__runtimeClass
 
 
 # PodSecurityPolicy governs the ability to make requests that affect the Security Context
 # that will be applied to a pod and container.
 # Deprecated: use PodSecurityPolicy from policy API Group instead.
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: PodSecurityPolicySpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "PodSecurityPolicy",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else PodSecurityPolicySpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "PodSecurityPolicy"
-
     # spec defines the policy enforced.
     @typechecked
-    def spec(self) -> PodSecurityPolicySpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return PodSecurityPolicySpec()
+    def spec(self) -> Optional[PodSecurityPolicySpec]:
+        return self.__spec
 
 
 # ReplicaSetSpec is the specification of a ReplicaSet.
 class ReplicaSetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        replicas: int = None,
+        minReadySeconds: int = None,
+        selector: "metav1.LabelSelector" = None,
+        template: "corev1.PodTemplateSpec" = None,
+    ):
+        super().__init__(**{})
+        self.__replicas = replicas if replicas is not None else 1
+        self.__minReadySeconds = minReadySeconds
+        self.__selector = selector
+        self.__template = template if template is not None else corev1.PodTemplateSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -2051,24 +2017,14 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return 1
+        return self.__replicas
 
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
     @typechecked
     def minReadySeconds(self) -> Optional[int]:
-        if "minReadySeconds" in self._kwargs:
-            return self._kwargs["minReadySeconds"]
-        if "minReadySeconds" in self._context and check_return_type(
-            self._context["minReadySeconds"]
-        ):
-            return self._context["minReadySeconds"]
-        return None
+        return self.__minReadySeconds
 
     # Selector is a label query over pods that should match the replica count.
     # If the selector is empty, it is defaulted to the labels present on the pod template.
@@ -2076,73 +2032,78 @@ class ReplicaSetSpec(types.Object):
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # Template is the object that describes the pod that will be created if
     # insufficient replicas are detected.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     @typechecked
-    def template(self) -> "corev1.PodTemplateSpec":
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return corev1.PodTemplateSpec()
+    def template(self) -> Optional["corev1.PodTemplateSpec"]:
+        return self.__template
 
 
 # DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1beta2/ReplicaSet. See the release notes for
 # more information.
 # ReplicaSet ensures that a specified number of pod replicas are running at any given time.
 class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: ReplicaSetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "ReplicaSet",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else ReplicaSetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "ReplicaSet"
-
     # Spec defines the specification of the desired behavior of the ReplicaSet.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> ReplicaSetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return ReplicaSetSpec()
+    def spec(self) -> Optional[ReplicaSetSpec]:
+        return self.__spec
 
 
 # Dummy definition
 class ReplicationControllerDummy(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(self):
+        super().__init__(
+            **{"apiVersion": "extensions/v1beta1", "kind": "ReplicationControllerDummy"}
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "ReplicationControllerDummy"
-
 
 # describes the attributes of a scale subresource
 class ScaleSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, replicas: int = None):
+        super().__init__(**{})
+        self.__replicas = replicas
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -2154,35 +2115,40 @@ class ScaleSpec(types.Object):
     # desired number of instances for the scaled object.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return None
+        return self.__replicas
 
 
 # represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: ScaleSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "extensions/v1beta1",
+                "kind": "Scale",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else ScaleSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "extensions/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Scale"
-
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> ScaleSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return ScaleSpec()
+    def spec(self) -> Optional[ScaleSpec]:
+        return self.__spec

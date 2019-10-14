@@ -33,6 +33,26 @@ ConcurrencyPolicy = base.Enum(
 
 # JobTemplateSpec describes the data a Job should have when created from a template
 class JobTemplateSpec(base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "batchv1.JobSpec" = None,
+    ):
+        super().__init__(
+            **{
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else batchv1.JobSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -42,17 +62,39 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
     # Specification of the desired behavior of the job.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> "batchv1.JobSpec":
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return batchv1.JobSpec()
+    def spec(self) -> Optional["batchv1.JobSpec"]:
+        return self.__spec
 
 
 # CronJobSpec describes how the job execution will look like and when it will actually run.
 class CronJobSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        schedule: str = "",
+        startingDeadlineSeconds: int = None,
+        concurrencyPolicy: ConcurrencyPolicy = ConcurrencyPolicy["Allow"],
+        suspend: bool = None,
+        jobTemplate: JobTemplateSpec = None,
+        successfulJobsHistoryLimit: int = None,
+        failedJobsHistoryLimit: int = None,
+    ):
+        super().__init__(**{})
+        self.__schedule = schedule
+        self.__startingDeadlineSeconds = startingDeadlineSeconds
+        self.__concurrencyPolicy = concurrencyPolicy
+        self.__suspend = suspend
+        self.__jobTemplate = (
+            jobTemplate if jobTemplate is not None else JobTemplateSpec()
+        )
+        self.__successfulJobsHistoryLimit = (
+            successfulJobsHistoryLimit if successfulJobsHistoryLimit is not None else 3
+        )
+        self.__failedJobsHistoryLimit = (
+            failedJobsHistoryLimit if failedJobsHistoryLimit is not None else 1
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -78,23 +120,13 @@ class CronJobSpec(types.Object):
     # The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
     @typechecked
     def schedule(self) -> str:
-        if "schedule" in self._kwargs:
-            return self._kwargs["schedule"]
-        if "schedule" in self._context and check_return_type(self._context["schedule"]):
-            return self._context["schedule"]
-        return ""
+        return self.__schedule
 
     # Optional deadline in seconds for starting the job if it misses scheduled
     # time for any reason.  Missed jobs executions will be counted as failed ones.
     @typechecked
     def startingDeadlineSeconds(self) -> Optional[int]:
-        if "startingDeadlineSeconds" in self._kwargs:
-            return self._kwargs["startingDeadlineSeconds"]
-        if "startingDeadlineSeconds" in self._context and check_return_type(
-            self._context["startingDeadlineSeconds"]
-        ):
-            return self._context["startingDeadlineSeconds"]
-        return None
+        return self.__startingDeadlineSeconds
 
     # Specifies how to treat concurrent executions of a Job.
     # Valid values are:
@@ -103,114 +135,103 @@ class CronJobSpec(types.Object):
     # - "Replace": cancels currently running job and replaces it with a new one
     @typechecked
     def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
-        if "concurrencyPolicy" in self._kwargs:
-            return self._kwargs["concurrencyPolicy"]
-        if "concurrencyPolicy" in self._context and check_return_type(
-            self._context["concurrencyPolicy"]
-        ):
-            return self._context["concurrencyPolicy"]
-        return ConcurrencyPolicy["Allow"]
+        return self.__concurrencyPolicy
 
     # This flag tells the controller to suspend subsequent executions, it does
     # not apply to already started executions.  Defaults to false.
     @typechecked
     def suspend(self) -> Optional[bool]:
-        if "suspend" in self._kwargs:
-            return self._kwargs["suspend"]
-        if "suspend" in self._context and check_return_type(self._context["suspend"]):
-            return self._context["suspend"]
-        return None
+        return self.__suspend
 
     # Specifies the job that will be created when executing a CronJob.
     @typechecked
     def jobTemplate(self) -> JobTemplateSpec:
-        if "jobTemplate" in self._kwargs:
-            return self._kwargs["jobTemplate"]
-        if "jobTemplate" in self._context and check_return_type(
-            self._context["jobTemplate"]
-        ):
-            return self._context["jobTemplate"]
-        with context.Scope(**self._context):
-            return JobTemplateSpec()
+        return self.__jobTemplate
 
     # The number of successful finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 3.
     @typechecked
     def successfulJobsHistoryLimit(self) -> Optional[int]:
-        if "successfulJobsHistoryLimit" in self._kwargs:
-            return self._kwargs["successfulJobsHistoryLimit"]
-        if "successfulJobsHistoryLimit" in self._context and check_return_type(
-            self._context["successfulJobsHistoryLimit"]
-        ):
-            return self._context["successfulJobsHistoryLimit"]
-        return 3
+        return self.__successfulJobsHistoryLimit
 
     # The number of failed finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 1.
     @typechecked
     def failedJobsHistoryLimit(self) -> Optional[int]:
-        if "failedJobsHistoryLimit" in self._kwargs:
-            return self._kwargs["failedJobsHistoryLimit"]
-        if "failedJobsHistoryLimit" in self._context and check_return_type(
-            self._context["failedJobsHistoryLimit"]
-        ):
-            return self._context["failedJobsHistoryLimit"]
-        return 1
+        return self.__failedJobsHistoryLimit
 
 
 # CronJob represents the configuration of a single cron job.
 class CronJob(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: CronJobSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "batch/v1beta1",
+                "kind": "CronJob",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else CronJobSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "batch/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "CronJob"
-
     # Specification of the desired behavior of a cron job, including the schedule.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> CronJobSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return CronJobSpec()
+    def spec(self) -> Optional[CronJobSpec]:
+        return self.__spec
 
 
 # JobTemplate describes a template for creating copies of a predefined pod.
 class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        template: JobTemplateSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "batch/v1beta1",
+                "kind": "JobTemplate",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__template = template if template is not None else JobTemplateSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["template"] = self.template()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "batch/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "JobTemplate"
-
     # Defines jobs that will be created from this template.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def template(self) -> JobTemplateSpec:
-        if "template" in self._kwargs:
-            return self._kwargs["template"]
-        if "template" in self._context and check_return_type(self._context["template"]):
-            return self._context["template"]
-        with context.Scope(**self._context):
-            return JobTemplateSpec()
+    def template(self) -> Optional[JobTemplateSpec]:
+        return self.__template

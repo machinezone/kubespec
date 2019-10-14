@@ -129,6 +129,12 @@ SupplementalGroupsStrategyType = base.Enum(
 
 # AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
 class AllowedCSIDriver(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, name: str = ""):
+        super().__init__(**{})
+        self.__name = name
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -138,15 +144,17 @@ class AllowedCSIDriver(types.Object):
     # Name is the registered name of the CSI driver
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
 
 # AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
 class AllowedFlexVolume(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, driver: str = ""):
+        super().__init__(**{})
+        self.__driver = driver
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -156,16 +164,19 @@ class AllowedFlexVolume(types.Object):
     # driver is the name of the Flexvolume driver.
     @typechecked
     def driver(self) -> str:
-        if "driver" in self._kwargs:
-            return self._kwargs["driver"]
-        if "driver" in self._context and check_return_type(self._context["driver"]):
-            return self._context["driver"]
-        return ""
+        return self.__driver
 
 
 # AllowedHostPath defines the host volume conditions that will be enabled by a policy
 # for pods to use. It requires the path prefix to be defined.
 class AllowedHostPath(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, pathPrefix: str = None, readOnly: bool = None):
+        super().__init__(**{})
+        self.__pathPrefix = pathPrefix
+        self.__readOnly = readOnly
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -186,28 +197,40 @@ class AllowedHostPath(types.Object):
     # `/foo` would not allow `/food` or `/etc/foo`
     @typechecked
     def pathPrefix(self) -> Optional[str]:
-        if "pathPrefix" in self._kwargs:
-            return self._kwargs["pathPrefix"]
-        if "pathPrefix" in self._context and check_return_type(
-            self._context["pathPrefix"]
-        ):
-            return self._context["pathPrefix"]
-        return None
+        return self.__pathPrefix
 
     # when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
     @typechecked
     def readOnly(self) -> Optional[bool]:
-        if "readOnly" in self._kwargs:
-            return self._kwargs["readOnly"]
-        if "readOnly" in self._context and check_return_type(self._context["readOnly"]):
-            return self._context["readOnly"]
-        return None
+        return self.__readOnly
 
 
 # Eviction evicts a pod from its node subject to certain policies and safety constraints.
 # This is a subresource of Pod.  A request to cause such an eviction is
 # created by POSTing to .../pods/<pod name>/evictions.
 class Eviction(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        deleteOptions: "metav1.DeleteOptions" = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "policy/v1beta1",
+                "kind": "Eviction",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__deleteOptions = deleteOptions
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -216,28 +239,21 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
             v["deleteOptions"] = deleteOptions
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "policy/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Eviction"
-
     # DeleteOptions may be provided
     @typechecked
     def deleteOptions(self) -> Optional["metav1.DeleteOptions"]:
-        if "deleteOptions" in self._kwargs:
-            return self._kwargs["deleteOptions"]
-        if "deleteOptions" in self._context and check_return_type(
-            self._context["deleteOptions"]
-        ):
-            return self._context["deleteOptions"]
-        return None
+        return self.__deleteOptions
 
 
 # IDRange provides a min/max of an allowed range of IDs.
 class IDRange(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, min: int = 0, max: int = 0):
+        super().__init__(**{})
+        self.__min = min
+        self.__max = max
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -248,24 +264,23 @@ class IDRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        if "min" in self._kwargs:
-            return self._kwargs["min"]
-        if "min" in self._context and check_return_type(self._context["min"]):
-            return self._context["min"]
-        return 0
+        return self.__min
 
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        if "max" in self._kwargs:
-            return self._kwargs["max"]
-        if "max" in self._context and check_return_type(self._context["max"]):
-            return self._context["max"]
-        return 0
+        return self.__max
 
 
 # FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
 class FSGroupStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -280,26 +295,25 @@ class FSGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[FSGroupStrategyType]:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of fs groups.  If you would like to force a single
     # fs group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # HostPortRange defines a range of host ports that will be enabled by a policy
 # for pods to use.  It requires both the start and end to be defined.
 class HostPortRange(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, min: int = 0, max: int = 0):
+        super().__init__(**{})
+        self.__min = min
+        self.__max = max
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -310,24 +324,29 @@ class HostPortRange(types.Object):
     # min is the start of the range, inclusive.
     @typechecked
     def min(self) -> int:
-        if "min" in self._kwargs:
-            return self._kwargs["min"]
-        if "min" in self._context and check_return_type(self._context["min"]):
-            return self._context["min"]
-        return 0
+        return self.__min
 
     # max is the end of the range, inclusive.
     @typechecked
     def max(self) -> int:
-        if "max" in self._kwargs:
-            return self._kwargs["max"]
-        if "max" in self._context and check_return_type(self._context["max"]):
-            return self._context["max"]
-        return 0
+        return self.__max
 
 
 # PodDisruptionBudgetSpec is a description of a PodDisruptionBudget.
 class PodDisruptionBudgetSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        minAvailable: Union[int, str] = None,
+        selector: "metav1.LabelSelector" = None,
+        maxUnavailable: Union[int, str] = None,
+    ):
+        super().__init__(**{})
+        self.__minAvailable = minAvailable
+        self.__selector = selector
+        self.__maxUnavailable = maxUnavailable
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -348,23 +367,13 @@ class PodDisruptionBudgetSpec(types.Object):
     # evictions by specifying "100%".
     @typechecked
     def minAvailable(self) -> Optional[Union[int, str]]:
-        if "minAvailable" in self._kwargs:
-            return self._kwargs["minAvailable"]
-        if "minAvailable" in self._context and check_return_type(
-            self._context["minAvailable"]
-        ):
-            return self._context["minAvailable"]
-        return None
+        return self.__minAvailable
 
     # Label query over pods whose evictions are managed by the disruption
     # budget.
     @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
-        if "selector" in self._kwargs:
-            return self._kwargs["selector"]
-        if "selector" in self._context and check_return_type(self._context["selector"]):
-            return self._context["selector"]
-        return None
+        return self.__selector
 
     # An eviction is allowed if at most "maxUnavailable" pods selected by
     # "selector" are unavailable after the eviction, i.e. even in absence of
@@ -372,44 +381,54 @@ class PodDisruptionBudgetSpec(types.Object):
     # by specifying 0. This is a mutually exclusive setting with "minAvailable".
     @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
-        if "maxUnavailable" in self._kwargs:
-            return self._kwargs["maxUnavailable"]
-        if "maxUnavailable" in self._context and check_return_type(
-            self._context["maxUnavailable"]
-        ):
-            return self._context["maxUnavailable"]
-        return None
+        return self.__maxUnavailable
 
 
 # PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
 class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: PodDisruptionBudgetSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "policy/v1beta1",
+                "kind": "PodDisruptionBudget",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else PodDisruptionBudgetSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "policy/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "PodDisruptionBudget"
-
     # Specification of the desired behavior of the PodDisruptionBudget.
     @typechecked
-    def spec(self) -> PodDisruptionBudgetSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return PodDisruptionBudgetSpec()
+    def spec(self) -> Optional[PodDisruptionBudgetSpec]:
+        return self.__spec
 
 
 # RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
 class RunAsGroupStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -422,25 +441,24 @@ class RunAsGroupStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
     @typechecked
     def rule(self) -> RunAsGroupStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
 class RunAsUserStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -453,26 +471,31 @@ class RunAsUserStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def rule(self) -> RunAsUserStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
     # then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
 # for a pod.
 class RuntimeClassStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        allowedRuntimeClassNames: List[str] = None,
+        defaultRuntimeClassName: str = None,
+    ):
+        super().__init__(**{})
+        self.__allowedRuntimeClassNames = (
+            allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
+        )
+        self.__defaultRuntimeClassName = defaultRuntimeClassName
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -487,30 +510,29 @@ class RuntimeClassStrategyOptions(types.Object):
     # list. An empty list requires the RuntimeClassName field to be unset.
     @typechecked
     def allowedRuntimeClassNames(self) -> List[str]:
-        if "allowedRuntimeClassNames" in self._kwargs:
-            return self._kwargs["allowedRuntimeClassNames"]
-        if "allowedRuntimeClassNames" in self._context and check_return_type(
-            self._context["allowedRuntimeClassNames"]
-        ):
-            return self._context["allowedRuntimeClassNames"]
-        return []
+        return self.__allowedRuntimeClassNames
 
     # defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
     # The default MUST be allowed by the allowedRuntimeClassNames list.
     # A value of nil does not mutate the Pod.
     @typechecked
     def defaultRuntimeClassName(self) -> Optional[str]:
-        if "defaultRuntimeClassName" in self._kwargs:
-            return self._kwargs["defaultRuntimeClassName"]
-        if "defaultRuntimeClassName" in self._context and check_return_type(
-            self._context["defaultRuntimeClassName"]
-        ):
-            return self._context["defaultRuntimeClassName"]
-        return None
+        return self.__defaultRuntimeClassName
 
 
 # SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
 class SELinuxStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        rule: SELinuxStrategy = None,
+        seLinuxOptions: "corev1.SELinuxOptions" = None,
+    ):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__seLinuxOptions = seLinuxOptions
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -523,27 +545,26 @@ class SELinuxStrategyOptions(types.Object):
     # rule is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def rule(self) -> SELinuxStrategy:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # seLinuxOptions required to run as; required for MustRunAs
     # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     @typechecked
     def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
-        if "seLinuxOptions" in self._kwargs:
-            return self._kwargs["seLinuxOptions"]
-        if "seLinuxOptions" in self._context and check_return_type(
-            self._context["seLinuxOptions"]
-        ):
-            return self._context["seLinuxOptions"]
-        return None
+        return self.__seLinuxOptions
 
 
 # SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
 class SupplementalGroupsStrategyOptions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
+    ):
+        super().__init__(**{})
+        self.__rule = rule
+        self.__ranges = ranges if ranges is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -558,25 +579,98 @@ class SupplementalGroupsStrategyOptions(types.Object):
     # rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
     @typechecked
     def rule(self) -> Optional[SupplementalGroupsStrategyType]:
-        if "rule" in self._kwargs:
-            return self._kwargs["rule"]
-        if "rule" in self._context and check_return_type(self._context["rule"]):
-            return self._context["rule"]
-        return None
+        return self.__rule
 
     # ranges are the allowed ranges of supplemental groups.  If you would like to force a single
     # supplemental group then supply a single range with the same start and end. Required for MustRunAs.
     @typechecked
-    def ranges(self) -> List[IDRange]:
-        if "ranges" in self._kwargs:
-            return self._kwargs["ranges"]
-        if "ranges" in self._context and check_return_type(self._context["ranges"]):
-            return self._context["ranges"]
-        return []
+    def ranges(self) -> Optional[List[IDRange]]:
+        return self.__ranges
 
 
 # PodSecurityPolicySpec defines the policy enforced.
 class PodSecurityPolicySpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        privileged: bool = None,
+        defaultAddCapabilities: List[corev1.Capability] = None,
+        requiredDropCapabilities: List[corev1.Capability] = None,
+        allowedCapabilities: List[corev1.Capability] = None,
+        volumes: List[FSType] = None,
+        hostNetwork: bool = None,
+        hostPorts: List[HostPortRange] = None,
+        hostPID: bool = None,
+        hostIPC: bool = None,
+        seLinux: SELinuxStrategyOptions = None,
+        runAsUser: RunAsUserStrategyOptions = None,
+        runAsGroup: RunAsGroupStrategyOptions = None,
+        supplementalGroups: SupplementalGroupsStrategyOptions = None,
+        fsGroup: FSGroupStrategyOptions = None,
+        readOnlyRootFilesystem: bool = None,
+        defaultAllowPrivilegeEscalation: bool = None,
+        allowPrivilegeEscalation: bool = None,
+        allowedHostPaths: List[AllowedHostPath] = None,
+        allowedFlexVolumes: List[AllowedFlexVolume] = None,
+        allowedCSIDrivers: Dict[str, AllowedCSIDriver] = None,
+        allowedUnsafeSysctls: List[str] = None,
+        forbiddenSysctls: List[str] = None,
+        allowedProcMountTypes: List[corev1.ProcMountType] = None,
+        runtimeClass: RuntimeClassStrategyOptions = None,
+    ):
+        super().__init__(**{})
+        self.__privileged = privileged
+        self.__defaultAddCapabilities = (
+            defaultAddCapabilities if defaultAddCapabilities is not None else []
+        )
+        self.__requiredDropCapabilities = (
+            requiredDropCapabilities if requiredDropCapabilities is not None else []
+        )
+        self.__allowedCapabilities = (
+            allowedCapabilities if allowedCapabilities is not None else []
+        )
+        self.__volumes = volumes if volumes is not None else []
+        self.__hostNetwork = hostNetwork
+        self.__hostPorts = hostPorts if hostPorts is not None else []
+        self.__hostPID = hostPID
+        self.__hostIPC = hostIPC
+        self.__seLinux = seLinux if seLinux is not None else SELinuxStrategyOptions()
+        self.__runAsUser = (
+            runAsUser if runAsUser is not None else RunAsUserStrategyOptions()
+        )
+        self.__runAsGroup = runAsGroup
+        self.__supplementalGroups = (
+            supplementalGroups
+            if supplementalGroups is not None
+            else SupplementalGroupsStrategyOptions()
+        )
+        self.__fsGroup = fsGroup if fsGroup is not None else FSGroupStrategyOptions()
+        self.__readOnlyRootFilesystem = readOnlyRootFilesystem
+        self.__defaultAllowPrivilegeEscalation = defaultAllowPrivilegeEscalation
+        self.__allowPrivilegeEscalation = (
+            allowPrivilegeEscalation if allowPrivilegeEscalation is not None else True
+        )
+        self.__allowedHostPaths = (
+            allowedHostPaths if allowedHostPaths is not None else []
+        )
+        self.__allowedFlexVolumes = (
+            allowedFlexVolumes if allowedFlexVolumes is not None else []
+        )
+        self.__allowedCSIDrivers = (
+            allowedCSIDrivers if allowedCSIDrivers is not None else {}
+        )
+        self.__allowedUnsafeSysctls = (
+            allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
+        )
+        self.__forbiddenSysctls = (
+            forbiddenSysctls if forbiddenSysctls is not None else []
+        )
+        self.__allowedProcMountTypes = (
+            allowedProcMountTypes if allowedProcMountTypes is not None else []
+        )
+        self.__runtimeClass = runtimeClass
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -649,159 +743,81 @@ class PodSecurityPolicySpec(types.Object):
     # privileged determines if a pod can request to be run as privileged.
     @typechecked
     def privileged(self) -> Optional[bool]:
-        if "privileged" in self._kwargs:
-            return self._kwargs["privileged"]
-        if "privileged" in self._context and check_return_type(
-            self._context["privileged"]
-        ):
-            return self._context["privileged"]
-        return None
+        return self.__privileged
 
     # defaultAddCapabilities is the default set of capabilities that will be added to the container
     # unless the pod spec specifically drops the capability.  You may not list a capability in both
     # defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
     # allowed, and need not be included in the allowedCapabilities list.
     @typechecked
-    def defaultAddCapabilities(self) -> List[corev1.Capability]:
-        if "defaultAddCapabilities" in self._kwargs:
-            return self._kwargs["defaultAddCapabilities"]
-        if "defaultAddCapabilities" in self._context and check_return_type(
-            self._context["defaultAddCapabilities"]
-        ):
-            return self._context["defaultAddCapabilities"]
-        return []
+    def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__defaultAddCapabilities
 
     # requiredDropCapabilities are the capabilities that will be dropped from the container.  These
     # are required to be dropped and cannot be added.
     @typechecked
-    def requiredDropCapabilities(self) -> List[corev1.Capability]:
-        if "requiredDropCapabilities" in self._kwargs:
-            return self._kwargs["requiredDropCapabilities"]
-        if "requiredDropCapabilities" in self._context and check_return_type(
-            self._context["requiredDropCapabilities"]
-        ):
-            return self._context["requiredDropCapabilities"]
-        return []
+    def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__requiredDropCapabilities
 
     # allowedCapabilities is a list of capabilities that can be requested to add to the container.
     # Capabilities in this field may be added at the pod author's discretion.
     # You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
     @typechecked
-    def allowedCapabilities(self) -> List[corev1.Capability]:
-        if "allowedCapabilities" in self._kwargs:
-            return self._kwargs["allowedCapabilities"]
-        if "allowedCapabilities" in self._context and check_return_type(
-            self._context["allowedCapabilities"]
-        ):
-            return self._context["allowedCapabilities"]
-        return []
+    def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+        return self.__allowedCapabilities
 
     # volumes is a white list of allowed volume plugins. Empty indicates that
     # no volumes may be used. To allow all volumes you may use '*'.
     @typechecked
-    def volumes(self) -> List[FSType]:
-        if "volumes" in self._kwargs:
-            return self._kwargs["volumes"]
-        if "volumes" in self._context and check_return_type(self._context["volumes"]):
-            return self._context["volumes"]
-        return []
+    def volumes(self) -> Optional[List[FSType]]:
+        return self.__volumes
 
     # hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
     @typechecked
     def hostNetwork(self) -> Optional[bool]:
-        if "hostNetwork" in self._kwargs:
-            return self._kwargs["hostNetwork"]
-        if "hostNetwork" in self._context and check_return_type(
-            self._context["hostNetwork"]
-        ):
-            return self._context["hostNetwork"]
-        return None
+        return self.__hostNetwork
 
     # hostPorts determines which host port ranges are allowed to be exposed.
     @typechecked
-    def hostPorts(self) -> List[HostPortRange]:
-        if "hostPorts" in self._kwargs:
-            return self._kwargs["hostPorts"]
-        if "hostPorts" in self._context and check_return_type(
-            self._context["hostPorts"]
-        ):
-            return self._context["hostPorts"]
-        return []
+    def hostPorts(self) -> Optional[List[HostPortRange]]:
+        return self.__hostPorts
 
     # hostPID determines if the policy allows the use of HostPID in the pod spec.
     @typechecked
     def hostPID(self) -> Optional[bool]:
-        if "hostPID" in self._kwargs:
-            return self._kwargs["hostPID"]
-        if "hostPID" in self._context and check_return_type(self._context["hostPID"]):
-            return self._context["hostPID"]
-        return None
+        return self.__hostPID
 
     # hostIPC determines if the policy allows the use of HostIPC in the pod spec.
     @typechecked
     def hostIPC(self) -> Optional[bool]:
-        if "hostIPC" in self._kwargs:
-            return self._kwargs["hostIPC"]
-        if "hostIPC" in self._context and check_return_type(self._context["hostIPC"]):
-            return self._context["hostIPC"]
-        return None
+        return self.__hostIPC
 
     # seLinux is the strategy that will dictate the allowable labels that may be set.
     @typechecked
     def seLinux(self) -> SELinuxStrategyOptions:
-        if "seLinux" in self._kwargs:
-            return self._kwargs["seLinux"]
-        if "seLinux" in self._context and check_return_type(self._context["seLinux"]):
-            return self._context["seLinux"]
-        with context.Scope(**self._context):
-            return SELinuxStrategyOptions()
+        return self.__seLinux
 
     # runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
     @typechecked
     def runAsUser(self) -> RunAsUserStrategyOptions:
-        if "runAsUser" in self._kwargs:
-            return self._kwargs["runAsUser"]
-        if "runAsUser" in self._context and check_return_type(
-            self._context["runAsUser"]
-        ):
-            return self._context["runAsUser"]
-        with context.Scope(**self._context):
-            return RunAsUserStrategyOptions()
+        return self.__runAsUser
 
     # RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
     # If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
     # RunAsGroup feature gate to be enabled.
     @typechecked
     def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
-        if "runAsGroup" in self._kwargs:
-            return self._kwargs["runAsGroup"]
-        if "runAsGroup" in self._context and check_return_type(
-            self._context["runAsGroup"]
-        ):
-            return self._context["runAsGroup"]
-        return None
+        return self.__runAsGroup
 
     # supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
     @typechecked
     def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
-        if "supplementalGroups" in self._kwargs:
-            return self._kwargs["supplementalGroups"]
-        if "supplementalGroups" in self._context and check_return_type(
-            self._context["supplementalGroups"]
-        ):
-            return self._context["supplementalGroups"]
-        with context.Scope(**self._context):
-            return SupplementalGroupsStrategyOptions()
+        return self.__supplementalGroups
 
     # fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
     @typechecked
     def fsGroup(self) -> FSGroupStrategyOptions:
-        if "fsGroup" in self._kwargs:
-            return self._kwargs["fsGroup"]
-        if "fsGroup" in self._context and check_return_type(self._context["fsGroup"]):
-            return self._context["fsGroup"]
-        with context.Scope(**self._context):
-            return FSGroupStrategyOptions()
+        return self.__fsGroup
 
     # readOnlyRootFilesystem when set to true will force containers to run with a read only root file
     # system.  If the container specifically requests to run with a non-read only root file system
@@ -810,75 +826,39 @@ class PodSecurityPolicySpec(types.Object):
     # will not be forced to.
     @typechecked
     def readOnlyRootFilesystem(self) -> Optional[bool]:
-        if "readOnlyRootFilesystem" in self._kwargs:
-            return self._kwargs["readOnlyRootFilesystem"]
-        if "readOnlyRootFilesystem" in self._context and check_return_type(
-            self._context["readOnlyRootFilesystem"]
-        ):
-            return self._context["readOnlyRootFilesystem"]
-        return None
+        return self.__readOnlyRootFilesystem
 
     # defaultAllowPrivilegeEscalation controls the default setting for whether a
     # process can gain more privileges than its parent process.
     @typechecked
     def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
-        if "defaultAllowPrivilegeEscalation" in self._kwargs:
-            return self._kwargs["defaultAllowPrivilegeEscalation"]
-        if "defaultAllowPrivilegeEscalation" in self._context and check_return_type(
-            self._context["defaultAllowPrivilegeEscalation"]
-        ):
-            return self._context["defaultAllowPrivilegeEscalation"]
-        return None
+        return self.__defaultAllowPrivilegeEscalation
 
     # allowPrivilegeEscalation determines if a pod can request to allow
     # privilege escalation. If unspecified, defaults to true.
     @typechecked
     def allowPrivilegeEscalation(self) -> Optional[bool]:
-        if "allowPrivilegeEscalation" in self._kwargs:
-            return self._kwargs["allowPrivilegeEscalation"]
-        if "allowPrivilegeEscalation" in self._context and check_return_type(
-            self._context["allowPrivilegeEscalation"]
-        ):
-            return self._context["allowPrivilegeEscalation"]
-        return True
+        return self.__allowPrivilegeEscalation
 
     # allowedHostPaths is a white list of allowed host paths. Empty indicates
     # that all host paths may be used.
     @typechecked
-    def allowedHostPaths(self) -> List[AllowedHostPath]:
-        if "allowedHostPaths" in self._kwargs:
-            return self._kwargs["allowedHostPaths"]
-        if "allowedHostPaths" in self._context and check_return_type(
-            self._context["allowedHostPaths"]
-        ):
-            return self._context["allowedHostPaths"]
-        return []
+    def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+        return self.__allowedHostPaths
 
     # allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
     # Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
     # is allowed in the "volumes" field.
     @typechecked
-    def allowedFlexVolumes(self) -> List[AllowedFlexVolume]:
-        if "allowedFlexVolumes" in self._kwargs:
-            return self._kwargs["allowedFlexVolumes"]
-        if "allowedFlexVolumes" in self._context and check_return_type(
-            self._context["allowedFlexVolumes"]
-        ):
-            return self._context["allowedFlexVolumes"]
-        return []
+    def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+        return self.__allowedFlexVolumes
 
     # AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
     # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
     # This is an alpha field, and is only honored if the API server enables the CSIInlineVolume feature gate.
     @typechecked
-    def allowedCSIDrivers(self) -> Dict[str, AllowedCSIDriver]:
-        if "allowedCSIDrivers" in self._kwargs:
-            return self._kwargs["allowedCSIDrivers"]
-        if "allowedCSIDrivers" in self._context and check_return_type(
-            self._context["allowedCSIDrivers"]
-        ):
-            return self._context["allowedCSIDrivers"]
-        return {}
+    def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+        return self.__allowedCSIDrivers
 
     # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -889,14 +869,8 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
     # e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
     @typechecked
-    def allowedUnsafeSysctls(self) -> List[str]:
-        if "allowedUnsafeSysctls" in self._kwargs:
-            return self._kwargs["allowedUnsafeSysctls"]
-        if "allowedUnsafeSysctls" in self._context and check_return_type(
-            self._context["allowedUnsafeSysctls"]
-        ):
-            return self._context["allowedUnsafeSysctls"]
-        return []
+    def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+        return self.__allowedUnsafeSysctls
 
     # forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
     # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -906,65 +880,54 @@ class PodSecurityPolicySpec(types.Object):
     # e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
     # e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
     @typechecked
-    def forbiddenSysctls(self) -> List[str]:
-        if "forbiddenSysctls" in self._kwargs:
-            return self._kwargs["forbiddenSysctls"]
-        if "forbiddenSysctls" in self._context and check_return_type(
-            self._context["forbiddenSysctls"]
-        ):
-            return self._context["forbiddenSysctls"]
-        return []
+    def forbiddenSysctls(self) -> Optional[List[str]]:
+        return self.__forbiddenSysctls
 
     # AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
     # Empty or nil indicates that only the DefaultProcMountType may be used.
     # This requires the ProcMountType feature flag to be enabled.
     @typechecked
-    def allowedProcMountTypes(self) -> List[corev1.ProcMountType]:
-        if "allowedProcMountTypes" in self._kwargs:
-            return self._kwargs["allowedProcMountTypes"]
-        if "allowedProcMountTypes" in self._context and check_return_type(
-            self._context["allowedProcMountTypes"]
-        ):
-            return self._context["allowedProcMountTypes"]
-        return []
+    def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+        return self.__allowedProcMountTypes
 
     # runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
     # If this field is omitted, the pod's runtimeClassName field is unrestricted.
     # Enforcement of this field depends on the RuntimeClass feature gate being enabled.
     @typechecked
     def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
-        if "runtimeClass" in self._kwargs:
-            return self._kwargs["runtimeClass"]
-        if "runtimeClass" in self._context and check_return_type(
-            self._context["runtimeClass"]
-        ):
-            return self._context["runtimeClass"]
-        return None
+        return self.__runtimeClass
 
 
 # PodSecurityPolicy governs the ability to make requests that affect the Security Context
 # that will be applied to a pod and container.
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: PodSecurityPolicySpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "policy/v1beta1",
+                "kind": "PodSecurityPolicy",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else PodSecurityPolicySpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "policy/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "PodSecurityPolicy"
-
     # spec defines the policy enforced.
     @typechecked
-    def spec(self) -> PodSecurityPolicySpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return PodSecurityPolicySpec()
+    def spec(self) -> Optional[PodSecurityPolicySpec]:
+        return self.__spec

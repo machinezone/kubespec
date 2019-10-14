@@ -14,6 +14,23 @@ from typeguard import check_return_type, typechecked
 
 # LeaseSpec is a specification of a Lease.
 class LeaseSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        holderIdentity: str = None,
+        leaseDurationSeconds: int = None,
+        acquireTime: "base.MicroTime" = None,
+        renewTime: "base.MicroTime" = None,
+        leaseTransitions: int = None,
+    ):
+        super().__init__(**{})
+        self.__holderIdentity = holderIdentity
+        self.__leaseDurationSeconds = leaseDurationSeconds
+        self.__acquireTime = acquireTime
+        self.__renewTime = renewTime
+        self.__leaseTransitions = leaseTransitions
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -37,86 +54,65 @@ class LeaseSpec(types.Object):
     # holderIdentity contains the identity of the holder of a current lease.
     @typechecked
     def holderIdentity(self) -> Optional[str]:
-        if "holderIdentity" in self._kwargs:
-            return self._kwargs["holderIdentity"]
-        if "holderIdentity" in self._context and check_return_type(
-            self._context["holderIdentity"]
-        ):
-            return self._context["holderIdentity"]
-        return None
+        return self.__holderIdentity
 
     # leaseDurationSeconds is a duration that candidates for a lease need
     # to wait to force acquire it. This is measure against time of last
     # observed RenewTime.
     @typechecked
     def leaseDurationSeconds(self) -> Optional[int]:
-        if "leaseDurationSeconds" in self._kwargs:
-            return self._kwargs["leaseDurationSeconds"]
-        if "leaseDurationSeconds" in self._context and check_return_type(
-            self._context["leaseDurationSeconds"]
-        ):
-            return self._context["leaseDurationSeconds"]
-        return None
+        return self.__leaseDurationSeconds
 
     # acquireTime is a time when the current lease was acquired.
     @typechecked
     def acquireTime(self) -> Optional["base.MicroTime"]:
-        if "acquireTime" in self._kwargs:
-            return self._kwargs["acquireTime"]
-        if "acquireTime" in self._context and check_return_type(
-            self._context["acquireTime"]
-        ):
-            return self._context["acquireTime"]
-        return None
+        return self.__acquireTime
 
     # renewTime is a time when the current holder of a lease has last
     # updated the lease.
     @typechecked
     def renewTime(self) -> Optional["base.MicroTime"]:
-        if "renewTime" in self._kwargs:
-            return self._kwargs["renewTime"]
-        if "renewTime" in self._context and check_return_type(
-            self._context["renewTime"]
-        ):
-            return self._context["renewTime"]
-        return None
+        return self.__renewTime
 
     # leaseTransitions is the number of transitions of a lease between
     # holders.
     @typechecked
     def leaseTransitions(self) -> Optional[int]:
-        if "leaseTransitions" in self._kwargs:
-            return self._kwargs["leaseTransitions"]
-        if "leaseTransitions" in self._context and check_return_type(
-            self._context["leaseTransitions"]
-        ):
-            return self._context["leaseTransitions"]
-        return None
+        return self.__leaseTransitions
 
 
 # Lease defines a lease concept.
 class Lease(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: LeaseSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "coordination.k8s.io/v1",
+                "kind": "Lease",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else LeaseSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "coordination.k8s.io/v1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Lease"
-
     # Specification of the Lease.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
-    def spec(self) -> LeaseSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return LeaseSpec()
+    def spec(self) -> Optional[LeaseSpec]:
+        return self.__spec

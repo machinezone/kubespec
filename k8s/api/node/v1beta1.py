@@ -16,6 +16,12 @@ from typeguard import check_return_type, typechecked
 
 # Overhead structure represents the resource overhead associated with running a pod.
 class Overhead(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, podFixed: Dict[corev1.ResourceName, "resource.Quantity"] = None):
+        super().__init__(**{})
+        self.__podFixed = podFixed if podFixed is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -26,17 +32,24 @@ class Overhead(types.Object):
 
     # PodFixed represents the fixed resource overhead associated with running a pod.
     @typechecked
-    def podFixed(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
-        if "podFixed" in self._kwargs:
-            return self._kwargs["podFixed"]
-        if "podFixed" in self._context and check_return_type(self._context["podFixed"]):
-            return self._context["podFixed"]
-        return {}
+    def podFixed(self) -> Optional[Dict[corev1.ResourceName, "resource.Quantity"]]:
+        return self.__podFixed
 
 
 # Scheduling specifies the scheduling constraints for nodes supporting a
 # RuntimeClass.
 class Scheduling(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        nodeSelector: Dict[str, str] = None,
+        tolerations: List["corev1.Toleration"] = None,
+    ):
+        super().__init__(**{})
+        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__tolerations = tolerations if tolerations is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -54,28 +67,16 @@ class Scheduling(types.Object):
     # with a pod's existing nodeSelector. Any conflicts will cause the pod to
     # be rejected in admission.
     @typechecked
-    def nodeSelector(self) -> Dict[str, str]:
-        if "nodeSelector" in self._kwargs:
-            return self._kwargs["nodeSelector"]
-        if "nodeSelector" in self._context and check_return_type(
-            self._context["nodeSelector"]
-        ):
-            return self._context["nodeSelector"]
-        return {}
+    def nodeSelector(self) -> Optional[Dict[str, str]]:
+        return self.__nodeSelector
 
     # tolerations are appended (excluding duplicates) to pods running with this
     # RuntimeClass during admission, effectively unioning the set of nodes
     # tolerated by the pod and the RuntimeClass.
     # +listType=atomic
     @typechecked
-    def tolerations(self) -> List["corev1.Toleration"]:
-        if "tolerations" in self._kwargs:
-            return self._kwargs["tolerations"]
-        if "tolerations" in self._context and check_return_type(
-            self._context["tolerations"]
-        ):
-            return self._context["tolerations"]
-        return []
+    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+        return self.__tolerations
 
 
 # RuntimeClass defines a class of container runtime supported in the cluster.
@@ -86,6 +87,30 @@ class Scheduling(types.Object):
 # pod.  For more details, see
 # https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
 class RuntimeClass(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        handler: str = "",
+        overhead: Overhead = None,
+        scheduling: Scheduling = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "node.k8s.io/v1beta1",
+                "kind": "RuntimeClass",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__handler = handler
+        self.__overhead = overhead
+        self.__scheduling = scheduling
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -97,14 +122,6 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         if scheduling is not None:  # omit empty
             v["scheduling"] = scheduling
         return v
-
-    @typechecked
-    def apiVersion(self) -> str:
-        return "node.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "RuntimeClass"
 
     # Handler specifies the underlying runtime and configuration that the CRI
     # implementation will use to handle pods of this class. The possible values
@@ -118,11 +135,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # immutable.
     @typechecked
     def handler(self) -> str:
-        if "handler" in self._kwargs:
-            return self._kwargs["handler"]
-        if "handler" in self._context and check_return_type(self._context["handler"]):
-            return self._context["handler"]
-        return ""
+        return self.__handler
 
     # Overhead represents the resource overhead associated with running a pod for a
     # given RuntimeClass. For more details, see
@@ -130,11 +143,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     @typechecked
     def overhead(self) -> Optional[Overhead]:
-        if "overhead" in self._kwargs:
-            return self._kwargs["overhead"]
-        if "overhead" in self._context and check_return_type(self._context["overhead"]):
-            return self._context["overhead"]
-        return None
+        return self.__overhead
 
     # Scheduling holds the scheduling constraints to ensure that pods running
     # with this RuntimeClass are scheduled to nodes that support it.
@@ -142,10 +151,4 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     # nodes.
     @typechecked
     def scheduling(self) -> Optional[Scheduling]:
-        if "scheduling" in self._kwargs:
-            return self._kwargs["scheduling"]
-        if "scheduling" in self._context and check_return_type(
-            self._context["scheduling"]
-        ):
-            return self._context["scheduling"]
-        return None
+        return self.__scheduling

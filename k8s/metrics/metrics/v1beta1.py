@@ -17,6 +17,17 @@ from typeguard import check_return_type, typechecked
 
 # ContainerMetrics sets resource usage metrics of a container.
 class ContainerMetrics(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = "",
+        usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
+    ):
+        super().__init__(**{})
+        self.__name = name
+        self.__usage = usage if usage is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -27,24 +38,40 @@ class ContainerMetrics(types.Object):
     # Container name corresponding to the one from pod.spec.containers.
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
-        if "usage" in self._kwargs:
-            return self._kwargs["usage"]
-        if "usage" in self._context and check_return_type(self._context["usage"]):
-            return self._context["usage"]
-        return {}
+        return self.__usage
 
 
 # NodeMetrics sets resource usage metrics of a node.
 class NodeMetrics(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        timestamp: "base.Time" = None,
+        window: "base.Duration" = None,
+        usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "metrics.k8s.io/v1beta1",
+                "kind": "NodeMetrics",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__timestamp = timestamp
+        self.__window = window if window is not None else metav1.Duration()
+        self.__usage = usage if usage is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -53,47 +80,50 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         v["usage"] = self.usage()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "metrics.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "NodeMetrics"
-
     # The following fields define time interval from which metrics were
     # collected from the interval [Timestamp-Window, Timestamp].
     @typechecked
     def timestamp(self) -> "base.Time":
-        if "timestamp" in self._kwargs:
-            return self._kwargs["timestamp"]
-        if "timestamp" in self._context and check_return_type(
-            self._context["timestamp"]
-        ):
-            return self._context["timestamp"]
-        return None
+        return self.__timestamp
 
     @typechecked
     def window(self) -> "base.Duration":
-        if "window" in self._kwargs:
-            return self._kwargs["window"]
-        if "window" in self._context and check_return_type(self._context["window"]):
-            return self._context["window"]
-        with context.Scope(**self._context):
-            return metav1.Duration()
+        return self.__window
 
     # The memory usage is the memory working set.
     @typechecked
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
-        if "usage" in self._kwargs:
-            return self._kwargs["usage"]
-        if "usage" in self._context and check_return_type(self._context["usage"]):
-            return self._context["usage"]
-        return {}
+        return self.__usage
 
 
 # PodMetrics sets resource usage metrics of a pod.
 class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        timestamp: "base.Time" = None,
+        window: "base.Duration" = None,
+        containers: Dict[str, ContainerMetrics] = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "metrics.k8s.io/v1beta1",
+                "kind": "PodMetrics",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__timestamp = timestamp
+        self.__window = window if window is not None else metav1.Duration()
+        self.__containers = containers if containers is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -102,42 +132,17 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         v["containers"] = self.containers().values()  # named list
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "metrics.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "PodMetrics"
-
     # The following fields define time interval from which metrics were
     # collected from the interval [Timestamp-Window, Timestamp].
     @typechecked
     def timestamp(self) -> "base.Time":
-        if "timestamp" in self._kwargs:
-            return self._kwargs["timestamp"]
-        if "timestamp" in self._context and check_return_type(
-            self._context["timestamp"]
-        ):
-            return self._context["timestamp"]
-        return None
+        return self.__timestamp
 
     @typechecked
     def window(self) -> "base.Duration":
-        if "window" in self._kwargs:
-            return self._kwargs["window"]
-        if "window" in self._context and check_return_type(self._context["window"]):
-            return self._context["window"]
-        with context.Scope(**self._context):
-            return metav1.Duration()
+        return self.__window
 
     # Metrics for all containers are collected within the same time window.
     @typechecked
     def containers(self) -> Dict[str, ContainerMetrics]:
-        if "containers" in self._kwargs:
-            return self._kwargs["containers"]
-        if "containers" in self._context and check_return_type(
-            self._context["containers"]
-        ):
-            return self._context["containers"]
-        return {}
+        return self.__containers

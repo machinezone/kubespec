@@ -78,6 +78,12 @@ Format = base.Enum(
 # writing some sort of special handling code in the hopes that that will
 # cause implementors to also use a fixed point implementation.
 class Quantity(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, format: Format = None):
+        super().__init__(**{})
+        self.__format = format
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -88,8 +94,4 @@ class Quantity(types.Object):
     # more details.
     @typechecked
     def format(self) -> Format:
-        if "Format" in self._kwargs:
-            return self._kwargs["Format"]
-        if "Format" in self._context and check_return_type(self._context["Format"]):
-            return self._context["Format"]
-        return None
+        return self.__format

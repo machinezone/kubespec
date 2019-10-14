@@ -14,6 +14,13 @@ from typeguard import check_return_type, typechecked
 
 # TokenReviewSpec is a description of the token authentication request.
 class TokenReviewSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, token: str = None, audiences: List[str] = None):
+        super().__init__(**{})
+        self.__token = token
+        self.__audiences = audiences if audiences is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -28,11 +35,7 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        if "token" in self._kwargs:
-            return self._kwargs["token"]
-        if "token" in self._context and check_return_type(self._context["token"]):
-            return self._context["token"]
-        return None
+        return self.__token
 
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -40,40 +43,41 @@ class TokenReviewSpec(types.Object):
     # this list. If no audiences are provided, the audience will default to the
     # audience of the Kubernetes apiserver.
     @typechecked
-    def audiences(self) -> List[str]:
-        if "audiences" in self._kwargs:
-            return self._kwargs["audiences"]
-        if "audiences" in self._context and check_return_type(
-            self._context["audiences"]
-        ):
-            return self._context["audiences"]
-        return []
+    def audiences(self) -> Optional[List[str]]:
+        return self.__audiences
 
 
 # TokenReview attempts to authenticate a token to a known user.
 # Note: TokenReview requests may be cached by the webhook token authenticator
 # plugin in the kube-apiserver.
 class TokenReview(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: TokenReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authentication.k8s.io/v1beta1",
+                "kind": "TokenReview",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else TokenReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authentication.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "TokenReview"
-
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return TokenReviewSpec()
+        return self.__spec

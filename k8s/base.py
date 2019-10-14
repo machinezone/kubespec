@@ -21,6 +21,13 @@ def Enum(name: str, values: Dict[str, str]):
 
 
 class TypedObject(types.Object):
+    def __init__(
+        self, apiVersion: Optional[str] = None, kind: Optional[str] = None, **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.__apiVersion = apiVersion
+        self.__kind = kind
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -38,13 +45,7 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if "apiVersion" in self._kwargs:
-            return self._kwargs["apiVersion"]
-        if "apiVersion" in self._context and check_return_type(
-            self._context["apiVersion"]
-        ):
-            return self._context["apiVersion"]
-        return None
+        return self.__apiVersion
 
     # Kind is a string value representing the REST resource this object represents.
     # Servers may infer this from the endpoint the client submits requests to.
@@ -53,14 +54,22 @@ class TypedObject(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return None
+        return self.__kind
 
 
 class MetadataObject(types.Object):
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        labels: Optional[Dict[str, str]] = None,
+        annotations: Optional[Dict[str, str]] = None,
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.__name = name
+        self.__labels = labels or {}
+        self.__annotations = annotations or {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -85,11 +94,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
@@ -97,11 +102,7 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
     def labels(self) -> Dict[str, str]:
-        if "labels" in self._kwargs:
-            return self._kwargs["labels"]
-        if "labels" in self._context and check_return_type(self._context["labels"]):
-            return self._context["labels"]
-        return {}
+        return self.__labels
 
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
@@ -109,16 +110,14 @@ class MetadataObject(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
     def annotations(self) -> Dict[str, str]:
-        if "annotations" in self._kwargs:
-            return self._kwargs["annotations"]
-        if "annotations" in self._context and check_return_type(
-            self._context["annotations"]
-        ):
-            return self._context["annotations"]
-        return {}
+        return self.__annotations
 
 
 class NamespacedMetadataObject(MetadataObject):
+    def __init__(self, namespace: Optional[str] = None, **kwargs):
+        super().__init__(**kwargs)
+        self.__namespace = namespace
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -139,13 +138,7 @@ class NamespacedMetadataObject(MetadataObject):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
 
 class Time(types.Renderable):

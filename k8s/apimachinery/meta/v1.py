@@ -209,6 +209,13 @@ StatusReason = base.Enum(
 
 # Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out.
 class Preconditions(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, uid: str = None, resourceVersion: str = None):
+        super().__init__(**{})
+        self.__uid = uid
+        self.__resourceVersion = resourceVersion
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -223,28 +230,25 @@ class Preconditions(types.Object):
     # Specifies the target UID.
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
     # Specifies the target ResourceVersion
     @typechecked
     def resourceVersion(self) -> Optional[str]:
-        if "resourceVersion" in self._kwargs:
-            return self._kwargs["resourceVersion"]
-        if "resourceVersion" in self._context and check_return_type(
-            self._context["resourceVersion"]
-        ):
-            return self._context["resourceVersion"]
-        return None
+        return self.__resourceVersion
 
 
 # TypeMeta describes an individual object in an API response or request
 # with strings representing the type of the object and its API schema version.
 # Structures that are versioned or persisted should inline TypeMeta.
 class TypeMeta(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, kind: str = None, apiVersion: str = None):
+        super().__init__(**{})
+        self.__kind = kind
+        self.__apiVersion = apiVersion
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -263,11 +267,7 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return None
+        return self.__kind
 
     # APIVersion defines the versioned schema of this representation of an object.
     # Servers should convert recognized schemas to the latest internal value, and
@@ -275,17 +275,26 @@ class TypeMeta(types.Object):
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if "apiVersion" in self._kwargs:
-            return self._kwargs["apiVersion"]
-        if "apiVersion" in self._context and check_return_type(
-            self._context["apiVersion"]
-        ):
-            return self._context["apiVersion"]
-        return None
+        return self.__apiVersion
 
 
 # DeleteOptions may be provided when deleting an API object.
 class DeleteOptions(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        gracePeriodSeconds: int = None,
+        preconditions: Preconditions = None,
+        propagationPolicy: DeletionPropagation = None,
+        dryRun: List[str] = None,
+    ):
+        super().__init__(**{})
+        self.__gracePeriodSeconds = gracePeriodSeconds
+        self.__preconditions = preconditions
+        self.__propagationPolicy = propagationPolicy
+        self.__dryRun = dryRun if dryRun is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -309,25 +318,13 @@ class DeleteOptions(base.TypedObject):
     # Defaults to a per object value if not specified. zero means delete immediately.
     @typechecked
     def gracePeriodSeconds(self) -> Optional[int]:
-        if "gracePeriodSeconds" in self._kwargs:
-            return self._kwargs["gracePeriodSeconds"]
-        if "gracePeriodSeconds" in self._context and check_return_type(
-            self._context["gracePeriodSeconds"]
-        ):
-            return self._context["gracePeriodSeconds"]
-        return None
+        return self.__gracePeriodSeconds
 
     # Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
     # returned.
     @typechecked
     def preconditions(self) -> Optional[Preconditions]:
-        if "preconditions" in self._kwargs:
-            return self._kwargs["preconditions"]
-        if "preconditions" in self._context and check_return_type(
-            self._context["preconditions"]
-        ):
-            return self._context["preconditions"]
-        return None
+        return self.__preconditions
 
     # Whether and how garbage collection will be performed.
     # Either this field or OrphanDependents may be set, but not both.
@@ -339,13 +336,7 @@ class DeleteOptions(base.TypedObject):
     # foreground.
     @typechecked
     def propagationPolicy(self) -> Optional[DeletionPropagation]:
-        if "propagationPolicy" in self._kwargs:
-            return self._kwargs["propagationPolicy"]
-        if "propagationPolicy" in self._context and check_return_type(
-            self._context["propagationPolicy"]
-        ):
-            return self._context["propagationPolicy"]
-        return None
+        return self.__propagationPolicy
 
     # When present, indicates that modifications should not be
     # persisted. An invalid or unrecognized dryRun directive will
@@ -353,17 +344,21 @@ class DeleteOptions(base.TypedObject):
     # request. Valid values are:
     # - All: all dry run stages will be processed
     @typechecked
-    def dryRun(self) -> List[str]:
-        if "dryRun" in self._kwargs:
-            return self._kwargs["dryRun"]
-        if "dryRun" in self._context and check_return_type(self._context["dryRun"]):
-            return self._context["dryRun"]
-        return []
+    def dryRun(self) -> Optional[List[str]]:
+        return self.__dryRun
 
 
 # GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
 # to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
 class GroupVersionKind(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, group: str = "", version: str = "", kind: str = ""):
+        super().__init__(**{})
+        self.__group = group
+        self.__version = version
+        self.__kind = kind
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -374,32 +369,28 @@ class GroupVersionKind(types.Object):
 
     @typechecked
     def group(self) -> str:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return ""
+        return self.__group
 
     @typechecked
     def version(self) -> str:
-        if "version" in self._kwargs:
-            return self._kwargs["version"]
-        if "version" in self._context and check_return_type(self._context["version"]):
-            return self._context["version"]
-        return ""
+        return self.__version
 
     @typechecked
     def kind(self) -> str:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return ""
+        return self.__kind
 
 
 # GroupVersionResource unambiguously identifies a resource.  It doesn't anonymously include GroupVersion
 # to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
 class GroupVersionResource(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, group: str = "", version: str = "", resource: str = ""):
+        super().__init__(**{})
+        self.__group = group
+        self.__version = version
+        self.__resource = resource
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -410,32 +401,33 @@ class GroupVersionResource(types.Object):
 
     @typechecked
     def group(self) -> str:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return ""
+        return self.__group
 
     @typechecked
     def version(self) -> str:
-        if "version" in self._kwargs:
-            return self._kwargs["version"]
-        if "version" in self._context and check_return_type(self._context["version"]):
-            return self._context["version"]
-        return ""
+        return self.__version
 
     @typechecked
     def resource(self) -> str:
-        if "resource" in self._kwargs:
-            return self._kwargs["resource"]
-        if "resource" in self._context and check_return_type(self._context["resource"]):
-            return self._context["resource"]
-        return ""
+        return self.__resource
 
 
 # A label selector requirement is a selector that contains values, a key, and an operator that
 # relates the key and values.
 class LabelSelectorRequirement(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        key: str = "",
+        operator: LabelSelectorOperator = None,
+        values: List[str] = None,
+    ):
+        super().__init__(**{})
+        self.__key = key
+        self.__operator = operator
+        self.__values = values if values is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -449,39 +441,40 @@ class LabelSelectorRequirement(types.Object):
     # key is the label key that the selector applies to.
     @typechecked
     def key(self) -> str:
-        if "key" in self._kwargs:
-            return self._kwargs["key"]
-        if "key" in self._context and check_return_type(self._context["key"]):
-            return self._context["key"]
-        return ""
+        return self.__key
 
     # operator represents a key's relationship to a set of values.
     # Valid operators are In, NotIn, Exists and DoesNotExist.
     @typechecked
     def operator(self) -> LabelSelectorOperator:
-        if "operator" in self._kwargs:
-            return self._kwargs["operator"]
-        if "operator" in self._context and check_return_type(self._context["operator"]):
-            return self._context["operator"]
-        return None
+        return self.__operator
 
     # values is an array of string values. If the operator is In or NotIn,
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
     # the values array must be empty. This array is replaced during a strategic
     # merge patch.
     @typechecked
-    def values(self) -> List[str]:
-        if "values" in self._kwargs:
-            return self._kwargs["values"]
-        if "values" in self._context and check_return_type(self._context["values"]):
-            return self._context["values"]
-        return []
+    def values(self) -> Optional[List[str]]:
+        return self.__values
 
 
 # A label selector is a label query over a set of resources. The result of matchLabels and
 # matchExpressions are ANDed. An empty label selector matches all objects. A null
 # label selector matches no objects.
 class LabelSelector(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        matchLabels: Dict[str, str] = None,
+        matchExpressions: List[LabelSelectorRequirement] = None,
+    ):
+        super().__init__(**{})
+        self.__matchLabels = matchLabels if matchLabels is not None else {}
+        self.__matchExpressions = (
+            matchExpressions if matchExpressions is not None else []
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -497,30 +490,25 @@ class LabelSelector(types.Object):
     # map is equivalent to an element of matchExpressions, whose key field is "key", the
     # operator is "In", and the values array contains only "value". The requirements are ANDed.
     @typechecked
-    def matchLabels(self) -> Dict[str, str]:
-        if "matchLabels" in self._kwargs:
-            return self._kwargs["matchLabels"]
-        if "matchLabels" in self._context and check_return_type(
-            self._context["matchLabels"]
-        ):
-            return self._context["matchLabels"]
-        return {}
+    def matchLabels(self) -> Optional[Dict[str, str]]:
+        return self.__matchLabels
 
     # matchExpressions is a list of label selector requirements. The requirements are ANDed.
     @typechecked
-    def matchExpressions(self) -> List[LabelSelectorRequirement]:
-        if "matchExpressions" in self._kwargs:
-            return self._kwargs["matchExpressions"]
-        if "matchExpressions" in self._context and check_return_type(
-            self._context["matchExpressions"]
-        ):
-            return self._context["matchExpressions"]
-        return []
+    def matchExpressions(self) -> Optional[List[LabelSelectorRequirement]]:
+        return self.__matchExpressions
 
 
 # ListMeta describes metadata that synthetic resources must have, including lists and
 # various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
 class ListMeta(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, continue_: str = None, remainingItemCount: int = None):
+        super().__init__(**{})
+        self.__continue_ = continue_
+        self.__remainingItemCount = remainingItemCount
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -541,11 +529,7 @@ class ListMeta(types.Object):
     # message.
     @typechecked
     def continue_(self) -> Optional[str]:
-        if "continue" in self._kwargs:
-            return self._kwargs["continue"]
-        if "continue" in self._context and check_return_type(self._context["continue"]):
-            return self._context["continue"]
-        return None
+        return self.__continue_
 
     # remainingItemCount is the number of subsequent items in the list which are not included in this
     # list response. If the list request contained label or field selectors, then the number of
@@ -558,18 +542,27 @@ class ListMeta(types.Object):
     # should not rely on the remainingItemCount to be set or to be exact.
     @typechecked
     def remainingItemCount(self) -> Optional[int]:
-        if "remainingItemCount" in self._kwargs:
-            return self._kwargs["remainingItemCount"]
-        if "remainingItemCount" in self._context and check_return_type(
-            self._context["remainingItemCount"]
-        ):
-            return self._context["remainingItemCount"]
-        return None
+        return self.__remainingItemCount
 
 
 # ObjectMeta is metadata that all persisted resources must have, which includes all objects
 # users must create.
 class ObjectMeta(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        namespace: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+    ):
+        super().__init__(**{})
+        self.__name = name
+        self.__namespace = namespace
+        self.__labels = labels if labels is not None else {}
+        self.__annotations = annotations if annotations is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -595,11 +588,7 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     # Namespace defines the space within each name must be unique. An empty namespace is
     # equivalent to the "default" namespace, but "default" is the canonical representation.
@@ -611,44 +600,38 @@ class ObjectMeta(types.Object):
     # More info: http://kubernetes.io/docs/user-guide/namespaces
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
     # Map of string keys and values that can be used to organize and categorize
     # (scope and select) objects. May match selectors of replication controllers
     # and services.
     # More info: http://kubernetes.io/docs/user-guide/labels
     @typechecked
-    def labels(self) -> Dict[str, str]:
-        if "labels" in self._kwargs:
-            return self._kwargs["labels"]
-        if "labels" in self._context and check_return_type(self._context["labels"]):
-            return self._context["labels"]
-        return {}
+    def labels(self) -> Optional[Dict[str, str]]:
+        return self.__labels
 
     # Annotations is an unstructured key value map stored with a resource that may be
     # set by external tools to store and retrieve arbitrary metadata. They are not
     # queryable and should be preserved when modifying objects.
     # More info: http://kubernetes.io/docs/user-guide/annotations
     @typechecked
-    def annotations(self) -> Dict[str, str]:
-        if "annotations" in self._kwargs:
-            return self._kwargs["annotations"]
-        if "annotations" in self._context and check_return_type(
-            self._context["annotations"]
-        ):
-            return self._context["annotations"]
-        return {}
+    def annotations(self) -> Optional[Dict[str, str]]:
+        return self.__annotations
 
 
 # StatusCause provides more information about an api.Status failure, including
 # cases when multiple errors are encountered.
 class StatusCause(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, reason: CauseType = None, message: str = None, field: str = None
+    ):
+        super().__init__(**{})
+        self.__reason = reason
+        self.__message = message
+        self.__field = field
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -667,21 +650,13 @@ class StatusCause(types.Object):
     # empty there is no information available.
     @typechecked
     def reason(self) -> Optional[CauseType]:
-        if "reason" in self._kwargs:
-            return self._kwargs["reason"]
-        if "reason" in self._context and check_return_type(self._context["reason"]):
-            return self._context["reason"]
-        return None
+        return self.__reason
 
     # A human-readable description of the cause of the error.  This field may be
     # presented as-is to a reader.
     @typechecked
     def message(self) -> Optional[str]:
-        if "message" in self._kwargs:
-            return self._kwargs["message"]
-        if "message" in self._context and check_return_type(self._context["message"]):
-            return self._context["message"]
-        return None
+        return self.__message
 
     # The field of the resource that has caused this error, as named by its JSON
     # serialization. May include dot and postfix notation for nested attributes.
@@ -694,11 +669,7 @@ class StatusCause(types.Object):
     #   "items[0].name" - the field "name" on the first array entry in "items"
     @typechecked
     def field(self) -> Optional[str]:
-        if "field" in self._kwargs:
-            return self._kwargs["field"]
-        if "field" in self._context and check_return_type(self._context["field"]):
-            return self._context["field"]
-        return None
+        return self.__field
 
 
 # StatusDetails is a set of additional properties that MAY be set by the
@@ -708,6 +679,25 @@ class StatusCause(types.Object):
 # and should assume that any attribute may be empty, invalid, or under
 # defined.
 class StatusDetails(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        group: str = None,
+        kind: str = None,
+        uid: str = None,
+        causes: List[StatusCause] = None,
+        retryAfterSeconds: int = None,
+    ):
+        super().__init__(**{})
+        self.__name = name
+        self.__group = group
+        self.__kind = kind
+        self.__uid = uid
+        self.__causes = causes if causes is not None else []
+        self.__retryAfterSeconds = retryAfterSeconds
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -735,69 +725,62 @@ class StatusDetails(types.Object):
     # (when there is a single name which can be described).
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     # The group attribute of the resource associated with the status StatusReason.
     @typechecked
     def group(self) -> Optional[str]:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return None
+        return self.__group
 
     # The kind attribute of the resource associated with the status StatusReason.
     # On some operations may differ from the requested resource Kind.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
     def kind(self) -> Optional[str]:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return None
+        return self.__kind
 
     # UID of the resource.
     # (when there is a single resource which can be described).
     # More info: http://kubernetes.io/docs/user-guide/identifiers#uids
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
     # The Causes array includes more details associated with the StatusReason
     # failure. Not all StatusReasons may provide detailed causes.
     @typechecked
-    def causes(self) -> List[StatusCause]:
-        if "causes" in self._kwargs:
-            return self._kwargs["causes"]
-        if "causes" in self._context and check_return_type(self._context["causes"]):
-            return self._context["causes"]
-        return []
+    def causes(self) -> Optional[List[StatusCause]]:
+        return self.__causes
 
     # If specified, the time in seconds before the operation should be retried. Some errors may indicate
     # the client must take an alternate action - for those errors this field may indicate how long to wait
     # before taking the alternate action.
     @typechecked
     def retryAfterSeconds(self) -> Optional[int]:
-        if "retryAfterSeconds" in self._kwargs:
-            return self._kwargs["retryAfterSeconds"]
-        if "retryAfterSeconds" in self._context and check_return_type(
-            self._context["retryAfterSeconds"]
-        ):
-            return self._context["retryAfterSeconds"]
-        return None
+        return self.__retryAfterSeconds
 
 
 # Status is a return value for calls that don't return other objects.
 class Status(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        metadata: ListMeta = None,
+        status: str = None,
+        message: str = None,
+        reason: StatusReason = None,
+        details: StatusDetails = None,
+        code: int = None,
+    ):
+        super().__init__(**{})
+        self.__metadata = metadata if metadata is not None else ListMeta()
+        self.__status = status
+        self.__message = message
+        self.__reason = reason
+        self.__details = details
+        self.__code = code
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -822,33 +805,20 @@ class Status(base.TypedObject):
     # Standard list metadata.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     @typechecked
-    def metadata(self) -> ListMeta:
-        if "metadata" in self._kwargs:
-            return self._kwargs["metadata"]
-        if "metadata" in self._context and check_return_type(self._context["metadata"]):
-            return self._context["metadata"]
-        with context.Scope(**self._context):
-            return ListMeta()
+    def metadata(self) -> Optional[ListMeta]:
+        return self.__metadata
 
     # Status of the operation.
     # One of: "Success" or "Failure".
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     @typechecked
     def status(self) -> Optional[str]:
-        if "status" in self._kwargs:
-            return self._kwargs["status"]
-        if "status" in self._context and check_return_type(self._context["status"]):
-            return self._context["status"]
-        return None
+        return self.__status
 
     # A human-readable description of the status of this operation.
     @typechecked
     def message(self) -> Optional[str]:
-        if "message" in self._kwargs:
-            return self._kwargs["message"]
-        if "message" in self._context and check_return_type(self._context["message"]):
-            return self._context["message"]
-        return None
+        return self.__message
 
     # A machine-readable description of why this operation is in the
     # "Failure" status. If this value is empty there
@@ -856,11 +826,7 @@ class Status(base.TypedObject):
     # code but does not override it.
     @typechecked
     def reason(self) -> Optional[StatusReason]:
-        if "reason" in self._kwargs:
-            return self._kwargs["reason"]
-        if "reason" in self._context and check_return_type(self._context["reason"]):
-            return self._context["reason"]
-        return None
+        return self.__reason
 
     # Extended data associated with the reason.  Each reason may define its
     # own extended details. This field is optional and the data returned
@@ -868,17 +834,9 @@ class Status(base.TypedObject):
     # the reason type.
     @typechecked
     def details(self) -> Optional[StatusDetails]:
-        if "details" in self._kwargs:
-            return self._kwargs["details"]
-        if "details" in self._context and check_return_type(self._context["details"]):
-            return self._context["details"]
-        return None
+        return self.__details
 
     # Suggested HTTP return code for this status, 0 if not set.
     @typechecked
     def code(self) -> Optional[int]:
-        if "code" in self._kwargs:
-            return self._kwargs["code"]
-        if "code" in self._context and check_return_type(self._context["code"]):
-            return self._context["code"]
-        return None
+        return self.__code

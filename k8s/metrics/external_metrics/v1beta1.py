@@ -17,6 +17,28 @@ from typeguard import check_return_type, typechecked
 # A single metric value is identified by metric name and a set of string labels.
 # For one metric there can be multiple values with different sets of labels.
 class ExternalMetricValue(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        metricName: str = "",
+        metricLabels: Dict[str, str] = None,
+        timestamp: "base.Time" = None,
+        window: int = None,
+        value: "resource.Quantity" = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "external.metrics.k8s.io/v1beta1",
+                "kind": "ExternalMetricValue",
+            }
+        )
+        self.__metricName = metricName
+        self.__metricLabels = metricLabels if metricLabels is not None else {}
+        self.__timestamp = timestamp
+        self.__window = window
+        self.__value = value if value is not None else resource.Quantity()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -29,46 +51,20 @@ class ExternalMetricValue(base.TypedObject):
         v["value"] = self.value()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "external.metrics.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "ExternalMetricValue"
-
     # the name of the metric
     @typechecked
     def metricName(self) -> str:
-        if "metricName" in self._kwargs:
-            return self._kwargs["metricName"]
-        if "metricName" in self._context and check_return_type(
-            self._context["metricName"]
-        ):
-            return self._context["metricName"]
-        return ""
+        return self.__metricName
 
     # a set of labels that identify a single time series for the metric
     @typechecked
     def metricLabels(self) -> Dict[str, str]:
-        if "metricLabels" in self._kwargs:
-            return self._kwargs["metricLabels"]
-        if "metricLabels" in self._context and check_return_type(
-            self._context["metricLabels"]
-        ):
-            return self._context["metricLabels"]
-        return {}
+        return self.__metricLabels
 
     # indicates the time at which the metrics were produced
     @typechecked
     def timestamp(self) -> "base.Time":
-        if "timestamp" in self._kwargs:
-            return self._kwargs["timestamp"]
-        if "timestamp" in self._context and check_return_type(
-            self._context["timestamp"]
-        ):
-            return self._context["timestamp"]
-        return None
+        return self.__timestamp
 
     # indicates the window ([Timestamp-Window, Timestamp]) from
     # which these metrics were calculated, when returning rate
@@ -76,18 +72,9 @@ class ExternalMetricValue(base.TypedObject):
     # non-calculated instantaneous metrics).
     @typechecked
     def window(self) -> Optional[int]:
-        if "window" in self._kwargs:
-            return self._kwargs["window"]
-        if "window" in self._context and check_return_type(self._context["window"]):
-            return self._context["window"]
-        return None
+        return self.__window
 
     # the value of the metric
     @typechecked
     def value(self) -> "resource.Quantity":
-        if "value" in self._kwargs:
-            return self._kwargs["value"]
-        if "value" in self._context and check_return_type(self._context["value"]):
-            return self._context["value"]
-        with context.Scope(**self._context):
-            return resource.Quantity()
+        return self.__value

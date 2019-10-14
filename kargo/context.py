@@ -4,7 +4,10 @@
 
 import contextvars
 import functools
+import inspect
 from typing import Any, Dict
+
+import typeguard
 
 
 _current_scope = contextvars.ContextVar("kargo.context")
@@ -17,9 +20,30 @@ def currentscope() -> Dict[str, Any]:
 def scoped(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        scope = _current_scope.get({}).copy()
-        scope.update(**kwargs)
-        func(*args, **scope)
+
+        scope = _current_scope.get(None)
+        if scope:
+            sig = inspect.signature(func, follow_wrapped=True)
+            for i, v in enumerate(sig.parameters.values()):
+                if (
+                    v.name in scope
+                    and v.name not in kwargs
+                    and (
+                        (
+                            v.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
+                            and len(args) <= i
+                        )
+                        or v.kind == inspect.Parameter.KEYWORD_ONLY
+                    )
+                ):
+                    if v.annotation != inspect.Parameter.empty:
+                        try:
+                            typeguard.check_type("", scope[v.name], v.annotation)
+                        except TypeError:
+                            continue
+                    kwargs[v.name] = scope[v.name]
+
+        return func(*args, **kwargs)
 
     return wrapper
 

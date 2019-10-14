@@ -63,6 +63,16 @@ class RawExtension(types.Object):
 # TODO: Make this object have easy access to field based accessors and settors for
 # metadata and field mutatation.
 class Unknown(base.TypedObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, raw: bytes = None, contentEncoding: str = "", contentType: str = ""
+    ):
+        super().__init__(**{})
+        self.__raw = raw if raw is not None else b""
+        self.__contentEncoding = contentEncoding
+        self.__contentType = contentType
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -76,32 +86,16 @@ class Unknown(base.TypedObject):
     # except for passing it through the system.
     @typechecked
     def raw(self) -> bytes:
-        if "Raw" in self._kwargs:
-            return self._kwargs["Raw"]
-        if "Raw" in self._context and check_return_type(self._context["Raw"]):
-            return self._context["Raw"]
-        return b""
+        return self.__raw
 
     # ContentEncoding is encoding used to encode 'Raw' data.
     # Unspecified means no encoding.
     @typechecked
     def contentEncoding(self) -> str:
-        if "ContentEncoding" in self._kwargs:
-            return self._kwargs["ContentEncoding"]
-        if "ContentEncoding" in self._context and check_return_type(
-            self._context["ContentEncoding"]
-        ):
-            return self._context["ContentEncoding"]
-        return ""
+        return self.__contentEncoding
 
     # ContentType  is serialization method used to serialize 'Raw'.
     # Unspecified means ContentTypeJSON.
     @typechecked
     def contentType(self) -> str:
-        if "ContentType" in self._kwargs:
-            return self._kwargs["ContentType"]
-        if "ContentType" in self._context and check_return_type(
-            self._context["ContentType"]
-        ):
-            return self._context["ContentType"]
-        return ""
+        return self.__contentType

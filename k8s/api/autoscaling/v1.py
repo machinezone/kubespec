@@ -14,6 +14,14 @@ from typeguard import check_return_type, typechecked
 
 # CrossVersionObjectReference contains enough information to let you identify the referred resource.
 class CrossVersionObjectReference(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
+        super().__init__(**{})
+        self.__kind = kind
+        self.__name = name
+        self.__apiVersion = apiVersion
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -27,35 +35,40 @@ class CrossVersionObjectReference(types.Object):
     # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
     @typechecked
     def kind(self) -> str:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return ""
+        return self.__kind
 
     # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
     # API version of the referent
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if "apiVersion" in self._kwargs:
-            return self._kwargs["apiVersion"]
-        if "apiVersion" in self._context and check_return_type(
-            self._context["apiVersion"]
-        ):
-            return self._context["apiVersion"]
-        return None
+        return self.__apiVersion
 
 
 # specification of a horizontal pod autoscaler.
 class HorizontalPodAutoscalerSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        scaleTargetRef: CrossVersionObjectReference = None,
+        minReplicas: int = None,
+        maxReplicas: int = 0,
+        targetCPUUtilizationPercentage: int = None,
+    ):
+        super().__init__(**{})
+        self.__scaleTargetRef = (
+            scaleTargetRef
+            if scaleTargetRef is not None
+            else CrossVersionObjectReference()
+        )
+        self.__minReplicas = minReplicas if minReplicas is not None else 1
+        self.__maxReplicas = maxReplicas
+        self.__targetCPUUtilizationPercentage = targetCPUUtilizationPercentage
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -73,14 +86,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # and will set the desired number of pods by using its Scale subresource.
     @typechecked
     def scaleTargetRef(self) -> CrossVersionObjectReference:
-        if "scaleTargetRef" in self._kwargs:
-            return self._kwargs["scaleTargetRef"]
-        if "scaleTargetRef" in self._context and check_return_type(
-            self._context["scaleTargetRef"]
-        ):
-            return self._context["scaleTargetRef"]
-        with context.Scope(**self._context):
-            return CrossVersionObjectReference()
+        return self.__scaleTargetRef
 
     # minReplicas is the lower limit for the number of replicas to which the autoscaler
     # can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
@@ -89,67 +95,64 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # available.
     @typechecked
     def minReplicas(self) -> Optional[int]:
-        if "minReplicas" in self._kwargs:
-            return self._kwargs["minReplicas"]
-        if "minReplicas" in self._context and check_return_type(
-            self._context["minReplicas"]
-        ):
-            return self._context["minReplicas"]
-        return 1
+        return self.__minReplicas
 
     # upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
     @typechecked
     def maxReplicas(self) -> int:
-        if "maxReplicas" in self._kwargs:
-            return self._kwargs["maxReplicas"]
-        if "maxReplicas" in self._context and check_return_type(
-            self._context["maxReplicas"]
-        ):
-            return self._context["maxReplicas"]
-        return 0
+        return self.__maxReplicas
 
     # target average CPU utilization (represented as a percentage of requested CPU) over all the pods;
     # if not specified the default autoscaling policy will be used.
     @typechecked
     def targetCPUUtilizationPercentage(self) -> Optional[int]:
-        if "targetCPUUtilizationPercentage" in self._kwargs:
-            return self._kwargs["targetCPUUtilizationPercentage"]
-        if "targetCPUUtilizationPercentage" in self._context and check_return_type(
-            self._context["targetCPUUtilizationPercentage"]
-        ):
-            return self._context["targetCPUUtilizationPercentage"]
-        return None
+        return self.__targetCPUUtilizationPercentage
 
 
 # configuration of a horizontal pod autoscaler.
 class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: HorizontalPodAutoscalerSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "autoscaling/v1",
+                "kind": "HorizontalPodAutoscaler",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else HorizontalPodAutoscalerSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "autoscaling/v1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "HorizontalPodAutoscaler"
-
     # behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> HorizontalPodAutoscalerSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return HorizontalPodAutoscalerSpec()
+    def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+        return self.__spec
 
 
 # ScaleSpec describes the attributes of a scale subresource.
 class ScaleSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, replicas: int = None):
+        super().__init__(**{})
+        self.__replicas = replicas
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -161,35 +164,40 @@ class ScaleSpec(types.Object):
     # desired number of instances for the scaled object.
     @typechecked
     def replicas(self) -> Optional[int]:
-        if "replicas" in self._kwargs:
-            return self._kwargs["replicas"]
-        if "replicas" in self._context and check_return_type(self._context["replicas"]):
-            return self._context["replicas"]
-        return None
+        return self.__replicas
 
 
 # Scale represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: ScaleSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "autoscaling/v1",
+                "kind": "Scale",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else ScaleSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "autoscaling/v1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "Scale"
-
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     @typechecked
-    def spec(self) -> ScaleSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return ScaleSpec()
+    def spec(self) -> Optional[ScaleSpec]:
+        return self.__spec

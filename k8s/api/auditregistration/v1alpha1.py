@@ -51,6 +51,13 @@ Stage = base.Enum(
 
 # Policy defines the configuration of how audit events are logged
 class Policy(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, level: Level = None, stages: List[Stage] = None):
+        super().__init__(**{})
+        self.__level = level
+        self.__stages = stages if stages is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -63,24 +70,27 @@ class Policy(types.Object):
     # required
     @typechecked
     def level(self) -> Level:
-        if "level" in self._kwargs:
-            return self._kwargs["level"]
-        if "level" in self._context and check_return_type(self._context["level"]):
-            return self._context["level"]
-        return None
+        return self.__level
 
     # Stages is a list of stages for which events are created.
     @typechecked
     def stages(self) -> List[Stage]:
-        if "stages" in self._kwargs:
-            return self._kwargs["stages"]
-        if "stages" in self._context and check_return_type(self._context["stages"]):
-            return self._context["stages"]
-        return []
+        return self.__stages
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, namespace: str = "", name: str = "", path: str = None, port: int = None
+    ):
+        super().__init__(**{})
+        self.__namespace = namespace
+        self.__name = name
+        self.__path = path
+        self.__port = port if port is not None else 443
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -98,48 +108,40 @@ class ServiceReference(types.Object):
     # Required
     @typechecked
     def namespace(self) -> str:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return ""
+        return self.__namespace
 
     # `name` is the name of the service.
     # Required
     @typechecked
     def name(self) -> str:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return ""
+        return self.__name
 
     # `path` is an optional URL path which will be sent in any request to
     # this service.
     @typechecked
     def path(self) -> Optional[str]:
-        if "path" in self._kwargs:
-            return self._kwargs["path"]
-        if "path" in self._context and check_return_type(self._context["path"]):
-            return self._context["path"]
-        return None
+        return self.__path
 
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
     @typechecked
     def port(self) -> Optional[int]:
-        if "port" in self._kwargs:
-            return self._kwargs["port"]
-        if "port" in self._context and check_return_type(self._context["port"]):
-            return self._context["port"]
-        return 443
+        return self.__port
 
 
 # WebhookClientConfig contains the information to make a connection with the webhook
 class WebhookClientConfig(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
+    ):
+        super().__init__(**{})
+        self.__url = url
+        self.__service = service
+        self.__caBundle = caBundle if caBundle is not None else b""
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -181,11 +183,7 @@ class WebhookClientConfig(types.Object):
     # allowed, either.
     @typechecked
     def url(self) -> Optional[str]:
-        if "url" in self._kwargs:
-            return self._kwargs["url"]
-        if "url" in self._context and check_return_type(self._context["url"]):
-            return self._context["url"]
-        return None
+        return self.__url
 
     # `service` is a reference to the service for this webhook. Either
     # `service` or `url` must be specified.
@@ -193,25 +191,24 @@ class WebhookClientConfig(types.Object):
     # If the webhook is running within the cluster, then you should use `service`.
     @typechecked
     def service(self) -> Optional[ServiceReference]:
-        if "service" in self._kwargs:
-            return self._kwargs["service"]
-        if "service" in self._context and check_return_type(self._context["service"]):
-            return self._context["service"]
-        return None
+        return self.__service
 
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
-    def caBundle(self) -> bytes:
-        if "caBundle" in self._kwargs:
-            return self._kwargs["caBundle"]
-        if "caBundle" in self._context and check_return_type(self._context["caBundle"]):
-            return self._context["caBundle"]
-        return b""
+    def caBundle(self) -> Optional[bytes]:
+        return self.__caBundle
 
 
 # WebhookThrottleConfig holds the configuration for throttling events
 class WebhookThrottleConfig(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, qps: int = None, burst: int = None):
+        super().__init__(**{})
+        self.__qps = qps if qps is not None else 10
+        self.__burst = burst if burst is not None else 15
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -227,25 +224,30 @@ class WebhookThrottleConfig(types.Object):
     # default 10 QPS
     @typechecked
     def qps(self) -> Optional[int]:
-        if "qps" in self._kwargs:
-            return self._kwargs["qps"]
-        if "qps" in self._context and check_return_type(self._context["qps"]):
-            return self._context["qps"]
-        return 10
+        return self.__qps
 
     # ThrottleBurst is the maximum number of events sent at the same moment
     # default 15 QPS
     @typechecked
     def burst(self) -> Optional[int]:
-        if "burst" in self._kwargs:
-            return self._kwargs["burst"]
-        if "burst" in self._context and check_return_type(self._context["burst"]):
-            return self._context["burst"]
-        return 15
+        return self.__burst
 
 
 # Webhook holds the configuration of the webhook
 class Webhook(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        throttle: WebhookThrottleConfig = None,
+        clientConfig: WebhookClientConfig = None,
+    ):
+        super().__init__(**{})
+        self.__throttle = throttle if throttle is not None else WebhookThrottleConfig()
+        self.__clientConfig = (
+            clientConfig if clientConfig is not None else WebhookClientConfig()
+        )
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -258,29 +260,24 @@ class Webhook(types.Object):
     # Throttle holds the options for throttling the webhook
     @typechecked
     def throttle(self) -> Optional[WebhookThrottleConfig]:
-        if "throttle" in self._kwargs:
-            return self._kwargs["throttle"]
-        if "throttle" in self._context and check_return_type(self._context["throttle"]):
-            return self._context["throttle"]
-        with context.Scope(**self._context):
-            return WebhookThrottleConfig()
+        return self.__throttle
 
     # ClientConfig holds the connection parameters for the webhook
     # required
     @typechecked
     def clientConfig(self) -> WebhookClientConfig:
-        if "clientConfig" in self._kwargs:
-            return self._kwargs["clientConfig"]
-        if "clientConfig" in self._context and check_return_type(
-            self._context["clientConfig"]
-        ):
-            return self._context["clientConfig"]
-        with context.Scope(**self._context):
-            return WebhookClientConfig()
+        return self.__clientConfig
 
 
 # AuditSinkSpec holds the spec for the audit sink
 class AuditSinkSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, policy: Policy = None, webhook: Webhook = None):
+        super().__init__(**{})
+        self.__policy = policy if policy is not None else Policy()
+        self.__webhook = webhook if webhook is not None else Webhook()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -292,47 +289,44 @@ class AuditSinkSpec(types.Object):
     # required
     @typechecked
     def policy(self) -> Policy:
-        if "policy" in self._kwargs:
-            return self._kwargs["policy"]
-        if "policy" in self._context and check_return_type(self._context["policy"]):
-            return self._context["policy"]
-        with context.Scope(**self._context):
-            return Policy()
+        return self.__policy
 
     # Webhook to send events
     # required
     @typechecked
     def webhook(self) -> Webhook:
-        if "webhook" in self._kwargs:
-            return self._kwargs["webhook"]
-        if "webhook" in self._context and check_return_type(self._context["webhook"]):
-            return self._context["webhook"]
-        with context.Scope(**self._context):
-            return Webhook()
+        return self.__webhook
 
 
 # AuditSink represents a cluster level audit sink
 class AuditSink(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: AuditSinkSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "auditregistration.k8s.io/v1alpha1",
+                "kind": "AuditSink",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else AuditSinkSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "auditregistration.k8s.io/v1alpha1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "AuditSink"
-
     # Spec defines the audit configuration spec
     @typechecked
-    def spec(self) -> AuditSinkSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return AuditSinkSpec()
+    def spec(self) -> Optional[AuditSinkSpec]:
+        return self.__spec

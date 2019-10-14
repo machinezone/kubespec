@@ -17,6 +17,32 @@ from typeguard import check_return_type, typechecked
 # PriorityClass defines mapping from a priority class name to the priority
 # integer value. The value can be any valid integer.
 class PriorityClass(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        value: int = 0,
+        globalDefault: bool = None,
+        description: str = None,
+        preemptionPolicy: corev1.PreemptionPolicy = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "scheduling.k8s.io/v1beta1",
+                "kind": "PriorityClass",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__value = value
+        self.__globalDefault = globalDefault
+        self.__description = description
+        self.__preemptionPolicy = preemptionPolicy
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -32,23 +58,11 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
             v["preemptionPolicy"] = preemptionPolicy
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "scheduling.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "PriorityClass"
-
     # The value of this priority class. This is the actual priority that pods
     # receive when they have the name of this class in their pod spec.
     @typechecked
     def value(self) -> int:
-        if "value" in self._kwargs:
-            return self._kwargs["value"]
-        if "value" in self._context and check_return_type(self._context["value"]):
-            return self._context["value"]
-        return 0
+        return self.__value
 
     # globalDefault specifies whether this PriorityClass should be considered as
     # the default priority for pods that do not have any priority class.
@@ -57,25 +71,13 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # the smallest value of such global default PriorityClasses will be used as the default priority.
     @typechecked
     def globalDefault(self) -> Optional[bool]:
-        if "globalDefault" in self._kwargs:
-            return self._kwargs["globalDefault"]
-        if "globalDefault" in self._context and check_return_type(
-            self._context["globalDefault"]
-        ):
-            return self._context["globalDefault"]
-        return None
+        return self.__globalDefault
 
     # description is an arbitrary string that usually provides guidelines on
     # when this priority class should be used.
     @typechecked
     def description(self) -> Optional[str]:
-        if "description" in self._kwargs:
-            return self._kwargs["description"]
-        if "description" in self._context and check_return_type(
-            self._context["description"]
-        ):
-            return self._context["description"]
-        return None
+        return self.__description
 
     # PreemptionPolicy is the Policy for preempting pods with lower priority.
     # One of Never, PreemptLowerPriority.
@@ -83,10 +85,4 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     @typechecked
     def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
-        if "preemptionPolicy" in self._kwargs:
-            return self._kwargs["preemptionPolicy"]
-        if "preemptionPolicy" in self._context and check_return_type(
-            self._context["preemptionPolicy"]
-        ):
-            return self._context["preemptionPolicy"]
-        return None
+        return self.__preemptionPolicy

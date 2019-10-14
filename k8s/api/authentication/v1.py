@@ -14,6 +14,21 @@ from typeguard import check_return_type, typechecked
 
 # BoundObjectReference is a reference to an object that a token is bound to.
 class BoundObjectReference(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        kind: str = None,
+        apiVersion: str = None,
+        name: str = None,
+        uid: str = None,
+    ):
+        super().__init__(**{})
+        self.__kind = kind
+        self.__apiVersion = apiVersion
+        self.__name = name
+        self.__uid = uid
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -34,44 +49,41 @@ class BoundObjectReference(types.Object):
     # Kind of the referent. Valid kinds are 'Pod' and 'Secret'.
     @typechecked
     def kind(self) -> Optional[str]:
-        if "kind" in self._kwargs:
-            return self._kwargs["kind"]
-        if "kind" in self._context and check_return_type(self._context["kind"]):
-            return self._context["kind"]
-        return None
+        return self.__kind
 
     # API version of the referent.
     @typechecked
     def apiVersion(self) -> Optional[str]:
-        if "apiVersion" in self._kwargs:
-            return self._kwargs["apiVersion"]
-        if "apiVersion" in self._context and check_return_type(
-            self._context["apiVersion"]
-        ):
-            return self._context["apiVersion"]
-        return None
+        return self.__apiVersion
 
     # Name of the referent.
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     # UID of the referent.
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
 
 # TokenRequestSpec contains client provided parameters of a token request.
 class TokenRequestSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        audiences: List[str] = None,
+        expirationSeconds: int = None,
+        boundObjectRef: BoundObjectReference = None,
+    ):
+        super().__init__(**{})
+        self.__audiences = audiences if audiences is not None else []
+        self.__expirationSeconds = (
+            expirationSeconds if expirationSeconds is not None else 3600
+        )
+        self.__boundObjectRef = boundObjectRef
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -88,26 +100,14 @@ class TokenRequestSpec(types.Object):
     # trust between the target audiences.
     @typechecked
     def audiences(self) -> List[str]:
-        if "audiences" in self._kwargs:
-            return self._kwargs["audiences"]
-        if "audiences" in self._context and check_return_type(
-            self._context["audiences"]
-        ):
-            return self._context["audiences"]
-        return []
+        return self.__audiences
 
     # ExpirationSeconds is the requested duration of validity of the request. The
     # token issuer may return a token with a different validity duration so a
     # client needs to check the 'expiration' field in a response.
     @typechecked
     def expirationSeconds(self) -> Optional[int]:
-        if "expirationSeconds" in self._kwargs:
-            return self._kwargs["expirationSeconds"]
-        if "expirationSeconds" in self._context and check_return_type(
-            self._context["expirationSeconds"]
-        ):
-            return self._context["expirationSeconds"]
-        return 3600
+        return self.__expirationSeconds
 
     # BoundObjectRef is a reference to an object that the token will be bound to.
     # The token will only be valid for as long as the bound object exists.
@@ -116,17 +116,33 @@ class TokenRequestSpec(types.Object):
     # small if you want prompt revocation.
     @typechecked
     def boundObjectRef(self) -> Optional[BoundObjectReference]:
-        if "boundObjectRef" in self._kwargs:
-            return self._kwargs["boundObjectRef"]
-        if "boundObjectRef" in self._context and check_return_type(
-            self._context["boundObjectRef"]
-        ):
-            return self._context["boundObjectRef"]
-        return None
+        return self.__boundObjectRef
 
 
 # TokenRequest requests a token for a given service account.
 class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: TokenRequestSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authentication.k8s.io/v1",
+                "kind": "TokenRequest",
+                **({"namespace": namespace} if namespace is not None else {}),
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else TokenRequestSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -134,25 +150,19 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
         return v
 
     @typechecked
-    def apiVersion(self) -> str:
-        return "authentication.k8s.io/v1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "TokenRequest"
-
-    @typechecked
     def spec(self) -> TokenRequestSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return TokenRequestSpec()
+        return self.__spec
 
 
 # TokenReviewSpec is a description of the token authentication request.
 class TokenReviewSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, token: str = None, audiences: List[str] = None):
+        super().__init__(**{})
+        self.__token = token
+        self.__audiences = audiences if audiences is not None else []
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -167,11 +177,7 @@ class TokenReviewSpec(types.Object):
     # Token is the opaque bearer token.
     @typechecked
     def token(self) -> Optional[str]:
-        if "token" in self._kwargs:
-            return self._kwargs["token"]
-        if "token" in self._context and check_return_type(self._context["token"]):
-            return self._context["token"]
-        return None
+        return self.__token
 
     # Audiences is a list of the identifiers that the resource server presented
     # with the token identifies as. Audience-aware token authenticators will
@@ -179,48 +185,64 @@ class TokenReviewSpec(types.Object):
     # this list. If no audiences are provided, the audience will default to the
     # audience of the Kubernetes apiserver.
     @typechecked
-    def audiences(self) -> List[str]:
-        if "audiences" in self._kwargs:
-            return self._kwargs["audiences"]
-        if "audiences" in self._context and check_return_type(
-            self._context["audiences"]
-        ):
-            return self._context["audiences"]
-        return []
+    def audiences(self) -> Optional[List[str]]:
+        return self.__audiences
 
 
 # TokenReview attempts to authenticate a token to a known user.
 # Note: TokenReview requests may be cached by the webhook token authenticator
 # plugin in the kube-apiserver.
 class TokenReview(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: TokenReviewSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "authentication.k8s.io/v1",
+                "kind": "TokenReview",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else TokenReviewSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "authentication.k8s.io/v1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "TokenReview"
-
     # Spec holds information about the request being evaluated
     @typechecked
     def spec(self) -> TokenReviewSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return TokenReviewSpec()
+        return self.__spec
 
 
 # UserInfo holds the information about the user needed to implement the
 # user.Info interface.
 class UserInfo(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        username: str = None,
+        uid: str = None,
+        groups: List[str] = None,
+        extra: Dict[str, List[str]] = None,
+    ):
+        super().__init__(**{})
+        self.__username = username
+        self.__uid = uid
+        self.__groups = groups if groups is not None else []
+        self.__extra = extra if extra is not None else {}
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -241,37 +263,21 @@ class UserInfo(types.Object):
     # The name that uniquely identifies this user among all active users.
     @typechecked
     def username(self) -> Optional[str]:
-        if "username" in self._kwargs:
-            return self._kwargs["username"]
-        if "username" in self._context and check_return_type(self._context["username"]):
-            return self._context["username"]
-        return None
+        return self.__username
 
     # A unique value that identifies this user across time. If this user is
     # deleted and another user by the same name is added, they will have
     # different UIDs.
     @typechecked
     def uid(self) -> Optional[str]:
-        if "uid" in self._kwargs:
-            return self._kwargs["uid"]
-        if "uid" in self._context and check_return_type(self._context["uid"]):
-            return self._context["uid"]
-        return None
+        return self.__uid
 
     # The names of groups this user is a part of.
     @typechecked
-    def groups(self) -> List[str]:
-        if "groups" in self._kwargs:
-            return self._kwargs["groups"]
-        if "groups" in self._context and check_return_type(self._context["groups"]):
-            return self._context["groups"]
-        return []
+    def groups(self) -> Optional[List[str]]:
+        return self.__groups
 
     # Any additional information provided by the authenticator.
     @typechecked
-    def extra(self) -> Dict[str, List[str]]:
-        if "extra" in self._kwargs:
-            return self._kwargs["extra"]
-        if "extra" in self._context and check_return_type(self._context["extra"]):
-            return self._context["extra"]
-        return {}
+    def extra(self) -> Optional[Dict[str, List[str]]]:
+        return self.__extra

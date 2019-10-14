@@ -5,7 +5,6 @@
 import base64
 from typing import Any, Dict, Union
 
-from kargo import context
 from typeguard import typechecked
 
 
@@ -15,13 +14,6 @@ class Renderable:
 
 
 class Object(Renderable):
-    def __init__(self, **kwargs):
-        self._context = context.currentscope()
-        self._kwargs = kwargs
-
-    def _get(self, key: str, default: Any = None) -> Any:
-        return self._kwargs.get(key, self._context.get(key, default))
-
     def render(self) -> Dict[str, Any]:
         return {}
 

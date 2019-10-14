@@ -14,6 +14,14 @@ from typeguard import check_return_type, typechecked
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(self, namespace: str = None, name: str = None, port: int = None):
+        super().__init__(**{})
+        self.__namespace = namespace
+        self.__name = name
+        self.__port = port if port is not None else 443
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -31,38 +39,45 @@ class ServiceReference(types.Object):
     # Namespace is the namespace of the service
     @typechecked
     def namespace(self) -> Optional[str]:
-        if "namespace" in self._kwargs:
-            return self._kwargs["namespace"]
-        if "namespace" in self._context and check_return_type(
-            self._context["namespace"]
-        ):
-            return self._context["namespace"]
-        return None
+        return self.__namespace
 
     # Name is the name of the service
     @typechecked
     def name(self) -> Optional[str]:
-        if "name" in self._kwargs:
-            return self._kwargs["name"]
-        if "name" in self._context and check_return_type(self._context["name"]):
-            return self._context["name"]
-        return None
+        return self.__name
 
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
     @typechecked
     def port(self) -> Optional[int]:
-        if "port" in self._kwargs:
-            return self._kwargs["port"]
-        if "port" in self._context and check_return_type(self._context["port"]):
-            return self._context["port"]
-        return 443
+        return self.__port
 
 
 # APIServiceSpec contains information for locating and communicating with a server.
 # Only https is supported, though you are able to disable certificate verification.
 class APIServiceSpec(types.Object):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        service: ServiceReference = None,
+        group: str = None,
+        version: str = None,
+        insecureSkipTLSVerify: bool = None,
+        caBundle: bytes = None,
+        groupPriorityMinimum: int = 0,
+        versionPriority: int = 0,
+    ):
+        super().__init__(**{})
+        self.__service = service
+        self.__group = group
+        self.__version = version
+        self.__insecureSkipTLSVerify = insecureSkipTLSVerify
+        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__groupPriorityMinimum = groupPriorityMinimum
+        self.__versionPriority = versionPriority
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
@@ -89,51 +104,29 @@ class APIServiceSpec(types.Object):
     # The call will simply delegate to the normal handler chain to be fulfilled.
     @typechecked
     def service(self) -> Optional[ServiceReference]:
-        if "service" in self._kwargs:
-            return self._kwargs["service"]
-        if "service" in self._context and check_return_type(self._context["service"]):
-            return self._context["service"]
-        return None
+        return self.__service
 
     # Group is the API group name this server hosts
     @typechecked
     def group(self) -> Optional[str]:
-        if "group" in self._kwargs:
-            return self._kwargs["group"]
-        if "group" in self._context and check_return_type(self._context["group"]):
-            return self._context["group"]
-        return None
+        return self.__group
 
     # Version is the API version this server hosts.  For example, "v1"
     @typechecked
     def version(self) -> Optional[str]:
-        if "version" in self._kwargs:
-            return self._kwargs["version"]
-        if "version" in self._context and check_return_type(self._context["version"]):
-            return self._context["version"]
-        return None
+        return self.__version
 
     # InsecureSkipTLSVerify disables TLS certificate verification when communicating with this server.
     # This is strongly discouraged.  You should use the CABundle instead.
     @typechecked
     def insecureSkipTLSVerify(self) -> Optional[bool]:
-        if "insecureSkipTLSVerify" in self._kwargs:
-            return self._kwargs["insecureSkipTLSVerify"]
-        if "insecureSkipTLSVerify" in self._context and check_return_type(
-            self._context["insecureSkipTLSVerify"]
-        ):
-            return self._context["insecureSkipTLSVerify"]
-        return None
+        return self.__insecureSkipTLSVerify
 
     # CABundle is a PEM encoded CA bundle which will be used to validate an API server's serving certificate.
     # If unspecified, system trust roots on the apiserver are used.
     @typechecked
-    def caBundle(self) -> bytes:
-        if "caBundle" in self._kwargs:
-            return self._kwargs["caBundle"]
-        if "caBundle" in self._context and check_return_type(self._context["caBundle"]):
-            return self._context["caBundle"]
-        return b""
+    def caBundle(self) -> Optional[bytes]:
+        return self.__caBundle
 
     # GroupPriorityMininum is the priority this group should have at least. Higher priority means that the group is preferred by clients over lower priority ones.
     # Note that other versions of this group might specify even higher GroupPriorityMininum values such that the whole group gets a higher priority.
@@ -143,13 +136,7 @@ class APIServiceSpec(types.Object):
     # PaaSes (OpenShift, Deis) are recommended to be in the 2000s
     @typechecked
     def groupPriorityMinimum(self) -> int:
-        if "groupPriorityMinimum" in self._kwargs:
-            return self._kwargs["groupPriorityMinimum"]
-        if "groupPriorityMinimum" in self._context and check_return_type(
-            self._context["groupPriorityMinimum"]
-        ):
-            return self._context["groupPriorityMinimum"]
-        return 0
+        return self.__groupPriorityMinimum
 
     # VersionPriority controls the ordering of this API version inside of its group.  Must be greater than zero.
     # The primary sort is based on VersionPriority, ordered highest to lowest (20 before 10).
@@ -163,38 +150,39 @@ class APIServiceSpec(types.Object):
     # v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
     @typechecked
     def versionPriority(self) -> int:
-        if "versionPriority" in self._kwargs:
-            return self._kwargs["versionPriority"]
-        if "versionPriority" in self._context and check_return_type(
-            self._context["versionPriority"]
-        ):
-            return self._context["versionPriority"]
-        return 0
+        return self.__versionPriority
 
 
 # APIService represents a server for a particular GroupVersion.
 # Name must be "version.group".
 class APIService(base.TypedObject, base.MetadataObject):
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: APIServiceSpec = None,
+    ):
+        super().__init__(
+            **{
+                "apiVersion": "apiregistration.k8s.io/v1beta1",
+                "kind": "APIService",
+                **({"name": name} if name is not None else {}),
+                **({"labels": labels} if labels is not None else {}),
+                **({"annotations": annotations} if annotations is not None else {}),
+            }
+        )
+        self.__spec = spec if spec is not None else APIServiceSpec()
+
     @typechecked
     def render(self) -> Dict[str, Any]:
         v = super().render()
         v["spec"] = self.spec()
         return v
 
-    @typechecked
-    def apiVersion(self) -> str:
-        return "apiregistration.k8s.io/v1beta1"
-
-    @typechecked
-    def kind(self) -> str:
-        return "APIService"
-
     # Spec contains information for locating and communicating with a server
     @typechecked
-    def spec(self) -> APIServiceSpec:
-        if "spec" in self._kwargs:
-            return self._kwargs["spec"]
-        if "spec" in self._context and check_return_type(self._context["spec"]):
-            return self._context["spec"]
-        with context.Scope(**self._context):
-            return APIServiceSpec()
+    def spec(self) -> Optional[APIServiceSpec]:
+        return self.__spec
