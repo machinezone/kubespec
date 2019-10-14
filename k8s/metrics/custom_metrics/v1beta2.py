@@ -25,8 +25,8 @@ class MetricIdentifier(types.Object):
         self.__selector = selector
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["selector"] = self.selector()
         return v
@@ -60,8 +60,8 @@ class MetricListOptions(base.TypedObject):
         self.__metricLabelSelector = metricLabelSelector
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         labelSelector = self.labelSelector()
         if labelSelector:  # omit empty
             v["labelSelector"] = labelSelector
@@ -106,8 +106,8 @@ class MetricValue(base.TypedObject):
         self.__value = value if value is not None else resource.Quantity()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["describedObject"] = self.describedObject()
         v["metric"] = self.metric()
         v["timestamp"] = self.timestamp()

@@ -73,8 +73,8 @@ class CSIDriverSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         attachRequired = self.attachRequired()
         if attachRequired is not None:  # omit empty
             v["attachRequired"] = attachRequired
@@ -175,8 +175,8 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else CSIDriverSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -195,8 +195,8 @@ class VolumeNodeResources(types.Object):
         self.__count = count
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         count = self.count()
         if count is not None:  # omit empty
             v["count"] = count
@@ -229,8 +229,8 @@ class CSINodeDriver(types.Object):
         self.__allocatable = allocatable
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["nodeID"] = self.nodeID()
         v["topologyKeys"] = self.topologyKeys()
@@ -288,8 +288,8 @@ class CSINodeSpec(types.Object):
         self.__drivers = drivers if drivers is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["drivers"] = self.drivers().values()  # named list
         return v
 
@@ -331,8 +331,8 @@ class CSINode(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else CSINodeSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -391,8 +391,8 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["provisioner"] = self.provisioner()
         parameters = self.parameters()
         if parameters:  # omit empty
@@ -476,8 +476,8 @@ class VolumeAttachmentSource(types.Object):
         self.__inlineVolumeSpec = inlineVolumeSpec
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         persistentVolumeName = self.persistentVolumeName()
         if persistentVolumeName is not None:  # omit empty
             v["persistentVolumeName"] = persistentVolumeName
@@ -518,8 +518,8 @@ class VolumeAttachmentSpec(types.Object):
         self.__nodeName = nodeName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["attacher"] = self.attacher()
         v["source"] = self.source()
         v["nodeName"] = self.nodeName()
@@ -568,8 +568,8 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else VolumeAttachmentSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

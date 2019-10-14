@@ -30,8 +30,8 @@ class BoundObjectReference(types.Object):
         self.__uid = uid
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         kind = self.kind()
         if kind:  # omit empty
             v["kind"] = kind
@@ -85,8 +85,8 @@ class TokenRequestSpec(types.Object):
         self.__boundObjectRef = boundObjectRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["audiences"] = self.audiences()
         v["expirationSeconds"] = self.expirationSeconds()
         v["boundObjectRef"] = self.boundObjectRef()
@@ -144,8 +144,8 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else TokenRequestSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -164,8 +164,8 @@ class TokenReviewSpec(types.Object):
         self.__audiences = audiences if audiences is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         token = self.token()
         if token:  # omit empty
             v["token"] = token
@@ -214,8 +214,8 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else TokenReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -244,8 +244,8 @@ class UserInfo(types.Object):
         self.__extra = extra if extra is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         username = self.username()
         if username:  # omit empty
             v["username"] = username

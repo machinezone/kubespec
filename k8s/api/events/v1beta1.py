@@ -24,8 +24,8 @@ class EventSeries(types.Object):
         self.__lastObservedTime = lastObservedTime
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["count"] = self.count()
         v["lastObservedTime"] = self.lastObservedTime()
         return v
@@ -86,8 +86,8 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         self.__type = type
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["eventTime"] = self.eventTime()
         series = self.series()
         if series is not None:  # omit empty

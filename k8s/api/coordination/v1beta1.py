@@ -32,8 +32,8 @@ class LeaseSpec(types.Object):
         self.__leaseTransitions = leaseTransitions
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         holderIdentity = self.holderIdentity()
         if holderIdentity is not None:  # omit empty
             v["holderIdentity"] = holderIdentity
@@ -106,8 +106,8 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else LeaseSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

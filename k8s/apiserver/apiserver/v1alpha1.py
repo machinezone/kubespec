@@ -26,8 +26,8 @@ class AdmissionPluginConfiguration(types.Object):
         self.__configuration = configuration
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["path"] = self.path()
         v["configuration"] = self.configuration()
@@ -66,8 +66,8 @@ class AdmissionConfiguration(base.TypedObject):
         self.__plugins = plugins if plugins is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["plugins"] = self.plugins().values()  # named list
         return v
 
@@ -94,8 +94,8 @@ class HTTPConnectConfig(types.Object):
         self.__clientCert = clientCert
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["url"] = self.url()
         caBundle = self.caBundle()
         if caBundle:  # omit empty
@@ -149,8 +149,8 @@ class Connection(types.Object):
         self.__httpConnect = httpConnect
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["type"] = self.type()
         httpConnect = self.httpConnect()
         if httpConnect is not None:  # omit empty
@@ -181,8 +181,8 @@ class EgressSelection(types.Object):
         self.__connection = connection if connection is not None else Connection()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["connection"] = self.connection()
         return v
@@ -215,8 +215,8 @@ class EgressSelectorConfiguration(base.TypedObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["egressSelections"] = self.egressSelections().values()  # named list
         return v
 

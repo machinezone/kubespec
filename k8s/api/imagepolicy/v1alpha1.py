@@ -21,8 +21,8 @@ class ImageReviewContainerSpec(types.Object):
         self.__image = image
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         image = self.image()
         if image:  # omit empty
             v["image"] = image
@@ -50,8 +50,8 @@ class ImageReviewSpec(types.Object):
         self.__namespace = namespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         containers = self.containers()
         if containers:  # omit empty
             v["containers"] = containers
@@ -104,8 +104,8 @@ class ImageReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else ImageReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

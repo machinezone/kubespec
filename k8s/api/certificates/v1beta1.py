@@ -69,8 +69,8 @@ class CertificateSigningRequestSpec(types.Object):
         self.__extra = extra if extra is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["request"] = self.request()
         usages = self.usages()
         if usages:  # omit empty
@@ -150,8 +150,8 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else CertificateSigningRequestSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

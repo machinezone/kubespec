@@ -78,8 +78,8 @@ class AdmissionRequest(types.Object):
         self.__options = options if options is not None else runtime.RawExtension()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["uid"] = self.uid()
         v["kind"] = self.kind()
         v["resource"] = self.resource()
@@ -241,8 +241,8 @@ class AdmissionResponse(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["uid"] = self.uid()
         v["allowed"] = self.allowed()
         status = self.status()
@@ -309,8 +309,8 @@ class AdmissionReview(base.TypedObject):
         self.__response = response
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         request = self.request()
         if request is not None:  # omit empty
             v["request"] = request

@@ -29,8 +29,8 @@ class ContainerMetrics(types.Object):
         self.__usage = usage if usage is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["usage"] = self.usage()
         return v
@@ -73,8 +73,8 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         self.__usage = usage if usage is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["timestamp"] = self.timestamp()
         v["window"] = self.window()
         v["usage"] = self.usage()
@@ -125,8 +125,8 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         self.__containers = containers if containers is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["timestamp"] = self.timestamp()
         v["window"] = self.window()
         v["containers"] = self.containers().values()  # named list

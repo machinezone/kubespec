@@ -177,8 +177,8 @@ class AllowedCSIDriver(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         return v
 
@@ -198,8 +198,8 @@ class AllowedFlexVolume(types.Object):
         self.__driver = driver
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         return v
 
@@ -221,8 +221,8 @@ class AllowedHostPath(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         pathPrefix = self.pathPrefix()
         if pathPrefix:  # omit empty
             v["pathPrefix"] = pathPrefix
@@ -257,8 +257,8 @@ class RollingUpdateDaemonSet(types.Object):
         self.__maxUnavailable = maxUnavailable
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
@@ -296,8 +296,8 @@ class DaemonSetUpdateStrategy(types.Object):
         self.__rollingUpdate = rollingUpdate
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -346,8 +346,8 @@ class DaemonSetSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         selector = self.selector()
         if selector is not None:  # omit empty
             v["selector"] = selector
@@ -426,8 +426,8 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else DaemonSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -450,8 +450,8 @@ class RollingUpdateDeployment(types.Object):
         self.__maxSurge = maxSurge if maxSurge is not None else 1
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
@@ -506,8 +506,8 @@ class DeploymentStrategy(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -563,8 +563,8 @@ class DeploymentSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -668,8 +668,8 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else DeploymentSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -688,8 +688,8 @@ class RollbackConfig(types.Object):
         self.__revision = revision
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         revision = self.revision()
         if revision:  # omit empty
             v["revision"] = revision
@@ -722,8 +722,8 @@ class DeploymentRollback(base.TypedObject):
         self.__rollbackTo = rollbackTo if rollbackTo is not None else RollbackConfig()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         updatedAnnotations = self.updatedAnnotations()
         if updatedAnnotations:  # omit empty
@@ -758,8 +758,8 @@ class IDRange(types.Object):
         self.__max = max
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["min"] = self.min()
         v["max"] = self.max()
         return v
@@ -786,8 +786,8 @@ class FSGroupStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         rule = self.rule()
         if rule:  # omit empty
             v["rule"] = rule
@@ -818,8 +818,8 @@ class IngressBackend(types.Object):
         self.__servicePort = servicePort if servicePort is not None else 0
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["serviceName"] = self.serviceName()
         v["servicePort"] = self.servicePort()
         return v
@@ -846,8 +846,8 @@ class HTTPIngressPath(types.Object):
         self.__backend = backend if backend is not None else IngressBackend()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -885,8 +885,8 @@ class HTTPIngressRuleValue(types.Object):
         self.__paths = paths if paths is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["paths"] = self.paths()
         return v
 
@@ -908,8 +908,8 @@ class HostPortRange(types.Object):
         self.__max = max
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["min"] = self.min()
         v["max"] = self.max()
         return v
@@ -938,8 +938,8 @@ class IPBlock(types.Object):
         self.__except_ = except_ if except_ is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["cidr"] = self.cidr()
         except_ = self.except_()
         if except_:  # omit empty
@@ -972,8 +972,8 @@ class IngressRuleValue(types.Object):
         self.__http = http
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         http = self.http()
         if http is not None:  # omit empty
             v["http"] = http
@@ -998,12 +998,12 @@ class IngressRule(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         host = self.host()
         if host:  # omit empty
             v["host"] = host
-        v.update(self.ingressRuleValue().render())  # inline
+        v.update(self.ingressRuleValue()._root())  # inline
         return v
 
     # Host is the fully qualified domain name of a network host, as defined
@@ -1042,8 +1042,8 @@ class IngressTLS(types.Object):
         self.__secretName = secretName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         hosts = self.hosts()
         if hosts:  # omit empty
             v["hosts"] = hosts
@@ -1086,8 +1086,8 @@ class IngressSpec(types.Object):
         self.__rules = rules if rules is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         backend = self.backend()
         if backend is not None:  # omit empty
             v["backend"] = backend
@@ -1152,8 +1152,8 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else IngressSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -1180,8 +1180,8 @@ class NetworkPolicyPeer(types.Object):
         self.__ipBlock = ipBlock
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         podSelector = self.podSelector()
         if podSelector is not None:  # omit empty
             v["podSelector"] = podSelector
@@ -1230,8 +1230,8 @@ class NetworkPolicyPort(types.Object):
         self.__port = port
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         protocol = self.protocol()
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
@@ -1271,8 +1271,8 @@ class NetworkPolicyEgressRule(types.Object):
         self.__to = to if to is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports
@@ -1315,8 +1315,8 @@ class NetworkPolicyIngressRule(types.Object):
         self.__from_ = from_ if from_ is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports
@@ -1364,8 +1364,8 @@ class NetworkPolicySpec(types.Object):
         self.__policyTypes = policyTypes if policyTypes is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["podSelector"] = self.podSelector()
         ingress = self.ingress()
         if ingress:  # omit empty
@@ -1450,8 +1450,8 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else NetworkPolicySpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -1472,8 +1472,8 @@ class RunAsGroupStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         ranges = self.ranges()
         if ranges:  # omit empty
@@ -1503,8 +1503,8 @@ class RunAsUserStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         ranges = self.ranges()
         if ranges:  # omit empty
@@ -1540,8 +1540,8 @@ class RuntimeClassStrategyOptions(types.Object):
         self.__defaultRuntimeClassName = defaultRuntimeClassName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["allowedRuntimeClassNames"] = self.allowedRuntimeClassNames()
         defaultRuntimeClassName = self.defaultRuntimeClassName()
         if defaultRuntimeClassName is not None:  # omit empty
@@ -1578,8 +1578,8 @@ class SELinuxStrategyOptions(types.Object):
         self.__seLinuxOptions = seLinuxOptions
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
@@ -1611,8 +1611,8 @@ class SupplementalGroupsStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         rule = self.rule()
         if rule:  # omit empty
             v["rule"] = rule
@@ -1718,8 +1718,8 @@ class PodSecurityPolicySpec(types.Object):
         self.__runtimeClass = runtimeClass
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         privileged = self.privileged()
         if privileged:  # omit empty
             v["privileged"] = privileged
@@ -1968,8 +1968,8 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else PodSecurityPolicySpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -1997,8 +1997,8 @@ class ReplicaSetSpec(types.Object):
         self.__template = template if template is not None else corev1.PodTemplateSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -2069,8 +2069,8 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ReplicaSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -2091,8 +2091,8 @@ class ReplicationControllerDummy(base.TypedObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         return v
 
 
@@ -2105,8 +2105,8 @@ class ScaleSpec(types.Object):
         self.__replicas = replicas
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas:  # omit empty
             v["replicas"] = replicas
@@ -2143,8 +2143,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ScaleSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

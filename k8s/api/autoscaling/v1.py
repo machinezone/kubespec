@@ -23,8 +23,8 @@ class CrossVersionObjectReference(types.Object):
         self.__apiVersion = apiVersion
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["kind"] = self.kind()
         v["name"] = self.name()
         apiVersion = self.apiVersion()
@@ -70,8 +70,8 @@ class HorizontalPodAutoscalerSpec(types.Object):
         self.__targetCPUUtilizationPercentage = targetCPUUtilizationPercentage
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["scaleTargetRef"] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
         if minReplicas is not None:  # omit empty
@@ -134,8 +134,8 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else HorizontalPodAutoscalerSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -154,8 +154,8 @@ class ScaleSpec(types.Object):
         self.__replicas = replicas
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas:  # omit empty
             v["replicas"] = replicas
@@ -192,8 +192,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ScaleSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

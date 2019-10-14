@@ -23,8 +23,8 @@ class ServiceReference(types.Object):
         self.__port = port if port is not None else 443
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         namespace = self.namespace()
         if namespace:  # omit empty
             v["namespace"] = namespace
@@ -79,8 +79,8 @@ class APIServiceSpec(types.Object):
         self.__versionPriority = versionPriority
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["service"] = self.service()
         group = self.group()
         if group:  # omit empty
@@ -177,8 +177,8 @@ class APIService(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else APIServiceSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

@@ -40,8 +40,8 @@ class ExternalMetricValue(base.TypedObject):
         self.__value = value if value is not None else resource.Quantity()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["metricName"] = self.metricName()
         v["metricLabels"] = self.metricLabels()
         v["timestamp"] = self.timestamp()

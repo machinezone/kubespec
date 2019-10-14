@@ -78,8 +78,8 @@ class ObjectReference(types.Object):
         self.__subresource = subresource
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         resource = self.resource()
         if resource:  # omit empty
             v["resource"] = resource
@@ -184,8 +184,8 @@ class Event(base.TypedObject):
         self.__annotations = annotations if annotations is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["level"] = self.level()
         v["auditID"] = self.auditID()
         v["stage"] = self.stage()
@@ -332,8 +332,8 @@ class GroupResources(types.Object):
         self.__resourceNames = resourceNames if resourceNames is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         group = self.group()
         if group:  # omit empty
             v["group"] = group
@@ -403,8 +403,8 @@ class PolicyRule(types.Object):
         self.__omitStages = omitStages if omitStages is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["level"] = self.level()
         users = self.users()
         if users:  # omit empty
@@ -510,8 +510,8 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         self.__omitStages = omitStages if omitStages is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rules"] = self.rules()
         omitStages = self.omitStages()
         if omitStages:  # omit empty

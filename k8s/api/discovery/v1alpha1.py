@@ -32,8 +32,8 @@ class EndpointConditions(types.Object):
         self.__ready = ready
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ready = self.ready()
         if ready is not None:  # omit empty
             v["ready"] = ready
@@ -70,8 +70,8 @@ class Endpoint(types.Object):
         self.__topology = topology if topology is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["addresses"] = self.addresses()
         v["conditions"] = self.conditions()
         hostname = self.hostname()
@@ -146,8 +146,8 @@ class EndpointPort(types.Object):
         self.__port = port
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name is not None:  # omit empty
             v["name"] = name
@@ -220,8 +220,8 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         self.__ports = ports if ports is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["addressType"] = self.addressType()
         v["endpoints"] = self.endpoints()
         v["ports"] = self.ports()

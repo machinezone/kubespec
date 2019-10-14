@@ -114,8 +114,8 @@ class Rule(types.Object):
         self.__scope = scope
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         apiGroups = self.apiGroups()
         if apiGroups:  # omit empty
             v["apiGroups"] = apiGroups
@@ -187,12 +187,12 @@ class RuleWithOperations(types.Object):
         self.__rule = rule if rule is not None else Rule()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         operations = self.operations()
         if operations:  # omit empty
             v["operations"] = operations
-        v.update(self.rule().render())  # inline
+        v.update(self.rule()._root())  # inline
         return v
 
     # Operations is the operations the admission hook cares about - CREATE, UPDATE, or *
@@ -224,8 +224,8 @@ class ServiceReference(types.Object):
         self.__port = port if port is not None else 443
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["namespace"] = self.namespace()
         v["name"] = self.name()
         path = self.path()
@@ -276,8 +276,8 @@ class WebhookClientConfig(types.Object):
         self.__caBundle = caBundle if caBundle is not None else b""
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         url = self.url()
         if url is not None:  # omit empty
             v["url"] = url
@@ -377,8 +377,8 @@ class MutatingWebhook(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["clientConfig"] = self.clientConfig()
         rules = self.rules()
@@ -590,8 +590,8 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         self.__webhooks = webhooks if webhooks is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         webhooks = self.webhooks()
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list
@@ -641,8 +641,8 @@ class ValidatingWebhook(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["clientConfig"] = self.clientConfig()
         rules = self.rules()
@@ -832,8 +832,8 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         self.__webhooks = webhooks if webhooks is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         webhooks = self.webhooks()
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list

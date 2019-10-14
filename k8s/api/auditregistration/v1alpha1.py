@@ -59,8 +59,8 @@ class Policy(types.Object):
         self.__stages = stages if stages is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["level"] = self.level()
         v["stages"] = self.stages()
         return v
@@ -92,8 +92,8 @@ class ServiceReference(types.Object):
         self.__port = port if port is not None else 443
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["namespace"] = self.namespace()
         v["name"] = self.name()
         path = self.path()
@@ -143,8 +143,8 @@ class WebhookClientConfig(types.Object):
         self.__caBundle = caBundle if caBundle is not None else b""
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         url = self.url()
         if url is not None:  # omit empty
             v["url"] = url
@@ -210,8 +210,8 @@ class WebhookThrottleConfig(types.Object):
         self.__burst = burst if burst is not None else 15
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         qps = self.qps()
         if qps is not None:  # omit empty
             v["qps"] = qps
@@ -249,8 +249,8 @@ class Webhook(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         throttle = self.throttle()
         if throttle is not None:  # omit empty
             v["throttle"] = throttle
@@ -279,8 +279,8 @@ class AuditSinkSpec(types.Object):
         self.__webhook = webhook if webhook is not None else Webhook()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["policy"] = self.policy()
         v["webhook"] = self.webhook()
         return v
@@ -321,8 +321,8 @@ class AuditSink(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else AuditSinkSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

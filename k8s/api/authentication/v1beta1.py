@@ -22,8 +22,8 @@ class TokenReviewSpec(types.Object):
         self.__audiences = audiences if audiences is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         token = self.token()
         if token:  # omit empty
             v["token"] = token
@@ -72,8 +72,8 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else TokenReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

@@ -34,8 +34,8 @@ class PodPresetSpec(types.Object):
         self.__volumeMounts = volumeMounts if volumeMounts is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["selector"] = self.selector()
         env = self.env()
         if env:  # omit empty
@@ -104,8 +104,8 @@ class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else PodPresetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

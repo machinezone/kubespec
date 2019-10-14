@@ -112,8 +112,8 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         self.__revision = revision
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["data"] = self.data()
         v["revision"] = self.revision()
         return v
@@ -138,8 +138,8 @@ class RollingUpdateDaemonSet(types.Object):
         self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else 1
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
@@ -182,8 +182,8 @@ class DaemonSetUpdateStrategy(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -231,8 +231,8 @@ class DaemonSetSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["selector"] = self.selector()
         v["template"] = self.template()
         v["updateStrategy"] = self.updateStrategy()
@@ -309,8 +309,8 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else DaemonSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -333,8 +333,8 @@ class RollingUpdateDeployment(types.Object):
         self.__maxSurge = maxSurge if maxSurge is not None else "25%"
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
@@ -389,8 +389,8 @@ class DeploymentStrategy(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -444,8 +444,8 @@ class DeploymentSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -545,8 +545,8 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else DeploymentSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -574,8 +574,8 @@ class ReplicaSetSpec(types.Object):
         self.__template = template if template is not None else corev1.PodTemplateSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -644,8 +644,8 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ReplicaSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -665,8 +665,8 @@ class RollingUpdateStatefulSetStrategy(types.Object):
         self.__partition = partition
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         partition = self.partition()
         if partition is not None:  # omit empty
             v["partition"] = partition
@@ -689,8 +689,8 @@ class ScaleSpec(types.Object):
         self.__replicas = replicas
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas:  # omit empty
             v["replicas"] = replicas
@@ -727,8 +727,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ScaleSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -760,8 +760,8 @@ class StatefulSetUpdateStrategy(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -818,8 +818,8 @@ class StatefulSetSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -942,8 +942,8 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else StatefulSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

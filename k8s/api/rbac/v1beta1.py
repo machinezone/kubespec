@@ -24,8 +24,8 @@ class AggregationRule(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         clusterRoleSelectors = self.clusterRoleSelectors()
         if clusterRoleSelectors:  # omit empty
             v["clusterRoleSelectors"] = clusterRoleSelectors
@@ -59,8 +59,8 @@ class PolicyRule(types.Object):
         self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["verbs"] = self.verbs()
         apiGroups = self.apiGroups()
         if apiGroups:  # omit empty
@@ -131,8 +131,8 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         self.__aggregationRule = aggregationRule
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rules"] = self.rules()
         aggregationRule = self.aggregationRule()
         if aggregationRule is not None:  # omit empty
@@ -168,8 +168,8 @@ class RoleRef(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["apiGroup"] = self.apiGroup()
         v["kind"] = self.kind()
         v["name"] = self.name()
@@ -210,8 +210,8 @@ class Subject(types.Object):
         self.__namespace = namespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["kind"] = self.kind()
         apiGroup = self.apiGroup()
         if apiGroup:  # omit empty
@@ -273,8 +273,8 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         self.__roleRef = roleRef if roleRef is not None else RoleRef()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         subjects = self.subjects()
         if subjects:  # omit empty
             v["subjects"] = subjects.values()  # named list
@@ -318,8 +318,8 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         self.__rules = rules if rules is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rules"] = self.rules()
         return v
 
@@ -358,8 +358,8 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         self.__roleRef = roleRef if roleRef is not None else RoleRef()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         subjects = self.subjects()
         if subjects:  # omit empty
             v["subjects"] = subjects.values()  # named list

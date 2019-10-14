@@ -23,8 +23,8 @@ class Overhead(types.Object):
         self.__podFixed = podFixed if podFixed is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         podFixed = self.podFixed()
         if podFixed:  # omit empty
             v["podFixed"] = podFixed
@@ -51,8 +51,8 @@ class Scheduling(types.Object):
         self.__tolerations = tolerations if tolerations is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         nodeSelector = self.nodeSelector()
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
@@ -98,8 +98,8 @@ class RuntimeClassSpec(types.Object):
         self.__scheduling = scheduling
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["runtimeHandler"] = self.runtimeHandler()
         overhead = self.overhead()
         if overhead is not None:  # omit empty
@@ -169,8 +169,8 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else RuntimeClassSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

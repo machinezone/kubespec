@@ -29,8 +29,8 @@ class TypedObject(types.Object):
         self.__kind = kind
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         apiVersion = self.apiVersion()
         if apiVersion:  # omitempty
             v["apiVersion"] = apiVersion
@@ -71,8 +71,8 @@ class MetadataObject(types.Object):
         self.__annotations = annotations or {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         metadata = v.get("metadata", {})
         name = self.name()
         if name:  # omitempty
@@ -119,8 +119,8 @@ class NamespacedMetadataObject(MetadataObject):
         self.__namespace = namespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         metadata = v.get("metadata", {})
         namespace = self.namespace()
         if namespace:  # omitempty

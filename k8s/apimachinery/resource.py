@@ -85,8 +85,8 @@ class Quantity(types.Object):
         self.__format = format
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["Format"] = self.format()
         return v
 

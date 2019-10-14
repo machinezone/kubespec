@@ -101,8 +101,8 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         self.__revision = revision
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["data"] = self.data()
         v["revision"] = self.revision()
         return v
@@ -130,8 +130,8 @@ class RollingUpdateDeployment(types.Object):
         self.__maxSurge = maxSurge if maxSurge is not None else "25%"
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         maxUnavailable = self.maxUnavailable()
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
@@ -186,8 +186,8 @@ class DeploymentStrategy(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -241,8 +241,8 @@ class DeploymentSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -343,8 +343,8 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else DeploymentSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -363,8 +363,8 @@ class RollbackConfig(types.Object):
         self.__revision = revision
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         revision = self.revision()
         if revision:  # omit empty
             v["revision"] = revision
@@ -395,8 +395,8 @@ class DeploymentRollback(base.TypedObject):
         self.__rollbackTo = rollbackTo if rollbackTo is not None else RollbackConfig()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         updatedAnnotations = self.updatedAnnotations()
         if updatedAnnotations:  # omit empty
@@ -429,8 +429,8 @@ class RollingUpdateStatefulSetStrategy(types.Object):
         self.__partition = partition
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         partition = self.partition()
         if partition is not None:  # omit empty
             v["partition"] = partition
@@ -452,8 +452,8 @@ class ScaleSpec(types.Object):
         self.__replicas = replicas
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas:  # omit empty
             v["replicas"] = replicas
@@ -490,8 +490,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ScaleSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -517,8 +517,8 @@ class StatefulSetUpdateStrategy(types.Object):
         self.__rollingUpdate = rollingUpdate
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -574,8 +574,8 @@ class StatefulSetSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -700,8 +700,8 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else StatefulSetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

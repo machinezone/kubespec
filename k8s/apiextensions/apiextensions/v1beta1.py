@@ -48,8 +48,8 @@ class ConversionRequest(types.Object):
         self.__objects = objects if objects is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["uid"] = self.uid()
         v["desiredAPIVersion"] = self.desiredAPIVersion()
         v["objects"] = self.objects()
@@ -92,8 +92,8 @@ class ConversionResponse(types.Object):
         self.__result = result if result is not None else metav1.Status()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["uid"] = self.uid()
         v["convertedObjects"] = self.convertedObjects()
         v["result"] = self.result()
@@ -137,8 +137,8 @@ class ConversionReview(base.TypedObject):
         self.__response = response
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         request = self.request()
         if request is not None:  # omit empty
             v["request"] = request
@@ -180,8 +180,8 @@ class CustomResourceColumnDefinition(types.Object):
         self.__jSONPath = jSONPath
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["type"] = self.type()
         format = self.format()
@@ -247,8 +247,8 @@ class ServiceReference(types.Object):
         self.__port = port if port is not None else 443
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["namespace"] = self.namespace()
         v["name"] = self.name()
         path = self.path()
@@ -297,8 +297,8 @@ class WebhookClientConfig(types.Object):
         self.__caBundle = caBundle if caBundle is not None else b""
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         url = self.url()
         if url is not None:  # omit empty
             v["url"] = url
@@ -372,8 +372,8 @@ class CustomResourceConversion(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["strategy"] = self.strategy()
         webhookClientConfig = self.webhookClientConfig()
         if webhookClientConfig is not None:  # omit empty
@@ -431,8 +431,8 @@ class CustomResourceDefinitionNames(types.Object):
         self.__categories = categories if categories is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["plural"] = self.plural()
         singular = self.singular()
         if singular:  # omit empty
@@ -504,8 +504,8 @@ class CustomResourceSubresourceScale(types.Object):
         self.__labelSelectorPath = labelSelectorPath
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["specReplicasPath"] = self.specReplicasPath()
         v["statusReplicasPath"] = self.statusReplicasPath()
         labelSelectorPath = self.labelSelectorPath()
@@ -567,8 +567,8 @@ class CustomResourceSubresources(types.Object):
         self.__scale = scale
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         status = self.status()
         if status is not None:  # omit empty
             v["status"] = status
@@ -601,8 +601,8 @@ class ExternalDocumentation(types.Object):
         self.__url = url
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         description = self.description()
         if description:  # omit empty
             v["description"] = description
@@ -630,8 +630,8 @@ class JSON(types.Object):
         self.__raw = raw if raw is not None else b""
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["Raw"] = self.raw()
         return v
 
@@ -738,8 +738,8 @@ class JSONSchemaProps(types.Object):
         self.__xKubernetesListType = xKubernetesListType
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         id = self.id()
         if id:  # omit empty
             v["id"] = id
@@ -1095,8 +1095,8 @@ class CustomResourceValidation(types.Object):
         self.__openAPIV3Schema = openAPIV3Schema
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         openAPIV3Schema = self.openAPIV3Schema()
         if openAPIV3Schema is not None:  # omit empty
             v["openAPIV3Schema"] = openAPIV3Schema
@@ -1132,8 +1132,8 @@ class CustomResourceDefinitionVersion(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["served"] = self.served()
         v["storage"] = self.storage()
@@ -1223,8 +1223,8 @@ class CustomResourceDefinitionSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["group"] = self.group()
         v["names"] = self.names()
         v["scope"] = self.scope()
@@ -1335,8 +1335,8 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else CustomResourceDefinitionSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

@@ -39,8 +39,8 @@ class IPBlock(types.Object):
         self.__except_ = except_ if except_ is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["cidr"] = self.cidr()
         except_ = self.except_()
         if except_:  # omit empty
@@ -78,8 +78,8 @@ class NetworkPolicyPeer(types.Object):
         self.__ipBlock = ipBlock
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         podSelector = self.podSelector()
         if podSelector is not None:  # omit empty
             v["podSelector"] = podSelector
@@ -128,8 +128,8 @@ class NetworkPolicyPort(types.Object):
         self.__port = port
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         protocol = self.protocol()
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
@@ -165,8 +165,8 @@ class NetworkPolicyEgressRule(types.Object):
         self.__to = to if to is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports
@@ -209,8 +209,8 @@ class NetworkPolicyIngressRule(types.Object):
         self.__from_ = from_ if from_ is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports
@@ -258,8 +258,8 @@ class NetworkPolicySpec(types.Object):
         self.__policyTypes = policyTypes if policyTypes is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["podSelector"] = self.podSelector()
         ingress = self.ingress()
         if ingress:  # omit empty
@@ -344,8 +344,8 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else NetworkPolicySpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

@@ -74,8 +74,8 @@ class Unknown(base.TypedObject):
         self.__contentType = contentType
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["Raw"] = self.raw()
         v["ContentEncoding"] = self.contentEncoding()
         v["ContentType"] = self.contentType()

@@ -217,8 +217,8 @@ class Preconditions(types.Object):
         self.__resourceVersion = resourceVersion
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         uid = self.uid()
         if uid is not None:  # omit empty
             v["uid"] = uid
@@ -250,8 +250,8 @@ class TypeMeta(types.Object):
         self.__apiVersion = apiVersion
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         kind = self.kind()
         if kind:  # omit empty
             v["kind"] = kind
@@ -296,8 +296,8 @@ class DeleteOptions(base.TypedObject):
         self.__dryRun = dryRun if dryRun is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         gracePeriodSeconds = self.gracePeriodSeconds()
         if gracePeriodSeconds is not None:  # omit empty
             v["gracePeriodSeconds"] = gracePeriodSeconds
@@ -360,8 +360,8 @@ class GroupVersionKind(types.Object):
         self.__kind = kind
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["group"] = self.group()
         v["version"] = self.version()
         v["kind"] = self.kind()
@@ -392,8 +392,8 @@ class GroupVersionResource(types.Object):
         self.__resource = resource
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["group"] = self.group()
         v["version"] = self.version()
         v["resource"] = self.resource()
@@ -429,8 +429,8 @@ class LabelSelectorRequirement(types.Object):
         self.__values = values if values is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["key"] = self.key()
         v["operator"] = self.operator()
         values = self.values()
@@ -476,8 +476,8 @@ class LabelSelector(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         matchLabels = self.matchLabels()
         if matchLabels:  # omit empty
             v["matchLabels"] = matchLabels
@@ -510,8 +510,8 @@ class ListMeta(types.Object):
         self.__remainingItemCount = remainingItemCount
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         continue_ = self.continue_()
         if continue_:  # omit empty
             v["continue"] = continue_
@@ -564,8 +564,8 @@ class ObjectMeta(types.Object):
         self.__annotations = annotations if annotations is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -633,8 +633,8 @@ class StatusCause(types.Object):
         self.__field = field
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         reason = self.reason()
         if reason:  # omit empty
             v["reason"] = reason
@@ -699,8 +699,8 @@ class StatusDetails(types.Object):
         self.__retryAfterSeconds = retryAfterSeconds
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -782,8 +782,8 @@ class Status(base.TypedObject):
         self.__code = code
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["metadata"] = self.metadata()
         status = self.status()
         if status:  # omit empty

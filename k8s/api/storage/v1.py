@@ -78,8 +78,8 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["provisioner"] = self.provisioner()
         parameters = self.parameters()
         if parameters:  # omit empty
@@ -163,8 +163,8 @@ class VolumeAttachmentSource(types.Object):
         self.__inlineVolumeSpec = inlineVolumeSpec
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         persistentVolumeName = self.persistentVolumeName()
         if persistentVolumeName is not None:  # omit empty
             v["persistentVolumeName"] = persistentVolumeName
@@ -205,8 +205,8 @@ class VolumeAttachmentSpec(types.Object):
         self.__nodeName = nodeName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["attacher"] = self.attacher()
         v["source"] = self.source()
         v["nodeName"] = self.nodeName()
@@ -255,8 +255,8 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else VolumeAttachmentSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

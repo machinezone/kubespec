@@ -22,8 +22,8 @@ class IngressBackend(types.Object):
         self.__servicePort = servicePort if servicePort is not None else 0
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["serviceName"] = self.serviceName()
         v["servicePort"] = self.servicePort()
         return v
@@ -50,8 +50,8 @@ class HTTPIngressPath(types.Object):
         self.__backend = backend if backend is not None else IngressBackend()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -89,8 +89,8 @@ class HTTPIngressRuleValue(types.Object):
         self.__paths = paths if paths is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["paths"] = self.paths()
         return v
 
@@ -112,8 +112,8 @@ class IngressRuleValue(types.Object):
         self.__http = http
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         http = self.http()
         if http is not None:  # omit empty
             v["http"] = http
@@ -138,12 +138,12 @@ class IngressRule(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         host = self.host()
         if host:  # omit empty
             v["host"] = host
-        v.update(self.ingressRuleValue().render())  # inline
+        v.update(self.ingressRuleValue()._root())  # inline
         return v
 
     # Host is the fully qualified domain name of a network host, as defined
@@ -182,8 +182,8 @@ class IngressTLS(types.Object):
         self.__secretName = secretName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         hosts = self.hosts()
         if hosts:  # omit empty
             v["hosts"] = hosts
@@ -226,8 +226,8 @@ class IngressSpec(types.Object):
         self.__rules = rules if rules is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         backend = self.backend()
         if backend is not None:  # omit empty
             v["backend"] = backend
@@ -291,8 +291,8 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else IngressSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

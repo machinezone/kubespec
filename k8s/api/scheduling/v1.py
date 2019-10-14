@@ -43,8 +43,8 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         self.__preemptionPolicy = preemptionPolicy
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["value"] = self.value()
         globalDefault = self.globalDefault()
         if globalDefault:  # omit empty

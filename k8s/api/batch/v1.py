@@ -40,8 +40,8 @@ class JobSpec(types.Object):
         self.__ttlSecondsAfterFinished = ttlSecondsAfterFinished
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         parallelism = self.parallelism()
         if parallelism is not None:  # omit empty
             v["parallelism"] = parallelism
@@ -163,8 +163,8 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else JobSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

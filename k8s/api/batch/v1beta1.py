@@ -54,8 +54,8 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else batchv1.JobSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -96,8 +96,8 @@ class CronJobSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["schedule"] = self.schedule()
         startingDeadlineSeconds = self.startingDeadlineSeconds()
         if startingDeadlineSeconds is not None:  # omit empty
@@ -188,8 +188,8 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else CronJobSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -225,8 +225,8 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
         self.__template = template if template is not None else JobTemplateSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["template"] = self.template()
         return v
 

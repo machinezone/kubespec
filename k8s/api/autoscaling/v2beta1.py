@@ -53,8 +53,8 @@ class CrossVersionObjectReference(types.Object):
         self.__apiVersion = apiVersion
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["kind"] = self.kind()
         v["name"] = self.name()
         apiVersion = self.apiVersion()
@@ -99,8 +99,8 @@ class ExternalMetricSource(types.Object):
         self.__targetAverageValue = targetAverageValue
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["metricName"] = self.metricName()
         metricSelector = self.metricSelector()
         if metricSelector is not None:  # omit empty
@@ -160,8 +160,8 @@ class ObjectMetricSource(types.Object):
         self.__averageValue = averageValue
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["target"] = self.target()
         v["metricName"] = self.metricName()
         v["targetValue"] = self.targetValue()
@@ -225,8 +225,8 @@ class PodsMetricSource(types.Object):
         self.__selector = selector
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["metricName"] = self.metricName()
         v["targetAverageValue"] = self.targetAverageValue()
         selector = self.selector()
@@ -275,8 +275,8 @@ class ResourceMetricSource(types.Object):
         self.__targetAverageValue = targetAverageValue
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         targetAverageUtilization = self.targetAverageUtilization()
         if targetAverageUtilization is not None:  # omit empty
@@ -327,8 +327,8 @@ class MetricSpec(types.Object):
         self.__external = external
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["type"] = self.type()
         object = self.object()
         if object is not None:  # omit empty
@@ -404,8 +404,8 @@ class HorizontalPodAutoscalerSpec(types.Object):
         self.__metrics = metrics if metrics is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["scaleTargetRef"] = self.scaleTargetRef()
         minReplicas = self.minReplicas()
         if minReplicas is not None:  # omit empty
@@ -476,8 +476,8 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else HorizontalPodAutoscalerSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

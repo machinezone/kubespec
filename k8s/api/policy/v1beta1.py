@@ -136,8 +136,8 @@ class AllowedCSIDriver(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         return v
 
@@ -156,8 +156,8 @@ class AllowedFlexVolume(types.Object):
         self.__driver = driver
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         return v
 
@@ -178,8 +178,8 @@ class AllowedHostPath(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         pathPrefix = self.pathPrefix()
         if pathPrefix:  # omit empty
             v["pathPrefix"] = pathPrefix
@@ -232,8 +232,8 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
         self.__deleteOptions = deleteOptions
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         deleteOptions = self.deleteOptions()
         if deleteOptions is not None:  # omit empty
             v["deleteOptions"] = deleteOptions
@@ -255,8 +255,8 @@ class IDRange(types.Object):
         self.__max = max
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["min"] = self.min()
         v["max"] = self.max()
         return v
@@ -282,8 +282,8 @@ class FSGroupStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         rule = self.rule()
         if rule:  # omit empty
             v["rule"] = rule
@@ -315,8 +315,8 @@ class HostPortRange(types.Object):
         self.__max = max
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["min"] = self.min()
         v["max"] = self.max()
         return v
@@ -348,8 +348,8 @@ class PodDisruptionBudgetSpec(types.Object):
         self.__maxUnavailable = maxUnavailable
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         minAvailable = self.minAvailable()
         if minAvailable is not None:  # omit empty
             v["minAvailable"] = minAvailable
@@ -409,8 +409,8 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else PodDisruptionBudgetSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -430,8 +430,8 @@ class RunAsGroupStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         ranges = self.ranges()
         if ranges:  # omit empty
@@ -460,8 +460,8 @@ class RunAsUserStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         ranges = self.ranges()
         if ranges:  # omit empty
@@ -497,8 +497,8 @@ class RuntimeClassStrategyOptions(types.Object):
         self.__defaultRuntimeClassName = defaultRuntimeClassName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["allowedRuntimeClassNames"] = self.allowedRuntimeClassNames()
         defaultRuntimeClassName = self.defaultRuntimeClassName()
         if defaultRuntimeClassName is not None:  # omit empty
@@ -534,8 +534,8 @@ class SELinuxStrategyOptions(types.Object):
         self.__seLinuxOptions = seLinuxOptions
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["rule"] = self.rule()
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
@@ -566,8 +566,8 @@ class SupplementalGroupsStrategyOptions(types.Object):
         self.__ranges = ranges if ranges is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         rule = self.rule()
         if rule:  # omit empty
             v["rule"] = rule
@@ -672,8 +672,8 @@ class PodSecurityPolicySpec(types.Object):
         self.__runtimeClass = runtimeClass
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         privileged = self.privileged()
         if privileged:  # omit empty
             v["privileged"] = privileged
@@ -922,8 +922,8 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else PodSecurityPolicySpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 

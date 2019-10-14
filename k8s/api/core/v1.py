@@ -610,8 +610,8 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -672,8 +672,8 @@ class NodeSelectorRequirement(types.Object):
         self.__values = values if values is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["key"] = self.key()
         v["operator"] = self.operator()
         values = self.values()
@@ -720,8 +720,8 @@ class NodeSelectorTerm(types.Object):
         self.__matchFields = matchFields if matchFields is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
@@ -754,8 +754,8 @@ class NodeSelector(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["nodeSelectorTerms"] = self.nodeSelectorTerms()
         return v
 
@@ -776,8 +776,8 @@ class PreferredSchedulingTerm(types.Object):
         self.__preference = preference if preference is not None else NodeSelectorTerm()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["weight"] = self.weight()
         v["preference"] = self.preference()
         return v
@@ -815,8 +815,8 @@ class NodeAffinity(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         requiredDuringSchedulingIgnoredDuringExecution = (
             self.requiredDuringSchedulingIgnoredDuringExecution()
         )
@@ -879,8 +879,8 @@ class PodAffinityTerm(types.Object):
         self.__topologyKey = topologyKey
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         labelSelector = self.labelSelector()
         if labelSelector is not None:  # omit empty
             v["labelSelector"] = labelSelector
@@ -923,8 +923,8 @@ class WeightedPodAffinityTerm(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["weight"] = self.weight()
         v["podAffinityTerm"] = self.podAffinityTerm()
         return v
@@ -965,8 +965,8 @@ class PodAffinity(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         requiredDuringSchedulingIgnoredDuringExecution = (
             self.requiredDuringSchedulingIgnoredDuringExecution()
         )
@@ -1036,8 +1036,8 @@ class PodAntiAffinity(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         requiredDuringSchedulingIgnoredDuringExecution = (
             self.requiredDuringSchedulingIgnoredDuringExecution()
         )
@@ -1099,8 +1099,8 @@ class Affinity(types.Object):
         self.__podAntiAffinity = podAntiAffinity
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         nodeAffinity = self.nodeAffinity()
         if nodeAffinity is not None:  # omit empty
             v["nodeAffinity"] = nodeAffinity
@@ -1154,8 +1154,8 @@ class AzureDiskVolumeSource(types.Object):
         self.__kind = kind if kind is not None else AzureDataDiskKind["Shared"]
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["diskName"] = self.diskName()
         v["diskURI"] = self.diskURI()
         cachingMode = self.cachingMode()
@@ -1224,8 +1224,8 @@ class AzureFilePersistentVolumeSource(types.Object):
         self.__secretNamespace = secretNamespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["secretName"] = self.secretName()
         v["shareName"] = self.shareName()
         readOnly = self.readOnly()
@@ -1270,8 +1270,8 @@ class AzureFileVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["secretName"] = self.secretName()
         v["shareName"] = self.shareName()
         readOnly = self.readOnly()
@@ -1320,8 +1320,8 @@ class ObjectReference(types.Object):
         self.__fieldPath = fieldPath
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         kind = self.kind()
         if kind:  # omit empty
             v["kind"] = kind
@@ -1419,8 +1419,8 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
         self.__target = target if target is not None else ObjectReference()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["target"] = self.target()
         return v
 
@@ -1441,8 +1441,8 @@ class SecretReference(types.Object):
         self.__namespace = namespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -1492,8 +1492,8 @@ class CSIPersistentVolumeSource(types.Object):
         self.__controllerExpandSecretRef = controllerExpandSecretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         v["volumeHandle"] = self.volumeHandle()
         readOnly = self.readOnly()
@@ -1598,8 +1598,8 @@ class LocalObjectReference(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -1635,8 +1635,8 @@ class CSIVolumeSource(types.Object):
         self.__nodePublishSecretRef = nodePublishSecretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         readOnly = self.readOnly()
         if readOnly is not None:  # omit empty
@@ -1697,8 +1697,8 @@ class Capabilities(types.Object):
         self.__drop = drop if drop is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         add = self.add()
         if add:  # omit empty
             v["add"] = add
@@ -1741,8 +1741,8 @@ class CephFSPersistentVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["monitors"] = self.monitors()
         path = self.path()
         if path:  # omit empty
@@ -1821,8 +1821,8 @@ class CephFSVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["monitors"] = self.monitors()
         path = self.path()
         if path:  # omit empty
@@ -1899,8 +1899,8 @@ class CinderPersistentVolumeSource(types.Object):
         self.__secretRef = secretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -1962,8 +1962,8 @@ class CinderVolumeSource(types.Object):
         self.__secretRef = secretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -2013,8 +2013,8 @@ class ClientIPConfig(types.Object):
         self.__timeoutSeconds = timeoutSeconds
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         timeoutSeconds = self.timeoutSeconds()
         if timeoutSeconds is not None:  # omit empty
             v["timeoutSeconds"] = timeoutSeconds
@@ -2046,8 +2046,8 @@ class ComponentCondition(types.Object):
         self.__error = error
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["type"] = self.type()
         v["status"] = self.status()
         message = self.message()
@@ -2106,8 +2106,8 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
         self.__conditions = conditions if conditions is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         conditions = self.conditions()
         if conditions:  # omit empty
             v["conditions"] = conditions
@@ -2146,8 +2146,8 @@ class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
         self.__binaryData = binaryData if binaryData is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         data = self.data()
         if data:  # omit empty
             v["data"] = data
@@ -2197,9 +2197,9 @@ class ConfigMapEnvSource(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
             v["optional"] = optional
@@ -2236,9 +2236,9 @@ class ConfigMapKeySelector(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         v["key"] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
@@ -2281,8 +2281,8 @@ class ConfigMapNodeConfigSource(types.Object):
         self.__kubeletConfigKey = kubeletConfigKey
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["namespace"] = self.namespace()
         v["name"] = self.name()
         uid = self.uid()
@@ -2336,8 +2336,8 @@ class KeyToPath(types.Object):
         self.__mode = mode
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["key"] = self.key()
         v["path"] = self.path()
         mode = self.mode()
@@ -2393,9 +2393,9 @@ class ConfigMapProjection(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         items = self.items()
         if items:  # omit empty
             v["items"] = items
@@ -2452,9 +2452,9 @@ class ConfigMapVolumeSource(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         items = self.items()
         if items:  # omit empty
             v["items"] = items
@@ -2516,8 +2516,8 @@ class ContainerPort(types.Object):
         self.__hostIP = hostIP
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -2586,9 +2586,9 @@ class SecretEnvSource(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         optional = self.optional()
         if optional is not None:  # omit empty
             v["optional"] = optional
@@ -2621,8 +2621,8 @@ class EnvFromSource(types.Object):
         self.__secretRef = secretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         prefix = self.prefix()
         if prefix:  # omit empty
             v["prefix"] = prefix
@@ -2660,8 +2660,8 @@ class ObjectFieldSelector(types.Object):
         self.__fieldPath = fieldPath
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         apiVersion = self.apiVersion()
         if apiVersion:  # omit empty
             v["apiVersion"] = apiVersion
@@ -2695,8 +2695,8 @@ class ResourceFieldSelector(types.Object):
         self.__divisor = divisor if divisor is not None else resource.Quantity()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         containerName = self.containerName()
         if containerName:  # omit empty
             v["containerName"] = containerName
@@ -2740,9 +2740,9 @@ class SecretKeySelector(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         v["key"] = self.key()
         optional = self.optional()
         if optional is not None:  # omit empty
@@ -2783,8 +2783,8 @@ class EnvVarSource(types.Object):
         self.__secretKeyRef = secretKeyRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         fieldRef = self.fieldRef()
         if fieldRef is not None:  # omit empty
             v["fieldRef"] = fieldRef
@@ -2835,8 +2835,8 @@ class EnvVar(types.Object):
         self.__valueFrom = valueFrom
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         value = self.value()
         if value:  # omit empty
@@ -2878,8 +2878,8 @@ class ExecAction(types.Object):
         self.__command = command if command is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         command = self.command()
         if command:  # omit empty
             v["command"] = command
@@ -2905,8 +2905,8 @@ class HTTPHeader(types.Object):
         self.__value = value
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["value"] = self.value()
         return v
@@ -2942,8 +2942,8 @@ class HTTPGetAction(types.Object):
         self.__httpHeaders = httpHeaders if httpHeaders is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -2999,8 +2999,8 @@ class TCPSocketAction(types.Object):
         self.__host = host
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["port"] = self.port()
         host = self.host()
         if host:  # omit empty
@@ -3037,8 +3037,8 @@ class Handler(types.Object):
         self.__tcpSocket = tcpSocket
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         exec_ = self.exec_()
         if exec_ is not None:  # omit empty
             v["exec"] = exec_
@@ -3081,8 +3081,8 @@ class Lifecycle(types.Object):
         self.__preStop = preStop
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         postStart = self.postStart()
         if postStart is not None:  # omit empty
             v["postStart"] = postStart
@@ -3137,9 +3137,9 @@ class Probe(types.Object):
         self.__failureThreshold = failureThreshold
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.handler().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.handler()._root())  # inline
         initialDelaySeconds = self.initialDelaySeconds()
         if initialDelaySeconds:  # omit empty
             v["initialDelaySeconds"] = initialDelaySeconds
@@ -3208,8 +3208,8 @@ class ResourceRequirements(types.Object):
         self.__requests = requests if requests is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         limits = self.limits()
         if limits:  # omit empty
             v["limits"] = limits
@@ -3247,8 +3247,8 @@ class SELinuxOptions(types.Object):
         self.__level = level
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         user = self.user()
         if user:  # omit empty
             v["user"] = user
@@ -3300,8 +3300,8 @@ class WindowsSecurityContextOptions(types.Object):
         self.__runAsUserName = runAsUserName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         gmsaCredentialSpecName = self.gmsaCredentialSpecName()
         if gmsaCredentialSpecName is not None:  # omit empty
             v["gmsaCredentialSpecName"] = gmsaCredentialSpecName
@@ -3369,8 +3369,8 @@ class SecurityContext(types.Object):
         self.__procMount = procMount
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         capabilities = self.capabilities()
         if capabilities is not None:  # omit empty
             v["capabilities"] = capabilities
@@ -3492,8 +3492,8 @@ class VolumeDevice(types.Object):
         self.__devicePath = devicePath
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["devicePath"] = self.devicePath()
         return v
@@ -3531,8 +3531,8 @@ class VolumeMount(types.Object):
         self.__subPathExpr = subPathExpr
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
@@ -3648,8 +3648,8 @@ class Container(types.Object):
         self.__tty = tty
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         image = self.image()
         if image:  # omit empty
@@ -3925,8 +3925,8 @@ class DownwardAPIVolumeFile(types.Object):
         self.__mode = mode
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["path"] = self.path()
         fieldRef = self.fieldRef()
         if fieldRef is not None:  # omit empty
@@ -3975,8 +3975,8 @@ class DownwardAPIProjection(types.Object):
         self.__items = items if items is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         items = self.items()
         if items:  # omit empty
             v["items"] = items
@@ -4001,8 +4001,8 @@ class DownwardAPIVolumeSource(types.Object):
         self.__defaultMode = defaultMode if defaultMode is not None else 420
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         items = self.items()
         if items:  # omit empty
             v["items"] = items
@@ -4039,8 +4039,8 @@ class EmptyDirVolumeSource(types.Object):
         self.__sizeLimit = sizeLimit
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         medium = self.medium()
         if medium:  # omit empty
             v["medium"] = medium
@@ -4086,8 +4086,8 @@ class EndpointAddress(types.Object):
         self.__targetRef = targetRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["ip"] = self.ip()
         hostname = self.hostname()
         if hostname:  # omit empty
@@ -4137,8 +4137,8 @@ class EndpointPort(types.Object):
         self.__protocol = protocol
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -4196,8 +4196,8 @@ class EndpointSubset(types.Object):
         self.__ports = ports if ports is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         addresses = self.addresses()
         if addresses:  # omit empty
             v["addresses"] = addresses
@@ -4264,8 +4264,8 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
         self.__subsets = subsets if subsets is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         subsets = self.subsets()
         if subsets:  # omit empty
             v["subsets"] = subsets
@@ -4342,8 +4342,8 @@ class EphemeralContainerCommon(types.Object):
         self.__tty = tty
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         image = self.image()
         if image:  # omit empty
@@ -4598,9 +4598,9 @@ class EphemeralContainer(types.Object):
         self.__targetContainerName = targetContainerName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.ephemeralContainerCommon().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.ephemeralContainerCommon()._root())  # inline
         targetContainerName = self.targetContainerName()
         if targetContainerName:  # omit empty
             v["targetContainerName"] = targetContainerName
@@ -4650,8 +4650,8 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["ephemeralContainers"] = self.ephemeralContainers()
         return v
 
@@ -4674,8 +4674,8 @@ class EventSeries(types.Object):
         self.__lastObservedTime = lastObservedTime
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         count = self.count()
         if count:  # omit empty
             v["count"] = count
@@ -4703,8 +4703,8 @@ class EventSource(types.Object):
         self.__host = host
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         component = self.component()
         if component:  # omit empty
             v["component"] = component
@@ -4777,8 +4777,8 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         self.__reportingInstance = reportingInstance
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["involvedObject"] = self.involvedObject()
         reason = self.reason()
         if reason:  # omit empty
@@ -4905,8 +4905,8 @@ class FCVolumeSource(types.Object):
         self.__wwids = wwids if wwids is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         targetWWNs = self.targetWWNs()
         if targetWWNs:  # omit empty
             v["targetWWNs"] = targetWWNs
@@ -4976,8 +4976,8 @@ class FlexPersistentVolumeSource(types.Object):
         self.__options = options if options is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -5047,8 +5047,8 @@ class FlexVolumeSource(types.Object):
         self.__options = options if options is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["driver"] = self.driver()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -5109,8 +5109,8 @@ class FlockerVolumeSource(types.Object):
         self.__datasetUUID = datasetUUID
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         datasetName = self.datasetName()
         if datasetName:  # omit empty
             v["datasetName"] = datasetName
@@ -5154,8 +5154,8 @@ class GCEPersistentDiskVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["pdName"] = self.pdName()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -5219,8 +5219,8 @@ class GlusterfsPersistentVolumeSource(types.Object):
         self.__endpointsNamespace = endpointsNamespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["endpoints"] = self.endpoints()
         v["path"] = self.path()
         readOnly = self.readOnly()
@@ -5270,8 +5270,8 @@ class GlusterfsVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["endpoints"] = self.endpoints()
         v["path"] = self.path()
         readOnly = self.readOnly()
@@ -5310,8 +5310,8 @@ class HostAlias(types.Object):
         self.__hostnames = hostnames if hostnames is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ip = self.ip()
         if ip:  # omit empty
             v["ip"] = ip
@@ -5342,8 +5342,8 @@ class HostPathVolumeSource(types.Object):
         self.__type = type
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["path"] = self.path()
         type = self.type()
         if type is not None:  # omit empty
@@ -5399,8 +5399,8 @@ class ISCSIPersistentVolumeSource(types.Object):
         self.__initiatorName = initiatorName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["targetPortal"] = self.targetPortal()
         v["iqn"] = self.iqn()
         v["lun"] = self.lun()
@@ -5530,8 +5530,8 @@ class ISCSIVolumeSource(types.Object):
         self.__initiatorName = initiatorName
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["targetPortal"] = self.targetPortal()
         v["iqn"] = self.iqn()
         v["lun"] = self.lun()
@@ -5651,8 +5651,8 @@ class LimitRangeItem(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         type = self.type()
         if type:  # omit empty
             v["type"] = type
@@ -5713,8 +5713,8 @@ class LimitRangeSpec(types.Object):
         self.__limits = limits if limits is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["limits"] = self.limits()
         return v
 
@@ -5749,8 +5749,8 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else LimitRangeSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -5771,8 +5771,8 @@ class LocalVolumeSource(types.Object):
         self.__fsType = fsType
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["path"] = self.path()
         fsType = self.fsType()
         if fsType is not None:  # omit empty
@@ -5806,8 +5806,8 @@ class NFSVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["server"] = self.server()
         v["path"] = self.path()
         readOnly = self.readOnly()
@@ -5845,8 +5845,8 @@ class NamespaceSpec(types.Object):
         self.__finalizers = finalizers if finalizers is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         finalizers = self.finalizers()
         if finalizers:  # omit empty
             v["finalizers"] = finalizers
@@ -5883,8 +5883,8 @@ class Namespace(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else NamespaceSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -5904,8 +5904,8 @@ class NodeConfigSource(types.Object):
         self.__configMap = configMap
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         configMap = self.configMap()
         if configMap is not None:  # omit empty
             v["configMap"] = configMap
@@ -5936,8 +5936,8 @@ class Taint(types.Object):
         self.__timeAdded = timeAdded
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["key"] = self.key()
         value = self.value()
         if value:  # omit empty
@@ -5994,8 +5994,8 @@ class NodeSpec(types.Object):
         self.__configSource = configSource
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         podCIDR = self.podCIDR()
         if podCIDR:  # omit empty
             v["podCIDR"] = podCIDR
@@ -6075,8 +6075,8 @@ class Node(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else NodeSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -6096,8 +6096,8 @@ class NodeProxyOptions(base.TypedObject):
         self.__path = path
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -6119,8 +6119,8 @@ class PhotonPersistentDiskVolumeSource(types.Object):
         self.__fsType = fsType
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["pdID"] = self.pdID()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -6151,8 +6151,8 @@ class PortworxVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["volumeID"] = self.volumeID()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -6204,8 +6204,8 @@ class QuobyteVolumeSource(types.Object):
         self.__tenant = tenant
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["registry"] = self.registry()
         v["volume"] = self.volume()
         readOnly = self.readOnly()
@@ -6286,8 +6286,8 @@ class RBDPersistentVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["monitors"] = self.monitors()
         v["image"] = self.image()
         fsType = self.fsType()
@@ -6398,8 +6398,8 @@ class ScaleIOPersistentVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["gateway"] = self.gateway()
         v["system"] = self.system()
         v["secretRef"] = self.secretRef()
@@ -6504,8 +6504,8 @@ class StorageOSPersistentVolumeSource(types.Object):
         self.__secretRef = secretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
             v["volumeName"] = volumeName
@@ -6577,8 +6577,8 @@ class VsphereVirtualDiskVolumeSource(types.Object):
         self.__storagePolicyID = storagePolicyID
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["volumePath"] = self.volumePath()
         fsType = self.fsType()
         if fsType:  # omit empty
@@ -6669,8 +6669,8 @@ class PersistentVolumeSource(types.Object):
         self.__csi = csi
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         gcePersistentDisk = self.gcePersistentDisk()
         if gcePersistentDisk is not None:  # omit empty
             v["gcePersistentDisk"] = gcePersistentDisk
@@ -6875,8 +6875,8 @@ class VolumeNodeAffinity(types.Object):
         self.__required = required
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         required = self.required()
         if required is not None:  # omit empty
             v["required"] = required
@@ -6924,12 +6924,12 @@ class PersistentVolumeSpec(types.Object):
         self.__nodeAffinity = nodeAffinity
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         capacity = self.capacity()
         if capacity:  # omit empty
             v["capacity"] = capacity
-        v.update(self.persistentVolumeSource().render())  # inline
+        v.update(self.persistentVolumeSource()._root())  # inline
         accessModes = self.accessModes()
         if accessModes:  # omit empty
             v["accessModes"] = accessModes
@@ -7039,8 +7039,8 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else PersistentVolumeSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -7064,8 +7064,8 @@ class TypedLocalObjectReference(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["apiGroup"] = self.apiGroup()
         v["kind"] = self.kind()
         v["name"] = self.name()
@@ -7118,8 +7118,8 @@ class PersistentVolumeClaimSpec(types.Object):
         self.__dataSource = dataSource
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         accessModes = self.accessModes()
         if accessModes:  # omit empty
             v["accessModes"] = accessModes
@@ -7214,8 +7214,8 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else PersistentVolumeClaimSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -7239,8 +7239,8 @@ class PersistentVolumeClaimVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["claimName"] = self.claimName()
         readOnly = self.readOnly()
         if readOnly:  # omit empty
@@ -7270,8 +7270,8 @@ class PodDNSConfigOption(types.Object):
         self.__value = value
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -7307,8 +7307,8 @@ class PodDNSConfig(types.Object):
         self.__options = options if options is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         nameservers = self.nameservers()
         if nameservers:  # omit empty
             v["nameservers"] = nameservers
@@ -7352,8 +7352,8 @@ class PodReadinessGate(types.Object):
         self.__conditionType = conditionType
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["conditionType"] = self.conditionType()
         return v
 
@@ -7373,8 +7373,8 @@ class Sysctl(types.Object):
         self.__value = value
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
         v["value"] = self.value()
         return v
@@ -7420,8 +7420,8 @@ class PodSecurityContext(types.Object):
         self.__sysctls = sysctls if sysctls is not None else {}
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         seLinuxOptions = self.seLinuxOptions()
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
@@ -7540,8 +7540,8 @@ class Toleration(types.Object):
         self.__tolerationSeconds = tolerationSeconds
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         key = self.key()
         if key:  # omit empty
             v["key"] = key
@@ -7612,8 +7612,8 @@ class TopologySpreadConstraint(types.Object):
         self.__labelSelector = labelSelector
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["maxSkew"] = self.maxSkew()
         v["topologyKey"] = self.topologyKey()
         v["whenUnsatisfiable"] = self.whenUnsatisfiable()
@@ -7705,9 +7705,9 @@ class SecretProjection(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
-        v.update(self.localObjectReference().render())  # inline
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        v.update(self.localObjectReference()._root())  # inline
         items = self.items()
         if items:  # omit empty
             v["items"] = items
@@ -7755,8 +7755,8 @@ class ServiceAccountTokenProjection(types.Object):
         self.__path = path
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         audience = self.audience()
         if audience:  # omit empty
             v["audience"] = audience
@@ -7809,8 +7809,8 @@ class VolumeProjection(types.Object):
         self.__serviceAccountToken = serviceAccountToken
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         secret = self.secret()
         if secret is not None:  # omit empty
             v["secret"] = secret
@@ -7856,8 +7856,8 @@ class ProjectedVolumeSource(types.Object):
         self.__defaultMode = defaultMode if defaultMode is not None else 420
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["sources"] = self.sources()
         defaultMode = self.defaultMode()
         if defaultMode is not None:  # omit empty
@@ -7906,8 +7906,8 @@ class RBDVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["monitors"] = self.monitors()
         v["image"] = self.image()
         fsType = self.fsType()
@@ -8018,8 +8018,8 @@ class ScaleIOVolumeSource(types.Object):
         self.__readOnly = readOnly
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["gateway"] = self.gateway()
         v["system"] = self.system()
         v["secretRef"] = self.secretRef()
@@ -8126,8 +8126,8 @@ class SecretVolumeSource(types.Object):
         self.__optional = optional
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         secretName = self.secretName()
         if secretName:  # omit empty
             v["secretName"] = secretName
@@ -8194,8 +8194,8 @@ class StorageOSVolumeSource(types.Object):
         self.__secretRef = secretRef
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         volumeName = self.volumeName()
         if volumeName:  # omit empty
             v["volumeName"] = volumeName
@@ -8314,8 +8314,8 @@ class VolumeSource(types.Object):
         self.__csi = csi
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         hostPath = self.hostPath()
         if hostPath is not None:  # omit empty
             v["hostPath"] = hostPath
@@ -8569,10 +8569,10 @@ class Volume(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["name"] = self.name()
-        v.update(self.volumeSource().render())  # inline
+        v.update(self.volumeSource()._root())  # inline
         return v
 
     # Volume's name.
@@ -8676,8 +8676,8 @@ class PodSpec(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         volumes = self.volumes()
         if volumes:  # omit empty
             v["volumes"] = volumes.values()  # named list
@@ -9065,8 +9065,8 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else PodSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -9100,8 +9100,8 @@ class PodAttachOptions(base.TypedObject):
         self.__container = container
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         stdin = self.stdin()
         if stdin:  # omit empty
             v["stdin"] = stdin
@@ -9177,8 +9177,8 @@ class PodExecOptions(base.TypedObject):
         self.__command = command if command is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         stdin = self.stdin()
         if stdin:  # omit empty
             v["stdin"] = stdin
@@ -9259,8 +9259,8 @@ class PodLogOptions(base.TypedObject):
         self.__limitBytes = limitBytes
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         container = self.container()
         if container:  # omit empty
             v["container"] = container
@@ -9352,8 +9352,8 @@ class PodPortForwardOptions(base.TypedObject):
         self.__ports = ports if ports is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports
@@ -9375,8 +9375,8 @@ class PodProxyOptions(base.TypedObject):
         self.__path = path
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -9411,8 +9411,8 @@ class PodStatusResult(base.TypedObject, base.NamespacedMetadataObject):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         return v
 
 
@@ -9439,8 +9439,8 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else PodSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -9476,8 +9476,8 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
         self.__template = template if template is not None else PodTemplateSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["template"] = self.template()
         return v
 
@@ -9515,8 +9515,8 @@ class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
         self.__data = data if data is not None else b""
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["range"] = self.range()
         v["data"] = self.data()
         return v
@@ -9550,8 +9550,8 @@ class ReplicationControllerSpec(types.Object):
         self.__template = template
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         replicas = self.replicas()
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
@@ -9623,8 +9623,8 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ReplicationControllerSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -9652,8 +9652,8 @@ class ScopedResourceSelectorRequirement(types.Object):
         self.__values = values if values is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["scopeName"] = self.scopeName()
         v["operator"] = self.operator()
         values = self.values()
@@ -9695,8 +9695,8 @@ class ScopeSelector(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         matchExpressions = self.matchExpressions()
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
@@ -9724,8 +9724,8 @@ class ResourceQuotaSpec(types.Object):
         self.__scopeSelector = scopeSelector
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         hard = self.hard()
         if hard:  # omit empty
             v["hard"] = hard
@@ -9782,8 +9782,8 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ResourceQuotaSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -9824,8 +9824,8 @@ class Secret(base.TypedObject, base.NamespacedMetadataObject):
         self.__type = type
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         data = self.data()
         if data:  # omit empty
             v["data"] = data
@@ -9868,8 +9868,8 @@ class SerializedReference(base.TypedObject):
         self.__reference = reference if reference is not None else ObjectReference()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["reference"] = self.reference()
         return v
 
@@ -9899,8 +9899,8 @@ class ServicePort(types.Object):
         self.__nodePort = nodePort
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         name = self.name()
         if name:  # omit empty
             v["name"] = name
@@ -9965,8 +9965,8 @@ class SessionAffinityConfig(types.Object):
         self.__clientIP = clientIP
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         clientIP = self.clientIP()
         if clientIP is not None:  # omit empty
             v["clientIP"] = clientIP
@@ -10018,8 +10018,8 @@ class ServiceSpec(types.Object):
         self.__ipFamily = ipFamily
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         ports = self.ports()
         if ports:  # omit empty
             v["ports"] = ports.values()  # named list
@@ -10230,8 +10230,8 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else ServiceSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -10276,8 +10276,8 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
         self.__automountServiceAccountToken = automountServiceAccountToken
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         secrets = self.secrets()
         if secrets:  # omit empty
             v["secrets"] = secrets.values()  # named list
@@ -10319,8 +10319,8 @@ class ServiceProxyOptions(base.TypedObject):
         self.__path = path
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -10347,8 +10347,8 @@ class TopologySelectorLabelRequirement(types.Object):
         self.__values = values if values is not None else []
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["key"] = self.key()
         v["values"] = self.values()
         return v
@@ -10382,8 +10382,8 @@ class TopologySelectorTerm(types.Object):
         )
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         matchLabelExpressions = self.matchLabelExpressions()
         if matchLabelExpressions:  # omit empty
             v["matchLabelExpressions"] = matchLabelExpressions

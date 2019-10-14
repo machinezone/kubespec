@@ -22,8 +22,8 @@ class NonResourceAttributes(types.Object):
         self.__verb = verb
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         path = self.path()
         if path:  # omit empty
             v["path"] = path
@@ -67,8 +67,8 @@ class ResourceAttributes(types.Object):
         self.__name = name
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         namespace = self.namespace()
         if namespace:  # omit empty
             v["namespace"] = namespace
@@ -154,8 +154,8 @@ class SubjectAccessReviewSpec(types.Object):
         self.__uid = uid
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         resourceAttributes = self.resourceAttributes()
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
@@ -236,8 +236,8 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -263,8 +263,8 @@ class SelfSubjectAccessReviewSpec(types.Object):
         self.__nonResourceAttributes = nonResourceAttributes
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         resourceAttributes = self.resourceAttributes()
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
@@ -309,8 +309,8 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else SelfSubjectAccessReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -328,8 +328,8 @@ class SelfSubjectRulesReviewSpec(types.Object):
         self.__namespace = namespace
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         namespace = self.namespace()
         if namespace:  # omit empty
             v["namespace"] = namespace
@@ -369,8 +369,8 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else SelfSubjectRulesReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
@@ -403,8 +403,8 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
         self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
 
     @typechecked
-    def render(self) -> Dict[str, Any]:
-        v = super().render()
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
         v["spec"] = self.spec()
         return v
 
