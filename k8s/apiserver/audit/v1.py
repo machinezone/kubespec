@@ -12,7 +12,7 @@ from k8s.apimachinery import runtime
 from k8s.apimachinery.meta import v1 as metav1
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # Level defines the amount of information logged during auditing

@@ -3,9 +3,7 @@
 # license that can be found in the LICENSE file.
 
 import base64
-from typing import Any, Dict, Union
-
-from typeguard import typechecked
+from typing import Any, Dict
 
 
 class Renderable:

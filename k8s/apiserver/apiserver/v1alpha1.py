@@ -10,7 +10,7 @@ from k8s import base
 from k8s.apimachinery import runtime
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # AdmissionPluginConfiguration provides the configuration for a single plug-in.

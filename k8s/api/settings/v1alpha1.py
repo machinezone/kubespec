@@ -11,7 +11,7 @@ from k8s.api.core import v1 as corev1
 from k8s.apimachinery.meta import v1 as metav1
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # PodPresetSpec is a description of a pod preset.

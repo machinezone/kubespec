@@ -10,7 +10,7 @@ from k8s import base
 from k8s.api.core import v1 as corev1
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # VolumeBindingMode indicates how PersistentVolumeClaims should be bound.

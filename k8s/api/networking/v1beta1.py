@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 from k8s import base
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # IngressBackend describes all endpoints for a given service and port.

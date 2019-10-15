@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from k8s import base
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # CrossVersionObjectReference contains enough information to let you identify the referred resource.

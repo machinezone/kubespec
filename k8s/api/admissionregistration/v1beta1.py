@@ -10,7 +10,7 @@ from k8s import base
 from k8s.apimachinery.meta import v1 as metav1
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 FailurePolicyType = base.Enum(

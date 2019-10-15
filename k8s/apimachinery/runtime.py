@@ -9,7 +9,7 @@ from typing import Any, Dict
 from k8s import base
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # RawExtension is used to hold extensions in external versions.

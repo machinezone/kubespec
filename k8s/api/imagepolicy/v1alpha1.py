@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from k8s import base
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # ImageReviewContainerSpec is a description of a container within the pod creation request.

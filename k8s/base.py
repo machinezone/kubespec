@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 import pytz
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 @typechecked

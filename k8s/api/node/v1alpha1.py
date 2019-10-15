@@ -11,7 +11,7 @@ from k8s.api.core import v1 as corev1
 from k8s.apimachinery import resource
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # Overhead structure represents the resource overhead associated with running a pod.

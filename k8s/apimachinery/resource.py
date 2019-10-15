@@ -9,7 +9,7 @@ from typing import Any, Dict
 from k8s import base
 from kargo import context
 from kargo import types
-from typeguard import check_return_type, typechecked
+from typeguard import typechecked
 
 
 # Format lists the three possible formattings of a quantity.
