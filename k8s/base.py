@@ -144,6 +144,7 @@ class NamespacedMetadataObject(MetadataObject):
 class Time(types.Renderable):
     _format = "%Y-%m-%dT%H:%M:%SZ"
 
+    @typechecked
     def __init__(self, time: datetime):
         self.time = time
 
@@ -156,6 +157,7 @@ class MicroTime(Time):
 
 
 class Duration(types.Renderable):
+    @typechecked
     def __init__(self, duration: timedelta):
         self.duration = duration
 
