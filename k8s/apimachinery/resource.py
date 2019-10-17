@@ -1,13 +1,12 @@
-# Code is generated: DO NOT EDIT
-
 # Copyright 2019 Machine Zone, Inc. All rights reserved.
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Any, Dict
+import re
+from copy import copy
+from typing import Dict, Union, Tuple
 
 from k8s import base
-from kargo import context
 from kargo import types
 from typeguard import typechecked
 
@@ -24,6 +23,34 @@ Format = base.Enum(
         "DecimalSI": "DecimalSI",
     },
 )
+
+
+_suffixes: Dict[str, Tuple[int, int, Format]] = {  # str -> (base, exp, fmt)
+    # Decimal
+    "": (10, 0, Format.DecimalSI),
+    "n": (10, -9, Format.DecimalSI),
+    "u": (10, -6, Format.DecimalSI),
+    "m": (10, -3, Format.DecimalSI),
+    "k": (10, 3, Format.DecimalSI),
+    "M": (10, 6, Format.DecimalSI),
+    "G": (10, 9, Format.DecimalSI),
+    "T": (10, 12, Format.DecimalSI),
+    "P": (10, 15, Format.DecimalSI),
+    "E": (10, 18, Format.DecimalSI),
+    # Binary
+    "Ki": (2, 10, Format.BinarySI),
+    "Mi": (2, 20, Format.BinarySI),
+    "Gi": (2, 30, Format.BinarySI),
+    "Ti": (2, 40, Format.BinarySI),
+    "Pi": (2, 50, Format.BinarySI),
+    "Ei": (2, 60, Format.BinarySI),
+}
+
+_binSuffixes: Dict[int, str] = {
+    v[1] // 10: k for k, v in _suffixes.items() if v[0] == 2
+}
+
+_decSuffixes: Dict[int, str] = {v[1]: k for k, v in _suffixes.items() if v[0] == 10}
 
 
 # Quantity is a fixed-point representation of a number.
@@ -77,21 +104,178 @@ Format = base.Enum(
 # This format is intended to make it difficult to use these numbers without
 # writing some sort of special handling code in the hopes that that will
 # cause implementors to also use a fixed point implementation.
-class Quantity(types.Object):
-    @context.scoped
+class Quantity(types.Renderable):
     @typechecked
-    def __init__(self, format: Format = None):
-        super().__init__(**{})
-        self.__format = format
+    def __init__(
+        self, value: Union[int, float, str] = 0, fmt: Format = Format.DecimalSI
+    ):
+        if isinstance(value, int):
+            self._from_int(value, 0, fmt)
+        elif isinstance(value, float):
+            self._from_int(int(1000 * value), -3, fmt)
+        else:
+            self._from_str(value)
 
-    @typechecked
-    def _root(self) -> Dict[str, Any]:
-        v = super()._root()
-        v["Format"] = self.format()
-        return v
+    def _from_int(self, value: int, scale: int, fmt: Format):
+        while value != 0 and value % 10 == 0:
+            value //= 10
+            scale += 1
+        self.value = value
+        self.scale = scale
+        self.format = fmt
 
-    # Change Format at will. See the comment for Canonicalize for
-    # more details.
-    @typechecked
-    def format(self) -> Format:
-        return self.__format
+    def _from_str(self, value: str):
+        negative = value.startswith("-")
+        _, whole, frac, suffix = _parseValue(value)
+        base, exp, fmt = _parseSuffix(suffix)
+        value = int(whole + frac)
+        scale = -len(frac)
+        if base == 10:
+            scale += exp
+        elif base == 2:
+            value *= 1 << exp
+        if negative:
+            value = -value
+        self._from_int(value, scale, fmt)
+
+    def render(self) -> str:
+        return str(self)
+
+    def __str__(self) -> str:
+        if self.value == 0:
+            return "0"
+
+        # If BinarySI formatting is requested but would
+        # cause rounding, switch to another format.
+        fmt = self.format
+        if fmt == Format.BinarySI:
+            rounded = self._with_scale(0)
+            if rounded == self and abs(rounded.value) >= 1024:
+                value, exp = _removeFactors(rounded.value, 1024)
+                if exp == 0:
+                    return str(value)
+                return str(value) + _binSuffixes[exp]
+            fmt = Format.DecimalSI
+
+        value, exp = _removeFactors(self.value, 10)
+        exp += self.scale
+        while exp % 3 != 0:
+            value *= 10
+            exp -= 1
+        if exp == 0:
+            return str(value)
+        if fmt == Format.DecimalSI and exp in _decSuffixes:
+            return str(value) + _decSuffixes[exp]
+        return str(value) + "e" + str(exp)
+
+    def _as_float(self) -> float:
+        return self.value * 10 ** (self.scale)
+
+    def _with_scale(self, scale) -> "Quantity":
+        obj = copy(self)
+        fact = 10 ** (obj.scale - scale)
+        if fact > 1:
+            obj.value = obj.value * int(fact)
+        elif fact < 1:
+            obj.value = int(round(obj.value * fact))
+        obj.scale = scale
+        return obj
+
+    def _same_scale(self, other: "Quantity") -> Tuple["Quantity", "Quantity"]:
+        scale = min(self.scale, other.scale)
+        return self._with_scale(scale), other._with_scale(scale)
+
+    def __lt__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value < that.value
+
+    def __gt__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value > that.value
+
+    def __le__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value <= that.value
+
+    def __ge__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value >= that.value
+
+    def __eq__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value == that.value
+
+    def __ne__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        return this.value != that.value
+
+    def __add__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        this.value += that.value
+        return this
+
+    def __sub__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        this, that = self._same_scale(other)
+        this.value -= that.value
+        return this
+
+    def __mul__(self, other):
+        if isinstance(other, (int, float, str)):
+            other = Quantity(other)
+        that = copy(self)
+        that.value *= other.value
+        that.scale += other.scale
+        return that
+
+
+def _parseValue(s: str) -> Tuple[str, str, str, str]:
+    match = re.search("^([-+]?([0-9]+)(\\.([0-9]+)?)?)(.*)$", s)
+    if not match:
+        # TODO: raise exception
+        return "0", "0", "", s
+    return (
+        match[1].lstrip("0") or "0",  # value
+        match[2].lstrip("0") or "0",  # whole component
+        match[4] or "",  # fractional component
+        match[5],  # suffix
+    )
+
+
+def _parseSuffix(s: str) -> Tuple[int, int, Format]:  # str -> (base, exp, fmt)
+    if s in _suffixes:
+        return _suffixes[s]
+    if s[0] in ("E", "e"):
+        return 10, int(s[1:]), Format.DecimalExponent
+    # TODO: raise exception
+    return 10, 0, Format.DecimalSI
+
+
+def _removeFactors(value: int, factor: int) -> Tuple[int, int]:
+    count = 0
+    result = value
+    negative = result < 0
+    if negative:
+        result = -result
+    while result >= factor and result % factor == 0:
+        result = result // factor
+        count += 1
+    if negative:
+        result = -result
+    return result, count
+
