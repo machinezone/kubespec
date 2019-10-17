@@ -20,7 +20,7 @@ class Object(Renderable):
             if isinstance(value, Renderable):
                 value = value.render()
             if isinstance(value, dict):
-                return {k: _render(v) for k, v in value.items()}
+                return {_render(k): _render(v) for k, v in value.items()}
             # Base64 encode bytes
             if isinstance(value, bytes):
                 return base64.b64encode(value).decode("UTF-8")
