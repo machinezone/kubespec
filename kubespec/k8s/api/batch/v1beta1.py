@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.api.batch import v1 as batchv1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ConcurrencyPolicy describes how the job will be handled.
@@ -56,12 +56,13 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional["batchv1.JobSpec"])
+        v["spec"] = spec
         return v
 
     # Specification of the desired behavior of the job.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> Optional["batchv1.JobSpec"]:
         return self.__spec
 
@@ -98,33 +99,42 @@ class CronJobSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["schedule"] = self.schedule()
+        schedule = self.schedule()
+        check_type("schedule", schedule, str)
+        v["schedule"] = schedule
         startingDeadlineSeconds = self.startingDeadlineSeconds()
+        check_type("startingDeadlineSeconds", startingDeadlineSeconds, Optional[int])
         if startingDeadlineSeconds is not None:  # omit empty
             v["startingDeadlineSeconds"] = startingDeadlineSeconds
         concurrencyPolicy = self.concurrencyPolicy()
+        check_type("concurrencyPolicy", concurrencyPolicy, Optional[ConcurrencyPolicy])
         if concurrencyPolicy:  # omit empty
             v["concurrencyPolicy"] = concurrencyPolicy
         suspend = self.suspend()
+        check_type("suspend", suspend, Optional[bool])
         if suspend is not None:  # omit empty
             v["suspend"] = suspend
-        v["jobTemplate"] = self.jobTemplate()
+        jobTemplate = self.jobTemplate()
+        check_type("jobTemplate", jobTemplate, JobTemplateSpec)
+        v["jobTemplate"] = jobTemplate
         successfulJobsHistoryLimit = self.successfulJobsHistoryLimit()
+        check_type(
+            "successfulJobsHistoryLimit", successfulJobsHistoryLimit, Optional[int]
+        )
         if successfulJobsHistoryLimit is not None:  # omit empty
             v["successfulJobsHistoryLimit"] = successfulJobsHistoryLimit
         failedJobsHistoryLimit = self.failedJobsHistoryLimit()
+        check_type("failedJobsHistoryLimit", failedJobsHistoryLimit, Optional[int])
         if failedJobsHistoryLimit is not None:  # omit empty
             v["failedJobsHistoryLimit"] = failedJobsHistoryLimit
         return v
 
     # The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
-    @typechecked
     def schedule(self) -> str:
         return self.__schedule
 
     # Optional deadline in seconds for starting the job if it misses scheduled
     # time for any reason.  Missed jobs executions will be counted as failed ones.
-    @typechecked
     def startingDeadlineSeconds(self) -> Optional[int]:
         return self.__startingDeadlineSeconds
 
@@ -133,32 +143,27 @@ class CronJobSpec(types.Object):
     # - "Allow" (default): allows CronJobs to run concurrently;
     # - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
     # - "Replace": cancels currently running job and replaces it with a new one
-    @typechecked
     def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
         return self.__concurrencyPolicy
 
     # This flag tells the controller to suspend subsequent executions, it does
     # not apply to already started executions.  Defaults to false.
-    @typechecked
     def suspend(self) -> Optional[bool]:
         return self.__suspend
 
     # Specifies the job that will be created when executing a CronJob.
-    @typechecked
     def jobTemplate(self) -> JobTemplateSpec:
         return self.__jobTemplate
 
     # The number of successful finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 3.
-    @typechecked
     def successfulJobsHistoryLimit(self) -> Optional[int]:
         return self.__successfulJobsHistoryLimit
 
     # The number of failed finished jobs to retain.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 1.
-    @typechecked
     def failedJobsHistoryLimit(self) -> Optional[int]:
         return self.__failedJobsHistoryLimit
 
@@ -190,12 +195,13 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[CronJobSpec])
+        v["spec"] = spec
         return v
 
     # Specification of the desired behavior of a cron job, including the schedule.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> Optional[CronJobSpec]:
         return self.__spec
 
@@ -227,11 +233,12 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["template"] = self.template()
+        template = self.template()
+        check_type("template", template, Optional[JobTemplateSpec])
+        v["template"] = template
         return v
 
     # Defines jobs that will be created from this template.
     # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def template(self) -> Optional[JobTemplateSpec]:
         return self.__template

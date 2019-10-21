@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # Level defines the amount of information logged during auditing
@@ -61,19 +61,21 @@ class Policy(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["level"] = self.level()
-        v["stages"] = self.stages()
+        level = self.level()
+        check_type("level", level, Level)
+        v["level"] = level
+        stages = self.stages()
+        check_type("stages", stages, List[Stage])
+        v["stages"] = stages
         return v
 
     # The Level that all requests are recorded at.
     # available options: None, Metadata, Request, RequestResponse
     # required
-    @typechecked
     def level(self) -> Level:
         return self.__level
 
     # Stages is a list of stages for which events are created.
-    @typechecked
     def stages(self) -> List[Stage]:
         return self.__stages
 
@@ -94,38 +96,40 @@ class ServiceReference(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["namespace"] = self.namespace()
-        v["name"] = self.name()
+        namespace = self.namespace()
+        check_type("namespace", namespace, str)
+        v["namespace"] = namespace
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         path = self.path()
+        check_type("path", path, Optional[str])
         if path is not None:  # omit empty
             v["path"] = path
         port = self.port()
+        check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
         return v
 
     # `namespace` is the namespace of the service.
     # Required
-    @typechecked
     def namespace(self) -> str:
         return self.__namespace
 
     # `name` is the name of the service.
     # Required
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # `path` is an optional URL path which will be sent in any request to
     # this service.
-    @typechecked
     def path(self) -> Optional[str]:
         return self.__path
 
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
-    @typechecked
     def port(self) -> Optional[int]:
         return self.__port
 
@@ -146,12 +150,15 @@ class WebhookClientConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         url = self.url()
+        check_type("url", url, Optional[str])
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
+        check_type("service", service, Optional[ServiceReference])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
+        check_type("caBundle", caBundle, Optional[bytes])
         if caBundle:  # omit empty
             v["caBundle"] = caBundle
         return v
@@ -181,7 +188,6 @@ class WebhookClientConfig(types.Object):
     # Attempting to use a user or basic auth e.g. "user:password@" is not
     # allowed. Fragments ("#...") and query parameters ("?...") are not
     # allowed, either.
-    @typechecked
     def url(self) -> Optional[str]:
         return self.__url
 
@@ -189,13 +195,11 @@ class WebhookClientConfig(types.Object):
     # `service` or `url` must be specified.
     #
     # If the webhook is running within the cluster, then you should use `service`.
-    @typechecked
     def service(self) -> Optional[ServiceReference]:
         return self.__service
 
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
-    @typechecked
     def caBundle(self) -> Optional[bytes]:
         return self.__caBundle
 
@@ -213,22 +217,22 @@ class WebhookThrottleConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         qps = self.qps()
+        check_type("qps", qps, Optional[int])
         if qps is not None:  # omit empty
             v["qps"] = qps
         burst = self.burst()
+        check_type("burst", burst, Optional[int])
         if burst is not None:  # omit empty
             v["burst"] = burst
         return v
 
     # ThrottleQPS maximum number of batches per second
     # default 10 QPS
-    @typechecked
     def qps(self) -> Optional[int]:
         return self.__qps
 
     # ThrottleBurst is the maximum number of events sent at the same moment
     # default 15 QPS
-    @typechecked
     def burst(self) -> Optional[int]:
         return self.__burst
 
@@ -252,19 +256,20 @@ class Webhook(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         throttle = self.throttle()
+        check_type("throttle", throttle, Optional[WebhookThrottleConfig])
         if throttle is not None:  # omit empty
             v["throttle"] = throttle
-        v["clientConfig"] = self.clientConfig()
+        clientConfig = self.clientConfig()
+        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        v["clientConfig"] = clientConfig
         return v
 
     # Throttle holds the options for throttling the webhook
-    @typechecked
     def throttle(self) -> Optional[WebhookThrottleConfig]:
         return self.__throttle
 
     # ClientConfig holds the connection parameters for the webhook
     # required
-    @typechecked
     def clientConfig(self) -> WebhookClientConfig:
         return self.__clientConfig
 
@@ -281,19 +286,21 @@ class AuditSinkSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["policy"] = self.policy()
-        v["webhook"] = self.webhook()
+        policy = self.policy()
+        check_type("policy", policy, Policy)
+        v["policy"] = policy
+        webhook = self.webhook()
+        check_type("webhook", webhook, Webhook)
+        v["webhook"] = webhook
         return v
 
     # Policy defines the policy for selecting which events should be sent to the webhook
     # required
-    @typechecked
     def policy(self) -> Policy:
         return self.__policy
 
     # Webhook to send events
     # required
-    @typechecked
     def webhook(self) -> Webhook:
         return self.__webhook
 
@@ -323,10 +330,11 @@ class AuditSink(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[AuditSinkSpec])
+        v["spec"] = spec
         return v
 
     # Spec defines the audit configuration spec
-    @typechecked
     def spec(self) -> Optional[AuditSinkSpec]:
         return self.__spec

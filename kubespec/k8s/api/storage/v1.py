@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # VolumeBindingMode indicates how PersistentVolumeClaims should be bound.
@@ -80,60 +80,70 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["provisioner"] = self.provisioner()
+        provisioner = self.provisioner()
+        check_type("provisioner", provisioner, str)
+        v["provisioner"] = provisioner
         parameters = self.parameters()
+        check_type("parameters", parameters, Optional[Dict[str, str]])
         if parameters:  # omit empty
             v["parameters"] = parameters
         reclaimPolicy = self.reclaimPolicy()
+        check_type(
+            "reclaimPolicy",
+            reclaimPolicy,
+            Optional[corev1.PersistentVolumeReclaimPolicy],
+        )
         if reclaimPolicy is not None:  # omit empty
             v["reclaimPolicy"] = reclaimPolicy
         mountOptions = self.mountOptions()
+        check_type("mountOptions", mountOptions, Optional[List[str]])
         if mountOptions:  # omit empty
             v["mountOptions"] = mountOptions
         allowVolumeExpansion = self.allowVolumeExpansion()
+        check_type("allowVolumeExpansion", allowVolumeExpansion, Optional[bool])
         if allowVolumeExpansion is not None:  # omit empty
             v["allowVolumeExpansion"] = allowVolumeExpansion
         volumeBindingMode = self.volumeBindingMode()
+        check_type("volumeBindingMode", volumeBindingMode, Optional[VolumeBindingMode])
         if volumeBindingMode is not None:  # omit empty
             v["volumeBindingMode"] = volumeBindingMode
         allowedTopologies = self.allowedTopologies()
+        check_type(
+            "allowedTopologies",
+            allowedTopologies,
+            Optional[List["corev1.TopologySelectorTerm"]],
+        )
         if allowedTopologies:  # omit empty
             v["allowedTopologies"] = allowedTopologies
         return v
 
     # Provisioner indicates the type of the provisioner.
-    @typechecked
     def provisioner(self) -> str:
         return self.__provisioner
 
     # Parameters holds the parameters for the provisioner that should
     # create volumes of this storage class.
-    @typechecked
     def parameters(self) -> Optional[Dict[str, str]]:
         return self.__parameters
 
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
-    @typechecked
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
         return self.__reclaimPolicy
 
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
     # mount of the PVs will simply fail if one is invalid.
-    @typechecked
     def mountOptions(self) -> Optional[List[str]]:
         return self.__mountOptions
 
     # AllowVolumeExpansion shows whether the storage class allow volume expand
-    @typechecked
     def allowVolumeExpansion(self) -> Optional[bool]:
         return self.__allowVolumeExpansion
 
     # VolumeBindingMode indicates how PersistentVolumeClaims should be
     # provisioned and bound.  When unset, VolumeBindingImmediate is used.
     # This field is only honored by servers that enable the VolumeScheduling feature.
-    @typechecked
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
         return self.__volumeBindingMode
 
@@ -141,7 +151,6 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # Each volume plugin defines its own supported topology specifications.
     # An empty TopologySelectorTerm list means there is no topology restriction.
     # This field is only honored by servers that enable the VolumeScheduling feature.
-    @typechecked
     def allowedTopologies(self) -> Optional[List["corev1.TopologySelectorTerm"]]:
         return self.__allowedTopologies
 
@@ -166,15 +175,20 @@ class VolumeAttachmentSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         persistentVolumeName = self.persistentVolumeName()
+        check_type("persistentVolumeName", persistentVolumeName, Optional[str])
         if persistentVolumeName is not None:  # omit empty
             v["persistentVolumeName"] = persistentVolumeName
         inlineVolumeSpec = self.inlineVolumeSpec()
+        check_type(
+            "inlineVolumeSpec",
+            inlineVolumeSpec,
+            Optional["corev1.PersistentVolumeSpec"],
+        )
         if inlineVolumeSpec is not None:  # omit empty
             v["inlineVolumeSpec"] = inlineVolumeSpec
         return v
 
     # Name of the persistent volume to attach.
-    @typechecked
     def persistentVolumeName(self) -> Optional[str]:
         return self.__persistentVolumeName
 
@@ -184,7 +198,6 @@ class VolumeAttachmentSource(types.Object):
     # translated fields from a pod's inline VolumeSource to a
     # PersistentVolumeSpec. This field is alpha-level and is only
     # honored by servers that enabled the CSIMigration feature.
-    @typechecked
     def inlineVolumeSpec(self) -> Optional["corev1.PersistentVolumeSpec"]:
         return self.__inlineVolumeSpec
 
@@ -207,24 +220,27 @@ class VolumeAttachmentSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["attacher"] = self.attacher()
-        v["source"] = self.source()
-        v["nodeName"] = self.nodeName()
+        attacher = self.attacher()
+        check_type("attacher", attacher, str)
+        v["attacher"] = attacher
+        source = self.source()
+        check_type("source", source, VolumeAttachmentSource)
+        v["source"] = source
+        nodeName = self.nodeName()
+        check_type("nodeName", nodeName, str)
+        v["nodeName"] = nodeName
         return v
 
     # Attacher indicates the name of the volume driver that MUST handle this
     # request. This is the name returned by GetPluginName().
-    @typechecked
     def attacher(self) -> str:
         return self.__attacher
 
     # Source represents the volume that should be attached.
-    @typechecked
     def source(self) -> VolumeAttachmentSource:
         return self.__source
 
     # The node that the volume should be attached to.
-    @typechecked
     def nodeName(self) -> str:
         return self.__nodeName
 
@@ -257,11 +273,12 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, VolumeAttachmentSpec)
+        v["spec"] = spec
         return v
 
     # Specification of the desired attach/detach volume behavior.
     # Populated by the Kubernetes system.
-    @typechecked
     def spec(self) -> VolumeAttachmentSpec:
         return self.__spec

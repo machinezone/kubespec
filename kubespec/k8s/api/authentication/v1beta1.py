@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # TokenReviewSpec is a description of the token authentication request.
@@ -25,15 +25,16 @@ class TokenReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         token = self.token()
+        check_type("token", token, Optional[str])
         if token:  # omit empty
             v["token"] = token
         audiences = self.audiences()
+        check_type("audiences", audiences, Optional[List[str]])
         if audiences:  # omit empty
             v["audiences"] = audiences
         return v
 
     # Token is the opaque bearer token.
-    @typechecked
     def token(self) -> Optional[str]:
         return self.__token
 
@@ -42,7 +43,6 @@ class TokenReviewSpec(types.Object):
     # verify that the token was intended for at least one of the audiences in
     # this list. If no audiences are provided, the audience will default to the
     # audience of the Kubernetes apiserver.
-    @typechecked
     def audiences(self) -> Optional[List[str]]:
         return self.__audiences
 
@@ -74,10 +74,11 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, TokenReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the request being evaluated
-    @typechecked
     def spec(self) -> TokenReviewSpec:
         return self.__spec

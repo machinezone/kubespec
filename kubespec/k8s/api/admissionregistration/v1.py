@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 FailurePolicyType = base.Enum(
@@ -117,15 +117,19 @@ class Rule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         apiGroups = self.apiGroups()
+        check_type("apiGroups", apiGroups, Optional[List[str]])
         if apiGroups:  # omit empty
             v["apiGroups"] = apiGroups
         apiVersions = self.apiVersions()
+        check_type("apiVersions", apiVersions, Optional[List[str]])
         if apiVersions:  # omit empty
             v["apiVersions"] = apiVersions
         resources = self.resources()
+        check_type("resources", resources, Optional[List[str]])
         if resources:  # omit empty
             v["resources"] = resources
         scope = self.scope()
+        check_type("scope", scope, Optional[ScopeType])
         if scope is not None:  # omit empty
             v["scope"] = scope
         return v
@@ -133,14 +137,12 @@ class Rule(types.Object):
     # APIGroups is the API groups the resources belong to. '*' is all groups.
     # If '*' is present, the length of the slice must be one.
     # Required.
-    @typechecked
     def apiGroups(self) -> Optional[List[str]]:
         return self.__apiGroups
 
     # APIVersions is the API versions the resources belong to. '*' is all versions.
     # If '*' is present, the length of the slice must be one.
     # Required.
-    @typechecked
     def apiVersions(self) -> Optional[List[str]]:
         return self.__apiVersions
 
@@ -159,7 +161,6 @@ class Rule(types.Object):
     #
     # Depending on the enclosing object, subresources might not be allowed.
     # Required.
-    @typechecked
     def resources(self) -> Optional[List[str]]:
         return self.__resources
 
@@ -171,7 +172,6 @@ class Rule(types.Object):
     # "*" means that there are no scope restrictions.
     # Subresources match the scope of their parent resource.
     # Default is "*".
-    @typechecked
     def scope(self) -> Optional[ScopeType]:
         return self.__scope
 
@@ -190,22 +190,23 @@ class RuleWithOperations(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         operations = self.operations()
+        check_type("operations", operations, Optional[List[OperationType]])
         if operations:  # omit empty
             v["operations"] = operations
-        v.update(self.rule()._root())  # inline
+        rule = self.rule()
+        check_type("rule", rule, Rule)
+        v.update(rule._root())  # inline
         return v
 
     # Operations is the operations the admission hook cares about - CREATE, UPDATE, or *
     # for all operations.
     # If '*' is present, the length of the slice must be one.
     # Required.
-    @typechecked
     def operations(self) -> Optional[List[OperationType]]:
         return self.__operations
 
     # Rule is embedded, it describes other criteria of the rule, like
     # APIGroups, APIVersions, Resources, etc.
-    @typechecked
     def rule(self) -> Rule:
         return self.__rule
 
@@ -226,38 +227,40 @@ class ServiceReference(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["namespace"] = self.namespace()
-        v["name"] = self.name()
+        namespace = self.namespace()
+        check_type("namespace", namespace, str)
+        v["namespace"] = namespace
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         path = self.path()
+        check_type("path", path, Optional[str])
         if path is not None:  # omit empty
             v["path"] = path
         port = self.port()
+        check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
         return v
 
     # `namespace` is the namespace of the service.
     # Required
-    @typechecked
     def namespace(self) -> str:
         return self.__namespace
 
     # `name` is the name of the service.
     # Required
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # `path` is an optional URL path which will be sent in any request to
     # this service.
-    @typechecked
     def path(self) -> Optional[str]:
         return self.__path
 
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
-    @typechecked
     def port(self) -> Optional[int]:
         return self.__port
 
@@ -279,12 +282,15 @@ class WebhookClientConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         url = self.url()
+        check_type("url", url, Optional[str])
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
+        check_type("service", service, Optional[ServiceReference])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
+        check_type("caBundle", caBundle, Optional[bytes])
         if caBundle:  # omit empty
             v["caBundle"] = caBundle
         return v
@@ -314,7 +320,6 @@ class WebhookClientConfig(types.Object):
     # Attempting to use a user or basic auth e.g. "user:password@" is not
     # allowed. Fragments ("#...") and query parameters ("?...") are not
     # allowed, either.
-    @typechecked
     def url(self) -> Optional[str]:
         return self.__url
 
@@ -322,13 +327,11 @@ class WebhookClientConfig(types.Object):
     # `service` or `url` must be specified.
     #
     # If the webhook is running within the cluster, then you should use `service`.
-    @typechecked
     def service(self) -> Optional[ServiceReference]:
         return self.__service
 
     # `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
-    @typechecked
     def caBundle(self) -> Optional[bytes]:
         return self.__caBundle
 
@@ -379,29 +382,48 @@ class MutatingWebhook(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["clientConfig"] = self.clientConfig()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        clientConfig = self.clientConfig()
+        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        v["clientConfig"] = clientConfig
         rules = self.rules()
+        check_type("rules", rules, Optional[List[RuleWithOperations]])
         if rules:  # omit empty
             v["rules"] = rules
         failurePolicy = self.failurePolicy()
+        check_type("failurePolicy", failurePolicy, Optional[FailurePolicyType])
         if failurePolicy is not None:  # omit empty
             v["failurePolicy"] = failurePolicy
         matchPolicy = self.matchPolicy()
+        check_type("matchPolicy", matchPolicy, Optional[MatchPolicyType])
         if matchPolicy is not None:  # omit empty
             v["matchPolicy"] = matchPolicy
         namespaceSelector = self.namespaceSelector()
+        check_type(
+            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+        )
         if namespaceSelector is not None:  # omit empty
             v["namespaceSelector"] = namespaceSelector
         objectSelector = self.objectSelector()
+        check_type("objectSelector", objectSelector, Optional["metav1.LabelSelector"])
         if objectSelector is not None:  # omit empty
             v["objectSelector"] = objectSelector
-        v["sideEffects"] = self.sideEffects()
+        sideEffects = self.sideEffects()
+        check_type("sideEffects", sideEffects, Optional[SideEffectClass])
+        v["sideEffects"] = sideEffects
         timeoutSeconds = self.timeoutSeconds()
+        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
         if timeoutSeconds is not None:  # omit empty
             v["timeoutSeconds"] = timeoutSeconds
-        v["admissionReviewVersions"] = self.admissionReviewVersions()
+        admissionReviewVersions = self.admissionReviewVersions()
+        check_type("admissionReviewVersions", admissionReviewVersions, List[str])
+        v["admissionReviewVersions"] = admissionReviewVersions
         reinvocationPolicy = self.reinvocationPolicy()
+        check_type(
+            "reinvocationPolicy", reinvocationPolicy, Optional[ReinvocationPolicyType]
+        )
         if reinvocationPolicy is not None:  # omit empty
             v["reinvocationPolicy"] = reinvocationPolicy
         return v
@@ -411,13 +433,11 @@ class MutatingWebhook(types.Object):
     # "imagepolicy" is the name of the webhook, and kubernetes.io is the name
     # of the organization.
     # Required.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # ClientConfig defines how to communicate with the hook.
     # Required
-    @typechecked
     def clientConfig(self) -> WebhookClientConfig:
         return self.__clientConfig
 
@@ -427,13 +447,11 @@ class MutatingWebhook(types.Object):
     # from putting the cluster in a state which cannot be recovered from without completely
     # disabling the plugin, ValidatingAdmissionWebhooks and MutatingAdmissionWebhooks are never called
     # on admission requests for ValidatingWebhookConfiguration and MutatingWebhookConfiguration objects.
-    @typechecked
     def rules(self) -> Optional[List[RuleWithOperations]]:
         return self.__rules
 
     # FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
     # allowed values are Ignore or Fail. Defaults to Fail.
-    @typechecked
     def failurePolicy(self) -> Optional[FailurePolicyType]:
         return self.__failurePolicy
 
@@ -451,7 +469,6 @@ class MutatingWebhook(types.Object):
     # a request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the webhook.
     #
     # Defaults to "Equivalent"
-    @typechecked
     def matchPolicy(self) -> Optional[MatchPolicyType]:
         return self.__matchPolicy
 
@@ -498,7 +515,6 @@ class MutatingWebhook(types.Object):
     # for more examples of label selectors.
     #
     # Default to the empty LabelSelector, which matches everything.
-    @typechecked
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__namespaceSelector
 
@@ -513,7 +529,6 @@ class MutatingWebhook(types.Object):
     # Use the object selector only if the webhook is opt-in, because end
     # users may skip the admission webhook by setting the labels.
     # Default to the empty LabelSelector, which matches everything.
-    @typechecked
     def objectSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__objectSelector
 
@@ -523,7 +538,6 @@ class MutatingWebhook(types.Object):
     # rejected by a future step in the admission change and the side effects therefore need to be undone.
     # Requests with the dryRun attribute will be auto-rejected if they match a webhook with
     # sideEffects == Unknown or Some.
-    @typechecked
     def sideEffects(self) -> Optional[SideEffectClass]:
         return self.__sideEffects
 
@@ -532,7 +546,6 @@ class MutatingWebhook(types.Object):
     # failure policy.
     # The timeout value must be between 1 and 30 seconds.
     # Default to 10 seconds.
-    @typechecked
     def timeoutSeconds(self) -> Optional[int]:
         return self.__timeoutSeconds
 
@@ -543,7 +556,6 @@ class MutatingWebhook(types.Object):
     # If a persisted webhook configuration specifies allowed versions and does not
     # include any versions known to the API Server, calls to the webhook will fail
     # and be subject to the failure policy.
-    @typechecked
     def admissionReviewVersions(self) -> List[str]:
         return self.__admissionReviewVersions
 
@@ -562,7 +574,6 @@ class MutatingWebhook(types.Object):
     # * to validate an object after all mutations are guaranteed complete, use a validating admission webhook instead.
     #
     # Defaults to "Never".
-    @typechecked
     def reinvocationPolicy(self) -> Optional[ReinvocationPolicyType]:
         return self.__reinvocationPolicy
 
@@ -593,12 +604,12 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
+        check_type("webhooks", webhooks, Optional[Dict[str, MutatingWebhook]])
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list
         return v
 
     # Webhooks is a list of webhooks and the affected resources and operations.
-    @typechecked
     def webhooks(self) -> Optional[Dict[str, MutatingWebhook]]:
         return self.__webhooks
 
@@ -643,28 +654,44 @@ class ValidatingWebhook(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["clientConfig"] = self.clientConfig()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        clientConfig = self.clientConfig()
+        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        v["clientConfig"] = clientConfig
         rules = self.rules()
+        check_type("rules", rules, Optional[List[RuleWithOperations]])
         if rules:  # omit empty
             v["rules"] = rules
         failurePolicy = self.failurePolicy()
+        check_type("failurePolicy", failurePolicy, Optional[FailurePolicyType])
         if failurePolicy is not None:  # omit empty
             v["failurePolicy"] = failurePolicy
         matchPolicy = self.matchPolicy()
+        check_type("matchPolicy", matchPolicy, Optional[MatchPolicyType])
         if matchPolicy is not None:  # omit empty
             v["matchPolicy"] = matchPolicy
         namespaceSelector = self.namespaceSelector()
+        check_type(
+            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+        )
         if namespaceSelector is not None:  # omit empty
             v["namespaceSelector"] = namespaceSelector
         objectSelector = self.objectSelector()
+        check_type("objectSelector", objectSelector, Optional["metav1.LabelSelector"])
         if objectSelector is not None:  # omit empty
             v["objectSelector"] = objectSelector
-        v["sideEffects"] = self.sideEffects()
+        sideEffects = self.sideEffects()
+        check_type("sideEffects", sideEffects, Optional[SideEffectClass])
+        v["sideEffects"] = sideEffects
         timeoutSeconds = self.timeoutSeconds()
+        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
         if timeoutSeconds is not None:  # omit empty
             v["timeoutSeconds"] = timeoutSeconds
-        v["admissionReviewVersions"] = self.admissionReviewVersions()
+        admissionReviewVersions = self.admissionReviewVersions()
+        check_type("admissionReviewVersions", admissionReviewVersions, List[str])
+        v["admissionReviewVersions"] = admissionReviewVersions
         return v
 
     # The name of the admission webhook.
@@ -672,13 +699,11 @@ class ValidatingWebhook(types.Object):
     # "imagepolicy" is the name of the webhook, and kubernetes.io is the name
     # of the organization.
     # Required.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # ClientConfig defines how to communicate with the hook.
     # Required
-    @typechecked
     def clientConfig(self) -> WebhookClientConfig:
         return self.__clientConfig
 
@@ -688,13 +713,11 @@ class ValidatingWebhook(types.Object):
     # from putting the cluster in a state which cannot be recovered from without completely
     # disabling the plugin, ValidatingAdmissionWebhooks and MutatingAdmissionWebhooks are never called
     # on admission requests for ValidatingWebhookConfiguration and MutatingWebhookConfiguration objects.
-    @typechecked
     def rules(self) -> Optional[List[RuleWithOperations]]:
         return self.__rules
 
     # FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
     # allowed values are Ignore or Fail. Defaults to Fail.
-    @typechecked
     def failurePolicy(self) -> Optional[FailurePolicyType]:
         return self.__failurePolicy
 
@@ -712,7 +735,6 @@ class ValidatingWebhook(types.Object):
     # a request to apps/v1beta1 or extensions/v1beta1 would be converted to apps/v1 and sent to the webhook.
     #
     # Defaults to "Equivalent"
-    @typechecked
     def matchPolicy(self) -> Optional[MatchPolicyType]:
         return self.__matchPolicy
 
@@ -759,7 +781,6 @@ class ValidatingWebhook(types.Object):
     # for more examples of label selectors.
     #
     # Default to the empty LabelSelector, which matches everything.
-    @typechecked
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__namespaceSelector
 
@@ -774,7 +795,6 @@ class ValidatingWebhook(types.Object):
     # Use the object selector only if the webhook is opt-in, because end
     # users may skip the admission webhook by setting the labels.
     # Default to the empty LabelSelector, which matches everything.
-    @typechecked
     def objectSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__objectSelector
 
@@ -784,7 +804,6 @@ class ValidatingWebhook(types.Object):
     # rejected by a future step in the admission change and the side effects therefore need to be undone.
     # Requests with the dryRun attribute will be auto-rejected if they match a webhook with
     # sideEffects == Unknown or Some.
-    @typechecked
     def sideEffects(self) -> Optional[SideEffectClass]:
         return self.__sideEffects
 
@@ -793,7 +812,6 @@ class ValidatingWebhook(types.Object):
     # failure policy.
     # The timeout value must be between 1 and 30 seconds.
     # Default to 10 seconds.
-    @typechecked
     def timeoutSeconds(self) -> Optional[int]:
         return self.__timeoutSeconds
 
@@ -804,7 +822,6 @@ class ValidatingWebhook(types.Object):
     # If a persisted webhook configuration specifies allowed versions and does not
     # include any versions known to the API Server, calls to the webhook will fail
     # and be subject to the failure policy.
-    @typechecked
     def admissionReviewVersions(self) -> List[str]:
         return self.__admissionReviewVersions
 
@@ -835,11 +852,11 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
+        check_type("webhooks", webhooks, Optional[Dict[str, ValidatingWebhook]])
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list
         return v
 
     # Webhooks is a list of webhooks and the affected resources and operations.
-    @typechecked
     def webhooks(self) -> Optional[Dict[str, ValidatingWebhook]]:
         return self.__webhooks

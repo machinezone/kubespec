@@ -12,7 +12,7 @@ from kubespec.k8s.apimachinery import resource
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # MetricListOptions is used to select metrics by their label selectors
@@ -33,21 +33,21 @@ class MetricListOptions(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         labelSelector = self.labelSelector()
+        check_type("labelSelector", labelSelector, Optional[str])
         if labelSelector:  # omit empty
             v["labelSelector"] = labelSelector
         metricLabelSelector = self.metricLabelSelector()
+        check_type("metricLabelSelector", metricLabelSelector, Optional[str])
         if metricLabelSelector:  # omit empty
             v["metricLabelSelector"] = metricLabelSelector
         return v
 
     # A selector to restrict the list of returned objects by their labels.
     # Defaults to everything.
-    @typechecked
     def labelSelector(self) -> Optional[str]:
         return self.__labelSelector
 
     # A selector to restrict the list of returned metrics by their labels
-    @typechecked
     def metricLabelSelector(self) -> Optional[str]:
         return self.__metricLabelSelector
 
@@ -80,28 +80,36 @@ class MetricValue(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["describedObject"] = self.describedObject()
-        v["metricName"] = self.metricName()
-        v["timestamp"] = self.timestamp()
+        describedObject = self.describedObject()
+        check_type("describedObject", describedObject, "corev1.ObjectReference")
+        v["describedObject"] = describedObject
+        metricName = self.metricName()
+        check_type("metricName", metricName, str)
+        v["metricName"] = metricName
+        timestamp = self.timestamp()
+        check_type("timestamp", timestamp, "base.Time")
+        v["timestamp"] = timestamp
         window = self.window()
+        check_type("window", window, Optional[int])
         if window is not None:  # omit empty
             v["window"] = window
-        v["value"] = self.value()
-        v["selector"] = self.selector()
+        value = self.value()
+        check_type("value", value, "resource.Quantity")
+        v["value"] = value
+        selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
+        v["selector"] = selector
         return v
 
     # a reference to the described object
-    @typechecked
     def describedObject(self) -> "corev1.ObjectReference":
         return self.__describedObject
 
     # the name of the metric
-    @typechecked
     def metricName(self) -> str:
         return self.__metricName
 
     # indicates the time at which the metrics were produced
-    @typechecked
     def timestamp(self) -> "base.Time":
         return self.__timestamp
 
@@ -109,12 +117,10 @@ class MetricValue(base.TypedObject):
     # which these metrics were calculated, when returning rate
     # metrics calculated from cumulative metrics (or zero for
     # non-calculated instantaneous metrics).
-    @typechecked
     def window(self) -> Optional[int]:
         return self.__window
 
     # the value of the metric for this
-    @typechecked
     def value(self) -> "resource.Quantity":
         return self.__value
 
@@ -122,6 +128,5 @@ class MetricValue(base.TypedObject):
     # this metric, and will generally just be the selector passed in to
     # the query used to fetch this metric.
     # When left blank, only the metric's Name will be used to gather metrics.
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector

@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.apimachinery import resource
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ExternalMetricValue is a metric value for external metric
@@ -42,27 +42,33 @@ class ExternalMetricValue(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["metricName"] = self.metricName()
-        v["metricLabels"] = self.metricLabels()
-        v["timestamp"] = self.timestamp()
+        metricName = self.metricName()
+        check_type("metricName", metricName, str)
+        v["metricName"] = metricName
+        metricLabels = self.metricLabels()
+        check_type("metricLabels", metricLabels, Dict[str, str])
+        v["metricLabels"] = metricLabels
+        timestamp = self.timestamp()
+        check_type("timestamp", timestamp, "base.Time")
+        v["timestamp"] = timestamp
         window = self.window()
+        check_type("window", window, Optional[int])
         if window is not None:  # omit empty
             v["window"] = window
-        v["value"] = self.value()
+        value = self.value()
+        check_type("value", value, "resource.Quantity")
+        v["value"] = value
         return v
 
     # the name of the metric
-    @typechecked
     def metricName(self) -> str:
         return self.__metricName
 
     # a set of labels that identify a single time series for the metric
-    @typechecked
     def metricLabels(self) -> Dict[str, str]:
         return self.__metricLabels
 
     # indicates the time at which the metrics were produced
-    @typechecked
     def timestamp(self) -> "base.Time":
         return self.__timestamp
 
@@ -70,11 +76,9 @@ class ExternalMetricValue(base.TypedObject):
     # which these metrics were calculated, when returning rate
     # metrics calculated from cumulative metrics (or zero for
     # non-calculated instantaneous metrics).
-    @typechecked
     def window(self) -> Optional[int]:
         return self.__window
 
     # the value of the metric
-    @typechecked
     def value(self) -> "resource.Quantity":
         return self.__value

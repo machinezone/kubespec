@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # DEPRECATED - This group version of PriorityClass is deprecated by scheduling.k8s.io/v1/PriorityClass.
@@ -46,21 +46,27 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["value"] = self.value()
+        value = self.value()
+        check_type("value", value, int)
+        v["value"] = value
         globalDefault = self.globalDefault()
+        check_type("globalDefault", globalDefault, Optional[bool])
         if globalDefault:  # omit empty
             v["globalDefault"] = globalDefault
         description = self.description()
+        check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
         preemptionPolicy = self.preemptionPolicy()
+        check_type(
+            "preemptionPolicy", preemptionPolicy, Optional[corev1.PreemptionPolicy]
+        )
         if preemptionPolicy is not None:  # omit empty
             v["preemptionPolicy"] = preemptionPolicy
         return v
 
     # The value of this priority class. This is the actual priority that pods
     # receive when they have the name of this class in their pod spec.
-    @typechecked
     def value(self) -> int:
         return self.__value
 
@@ -69,13 +75,11 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # Only one PriorityClass can be marked as `globalDefault`. However, if more than
     # one PriorityClasses exists with their `globalDefault` field set to true,
     # the smallest value of such global default PriorityClasses will be used as the default priority.
-    @typechecked
     def globalDefault(self) -> Optional[bool]:
         return self.__globalDefault
 
     # description is an arbitrary string that usually provides guidelines on
     # when this priority class should be used.
-    @typechecked
     def description(self) -> Optional[str]:
         return self.__description
 
@@ -83,6 +87,5 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
     # One of Never, PreemptLowerPriority.
     # Defaults to PreemptLowerPriority if unset.
     # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
-    @typechecked
     def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
         return self.__preemptionPolicy

@@ -11,7 +11,7 @@ from kubespec.k8s.api.core import v1 as corev1
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # JobSpec describes how the job execution will look like.
@@ -43,25 +43,34 @@ class JobSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         parallelism = self.parallelism()
+        check_type("parallelism", parallelism, Optional[int])
         if parallelism is not None:  # omit empty
             v["parallelism"] = parallelism
         completions = self.completions()
+        check_type("completions", completions, Optional[int])
         if completions is not None:  # omit empty
             v["completions"] = completions
         activeDeadlineSeconds = self.activeDeadlineSeconds()
+        check_type("activeDeadlineSeconds", activeDeadlineSeconds, Optional[int])
         if activeDeadlineSeconds is not None:  # omit empty
             v["activeDeadlineSeconds"] = activeDeadlineSeconds
         backoffLimit = self.backoffLimit()
+        check_type("backoffLimit", backoffLimit, Optional[int])
         if backoffLimit is not None:  # omit empty
             v["backoffLimit"] = backoffLimit
         selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
         manualSelector = self.manualSelector()
+        check_type("manualSelector", manualSelector, Optional[bool])
         if manualSelector is not None:  # omit empty
             v["manualSelector"] = manualSelector
-        v["template"] = self.template()
+        template = self.template()
+        check_type("template", template, "corev1.PodTemplateSpec")
+        v["template"] = template
         ttlSecondsAfterFinished = self.ttlSecondsAfterFinished()
+        check_type("ttlSecondsAfterFinished", ttlSecondsAfterFinished, Optional[int])
         if ttlSecondsAfterFinished is not None:  # omit empty
             v["ttlSecondsAfterFinished"] = ttlSecondsAfterFinished
         return v
@@ -71,7 +80,6 @@ class JobSpec(types.Object):
     # be less than this number when ((.spec.completions - .status.successful) < .spec.parallelism),
     # i.e. when the work left to do is less than max parallelism.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
-    @typechecked
     def parallelism(self) -> Optional[int]:
         return self.__parallelism
 
@@ -81,26 +89,22 @@ class JobSpec(types.Object):
     # value.  Setting to 1 means that parallelism is limited to 1 and the success of that
     # pod signals the success of the job.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
-    @typechecked
     def completions(self) -> Optional[int]:
         return self.__completions
 
     # Specifies the duration in seconds relative to the startTime that the job may be active
     # before the system tries to terminate it; value must be positive integer
-    @typechecked
     def activeDeadlineSeconds(self) -> Optional[int]:
         return self.__activeDeadlineSeconds
 
     # Specifies the number of retries before marking this job failed.
     # Defaults to 6
-    @typechecked
     def backoffLimit(self) -> Optional[int]:
         return self.__backoffLimit
 
     # A label query over pods that should match the pod count.
     # Normally, the system sets this field for you.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
@@ -114,13 +118,11 @@ class JobSpec(types.Object):
     # `manualSelector=true` in jobs that were created with the old `extensions/v1beta1`
     # API.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#specifying-your-own-pod-selector
-    @typechecked
     def manualSelector(self) -> Optional[bool]:
         return self.__manualSelector
 
     # Describes the pod that will be created when executing a job.
     # More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/
-    @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
         return self.__template
 
@@ -133,7 +135,6 @@ class JobSpec(types.Object):
     # the Job becomes eligible to be deleted immediately after it finishes.
     # This field is alpha-level and is only honored by servers that enable the
     # TTLAfterFinished feature.
-    @typechecked
     def ttlSecondsAfterFinished(self) -> Optional[int]:
         return self.__ttlSecondsAfterFinished
 
@@ -165,11 +166,12 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[JobSpec])
+        v["spec"] = spec
         return v
 
     # Specification of the desired behavior of a job.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> Optional[JobSpec]:
         return self.__spec

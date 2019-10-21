@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # KeyUsages specifies valid usage contexts for keys.
@@ -71,26 +71,32 @@ class CertificateSigningRequestSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["request"] = self.request()
+        request = self.request()
+        check_type("request", request, bytes)
+        v["request"] = request
         usages = self.usages()
+        check_type("usages", usages, Optional[List[KeyUsage]])
         if usages:  # omit empty
             v["usages"] = usages
         username = self.username()
+        check_type("username", username, Optional[str])
         if username:  # omit empty
             v["username"] = username
         uid = self.uid()
+        check_type("uid", uid, Optional[str])
         if uid:  # omit empty
             v["uid"] = uid
         groups = self.groups()
+        check_type("groups", groups, Optional[List[str]])
         if groups:  # omit empty
             v["groups"] = groups
         extra = self.extra()
+        check_type("extra", extra, Optional[Dict[str, List[str]]])
         if extra:  # omit empty
             v["extra"] = extra
         return v
 
     # Base64-encoded PKCS#10 CSR data
-    @typechecked
     def request(self) -> bytes:
         return self.__request
 
@@ -98,31 +104,26 @@ class CertificateSigningRequestSpec(types.Object):
     # valid for.
     # See: https://tools.ietf.org/html/rfc5280#section-4.2.1.3
     #      https://tools.ietf.org/html/rfc5280#section-4.2.1.12
-    @typechecked
     def usages(self) -> Optional[List[KeyUsage]]:
         return self.__usages
 
     # Information about the requesting user.
     # See user.Info interface for details.
-    @typechecked
     def username(self) -> Optional[str]:
         return self.__username
 
     # UID information about the requesting user.
     # See user.Info interface for details.
-    @typechecked
     def uid(self) -> Optional[str]:
         return self.__uid
 
     # Group information about the requesting user.
     # See user.Info interface for details.
-    @typechecked
     def groups(self) -> Optional[List[str]]:
         return self.__groups
 
     # Extra information about the requesting user.
     # See user.Info interface for details.
-    @typechecked
     def extra(self) -> Optional[Dict[str, List[str]]]:
         return self.__extra
 
@@ -152,10 +153,11 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[CertificateSigningRequestSpec])
+        v["spec"] = spec
         return v
 
     # The certificate request itself and any additional information.
-    @typechecked
     def spec(self) -> Optional[CertificateSigningRequestSpec]:
         return self.__spec

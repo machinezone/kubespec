@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # CrossVersionObjectReference contains enough information to let you identify the referred resource.
@@ -25,25 +25,27 @@ class CrossVersionObjectReference(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["kind"] = self.kind()
-        v["name"] = self.name()
+        kind = self.kind()
+        check_type("kind", kind, str)
+        v["kind"] = kind
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         apiVersion = self.apiVersion()
+        check_type("apiVersion", apiVersion, Optional[str])
         if apiVersion:  # omit empty
             v["apiVersion"] = apiVersion
         return v
 
     # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
-    @typechecked
     def kind(self) -> str:
         return self.__kind
 
     # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # API version of the referent
-    @typechecked
     def apiVersion(self) -> Optional[str]:
         return self.__apiVersion
 
@@ -72,19 +74,28 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["scaleTargetRef"] = self.scaleTargetRef()
+        scaleTargetRef = self.scaleTargetRef()
+        check_type("scaleTargetRef", scaleTargetRef, CrossVersionObjectReference)
+        v["scaleTargetRef"] = scaleTargetRef
         minReplicas = self.minReplicas()
+        check_type("minReplicas", minReplicas, Optional[int])
         if minReplicas is not None:  # omit empty
             v["minReplicas"] = minReplicas
-        v["maxReplicas"] = self.maxReplicas()
+        maxReplicas = self.maxReplicas()
+        check_type("maxReplicas", maxReplicas, int)
+        v["maxReplicas"] = maxReplicas
         targetCPUUtilizationPercentage = self.targetCPUUtilizationPercentage()
+        check_type(
+            "targetCPUUtilizationPercentage",
+            targetCPUUtilizationPercentage,
+            Optional[int],
+        )
         if targetCPUUtilizationPercentage is not None:  # omit empty
             v["targetCPUUtilizationPercentage"] = targetCPUUtilizationPercentage
         return v
 
     # reference to scaled resource; horizontal pod autoscaler will learn the current resource consumption
     # and will set the desired number of pods by using its Scale subresource.
-    @typechecked
     def scaleTargetRef(self) -> CrossVersionObjectReference:
         return self.__scaleTargetRef
 
@@ -93,18 +104,15 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # alpha feature gate HPAScaleToZero is enabled and at least one Object or External
     # metric is configured.  Scaling is active as long as at least one metric value is
     # available.
-    @typechecked
     def minReplicas(self) -> Optional[int]:
         return self.__minReplicas
 
     # upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
-    @typechecked
     def maxReplicas(self) -> int:
         return self.__maxReplicas
 
     # target average CPU utilization (represented as a percentage of requested CPU) over all the pods;
     # if not specified the default autoscaling policy will be used.
-    @typechecked
     def targetCPUUtilizationPercentage(self) -> Optional[int]:
         return self.__targetCPUUtilizationPercentage
 
@@ -136,11 +144,12 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[HorizontalPodAutoscalerSpec])
+        v["spec"] = spec
         return v
 
     # behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
-    @typechecked
     def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
         return self.__spec
 
@@ -157,12 +166,12 @@ class ScaleSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         replicas = self.replicas()
+        check_type("replicas", replicas, Optional[int])
         if replicas:  # omit empty
             v["replicas"] = replicas
         return v
 
     # desired number of instances for the scaled object.
-    @typechecked
     def replicas(self) -> Optional[int]:
         return self.__replicas
 
@@ -194,10 +203,11 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[ScaleSpec])
+        v["spec"] = spec
         return v
 
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
-    @typechecked
     def spec(self) -> Optional[ScaleSpec]:
         return self.__spec

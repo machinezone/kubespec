@@ -9,7 +9,7 @@ from typing import Any, Dict
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # RawExtension is used to hold extensions in external versions.
@@ -76,26 +76,29 @@ class Unknown(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["Raw"] = self.raw()
-        v["ContentEncoding"] = self.contentEncoding()
-        v["ContentType"] = self.contentType()
+        raw = self.raw()
+        check_type("raw", raw, bytes)
+        v["Raw"] = raw
+        contentEncoding = self.contentEncoding()
+        check_type("contentEncoding", contentEncoding, str)
+        v["ContentEncoding"] = contentEncoding
+        contentType = self.contentType()
+        check_type("contentType", contentType, str)
+        v["ContentType"] = contentType
         return v
 
     # Raw will hold the complete serialized object which couldn't be matched
     # with a registered type. Most likely, nothing should be done with this
     # except for passing it through the system.
-    @typechecked
     def raw(self) -> bytes:
         return self.__raw
 
     # ContentEncoding is encoding used to encode 'Raw' data.
     # Unspecified means no encoding.
-    @typechecked
     def contentEncoding(self) -> str:
         return self.__contentEncoding
 
     # ContentType  is serialization method used to serialize 'Raw'.
     # Unspecified means ContentTypeJSON.
-    @typechecked
     def contentType(self) -> str:
         return self.__contentType

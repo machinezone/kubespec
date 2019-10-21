@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # LeaseSpec is a specification of a Lease.
@@ -35,48 +35,48 @@ class LeaseSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         holderIdentity = self.holderIdentity()
+        check_type("holderIdentity", holderIdentity, Optional[str])
         if holderIdentity is not None:  # omit empty
             v["holderIdentity"] = holderIdentity
         leaseDurationSeconds = self.leaseDurationSeconds()
+        check_type("leaseDurationSeconds", leaseDurationSeconds, Optional[int])
         if leaseDurationSeconds is not None:  # omit empty
             v["leaseDurationSeconds"] = leaseDurationSeconds
         acquireTime = self.acquireTime()
+        check_type("acquireTime", acquireTime, Optional["base.MicroTime"])
         if acquireTime is not None:  # omit empty
             v["acquireTime"] = acquireTime
         renewTime = self.renewTime()
+        check_type("renewTime", renewTime, Optional["base.MicroTime"])
         if renewTime is not None:  # omit empty
             v["renewTime"] = renewTime
         leaseTransitions = self.leaseTransitions()
+        check_type("leaseTransitions", leaseTransitions, Optional[int])
         if leaseTransitions is not None:  # omit empty
             v["leaseTransitions"] = leaseTransitions
         return v
 
     # holderIdentity contains the identity of the holder of a current lease.
-    @typechecked
     def holderIdentity(self) -> Optional[str]:
         return self.__holderIdentity
 
     # leaseDurationSeconds is a duration that candidates for a lease need
     # to wait to force acquire it. This is measure against time of last
     # observed RenewTime.
-    @typechecked
     def leaseDurationSeconds(self) -> Optional[int]:
         return self.__leaseDurationSeconds
 
     # acquireTime is a time when the current lease was acquired.
-    @typechecked
     def acquireTime(self) -> Optional["base.MicroTime"]:
         return self.__acquireTime
 
     # renewTime is a time when the current holder of a lease has last
     # updated the lease.
-    @typechecked
     def renewTime(self) -> Optional["base.MicroTime"]:
         return self.__renewTime
 
     # leaseTransitions is the number of transitions of a lease between
     # holders.
-    @typechecked
     def leaseTransitions(self) -> Optional[int]:
         return self.__leaseTransitions
 
@@ -108,11 +108,12 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[LeaseSpec])
+        v["spec"] = spec
         return v
 
     # Specification of the Lease.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> Optional[LeaseSpec]:
         return self.__spec

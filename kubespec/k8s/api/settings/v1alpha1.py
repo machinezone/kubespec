@@ -11,7 +11,7 @@ from kubespec.k8s.api.core import v1 as corev1
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # PodPresetSpec is a description of a pod preset.
@@ -36,44 +36,47 @@ class PodPresetSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["selector"] = self.selector()
+        selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
+        v["selector"] = selector
         env = self.env()
+        check_type("env", env, Optional[Dict[str, "corev1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env.values()  # named list
         envFrom = self.envFrom()
+        check_type("envFrom", envFrom, Optional[List["corev1.EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         volumes = self.volumes()
+        check_type("volumes", volumes, Optional[Dict[str, "corev1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes.values()  # named list
         volumeMounts = self.volumeMounts()
+        check_type(
+            "volumeMounts", volumeMounts, Optional[Dict[str, "corev1.VolumeMount"]]
+        )
         if volumeMounts:  # omit empty
             v["volumeMounts"] = volumeMounts.values()  # named list
         return v
 
     # Selector is a label query over a set of resources, in this case pods.
     # Required.
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
     # Env defines the collection of EnvVar to inject into containers.
-    @typechecked
     def env(self) -> Optional[Dict[str, "corev1.EnvVar"]]:
         return self.__env
 
     # EnvFrom defines the collection of EnvFromSource to inject into containers.
-    @typechecked
     def envFrom(self) -> Optional[List["corev1.EnvFromSource"]]:
         return self.__envFrom
 
     # Volumes defines the collection of Volume to inject into the pod.
-    @typechecked
     def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
         return self.__volumes
 
     # VolumeMounts defines the collection of VolumeMount to inject into containers.
-    @typechecked
     def volumeMounts(self) -> Optional[Dict[str, "corev1.VolumeMount"]]:
         return self.__volumeMounts
 
@@ -106,9 +109,10 @@ class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[PodPresetSpec])
+        v["spec"] = spec
         return v
 
-    @typechecked
     def spec(self) -> Optional[PodPresetSpec]:
         return self.__spec

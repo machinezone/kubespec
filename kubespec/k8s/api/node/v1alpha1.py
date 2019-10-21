@@ -11,7 +11,7 @@ from kubespec.k8s.api.core import v1 as corev1
 from kubespec.k8s.apimachinery import resource
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # Overhead structure represents the resource overhead associated with running a pod.
@@ -26,12 +26,16 @@ class Overhead(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         podFixed = self.podFixed()
+        check_type(
+            "podFixed",
+            podFixed,
+            Optional[Dict[corev1.ResourceName, "resource.Quantity"]],
+        )
         if podFixed:  # omit empty
             v["podFixed"] = podFixed
         return v
 
     # PodFixed represents the fixed resource overhead associated with running a pod.
-    @typechecked
     def podFixed(self) -> Optional[Dict[corev1.ResourceName, "resource.Quantity"]]:
         return self.__podFixed
 
@@ -54,9 +58,11 @@ class Scheduling(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         nodeSelector = self.nodeSelector()
+        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
+        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -66,7 +72,6 @@ class Scheduling(types.Object):
     # node matched by this selector. The RuntimeClass nodeSelector is merged
     # with a pod's existing nodeSelector. Any conflicts will cause the pod to
     # be rejected in admission.
-    @typechecked
     def nodeSelector(self) -> Optional[Dict[str, str]]:
         return self.__nodeSelector
 
@@ -74,7 +79,6 @@ class Scheduling(types.Object):
     # RuntimeClass during admission, effectively unioning the set of nodes
     # tolerated by the pod and the RuntimeClass.
     # +listType=atomic
-    @typechecked
     def tolerations(self) -> Optional[List["corev1.Toleration"]]:
         return self.__tolerations
 
@@ -100,11 +104,15 @@ class RuntimeClassSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["runtimeHandler"] = self.runtimeHandler()
+        runtimeHandler = self.runtimeHandler()
+        check_type("runtimeHandler", runtimeHandler, str)
+        v["runtimeHandler"] = runtimeHandler
         overhead = self.overhead()
+        check_type("overhead", overhead, Optional[Overhead])
         if overhead is not None:  # omit empty
             v["overhead"] = overhead
         scheduling = self.scheduling()
+        check_type("scheduling", scheduling, Optional[Scheduling])
         if scheduling is not None:  # omit empty
             v["scheduling"] = scheduling
         return v
@@ -119,7 +127,6 @@ class RuntimeClassSpec(types.Object):
     # in a pod.
     # The RuntimeHandler must conform to the DNS Label (RFC 1123) requirements
     # and is immutable.
-    @typechecked
     def runtimeHandler(self) -> str:
         return self.__runtimeHandler
 
@@ -127,7 +134,6 @@ class RuntimeClassSpec(types.Object):
     # given RuntimeClass. For more details, see
     # https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
     # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
-    @typechecked
     def overhead(self) -> Optional[Overhead]:
         return self.__overhead
 
@@ -135,7 +141,6 @@ class RuntimeClassSpec(types.Object):
     # with this RuntimeClass are scheduled to nodes that support it.
     # If scheduling is nil, this RuntimeClass is assumed to be supported by all
     # nodes.
-    @typechecked
     def scheduling(self) -> Optional[Scheduling]:
         return self.__scheduling
 
@@ -171,11 +176,12 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, RuntimeClassSpec)
+        v["spec"] = spec
         return v
 
     # Specification of the RuntimeClass
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> RuntimeClassSpec:
         return self.__spec

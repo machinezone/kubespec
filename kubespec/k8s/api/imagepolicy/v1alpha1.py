@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ImageReviewContainerSpec is a description of a container within the pod creation request.
@@ -24,12 +24,12 @@ class ImageReviewContainerSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         image = self.image()
+        check_type("image", image, Optional[str])
         if image:  # omit empty
             v["image"] = image
         return v
 
     # This can be in the form image:tag or image@SHA:012345679abcdef.
-    @typechecked
     def image(self) -> Optional[str]:
         return self.__image
 
@@ -53,30 +53,30 @@ class ImageReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         containers = self.containers()
+        check_type("containers", containers, Optional[List[ImageReviewContainerSpec]])
         if containers:  # omit empty
             v["containers"] = containers
         annotations = self.annotations()
+        check_type("annotations", annotations, Optional[Dict[str, str]])
         if annotations:  # omit empty
             v["annotations"] = annotations
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         return v
 
     # Containers is a list of a subset of the information in each container of the Pod being created.
-    @typechecked
     def containers(self) -> Optional[List[ImageReviewContainerSpec]]:
         return self.__containers
 
     # Annotations is a list of key-value pairs extracted from the Pod's annotations.
     # It only includes keys which match the pattern `*.image-policy.k8s.io/*`.
     # It is up to each webhook backend to determine how to interpret these annotations, if at all.
-    @typechecked
     def annotations(self) -> Optional[Dict[str, str]]:
         return self.__annotations
 
     # Namespace is the namespace the pod is being created in.
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
@@ -106,10 +106,11 @@ class ImageReview(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, ImageReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the pod being evaluated
-    @typechecked
     def spec(self) -> ImageReviewSpec:
         return self.__spec

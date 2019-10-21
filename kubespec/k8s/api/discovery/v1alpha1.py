@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # AddressType represents the type of address referred to by an endpoint.
@@ -35,6 +35,7 @@ class EndpointConditions(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ready = self.ready()
+        check_type("ready", ready, Optional[bool])
         if ready is not None:  # omit empty
             v["ready"] = ready
         return v
@@ -43,7 +44,6 @@ class EndpointConditions(types.Object):
     # according to whatever system is managing the endpoint. A nil value
     # indicates an unknown state. In most cases consumers should interpret this
     # unknown state as ready.
-    @typechecked
     def ready(self) -> Optional[bool]:
         return self.__ready
 
@@ -72,15 +72,22 @@ class Endpoint(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["addresses"] = self.addresses()
-        v["conditions"] = self.conditions()
+        addresses = self.addresses()
+        check_type("addresses", addresses, List[str])
+        v["addresses"] = addresses
+        conditions = self.conditions()
+        check_type("conditions", conditions, Optional[EndpointConditions])
+        v["conditions"] = conditions
         hostname = self.hostname()
+        check_type("hostname", hostname, Optional[str])
         if hostname is not None:  # omit empty
             v["hostname"] = hostname
         targetRef = self.targetRef()
+        check_type("targetRef", targetRef, Optional["corev1.ObjectReference"])
         if targetRef is not None:  # omit empty
             v["targetRef"] = targetRef
         topology = self.topology()
+        check_type("topology", topology, Optional[Dict[str, str]])
         if topology:  # omit empty
             v["topology"] = topology
         return v
@@ -92,12 +99,10 @@ class Endpoint(types.Object):
     # of their own capabilities. This must contain at least one address but no
     # more than 100.
     # +listType=set
-    @typechecked
     def addresses(self) -> List[str]:
         return self.__addresses
 
     # conditions contains information about the current status of the endpoint.
-    @typechecked
     def conditions(self) -> Optional[EndpointConditions]:
         return self.__conditions
 
@@ -106,13 +111,11 @@ class Endpoint(types.Object):
     # Multiple endpoints which use the same hostname should be considered
     # fungible (e.g. multiple A values in DNS). Must pass DNS Label (RFC 1123)
     # validation.
-    @typechecked
     def hostname(self) -> Optional[str]:
         return self.__hostname
 
     # targetRef is a reference to a Kubernetes object that represents this
     # endpoint.
-    @typechecked
     def targetRef(self) -> Optional["corev1.ObjectReference"]:
         return self.__targetRef
 
@@ -128,7 +131,6 @@ class Endpoint(types.Object):
     #   endpoint is located. This should match the corresponding node label.
     # * topology.kubernetes.io/region: the value indicates the region where the
     #   endpoint is located. This should match the corresponding node label.
-    @typechecked
     def topology(self) -> Optional[Dict[str, str]]:
         return self.__topology
 
@@ -149,12 +151,15 @@ class EndpointPort(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         name = self.name()
+        check_type("name", name, Optional[str])
         if name is not None:  # omit empty
             v["name"] = name
         protocol = self.protocol()
+        check_type("protocol", protocol, Optional[corev1.Protocol])
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
         port = self.port()
+        check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
         return v
@@ -168,21 +173,18 @@ class EndpointPort(types.Object):
     # * must contain at least one letter [a-z]
     # * it must not start or end with a hyphen, nor contain adjacent hyphens
     # Default is empty string.
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
     # The IP protocol for this port.
     # Must be UDP, TCP, or SCTP.
     # Default is TCP.
-    @typechecked
     def protocol(self) -> Optional[corev1.Protocol]:
         return self.__protocol
 
     # The port number of the endpoint.
     # If this is not specified, ports are not restricted and must be
     # interpreted in the context of the specific consumer.
-    @typechecked
     def port(self) -> Optional[int]:
         return self.__port
 
@@ -222,22 +224,26 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["addressType"] = self.addressType()
-        v["endpoints"] = self.endpoints()
-        v["ports"] = self.ports()
+        addressType = self.addressType()
+        check_type("addressType", addressType, Optional[AddressType])
+        v["addressType"] = addressType
+        endpoints = self.endpoints()
+        check_type("endpoints", endpoints, List[Endpoint])
+        v["endpoints"] = endpoints
+        ports = self.ports()
+        check_type("ports", ports, List[EndpointPort])
+        v["ports"] = ports
         return v
 
     # addressType specifies the type of address carried by this EndpointSlice.
     # All addresses in this slice must be the same type.
     # Default is IP
-    @typechecked
     def addressType(self) -> Optional[AddressType]:
         return self.__addressType
 
     # endpoints is a list of unique endpoints in this slice. Each slice may
     # include a maximum of 1000 endpoints.
     # +listType=atomic
-    @typechecked
     def endpoints(self) -> List[Endpoint]:
         return self.__endpoints
 
@@ -247,6 +253,5 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
     # nil port value, it indicates "all ports". Each slice may include a
     # maximum of 100 ports.
     # +listType=atomic
-    @typechecked
     def ports(self) -> List[EndpointPort]:
         return self.__ports

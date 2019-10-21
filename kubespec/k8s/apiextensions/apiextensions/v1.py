@@ -11,7 +11,7 @@ from kubespec.k8s.apimachinery import runtime
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ConversionStrategyType describes different conversion types.
@@ -50,26 +50,29 @@ class ConversionRequest(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["uid"] = self.uid()
-        v["desiredAPIVersion"] = self.desiredAPIVersion()
-        v["objects"] = self.objects()
+        uid = self.uid()
+        check_type("uid", uid, str)
+        v["uid"] = uid
+        desiredAPIVersion = self.desiredAPIVersion()
+        check_type("desiredAPIVersion", desiredAPIVersion, str)
+        v["desiredAPIVersion"] = desiredAPIVersion
+        objects = self.objects()
+        check_type("objects", objects, List["runtime.RawExtension"])
+        v["objects"] = objects
         return v
 
     # uid is an identifier for the individual request/response. It allows distinguishing instances of requests which are
     # otherwise identical (parallel requests, etc).
     # The UID is meant to track the round trip (request/response) between the Kubernetes API server and the webhook, not the user request.
     # It is suitable for correlating log entries between the webhook and apiserver, for either auditing or debugging.
-    @typechecked
     def uid(self) -> str:
         return self.__uid
 
     # desiredAPIVersion is the version to convert given objects to. e.g. "myapi.example.com/v1"
-    @typechecked
     def desiredAPIVersion(self) -> str:
         return self.__desiredAPIVersion
 
     # objects is the list of custom resource objects to be converted.
-    @typechecked
     def objects(self) -> List["runtime.RawExtension"]:
         return self.__objects
 
@@ -94,14 +97,19 @@ class ConversionResponse(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["uid"] = self.uid()
-        v["convertedObjects"] = self.convertedObjects()
-        v["result"] = self.result()
+        uid = self.uid()
+        check_type("uid", uid, str)
+        v["uid"] = uid
+        convertedObjects = self.convertedObjects()
+        check_type("convertedObjects", convertedObjects, List["runtime.RawExtension"])
+        v["convertedObjects"] = convertedObjects
+        result = self.result()
+        check_type("result", result, "metav1.Status")
+        v["result"] = result
         return v
 
     # uid is an identifier for the individual request/response.
     # This should be copied over from the corresponding `request.uid`.
-    @typechecked
     def uid(self) -> str:
         return self.__uid
 
@@ -109,7 +117,6 @@ class ConversionResponse(types.Object):
     # The webhook is expected to set `apiVersion` of these objects to the `request.desiredAPIVersion`. The list
     # must also have the same size as the input list with the same objects in the same order (equal kind, metadata.uid, metadata.name and metadata.namespace).
     # The webhook is allowed to mutate labels and annotations. Any other change to the metadata is silently ignored.
-    @typechecked
     def convertedObjects(self) -> List["runtime.RawExtension"]:
         return self.__convertedObjects
 
@@ -118,7 +125,6 @@ class ConversionResponse(types.Object):
     # conversion. A successful conversion must set `result.status` to `Success`. A failed conversion must set
     # `result.status` to `Failure` and provide more details in `result.message` and return http status 200. The `result.message`
     # will be used to construct an error message for the end user.
-    @typechecked
     def result(self) -> "metav1.Status":
         return self.__result
 
@@ -140,20 +146,20 @@ class ConversionReview(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         request = self.request()
+        check_type("request", request, Optional[ConversionRequest])
         if request is not None:  # omit empty
             v["request"] = request
         response = self.response()
+        check_type("response", response, Optional[ConversionResponse])
         if response is not None:  # omit empty
             v["response"] = response
         return v
 
     # request describes the attributes for the conversion request.
-    @typechecked
     def request(self) -> Optional[ConversionRequest]:
         return self.__request
 
     # response describes the attributes for the conversion response.
-    @typechecked
     def response(self) -> Optional[ConversionResponse]:
         return self.__response
 
@@ -182,53 +188,56 @@ class CustomResourceColumnDefinition(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["type"] = self.type()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        type = self.type()
+        check_type("type", type, str)
+        v["type"] = type
         format = self.format()
+        check_type("format", format, Optional[str])
         if format:  # omit empty
             v["format"] = format
         description = self.description()
+        check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
         priority = self.priority()
+        check_type("priority", priority, Optional[int])
         if priority:  # omit empty
             v["priority"] = priority
-        v["jsonPath"] = self.jsonPath()
+        jsonPath = self.jsonPath()
+        check_type("jsonPath", jsonPath, str)
+        v["jsonPath"] = jsonPath
         return v
 
     # name is a human readable name for the column.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # type is an OpenAPI type definition for this column.
     # See https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#data-types for details.
-    @typechecked
     def type(self) -> str:
         return self.__type
 
     # format is an optional OpenAPI type definition for this column. The 'name' format is applied
     # to the primary identifier column to assist in clients identifying column is the resource name.
     # See https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#data-types for details.
-    @typechecked
     def format(self) -> Optional[str]:
         return self.__format
 
     # description is a human readable description of this column.
-    @typechecked
     def description(self) -> Optional[str]:
         return self.__description
 
     # priority is an integer defining the relative importance of this column compared to others. Lower
     # numbers are considered higher priority. Columns that may be omitted in limited space scenarios
     # should be given a priority greater than 0.
-    @typechecked
     def priority(self) -> Optional[int]:
         return self.__priority
 
     # jsonPath is a simple JSON path (i.e. with array notation) which is evaluated against
     # each custom resource to produce the value for this column.
-    @typechecked
     def jsonPath(self) -> str:
         return self.__jsonPath
 
@@ -249,37 +258,39 @@ class ServiceReference(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["namespace"] = self.namespace()
-        v["name"] = self.name()
+        namespace = self.namespace()
+        check_type("namespace", namespace, str)
+        v["namespace"] = namespace
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         path = self.path()
+        check_type("path", path, Optional[str])
         if path is not None:  # omit empty
             v["path"] = path
         port = self.port()
+        check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
         return v
 
     # namespace is the namespace of the service.
     # Required
-    @typechecked
     def namespace(self) -> str:
         return self.__namespace
 
     # name is the name of the service.
     # Required
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # path is an optional URL path at which the webhook will be contacted.
-    @typechecked
     def path(self) -> Optional[str]:
         return self.__path
 
     # port is an optional service port at which the webhook will be contacted.
     # `port` should be a valid port number (1-65535, inclusive).
     # Defaults to 443 for backward compatibility.
-    @typechecked
     def port(self) -> Optional[int]:
         return self.__port
 
@@ -300,12 +311,15 @@ class WebhookClientConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         url = self.url()
+        check_type("url", url, Optional[str])
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
+        check_type("service", service, Optional[ServiceReference])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
+        check_type("caBundle", caBundle, Optional[bytes])
         if caBundle:  # omit empty
             v["caBundle"] = caBundle
         return v
@@ -335,7 +349,6 @@ class WebhookClientConfig(types.Object):
     # Attempting to use a user or basic auth e.g. "user:password@" is not
     # allowed. Fragments ("#...") and query parameters ("?...") are not
     # allowed, either.
-    @typechecked
     def url(self) -> Optional[str]:
         return self.__url
 
@@ -343,13 +356,11 @@ class WebhookClientConfig(types.Object):
     # service or url must be specified.
     #
     # If the webhook is running within the cluster, then you should use `service`.
-    @typechecked
     def service(self) -> Optional[ServiceReference]:
         return self.__service
 
     # caBundle is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
     # If unspecified, system trust roots on the apiserver are used.
-    @typechecked
     def caBundle(self) -> Optional[bytes]:
         return self.__caBundle
 
@@ -373,13 +384,15 @@ class WebhookConversion(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         clientConfig = self.clientConfig()
+        check_type("clientConfig", clientConfig, Optional[WebhookClientConfig])
         if clientConfig is not None:  # omit empty
             v["clientConfig"] = clientConfig
-        v["conversionReviewVersions"] = self.conversionReviewVersions()
+        conversionReviewVersions = self.conversionReviewVersions()
+        check_type("conversionReviewVersions", conversionReviewVersions, List[str])
+        v["conversionReviewVersions"] = conversionReviewVersions
         return v
 
     # clientConfig is the instructions for how to call the webhook if strategy is `Webhook`.
-    @typechecked
     def clientConfig(self) -> Optional[WebhookClientConfig]:
         return self.__clientConfig
 
@@ -389,7 +402,6 @@ class WebhookConversion(types.Object):
     # are supported by API server, conversion will fail for the custom resource.
     # If a persisted Webhook configuration specifies allowed versions and does not
     # include any versions known to the API Server, calls to the webhook will fail.
-    @typechecked
     def conversionReviewVersions(self) -> List[str]:
         return self.__conversionReviewVersions
 
@@ -410,8 +422,11 @@ class CustomResourceConversion(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["strategy"] = self.strategy()
+        strategy = self.strategy()
+        check_type("strategy", strategy, ConversionStrategyType)
+        v["strategy"] = strategy
         webhook = self.webhook()
+        check_type("webhook", webhook, Optional[WebhookConversion])
         if webhook is not None:  # omit empty
             v["webhook"] = webhook
         return v
@@ -420,12 +435,10 @@ class CustomResourceConversion(types.Object):
     # - `None`: The converter only change the apiVersion and would not touch any other field in the custom resource.
     # - `Webhook`: API Server will call to an external webhook to do the conversion. Additional information
     #   is needed for this option. This requires spec.preserveUnknownFields to be false, and spec.conversion.webhook to be set.
-    @typechecked
     def strategy(self) -> ConversionStrategyType:
         return self.__strategy
 
     # webhook describes how to call the conversion webhook. Required when `strategy` is set to `Webhook`.
-    @typechecked
     def webhook(self) -> Optional[WebhookConversion]:
         return self.__webhook
 
@@ -454,18 +467,26 @@ class CustomResourceDefinitionNames(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["plural"] = self.plural()
+        plural = self.plural()
+        check_type("plural", plural, str)
+        v["plural"] = plural
         singular = self.singular()
+        check_type("singular", singular, Optional[str])
         if singular:  # omit empty
             v["singular"] = singular
         shortNames = self.shortNames()
+        check_type("shortNames", shortNames, Optional[List[str]])
         if shortNames:  # omit empty
             v["shortNames"] = shortNames
-        v["kind"] = self.kind()
+        kind = self.kind()
+        check_type("kind", kind, str)
+        v["kind"] = kind
         listKind = self.listKind()
+        check_type("listKind", listKind, Optional[str])
         if listKind:  # omit empty
             v["listKind"] = listKind
         categories = self.categories()
+        check_type("categories", categories, Optional[List[str]])
         if categories:  # omit empty
             v["categories"] = categories
         return v
@@ -474,37 +495,31 @@ class CustomResourceDefinitionNames(types.Object):
     # The custom resources are served under `/apis/<group>/<version>/.../<plural>`.
     # Must match the name of the CustomResourceDefinition (in the form `<names.plural>.<group>`).
     # Must be all lowercase.
-    @typechecked
     def plural(self) -> str:
         return self.__plural
 
     # singular is the singular name of the resource. It must be all lowercase. Defaults to lowercased `kind`.
-    @typechecked
     def singular(self) -> Optional[str]:
         return self.__singular
 
     # shortNames are short names for the resource, exposed in API discovery documents,
     # and used by clients to support invocations like `kubectl get <shortname>`.
     # It must be all lowercase.
-    @typechecked
     def shortNames(self) -> Optional[List[str]]:
         return self.__shortNames
 
     # kind is the serialized kind of the resource. It is normally CamelCase and singular.
     # Custom resource instances will use this value as the `kind` attribute in API calls.
-    @typechecked
     def kind(self) -> str:
         return self.__kind
 
     # listKind is the serialized kind of the list for this resource. Defaults to "`kind`List".
-    @typechecked
     def listKind(self) -> Optional[str]:
         return self.__listKind
 
     # categories is a list of grouped resources this custom resource belongs to (e.g. 'all').
     # This is published in API discovery documents, and used by clients to support invocations like
     # `kubectl get all`.
-    @typechecked
     def categories(self) -> Optional[List[str]]:
         return self.__categories
 
@@ -527,9 +542,14 @@ class CustomResourceSubresourceScale(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["specReplicasPath"] = self.specReplicasPath()
-        v["statusReplicasPath"] = self.statusReplicasPath()
+        specReplicasPath = self.specReplicasPath()
+        check_type("specReplicasPath", specReplicasPath, str)
+        v["specReplicasPath"] = specReplicasPath
+        statusReplicasPath = self.statusReplicasPath()
+        check_type("statusReplicasPath", statusReplicasPath, str)
+        v["statusReplicasPath"] = statusReplicasPath
         labelSelectorPath = self.labelSelectorPath()
+        check_type("labelSelectorPath", labelSelectorPath, Optional[str])
         if labelSelectorPath is not None:  # omit empty
             v["labelSelectorPath"] = labelSelectorPath
         return v
@@ -538,7 +558,6 @@ class CustomResourceSubresourceScale(types.Object):
     # Only JSON paths without the array notation are allowed.
     # Must be a JSON Path under `.spec`.
     # If there is no value under the given path in the custom resource, the `/scale` subresource will return an error on GET.
-    @typechecked
     def specReplicasPath(self) -> str:
         return self.__specReplicasPath
 
@@ -547,7 +566,6 @@ class CustomResourceSubresourceScale(types.Object):
     # Must be a JSON Path under `.status`.
     # If there is no value under the given path in the custom resource, the `status.replicas` value in the `/scale` subresource
     # will default to 0.
-    @typechecked
     def statusReplicasPath(self) -> str:
         return self.__statusReplicasPath
 
@@ -560,7 +578,6 @@ class CustomResourceSubresourceScale(types.Object):
     # More info: https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions#scale-subresource
     # If there is no value under the given path in the custom resource, the `status.selector` value in the `/scale`
     # subresource will default to the empty string.
-    @typechecked
     def labelSelectorPath(self) -> Optional[str]:
         return self.__labelSelectorPath
 
@@ -591,9 +608,11 @@ class CustomResourceSubresources(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         status = self.status()
+        check_type("status", status, Optional[CustomResourceSubresourceStatus])
         if status is not None:  # omit empty
             v["status"] = status
         scale = self.scale()
+        check_type("scale", scale, Optional[CustomResourceSubresourceScale])
         if scale is not None:  # omit empty
             v["scale"] = scale
         return v
@@ -602,12 +621,10 @@ class CustomResourceSubresources(types.Object):
     # When enabled:
     # 1. requests to the custom resource primary endpoint ignore changes to the `status` stanza of the object.
     # 2. requests to the custom resource `/status` subresource ignore changes to anything other than the `status` stanza of the object.
-    @typechecked
     def status(self) -> Optional[CustomResourceSubresourceStatus]:
         return self.__status
 
     # scale indicates the custom resource should serve a `/scale` subresource that returns an `autoscaling/v1` Scale object.
-    @typechecked
     def scale(self) -> Optional[CustomResourceSubresourceScale]:
         return self.__scale
 
@@ -625,18 +642,18 @@ class ExternalDocumentation(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         description = self.description()
+        check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
         url = self.url()
+        check_type("url", url, Optional[str])
         if url:  # omit empty
             v["url"] = url
         return v
 
-    @typechecked
     def description(self) -> Optional[str]:
         return self.__description
 
-    @typechecked
     def url(self) -> Optional[str]:
         return self.__url
 
@@ -653,10 +670,11 @@ class JSON(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["Raw"] = self.raw()
+        raw = self.raw()
+        check_type("raw", raw, bytes)
+        v["Raw"] = raw
         return v
 
-    @typechecked
     def raw(self) -> bytes:
         return self.__raw
 
@@ -762,281 +780,308 @@ class JSONSchemaProps(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         id = self.id()
+        check_type("id", id, Optional[str])
         if id:  # omit empty
             v["id"] = id
         schema = self.schema()
+        check_type("schema", schema, Optional[str])
         if schema:  # omit empty
             v["$schema"] = schema
         ref = self.ref()
+        check_type("ref", ref, Optional[str])
         if ref is not None:  # omit empty
             v["$ref"] = ref
         description = self.description()
+        check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
         type = self.type()
+        check_type("type", type, Optional[str])
         if type:  # omit empty
             v["type"] = type
         format = self.format()
+        check_type("format", format, Optional[str])
         if format:  # omit empty
             v["format"] = format
         title = self.title()
+        check_type("title", title, Optional[str])
         if title:  # omit empty
             v["title"] = title
         default = self.default()
+        check_type("default", default, Optional[JSON])
         if default is not None:  # omit empty
             v["default"] = default
         maximum = self.maximum()
+        check_type("maximum", maximum, Optional[float])
         if maximum is not None:  # omit empty
             v["maximum"] = maximum
         exclusiveMaximum = self.exclusiveMaximum()
+        check_type("exclusiveMaximum", exclusiveMaximum, Optional[bool])
         if exclusiveMaximum:  # omit empty
             v["exclusiveMaximum"] = exclusiveMaximum
         minimum = self.minimum()
+        check_type("minimum", minimum, Optional[float])
         if minimum is not None:  # omit empty
             v["minimum"] = minimum
         exclusiveMinimum = self.exclusiveMinimum()
+        check_type("exclusiveMinimum", exclusiveMinimum, Optional[bool])
         if exclusiveMinimum:  # omit empty
             v["exclusiveMinimum"] = exclusiveMinimum
         maxLength = self.maxLength()
+        check_type("maxLength", maxLength, Optional[int])
         if maxLength is not None:  # omit empty
             v["maxLength"] = maxLength
         minLength = self.minLength()
+        check_type("minLength", minLength, Optional[int])
         if minLength is not None:  # omit empty
             v["minLength"] = minLength
         pattern = self.pattern()
+        check_type("pattern", pattern, Optional[str])
         if pattern:  # omit empty
             v["pattern"] = pattern
         maxItems = self.maxItems()
+        check_type("maxItems", maxItems, Optional[int])
         if maxItems is not None:  # omit empty
             v["maxItems"] = maxItems
         minItems = self.minItems()
+        check_type("minItems", minItems, Optional[int])
         if minItems is not None:  # omit empty
             v["minItems"] = minItems
         uniqueItems = self.uniqueItems()
+        check_type("uniqueItems", uniqueItems, Optional[bool])
         if uniqueItems:  # omit empty
             v["uniqueItems"] = uniqueItems
         multipleOf = self.multipleOf()
+        check_type("multipleOf", multipleOf, Optional[float])
         if multipleOf is not None:  # omit empty
             v["multipleOf"] = multipleOf
         enum = self.enum()
+        check_type("enum", enum, Optional[List[JSON]])
         if enum:  # omit empty
             v["enum"] = enum
         maxProperties = self.maxProperties()
+        check_type("maxProperties", maxProperties, Optional[int])
         if maxProperties is not None:  # omit empty
             v["maxProperties"] = maxProperties
         minProperties = self.minProperties()
+        check_type("minProperties", minProperties, Optional[int])
         if minProperties is not None:  # omit empty
             v["minProperties"] = minProperties
         required = self.required()
+        check_type("required", required, Optional[List[str]])
         if required:  # omit empty
             v["required"] = required
         items = self.items()
+        check_type(
+            "items", items, Optional[Union[JSONSchemaProps, List[JSONSchemaProps]]]
+        )
         if items is not None:  # omit empty
             v["items"] = items
         allOf = self.allOf()
+        check_type("allOf", allOf, Optional[List[JSONSchemaProps]])
         if allOf:  # omit empty
             v["allOf"] = allOf
         oneOf = self.oneOf()
+        check_type("oneOf", oneOf, Optional[List[JSONSchemaProps]])
         if oneOf:  # omit empty
             v["oneOf"] = oneOf
         anyOf = self.anyOf()
+        check_type("anyOf", anyOf, Optional[List[JSONSchemaProps]])
         if anyOf:  # omit empty
             v["anyOf"] = anyOf
         not_ = self.not_()
+        check_type("not_", not_, Optional[JSONSchemaProps])
         if not_ is not None:  # omit empty
             v["not"] = not_
         properties = self.properties()
+        check_type("properties", properties, Optional[Dict[str, JSONSchemaProps]])
         if properties:  # omit empty
             v["properties"] = properties
         additionalProperties = self.additionalProperties()
+        check_type(
+            "additionalProperties",
+            additionalProperties,
+            Optional[Union[JSONSchemaProps, bool]],
+        )
         if additionalProperties is not None:  # omit empty
             v["additionalProperties"] = additionalProperties
         patternProperties = self.patternProperties()
+        check_type(
+            "patternProperties", patternProperties, Optional[Dict[str, JSONSchemaProps]]
+        )
         if patternProperties:  # omit empty
             v["patternProperties"] = patternProperties
         dependencies = self.dependencies()
+        check_type(
+            "dependencies",
+            dependencies,
+            Optional[Dict[str, Union[JSONSchemaProps, List[str]]]],
+        )
         if dependencies:  # omit empty
             v["dependencies"] = dependencies
         additionalItems = self.additionalItems()
+        check_type(
+            "additionalItems", additionalItems, Optional[Union[JSONSchemaProps, bool]]
+        )
         if additionalItems is not None:  # omit empty
             v["additionalItems"] = additionalItems
         definitions = self.definitions()
+        check_type("definitions", definitions, Optional[Dict[str, JSONSchemaProps]])
         if definitions:  # omit empty
             v["definitions"] = definitions
         externalDocs = self.externalDocs()
+        check_type("externalDocs", externalDocs, Optional[ExternalDocumentation])
         if externalDocs is not None:  # omit empty
             v["externalDocs"] = externalDocs
         example = self.example()
+        check_type("example", example, Optional[JSON])
         if example is not None:  # omit empty
             v["example"] = example
         nullable = self.nullable()
+        check_type("nullable", nullable, Optional[bool])
         if nullable:  # omit empty
             v["nullable"] = nullable
         xKubernetesPreserveUnknownFields = self.xKubernetesPreserveUnknownFields()
+        check_type(
+            "xKubernetesPreserveUnknownFields",
+            xKubernetesPreserveUnknownFields,
+            Optional[bool],
+        )
         if xKubernetesPreserveUnknownFields is not None:  # omit empty
             v["x-kubernetes-preserve-unknown-fields"] = xKubernetesPreserveUnknownFields
         xKubernetesEmbeddedResource = self.xKubernetesEmbeddedResource()
+        check_type(
+            "xKubernetesEmbeddedResource", xKubernetesEmbeddedResource, Optional[bool]
+        )
         if xKubernetesEmbeddedResource:  # omit empty
             v["x-kubernetes-embedded-resource"] = xKubernetesEmbeddedResource
         xKubernetesIntOrString = self.xKubernetesIntOrString()
+        check_type("xKubernetesIntOrString", xKubernetesIntOrString, Optional[bool])
         if xKubernetesIntOrString:  # omit empty
             v["x-kubernetes-int-or-string"] = xKubernetesIntOrString
         xKubernetesListMapKeys = self.xKubernetesListMapKeys()
+        check_type(
+            "xKubernetesListMapKeys", xKubernetesListMapKeys, Optional[List[str]]
+        )
         if xKubernetesListMapKeys:  # omit empty
             v["x-kubernetes-list-map-keys"] = xKubernetesListMapKeys
         xKubernetesListType = self.xKubernetesListType()
+        check_type("xKubernetesListType", xKubernetesListType, Optional[str])
         if xKubernetesListType is not None:  # omit empty
             v["x-kubernetes-list-type"] = xKubernetesListType
         return v
 
-    @typechecked
     def id(self) -> Optional[str]:
         return self.__id
 
-    @typechecked
     def schema(self) -> Optional[str]:
         return self.__schema
 
-    @typechecked
     def ref(self) -> Optional[str]:
         return self.__ref
 
-    @typechecked
     def description(self) -> Optional[str]:
         return self.__description
 
-    @typechecked
     def type(self) -> Optional[str]:
         return self.__type
 
-    @typechecked
     def format(self) -> Optional[str]:
         return self.__format
 
-    @typechecked
     def title(self) -> Optional[str]:
         return self.__title
 
     # default is a default value for undefined object fields.
     # Defaulting is a beta feature under the CustomResourceDefaulting feature gate.
     # Defaulting requires spec.preserveUnknownFields to be false.
-    @typechecked
     def default(self) -> Optional[JSON]:
         return self.__default
 
-    @typechecked
     def maximum(self) -> Optional[float]:
         return self.__maximum
 
-    @typechecked
     def exclusiveMaximum(self) -> Optional[bool]:
         return self.__exclusiveMaximum
 
-    @typechecked
     def minimum(self) -> Optional[float]:
         return self.__minimum
 
-    @typechecked
     def exclusiveMinimum(self) -> Optional[bool]:
         return self.__exclusiveMinimum
 
-    @typechecked
     def maxLength(self) -> Optional[int]:
         return self.__maxLength
 
-    @typechecked
     def minLength(self) -> Optional[int]:
         return self.__minLength
 
-    @typechecked
     def pattern(self) -> Optional[str]:
         return self.__pattern
 
-    @typechecked
     def maxItems(self) -> Optional[int]:
         return self.__maxItems
 
-    @typechecked
     def minItems(self) -> Optional[int]:
         return self.__minItems
 
-    @typechecked
     def uniqueItems(self) -> Optional[bool]:
         return self.__uniqueItems
 
-    @typechecked
     def multipleOf(self) -> Optional[float]:
         return self.__multipleOf
 
-    @typechecked
     def enum(self) -> Optional[List[JSON]]:
         return self.__enum
 
-    @typechecked
     def maxProperties(self) -> Optional[int]:
         return self.__maxProperties
 
-    @typechecked
     def minProperties(self) -> Optional[int]:
         return self.__minProperties
 
-    @typechecked
     def required(self) -> Optional[List[str]]:
         return self.__required
 
-    @typechecked
     def items(self) -> Optional[Union[JSONSchemaProps, List[JSONSchemaProps]]]:
         return self.__items
 
-    @typechecked
     def allOf(self) -> Optional[List[JSONSchemaProps]]:
         return self.__allOf
 
-    @typechecked
     def oneOf(self) -> Optional[List[JSONSchemaProps]]:
         return self.__oneOf
 
-    @typechecked
     def anyOf(self) -> Optional[List[JSONSchemaProps]]:
         return self.__anyOf
 
-    @typechecked
     def not_(self) -> Optional[JSONSchemaProps]:
         return self.__not_
 
-    @typechecked
     def properties(self) -> Optional[Dict[str, JSONSchemaProps]]:
         return self.__properties
 
-    @typechecked
     def additionalProperties(self) -> Optional[Union[JSONSchemaProps, bool]]:
         return self.__additionalProperties
 
-    @typechecked
     def patternProperties(self) -> Optional[Dict[str, JSONSchemaProps]]:
         return self.__patternProperties
 
-    @typechecked
     def dependencies(self) -> Optional[Dict[str, Union[JSONSchemaProps, List[str]]]]:
         return self.__dependencies
 
-    @typechecked
     def additionalItems(self) -> Optional[Union[JSONSchemaProps, bool]]:
         return self.__additionalItems
 
-    @typechecked
     def definitions(self) -> Optional[Dict[str, JSONSchemaProps]]:
         return self.__definitions
 
-    @typechecked
     def externalDocs(self) -> Optional[ExternalDocumentation]:
         return self.__externalDocs
 
-    @typechecked
     def example(self) -> Optional[JSON]:
         return self.__example
 
-    @typechecked
     def nullable(self) -> Optional[bool]:
         return self.__nullable
 
@@ -1046,7 +1091,6 @@ class JSONSchemaProps(types.Object):
     # but switches back to normal pruning behaviour if nested
     # properties or additionalProperties are specified in the schema.
     # This can either be true or undefined. False is forbidden.
-    @typechecked
     def xKubernetesPreserveUnknownFields(self) -> Optional[bool]:
         return self.__xKubernetesPreserveUnknownFields
 
@@ -1057,7 +1101,6 @@ class JSONSchemaProps(types.Object):
     # are validated automatically. x-kubernetes-preserve-unknown-fields
     # is allowed to be true, but does not have to be if the object
     # is fully specified (up to kind, apiVersion, metadata).
-    @typechecked
     def xKubernetesEmbeddedResource(self) -> Optional[bool]:
         return self.__xKubernetesEmbeddedResource
 
@@ -1074,7 +1117,6 @@ class JSONSchemaProps(types.Object):
     #      - type: integer
     #      - type: string
     #    - ... zero or more
-    @typechecked
     def xKubernetesIntOrString(self) -> Optional[bool]:
         return self.__xKubernetesIntOrString
 
@@ -1084,7 +1126,6 @@ class JSONSchemaProps(types.Object):
     # This tag MUST only be used on lists that have the "x-kubernetes-list-type"
     # extension set to "map". Also, the values specified for this attribute must
     # be a scalar typed field of the child structure (no nesting is supported).
-    @typechecked
     def xKubernetesListMapKeys(self) -> Optional[List[str]]:
         return self.__xKubernetesListMapKeys
 
@@ -1102,7 +1143,6 @@ class JSONSchemaProps(types.Object):
     #      used to identify them. Order is preserved upon merge. The map tag
     #      must only be used on a list with elements of type object.
     # Defaults to atomic for arrays.
-    @typechecked
     def xKubernetesListType(self) -> Optional[str]:
         return self.__xKubernetesListType
 
@@ -1119,12 +1159,12 @@ class CustomResourceValidation(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         openAPIV3Schema = self.openAPIV3Schema()
+        check_type("openAPIV3Schema", openAPIV3Schema, Optional[JSONSchemaProps])
         if openAPIV3Schema is not None:  # omit empty
             v["openAPIV3Schema"] = openAPIV3Schema
         return v
 
     # openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.
-    @typechecked
     def openAPIV3Schema(self) -> Optional[JSONSchemaProps]:
         return self.__openAPIV3Schema
 
@@ -1155,16 +1195,29 @@ class CustomResourceDefinitionVersion(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["served"] = self.served()
-        v["storage"] = self.storage()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        served = self.served()
+        check_type("served", served, bool)
+        v["served"] = served
+        storage = self.storage()
+        check_type("storage", storage, bool)
+        v["storage"] = storage
         schema = self.schema()
+        check_type("schema", schema, Optional[CustomResourceValidation])
         if schema is not None:  # omit empty
             v["schema"] = schema
         subresources = self.subresources()
+        check_type("subresources", subresources, Optional[CustomResourceSubresources])
         if subresources is not None:  # omit empty
             v["subresources"] = subresources
         additionalPrinterColumns = self.additionalPrinterColumns()
+        check_type(
+            "additionalPrinterColumns",
+            additionalPrinterColumns,
+            Optional[Dict[str, CustomResourceColumnDefinition]],
+        )
         if additionalPrinterColumns:  # omit empty
             v[
                 "additionalPrinterColumns"
@@ -1173,35 +1226,29 @@ class CustomResourceDefinitionVersion(types.Object):
 
     # name is the version name, e.g. “v1”, “v2beta1”, etc.
     # The custom resources are served under this version at `/apis/<group>/<version>/...` if `served` is true.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # served is a flag enabling/disabling this version from being served via REST APIs
-    @typechecked
     def served(self) -> bool:
         return self.__served
 
     # storage indicates this version should be used when persisting custom resources to storage.
     # There must be exactly one version with storage=true.
-    @typechecked
     def storage(self) -> bool:
         return self.__storage
 
     # schema describes the schema used for validation, pruning, and defaulting of this version of the custom resource.
-    @typechecked
     def schema(self) -> Optional[CustomResourceValidation]:
         return self.__schema
 
     # subresources specify what subresources this version of the defined custom resource have.
-    @typechecked
     def subresources(self) -> Optional[CustomResourceSubresources]:
         return self.__subresources
 
     # additionalPrinterColumns specifies additional columns returned in Table output.
     # See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
     # If no columns are specified, a single column displaying the age of the custom resource is used.
-    @typechecked
     def additionalPrinterColumns(
         self
     ) -> Optional[Dict[str, CustomResourceColumnDefinition]]:
@@ -1234,14 +1281,24 @@ class CustomResourceDefinitionSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["group"] = self.group()
-        v["names"] = self.names()
-        v["scope"] = self.scope()
-        v["versions"] = self.versions().values()  # named list
+        group = self.group()
+        check_type("group", group, str)
+        v["group"] = group
+        names = self.names()
+        check_type("names", names, CustomResourceDefinitionNames)
+        v["names"] = names
+        scope = self.scope()
+        check_type("scope", scope, ResourceScope)
+        v["scope"] = scope
+        versions = self.versions()
+        check_type("versions", versions, Dict[str, CustomResourceDefinitionVersion])
+        v["versions"] = versions.values()  # named list
         conversion = self.conversion()
+        check_type("conversion", conversion, Optional[CustomResourceConversion])
         if conversion is not None:  # omit empty
             v["conversion"] = conversion
         preserveUnknownFields = self.preserveUnknownFields()
+        check_type("preserveUnknownFields", preserveUnknownFields, Optional[bool])
         if preserveUnknownFields:  # omit empty
             v["preserveUnknownFields"] = preserveUnknownFields
         return v
@@ -1249,18 +1306,15 @@ class CustomResourceDefinitionSpec(types.Object):
     # group is the API group of the defined custom resource.
     # The custom resources are served under `/apis/<group>/...`.
     # Must match the name of the CustomResourceDefinition (in the form `<names.plural>.<group>`).
-    @typechecked
     def group(self) -> str:
         return self.__group
 
     # names specify the resource and kind names for the custom resource.
-    @typechecked
     def names(self) -> CustomResourceDefinitionNames:
         return self.__names
 
     # scope indicates whether the defined custom resource is cluster- or namespace-scoped.
     # Allowed values are `Cluster` and `Namespaced`. Default is `Namespaced`.
-    @typechecked
     def scope(self) -> ResourceScope:
         return self.__scope
 
@@ -1272,12 +1326,10 @@ class CustomResourceDefinitionSpec(types.Object):
     # by GA > beta > alpha (where GA is a version with no suffix such as beta or alpha), and then by comparing
     # major version, then minor version. An example sorted list of versions:
     # v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
-    @typechecked
     def versions(self) -> Dict[str, CustomResourceDefinitionVersion]:
         return self.__versions
 
     # conversion defines conversion settings for the CRD.
-    @typechecked
     def conversion(self) -> Optional[CustomResourceConversion]:
         return self.__conversion
 
@@ -1286,7 +1338,6 @@ class CustomResourceDefinitionSpec(types.Object):
     # apiVersion, kind, metadata and known fields inside metadata are always preserved.
     # This field is deprecated in favor of setting `x-preserve-unknown-fields` to true in `spec.versions[*].schema.openAPIV3Schema`.
     # See https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#pruning-versus-preserving-unknown-fields for details.
-    @typechecked
     def preserveUnknownFields(self) -> Optional[bool]:
         return self.__preserveUnknownFields
 
@@ -1317,10 +1368,11 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, CustomResourceDefinitionSpec)
+        v["spec"] = spec
         return v
 
     # spec describes how the user wants the resources to appear
-    @typechecked
     def spec(self) -> CustomResourceDefinitionSpec:
         return self.__spec

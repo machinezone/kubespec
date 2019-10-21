@@ -12,7 +12,7 @@ from kubespec.k8s.apimachinery import resource
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # MetricSourceType indicates the type of metric.
@@ -55,25 +55,27 @@ class CrossVersionObjectReference(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["kind"] = self.kind()
-        v["name"] = self.name()
+        kind = self.kind()
+        check_type("kind", kind, str)
+        v["kind"] = kind
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         apiVersion = self.apiVersion()
+        check_type("apiVersion", apiVersion, Optional[str])
         if apiVersion:  # omit empty
             v["apiVersion"] = apiVersion
         return v
 
     # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
-    @typechecked
     def kind(self) -> str:
         return self.__kind
 
     # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # API version of the referent
-    @typechecked
     def apiVersion(self) -> Optional[str]:
         return self.__apiVersion
 
@@ -101,38 +103,41 @@ class ExternalMetricSource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["metricName"] = self.metricName()
+        metricName = self.metricName()
+        check_type("metricName", metricName, str)
+        v["metricName"] = metricName
         metricSelector = self.metricSelector()
+        check_type("metricSelector", metricSelector, Optional["metav1.LabelSelector"])
         if metricSelector is not None:  # omit empty
             v["metricSelector"] = metricSelector
         targetValue = self.targetValue()
+        check_type("targetValue", targetValue, Optional["resource.Quantity"])
         if targetValue is not None:  # omit empty
             v["targetValue"] = targetValue
         targetAverageValue = self.targetAverageValue()
+        check_type(
+            "targetAverageValue", targetAverageValue, Optional["resource.Quantity"]
+        )
         if targetAverageValue is not None:  # omit empty
             v["targetAverageValue"] = targetAverageValue
         return v
 
     # metricName is the name of the metric in question.
-    @typechecked
     def metricName(self) -> str:
         return self.__metricName
 
     # metricSelector is used to identify a specific time series
     # within a given metric.
-    @typechecked
     def metricSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__metricSelector
 
     # targetValue is the target value of the metric (as a quantity).
     # Mutually exclusive with TargetAverageValue.
-    @typechecked
     def targetValue(self) -> Optional["resource.Quantity"]:
         return self.__targetValue
 
     # targetAverageValue is the target per-pod value of global metric (as a quantity).
     # Mutually exclusive with TargetValue.
-    @typechecked
     def targetAverageValue(self) -> Optional["resource.Quantity"]:
         return self.__targetAverageValue
 
@@ -162,42 +167,45 @@ class ObjectMetricSource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["target"] = self.target()
-        v["metricName"] = self.metricName()
-        v["targetValue"] = self.targetValue()
+        target = self.target()
+        check_type("target", target, CrossVersionObjectReference)
+        v["target"] = target
+        metricName = self.metricName()
+        check_type("metricName", metricName, str)
+        v["metricName"] = metricName
+        targetValue = self.targetValue()
+        check_type("targetValue", targetValue, "resource.Quantity")
+        v["targetValue"] = targetValue
         selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
         averageValue = self.averageValue()
+        check_type("averageValue", averageValue, Optional["resource.Quantity"])
         if averageValue is not None:  # omit empty
             v["averageValue"] = averageValue
         return v
 
     # target is the described Kubernetes object.
-    @typechecked
     def target(self) -> CrossVersionObjectReference:
         return self.__target
 
     # metricName is the name of the metric in question.
-    @typechecked
     def metricName(self) -> str:
         return self.__metricName
 
     # targetValue is the target value of the metric (as a quantity).
-    @typechecked
     def targetValue(self) -> "resource.Quantity":
         return self.__targetValue
 
     # selector is the string-encoded form of a standard kubernetes label selector for the given metric
     # When set, it is passed as an additional parameter to the metrics server for more specific metrics scoping
     # When unset, just the metricName will be used to gather metrics.
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
     # averageValue is the target value of the average of the
     # metric across all relevant pods (as a quantity)
-    @typechecked
     def averageValue(self) -> Optional["resource.Quantity"]:
         return self.__averageValue
 
@@ -227,28 +235,30 @@ class PodsMetricSource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["metricName"] = self.metricName()
-        v["targetAverageValue"] = self.targetAverageValue()
+        metricName = self.metricName()
+        check_type("metricName", metricName, str)
+        v["metricName"] = metricName
+        targetAverageValue = self.targetAverageValue()
+        check_type("targetAverageValue", targetAverageValue, "resource.Quantity")
+        v["targetAverageValue"] = targetAverageValue
         selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
         return v
 
     # metricName is the name of the metric in question
-    @typechecked
     def metricName(self) -> str:
         return self.__metricName
 
     # targetAverageValue is the target value of the average of the
     # metric across all relevant pods (as a quantity)
-    @typechecked
     def targetAverageValue(self) -> "resource.Quantity":
         return self.__targetAverageValue
 
     # selector is the string-encoded form of a standard kubernetes label selector for the given metric
     # When set, it is passed as an additional parameter to the metrics server for more specific metrics scoping
     # When unset, just the metricName will be used to gather metrics.
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
@@ -277,31 +287,34 @@ class ResourceMetricSource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
+        name = self.name()
+        check_type("name", name, corev1.ResourceName)
+        v["name"] = name
         targetAverageUtilization = self.targetAverageUtilization()
+        check_type("targetAverageUtilization", targetAverageUtilization, Optional[int])
         if targetAverageUtilization is not None:  # omit empty
             v["targetAverageUtilization"] = targetAverageUtilization
         targetAverageValue = self.targetAverageValue()
+        check_type(
+            "targetAverageValue", targetAverageValue, Optional["resource.Quantity"]
+        )
         if targetAverageValue is not None:  # omit empty
             v["targetAverageValue"] = targetAverageValue
         return v
 
     # name is the name of the resource in question.
-    @typechecked
     def name(self) -> corev1.ResourceName:
         return self.__name
 
     # targetAverageUtilization is the target value of the average of the
     # resource metric across all relevant pods, represented as a percentage of
     # the requested value of the resource for the pods.
-    @typechecked
     def targetAverageUtilization(self) -> Optional[int]:
         return self.__targetAverageUtilization
 
     # targetAverageValue is the target value of the average of the
     # resource metric across all relevant pods, as a raw value (instead of as
     # a percentage of the request), similar to the "pods" metric source type.
-    @typechecked
     def targetAverageValue(self) -> Optional["resource.Quantity"]:
         return self.__targetAverageValue
 
@@ -329,37 +342,40 @@ class MetricSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["type"] = self.type()
+        type = self.type()
+        check_type("type", type, MetricSourceType)
+        v["type"] = type
         object = self.object()
+        check_type("object", object, Optional[ObjectMetricSource])
         if object is not None:  # omit empty
             v["object"] = object
         pods = self.pods()
+        check_type("pods", pods, Optional[PodsMetricSource])
         if pods is not None:  # omit empty
             v["pods"] = pods
         resource = self.resource()
+        check_type("resource", resource, Optional[ResourceMetricSource])
         if resource is not None:  # omit empty
             v["resource"] = resource
         external = self.external()
+        check_type("external", external, Optional[ExternalMetricSource])
         if external is not None:  # omit empty
             v["external"] = external
         return v
 
     # type is the type of metric source.  It should be one of "Object",
     # "Pods" or "Resource", each mapping to a matching field in the object.
-    @typechecked
     def type(self) -> MetricSourceType:
         return self.__type
 
     # object refers to a metric describing a single kubernetes object
     # (for example, hits-per-second on an Ingress object).
-    @typechecked
     def object(self) -> Optional[ObjectMetricSource]:
         return self.__object
 
     # pods refers to a metric describing each pod in the current scale target
     # (for example, transactions-processed-per-second).  The values will be
     # averaged together before being compared to the target value.
-    @typechecked
     def pods(self) -> Optional[PodsMetricSource]:
         return self.__pods
 
@@ -368,7 +384,6 @@ class MetricSpec(types.Object):
     # current scale target (e.g. CPU or memory). Such metrics are built in to
     # Kubernetes, and have special scaling options on top of those available
     # to normal per-pod metrics using the "pods" source.
-    @typechecked
     def resource(self) -> Optional[ResourceMetricSource]:
         return self.__resource
 
@@ -377,7 +392,6 @@ class MetricSpec(types.Object):
     # coming from components running outside of cluster
     # (for example length of queue in cloud messaging service, or
     # QPS from loadbalancer running outside of cluster).
-    @typechecked
     def external(self) -> Optional[ExternalMetricSource]:
         return self.__external
 
@@ -406,19 +420,24 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["scaleTargetRef"] = self.scaleTargetRef()
+        scaleTargetRef = self.scaleTargetRef()
+        check_type("scaleTargetRef", scaleTargetRef, CrossVersionObjectReference)
+        v["scaleTargetRef"] = scaleTargetRef
         minReplicas = self.minReplicas()
+        check_type("minReplicas", minReplicas, Optional[int])
         if minReplicas is not None:  # omit empty
             v["minReplicas"] = minReplicas
-        v["maxReplicas"] = self.maxReplicas()
+        maxReplicas = self.maxReplicas()
+        check_type("maxReplicas", maxReplicas, int)
+        v["maxReplicas"] = maxReplicas
         metrics = self.metrics()
+        check_type("metrics", metrics, Optional[List[MetricSpec]])
         if metrics:  # omit empty
             v["metrics"] = metrics
         return v
 
     # scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
     # should be collected, as well as to actually change the replica count.
-    @typechecked
     def scaleTargetRef(self) -> CrossVersionObjectReference:
         return self.__scaleTargetRef
 
@@ -427,13 +446,11 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # alpha feature gate HPAScaleToZero is enabled and at least one Object or External
     # metric is configured.  Scaling is active as long as at least one metric value is
     # available.
-    @typechecked
     def minReplicas(self) -> Optional[int]:
         return self.__minReplicas
 
     # maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
     # It cannot be less that minReplicas.
-    @typechecked
     def maxReplicas(self) -> int:
         return self.__maxReplicas
 
@@ -444,7 +461,6 @@ class HorizontalPodAutoscalerSpec(types.Object):
     # number of pods.  Ergo, metrics used must decrease as the pod count is
     # increased, and vice-versa.  See the individual metric source types for
     # more information about how each type of metric must respond.
-    @typechecked
     def metrics(self) -> Optional[List[MetricSpec]]:
         return self.__metrics
 
@@ -478,11 +494,12 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[HorizontalPodAutoscalerSpec])
+        v["spec"] = spec
         return v
 
     # spec is the specification for the behaviour of the autoscaler.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
-    @typechecked
     def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
         return self.__spec

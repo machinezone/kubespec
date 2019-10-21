@@ -10,7 +10,7 @@ from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # VolumeBindingMode indicates how PersistentVolumeClaims should be bound.
@@ -76,12 +76,19 @@ class CSIDriverSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         attachRequired = self.attachRequired()
+        check_type("attachRequired", attachRequired, Optional[bool])
         if attachRequired is not None:  # omit empty
             v["attachRequired"] = attachRequired
         podInfoOnMount = self.podInfoOnMount()
+        check_type("podInfoOnMount", podInfoOnMount, Optional[bool])
         if podInfoOnMount is not None:  # omit empty
             v["podInfoOnMount"] = podInfoOnMount
         volumeLifecycleModes = self.volumeLifecycleModes()
+        check_type(
+            "volumeLifecycleModes",
+            volumeLifecycleModes,
+            Optional[List[VolumeLifecycleMode]],
+        )
         if volumeLifecycleModes:  # omit empty
             v["volumeLifecycleModes"] = volumeLifecycleModes
         return v
@@ -96,7 +103,6 @@ class CSIDriverSpec(types.Object):
     # If the CSIDriverRegistry feature gate is enabled and the value is
     # specified to false, the attach operation will be skipped.
     # Otherwise the attach operation will be called.
-    @typechecked
     def attachRequired(self) -> Optional[bool]:
         return self.__attachRequired
 
@@ -124,7 +130,6 @@ class CSIDriverSpec(types.Object):
     # As Kubernetes 1.15 doesn't support this field, drivers can only support one mode when
     # deployed on such a cluster and the deployment determines which mode that is, for example
     # via a command line parameter of the driver.
-    @typechecked
     def podInfoOnMount(self) -> Optional[bool]:
         return self.__podInfoOnMount
 
@@ -140,7 +145,6 @@ class CSIDriverSpec(types.Object):
     # https://kubernetes-csi.github.io/docs/ephemeral-local-volumes.html
     # A driver can support one or more of these modes and
     # more modes may be added in the future.
-    @typechecked
     def volumeLifecycleModes(self) -> Optional[List[VolumeLifecycleMode]]:
         return self.__volumeLifecycleModes
 
@@ -177,11 +181,12 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, CSIDriverSpec)
+        v["spec"] = spec
         return v
 
     # Specification of the CSI Driver.
-    @typechecked
     def spec(self) -> CSIDriverSpec:
         return self.__spec
 
@@ -198,6 +203,7 @@ class VolumeNodeResources(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         count = self.count()
+        check_type("count", count, Optional[int])
         if count is not None:  # omit empty
             v["count"] = count
         return v
@@ -206,7 +212,6 @@ class VolumeNodeResources(types.Object):
     # A volume that is both attached and mounted on a node is considered to be used once, not twice.
     # The same rule applies for a unique volume that is shared among multiple pods on the same node.
     # If this field is nil, then the supported number of volumes on this node is unbounded.
-    @typechecked
     def count(self) -> Optional[int]:
         return self.__count
 
@@ -231,10 +236,17 @@ class CSINodeDriver(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["nodeID"] = self.nodeID()
-        v["topologyKeys"] = self.topologyKeys()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        nodeID = self.nodeID()
+        check_type("nodeID", nodeID, str)
+        v["nodeID"] = nodeID
+        topologyKeys = self.topologyKeys()
+        check_type("topologyKeys", topologyKeys, List[str])
+        v["topologyKeys"] = topologyKeys
         allocatable = self.allocatable()
+        check_type("allocatable", allocatable, Optional[VolumeNodeResources])
         if allocatable is not None:  # omit empty
             v["allocatable"] = allocatable
         return v
@@ -242,7 +254,6 @@ class CSINodeDriver(types.Object):
     # This is the name of the CSI driver that this object refers to.
     # This MUST be the same name returned by the CSI GetPluginName() call for
     # that driver.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
@@ -254,7 +265,6 @@ class CSINodeDriver(types.Object):
     # system to attach a volume to a specific node, it can use this field to
     # refer to the node name using the ID that the storage system will
     # understand, e.g. "nodeA" instead of "node1". This field is required.
-    @typechecked
     def nodeID(self) -> str:
         return self.__nodeID
 
@@ -269,12 +279,10 @@ class CSINodeDriver(types.Object):
     # back to the driver.
     # It is possible for different nodes to use different topology keys.
     # This can be empty if driver does not support topology.
-    @typechecked
     def topologyKeys(self) -> List[str]:
         return self.__topologyKeys
 
     # allocatable represents the volume resources of a node that are available for scheduling.
-    @typechecked
     def allocatable(self) -> Optional[VolumeNodeResources]:
         return self.__allocatable
 
@@ -290,12 +298,13 @@ class CSINodeSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["drivers"] = self.drivers().values()  # named list
+        drivers = self.drivers()
+        check_type("drivers", drivers, Dict[str, CSINodeDriver])
+        v["drivers"] = drivers.values()  # named list
         return v
 
     # drivers is a list of information of all CSI Drivers existing on a node.
     # If all drivers in the list are uninstalled, this can become empty.
-    @typechecked
     def drivers(self) -> Dict[str, CSINodeDriver]:
         return self.__drivers
 
@@ -333,11 +342,12 @@ class CSINode(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, CSINodeSpec)
+        v["spec"] = spec
         return v
 
     # spec is the specification of CSINode
-    @typechecked
     def spec(self) -> CSINodeSpec:
         return self.__spec
 
@@ -393,60 +403,70 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["provisioner"] = self.provisioner()
+        provisioner = self.provisioner()
+        check_type("provisioner", provisioner, str)
+        v["provisioner"] = provisioner
         parameters = self.parameters()
+        check_type("parameters", parameters, Optional[Dict[str, str]])
         if parameters:  # omit empty
             v["parameters"] = parameters
         reclaimPolicy = self.reclaimPolicy()
+        check_type(
+            "reclaimPolicy",
+            reclaimPolicy,
+            Optional[corev1.PersistentVolumeReclaimPolicy],
+        )
         if reclaimPolicy is not None:  # omit empty
             v["reclaimPolicy"] = reclaimPolicy
         mountOptions = self.mountOptions()
+        check_type("mountOptions", mountOptions, Optional[List[str]])
         if mountOptions:  # omit empty
             v["mountOptions"] = mountOptions
         allowVolumeExpansion = self.allowVolumeExpansion()
+        check_type("allowVolumeExpansion", allowVolumeExpansion, Optional[bool])
         if allowVolumeExpansion is not None:  # omit empty
             v["allowVolumeExpansion"] = allowVolumeExpansion
         volumeBindingMode = self.volumeBindingMode()
+        check_type("volumeBindingMode", volumeBindingMode, Optional[VolumeBindingMode])
         if volumeBindingMode is not None:  # omit empty
             v["volumeBindingMode"] = volumeBindingMode
         allowedTopologies = self.allowedTopologies()
+        check_type(
+            "allowedTopologies",
+            allowedTopologies,
+            Optional[List["corev1.TopologySelectorTerm"]],
+        )
         if allowedTopologies:  # omit empty
             v["allowedTopologies"] = allowedTopologies
         return v
 
     # Provisioner indicates the type of the provisioner.
-    @typechecked
     def provisioner(self) -> str:
         return self.__provisioner
 
     # Parameters holds the parameters for the provisioner that should
     # create volumes of this storage class.
-    @typechecked
     def parameters(self) -> Optional[Dict[str, str]]:
         return self.__parameters
 
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with this reclaimPolicy. Defaults to Delete.
-    @typechecked
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
         return self.__reclaimPolicy
 
     # Dynamically provisioned PersistentVolumes of this storage class are
     # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
     # mount of the PVs will simply fail if one is invalid.
-    @typechecked
     def mountOptions(self) -> Optional[List[str]]:
         return self.__mountOptions
 
     # AllowVolumeExpansion shows whether the storage class allow volume expand
-    @typechecked
     def allowVolumeExpansion(self) -> Optional[bool]:
         return self.__allowVolumeExpansion
 
     # VolumeBindingMode indicates how PersistentVolumeClaims should be
     # provisioned and bound.  When unset, VolumeBindingImmediate is used.
     # This field is only honored by servers that enable the VolumeScheduling feature.
-    @typechecked
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
         return self.__volumeBindingMode
 
@@ -454,7 +474,6 @@ class StorageClass(base.TypedObject, base.MetadataObject):
     # Each volume plugin defines its own supported topology specifications.
     # An empty TopologySelectorTerm list means there is no topology restriction.
     # This field is only honored by servers that enable the VolumeScheduling feature.
-    @typechecked
     def allowedTopologies(self) -> Optional[List["corev1.TopologySelectorTerm"]]:
         return self.__allowedTopologies
 
@@ -479,15 +498,20 @@ class VolumeAttachmentSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         persistentVolumeName = self.persistentVolumeName()
+        check_type("persistentVolumeName", persistentVolumeName, Optional[str])
         if persistentVolumeName is not None:  # omit empty
             v["persistentVolumeName"] = persistentVolumeName
         inlineVolumeSpec = self.inlineVolumeSpec()
+        check_type(
+            "inlineVolumeSpec",
+            inlineVolumeSpec,
+            Optional["corev1.PersistentVolumeSpec"],
+        )
         if inlineVolumeSpec is not None:  # omit empty
             v["inlineVolumeSpec"] = inlineVolumeSpec
         return v
 
     # Name of the persistent volume to attach.
-    @typechecked
     def persistentVolumeName(self) -> Optional[str]:
         return self.__persistentVolumeName
 
@@ -497,7 +521,6 @@ class VolumeAttachmentSource(types.Object):
     # translated fields from a pod's inline VolumeSource to a
     # PersistentVolumeSpec. This field is alpha-level and is only
     # honored by servers that enabled the CSIMigration feature.
-    @typechecked
     def inlineVolumeSpec(self) -> Optional["corev1.PersistentVolumeSpec"]:
         return self.__inlineVolumeSpec
 
@@ -520,24 +543,27 @@ class VolumeAttachmentSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["attacher"] = self.attacher()
-        v["source"] = self.source()
-        v["nodeName"] = self.nodeName()
+        attacher = self.attacher()
+        check_type("attacher", attacher, str)
+        v["attacher"] = attacher
+        source = self.source()
+        check_type("source", source, VolumeAttachmentSource)
+        v["source"] = source
+        nodeName = self.nodeName()
+        check_type("nodeName", nodeName, str)
+        v["nodeName"] = nodeName
         return v
 
     # Attacher indicates the name of the volume driver that MUST handle this
     # request. This is the name returned by GetPluginName().
-    @typechecked
     def attacher(self) -> str:
         return self.__attacher
 
     # Source represents the volume that should be attached.
-    @typechecked
     def source(self) -> VolumeAttachmentSource:
         return self.__source
 
     # The node that the volume should be attached to.
-    @typechecked
     def nodeName(self) -> str:
         return self.__nodeName
 
@@ -570,11 +596,12 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, VolumeAttachmentSpec)
+        v["spec"] = spec
         return v
 
     # Specification of the desired attach/detach volume behavior.
     # Populated by the Kubernetes system.
-    @typechecked
     def spec(self) -> VolumeAttachmentSpec:
         return self.__spec

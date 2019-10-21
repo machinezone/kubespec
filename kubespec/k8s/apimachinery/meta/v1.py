@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # CauseType is a machine readable value providing more detail about what
@@ -220,20 +220,20 @@ class Preconditions(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         uid = self.uid()
+        check_type("uid", uid, Optional[str])
         if uid is not None:  # omit empty
             v["uid"] = uid
         resourceVersion = self.resourceVersion()
+        check_type("resourceVersion", resourceVersion, Optional[str])
         if resourceVersion is not None:  # omit empty
             v["resourceVersion"] = resourceVersion
         return v
 
     # Specifies the target UID.
-    @typechecked
     def uid(self) -> Optional[str]:
         return self.__uid
 
     # Specifies the target ResourceVersion
-    @typechecked
     def resourceVersion(self) -> Optional[str]:
         return self.__resourceVersion
 
@@ -253,9 +253,11 @@ class TypeMeta(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         kind = self.kind()
+        check_type("kind", kind, Optional[str])
         if kind:  # omit empty
             v["kind"] = kind
         apiVersion = self.apiVersion()
+        check_type("apiVersion", apiVersion, Optional[str])
         if apiVersion:  # omit empty
             v["apiVersion"] = apiVersion
         return v
@@ -265,7 +267,6 @@ class TypeMeta(types.Object):
     # Cannot be updated.
     # In CamelCase.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-    @typechecked
     def kind(self) -> Optional[str]:
         return self.__kind
 
@@ -273,7 +274,6 @@ class TypeMeta(types.Object):
     # Servers should convert recognized schemas to the latest internal value, and
     # may reject unrecognized values.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-    @typechecked
     def apiVersion(self) -> Optional[str]:
         return self.__apiVersion
 
@@ -299,15 +299,21 @@ class DeleteOptions(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         gracePeriodSeconds = self.gracePeriodSeconds()
+        check_type("gracePeriodSeconds", gracePeriodSeconds, Optional[int])
         if gracePeriodSeconds is not None:  # omit empty
             v["gracePeriodSeconds"] = gracePeriodSeconds
         preconditions = self.preconditions()
+        check_type("preconditions", preconditions, Optional[Preconditions])
         if preconditions is not None:  # omit empty
             v["preconditions"] = preconditions
         propagationPolicy = self.propagationPolicy()
+        check_type(
+            "propagationPolicy", propagationPolicy, Optional[DeletionPropagation]
+        )
         if propagationPolicy is not None:  # omit empty
             v["propagationPolicy"] = propagationPolicy
         dryRun = self.dryRun()
+        check_type("dryRun", dryRun, Optional[List[str]])
         if dryRun:  # omit empty
             v["dryRun"] = dryRun
         return v
@@ -316,13 +322,11 @@ class DeleteOptions(base.TypedObject):
     # The value zero indicates delete immediately. If this value is nil, the default grace period for the
     # specified type will be used.
     # Defaults to a per object value if not specified. zero means delete immediately.
-    @typechecked
     def gracePeriodSeconds(self) -> Optional[int]:
         return self.__gracePeriodSeconds
 
     # Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
     # returned.
-    @typechecked
     def preconditions(self) -> Optional[Preconditions]:
         return self.__preconditions
 
@@ -334,7 +338,6 @@ class DeleteOptions(base.TypedObject):
     # allow the garbage collector to delete the dependents in the background;
     # 'Foreground' - a cascading policy that deletes all dependents in the
     # foreground.
-    @typechecked
     def propagationPolicy(self) -> Optional[DeletionPropagation]:
         return self.__propagationPolicy
 
@@ -343,7 +346,6 @@ class DeleteOptions(base.TypedObject):
     # result in an error response and no further processing of the
     # request. Valid values are:
     # - All: all dry run stages will be processed
-    @typechecked
     def dryRun(self) -> Optional[List[str]]:
         return self.__dryRun
 
@@ -362,20 +364,23 @@ class GroupVersionKind(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["group"] = self.group()
-        v["version"] = self.version()
-        v["kind"] = self.kind()
+        group = self.group()
+        check_type("group", group, str)
+        v["group"] = group
+        version = self.version()
+        check_type("version", version, str)
+        v["version"] = version
+        kind = self.kind()
+        check_type("kind", kind, str)
+        v["kind"] = kind
         return v
 
-    @typechecked
     def group(self) -> str:
         return self.__group
 
-    @typechecked
     def version(self) -> str:
         return self.__version
 
-    @typechecked
     def kind(self) -> str:
         return self.__kind
 
@@ -394,20 +399,23 @@ class GroupVersionResource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["group"] = self.group()
-        v["version"] = self.version()
-        v["resource"] = self.resource()
+        group = self.group()
+        check_type("group", group, str)
+        v["group"] = group
+        version = self.version()
+        check_type("version", version, str)
+        v["version"] = version
+        resource = self.resource()
+        check_type("resource", resource, str)
+        v["resource"] = resource
         return v
 
-    @typechecked
     def group(self) -> str:
         return self.__group
 
-    @typechecked
     def version(self) -> str:
         return self.__version
 
-    @typechecked
     def resource(self) -> str:
         return self.__resource
 
@@ -431,21 +439,24 @@ class LabelSelectorRequirement(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["key"] = self.key()
-        v["operator"] = self.operator()
+        key = self.key()
+        check_type("key", key, str)
+        v["key"] = key
+        operator = self.operator()
+        check_type("operator", operator, LabelSelectorOperator)
+        v["operator"] = operator
         values = self.values()
+        check_type("values", values, Optional[List[str]])
         if values:  # omit empty
             v["values"] = values
         return v
 
     # key is the label key that the selector applies to.
-    @typechecked
     def key(self) -> str:
         return self.__key
 
     # operator represents a key's relationship to a set of values.
     # Valid operators are In, NotIn, Exists and DoesNotExist.
-    @typechecked
     def operator(self) -> LabelSelectorOperator:
         return self.__operator
 
@@ -453,7 +464,6 @@ class LabelSelectorRequirement(types.Object):
     # the values array must be non-empty. If the operator is Exists or DoesNotExist,
     # the values array must be empty. This array is replaced during a strategic
     # merge patch.
-    @typechecked
     def values(self) -> Optional[List[str]]:
         return self.__values
 
@@ -479,9 +489,15 @@ class LabelSelector(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         matchLabels = self.matchLabels()
+        check_type("matchLabels", matchLabels, Optional[Dict[str, str]])
         if matchLabels:  # omit empty
             v["matchLabels"] = matchLabels
         matchExpressions = self.matchExpressions()
+        check_type(
+            "matchExpressions",
+            matchExpressions,
+            Optional[List[LabelSelectorRequirement]],
+        )
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
         return v
@@ -489,12 +505,10 @@ class LabelSelector(types.Object):
     # matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
     # map is equivalent to an element of matchExpressions, whose key field is "key", the
     # operator is "In", and the values array contains only "value". The requirements are ANDed.
-    @typechecked
     def matchLabels(self) -> Optional[Dict[str, str]]:
         return self.__matchLabels
 
     # matchExpressions is a list of label selector requirements. The requirements are ANDed.
-    @typechecked
     def matchExpressions(self) -> Optional[List[LabelSelectorRequirement]]:
         return self.__matchExpressions
 
@@ -513,9 +527,11 @@ class ListMeta(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         continue_ = self.continue_()
+        check_type("continue_", continue_, Optional[str])
         if continue_:  # omit empty
             v["continue"] = continue_
         remainingItemCount = self.remainingItemCount()
+        check_type("remainingItemCount", remainingItemCount, Optional[int])
         if remainingItemCount is not None:  # omit empty
             v["remainingItemCount"] = remainingItemCount
         return v
@@ -527,7 +543,6 @@ class ListMeta(types.Object):
     # minutes have passed. The resourceVersion field returned when using this continue value will be
     # identical to the value in the first response, unless you have received this token from an error
     # message.
-    @typechecked
     def continue_(self) -> Optional[str]:
         return self.__continue_
 
@@ -540,7 +555,6 @@ class ListMeta(types.Object):
     # Servers older than v1.15 do not set this field.
     # The intended use of the remainingItemCount is *estimating* the size of a collection. Clients
     # should not rely on the remainingItemCount to be set or to be exact.
-    @typechecked
     def remainingItemCount(self) -> Optional[int]:
         return self.__remainingItemCount
 
@@ -567,15 +581,19 @@ class ObjectMeta(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         labels = self.labels()
+        check_type("labels", labels, Optional[Dict[str, str]])
         if labels:  # omit empty
             v["labels"] = labels
         annotations = self.annotations()
+        check_type("annotations", annotations, Optional[Dict[str, str]])
         if annotations:  # omit empty
             v["annotations"] = annotations
         return v
@@ -586,7 +604,6 @@ class ObjectMeta(types.Object):
     # definition.
     # Cannot be updated.
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
@@ -598,7 +615,6 @@ class ObjectMeta(types.Object):
     # Must be a DNS_LABEL.
     # Cannot be updated.
     # More info: http://kubernetes.io/docs/user-guide/namespaces
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
@@ -606,7 +622,6 @@ class ObjectMeta(types.Object):
     # (scope and select) objects. May match selectors of replication controllers
     # and services.
     # More info: http://kubernetes.io/docs/user-guide/labels
-    @typechecked
     def labels(self) -> Optional[Dict[str, str]]:
         return self.__labels
 
@@ -614,7 +629,6 @@ class ObjectMeta(types.Object):
     # set by external tools to store and retrieve arbitrary metadata. They are not
     # queryable and should be preserved when modifying objects.
     # More info: http://kubernetes.io/docs/user-guide/annotations
-    @typechecked
     def annotations(self) -> Optional[Dict[str, str]]:
         return self.__annotations
 
@@ -636,25 +650,26 @@ class StatusCause(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         reason = self.reason()
+        check_type("reason", reason, Optional[CauseType])
         if reason:  # omit empty
             v["reason"] = reason
         message = self.message()
+        check_type("message", message, Optional[str])
         if message:  # omit empty
             v["message"] = message
         field = self.field()
+        check_type("field", field, Optional[str])
         if field:  # omit empty
             v["field"] = field
         return v
 
     # A machine-readable description of the cause of the error. If this value is
     # empty there is no information available.
-    @typechecked
     def reason(self) -> Optional[CauseType]:
         return self.__reason
 
     # A human-readable description of the cause of the error.  This field may be
     # presented as-is to a reader.
-    @typechecked
     def message(self) -> Optional[str]:
         return self.__message
 
@@ -667,7 +682,6 @@ class StatusCause(types.Object):
     # Examples:
     #   "name" - the field "name" on the current resource
     #   "items[0].name" - the field "name" on the first array entry in "items"
-    @typechecked
     def field(self) -> Optional[str]:
         return self.__field
 
@@ -702,60 +716,60 @@ class StatusDetails(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
         group = self.group()
+        check_type("group", group, Optional[str])
         if group:  # omit empty
             v["group"] = group
         kind = self.kind()
+        check_type("kind", kind, Optional[str])
         if kind:  # omit empty
             v["kind"] = kind
         uid = self.uid()
+        check_type("uid", uid, Optional[str])
         if uid:  # omit empty
             v["uid"] = uid
         causes = self.causes()
+        check_type("causes", causes, Optional[List[StatusCause]])
         if causes:  # omit empty
             v["causes"] = causes
         retryAfterSeconds = self.retryAfterSeconds()
+        check_type("retryAfterSeconds", retryAfterSeconds, Optional[int])
         if retryAfterSeconds:  # omit empty
             v["retryAfterSeconds"] = retryAfterSeconds
         return v
 
     # The name attribute of the resource associated with the status StatusReason
     # (when there is a single name which can be described).
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
     # The group attribute of the resource associated with the status StatusReason.
-    @typechecked
     def group(self) -> Optional[str]:
         return self.__group
 
     # The kind attribute of the resource associated with the status StatusReason.
     # On some operations may differ from the requested resource Kind.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-    @typechecked
     def kind(self) -> Optional[str]:
         return self.__kind
 
     # UID of the resource.
     # (when there is a single resource which can be described).
     # More info: http://kubernetes.io/docs/user-guide/identifiers#uids
-    @typechecked
     def uid(self) -> Optional[str]:
         return self.__uid
 
     # The Causes array includes more details associated with the StatusReason
     # failure. Not all StatusReasons may provide detailed causes.
-    @typechecked
     def causes(self) -> Optional[List[StatusCause]]:
         return self.__causes
 
     # If specified, the time in seconds before the operation should be retried. Some errors may indicate
     # the client must take an alternate action - for those errors this field may indicate how long to wait
     # before taking the alternate action.
-    @typechecked
     def retryAfterSeconds(self) -> Optional[int]:
         return self.__retryAfterSeconds
 
@@ -784,39 +798,43 @@ class Status(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["metadata"] = self.metadata()
+        metadata = self.metadata()
+        check_type("metadata", metadata, Optional[ListMeta])
+        v["metadata"] = metadata
         status = self.status()
+        check_type("status", status, Optional[str])
         if status:  # omit empty
             v["status"] = status
         message = self.message()
+        check_type("message", message, Optional[str])
         if message:  # omit empty
             v["message"] = message
         reason = self.reason()
+        check_type("reason", reason, Optional[StatusReason])
         if reason:  # omit empty
             v["reason"] = reason
         details = self.details()
+        check_type("details", details, Optional[StatusDetails])
         if details is not None:  # omit empty
             v["details"] = details
         code = self.code()
+        check_type("code", code, Optional[int])
         if code:  # omit empty
             v["code"] = code
         return v
 
     # Standard list metadata.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-    @typechecked
     def metadata(self) -> Optional[ListMeta]:
         return self.__metadata
 
     # Status of the operation.
     # One of: "Success" or "Failure".
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def status(self) -> Optional[str]:
         return self.__status
 
     # A human-readable description of the status of this operation.
-    @typechecked
     def message(self) -> Optional[str]:
         return self.__message
 
@@ -824,7 +842,6 @@ class Status(base.TypedObject):
     # "Failure" status. If this value is empty there
     # is no information available. A Reason clarifies an HTTP status
     # code but does not override it.
-    @typechecked
     def reason(self) -> Optional[StatusReason]:
         return self.__reason
 
@@ -832,11 +849,9 @@ class Status(base.TypedObject):
     # own extended details. This field is optional and the data returned
     # is not guaranteed to conform to any schema except that defined by
     # the reason type.
-    @typechecked
     def details(self) -> Optional[StatusDetails]:
         return self.__details
 
     # Suggested HTTP return code for this status, 0 if not set.
-    @typechecked
     def code(self) -> Optional[int]:
         return self.__code

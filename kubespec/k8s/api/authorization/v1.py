@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
@@ -25,20 +25,20 @@ class NonResourceAttributes(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         path = self.path()
+        check_type("path", path, Optional[str])
         if path:  # omit empty
             v["path"] = path
         verb = self.verb()
+        check_type("verb", verb, Optional[str])
         if verb:  # omit empty
             v["verb"] = verb
         return v
 
     # Path is the URL path of the request
-    @typechecked
     def path(self) -> Optional[str]:
         return self.__path
 
     # Verb is the standard HTTP verb
-    @typechecked
     def verb(self) -> Optional[str]:
         return self.__verb
 
@@ -70,24 +70,31 @@ class ResourceAttributes(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         verb = self.verb()
+        check_type("verb", verb, Optional[str])
         if verb:  # omit empty
             v["verb"] = verb
         group = self.group()
+        check_type("group", group, Optional[str])
         if group:  # omit empty
             v["group"] = group
         version = self.version()
+        check_type("version", version, Optional[str])
         if version:  # omit empty
             v["version"] = version
         resource = self.resource()
+        check_type("resource", resource, Optional[str])
         if resource:  # omit empty
             v["resource"] = resource
         subresource = self.subresource()
+        check_type("subresource", subresource, Optional[str])
         if subresource:  # omit empty
             v["subresource"] = subresource
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
         return v
@@ -96,37 +103,30 @@ class ResourceAttributes(types.Object):
     # "" (empty) is defaulted for LocalSubjectAccessReviews
     # "" (empty) is empty for cluster-scoped resources
     # "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
     # Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
-    @typechecked
     def verb(self) -> Optional[str]:
         return self.__verb
 
     # Group is the API Group of the Resource.  "*" means all.
-    @typechecked
     def group(self) -> Optional[str]:
         return self.__group
 
     # Version is the API Version of the Resource.  "*" means all.
-    @typechecked
     def version(self) -> Optional[str]:
         return self.__version
 
     # Resource is one of the existing resource types.  "*" means all.
-    @typechecked
     def resource(self) -> Optional[str]:
         return self.__resource
 
     # Subresource is one of the existing resource types.  "" means none.
-    @typechecked
     def subresource(self) -> Optional[str]:
         return self.__subresource
 
     # Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
@@ -157,54 +157,60 @@ class SubjectAccessReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         resourceAttributes = self.resourceAttributes()
+        check_type(
+            "resourceAttributes", resourceAttributes, Optional[ResourceAttributes]
+        )
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
         nonResourceAttributes = self.nonResourceAttributes()
+        check_type(
+            "nonResourceAttributes",
+            nonResourceAttributes,
+            Optional[NonResourceAttributes],
+        )
         if nonResourceAttributes is not None:  # omit empty
             v["nonResourceAttributes"] = nonResourceAttributes
         user = self.user()
+        check_type("user", user, Optional[str])
         if user:  # omit empty
             v["user"] = user
         groups = self.groups()
+        check_type("groups", groups, Optional[List[str]])
         if groups:  # omit empty
             v["groups"] = groups
         extra = self.extra()
+        check_type("extra", extra, Optional[Dict[str, List[str]]])
         if extra:  # omit empty
             v["extra"] = extra
         uid = self.uid()
+        check_type("uid", uid, Optional[str])
         if uid:  # omit empty
             v["uid"] = uid
         return v
 
     # ResourceAuthorizationAttributes describes information for a resource access request
-    @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
         return self.__resourceAttributes
 
     # NonResourceAttributes describes information for a non-resource access request
-    @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
         return self.__nonResourceAttributes
 
     # User is the user you're testing for.
     # If you specify "User" but not "Groups", then is it interpreted as "What if User were not a member of any groups
-    @typechecked
     def user(self) -> Optional[str]:
         return self.__user
 
     # Groups is the groups you're testing for.
-    @typechecked
     def groups(self) -> Optional[List[str]]:
         return self.__groups
 
     # Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
     # it needs a reflection here.
-    @typechecked
     def extra(self) -> Optional[Dict[str, List[str]]]:
         return self.__extra
 
     # UID information about the requesting user.
-    @typechecked
     def uid(self) -> Optional[str]:
         return self.__uid
 
@@ -238,12 +244,13 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, SubjectAccessReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the request being evaluated.  spec.namespace must be equal to the namespace
     # you made the request against.  If empty, it is defaulted.
-    @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
         return self.__spec
 
@@ -266,20 +273,26 @@ class SelfSubjectAccessReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         resourceAttributes = self.resourceAttributes()
+        check_type(
+            "resourceAttributes", resourceAttributes, Optional[ResourceAttributes]
+        )
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
         nonResourceAttributes = self.nonResourceAttributes()
+        check_type(
+            "nonResourceAttributes",
+            nonResourceAttributes,
+            Optional[NonResourceAttributes],
+        )
         if nonResourceAttributes is not None:  # omit empty
             v["nonResourceAttributes"] = nonResourceAttributes
         return v
 
     # ResourceAuthorizationAttributes describes information for a resource access request
-    @typechecked
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
         return self.__resourceAttributes
 
     # NonResourceAttributes describes information for a non-resource access request
-    @typechecked
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
         return self.__nonResourceAttributes
 
@@ -311,11 +324,12 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, SelfSubjectAccessReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the request being evaluated.  user and groups must be empty
-    @typechecked
     def spec(self) -> SelfSubjectAccessReviewSpec:
         return self.__spec
 
@@ -331,12 +345,12 @@ class SelfSubjectRulesReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         return v
 
     # Namespace to evaluate rules for. Required.
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
@@ -371,11 +385,12 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, SelfSubjectRulesReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the request being evaluated.
-    @typechecked
     def spec(self) -> SelfSubjectRulesReviewSpec:
         return self.__spec
 
@@ -405,10 +420,11 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, SubjectAccessReviewSpec)
+        v["spec"] = spec
         return v
 
     # Spec holds information about the request being evaluated
-    @typechecked
     def spec(self) -> SubjectAccessReviewSpec:
         return self.__spec

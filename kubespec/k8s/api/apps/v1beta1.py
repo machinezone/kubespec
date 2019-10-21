@@ -12,7 +12,7 @@ from kubespec.k8s.apimachinery import runtime
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 DeploymentStrategyType = base.Enum(
@@ -103,17 +103,19 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["data"] = self.data()
-        v["revision"] = self.revision()
+        data = self.data()
+        check_type("data", data, Optional["runtime.RawExtension"])
+        v["data"] = data
+        revision = self.revision()
+        check_type("revision", revision, int)
+        v["revision"] = revision
         return v
 
     # Data is the serialized representation of the state.
-    @typechecked
     def data(self) -> Optional["runtime.RawExtension"]:
         return self.__data
 
     # Revision indicates the revision of the state represented by Data.
-    @typechecked
     def revision(self) -> int:
         return self.__revision
 
@@ -133,9 +135,11 @@ class RollingUpdateDeployment(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         maxUnavailable = self.maxUnavailable()
+        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
         if maxUnavailable is not None:  # omit empty
             v["maxUnavailable"] = maxUnavailable
         maxSurge = self.maxSurge()
+        check_type("maxSurge", maxSurge, Optional[Union[int, str]])
         if maxSurge is not None:  # omit empty
             v["maxSurge"] = maxSurge
         return v
@@ -150,7 +154,6 @@ class RollingUpdateDeployment(types.Object):
     # can be scaled down further, followed by scaling up the new ReplicaSet, ensuring
     # that the total number of pods available at all times during the update is at
     # least 70% of desired pods.
-    @typechecked
     def maxUnavailable(self) -> Optional[Union[int, str]]:
         return self.__maxUnavailable
 
@@ -165,7 +168,6 @@ class RollingUpdateDeployment(types.Object):
     # 130% of desired pods. Once old pods have been killed,
     # new ReplicaSet can be scaled up further, ensuring that total number of pods running
     # at any time during the update is at most 130% of desired pods.
-    @typechecked
     def maxSurge(self) -> Optional[Union[int, str]]:
         return self.__maxSurge
 
@@ -189,15 +191,16 @@ class DeploymentStrategy(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         type = self.type()
+        check_type("type", type, Optional[DeploymentStrategyType])
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
+        check_type("rollingUpdate", rollingUpdate, Optional[RollingUpdateDeployment])
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
 
     # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
-    @typechecked
     def type(self) -> Optional[DeploymentStrategyType]:
         return self.__type
 
@@ -206,7 +209,6 @@ class DeploymentStrategy(types.Object):
     # ---
     # TODO: Update this to follow our convention for oneOf, whatever we decide it
     # to be.
-    @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
         return self.__rollingUpdate
 
@@ -244,65 +246,68 @@ class DeploymentSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         replicas = self.replicas()
+        check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
         selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
-        v["template"] = self.template()
-        v["strategy"] = self.strategy()
+        template = self.template()
+        check_type("template", template, "corev1.PodTemplateSpec")
+        v["template"] = template
+        strategy = self.strategy()
+        check_type("strategy", strategy, Optional[DeploymentStrategy])
+        v["strategy"] = strategy
         minReadySeconds = self.minReadySeconds()
+        check_type("minReadySeconds", minReadySeconds, Optional[int])
         if minReadySeconds:  # omit empty
             v["minReadySeconds"] = minReadySeconds
         revisionHistoryLimit = self.revisionHistoryLimit()
+        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
         if revisionHistoryLimit is not None:  # omit empty
             v["revisionHistoryLimit"] = revisionHistoryLimit
         paused = self.paused()
+        check_type("paused", paused, Optional[bool])
         if paused:  # omit empty
             v["paused"] = paused
         progressDeadlineSeconds = self.progressDeadlineSeconds()
+        check_type("progressDeadlineSeconds", progressDeadlineSeconds, Optional[int])
         if progressDeadlineSeconds is not None:  # omit empty
             v["progressDeadlineSeconds"] = progressDeadlineSeconds
         return v
 
     # Number of desired pods. This is a pointer to distinguish between explicit
     # zero and not specified. Defaults to 1.
-    @typechecked
     def replicas(self) -> Optional[int]:
         return self.__replicas
 
     # Label selector for pods. Existing ReplicaSets whose pods are
     # selected by this will be the ones affected by this deployment.
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
     # Template describes the pods that will be created.
-    @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
         return self.__template
 
     # The deployment strategy to use to replace existing pods with new ones.
-    @typechecked
     def strategy(self) -> Optional[DeploymentStrategy]:
         return self.__strategy
 
     # Minimum number of seconds for which a newly created pod should be ready
     # without any of its container crashing, for it to be considered available.
     # Defaults to 0 (pod will be considered available as soon as it is ready)
-    @typechecked
     def minReadySeconds(self) -> Optional[int]:
         return self.__minReadySeconds
 
     # The number of old ReplicaSets to retain to allow rollback.
     # This is a pointer to distinguish between explicit zero and not specified.
     # Defaults to 2.
-    @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
         return self.__revisionHistoryLimit
 
     # Indicates that the deployment is paused.
-    @typechecked
     def paused(self) -> Optional[bool]:
         return self.__paused
 
@@ -311,7 +316,6 @@ class DeploymentSpec(types.Object):
     # process failed deployments and a condition with a ProgressDeadlineExceeded
     # reason will be surfaced in the deployment status. Note that progress will
     # not be estimated during the time a deployment is paused. Defaults to 600s.
-    @typechecked
     def progressDeadlineSeconds(self) -> Optional[int]:
         return self.__progressDeadlineSeconds
 
@@ -345,11 +349,12 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[DeploymentSpec])
+        v["spec"] = spec
         return v
 
     # Specification of the desired behavior of the Deployment.
-    @typechecked
     def spec(self) -> Optional[DeploymentSpec]:
         return self.__spec
 
@@ -366,12 +371,12 @@ class RollbackConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         revision = self.revision()
+        check_type("revision", revision, Optional[int])
         if revision:  # omit empty
             v["revision"] = revision
         return v
 
     # The revision to rollback to. If set to 0, rollback to the last revision.
-    @typechecked
     def revision(self) -> Optional[int]:
         return self.__revision
 
@@ -397,25 +402,27 @@ class DeploymentRollback(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
         updatedAnnotations = self.updatedAnnotations()
+        check_type("updatedAnnotations", updatedAnnotations, Optional[Dict[str, str]])
         if updatedAnnotations:  # omit empty
             v["updatedAnnotations"] = updatedAnnotations
-        v["rollbackTo"] = self.rollbackTo()
+        rollbackTo = self.rollbackTo()
+        check_type("rollbackTo", rollbackTo, RollbackConfig)
+        v["rollbackTo"] = rollbackTo
         return v
 
     # Required: This must match the Name of a deployment.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # The annotations to be updated to a deployment
-    @typechecked
     def updatedAnnotations(self) -> Optional[Dict[str, str]]:
         return self.__updatedAnnotations
 
     # The config of this deployment rollback.
-    @typechecked
     def rollbackTo(self) -> RollbackConfig:
         return self.__rollbackTo
 
@@ -432,13 +439,13 @@ class RollingUpdateStatefulSetStrategy(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         partition = self.partition()
+        check_type("partition", partition, Optional[int])
         if partition is not None:  # omit empty
             v["partition"] = partition
         return v
 
     # Partition indicates the ordinal at which the StatefulSet should be
     # partitioned.
-    @typechecked
     def partition(self) -> Optional[int]:
         return self.__partition
 
@@ -455,12 +462,12 @@ class ScaleSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         replicas = self.replicas()
+        check_type("replicas", replicas, Optional[int])
         if replicas:  # omit empty
             v["replicas"] = replicas
         return v
 
     # desired number of instances for the scaled object.
-    @typechecked
     def replicas(self) -> Optional[int]:
         return self.__replicas
 
@@ -492,11 +499,12 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[ScaleSpec])
+        v["spec"] = spec
         return v
 
     # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
-    @typechecked
     def spec(self) -> Optional[ScaleSpec]:
         return self.__spec
 
@@ -520,20 +528,22 @@ class StatefulSetUpdateStrategy(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         type = self.type()
+        check_type("type", type, Optional[StatefulSetUpdateStrategyType])
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
+        check_type(
+            "rollingUpdate", rollingUpdate, Optional[RollingUpdateStatefulSetStrategy]
+        )
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
 
     # Type indicates the type of the StatefulSetUpdateStrategy.
-    @typechecked
     def type(self) -> Optional[StatefulSetUpdateStrategyType]:
         return self.__type
 
     # RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
-    @typechecked
     def rollingUpdate(self) -> Optional[RollingUpdateStatefulSetStrategy]:
         return self.__rollingUpdate
 
@@ -577,21 +587,42 @@ class StatefulSetSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         replicas = self.replicas()
+        check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
         selector = self.selector()
+        check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
-        v["template"] = self.template()
+        template = self.template()
+        check_type("template", template, "corev1.PodTemplateSpec")
+        v["template"] = template
         volumeClaimTemplates = self.volumeClaimTemplates()
+        check_type(
+            "volumeClaimTemplates",
+            volumeClaimTemplates,
+            Optional[List["corev1.PersistentVolumeClaim"]],
+        )
         if volumeClaimTemplates:  # omit empty
             v["volumeClaimTemplates"] = volumeClaimTemplates
-        v["serviceName"] = self.serviceName()
+        serviceName = self.serviceName()
+        check_type("serviceName", serviceName, str)
+        v["serviceName"] = serviceName
         podManagementPolicy = self.podManagementPolicy()
+        check_type(
+            "podManagementPolicy",
+            podManagementPolicy,
+            Optional[PodManagementPolicyType],
+        )
         if podManagementPolicy:  # omit empty
             v["podManagementPolicy"] = podManagementPolicy
-        v["updateStrategy"] = self.updateStrategy()
+        updateStrategy = self.updateStrategy()
+        check_type(
+            "updateStrategy", updateStrategy, Optional[StatefulSetUpdateStrategy]
+        )
+        v["updateStrategy"] = updateStrategy
         revisionHistoryLimit = self.revisionHistoryLimit()
+        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
         if revisionHistoryLimit is not None:  # omit empty
             v["revisionHistoryLimit"] = revisionHistoryLimit
         return v
@@ -601,14 +632,12 @@ class StatefulSetSpec(types.Object):
     # same Template, but individual replicas also have a consistent identity.
     # If unspecified, defaults to 1.
     # TODO: Consider a rename of this field.
-    @typechecked
     def replicas(self) -> Optional[int]:
         return self.__replicas
 
     # selector is a label query over pods that should match the replica count.
     # If empty, defaulted to labels on the pod template.
     # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
-    @typechecked
     def selector(self) -> Optional["metav1.LabelSelector"]:
         return self.__selector
 
@@ -616,7 +645,6 @@ class StatefulSetSpec(types.Object):
     # insufficient replicas are detected. Each pod stamped out by the StatefulSet
     # will fulfill this Template, but have a unique identity from the rest
     # of the StatefulSet.
-    @typechecked
     def template(self) -> "corev1.PodTemplateSpec":
         return self.__template
 
@@ -627,7 +655,6 @@ class StatefulSetSpec(types.Object):
     # container in the template. A claim in this list takes precedence over
     # any volumes in the template, with the same name.
     # TODO: Define the behavior if a claim already exists with the same name.
-    @typechecked
     def volumeClaimTemplates(self) -> Optional[List["corev1.PersistentVolumeClaim"]]:
         return self.__volumeClaimTemplates
 
@@ -636,7 +663,6 @@ class StatefulSetSpec(types.Object):
     # the network identity of the set. Pods get DNS/hostnames that follow the
     # pattern: pod-specific-string.serviceName.default.svc.cluster.local
     # where "pod-specific-string" is managed by the StatefulSet controller.
-    @typechecked
     def serviceName(self) -> str:
         return self.__serviceName
 
@@ -648,14 +674,12 @@ class StatefulSetSpec(types.Object):
     # The alternative policy is `Parallel` which will create pods in parallel
     # to match the desired scale without waiting, and on scale down will delete
     # all pods at once.
-    @typechecked
     def podManagementPolicy(self) -> Optional[PodManagementPolicyType]:
         return self.__podManagementPolicy
 
     # updateStrategy indicates the StatefulSetUpdateStrategy that will be
     # employed to update Pods in the StatefulSet when a revision is made to
     # Template.
-    @typechecked
     def updateStrategy(self) -> Optional[StatefulSetUpdateStrategy]:
         return self.__updateStrategy
 
@@ -663,7 +687,6 @@ class StatefulSetSpec(types.Object):
     # be maintained in the StatefulSet's revision history. The revision history
     # consists of all revisions not represented by a currently applied
     # StatefulSetSpec version. The default value is 10.
-    @typechecked
     def revisionHistoryLimit(self) -> Optional[int]:
         return self.__revisionHistoryLimit
 
@@ -702,10 +725,11 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[StatefulSetSpec])
+        v["spec"] = spec
         return v
 
     # Spec defines the desired identities of pods in this set.
-    @typechecked
     def spec(self) -> Optional[StatefulSetSpec]:
         return self.__spec

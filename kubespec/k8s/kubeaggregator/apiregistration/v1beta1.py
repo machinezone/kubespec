@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ServiceReference holds a reference to Service.legacy.k8s.io
@@ -26,30 +26,30 @@ class ServiceReference(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
         port = self.port()
+        check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
         return v
 
     # Namespace is the namespace of the service
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
     # Name is the name of the service
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
     # If specified, the port on the service that hosting webhook.
     # Default to 443 for backward compatibility.
     # `port` should be a valid port number (1-65535, inclusive).
-    @typechecked
     def port(self) -> Optional[int]:
         return self.__port
 
@@ -81,50 +81,55 @@ class APIServiceSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["service"] = self.service()
+        service = self.service()
+        check_type("service", service, Optional[ServiceReference])
+        v["service"] = service
         group = self.group()
+        check_type("group", group, Optional[str])
         if group:  # omit empty
             v["group"] = group
         version = self.version()
+        check_type("version", version, Optional[str])
         if version:  # omit empty
             v["version"] = version
         insecureSkipTLSVerify = self.insecureSkipTLSVerify()
+        check_type("insecureSkipTLSVerify", insecureSkipTLSVerify, Optional[bool])
         if insecureSkipTLSVerify:  # omit empty
             v["insecureSkipTLSVerify"] = insecureSkipTLSVerify
         caBundle = self.caBundle()
+        check_type("caBundle", caBundle, Optional[bytes])
         if caBundle:  # omit empty
             v["caBundle"] = caBundle
-        v["groupPriorityMinimum"] = self.groupPriorityMinimum()
-        v["versionPriority"] = self.versionPriority()
+        groupPriorityMinimum = self.groupPriorityMinimum()
+        check_type("groupPriorityMinimum", groupPriorityMinimum, int)
+        v["groupPriorityMinimum"] = groupPriorityMinimum
+        versionPriority = self.versionPriority()
+        check_type("versionPriority", versionPriority, int)
+        v["versionPriority"] = versionPriority
         return v
 
     # Service is a reference to the service for this API server.  It must communicate
     # on port 443
     # If the Service is nil, that means the handling for the API groupversion is handled locally on this server.
     # The call will simply delegate to the normal handler chain to be fulfilled.
-    @typechecked
     def service(self) -> Optional[ServiceReference]:
         return self.__service
 
     # Group is the API group name this server hosts
-    @typechecked
     def group(self) -> Optional[str]:
         return self.__group
 
     # Version is the API version this server hosts.  For example, "v1"
-    @typechecked
     def version(self) -> Optional[str]:
         return self.__version
 
     # InsecureSkipTLSVerify disables TLS certificate verification when communicating with this server.
     # This is strongly discouraged.  You should use the CABundle instead.
-    @typechecked
     def insecureSkipTLSVerify(self) -> Optional[bool]:
         return self.__insecureSkipTLSVerify
 
     # CABundle is a PEM encoded CA bundle which will be used to validate an API server's serving certificate.
     # If unspecified, system trust roots on the apiserver are used.
-    @typechecked
     def caBundle(self) -> Optional[bytes]:
         return self.__caBundle
 
@@ -134,7 +139,6 @@ class APIServiceSpec(types.Object):
     # The secondary sort is based on the alphabetical comparison of the name of the object.  (v1.bar before v1.foo)
     # We'd recommend something like: *.k8s.io (except extensions) at 18000 and
     # PaaSes (OpenShift, Deis) are recommended to be in the 2000s
-    @typechecked
     def groupPriorityMinimum(self) -> int:
         return self.__groupPriorityMinimum
 
@@ -148,7 +152,6 @@ class APIServiceSpec(types.Object):
     # by GA > beta > alpha (where GA is a version with no suffix such as beta or alpha), and then by comparing major
     # version, then minor version. An example sorted list of versions:
     # v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
-    @typechecked
     def versionPriority(self) -> int:
         return self.__versionPriority
 
@@ -179,10 +182,11 @@ class APIService(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[APIServiceSpec])
+        v["spec"] = spec
         return v
 
     # Spec contains information for locating and communicating with a server
-    @typechecked
     def spec(self) -> Optional[APIServiceSpec]:
         return self.__spec

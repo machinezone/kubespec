@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Union
 from kubespec.k8s import base
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # IngressBackend describes all endpoints for a given service and port.
@@ -24,17 +24,19 @@ class IngressBackend(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["serviceName"] = self.serviceName()
-        v["servicePort"] = self.servicePort()
+        serviceName = self.serviceName()
+        check_type("serviceName", serviceName, str)
+        v["serviceName"] = serviceName
+        servicePort = self.servicePort()
+        check_type("servicePort", servicePort, Union[int, str])
+        v["servicePort"] = servicePort
         return v
 
     # Specifies the name of the referenced service.
-    @typechecked
     def serviceName(self) -> str:
         return self.__serviceName
 
     # Specifies the port of the referenced service.
-    @typechecked
     def servicePort(self) -> Union[int, str]:
         return self.__servicePort
 
@@ -53,9 +55,12 @@ class HTTPIngressPath(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         path = self.path()
+        check_type("path", path, Optional[str])
         if path:  # omit empty
             v["path"] = path
-        v["backend"] = self.backend()
+        backend = self.backend()
+        check_type("backend", backend, IngressBackend)
+        v["backend"] = backend
         return v
 
     # Path is an extended POSIX regex as defined by IEEE Std 1003.1,
@@ -65,13 +70,11 @@ class HTTPIngressPath(types.Object):
     # part of a URL as defined by RFC 3986. Paths must begin with
     # a '/'. If unspecified, the path defaults to a catch all sending
     # traffic to the backend.
-    @typechecked
     def path(self) -> Optional[str]:
         return self.__path
 
     # Backend defines the referenced service endpoint to which the traffic
     # will be forwarded to.
-    @typechecked
     def backend(self) -> IngressBackend:
         return self.__backend
 
@@ -91,11 +94,12 @@ class HTTPIngressRuleValue(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["paths"] = self.paths()
+        paths = self.paths()
+        check_type("paths", paths, List[HTTPIngressPath])
+        v["paths"] = paths
         return v
 
     # A collection of paths that map requests to backends.
-    @typechecked
     def paths(self) -> List[HTTPIngressPath]:
         return self.__paths
 
@@ -115,11 +119,11 @@ class IngressRuleValue(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         http = self.http()
+        check_type("http", http, Optional[HTTPIngressRuleValue])
         if http is not None:  # omit empty
             v["http"] = http
         return v
 
-    @typechecked
     def http(self) -> Optional[HTTPIngressRuleValue]:
         return self.__http
 
@@ -141,9 +145,12 @@ class IngressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         host = self.host()
+        check_type("host", host, Optional[str])
         if host:  # omit empty
             v["host"] = host
-        v.update(self.ingressRuleValue()._root())  # inline
+        ingressRuleValue = self.ingressRuleValue()
+        check_type("ingressRuleValue", ingressRuleValue, Optional[IngressRuleValue])
+        v.update(ingressRuleValue._root())  # inline
         return v
 
     # Host is the fully qualified domain name of a network host, as defined
@@ -158,7 +165,6 @@ class IngressRule(types.Object):
     # Incoming requests are matched against the host before the IngressRuleValue.
     # If the host is unspecified, the Ingress routes all traffic based on the
     # specified IngressRuleValue.
-    @typechecked
     def host(self) -> Optional[str]:
         return self.__host
 
@@ -167,7 +173,6 @@ class IngressRule(types.Object):
     # just traffic matching the host to the default backend or all traffic to the
     # default backend, is left to the controller fulfilling the Ingress. Http is
     # currently the only supported IngressRuleValue.
-    @typechecked
     def ingressRuleValue(self) -> Optional[IngressRuleValue]:
         return self.__ingressRuleValue
 
@@ -185,9 +190,11 @@ class IngressTLS(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         hosts = self.hosts()
+        check_type("hosts", hosts, Optional[List[str]])
         if hosts:  # omit empty
             v["hosts"] = hosts
         secretName = self.secretName()
+        check_type("secretName", secretName, Optional[str])
         if secretName:  # omit empty
             v["secretName"] = secretName
         return v
@@ -196,7 +203,6 @@ class IngressTLS(types.Object):
     # this list must match the name/s used in the tlsSecret. Defaults to the
     # wildcard host setting for the loadbalancer controller fulfilling this
     # Ingress, if left unspecified.
-    @typechecked
     def hosts(self) -> Optional[List[str]]:
         return self.__hosts
 
@@ -205,7 +211,6 @@ class IngressTLS(types.Object):
     # If the SNI host in a listener conflicts with the "Host" header field used
     # by an IngressRule, the SNI host is used for termination and value of the
     # Host header is used for routing.
-    @typechecked
     def secretName(self) -> Optional[str]:
         return self.__secretName
 
@@ -229,12 +234,15 @@ class IngressSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         backend = self.backend()
+        check_type("backend", backend, Optional[IngressBackend])
         if backend is not None:  # omit empty
             v["backend"] = backend
         tls = self.tls()
+        check_type("tls", tls, Optional[List[IngressTLS]])
         if tls:  # omit empty
             v["tls"] = tls
         rules = self.rules()
+        check_type("rules", rules, Optional[List[IngressRule]])
         if rules:  # omit empty
             v["rules"] = rules
         return v
@@ -243,7 +251,6 @@ class IngressSpec(types.Object):
     # rule. At least one of 'backend' or 'rules' must be specified. This field
     # is optional to allow the loadbalancer controller or defaulting logic to
     # specify a global default.
-    @typechecked
     def backend(self) -> Optional[IngressBackend]:
         return self.__backend
 
@@ -252,13 +259,11 @@ class IngressSpec(types.Object):
     # will be multiplexed on the same port according to the hostname specified
     # through the SNI TLS extension, if the ingress controller fulfilling the
     # ingress supports SNI.
-    @typechecked
     def tls(self) -> Optional[List[IngressTLS]]:
         return self.__tls
 
     # A list of host rules used to configure the Ingress. If unspecified, or
     # no rule matches, all traffic is sent to the default backend.
-    @typechecked
     def rules(self) -> Optional[List[IngressRule]]:
         return self.__rules
 
@@ -293,11 +298,12 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[IngressSpec])
+        v["spec"] = spec
         return v
 
     # Spec is the desired state of the Ingress.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
-    @typechecked
     def spec(self) -> Optional[IngressSpec]:
         return self.__spec

@@ -12,7 +12,7 @@ from kubespec.k8s.apimachinery import runtime
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # Level defines the amount of information logged during auditing
@@ -81,63 +81,63 @@ class ObjectReference(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         resource = self.resource()
+        check_type("resource", resource, Optional[str])
         if resource:  # omit empty
             v["resource"] = resource
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
         uid = self.uid()
+        check_type("uid", uid, Optional[str])
         if uid:  # omit empty
             v["uid"] = uid
         apiGroup = self.apiGroup()
+        check_type("apiGroup", apiGroup, Optional[str])
         if apiGroup:  # omit empty
             v["apiGroup"] = apiGroup
         apiVersion = self.apiVersion()
+        check_type("apiVersion", apiVersion, Optional[str])
         if apiVersion:  # omit empty
             v["apiVersion"] = apiVersion
         resourceVersion = self.resourceVersion()
+        check_type("resourceVersion", resourceVersion, Optional[str])
         if resourceVersion:  # omit empty
             v["resourceVersion"] = resourceVersion
         subresource = self.subresource()
+        check_type("subresource", subresource, Optional[str])
         if subresource:  # omit empty
             v["subresource"] = subresource
         return v
 
-    @typechecked
     def resource(self) -> Optional[str]:
         return self.__resource
 
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
-    @typechecked
     def uid(self) -> Optional[str]:
         return self.__uid
 
     # APIGroup is the name of the API group that contains the referred object.
     # The empty string represents the core API group.
-    @typechecked
     def apiGroup(self) -> Optional[str]:
         return self.__apiGroup
 
     # APIVersion is the version of the API group that contains the referred object.
-    @typechecked
     def apiVersion(self) -> Optional[str]:
         return self.__apiVersion
 
-    @typechecked
     def resourceVersion(self) -> Optional[str]:
         return self.__resourceVersion
 
-    @typechecked
     def subresource(self) -> Optional[str]:
         return self.__subresource
 
@@ -186,97 +186,114 @@ class Event(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["level"] = self.level()
-        v["auditID"] = self.auditID()
-        v["stage"] = self.stage()
-        v["requestURI"] = self.requestURI()
-        v["verb"] = self.verb()
-        v["user"] = self.user()
+        level = self.level()
+        check_type("level", level, Level)
+        v["level"] = level
+        auditID = self.auditID()
+        check_type("auditID", auditID, str)
+        v["auditID"] = auditID
+        stage = self.stage()
+        check_type("stage", stage, Stage)
+        v["stage"] = stage
+        requestURI = self.requestURI()
+        check_type("requestURI", requestURI, str)
+        v["requestURI"] = requestURI
+        verb = self.verb()
+        check_type("verb", verb, str)
+        v["verb"] = verb
+        user = self.user()
+        check_type("user", user, "authenticationv1.UserInfo")
+        v["user"] = user
         impersonatedUser = self.impersonatedUser()
+        check_type(
+            "impersonatedUser", impersonatedUser, Optional["authenticationv1.UserInfo"]
+        )
         if impersonatedUser is not None:  # omit empty
             v["impersonatedUser"] = impersonatedUser
         sourceIPs = self.sourceIPs()
+        check_type("sourceIPs", sourceIPs, Optional[List[str]])
         if sourceIPs:  # omit empty
             v["sourceIPs"] = sourceIPs
         userAgent = self.userAgent()
+        check_type("userAgent", userAgent, Optional[str])
         if userAgent:  # omit empty
             v["userAgent"] = userAgent
         objectRef = self.objectRef()
+        check_type("objectRef", objectRef, Optional[ObjectReference])
         if objectRef is not None:  # omit empty
             v["objectRef"] = objectRef
         responseStatus = self.responseStatus()
+        check_type("responseStatus", responseStatus, Optional["metav1.Status"])
         if responseStatus is not None:  # omit empty
             v["responseStatus"] = responseStatus
         requestObject = self.requestObject()
+        check_type("requestObject", requestObject, Optional["runtime.Unknown"])
         if requestObject is not None:  # omit empty
             v["requestObject"] = requestObject
         responseObject = self.responseObject()
+        check_type("responseObject", responseObject, Optional["runtime.Unknown"])
         if responseObject is not None:  # omit empty
             v["responseObject"] = responseObject
-        v["requestReceivedTimestamp"] = self.requestReceivedTimestamp()
-        v["stageTimestamp"] = self.stageTimestamp()
+        requestReceivedTimestamp = self.requestReceivedTimestamp()
+        check_type(
+            "requestReceivedTimestamp", requestReceivedTimestamp, "base.MicroTime"
+        )
+        v["requestReceivedTimestamp"] = requestReceivedTimestamp
+        stageTimestamp = self.stageTimestamp()
+        check_type("stageTimestamp", stageTimestamp, "base.MicroTime")
+        v["stageTimestamp"] = stageTimestamp
         annotations = self.annotations()
+        check_type("annotations", annotations, Optional[Dict[str, str]])
         if annotations:  # omit empty
             v["annotations"] = annotations
         return v
 
     # AuditLevel at which event was generated
-    @typechecked
     def level(self) -> Level:
         return self.__level
 
     # Unique audit ID, generated for each request.
-    @typechecked
     def auditID(self) -> str:
         return self.__auditID
 
     # Stage of the request handling when this event instance was generated.
-    @typechecked
     def stage(self) -> Stage:
         return self.__stage
 
     # RequestURI is the request URI as sent by the client to a server.
-    @typechecked
     def requestURI(self) -> str:
         return self.__requestURI
 
     # Verb is the kubernetes verb associated with the request.
     # For non-resource requests, this is the lower-cased HTTP method.
-    @typechecked
     def verb(self) -> str:
         return self.__verb
 
     # Authenticated user information.
-    @typechecked
     def user(self) -> "authenticationv1.UserInfo":
         return self.__user
 
     # Impersonated user information.
-    @typechecked
     def impersonatedUser(self) -> Optional["authenticationv1.UserInfo"]:
         return self.__impersonatedUser
 
     # Source IPs, from where the request originated and intermediate proxies.
-    @typechecked
     def sourceIPs(self) -> Optional[List[str]]:
         return self.__sourceIPs
 
     # UserAgent records the user agent string reported by the client.
     # Note that the UserAgent is provided by the client, and must not be trusted.
-    @typechecked
     def userAgent(self) -> Optional[str]:
         return self.__userAgent
 
     # Object reference this request is targeted at.
     # Does not apply for List-type requests, or non-resource requests.
-    @typechecked
     def objectRef(self) -> Optional[ObjectReference]:
         return self.__objectRef
 
     # The response status, populated even when the ResponseObject is not a Status type.
     # For successful responses, this will only include the Code and StatusSuccess.
     # For non-status type error responses, this will be auto-populated with the error Message.
-    @typechecked
     def responseStatus(self) -> Optional["metav1.Status"]:
         return self.__responseStatus
 
@@ -284,24 +301,20 @@ class Event(base.TypedObject):
     # (possibly re-encoded as JSON), prior to version conversion, defaulting, admission or
     # merging. It is an external versioned object type, and may not be a valid object on its own.
     # Omitted for non-resource requests.  Only logged at Request Level and higher.
-    @typechecked
     def requestObject(self) -> Optional["runtime.Unknown"]:
         return self.__requestObject
 
     # API object returned in the response, in JSON. The ResponseObject is recorded after conversion
     # to the external type, and serialized as JSON.  Omitted for non-resource requests.  Only logged
     # at Response Level.
-    @typechecked
     def responseObject(self) -> Optional["runtime.Unknown"]:
         return self.__responseObject
 
     # Time the request reached the apiserver.
-    @typechecked
     def requestReceivedTimestamp(self) -> "base.MicroTime":
         return self.__requestReceivedTimestamp
 
     # Time the request reached current audit stage.
-    @typechecked
     def stageTimestamp(self) -> "base.MicroTime":
         return self.__stageTimestamp
 
@@ -311,7 +324,6 @@ class Event(base.TypedObject):
     # to the metadata.annotations of the submitted object. Keys should uniquely identify the informing
     # component to avoid name collisions (e.g. podsecuritypolicy.admission.k8s.io/policy). Values
     # should be short. Annotations are included in the Metadata level.
-    @typechecked
     def annotations(self) -> Optional[Dict[str, str]]:
         return self.__annotations
 
@@ -335,19 +347,21 @@ class GroupResources(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         group = self.group()
+        check_type("group", group, Optional[str])
         if group:  # omit empty
             v["group"] = group
         resources = self.resources()
+        check_type("resources", resources, Optional[List[str]])
         if resources:  # omit empty
             v["resources"] = resources
         resourceNames = self.resourceNames()
+        check_type("resourceNames", resourceNames, Optional[List[str]])
         if resourceNames:  # omit empty
             v["resourceNames"] = resourceNames
         return v
 
     # Group is the name of the API group that contains the resources.
     # The empty string represents the core API group.
-    @typechecked
     def group(self) -> Optional[str]:
         return self.__group
 
@@ -364,14 +378,12 @@ class GroupResources(types.Object):
     # overlap with each other.
     #
     # An empty list implies all resources and subresources in this API groups apply.
-    @typechecked
     def resources(self) -> Optional[List[str]]:
         return self.__resources
 
     # ResourceNames is a list of resource instance names that the policy matches.
     # Using this field requires Resources to be specified.
     # An empty list implies that every instance of the resource is matched.
-    @typechecked
     def resourceNames(self) -> Optional[List[str]]:
         return self.__resourceNames
 
@@ -405,63 +417,66 @@ class PolicyRule(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["level"] = self.level()
+        level = self.level()
+        check_type("level", level, Level)
+        v["level"] = level
         users = self.users()
+        check_type("users", users, Optional[List[str]])
         if users:  # omit empty
             v["users"] = users
         userGroups = self.userGroups()
+        check_type("userGroups", userGroups, Optional[List[str]])
         if userGroups:  # omit empty
             v["userGroups"] = userGroups
         verbs = self.verbs()
+        check_type("verbs", verbs, Optional[List[str]])
         if verbs:  # omit empty
             v["verbs"] = verbs
         resources = self.resources()
+        check_type("resources", resources, Optional[List[GroupResources]])
         if resources:  # omit empty
             v["resources"] = resources
         namespaces = self.namespaces()
+        check_type("namespaces", namespaces, Optional[List[str]])
         if namespaces:  # omit empty
             v["namespaces"] = namespaces
         nonResourceURLs = self.nonResourceURLs()
+        check_type("nonResourceURLs", nonResourceURLs, Optional[List[str]])
         if nonResourceURLs:  # omit empty
             v["nonResourceURLs"] = nonResourceURLs
         omitStages = self.omitStages()
+        check_type("omitStages", omitStages, Optional[List[Stage]])
         if omitStages:  # omit empty
             v["omitStages"] = omitStages
         return v
 
     # The Level that requests matching this rule are recorded at.
-    @typechecked
     def level(self) -> Level:
         return self.__level
 
     # The users (by authenticated user name) this rule applies to.
     # An empty list implies every user.
-    @typechecked
     def users(self) -> Optional[List[str]]:
         return self.__users
 
     # The user groups this rule applies to. A user is considered matching
     # if it is a member of any of the UserGroups.
     # An empty list implies every user group.
-    @typechecked
     def userGroups(self) -> Optional[List[str]]:
         return self.__userGroups
 
     # The verbs that match this rule.
     # An empty list implies every verb.
-    @typechecked
     def verbs(self) -> Optional[List[str]]:
         return self.__verbs
 
     # Resources that this rule matches. An empty list implies all kinds in all API groups.
-    @typechecked
     def resources(self) -> Optional[List[GroupResources]]:
         return self.__resources
 
     # Namespaces that this rule matches.
     # The empty string "" matches non-namespaced resources.
     # An empty list implies every namespace.
-    @typechecked
     def namespaces(self) -> Optional[List[str]]:
         return self.__namespaces
 
@@ -470,14 +485,12 @@ class PolicyRule(types.Object):
     # Examples:
     #  "/metrics" - Log requests for apiserver metrics
     #  "/healthz*" - Log all health checks
-    @typechecked
     def nonResourceURLs(self) -> Optional[List[str]]:
         return self.__nonResourceURLs
 
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified policy wide in which case the union of both are omitted.
     # An empty list means no restrictions will apply.
-    @typechecked
     def omitStages(self) -> Optional[List[Stage]]:
         return self.__omitStages
 
@@ -512,8 +525,11 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["rules"] = self.rules()
+        rules = self.rules()
+        check_type("rules", rules, List[PolicyRule])
+        v["rules"] = rules
         omitStages = self.omitStages()
+        check_type("omitStages", omitStages, Optional[List[Stage]])
         if omitStages:  # omit empty
             v["omitStages"] = omitStages
         return v
@@ -522,12 +538,10 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
     # A request may match multiple rules, in which case the FIRST matching rule is used.
     # The default audit level is None, but can be overridden by a catch-all rule at the end of the list.
     # PolicyRules are strictly ordered.
-    @typechecked
     def rules(self) -> List[PolicyRule]:
         return self.__rules
 
     # OmitStages is a list of stages for which no events are created. Note that this can also
     # be specified per rule in which case the union of both are omitted.
-    @typechecked
     def omitStages(self) -> Optional[List[Stage]]:
         return self.__omitStages

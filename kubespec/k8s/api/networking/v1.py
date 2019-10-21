@@ -11,7 +11,7 @@ from kubespec.k8s.api.core import v1 as corev1
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # Policy Type string describes the NetworkPolicy type
@@ -41,22 +41,23 @@ class IPBlock(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["cidr"] = self.cidr()
+        cidr = self.cidr()
+        check_type("cidr", cidr, str)
+        v["cidr"] = cidr
         except_ = self.except_()
+        check_type("except_", except_, Optional[List[str]])
         if except_:  # omit empty
             v["except"] = except_
         return v
 
     # CIDR is a string representing the IP Block
     # Valid examples are "192.168.1.1/24"
-    @typechecked
     def cidr(self) -> str:
         return self.__cidr
 
     # Except is a slice of CIDRs that should not be included within an IP Block
     # Valid examples are "192.168.1.1/24"
     # Except values will be rejected if they are outside the CIDR range
-    @typechecked
     def except_(self) -> Optional[List[str]]:
         return self.__except_
 
@@ -81,12 +82,17 @@ class NetworkPolicyPeer(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         podSelector = self.podSelector()
+        check_type("podSelector", podSelector, Optional["metav1.LabelSelector"])
         if podSelector is not None:  # omit empty
             v["podSelector"] = podSelector
         namespaceSelector = self.namespaceSelector()
+        check_type(
+            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+        )
         if namespaceSelector is not None:  # omit empty
             v["namespaceSelector"] = namespaceSelector
         ipBlock = self.ipBlock()
+        check_type("ipBlock", ipBlock, Optional[IPBlock])
         if ipBlock is not None:  # omit empty
             v["ipBlock"] = ipBlock
         return v
@@ -97,7 +103,6 @@ class NetworkPolicyPeer(types.Object):
     # If NamespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
     # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
     # Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
-    @typechecked
     def podSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__podSelector
 
@@ -107,13 +112,11 @@ class NetworkPolicyPeer(types.Object):
     # If PodSelector is also set, then the NetworkPolicyPeer as a whole selects
     # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
     # Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
-    @typechecked
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
         return self.__namespaceSelector
 
     # IPBlock defines policy on a particular IPBlock. If this field is set then
     # neither of the other fields can be.
-    @typechecked
     def ipBlock(self) -> Optional[IPBlock]:
         return self.__ipBlock
 
@@ -131,22 +134,22 @@ class NetworkPolicyPort(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         protocol = self.protocol()
+        check_type("protocol", protocol, Optional[corev1.Protocol])
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
         port = self.port()
+        check_type("port", port, Optional[Union[int, str]])
         if port is not None:  # omit empty
             v["port"] = port
         return v
 
     # The protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this
     # field defaults to TCP.
-    @typechecked
     def protocol(self) -> Optional[corev1.Protocol]:
         return self.__protocol
 
     # The port on the given protocol. This can either be a numerical or named port on
     # a pod. If this field is not provided, this matches all port names and numbers.
-    @typechecked
     def port(self) -> Optional[Union[int, str]]:
         return self.__port
 
@@ -168,9 +171,11 @@ class NetworkPolicyEgressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
+        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
         if ports:  # omit empty
             v["ports"] = ports
         to = self.to()
+        check_type("to", to, Optional[List[NetworkPolicyPeer]])
         if to:  # omit empty
             v["to"] = to
         return v
@@ -180,7 +185,6 @@ class NetworkPolicyEgressRule(types.Object):
     # empty or missing, this rule matches all ports (traffic not restricted by port).
     # If this field is present and contains at least one item, then this rule allows
     # traffic only if the traffic matches at least one port in the list.
-    @typechecked
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
         return self.__ports
 
@@ -189,7 +193,6 @@ class NetworkPolicyEgressRule(types.Object):
     # empty or missing, this rule matches all destinations (traffic not restricted by
     # destination). If this field is present and contains at least one item, this rule
     # allows traffic only if the traffic matches at least one item in the to list.
-    @typechecked
     def to(self) -> Optional[List[NetworkPolicyPeer]]:
         return self.__to
 
@@ -212,9 +215,11 @@ class NetworkPolicyIngressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
+        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
         if ports:  # omit empty
             v["ports"] = ports
         from_ = self.from_()
+        check_type("from_", from_, Optional[List[NetworkPolicyPeer]])
         if from_:  # omit empty
             v["from"] = from_
         return v
@@ -224,7 +229,6 @@ class NetworkPolicyIngressRule(types.Object):
     # empty or missing, this rule matches all ports (traffic not restricted by port).
     # If this field is present and contains at least one item, then this rule allows
     # traffic only if the traffic matches at least one port in the list.
-    @typechecked
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
         return self.__ports
 
@@ -233,7 +237,6 @@ class NetworkPolicyIngressRule(types.Object):
     # empty or missing, this rule matches all sources (traffic not restricted by
     # source). If this field is present and contains at least one item, this rule
     # allows traffic only if the traffic matches at least one item in the from list.
-    @typechecked
     def from_(self) -> Optional[List[NetworkPolicyPeer]]:
         return self.__from_
 
@@ -260,14 +263,19 @@ class NetworkPolicySpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["podSelector"] = self.podSelector()
+        podSelector = self.podSelector()
+        check_type("podSelector", podSelector, "metav1.LabelSelector")
+        v["podSelector"] = podSelector
         ingress = self.ingress()
+        check_type("ingress", ingress, Optional[List[NetworkPolicyIngressRule]])
         if ingress:  # omit empty
             v["ingress"] = ingress
         egress = self.egress()
+        check_type("egress", egress, Optional[List[NetworkPolicyEgressRule]])
         if egress:  # omit empty
             v["egress"] = egress
         policyTypes = self.policyTypes()
+        check_type("policyTypes", policyTypes, Optional[List[PolicyType]])
         if policyTypes:  # omit empty
             v["policyTypes"] = policyTypes
         return v
@@ -278,7 +286,6 @@ class NetworkPolicySpec(types.Object):
     # each are combined additively. This field is NOT optional and follows standard
     # label selector semantics. An empty podSelector matches all pods in this
     # namespace.
-    @typechecked
     def podSelector(self) -> "metav1.LabelSelector":
         return self.__podSelector
 
@@ -289,7 +296,6 @@ class NetworkPolicySpec(types.Object):
     # across all of the NetworkPolicy objects whose podSelector matches the pod. If
     # this field is empty then this NetworkPolicy does not allow any traffic (and serves
     # solely to ensure that the pods it selects are isolated by default)
-    @typechecked
     def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
         return self.__ingress
 
@@ -300,7 +306,6 @@ class NetworkPolicySpec(types.Object):
     # this field is empty then this NetworkPolicy limits all outgoing traffic (and serves
     # solely to ensure that the pods it selects are isolated by default).
     # This field is beta-level in 1.8
-    @typechecked
     def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
         return self.__egress
 
@@ -314,7 +319,6 @@ class NetworkPolicySpec(types.Object):
     # you must specify a policyTypes value that include "Egress" (since such a policy would not include
     # an Egress section and would otherwise default to just [ "Ingress" ]).
     # This field is beta-level in 1.8
-    @typechecked
     def policyTypes(self) -> Optional[List[PolicyType]]:
         return self.__policyTypes
 
@@ -346,10 +350,11 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["spec"] = self.spec()
+        spec = self.spec()
+        check_type("spec", spec, Optional[NetworkPolicySpec])
+        v["spec"] = spec
         return v
 
     # Specification of the desired behavior for this NetworkPolicy.
-    @typechecked
     def spec(self) -> Optional[NetworkPolicySpec]:
         return self.__spec

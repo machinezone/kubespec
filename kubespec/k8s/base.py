@@ -8,7 +8,7 @@ from typing import Any, Dict, Optional
 
 import pytz
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 @typechecked
@@ -32,9 +32,11 @@ class TypedObject(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         apiVersion = self.apiVersion()
+        check_type("apiVersion", apiVersion, Optional[str])
         if apiVersion:  # omitempty
             v["apiVersion"] = apiVersion
         kind = self.kind()
+        check_type("kind", kind, Optional[str])
         if kind:  # omitempty
             v["kind"] = kind
         return v
@@ -43,7 +45,6 @@ class TypedObject(types.Object):
     # Servers should convert recognized schemas to the latest internal value, and
     # may reject unrecognized values.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
-    @typechecked
     def apiVersion(self) -> Optional[str]:
         return self.__apiVersion
 
@@ -52,7 +53,6 @@ class TypedObject(types.Object):
     # Cannot be updated.
     # In CamelCase.
     # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-    @typechecked
     def kind(self) -> Optional[str]:
         return self.__kind
 
@@ -74,13 +74,17 @@ class MetadataObject(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         metadata = v.get("metadata", {})
+        check_type("metadata", metadata, Dict[str, Any])
         name = self.name()
+        check_type("name", name, Optional[str])
         if name:  # omitempty
             metadata["name"] = name
         labels = self.labels()
+        check_type("labels", labels, Dict[str, str])
         if labels:  # omitempty
             metadata["labels"] = labels
         annotations = self.annotations()
+        check_type("annotations", annotations, Dict[str, str])
         if annotations:  # omitempty
             metadata["annotations"] = annotations
         v["metadata"] = metadata
@@ -92,7 +96,6 @@ class MetadataObject(types.Object):
     # definition.
     # Cannot be updated.
     # More info: http://kubernetes.io/docs/user-guide/identifiers#names
-    @typechecked
     def name(self) -> Optional[str]:
         return self.__name
 
@@ -100,7 +103,6 @@ class MetadataObject(types.Object):
     # (scope and select) objects. May match selectors of replication controllers
     # and services.
     # More info: http://kubernetes.io/docs/user-guide/labels
-    @typechecked
     def labels(self) -> Dict[str, str]:
         return self.__labels
 
@@ -108,7 +110,6 @@ class MetadataObject(types.Object):
     # set by external tools to store and retrieve arbitrary metadata. They are not
     # queryable and should be preserved when modifying objects.
     # More info: http://kubernetes.io/docs/user-guide/annotations
-    @typechecked
     def annotations(self) -> Dict[str, str]:
         return self.__annotations
 
@@ -122,7 +123,9 @@ class NamespacedMetadataObject(MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         metadata = v.get("metadata", {})
+        check_type("metadata", metadata, Dict[str, Any])
         namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
         if namespace:  # omitempty
             metadata["namespace"] = namespace
         v["metadata"] = metadata
@@ -136,7 +139,6 @@ class NamespacedMetadataObject(MetadataObject):
     # Must be a DNS_LABEL.
     # Cannot be updated.
     # More info: http://kubernetes.io/docs/user-guide/namespaces
-    @typechecked
     def namespace(self) -> Optional[str]:
         return self.__namespace
 

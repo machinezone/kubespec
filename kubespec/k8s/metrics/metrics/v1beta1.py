@@ -12,7 +12,7 @@ from kubespec.k8s.apimachinery import resource
 from kubespec.k8s.apimachinery.meta import v1 as metav1
 from kubespec import context
 from kubespec import types
-from typeguard import typechecked
+from typeguard import check_type, typechecked
 
 
 # ContainerMetrics sets resource usage metrics of a container.
@@ -31,17 +31,19 @@ class ContainerMetrics(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["name"] = self.name()
-        v["usage"] = self.usage()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        usage = self.usage()
+        check_type("usage", usage, Dict[corev1.ResourceName, "resource.Quantity"])
+        v["usage"] = usage
         return v
 
     # Container name corresponding to the one from pod.spec.containers.
-    @typechecked
     def name(self) -> str:
         return self.__name
 
     # The memory usage is the memory working set.
-    @typechecked
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
         return self.__usage
 
@@ -75,23 +77,26 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["timestamp"] = self.timestamp()
-        v["window"] = self.window()
-        v["usage"] = self.usage()
+        timestamp = self.timestamp()
+        check_type("timestamp", timestamp, "base.Time")
+        v["timestamp"] = timestamp
+        window = self.window()
+        check_type("window", window, "base.Duration")
+        v["window"] = window
+        usage = self.usage()
+        check_type("usage", usage, Dict[corev1.ResourceName, "resource.Quantity"])
+        v["usage"] = usage
         return v
 
     # The following fields define time interval from which metrics were
     # collected from the interval [Timestamp-Window, Timestamp].
-    @typechecked
     def timestamp(self) -> "base.Time":
         return self.__timestamp
 
-    @typechecked
     def window(self) -> "base.Duration":
         return self.__window
 
     # The memory usage is the memory working set.
-    @typechecked
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
         return self.__usage
 
@@ -127,22 +132,25 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        v["timestamp"] = self.timestamp()
-        v["window"] = self.window()
-        v["containers"] = self.containers().values()  # named list
+        timestamp = self.timestamp()
+        check_type("timestamp", timestamp, "base.Time")
+        v["timestamp"] = timestamp
+        window = self.window()
+        check_type("window", window, "base.Duration")
+        v["window"] = window
+        containers = self.containers()
+        check_type("containers", containers, Dict[str, ContainerMetrics])
+        v["containers"] = containers.values()  # named list
         return v
 
     # The following fields define time interval from which metrics were
     # collected from the interval [Timestamp-Window, Timestamp].
-    @typechecked
     def timestamp(self) -> "base.Time":
         return self.__timestamp
 
-    @typechecked
     def window(self) -> "base.Duration":
         return self.__window
 
     # Metrics for all containers are collected within the same time window.
-    @typechecked
     def containers(self) -> Dict[str, ContainerMetrics]:
         return self.__containers
