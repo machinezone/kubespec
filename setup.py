@@ -8,12 +8,12 @@ with open("README.md") as f:
     readme = f.read()
 
 setup(
-    name="kargo",
+    name="kubespec",
     version="0.1.dev20191017",
-    url="https://github.com/machinezone/kargo",
+    url="https://github.com/machinezone/kubespec",
     author="Andy Bursavich",
     author_email="abursavich@mz.com",
-    description="Kargo is a set of foundational libraries for expressing Kubernetes resources as code.",
+    description="Kubespec is a set of foundational libraries for expressing Kubernetes resource specifications as code.",
     long_description=readme,
     long_description_content_type="text/markdown",
     license="BSD 3",

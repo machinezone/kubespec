@@ -1,5 +1,5 @@
-# Kargo
+# kubespec
 
-Kargo is a set of foundational Python libraries for expressing Kubernetes resources as code.
+`kubespec` is a set of foundational Python libraries for expressing Kubernetes resource specifications as code.
 
-Stop wrangling YAML and start using programming tools and techniques to define configuration as objects, enforce consistency, share logic, etc.
+Stop wrangling YAML and start using programming tools and techniques to define configuration as typed objects, share logic across your organization, enforce consistent patterns across your services, validate specifications with tests, etc.
