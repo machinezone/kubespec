@@ -39,12 +39,16 @@ class ContainerMetrics(types.Object):
         v["usage"] = usage
         return v
 
-    # Container name corresponding to the one from pod.spec.containers.
     def name(self) -> str:
+        """
+        Container name corresponding to the one from pod.spec.containers.
+        """
         return self.__name
 
-    # The memory usage is the memory working set.
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
+        """
+        The memory usage is the memory working set.
+        """
         return self.__usage
 
 
@@ -86,16 +90,20 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         v["usage"] = usage
         return v
 
-    # The following fields define time interval from which metrics were
-    # collected from the interval [Timestamp-Window, Timestamp].
     def timestamp(self) -> "base.Time":
+        """
+        The following fields define time interval from which metrics were
+        collected from the interval [Timestamp-Window, Timestamp].
+        """
         return self.__timestamp
 
     def window(self) -> "base.Duration":
         return self.__window
 
-    # The memory usage is the memory working set.
     def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
+        """
+        The memory usage is the memory working set.
+        """
         return self.__usage
 
 
@@ -139,14 +147,18 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         v["containers"] = containers.values()  # named list
         return v
 
-    # The following fields define time interval from which metrics were
-    # collected from the interval [Timestamp-Window, Timestamp].
     def timestamp(self) -> "base.Time":
+        """
+        The following fields define time interval from which metrics were
+        collected from the interval [Timestamp-Window, Timestamp].
+        """
         return self.__timestamp
 
     def window(self) -> "base.Duration":
         return self.__window
 
-    # Metrics for all containers are collected within the same time window.
     def containers(self) -> Dict[str, ContainerMetrics]:
+        """
+        Metrics for all containers are collected within the same time window.
+        """
         return self.__containers

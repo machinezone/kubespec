@@ -34,16 +34,20 @@ class TokenReviewSpec(types.Object):
             v["audiences"] = audiences
         return v
 
-    # Token is the opaque bearer token.
     def token(self) -> Optional[str]:
+        """
+        Token is the opaque bearer token.
+        """
         return self.__token
 
-    # Audiences is a list of the identifiers that the resource server presented
-    # with the token identifies as. Audience-aware token authenticators will
-    # verify that the token was intended for at least one of the audiences in
-    # this list. If no audiences are provided, the audience will default to the
-    # audience of the Kubernetes apiserver.
     def audiences(self) -> Optional[List[str]]:
+        """
+        Audiences is a list of the identifiers that the resource server presented
+        with the token identifies as. Audience-aware token authenticators will
+        verify that the token was intended for at least one of the audiences in
+        this list. If no audiences are provided, the audience will default to the
+        audience of the Kubernetes apiserver.
+        """
         return self.__audiences
 
 
@@ -77,6 +81,8 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated
     def spec(self) -> TokenReviewSpec:
+        """
+        Spec holds information about the request being evaluated
+        """
         return self.__spec

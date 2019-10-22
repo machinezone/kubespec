@@ -35,8 +35,10 @@ class Overhead(types.Object):
             v["podFixed"] = podFixed
         return v
 
-    # PodFixed represents the fixed resource overhead associated with running a pod.
     def podFixed(self) -> Optional[Dict[corev1.ResourceName, "resource.Quantity"]]:
+        """
+        PodFixed represents the fixed resource overhead associated with running a pod.
+        """
         return self.__podFixed
 
 
@@ -67,19 +69,23 @@ class Scheduling(types.Object):
             v["tolerations"] = tolerations
         return v
 
-    # nodeSelector lists labels that must be present on nodes that support this
-    # RuntimeClass. Pods using this RuntimeClass can only be scheduled to a
-    # node matched by this selector. The RuntimeClass nodeSelector is merged
-    # with a pod's existing nodeSelector. Any conflicts will cause the pod to
-    # be rejected in admission.
     def nodeSelector(self) -> Optional[Dict[str, str]]:
+        """
+        nodeSelector lists labels that must be present on nodes that support this
+        RuntimeClass. Pods using this RuntimeClass can only be scheduled to a
+        node matched by this selector. The RuntimeClass nodeSelector is merged
+        with a pod's existing nodeSelector. Any conflicts will cause the pod to
+        be rejected in admission.
+        """
         return self.__nodeSelector
 
-    # tolerations are appended (excluding duplicates) to pods running with this
-    # RuntimeClass during admission, effectively unioning the set of nodes
-    # tolerated by the pod and the RuntimeClass.
-    # +listType=atomic
     def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+        """
+        tolerations are appended (excluding duplicates) to pods running with this
+        RuntimeClass during admission, effectively unioning the set of nodes
+        tolerated by the pod and the RuntimeClass.
+        +listType=atomic
+        """
         return self.__tolerations
 
 
@@ -117,31 +123,37 @@ class RuntimeClassSpec(types.Object):
             v["scheduling"] = scheduling
         return v
 
-    # RuntimeHandler specifies the underlying runtime and configuration that the
-    # CRI implementation will use to handle pods of this class. The possible
-    # values are specific to the node & CRI configuration.  It is assumed that
-    # all handlers are available on every node, and handlers of the same name are
-    # equivalent on every node.
-    # For example, a handler called "runc" might specify that the runc OCI
-    # runtime (using native Linux containers) will be used to run the containers
-    # in a pod.
-    # The RuntimeHandler must conform to the DNS Label (RFC 1123) requirements
-    # and is immutable.
     def runtimeHandler(self) -> str:
+        """
+        RuntimeHandler specifies the underlying runtime and configuration that the
+        CRI implementation will use to handle pods of this class. The possible
+        values are specific to the node & CRI configuration.  It is assumed that
+        all handlers are available on every node, and handlers of the same name are
+        equivalent on every node.
+        For example, a handler called "runc" might specify that the runc OCI
+        runtime (using native Linux containers) will be used to run the containers
+        in a pod.
+        The RuntimeHandler must conform to the DNS Label (RFC 1123) requirements
+        and is immutable.
+        """
         return self.__runtimeHandler
 
-    # Overhead represents the resource overhead associated with running a pod for a
-    # given RuntimeClass. For more details, see
-    # https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
-    # This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
     def overhead(self) -> Optional[Overhead]:
+        """
+        Overhead represents the resource overhead associated with running a pod for a
+        given RuntimeClass. For more details, see
+        https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
+        This field is alpha-level as of Kubernetes v1.15, and is only honored by servers that enable the PodOverhead feature.
+        """
         return self.__overhead
 
-    # Scheduling holds the scheduling constraints to ensure that pods running
-    # with this RuntimeClass are scheduled to nodes that support it.
-    # If scheduling is nil, this RuntimeClass is assumed to be supported by all
-    # nodes.
     def scheduling(self) -> Optional[Scheduling]:
+        """
+        Scheduling holds the scheduling constraints to ensure that pods running
+        with this RuntimeClass are scheduled to nodes that support it.
+        If scheduling is nil, this RuntimeClass is assumed to be supported by all
+        nodes.
+        """
         return self.__scheduling
 
 
@@ -179,7 +191,9 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the RuntimeClass
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> RuntimeClassSpec:
+        """
+        Specification of the RuntimeClass
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec

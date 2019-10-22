@@ -48,20 +48,24 @@ class ConfigMapTemplate(base.NamespacedMetadataObject):
             v["binaryData"] = binaryData
         return v
 
-    # Data contains the configuration data.
-    # Each key must consist of alphanumeric characters, '-', '_' or '.'.
-    # Values with non-UTF-8 byte sequences must use the BinaryData field.
-    # The keys stored in Data must not overlap with the keys in
-    # the BinaryData field.
     def data(self) -> Optional[Dict[str, str]]:
+        """
+        Data contains the configuration data.
+        Each key must consist of alphanumeric characters, '-', '_' or '.'.
+        Values with non-UTF-8 byte sequences must use the BinaryData field.
+        The keys stored in Data must not overlap with the keys in
+        the BinaryData field.
+        """
         return self.__data
 
-    # BinaryData contains the binary data.
-    # Each key must consist of alphanumeric characters, '-', '_' or '.'.
-    # BinaryData can contain byte sequences that are not in the UTF-8 range.
-    # The keys stored in BinaryData must not overlap with the keys in
-    # the Data field.
     def binaryData(self) -> Optional[Dict[str, bytes]]:
+        """
+        BinaryData contains the binary data.
+        Each key must consist of alphanumeric characters, '-', '_' or '.'.
+        BinaryData can contain byte sequences that are not in the UTF-8 range.
+        The keys stored in BinaryData must not overlap with the keys in
+        the Data field.
+        """
         return self.__binaryData
 
 
@@ -104,25 +108,33 @@ class TemplateVariable(types.Object):
             v["configMapValue"] = configMapValue
         return v
 
-    # Name of the template variable.
     def name(self) -> str:
+        """
+        Name of the template variable.
+        """
         return self.__name
 
-    # Variable references $(VAR_NAME) are expanded using the previous defined
-    # environment variables in the ConfigMapSecret. If a variable cannot be resolved,
-    # the reference in the input string will be unchanged. The $(VAR_NAME) syntax
-    # can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will
-    # never be expanded, regardless of whether the variable exists or not.
-    # Defaults to "".
     def value(self) -> Optional[str]:
+        """
+        Variable references $(VAR_NAME) are expanded using the previous defined
+        environment variables in the ConfigMapSecret. If a variable cannot be resolved,
+        the reference in the input string will be unchanged. The $(VAR_NAME) syntax
+        can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will
+        never be expanded, regardless of whether the variable exists or not.
+        Defaults to "".
+        """
         return self.__value
 
-    # SecretValue selects a value by its key in a Secret.
     def secretValue(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        SecretValue selects a value by its key in a Secret.
+        """
         return self.__secretValue
 
-    # ConfigMapValue selects a value by its key in a ConfigMap.
     def configMapValue(self) -> Optional["corev1.ConfigMapKeySelector"]:
+        """
+        ConfigMapValue selects a value by its key in a ConfigMap.
+        """
         return self.__configMapValue
 
 
@@ -151,17 +163,21 @@ class ConfigMapSecretSpec(types.Object):
             v["vars"] = vars.values()  # named list
         return v
 
-    # Template that describes the config that will be rendered.
-    # Variable references $(VAR_NAME) in template data are expanded using the
-    # ConfigMapSecret's variables. If a variable cannot be resolved, the reference
-    # in the input data will be unchanged. The $(VAR_NAME) syntax can be escaped
-    # with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
-    # regardless of whether the variable exists or not.
     def template(self) -> Optional[ConfigMapTemplate]:
+        """
+        Template that describes the config that will be rendered.
+        Variable references $(VAR_NAME) in template data are expanded using the
+        ConfigMapSecret's variables. If a variable cannot be resolved, the reference
+        in the input data will be unchanged. The $(VAR_NAME) syntax can be escaped
+        with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
+        regardless of whether the variable exists or not.
+        """
         return self.__template
 
-    # List of template variables.
     def vars(self) -> Optional[Dict[str, TemplateVariable]]:
+        """
+        List of template variables.
+        """
         return self.__vars
 
 
@@ -195,7 +211,9 @@ class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Desired state of the ConfigMapSecret.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[ConfigMapSecretSpec]:
+        """
+        Desired state of the ConfigMapSecret.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec

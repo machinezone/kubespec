@@ -34,12 +34,16 @@ class EventSeries(types.Object):
         v["lastObservedTime"] = lastObservedTime
         return v
 
-    # Number of occurrences in this series up to the last heartbeat time
     def count(self) -> int:
+        """
+        Number of occurrences in this series up to the last heartbeat time
+        """
         return self.__count
 
-    # Time when last Event from the series was seen before last heartbeat.
     def lastObservedTime(self) -> "base.MicroTime":
+        """
+        Time when last Event from the series was seen before last heartbeat.
+        """
         return self.__lastObservedTime
 
 
@@ -128,48 +132,68 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
             v["type"] = type
         return v
 
-    # Required. Time when this Event was first observed.
     def eventTime(self) -> "base.MicroTime":
+        """
+        Required. Time when this Event was first observed.
+        """
         return self.__eventTime
 
-    # Data about the Event series this event represents or nil if it's a singleton Event.
     def series(self) -> Optional[EventSeries]:
+        """
+        Data about the Event series this event represents or nil if it's a singleton Event.
+        """
         return self.__series
 
-    # Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
     def reportingController(self) -> Optional[str]:
+        """
+        Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
+        """
         return self.__reportingController
 
-    # ID of the controller instance, e.g. `kubelet-xyzf`.
     def reportingInstance(self) -> Optional[str]:
+        """
+        ID of the controller instance, e.g. `kubelet-xyzf`.
+        """
         return self.__reportingInstance
 
-    # What action was taken/failed regarding to the regarding object.
     def action(self) -> Optional[str]:
+        """
+        What action was taken/failed regarding to the regarding object.
+        """
         return self.__action
 
-    # Why the action was taken.
     def reason(self) -> Optional[str]:
+        """
+        Why the action was taken.
+        """
         return self.__reason
 
-    # The object this Event is about. In most cases it's an Object reporting controller implements.
-    # E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
-    # it acts on some changes in a ReplicaSet object.
     def regarding(self) -> Optional["corev1.ObjectReference"]:
+        """
+        The object this Event is about. In most cases it's an Object reporting controller implements.
+        E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
+        it acts on some changes in a ReplicaSet object.
+        """
         return self.__regarding
 
-    # Optional secondary object for more complex actions. E.g. when regarding object triggers
-    # a creation or deletion of related object.
     def related(self) -> Optional["corev1.ObjectReference"]:
+        """
+        Optional secondary object for more complex actions. E.g. when regarding object triggers
+        a creation or deletion of related object.
+        """
         return self.__related
 
-    # Optional. A human-readable description of the status of this operation.
-    # Maximal length of the note is 1kB, but libraries should be prepared to
-    # handle values up to 64kB.
     def note(self) -> Optional[str]:
+        """
+        Optional. A human-readable description of the status of this operation.
+        Maximal length of the note is 1kB, but libraries should be prepared to
+        handle values up to 64kB.
+        """
         return self.__note
 
-    # Type of this event (Normal, Warning), new types could be added in the
-    # future.
     def type(self) -> Optional[str]:
+        """
+        Type of this event (Normal, Warning), new types could be added in the
+        future.
+        """
         return self.__type

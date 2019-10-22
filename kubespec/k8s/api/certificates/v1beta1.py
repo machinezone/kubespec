@@ -96,35 +96,47 @@ class CertificateSigningRequestSpec(types.Object):
             v["extra"] = extra
         return v
 
-    # Base64-encoded PKCS#10 CSR data
     def request(self) -> bytes:
+        """
+        Base64-encoded PKCS#10 CSR data
+        """
         return self.__request
 
-    # allowedUsages specifies a set of usage contexts the key will be
-    # valid for.
-    # See: https://tools.ietf.org/html/rfc5280#section-4.2.1.3
-    #      https://tools.ietf.org/html/rfc5280#section-4.2.1.12
     def usages(self) -> Optional[List[KeyUsage]]:
+        """
+        allowedUsages specifies a set of usage contexts the key will be
+        valid for.
+        See: https://tools.ietf.org/html/rfc5280#section-4.2.1.3
+             https://tools.ietf.org/html/rfc5280#section-4.2.1.12
+        """
         return self.__usages
 
-    # Information about the requesting user.
-    # See user.Info interface for details.
     def username(self) -> Optional[str]:
+        """
+        Information about the requesting user.
+        See user.Info interface for details.
+        """
         return self.__username
 
-    # UID information about the requesting user.
-    # See user.Info interface for details.
     def uid(self) -> Optional[str]:
+        """
+        UID information about the requesting user.
+        See user.Info interface for details.
+        """
         return self.__uid
 
-    # Group information about the requesting user.
-    # See user.Info interface for details.
     def groups(self) -> Optional[List[str]]:
+        """
+        Group information about the requesting user.
+        See user.Info interface for details.
+        """
         return self.__groups
 
-    # Extra information about the requesting user.
-    # See user.Info interface for details.
     def extra(self) -> Optional[Dict[str, List[str]]]:
+        """
+        Extra information about the requesting user.
+        See user.Info interface for details.
+        """
         return self.__extra
 
 
@@ -156,6 +168,8 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # The certificate request itself and any additional information.
     def spec(self) -> Optional[CertificateSigningRequestSpec]:
+        """
+        The certificate request itself and any additional information.
+        """
         return self.__spec

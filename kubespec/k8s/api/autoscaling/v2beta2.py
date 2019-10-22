@@ -82,16 +82,22 @@ class CrossVersionObjectReference(types.Object):
             v["apiVersion"] = apiVersion
         return v
 
-    # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
     def kind(self) -> str:
+        """
+        Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+        """
         return self.__kind
 
-    # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
     def name(self) -> str:
+        """
+        Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
+        """
         return self.__name
 
-    # API version of the referent
     def apiVersion(self) -> Optional[str]:
+        """
+        API version of the referent
+        """
         return self.__apiVersion
 
 
@@ -116,14 +122,18 @@ class MetricIdentifier(types.Object):
             v["selector"] = selector
         return v
 
-    # name is the name of the given metric
     def name(self) -> str:
+        """
+        name is the name of the given metric
+        """
         return self.__name
 
-    # selector is the string-encoded form of a standard kubernetes label selector for the given metric
-    # When set, it is passed as an additional parameter to the metrics server for more specific metrics scoping.
-    # When unset, just the metricName will be used to gather metrics.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        selector is the string-encoded form of a standard kubernetes label selector for the given metric
+        When set, it is passed as an additional parameter to the metrics server for more specific metrics scoping.
+        When unset, just the metricName will be used to gather metrics.
+        """
         return self.__selector
 
 
@@ -164,24 +174,32 @@ class MetricTarget(types.Object):
             v["averageUtilization"] = averageUtilization
         return v
 
-    # type represents whether the metric type is Utilization, Value, or AverageValue
     def type(self) -> MetricTargetType:
+        """
+        type represents whether the metric type is Utilization, Value, or AverageValue
+        """
         return self.__type
 
-    # value is the target value of the metric (as a quantity).
     def value(self) -> Optional["resource.Quantity"]:
+        """
+        value is the target value of the metric (as a quantity).
+        """
         return self.__value
 
-    # averageValue is the target value of the average of the
-    # metric across all relevant pods (as a quantity)
     def averageValue(self) -> Optional["resource.Quantity"]:
+        """
+        averageValue is the target value of the average of the
+        metric across all relevant pods (as a quantity)
+        """
         return self.__averageValue
 
-    # averageUtilization is the target value of the average of the
-    # resource metric across all relevant pods, represented as a percentage of
-    # the requested value of the resource for the pods.
-    # Currently only valid for Resource metric source type
     def averageUtilization(self) -> Optional[int]:
+        """
+        averageUtilization is the target value of the average of the
+        resource metric across all relevant pods, represented as a percentage of
+        the requested value of the resource for the pods.
+        Currently only valid for Resource metric source type
+        """
         return self.__averageUtilization
 
 
@@ -207,12 +225,16 @@ class ExternalMetricSource(types.Object):
         v["target"] = target
         return v
 
-    # metric identifies the target metric by name and selector
     def metric(self) -> MetricIdentifier:
+        """
+        metric identifies the target metric by name and selector
+        """
         return self.__metric
 
-    # target specifies the target value for the given metric
     def target(self) -> MetricTarget:
+        """
+        target specifies the target value for the given metric
+        """
         return self.__target
 
 
@@ -253,12 +275,16 @@ class ObjectMetricSource(types.Object):
     def describedObject(self) -> CrossVersionObjectReference:
         return self.__describedObject
 
-    # target specifies the target value for the given metric
     def target(self) -> MetricTarget:
+        """
+        target specifies the target value for the given metric
+        """
         return self.__target
 
-    # metric identifies the target metric by name and selector
     def metric(self) -> MetricIdentifier:
+        """
+        metric identifies the target metric by name and selector
+        """
         return self.__metric
 
 
@@ -285,12 +311,16 @@ class PodsMetricSource(types.Object):
         v["target"] = target
         return v
 
-    # metric identifies the target metric by name and selector
     def metric(self) -> MetricIdentifier:
+        """
+        metric identifies the target metric by name and selector
+        """
         return self.__metric
 
-    # target specifies the target value for the given metric
     def target(self) -> MetricTarget:
+        """
+        target specifies the target value for the given metric
+        """
         return self.__target
 
 
@@ -320,12 +350,16 @@ class ResourceMetricSource(types.Object):
         v["target"] = target
         return v
 
-    # name is the name of the resource in question.
     def name(self) -> corev1.ResourceName:
+        """
+        name is the name of the resource in question.
+        """
         return self.__name
 
-    # target specifies the target value for the given metric
     def target(self) -> MetricTarget:
+        """
+        target specifies the target value for the given metric
+        """
         return self.__target
 
 
@@ -373,36 +407,46 @@ class MetricSpec(types.Object):
             v["external"] = external
         return v
 
-    # type is the type of metric source.  It should be one of "Object",
-    # "Pods" or "Resource", each mapping to a matching field in the object.
     def type(self) -> MetricSourceType:
+        """
+        type is the type of metric source.  It should be one of "Object",
+        "Pods" or "Resource", each mapping to a matching field in the object.
+        """
         return self.__type
 
-    # object refers to a metric describing a single kubernetes object
-    # (for example, hits-per-second on an Ingress object).
     def object(self) -> Optional[ObjectMetricSource]:
+        """
+        object refers to a metric describing a single kubernetes object
+        (for example, hits-per-second on an Ingress object).
+        """
         return self.__object
 
-    # pods refers to a metric describing each pod in the current scale target
-    # (for example, transactions-processed-per-second).  The values will be
-    # averaged together before being compared to the target value.
     def pods(self) -> Optional[PodsMetricSource]:
+        """
+        pods refers to a metric describing each pod in the current scale target
+        (for example, transactions-processed-per-second).  The values will be
+        averaged together before being compared to the target value.
+        """
         return self.__pods
 
-    # resource refers to a resource metric (such as those specified in
-    # requests and limits) known to Kubernetes describing each pod in the
-    # current scale target (e.g. CPU or memory). Such metrics are built in to
-    # Kubernetes, and have special scaling options on top of those available
-    # to normal per-pod metrics using the "pods" source.
     def resource(self) -> Optional[ResourceMetricSource]:
+        """
+        resource refers to a resource metric (such as those specified in
+        requests and limits) known to Kubernetes describing each pod in the
+        current scale target (e.g. CPU or memory). Such metrics are built in to
+        Kubernetes, and have special scaling options on top of those available
+        to normal per-pod metrics using the "pods" source.
+        """
         return self.__resource
 
-    # external refers to a global metric that is not associated
-    # with any Kubernetes object. It allows autoscaling based on information
-    # coming from components running outside of cluster
-    # (for example length of queue in cloud messaging service, or
-    # QPS from loadbalancer running outside of cluster).
     def external(self) -> Optional[ExternalMetricSource]:
+        """
+        external refers to a global metric that is not associated
+        with any Kubernetes object. It allows autoscaling based on information
+        coming from components running outside of cluster
+        (for example length of queue in cloud messaging service, or
+        QPS from loadbalancer running outside of cluster).
+        """
         return self.__external
 
 
@@ -446,33 +490,41 @@ class HorizontalPodAutoscalerSpec(types.Object):
             v["metrics"] = metrics
         return v
 
-    # scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
-    # should be collected, as well as to actually change the replica count.
     def scaleTargetRef(self) -> CrossVersionObjectReference:
+        """
+        scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
+        should be collected, as well as to actually change the replica count.
+        """
         return self.__scaleTargetRef
 
-    # minReplicas is the lower limit for the number of replicas to which the autoscaler
-    # can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
-    # alpha feature gate HPAScaleToZero is enabled and at least one Object or External
-    # metric is configured.  Scaling is active as long as at least one metric value is
-    # available.
     def minReplicas(self) -> Optional[int]:
+        """
+        minReplicas is the lower limit for the number of replicas to which the autoscaler
+        can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
+        alpha feature gate HPAScaleToZero is enabled and at least one Object or External
+        metric is configured.  Scaling is active as long as at least one metric value is
+        available.
+        """
         return self.__minReplicas
 
-    # maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
-    # It cannot be less that minReplicas.
     def maxReplicas(self) -> int:
+        """
+        maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
+        It cannot be less that minReplicas.
+        """
         return self.__maxReplicas
 
-    # metrics contains the specifications for which to use to calculate the
-    # desired replica count (the maximum replica count across all metrics will
-    # be used).  The desired replica count is calculated multiplying the
-    # ratio between the target value and the current value by the current
-    # number of pods.  Ergo, metrics used must decrease as the pod count is
-    # increased, and vice-versa.  See the individual metric source types for
-    # more information about how each type of metric must respond.
-    # If not set, the default metric will be set to 80% average CPU utilization.
     def metrics(self) -> Optional[List[MetricSpec]]:
+        """
+        metrics contains the specifications for which to use to calculate the
+        desired replica count (the maximum replica count across all metrics will
+        be used).  The desired replica count is calculated multiplying the
+        ratio between the target value and the current value by the current
+        number of pods.  Ergo, metrics used must decrease as the pod count is
+        increased, and vice-versa.  See the individual metric source types for
+        more information about how each type of metric must respond.
+        If not set, the default metric will be set to 80% average CPU utilization.
+        """
         return self.__metrics
 
 
@@ -508,7 +560,9 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # spec is the specification for the behaviour of the autoscaler.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+        """
+        spec is the specification for the behaviour of the autoscaler.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
+        """
         return self.__spec

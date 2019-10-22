@@ -115,41 +115,55 @@ class StorageClass(base.TypedObject, base.MetadataObject):
             v["allowedTopologies"] = allowedTopologies
         return v
 
-    # Provisioner indicates the type of the provisioner.
     def provisioner(self) -> str:
+        """
+        Provisioner indicates the type of the provisioner.
+        """
         return self.__provisioner
 
-    # Parameters holds the parameters for the provisioner that should
-    # create volumes of this storage class.
     def parameters(self) -> Optional[Dict[str, str]]:
+        """
+        Parameters holds the parameters for the provisioner that should
+        create volumes of this storage class.
+        """
         return self.__parameters
 
-    # Dynamically provisioned PersistentVolumes of this storage class are
-    # created with this reclaimPolicy. Defaults to Delete.
     def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
+        """
+        Dynamically provisioned PersistentVolumes of this storage class are
+        created with this reclaimPolicy. Defaults to Delete.
+        """
         return self.__reclaimPolicy
 
-    # Dynamically provisioned PersistentVolumes of this storage class are
-    # created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
-    # mount of the PVs will simply fail if one is invalid.
     def mountOptions(self) -> Optional[List[str]]:
+        """
+        Dynamically provisioned PersistentVolumes of this storage class are
+        created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
+        mount of the PVs will simply fail if one is invalid.
+        """
         return self.__mountOptions
 
-    # AllowVolumeExpansion shows whether the storage class allow volume expand
     def allowVolumeExpansion(self) -> Optional[bool]:
+        """
+        AllowVolumeExpansion shows whether the storage class allow volume expand
+        """
         return self.__allowVolumeExpansion
 
-    # VolumeBindingMode indicates how PersistentVolumeClaims should be
-    # provisioned and bound.  When unset, VolumeBindingImmediate is used.
-    # This field is only honored by servers that enable the VolumeScheduling feature.
     def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
+        """
+        VolumeBindingMode indicates how PersistentVolumeClaims should be
+        provisioned and bound.  When unset, VolumeBindingImmediate is used.
+        This field is only honored by servers that enable the VolumeScheduling feature.
+        """
         return self.__volumeBindingMode
 
-    # Restrict the node topologies where volumes can be dynamically provisioned.
-    # Each volume plugin defines its own supported topology specifications.
-    # An empty TopologySelectorTerm list means there is no topology restriction.
-    # This field is only honored by servers that enable the VolumeScheduling feature.
     def allowedTopologies(self) -> Optional[List["corev1.TopologySelectorTerm"]]:
+        """
+        Restrict the node topologies where volumes can be dynamically provisioned.
+        Each volume plugin defines its own supported topology specifications.
+        An empty TopologySelectorTerm list means there is no topology restriction.
+        This field is only honored by servers that enable the VolumeScheduling feature.
+        """
         return self.__allowedTopologies
 
 
@@ -186,17 +200,21 @@ class VolumeAttachmentSource(types.Object):
             v["inlineVolumeSpec"] = inlineVolumeSpec
         return v
 
-    # Name of the persistent volume to attach.
     def persistentVolumeName(self) -> Optional[str]:
+        """
+        Name of the persistent volume to attach.
+        """
         return self.__persistentVolumeName
 
-    # inlineVolumeSpec contains all the information necessary to attach
-    # a persistent volume defined by a pod's inline VolumeSource. This field
-    # is populated only for the CSIMigration feature. It contains
-    # translated fields from a pod's inline VolumeSource to a
-    # PersistentVolumeSpec. This field is alpha-level and is only
-    # honored by servers that enabled the CSIMigration feature.
     def inlineVolumeSpec(self) -> Optional["corev1.PersistentVolumeSpec"]:
+        """
+        inlineVolumeSpec contains all the information necessary to attach
+        a persistent volume defined by a pod's inline VolumeSource. This field
+        is populated only for the CSIMigration feature. It contains
+        translated fields from a pod's inline VolumeSource to a
+        PersistentVolumeSpec. This field is alpha-level and is only
+        honored by servers that enabled the CSIMigration feature.
+        """
         return self.__inlineVolumeSpec
 
 
@@ -229,17 +247,23 @@ class VolumeAttachmentSpec(types.Object):
         v["nodeName"] = nodeName
         return v
 
-    # Attacher indicates the name of the volume driver that MUST handle this
-    # request. This is the name returned by GetPluginName().
     def attacher(self) -> str:
+        """
+        Attacher indicates the name of the volume driver that MUST handle this
+        request. This is the name returned by GetPluginName().
+        """
         return self.__attacher
 
-    # Source represents the volume that should be attached.
     def source(self) -> VolumeAttachmentSource:
+        """
+        Source represents the volume that should be attached.
+        """
         return self.__source
 
-    # The node that the volume should be attached to.
     def nodeName(self) -> str:
+        """
+        The node that the volume should be attached to.
+        """
         return self.__nodeName
 
 
@@ -274,7 +298,9 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired attach/detach volume behavior.
-    # Populated by the Kubernetes system.
     def spec(self) -> VolumeAttachmentSpec:
+        """
+        Specification of the desired attach/detach volume behavior.
+        Populated by the Kubernetes system.
+        """
         return self.__spec

@@ -43,12 +43,16 @@ class BasicAuth(types.Object):
         v["password"] = password
         return v
 
-    # The secret that contains the username for authenticate
     def username(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        The secret that contains the username for authenticate
+        """
         return self.__username
 
-    # The secret that contains the password for authenticate
     def password(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        The secret that contains the password for authenticate
+        """
         return self.__password
 
 
@@ -96,24 +100,34 @@ class TLSConfig(types.Object):
             v["insecureSkipVerify"] = insecureSkipVerify
         return v
 
-    # The CA cert to use for the targets.
     def caFile(self) -> Optional[str]:
+        """
+        The CA cert to use for the targets.
+        """
         return self.__caFile
 
-    # The client cert file for the targets.
     def certFile(self) -> Optional[str]:
+        """
+        The client cert file for the targets.
+        """
         return self.__certFile
 
-    # The client key file for the targets.
     def keyFile(self) -> Optional[str]:
+        """
+        The client key file for the targets.
+        """
         return self.__keyFile
 
-    # Used to verify the hostname for the targets.
     def serverName(self) -> Optional[str]:
+        """
+        Used to verify the hostname for the targets.
+        """
         return self.__serverName
 
-    # Disable target certificate validation.
     def insecureSkipVerify(self) -> Optional[bool]:
+        """
+        Disable target certificate validation.
+        """
         return self.__insecureSkipVerify
 
 
@@ -161,25 +175,35 @@ class APIServerConfig(types.Object):
             v["tlsConfig"] = tlsConfig
         return v
 
-    # Host of apiserver.
-    # A valid string consisting of a hostname or IP followed by an optional port number
     def host(self) -> str:
+        """
+        Host of apiserver.
+        A valid string consisting of a hostname or IP followed by an optional port number
+        """
         return self.__host
 
-    # BasicAuth allow an endpoint to authenticate over basic authentication
     def basicAuth(self) -> Optional[BasicAuth]:
+        """
+        BasicAuth allow an endpoint to authenticate over basic authentication
+        """
         return self.__basicAuth
 
-    # Bearer token for accessing apiserver.
     def bearerToken(self) -> Optional[str]:
+        """
+        Bearer token for accessing apiserver.
+        """
         return self.__bearerToken
 
-    # File to read bearer token for accessing apiserver.
     def bearerTokenFile(self) -> Optional[str]:
+        """
+        File to read bearer token for accessing apiserver.
+        """
         return self.__bearerTokenFile
 
-    # TLS Config to use for accessing apiserver.
     def tlsConfig(self) -> Optional[TLSConfig]:
+        """
+        TLS Config to use for accessing apiserver.
+        """
         return self.__tlsConfig
 
 
@@ -237,33 +261,47 @@ class AlertmanagerEndpoints(types.Object):
             v["bearerTokenFile"] = bearerTokenFile
         return v
 
-    # Namespace of Endpoints object.
     def namespace(self) -> str:
+        """
+        Namespace of Endpoints object.
+        """
         return self.__namespace
 
-    # Name of Endpoints object in Namespace.
     def name(self) -> str:
+        """
+        Name of Endpoints object in Namespace.
+        """
         return self.__name
 
-    # Port the Alertmanager API is exposed on.
     def port(self) -> Union[int, str]:
+        """
+        Port the Alertmanager API is exposed on.
+        """
         return self.__port
 
-    # Scheme to use when firing alerts.
     def scheme(self) -> Optional[str]:
+        """
+        Scheme to use when firing alerts.
+        """
         return self.__scheme
 
-    # Prefix for the HTTP path alerts are pushed to.
     def pathPrefix(self) -> Optional[str]:
+        """
+        Prefix for the HTTP path alerts are pushed to.
+        """
         return self.__pathPrefix
 
-    # TLS Config to use for alertmanager connection.
     def tlsConfig(self) -> Optional[TLSConfig]:
+        """
+        TLS Config to use for alertmanager connection.
+        """
         return self.__tlsConfig
 
-    # BearerTokenFile to read from filesystem to use when authenticating to
-    # Alertmanager.
     def bearerTokenFile(self) -> Optional[str]:
+        """
+        BearerTokenFile to read from filesystem to use when authenticating to
+        Alertmanager.
+        """
         return self.__bearerTokenFile
 
 
@@ -283,8 +321,10 @@ class AlertingSpec(types.Object):
         v["alertmanagers"] = alertmanagers.values()  # named list
         return v
 
-    # AlertmanagerEndpoints Prometheus should fire alerts against.
     def alertmanagers(self) -> Dict[str, AlertmanagerEndpoints]:
+        """
+        AlertmanagerEndpoints Prometheus should fire alerts against.
+        """
         return self.__alertmanagers
 
 
@@ -322,13 +362,17 @@ class StorageSpec(types.Object):
         v["volumeClaimTemplate"] = volumeClaimTemplate
         return v
 
-    # EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More
-    # info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
     def emptyDir(self) -> Optional["corev1.EmptyDirVolumeSource"]:
+        """
+        EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More
+        info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
+        """
         return self.__emptyDir
 
-    # A PVC spec to be used by the Prometheus StatefulSets.
     def volumeClaimTemplate(self) -> Optional["corev1.PersistentVolumeClaim"]:
+        """
+        A PVC spec to be used by the Prometheus StatefulSets.
+        """
         return self.__volumeClaimTemplate
 
 
@@ -546,167 +590,229 @@ class AlertmanagerSpec(types.Object):
             v["portName"] = portName
         return v
 
-    # Standard object’s metadata. More info:
-    # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
-    # Metadata Labels and Annotations gets propagated to the prometheus pods.
     def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
+        """
+        Standard object’s metadata. More info:
+        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+        Metadata Labels and Annotations gets propagated to the prometheus pods.
+        """
         return self.__podMetadata
 
-    # Image if specified has precedence over baseImage, tag and sha
-    # combinations. Specifying the version is still necessary to ensure the
-    # Prometheus Operator knows what version of Alertmanager is being
-    # configured.
     def image(self) -> Optional[str]:
+        """
+        Image if specified has precedence over baseImage, tag and sha
+        combinations. Specifying the version is still necessary to ensure the
+        Prometheus Operator knows what version of Alertmanager is being
+        configured.
+        """
         return self.__image
 
-    # Version the cluster should be on.
     def version(self) -> Optional[str]:
+        """
+        Version the cluster should be on.
+        """
         return self.__version
 
-    # Tag of Alertmanager container image to be deployed. Defaults to the value of `version`.
-    # Version is ignored if Tag is set.
     def tag(self) -> Optional[str]:
+        """
+        Tag of Alertmanager container image to be deployed. Defaults to the value of `version`.
+        Version is ignored if Tag is set.
+        """
         return self.__tag
 
-    # SHA of Alertmanager container image to be deployed. Defaults to the value of `version`.
-    # Similar to a tag, but the SHA explicitly deploys an immutable container image.
-    # Version and Tag are ignored if SHA is set.
     def sha(self) -> Optional[str]:
+        """
+        SHA of Alertmanager container image to be deployed. Defaults to the value of `version`.
+        Similar to a tag, but the SHA explicitly deploys an immutable container image.
+        Version and Tag are ignored if SHA is set.
+        """
         return self.__sha
 
-    # Base image that is used to deploy pods, without tag.
     def baseImage(self) -> Optional[str]:
+        """
+        Base image that is used to deploy pods, without tag.
+        """
         return self.__baseImage
 
-    # An optional list of references to secrets in the same namespace
-    # to use for pulling prometheus and alertmanager images from registries
-    # see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
     def imagePullSecrets(self) -> Optional[Dict[str, "corev1.LocalObjectReference"]]:
+        """
+        An optional list of references to secrets in the same namespace
+        to use for pulling prometheus and alertmanager images from registries
+        see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
+        """
         return self.__imagePullSecrets
 
-    # Secrets is a list of Secrets in the same namespace as the Alertmanager
-    # object, which shall be mounted into the Alertmanager Pods.
-    # The Secrets are mounted into /etc/alertmanager/secrets/<secret-name>.
     def secrets(self) -> Optional[List[str]]:
+        """
+        Secrets is a list of Secrets in the same namespace as the Alertmanager
+        object, which shall be mounted into the Alertmanager Pods.
+        The Secrets are mounted into /etc/alertmanager/secrets/<secret-name>.
+        """
         return self.__secrets
 
-    # ConfigMaps is a list of ConfigMaps in the same namespace as the Alertmanager
-    # object, which shall be mounted into the Alertmanager Pods.
-    # The ConfigMaps are mounted into /etc/alertmanager/configmaps/<configmap-name>.
     def configMaps(self) -> Optional[List[str]]:
+        """
+        ConfigMaps is a list of ConfigMaps in the same namespace as the Alertmanager
+        object, which shall be mounted into the Alertmanager Pods.
+        The ConfigMaps are mounted into /etc/alertmanager/configmaps/<configmap-name>.
+        """
         return self.__configMaps
 
-    # Log level for Alertmanager to be configured with.
     def logLevel(self) -> Optional[str]:
+        """
+        Log level for Alertmanager to be configured with.
+        """
         return self.__logLevel
 
-    # Log format for Alertmanager to be configured with.
     def logFormat(self) -> Optional[str]:
+        """
+        Log format for Alertmanager to be configured with.
+        """
         return self.__logFormat
 
-    # Size is the expected size of the alertmanager cluster. The controller will
-    # eventually make the size of the running cluster equal to the expected
-    # size.
     def replicas(self) -> Optional[int]:
+        """
+        Size is the expected size of the alertmanager cluster. The controller will
+        eventually make the size of the running cluster equal to the expected
+        size.
+        """
         return self.__replicas
 
-    # Time duration Alertmanager shall retain data for. Default is '120h',
-    # and must match the regular expression `[0-9]+(ms|s|m|h)` (milliseconds seconds minutes hours).
     def retention(self) -> Optional[str]:
+        """
+        Time duration Alertmanager shall retain data for. Default is '120h',
+        and must match the regular expression `[0-9]+(ms|s|m|h)` (milliseconds seconds minutes hours).
+        """
         return self.__retention
 
-    # Storage is the definition of how storage will be used by the Alertmanager
-    # instances.
     def storage(self) -> Optional[StorageSpec]:
+        """
+        Storage is the definition of how storage will be used by the Alertmanager
+        instances.
+        """
         return self.__storage
 
-    # Volumes allows configuration of additional volumes on the output StatefulSet definition.
-    # Volumes specified will be appended to other volumes that are generated as a result of
-    # StorageSpec objects.
     def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+        """
+        Volumes allows configuration of additional volumes on the output StatefulSet definition.
+        Volumes specified will be appended to other volumes that are generated as a result of
+        StorageSpec objects.
+        """
         return self.__volumes
 
-    # VolumeMounts allows configuration of additional VolumeMounts on the output StatefulSet definition.
-    # VolumeMounts specified will be appended to other VolumeMounts in the alertmanager container,
-    # that are generated as a result of StorageSpec objects.
     def volumeMounts(self) -> Optional[Dict[str, "corev1.VolumeMount"]]:
+        """
+        VolumeMounts allows configuration of additional VolumeMounts on the output StatefulSet definition.
+        VolumeMounts specified will be appended to other VolumeMounts in the alertmanager container,
+        that are generated as a result of StorageSpec objects.
+        """
         return self.__volumeMounts
 
-    # The external URL the Alertmanager instances will be available under. This is
-    # necessary to generate correct URLs. This is necessary if Alertmanager is not
-    # served from root of a DNS name.
     def externalUrl(self) -> Optional[str]:
+        """
+        The external URL the Alertmanager instances will be available under. This is
+        necessary to generate correct URLs. This is necessary if Alertmanager is not
+        served from root of a DNS name.
+        """
         return self.__externalUrl
 
-    # The route prefix Alertmanager registers HTTP handlers for. This is useful,
-    # if using ExternalURL and a proxy is rewriting HTTP routes of a request,
-    # and the actual ExternalURL is still true, but the server serves requests
-    # under a different route prefix. For example for use with `kubectl proxy`.
     def routePrefix(self) -> Optional[str]:
+        """
+        The route prefix Alertmanager registers HTTP handlers for. This is useful,
+        if using ExternalURL and a proxy is rewriting HTTP routes of a request,
+        and the actual ExternalURL is still true, but the server serves requests
+        under a different route prefix. For example for use with `kubectl proxy`.
+        """
         return self.__routePrefix
 
-    # If set to true all actions on the underlaying managed objects are not
-    # goint to be performed, except for delete actions.
     def paused(self) -> Optional[bool]:
+        """
+        If set to true all actions on the underlaying managed objects are not
+        goint to be performed, except for delete actions.
+        """
         return self.__paused
 
-    # Define which Nodes the Pods are scheduled on.
     def nodeSelector(self) -> Optional[Dict[str, str]]:
+        """
+        Define which Nodes the Pods are scheduled on.
+        """
         return self.__nodeSelector
 
-    # Define resources requests and limits for single Pods.
     def resources(self) -> Optional["corev1.ResourceRequirements"]:
+        """
+        Define resources requests and limits for single Pods.
+        """
         return self.__resources
 
-    # If specified, the pod's scheduling constraints.
     def affinity(self) -> Optional["corev1.Affinity"]:
+        """
+        If specified, the pod's scheduling constraints.
+        """
         return self.__affinity
 
-    # If specified, the pod's tolerations.
     def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+        """
+        If specified, the pod's tolerations.
+        """
         return self.__tolerations
 
-    # SecurityContext holds pod-level security attributes and common container settings.
-    # This defaults to the default PodSecurityContext.
     def securityContext(self) -> Optional["corev1.PodSecurityContext"]:
+        """
+        SecurityContext holds pod-level security attributes and common container settings.
+        This defaults to the default PodSecurityContext.
+        """
         return self.__securityContext
 
-    # ServiceAccountName is the name of the ServiceAccount to use to run the
-    # Prometheus Pods.
     def serviceAccountName(self) -> Optional[str]:
+        """
+        ServiceAccountName is the name of the ServiceAccount to use to run the
+        Prometheus Pods.
+        """
         return self.__serviceAccountName
 
-    # ListenLocal makes the Alertmanager server listen on loopback, so that it
-    # does not bind against the Pod IP. Note this is only for the Alertmanager
-    # UI, not the gossip communication.
     def listenLocal(self) -> Optional[bool]:
+        """
+        ListenLocal makes the Alertmanager server listen on loopback, so that it
+        does not bind against the Pod IP. Note this is only for the Alertmanager
+        UI, not the gossip communication.
+        """
         return self.__listenLocal
 
-    # Containers allows injecting additional containers. This is meant to
-    # allow adding an authentication proxy to an Alertmanager pod.
     def containers(self) -> Optional[Dict[str, "corev1.Container"]]:
+        """
+        Containers allows injecting additional containers. This is meant to
+        allow adding an authentication proxy to an Alertmanager pod.
+        """
         return self.__containers
 
-    # InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
-    # fetch secrets for injection into the Alertmanager configuration from external sources. Any
-    # errors during the execution of an initContainer will lead to a restart of the Pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-    # Using initContainers for any use case other then secret fetching is entirely outside the scope
-    # of what the maintainers will support and by doing so, you accept that this behaviour may break
-    # at any time without notice.
     def initContainers(self) -> Optional[Dict[str, "corev1.Container"]]:
+        """
+        InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
+        fetch secrets for injection into the Alertmanager configuration from external sources. Any
+        errors during the execution of an initContainer will lead to a restart of the Pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+        Using initContainers for any use case other then secret fetching is entirely outside the scope
+        of what the maintainers will support and by doing so, you accept that this behaviour may break
+        at any time without notice.
+        """
         return self.__initContainers
 
-    # Priority class assigned to the Pods
     def priorityClassName(self) -> Optional[str]:
+        """
+        Priority class assigned to the Pods
+        """
         return self.__priorityClassName
 
-    # AdditionalPeers allows injecting a set of additional Alertmanagers to peer with to form a highly available cluster.
     def additionalPeers(self) -> Optional[List[str]]:
+        """
+        AdditionalPeers allows injecting a set of additional Alertmanagers to peer with to form a highly available cluster.
+        """
         return self.__additionalPeers
 
-    # Port name used for the pods and governing service.
-    # This defaults to web
     def portName(self) -> Optional[str]:
+        """
+        Port name used for the pods and governing service.
+        This defaults to web
+        """
         return self.__portName
 
 
@@ -741,9 +847,11 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the Alertmanager cluster. More info:
-    # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
     def spec(self) -> AlertmanagerSpec:
+        """
+        Specification of the desired behavior of the Alertmanager cluster. More info:
+        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -805,36 +913,50 @@ class RelabelConfig(types.Object):
             v["action"] = action
         return v
 
-    # The source labels select values from existing labels. Their content is concatenated
-    # using the configured separator and matched against the configured regular expression
-    # for the replace, keep, and drop actions.
     def sourceLabels(self) -> Optional[List[str]]:
+        """
+        The source labels select values from existing labels. Their content is concatenated
+        using the configured separator and matched against the configured regular expression
+        for the replace, keep, and drop actions.
+        """
         return self.__sourceLabels
 
-    # Separator placed between concatenated source label values. default is ';'.
     def separator(self) -> Optional[str]:
+        """
+        Separator placed between concatenated source label values. default is ';'.
+        """
         return self.__separator
 
-    # Label to which the resulting value is written in a replace action.
-    # It is mandatory for replace actions. Regex capture groups are available.
     def targetLabel(self) -> Optional[str]:
+        """
+        Label to which the resulting value is written in a replace action.
+        It is mandatory for replace actions. Regex capture groups are available.
+        """
         return self.__targetLabel
 
-    # Regular expression against which the extracted value is matched. defailt is '(.*)'
     def regex(self) -> Optional[str]:
+        """
+        Regular expression against which the extracted value is matched. defailt is '(.*)'
+        """
         return self.__regex
 
-    # Modulus to take of the hash of the source label values.
     def modulus(self) -> Optional[int]:
+        """
+        Modulus to take of the hash of the source label values.
+        """
         return self.__modulus
 
-    # Replacement value against which a regex replace is performed if the
-    # regular expression matches. Regex capture groups are available. Default is '$1'
     def replacement(self) -> Optional[str]:
+        """
+        Replacement value against which a regex replace is performed if the
+        regular expression matches. Regex capture groups are available. Default is '$1'
+        """
         return self.__replacement
 
-    # Action to perform based on regex matching. Default is 'replace'
     def action(self) -> Optional[str]:
+        """
+        Action to perform based on regex matching. Default is 'replace'
+        """
         return self.__action
 
 
@@ -940,62 +1062,90 @@ class Endpoint(types.Object):
             v["proxyUrl"] = proxyUrl
         return v
 
-    # Name of the service port this endpoint refers to. Mutually exclusive with targetPort.
     def port(self) -> Optional[str]:
+        """
+        Name of the service port this endpoint refers to. Mutually exclusive with targetPort.
+        """
         return self.__port
 
-    # Name or number of the target port of the endpoint. Mutually exclusive with port.
     def targetPort(self) -> Optional[Union[int, str]]:
+        """
+        Name or number of the target port of the endpoint. Mutually exclusive with port.
+        """
         return self.__targetPort
 
-    # HTTP path to scrape for metrics.
     def path(self) -> Optional[str]:
+        """
+        HTTP path to scrape for metrics.
+        """
         return self.__path
 
-    # HTTP scheme to use for scraping.
     def scheme(self) -> Optional[str]:
+        """
+        HTTP scheme to use for scraping.
+        """
         return self.__scheme
 
-    # Optional HTTP URL parameters
     def params(self) -> Optional[Dict[str, List[str]]]:
+        """
+        Optional HTTP URL parameters
+        """
         return self.__params
 
-    # Interval at which metrics should be scraped
     def interval(self) -> Optional[str]:
+        """
+        Interval at which metrics should be scraped
+        """
         return self.__interval
 
-    # Timeout after which the scrape is ended
     def scrapeTimeout(self) -> Optional[str]:
+        """
+        Timeout after which the scrape is ended
+        """
         return self.__scrapeTimeout
 
-    # TLS configuration to use when scraping the endpoint
     def tlsConfig(self) -> Optional[TLSConfig]:
+        """
+        TLS configuration to use when scraping the endpoint
+        """
         return self.__tlsConfig
 
-    # File to read bearer token for scraping targets.
     def bearerTokenFile(self) -> Optional[str]:
+        """
+        File to read bearer token for scraping targets.
+        """
         return self.__bearerTokenFile
 
-    # HonorLabels chooses the metric's labels on collisions with target labels.
     def honorLabels(self) -> Optional[bool]:
+        """
+        HonorLabels chooses the metric's labels on collisions with target labels.
+        """
         return self.__honorLabels
 
-    # BasicAuth allow an endpoint to authenticate over basic authentication
-    # More info: https://prometheus.io/docs/operating/configuration/#endpoints
     def basicAuth(self) -> Optional[BasicAuth]:
+        """
+        BasicAuth allow an endpoint to authenticate over basic authentication
+        More info: https://prometheus.io/docs/operating/configuration/#endpoints
+        """
         return self.__basicAuth
 
-    # MetricRelabelConfigs to apply to samples before ingestion.
     def metricRelabelings(self) -> Optional[List[RelabelConfig]]:
+        """
+        MetricRelabelConfigs to apply to samples before ingestion.
+        """
         return self.__metricRelabelings
 
-    # RelabelConfigs to apply to samples before scraping.
-    # More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
     def relabelings(self) -> Optional[List[RelabelConfig]]:
+        """
+        RelabelConfigs to apply to samples before scraping.
+        More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+        """
         return self.__relabelings
 
-    # ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
     def proxyUrl(self) -> Optional[str]:
+        """
+        ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
+        """
         return self.__proxyUrl
 
 
@@ -1022,13 +1172,17 @@ class NamespaceSelector(types.Object):
             v["matchNames"] = matchNames
         return v
 
-    # Boolean describing whether all namespaces are selected in contrast to a
-    # list restricting them.
     def any(self) -> Optional[bool]:
+        """
+        Boolean describing whether all namespaces are selected in contrast to a
+        list restricting them.
+        """
         return self.__any
 
-    # List of namespace names.
     def matchNames(self) -> Optional[List[str]]:
+        """
+        List of namespace names.
+        """
         return self.__matchNames
 
 
@@ -1116,49 +1270,71 @@ class PodMetricsEndpoint(types.Object):
             v["proxyUrl"] = proxyUrl
         return v
 
-    # Name of the port this endpoint refers to. Mutually exclusive with targetPort.
     def port(self) -> Optional[str]:
+        """
+        Name of the port this endpoint refers to. Mutually exclusive with targetPort.
+        """
         return self.__port
 
-    # Name or number of the target port of the endpoint. Mutually exclusive with port.
     def targetPort(self) -> Optional[Union[int, str]]:
+        """
+        Name or number of the target port of the endpoint. Mutually exclusive with port.
+        """
         return self.__targetPort
 
-    # HTTP path to scrape for metrics.
     def path(self) -> Optional[str]:
+        """
+        HTTP path to scrape for metrics.
+        """
         return self.__path
 
-    # HTTP scheme to use for scraping.
     def scheme(self) -> Optional[str]:
+        """
+        HTTP scheme to use for scraping.
+        """
         return self.__scheme
 
-    # Optional HTTP URL parameters
     def params(self) -> Optional[Dict[str, List[str]]]:
+        """
+        Optional HTTP URL parameters
+        """
         return self.__params
 
-    # Interval at which metrics should be scraped
     def interval(self) -> Optional[str]:
+        """
+        Interval at which metrics should be scraped
+        """
         return self.__interval
 
-    # Timeout after which the scrape is ended
     def scrapeTimeout(self) -> Optional[str]:
+        """
+        Timeout after which the scrape is ended
+        """
         return self.__scrapeTimeout
 
-    # HonorLabels chooses the metric's labels on collisions with target labels.
     def honorLabels(self) -> Optional[bool]:
+        """
+        HonorLabels chooses the metric's labels on collisions with target labels.
+        """
         return self.__honorLabels
 
-    # MetricRelabelConfigs to apply to samples before ingestion.
     def metricRelabelings(self) -> Optional[List[RelabelConfig]]:
+        """
+        MetricRelabelConfigs to apply to samples before ingestion.
+        """
         return self.__metricRelabelings
 
-    # RelabelConfigs to apply to samples before ingestion.
-    # More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
     def relabelings(self) -> Optional[List[RelabelConfig]]:
+        """
+        RelabelConfigs to apply to samples before ingestion.
+        More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
+        """
         return self.__relabelings
 
-    # ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
     def proxyUrl(self) -> Optional[str]:
+        """
+        ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
+        """
         return self.__proxyUrl
 
 
@@ -1213,28 +1389,40 @@ class PodMonitorSpec(types.Object):
             v["sampleLimit"] = sampleLimit
         return v
 
-    # The label to use to retrieve the job name from.
     def jobLabel(self) -> Optional[str]:
+        """
+        The label to use to retrieve the job name from.
+        """
         return self.__jobLabel
 
-    # PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
     def podTargetLabels(self) -> Optional[List[str]]:
+        """
+        PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
+        """
         return self.__podTargetLabels
 
-    # A list of endpoints allowed as part of this PodMonitor.
     def podMetricsEndpoints(self) -> List[PodMetricsEndpoint]:
+        """
+        A list of endpoints allowed as part of this PodMonitor.
+        """
         return self.__podMetricsEndpoints
 
-    # Selector to select Pod objects.
     def selector(self) -> "metav1.LabelSelector":
+        """
+        Selector to select Pod objects.
+        """
         return self.__selector
 
-    # Selector to select which namespaces the Endpoints objects are discovered from.
     def namespaceSelector(self) -> Optional[NamespaceSelector]:
+        """
+        Selector to select which namespaces the Endpoints objects are discovered from.
+        """
         return self.__namespaceSelector
 
-    # SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
     def sampleLimit(self) -> Optional[int]:
+        """
+        SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
+        """
         return self.__sampleLimit
 
 
@@ -1269,8 +1457,10 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of desired Pod selection for target discovery by Prometheus.
     def spec(self) -> PodMonitorSpec:
+        """
+        Specification of desired Pod selection for target discovery by Prometheus.
+        """
         return self.__spec
 
 
@@ -1312,20 +1502,28 @@ class QuerySpec(types.Object):
             v["timeout"] = timeout
         return v
 
-    # The delta difference allowed for retrieving metrics during expression evaluations.
     def lookbackDelta(self) -> Optional[str]:
+        """
+        The delta difference allowed for retrieving metrics during expression evaluations.
+        """
         return self.__lookbackDelta
 
-    # Number of concurrent queries that can be run at once.
     def maxConcurrency(self) -> Optional[int]:
+        """
+        Number of concurrent queries that can be run at once.
+        """
         return self.__maxConcurrency
 
-    # Maximum number of samples a single query can load into memory. Note that queries will fail if they would load more samples than this into memory, so this also limits the number of samples a query can return.
     def maxSamples(self) -> Optional[int]:
+        """
+        Maximum number of samples a single query can load into memory. Note that queries will fail if they would load more samples than this into memory, so this also limits the number of samples a query can return.
+        """
         return self.__maxSamples
 
-    # Maximum time a query may take before being aborted.
     def timeout(self) -> Optional[str]:
+        """
+        Maximum time a query may take before being aborted.
+        """
         return self.__timeout
 
 
@@ -1398,42 +1596,60 @@ class RemoteReadSpec(types.Object):
             v["proxyUrl"] = proxyUrl
         return v
 
-    # The URL of the endpoint to send samples to.
     def url(self) -> str:
+        """
+        The URL of the endpoint to send samples to.
+        """
         return self.__url
 
-    # An optional list of equality matchers which have to be present
-    # in a selector to query the remote read endpoint.
     def requiredMatchers(self) -> Optional[Dict[str, str]]:
+        """
+        An optional list of equality matchers which have to be present
+        in a selector to query the remote read endpoint.
+        """
         return self.__requiredMatchers
 
-    # Timeout for requests to the remote read endpoint.
     def remoteTimeout(self) -> Optional[str]:
+        """
+        Timeout for requests to the remote read endpoint.
+        """
         return self.__remoteTimeout
 
-    # Whether reads should be made for queries for time ranges that
-    # the local storage should have complete data for.
     def readRecent(self) -> Optional[bool]:
+        """
+        Whether reads should be made for queries for time ranges that
+        the local storage should have complete data for.
+        """
         return self.__readRecent
 
-    # BasicAuth for the URL.
     def basicAuth(self) -> Optional[BasicAuth]:
+        """
+        BasicAuth for the URL.
+        """
         return self.__basicAuth
 
-    # bearer token for remote read.
     def bearerToken(self) -> Optional[str]:
+        """
+        bearer token for remote read.
+        """
         return self.__bearerToken
 
-    # File to read bearer token for remote read.
     def bearerTokenFile(self) -> Optional[str]:
+        """
+        File to read bearer token for remote read.
+        """
         return self.__bearerTokenFile
 
-    # TLS Config to use for remote read.
     def tlsConfig(self) -> Optional[TLSConfig]:
+        """
+        TLS Config to use for remote read.
+        """
         return self.__tlsConfig
 
-    # Optional ProxyURL
     def proxyUrl(self) -> Optional[str]:
+        """
+        Optional ProxyURL
+        """
         return self.__proxyUrl
 
 
@@ -1500,36 +1716,52 @@ class QueueConfig(types.Object):
             v["maxBackoff"] = maxBackoff
         return v
 
-    # Capacity is the number of samples to buffer per shard before we start dropping them.
     def capacity(self) -> Optional[int]:
+        """
+        Capacity is the number of samples to buffer per shard before we start dropping them.
+        """
         return self.__capacity
 
-    # MinShards is the minimum number of shards, i.e. amount of concurrency.
     def minShards(self) -> Optional[int]:
+        """
+        MinShards is the minimum number of shards, i.e. amount of concurrency.
+        """
         return self.__minShards
 
-    # MaxShards is the maximum number of shards, i.e. amount of concurrency.
     def maxShards(self) -> Optional[int]:
+        """
+        MaxShards is the maximum number of shards, i.e. amount of concurrency.
+        """
         return self.__maxShards
 
-    # MaxSamplesPerSend is the maximum number of samples per send.
     def maxSamplesPerSend(self) -> Optional[int]:
+        """
+        MaxSamplesPerSend is the maximum number of samples per send.
+        """
         return self.__maxSamplesPerSend
 
-    # BatchSendDeadline is the maximum time a sample will wait in buffer.
     def batchSendDeadline(self) -> Optional[str]:
+        """
+        BatchSendDeadline is the maximum time a sample will wait in buffer.
+        """
         return self.__batchSendDeadline
 
-    # MaxRetries is the maximum number of times to retry a batch on recoverable errors.
     def maxRetries(self) -> Optional[int]:
+        """
+        MaxRetries is the maximum number of times to retry a batch on recoverable errors.
+        """
         return self.__maxRetries
 
-    # MinBackoff is the initial retry delay. Gets doubled for every retry.
     def minBackoff(self) -> Optional[str]:
+        """
+        MinBackoff is the initial retry delay. Gets doubled for every retry.
+        """
         return self.__minBackoff
 
-    # MaxBackoff is the maximum retry delay.
     def maxBackoff(self) -> Optional[str]:
+        """
+        MaxBackoff is the maximum retry delay.
+        """
         return self.__maxBackoff
 
 
@@ -1604,40 +1836,58 @@ class RemoteWriteSpec(types.Object):
             v["queueConfig"] = queueConfig
         return v
 
-    # The URL of the endpoint to send samples to.
     def url(self) -> str:
+        """
+        The URL of the endpoint to send samples to.
+        """
         return self.__url
 
-    # Timeout for requests to the remote write endpoint.
     def remoteTimeout(self) -> Optional[str]:
+        """
+        Timeout for requests to the remote write endpoint.
+        """
         return self.__remoteTimeout
 
-    # The list of remote write relabel configurations.
     def writeRelabelConfigs(self) -> Optional[List[RelabelConfig]]:
+        """
+        The list of remote write relabel configurations.
+        """
         return self.__writeRelabelConfigs
 
-    # BasicAuth for the URL.
     def basicAuth(self) -> Optional[BasicAuth]:
+        """
+        BasicAuth for the URL.
+        """
         return self.__basicAuth
 
-    # File to read bearer token for remote write.
     def bearerToken(self) -> Optional[str]:
+        """
+        File to read bearer token for remote write.
+        """
         return self.__bearerToken
 
-    # File to read bearer token for remote write.
     def bearerTokenFile(self) -> Optional[str]:
+        """
+        File to read bearer token for remote write.
+        """
         return self.__bearerTokenFile
 
-    # TLS Config to use for remote write.
     def tlsConfig(self) -> Optional[TLSConfig]:
+        """
+        TLS Config to use for remote write.
+        """
         return self.__tlsConfig
 
-    # Optional ProxyURL
     def proxyUrl(self) -> Optional[str]:
+        """
+        Optional ProxyURL
+        """
         return self.__proxyUrl
 
-    # QueueConfig allows tuning of the remote write queue parameters.
     def queueConfig(self) -> Optional[QueueConfig]:
+        """
+        QueueConfig allows tuning of the remote write queue parameters.
+        """
         return self.__queueConfig
 
 
@@ -1673,17 +1923,23 @@ class RulesAlert(types.Object):
             v["resendDelay"] = resendDelay
         return v
 
-    # Max time to tolerate prometheus outage for restoring 'for' state of alert.
     def forOutageTolerance(self) -> Optional[str]:
+        """
+        Max time to tolerate prometheus outage for restoring 'for' state of alert.
+        """
         return self.__forOutageTolerance
 
-    # Minimum duration between alert and restored 'for' state.
-    # This is maintained only for alerts with configured 'for' time greater than grace period.
     def forGracePeriod(self) -> Optional[str]:
+        """
+        Minimum duration between alert and restored 'for' state.
+        This is maintained only for alerts with configured 'for' time greater than grace period.
+        """
         return self.__forGracePeriod
 
-    # Minimum amount of time to wait before resending an alert to Alertmanager.
     def resendDelay(self) -> Optional[str]:
+        """
+        Minimum amount of time to wait before resending an alert to Alertmanager.
+        """
         return self.__resendDelay
 
 
@@ -1768,39 +2024,53 @@ class ThanosSpec(types.Object):
             v["objectStorageConfig"] = objectStorageConfig
         return v
 
-    # Image if specified has precedence over baseImage, tag and sha
-    # combinations. Specifying the version is still necessary to ensure the
-    # Prometheus Operator knows what version of Thanos is being
-    # configured.
     def image(self) -> Optional[str]:
+        """
+        Image if specified has precedence over baseImage, tag and sha
+        combinations. Specifying the version is still necessary to ensure the
+        Prometheus Operator knows what version of Thanos is being
+        configured.
+        """
         return self.__image
 
-    # Version describes the version of Thanos to use.
     def version(self) -> Optional[str]:
+        """
+        Version describes the version of Thanos to use.
+        """
         return self.__version
 
-    # Tag of Thanos sidecar container image to be deployed. Defaults to the value of `version`.
-    # Version is ignored if Tag is set.
     def tag(self) -> Optional[str]:
+        """
+        Tag of Thanos sidecar container image to be deployed. Defaults to the value of `version`.
+        Version is ignored if Tag is set.
+        """
         return self.__tag
 
-    # SHA of Thanos container image to be deployed. Defaults to the value of `version`.
-    # Similar to a tag, but the SHA explicitly deploys an immutable container image.
-    # Version and Tag are ignored if SHA is set.
     def sha(self) -> Optional[str]:
+        """
+        SHA of Thanos container image to be deployed. Defaults to the value of `version`.
+        Similar to a tag, but the SHA explicitly deploys an immutable container image.
+        Version and Tag are ignored if SHA is set.
+        """
         return self.__sha
 
-    # Thanos base image if other than default.
     def baseImage(self) -> Optional[str]:
+        """
+        Thanos base image if other than default.
+        """
         return self.__baseImage
 
-    # Resources defines the resource requirements for the Thanos sidecar.
-    # If not provided, no requests/limits will be set
     def resources(self) -> Optional["corev1.ResourceRequirements"]:
+        """
+        Resources defines the resource requirements for the Thanos sidecar.
+        If not provided, no requests/limits will be set
+        """
         return self.__resources
 
-    # ObjectStorageConfig configures object storage in Thanos.
     def objectStorageConfig(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        ObjectStorageConfig configures object storage in Thanos.
+        """
         return self.__objectStorageConfig
 
 
@@ -2179,312 +2449,418 @@ class PrometheusSpec(types.Object):
             v["portName"] = portName
         return v
 
-    # Standard object’s metadata. More info:
-    # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
-    # Metadata Labels and Annotations gets propagated to the prometheus pods.
     def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
+        """
+        Standard object’s metadata. More info:
+        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+        Metadata Labels and Annotations gets propagated to the prometheus pods.
+        """
         return self.__podMetadata
 
-    # ServiceMonitors to be selected for target discovery.
     def serviceMonitorSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        ServiceMonitors to be selected for target discovery.
+        """
         return self.__serviceMonitorSelector
 
-    # Namespaces to be selected for ServiceMonitor discovery. If nil, only
-    # check own namespace.
     def serviceMonitorNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Namespaces to be selected for ServiceMonitor discovery. If nil, only
+        check own namespace.
+        """
         return self.__serviceMonitorNamespaceSelector
 
-    # *Experimental* PodMonitors to be selected for target discovery.
     def podMonitorSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        *Experimental* PodMonitors to be selected for target discovery.
+        """
         return self.__podMonitorSelector
 
-    # Namespaces to be selected for PodMonitor discovery. If nil, only
-    # check own namespace.
     def podMonitorNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Namespaces to be selected for PodMonitor discovery. If nil, only
+        check own namespace.
+        """
         return self.__podMonitorNamespaceSelector
 
-    # Version of Prometheus to be deployed.
     def version(self) -> Optional[str]:
+        """
+        Version of Prometheus to be deployed.
+        """
         return self.__version
 
-    # Tag of Prometheus container image to be deployed. Defaults to the value of `version`.
-    # Version is ignored if Tag is set.
     def tag(self) -> Optional[str]:
+        """
+        Tag of Prometheus container image to be deployed. Defaults to the value of `version`.
+        Version is ignored if Tag is set.
+        """
         return self.__tag
 
-    # SHA of Prometheus container image to be deployed. Defaults to the value of `version`.
-    # Similar to a tag, but the SHA explicitly deploys an immutable container image.
-    # Version and Tag are ignored if SHA is set.
     def sha(self) -> Optional[str]:
+        """
+        SHA of Prometheus container image to be deployed. Defaults to the value of `version`.
+        Similar to a tag, but the SHA explicitly deploys an immutable container image.
+        Version and Tag are ignored if SHA is set.
+        """
         return self.__sha
 
-    # When a Prometheus deployment is paused, no actions except for deletion
-    # will be performed on the underlying objects.
     def paused(self) -> Optional[bool]:
+        """
+        When a Prometheus deployment is paused, no actions except for deletion
+        will be performed on the underlying objects.
+        """
         return self.__paused
 
-    # Image if specified has precedence over baseImage, tag and sha
-    # combinations. Specifying the version is still necessary to ensure the
-    # Prometheus Operator knows what version of Prometheus is being
-    # configured.
     def image(self) -> Optional[str]:
+        """
+        Image if specified has precedence over baseImage, tag and sha
+        combinations. Specifying the version is still necessary to ensure the
+        Prometheus Operator knows what version of Prometheus is being
+        configured.
+        """
         return self.__image
 
-    # Base image to use for a Prometheus deployment.
     def baseImage(self) -> Optional[str]:
+        """
+        Base image to use for a Prometheus deployment.
+        """
         return self.__baseImage
 
-    # An optional list of references to secrets in the same namespace
-    # to use for pulling prometheus and alertmanager images from registries
-    # see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
     def imagePullSecrets(self) -> Optional[Dict[str, "corev1.LocalObjectReference"]]:
+        """
+        An optional list of references to secrets in the same namespace
+        to use for pulling prometheus and alertmanager images from registries
+        see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
+        """
         return self.__imagePullSecrets
 
-    # Number of instances to deploy for a Prometheus deployment.
     def replicas(self) -> Optional[int]:
+        """
+        Number of instances to deploy for a Prometheus deployment.
+        """
         return self.__replicas
 
-    # Name of Prometheus external label used to denote replica name.
-    # Defaults to the value of `prometheus_replica`. External label will
-    # _not_ be added when value is set to empty string (`""`).
     def replicaExternalLabelName(self) -> Optional[str]:
+        """
+        Name of Prometheus external label used to denote replica name.
+        Defaults to the value of `prometheus_replica`. External label will
+        _not_ be added when value is set to empty string (`""`).
+        """
         return self.__replicaExternalLabelName
 
-    # Name of Prometheus external label used to denote Prometheus instance
-    # name. Defaults to the value of `prometheus`. External label will
-    # _not_ be added when value is set to empty string (`""`).
     def prometheusExternalLabelName(self) -> Optional[str]:
+        """
+        Name of Prometheus external label used to denote Prometheus instance
+        name. Defaults to the value of `prometheus`. External label will
+        _not_ be added when value is set to empty string (`""`).
+        """
         return self.__prometheusExternalLabelName
 
-    # Time duration Prometheus shall retain data for. Default is '24h',
-    # and must match the regular expression `[0-9]+(ms|s|m|h|d|w|y)` (milliseconds seconds minutes hours days weeks years).
     def retention(self) -> Optional[str]:
+        """
+        Time duration Prometheus shall retain data for. Default is '24h',
+        and must match the regular expression `[0-9]+(ms|s|m|h|d|w|y)` (milliseconds seconds minutes hours days weeks years).
+        """
         return self.__retention
 
-    # Maximum amount of disk space used by blocks.
     def retentionSize(self) -> Optional[str]:
+        """
+        Maximum amount of disk space used by blocks.
+        """
         return self.__retentionSize
 
-    # Enable compression of the write-ahead log using Snappy. This flag is
-    # only available in versions of Prometheus >= 2.11.0.
     def walCompression(self) -> Optional[bool]:
+        """
+        Enable compression of the write-ahead log using Snappy. This flag is
+        only available in versions of Prometheus >= 2.11.0.
+        """
         return self.__walCompression
 
-    # Log level for Prometheus to be configured with.
     def logLevel(self) -> Optional[str]:
+        """
+        Log level for Prometheus to be configured with.
+        """
         return self.__logLevel
 
-    # Log format for Prometheus to be configured with.
     def logFormat(self) -> Optional[str]:
+        """
+        Log format for Prometheus to be configured with.
+        """
         return self.__logFormat
 
-    # Interval between consecutive scrapes.
     def scrapeInterval(self) -> Optional[str]:
+        """
+        Interval between consecutive scrapes.
+        """
         return self.__scrapeInterval
 
-    # Interval between consecutive evaluations.
     def evaluationInterval(self) -> Optional[str]:
+        """
+        Interval between consecutive evaluations.
+        """
         return self.__evaluationInterval
 
-    # /--rules.*/ command-line arguments.
     def rules(self) -> Optional[Rules]:
+        """
+        /--rules.*/ command-line arguments.
+        """
         return self.__rules
 
-    # The labels to add to any time series or alerts when communicating with
-    # external systems (federation, remote storage, Alertmanager).
     def externalLabels(self) -> Optional[Dict[str, str]]:
+        """
+        The labels to add to any time series or alerts when communicating with
+        external systems (federation, remote storage, Alertmanager).
+        """
         return self.__externalLabels
 
-    # Enable access to prometheus web admin API. Defaults to the value of `false`.
-    # WARNING: Enabling the admin APIs enables mutating endpoints, to delete data,
-    # shutdown Prometheus, and more. Enabling this should be done with care and the
-    # user is advised to add additional authentication authorization via a proxy to
-    # ensure only clients authorized to perform these actions can do so.
-    # For more information see https://prometheus.io/docs/prometheus/latest/querying/api/#tsdb-admin-apis
     def enableAdminAPI(self) -> Optional[bool]:
+        """
+        Enable access to prometheus web admin API. Defaults to the value of `false`.
+        WARNING: Enabling the admin APIs enables mutating endpoints, to delete data,
+        shutdown Prometheus, and more. Enabling this should be done with care and the
+        user is advised to add additional authentication authorization via a proxy to
+        ensure only clients authorized to perform these actions can do so.
+        For more information see https://prometheus.io/docs/prometheus/latest/querying/api/#tsdb-admin-apis
+        """
         return self.__enableAdminAPI
 
-    # The external URL the Prometheus instances will be available under. This is
-    # necessary to generate correct URLs. This is necessary if Prometheus is not
-    # served from root of a DNS name.
     def externalUrl(self) -> Optional[str]:
+        """
+        The external URL the Prometheus instances will be available under. This is
+        necessary to generate correct URLs. This is necessary if Prometheus is not
+        served from root of a DNS name.
+        """
         return self.__externalUrl
 
-    # The route prefix Prometheus registers HTTP handlers for. This is useful,
-    # if using ExternalURL and a proxy is rewriting HTTP routes of a request,
-    # and the actual ExternalURL is still true, but the server serves requests
-    # under a different route prefix. For example for use with `kubectl proxy`.
     def routePrefix(self) -> Optional[str]:
+        """
+        The route prefix Prometheus registers HTTP handlers for. This is useful,
+        if using ExternalURL and a proxy is rewriting HTTP routes of a request,
+        and the actual ExternalURL is still true, but the server serves requests
+        under a different route prefix. For example for use with `kubectl proxy`.
+        """
         return self.__routePrefix
 
-    # QuerySpec defines the query command line flags when starting Prometheus.
     def query(self) -> Optional[QuerySpec]:
+        """
+        QuerySpec defines the query command line flags when starting Prometheus.
+        """
         return self.__query
 
-    # Storage spec to specify how storage shall be used.
     def storage(self) -> Optional[StorageSpec]:
+        """
+        Storage spec to specify how storage shall be used.
+        """
         return self.__storage
 
-    # Volumes allows configuration of additional volumes on the output StatefulSet definition. Volumes specified will
-    # be appended to other volumes that are generated as a result of StorageSpec objects.
     def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+        """
+        Volumes allows configuration of additional volumes on the output StatefulSet definition. Volumes specified will
+        be appended to other volumes that are generated as a result of StorageSpec objects.
+        """
         return self.__volumes
 
-    # A selector to select which PrometheusRules to mount for loading alerting
-    # rules from. Until (excluding) Prometheus Operator v0.24.0 Prometheus
-    # Operator will migrate any legacy rule ConfigMaps to PrometheusRule custom
-    # resources selected by RuleSelector. Make sure it does not match any config
-    # maps that you do not want to be migrated.
     def ruleSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        A selector to select which PrometheusRules to mount for loading alerting
+        rules from. Until (excluding) Prometheus Operator v0.24.0 Prometheus
+        Operator will migrate any legacy rule ConfigMaps to PrometheusRule custom
+        resources selected by RuleSelector. Make sure it does not match any config
+        maps that you do not want to be migrated.
+        """
         return self.__ruleSelector
 
-    # Namespaces to be selected for PrometheusRules discovery. If unspecified, only
-    # the same namespace as the Prometheus object is in is used.
     def ruleNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Namespaces to be selected for PrometheusRules discovery. If unspecified, only
+        the same namespace as the Prometheus object is in is used.
+        """
         return self.__ruleNamespaceSelector
 
-    # Define details regarding alerting.
     def alerting(self) -> Optional[AlertingSpec]:
+        """
+        Define details regarding alerting.
+        """
         return self.__alerting
 
-    # Define resources requests and limits for single Pods.
     def resources(self) -> Optional["corev1.ResourceRequirements"]:
+        """
+        Define resources requests and limits for single Pods.
+        """
         return self.__resources
 
-    # Define which Nodes the Pods are scheduled on.
     def nodeSelector(self) -> Optional[Dict[str, str]]:
+        """
+        Define which Nodes the Pods are scheduled on.
+        """
         return self.__nodeSelector
 
-    # ServiceAccountName is the name of the ServiceAccount to use to run the
-    # Prometheus Pods.
     def serviceAccountName(self) -> Optional[str]:
+        """
+        ServiceAccountName is the name of the ServiceAccount to use to run the
+        Prometheus Pods.
+        """
         return self.__serviceAccountName
 
-    # Secrets is a list of Secrets in the same namespace as the Prometheus
-    # object, which shall be mounted into the Prometheus Pods.
-    # The Secrets are mounted into /etc/prometheus/secrets/<secret-name>.
     def secrets(self) -> Optional[List[str]]:
+        """
+        Secrets is a list of Secrets in the same namespace as the Prometheus
+        object, which shall be mounted into the Prometheus Pods.
+        The Secrets are mounted into /etc/prometheus/secrets/<secret-name>.
+        """
         return self.__secrets
 
-    # ConfigMaps is a list of ConfigMaps in the same namespace as the Prometheus
-    # object, which shall be mounted into the Prometheus Pods.
-    # The ConfigMaps are mounted into /etc/prometheus/configmaps/<configmap-name>.
     def configMaps(self) -> Optional[List[str]]:
+        """
+        ConfigMaps is a list of ConfigMaps in the same namespace as the Prometheus
+        object, which shall be mounted into the Prometheus Pods.
+        The ConfigMaps are mounted into /etc/prometheus/configmaps/<configmap-name>.
+        """
         return self.__configMaps
 
-    # If specified, the pod's scheduling constraints.
     def affinity(self) -> Optional["corev1.Affinity"]:
+        """
+        If specified, the pod's scheduling constraints.
+        """
         return self.__affinity
 
-    # If specified, the pod's tolerations.
     def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+        """
+        If specified, the pod's tolerations.
+        """
         return self.__tolerations
 
-    # If specified, the remote_write spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
     def remoteWrite(self) -> Optional[List[RemoteWriteSpec]]:
+        """
+        If specified, the remote_write spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
+        """
         return self.__remoteWrite
 
-    # If specified, the remote_read spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
     def remoteRead(self) -> Optional[List[RemoteReadSpec]]:
+        """
+        If specified, the remote_read spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
+        """
         return self.__remoteRead
 
-    # SecurityContext holds pod-level security attributes and common container settings.
-    # This defaults to the default PodSecurityContext.
     def securityContext(self) -> Optional["corev1.PodSecurityContext"]:
+        """
+        SecurityContext holds pod-level security attributes and common container settings.
+        This defaults to the default PodSecurityContext.
+        """
         return self.__securityContext
 
-    # ListenLocal makes the Prometheus server listen on loopback, so that it
-    # does not bind against the Pod IP.
     def listenLocal(self) -> Optional[bool]:
+        """
+        ListenLocal makes the Prometheus server listen on loopback, so that it
+        does not bind against the Pod IP.
+        """
         return self.__listenLocal
 
-    # Containers allows injecting additional containers or modifying operator generated
-    # containers. This can be used to allow adding an authentication proxy to a Prometheus pod or
-    # to change the behavior of an operator generated container. Containers described here modify
-    # an operator generated container if they share the same name and modifications are done via a
-    # strategic merge patch. The current container names are: `prometheus`,
-    # `prometheus-config-reloader`, `rules-configmap-reloader`, and `thanos-sidecar`. Overriding
-    # containers is entirely outside the scope of what the maintainers will support and by doing
-    # so, you accept that this behaviour may break at any time without notice.
     def containers(self) -> Optional[Dict[str, "corev1.Container"]]:
+        """
+        Containers allows injecting additional containers or modifying operator generated
+        containers. This can be used to allow adding an authentication proxy to a Prometheus pod or
+        to change the behavior of an operator generated container. Containers described here modify
+        an operator generated container if they share the same name and modifications are done via a
+        strategic merge patch. The current container names are: `prometheus`,
+        `prometheus-config-reloader`, `rules-configmap-reloader`, and `thanos-sidecar`. Overriding
+        containers is entirely outside the scope of what the maintainers will support and by doing
+        so, you accept that this behaviour may break at any time without notice.
+        """
         return self.__containers
 
-    # InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
-    # fetch secrets for injection into the Prometheus configuration from external sources. Any errors
-    # during the execution of an initContainer will lead to a restart of the Pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
-    # Using initContainers for any use case other then secret fetching is entirely outside the scope
-    # of what the maintainers will support and by doing so, you accept that this behaviour may break
-    # at any time without notice.
     def initContainers(self) -> Optional[Dict[str, "corev1.Container"]]:
+        """
+        InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
+        fetch secrets for injection into the Prometheus configuration from external sources. Any errors
+        during the execution of an initContainer will lead to a restart of the Pod. More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+        Using initContainers for any use case other then secret fetching is entirely outside the scope
+        of what the maintainers will support and by doing so, you accept that this behaviour may break
+        at any time without notice.
+        """
         return self.__initContainers
 
-    # AdditionalScrapeConfigs allows specifying a key of a Secret containing
-    # additional Prometheus scrape configurations. Scrape configurations
-    # specified are appended to the configurations generated by the Prometheus
-    # Operator. Job configurations specified must have the form as specified
-    # in the official Prometheus documentation:
-    # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config.
-    # As scrape configs are appended, the user is responsible to make sure it
-    # is valid. Note that using this feature may expose the possibility to
-    # break upgrades of Prometheus. It is advised to review Prometheus release
-    # notes to ensure that no incompatible scrape configs are going to break
-    # Prometheus after the upgrade.
     def additionalScrapeConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        AdditionalScrapeConfigs allows specifying a key of a Secret containing
+        additional Prometheus scrape configurations. Scrape configurations
+        specified are appended to the configurations generated by the Prometheus
+        Operator. Job configurations specified must have the form as specified
+        in the official Prometheus documentation:
+        https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config.
+        As scrape configs are appended, the user is responsible to make sure it
+        is valid. Note that using this feature may expose the possibility to
+        break upgrades of Prometheus. It is advised to review Prometheus release
+        notes to ensure that no incompatible scrape configs are going to break
+        Prometheus after the upgrade.
+        """
         return self.__additionalScrapeConfigs
 
-    # AdditionalAlertRelabelConfigs allows specifying a key of a Secret containing
-    # additional Prometheus alert relabel configurations. Alert relabel configurations
-    # specified are appended to the configurations generated by the Prometheus
-    # Operator. Alert relabel configurations specified must have the form as specified
-    # in the official Prometheus documentation:
-    # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alert_relabel_configs.
-    # As alert relabel configs are appended, the user is responsible to make sure it
-    # is valid. Note that using this feature may expose the possibility to
-    # break upgrades of Prometheus. It is advised to review Prometheus release
-    # notes to ensure that no incompatible alert relabel configs are going to break
-    # Prometheus after the upgrade.
     def additionalAlertRelabelConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        AdditionalAlertRelabelConfigs allows specifying a key of a Secret containing
+        additional Prometheus alert relabel configurations. Alert relabel configurations
+        specified are appended to the configurations generated by the Prometheus
+        Operator. Alert relabel configurations specified must have the form as specified
+        in the official Prometheus documentation:
+        https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alert_relabel_configs.
+        As alert relabel configs are appended, the user is responsible to make sure it
+        is valid. Note that using this feature may expose the possibility to
+        break upgrades of Prometheus. It is advised to review Prometheus release
+        notes to ensure that no incompatible alert relabel configs are going to break
+        Prometheus after the upgrade.
+        """
         return self.__additionalAlertRelabelConfigs
 
-    # AdditionalAlertManagerConfigs allows specifying a key of a Secret containing
-    # additional Prometheus AlertManager configurations. AlertManager configurations
-    # specified are appended to the configurations generated by the Prometheus
-    # Operator. Job configurations specified must have the form as specified
-    # in the official Prometheus documentation:
-    # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alertmanager_config.
-    # As AlertManager configs are appended, the user is responsible to make sure it
-    # is valid. Note that using this feature may expose the possibility to
-    # break upgrades of Prometheus. It is advised to review Prometheus release
-    # notes to ensure that no incompatible AlertManager configs are going to break
-    # Prometheus after the upgrade.
     def additionalAlertManagerConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        AdditionalAlertManagerConfigs allows specifying a key of a Secret containing
+        additional Prometheus AlertManager configurations. AlertManager configurations
+        specified are appended to the configurations generated by the Prometheus
+        Operator. Job configurations specified must have the form as specified
+        in the official Prometheus documentation:
+        https://prometheus.io/docs/prometheus/latest/configuration/configuration/#alertmanager_config.
+        As AlertManager configs are appended, the user is responsible to make sure it
+        is valid. Note that using this feature may expose the possibility to
+        break upgrades of Prometheus. It is advised to review Prometheus release
+        notes to ensure that no incompatible AlertManager configs are going to break
+        Prometheus after the upgrade.
+        """
         return self.__additionalAlertManagerConfigs
 
-    # APIServerConfig allows specifying a host and auth methods to access apiserver.
-    # If left empty, Prometheus is assumed to run inside of the cluster
-    # and will discover API servers automatically and use the pod's CA certificate
-    # and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/.
     def apiserverConfig(self) -> Optional[APIServerConfig]:
+        """
+        APIServerConfig allows specifying a host and auth methods to access apiserver.
+        If left empty, Prometheus is assumed to run inside of the cluster
+        and will discover API servers automatically and use the pod's CA certificate
+        and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/.
+        """
         return self.__apiserverConfig
 
-    # Thanos configuration allows configuring various aspects of a Prometheus
-    # server in a Thanos environment.
-    #
-    # This section is experimental, it may change significantly without
-    # deprecation notice in any release.
-    #
-    # This is experimental and may change significantly without backward
-    # compatibility in any release.
     def thanos(self) -> Optional[ThanosSpec]:
+        """
+        Thanos configuration allows configuring various aspects of a Prometheus
+        server in a Thanos environment.
+        
+        This section is experimental, it may change significantly without
+        deprecation notice in any release.
+        
+        This is experimental and may change significantly without backward
+        compatibility in any release.
+        """
         return self.__thanos
 
-    # Priority class assigned to the Pods
     def priorityClassName(self) -> Optional[str]:
+        """
+        Priority class assigned to the Pods
+        """
         return self.__priorityClassName
 
-    # Port name used for the pods and governing service.
-    # This defaults to web
     def portName(self) -> Optional[str]:
+        """
+        Port name used for the pods and governing service.
+        This defaults to web
+        """
         return self.__portName
 
 
@@ -2519,9 +2895,11 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the Prometheus cluster. More info:
-    # https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
     def spec(self) -> PrometheusSpec:
+        """
+        Specification of the desired behavior of the Prometheus cluster. More info:
+        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -2645,8 +3023,10 @@ class PrometheusRuleSpec(types.Object):
             v["groups"] = groups.values()  # named list
         return v
 
-    # Content of Prometheus rule file
     def groups(self) -> Optional[Dict[str, RuleGroup]]:
+        """
+        Content of Prometheus rule file
+        """
         return self.__groups
 
 
@@ -2681,8 +3061,10 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of desired alerting rule definitions for Prometheus.
     def spec(self) -> PrometheusRuleSpec:
+        """
+        Specification of desired alerting rule definitions for Prometheus.
+        """
         return self.__spec
 
 
@@ -2741,32 +3123,46 @@ class ServiceMonitorSpec(types.Object):
             v["sampleLimit"] = sampleLimit
         return v
 
-    # The label to use to retrieve the job name from.
     def jobLabel(self) -> Optional[str]:
+        """
+        The label to use to retrieve the job name from.
+        """
         return self.__jobLabel
 
-    # TargetLabels transfers labels on the Kubernetes Service onto the target.
     def targetLabels(self) -> Optional[List[str]]:
+        """
+        TargetLabels transfers labels on the Kubernetes Service onto the target.
+        """
         return self.__targetLabels
 
-    # PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
     def podTargetLabels(self) -> Optional[List[str]]:
+        """
+        PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
+        """
         return self.__podTargetLabels
 
-    # A list of endpoints allowed as part of this ServiceMonitor.
     def endpoints(self) -> List[Endpoint]:
+        """
+        A list of endpoints allowed as part of this ServiceMonitor.
+        """
         return self.__endpoints
 
-    # Selector to select Endpoints objects.
     def selector(self) -> "metav1.LabelSelector":
+        """
+        Selector to select Endpoints objects.
+        """
         return self.__selector
 
-    # Selector to select which namespaces the Endpoints objects are discovered from.
     def namespaceSelector(self) -> Optional[NamespaceSelector]:
+        """
+        Selector to select which namespaces the Endpoints objects are discovered from.
+        """
         return self.__namespaceSelector
 
-    # SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
     def sampleLimit(self) -> Optional[int]:
+        """
+        SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
+        """
         return self.__sampleLimit
 
 
@@ -2801,7 +3197,9 @@ class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of desired Service selection for target discrovery by
-    # Prometheus.
     def spec(self) -> ServiceMonitorSpec:
+        """
+        Specification of desired Service selection for target discrovery by
+        Prometheus.
+        """
         return self.__spec

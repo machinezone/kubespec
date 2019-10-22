@@ -37,16 +37,22 @@ class CrossVersionObjectReference(types.Object):
             v["apiVersion"] = apiVersion
         return v
 
-    # Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
     def kind(self) -> str:
+        """
+        Kind of the referent; More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds"
+        """
         return self.__kind
 
-    # Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
     def name(self) -> str:
+        """
+        Name of the referent; More info: http://kubernetes.io/docs/user-guide/identifiers#names
+        """
         return self.__name
 
-    # API version of the referent
     def apiVersion(self) -> Optional[str]:
+        """
+        API version of the referent
+        """
         return self.__apiVersion
 
 
@@ -94,26 +100,34 @@ class HorizontalPodAutoscalerSpec(types.Object):
             v["targetCPUUtilizationPercentage"] = targetCPUUtilizationPercentage
         return v
 
-    # reference to scaled resource; horizontal pod autoscaler will learn the current resource consumption
-    # and will set the desired number of pods by using its Scale subresource.
     def scaleTargetRef(self) -> CrossVersionObjectReference:
+        """
+        reference to scaled resource; horizontal pod autoscaler will learn the current resource consumption
+        and will set the desired number of pods by using its Scale subresource.
+        """
         return self.__scaleTargetRef
 
-    # minReplicas is the lower limit for the number of replicas to which the autoscaler
-    # can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
-    # alpha feature gate HPAScaleToZero is enabled and at least one Object or External
-    # metric is configured.  Scaling is active as long as at least one metric value is
-    # available.
     def minReplicas(self) -> Optional[int]:
+        """
+        minReplicas is the lower limit for the number of replicas to which the autoscaler
+        can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
+        alpha feature gate HPAScaleToZero is enabled and at least one Object or External
+        metric is configured.  Scaling is active as long as at least one metric value is
+        available.
+        """
         return self.__minReplicas
 
-    # upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
     def maxReplicas(self) -> int:
+        """
+        upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
+        """
         return self.__maxReplicas
 
-    # target average CPU utilization (represented as a percentage of requested CPU) over all the pods;
-    # if not specified the default autoscaling policy will be used.
     def targetCPUUtilizationPercentage(self) -> Optional[int]:
+        """
+        target average CPU utilization (represented as a percentage of requested CPU) over all the pods;
+        if not specified the default autoscaling policy will be used.
+        """
         return self.__targetCPUUtilizationPercentage
 
 
@@ -147,8 +161,10 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+        """
+        behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
+        """
         return self.__spec
 
 
@@ -169,8 +185,10 @@ class ScaleSpec(types.Object):
             v["replicas"] = replicas
         return v
 
-    # desired number of instances for the scaled object.
     def replicas(self) -> Optional[int]:
+        """
+        desired number of instances for the scaled object.
+        """
         return self.__replicas
 
 
@@ -204,6 +222,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     def spec(self) -> Optional[ScaleSpec]:
+        """
+        defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
+        """
         return self.__spec

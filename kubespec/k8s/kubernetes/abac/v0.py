@@ -58,28 +58,38 @@ class Policy(base.TypedObject):
             v["namespace"] = namespace
         return v
 
-    # User is the username this rule applies to.
-    # Either user or group is required to match the request.
-    # "*" matches all users.
     def user(self) -> Optional[str]:
+        """
+        User is the username this rule applies to.
+        Either user or group is required to match the request.
+        "*" matches all users.
+        """
         return self.__user
 
-    # Group is the group this rule applies to.
-    # Either user or group is required to match the request.
-    # "*" matches all groups.
     def group(self) -> Optional[str]:
+        """
+        Group is the group this rule applies to.
+        Either user or group is required to match the request.
+        "*" matches all groups.
+        """
         return self.__group
 
-    # Readonly matches readonly requests when true, and all requests when false
     def readonly(self) -> Optional[bool]:
+        """
+        Readonly matches readonly requests when true, and all requests when false
+        """
         return self.__readonly
 
-    # Resource is the name of a resource
-    # "*" matches all resources
     def resource(self) -> Optional[str]:
+        """
+        Resource is the name of a resource
+        "*" matches all resources
+        """
         return self.__resource
 
-    # Namespace is the name of a namespace
-    # "*" matches all namespaces (including unnamespaced requests)
     def namespace(self) -> Optional[str]:
+        """
+        Namespace is the name of a namespace
+        "*" matches all namespaces (including unnamespaced requests)
+        """
         return self.__namespace

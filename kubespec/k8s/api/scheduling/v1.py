@@ -62,27 +62,35 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
             v["preemptionPolicy"] = preemptionPolicy
         return v
 
-    # The value of this priority class. This is the actual priority that pods
-    # receive when they have the name of this class in their pod spec.
     def value(self) -> int:
+        """
+        The value of this priority class. This is the actual priority that pods
+        receive when they have the name of this class in their pod spec.
+        """
         return self.__value
 
-    # globalDefault specifies whether this PriorityClass should be considered as
-    # the default priority for pods that do not have any priority class.
-    # Only one PriorityClass can be marked as `globalDefault`. However, if more than
-    # one PriorityClasses exists with their `globalDefault` field set to true,
-    # the smallest value of such global default PriorityClasses will be used as the default priority.
     def globalDefault(self) -> Optional[bool]:
+        """
+        globalDefault specifies whether this PriorityClass should be considered as
+        the default priority for pods that do not have any priority class.
+        Only one PriorityClass can be marked as `globalDefault`. However, if more than
+        one PriorityClasses exists with their `globalDefault` field set to true,
+        the smallest value of such global default PriorityClasses will be used as the default priority.
+        """
         return self.__globalDefault
 
-    # description is an arbitrary string that usually provides guidelines on
-    # when this priority class should be used.
     def description(self) -> Optional[str]:
+        """
+        description is an arbitrary string that usually provides guidelines on
+        when this priority class should be used.
+        """
         return self.__description
 
-    # PreemptionPolicy is the Policy for preempting pods with lower priority.
-    # One of Never, PreemptLowerPriority.
-    # Defaults to PreemptLowerPriority if unset.
-    # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
+        """
+        PreemptionPolicy is the Policy for preempting pods with lower priority.
+        One of Never, PreemptLowerPriority.
+        Defaults to PreemptLowerPriority if unset.
+        This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
+        """
         return self.__preemptionPolicy

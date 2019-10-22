@@ -59,25 +59,35 @@ class PodPresetSpec(types.Object):
             v["volumeMounts"] = volumeMounts.values()  # named list
         return v
 
-    # Selector is a label query over a set of resources, in this case pods.
-    # Required.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Selector is a label query over a set of resources, in this case pods.
+        Required.
+        """
         return self.__selector
 
-    # Env defines the collection of EnvVar to inject into containers.
     def env(self) -> Optional[Dict[str, "corev1.EnvVar"]]:
+        """
+        Env defines the collection of EnvVar to inject into containers.
+        """
         return self.__env
 
-    # EnvFrom defines the collection of EnvFromSource to inject into containers.
     def envFrom(self) -> Optional[List["corev1.EnvFromSource"]]:
+        """
+        EnvFrom defines the collection of EnvFromSource to inject into containers.
+        """
         return self.__envFrom
 
-    # Volumes defines the collection of Volume to inject into the pod.
     def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+        """
+        Volumes defines the collection of Volume to inject into the pod.
+        """
         return self.__volumes
 
-    # VolumeMounts defines the collection of VolumeMount to inject into containers.
     def volumeMounts(self) -> Optional[Dict[str, "corev1.VolumeMount"]]:
+        """
+        VolumeMounts defines the collection of VolumeMount to inject into containers.
+        """
         return self.__volumeMounts
 
 

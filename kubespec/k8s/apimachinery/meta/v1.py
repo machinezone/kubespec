@@ -229,12 +229,16 @@ class Preconditions(types.Object):
             v["resourceVersion"] = resourceVersion
         return v
 
-    # Specifies the target UID.
     def uid(self) -> Optional[str]:
+        """
+        Specifies the target UID.
+        """
         return self.__uid
 
-    # Specifies the target ResourceVersion
     def resourceVersion(self) -> Optional[str]:
+        """
+        Specifies the target ResourceVersion
+        """
         return self.__resourceVersion
 
 
@@ -262,19 +266,23 @@ class TypeMeta(types.Object):
             v["apiVersion"] = apiVersion
         return v
 
-    # Kind is a string value representing the REST resource this object represents.
-    # Servers may infer this from the endpoint the client submits requests to.
-    # Cannot be updated.
-    # In CamelCase.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     def kind(self) -> Optional[str]:
+        """
+        Kind is a string value representing the REST resource this object represents.
+        Servers may infer this from the endpoint the client submits requests to.
+        Cannot be updated.
+        In CamelCase.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        """
         return self.__kind
 
-    # APIVersion defines the versioned schema of this representation of an object.
-    # Servers should convert recognized schemas to the latest internal value, and
-    # may reject unrecognized values.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
     def apiVersion(self) -> Optional[str]:
+        """
+        APIVersion defines the versioned schema of this representation of an object.
+        Servers should convert recognized schemas to the latest internal value, and
+        may reject unrecognized values.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+        """
         return self.__apiVersion
 
 
@@ -318,35 +326,43 @@ class DeleteOptions(base.TypedObject):
             v["dryRun"] = dryRun
         return v
 
-    # The duration in seconds before the object should be deleted. Value must be non-negative integer.
-    # The value zero indicates delete immediately. If this value is nil, the default grace period for the
-    # specified type will be used.
-    # Defaults to a per object value if not specified. zero means delete immediately.
     def gracePeriodSeconds(self) -> Optional[int]:
+        """
+        The duration in seconds before the object should be deleted. Value must be non-negative integer.
+        The value zero indicates delete immediately. If this value is nil, the default grace period for the
+        specified type will be used.
+        Defaults to a per object value if not specified. zero means delete immediately.
+        """
         return self.__gracePeriodSeconds
 
-    # Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
-    # returned.
     def preconditions(self) -> Optional[Preconditions]:
+        """
+        Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
+        returned.
+        """
         return self.__preconditions
 
-    # Whether and how garbage collection will be performed.
-    # Either this field or OrphanDependents may be set, but not both.
-    # The default policy is decided by the existing finalizer set in the
-    # metadata.finalizers and the resource-specific default policy.
-    # Acceptable values are: 'Orphan' - orphan the dependents; 'Background' -
-    # allow the garbage collector to delete the dependents in the background;
-    # 'Foreground' - a cascading policy that deletes all dependents in the
-    # foreground.
     def propagationPolicy(self) -> Optional[DeletionPropagation]:
+        """
+        Whether and how garbage collection will be performed.
+        Either this field or OrphanDependents may be set, but not both.
+        The default policy is decided by the existing finalizer set in the
+        metadata.finalizers and the resource-specific default policy.
+        Acceptable values are: 'Orphan' - orphan the dependents; 'Background' -
+        allow the garbage collector to delete the dependents in the background;
+        'Foreground' - a cascading policy that deletes all dependents in the
+        foreground.
+        """
         return self.__propagationPolicy
 
-    # When present, indicates that modifications should not be
-    # persisted. An invalid or unrecognized dryRun directive will
-    # result in an error response and no further processing of the
-    # request. Valid values are:
-    # - All: all dry run stages will be processed
     def dryRun(self) -> Optional[List[str]]:
+        """
+        When present, indicates that modifications should not be
+        persisted. An invalid or unrecognized dryRun directive will
+        result in an error response and no further processing of the
+        request. Valid values are:
+        - All: all dry run stages will be processed
+        """
         return self.__dryRun
 
 
@@ -451,20 +467,26 @@ class LabelSelectorRequirement(types.Object):
             v["values"] = values
         return v
 
-    # key is the label key that the selector applies to.
     def key(self) -> str:
+        """
+        key is the label key that the selector applies to.
+        """
         return self.__key
 
-    # operator represents a key's relationship to a set of values.
-    # Valid operators are In, NotIn, Exists and DoesNotExist.
     def operator(self) -> LabelSelectorOperator:
+        """
+        operator represents a key's relationship to a set of values.
+        Valid operators are In, NotIn, Exists and DoesNotExist.
+        """
         return self.__operator
 
-    # values is an array of string values. If the operator is In or NotIn,
-    # the values array must be non-empty. If the operator is Exists or DoesNotExist,
-    # the values array must be empty. This array is replaced during a strategic
-    # merge patch.
     def values(self) -> Optional[List[str]]:
+        """
+        values is an array of string values. If the operator is In or NotIn,
+        the values array must be non-empty. If the operator is Exists or DoesNotExist,
+        the values array must be empty. This array is replaced during a strategic
+        merge patch.
+        """
         return self.__values
 
 
@@ -502,14 +524,18 @@ class LabelSelector(types.Object):
             v["matchExpressions"] = matchExpressions
         return v
 
-    # matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
-    # map is equivalent to an element of matchExpressions, whose key field is "key", the
-    # operator is "In", and the values array contains only "value". The requirements are ANDed.
     def matchLabels(self) -> Optional[Dict[str, str]]:
+        """
+        matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+        map is equivalent to an element of matchExpressions, whose key field is "key", the
+        operator is "In", and the values array contains only "value". The requirements are ANDed.
+        """
         return self.__matchLabels
 
-    # matchExpressions is a list of label selector requirements. The requirements are ANDed.
     def matchExpressions(self) -> Optional[List[LabelSelectorRequirement]]:
+        """
+        matchExpressions is a list of label selector requirements. The requirements are ANDed.
+        """
         return self.__matchExpressions
 
 
@@ -536,26 +562,30 @@ class ListMeta(types.Object):
             v["remainingItemCount"] = remainingItemCount
         return v
 
-    # continue may be set if the user set a limit on the number of items returned, and indicates that
-    # the server has more data available. The value is opaque and may be used to issue another request
-    # to the endpoint that served this list to retrieve the next set of available objects. Continuing a
-    # consistent list may not be possible if the server configuration has changed or more than a few
-    # minutes have passed. The resourceVersion field returned when using this continue value will be
-    # identical to the value in the first response, unless you have received this token from an error
-    # message.
     def continue_(self) -> Optional[str]:
+        """
+        continue may be set if the user set a limit on the number of items returned, and indicates that
+        the server has more data available. The value is opaque and may be used to issue another request
+        to the endpoint that served this list to retrieve the next set of available objects. Continuing a
+        consistent list may not be possible if the server configuration has changed or more than a few
+        minutes have passed. The resourceVersion field returned when using this continue value will be
+        identical to the value in the first response, unless you have received this token from an error
+        message.
+        """
         return self.__continue_
 
-    # remainingItemCount is the number of subsequent items in the list which are not included in this
-    # list response. If the list request contained label or field selectors, then the number of
-    # remaining items is unknown and the field will be left unset and omitted during serialization.
-    # If the list is complete (either because it is not chunking or because this is the last chunk),
-    # then there are no more remaining items and this field will be left unset and omitted during
-    # serialization.
-    # Servers older than v1.15 do not set this field.
-    # The intended use of the remainingItemCount is *estimating* the size of a collection. Clients
-    # should not rely on the remainingItemCount to be set or to be exact.
     def remainingItemCount(self) -> Optional[int]:
+        """
+        remainingItemCount is the number of subsequent items in the list which are not included in this
+        list response. If the list request contained label or field selectors, then the number of
+        remaining items is unknown and the field will be left unset and omitted during serialization.
+        If the list is complete (either because it is not chunking or because this is the last chunk),
+        then there are no more remaining items and this field will be left unset and omitted during
+        serialization.
+        Servers older than v1.15 do not set this field.
+        The intended use of the remainingItemCount is *estimating* the size of a collection. Clients
+        should not rely on the remainingItemCount to be set or to be exact.
+        """
         return self.__remainingItemCount
 
 
@@ -598,38 +628,46 @@ class ObjectMeta(types.Object):
             v["annotations"] = annotations
         return v
 
-    # Name must be unique within a namespace. Is required when creating resources, although
-    # some resources may allow a client to request the generation of an appropriate name
-    # automatically. Name is primarily intended for creation idempotence and configuration
-    # definition.
-    # Cannot be updated.
-    # More info: http://kubernetes.io/docs/user-guide/identifiers#names
     def name(self) -> Optional[str]:
+        """
+        Name must be unique within a namespace. Is required when creating resources, although
+        some resources may allow a client to request the generation of an appropriate name
+        automatically. Name is primarily intended for creation idempotence and configuration
+        definition.
+        Cannot be updated.
+        More info: http://kubernetes.io/docs/user-guide/identifiers#names
+        """
         return self.__name
 
-    # Namespace defines the space within each name must be unique. An empty namespace is
-    # equivalent to the "default" namespace, but "default" is the canonical representation.
-    # Not all objects are required to be scoped to a namespace - the value of this field for
-    # those objects will be empty.
-    #
-    # Must be a DNS_LABEL.
-    # Cannot be updated.
-    # More info: http://kubernetes.io/docs/user-guide/namespaces
     def namespace(self) -> Optional[str]:
+        """
+        Namespace defines the space within each name must be unique. An empty namespace is
+        equivalent to the "default" namespace, but "default" is the canonical representation.
+        Not all objects are required to be scoped to a namespace - the value of this field for
+        those objects will be empty.
+        
+        Must be a DNS_LABEL.
+        Cannot be updated.
+        More info: http://kubernetes.io/docs/user-guide/namespaces
+        """
         return self.__namespace
 
-    # Map of string keys and values that can be used to organize and categorize
-    # (scope and select) objects. May match selectors of replication controllers
-    # and services.
-    # More info: http://kubernetes.io/docs/user-guide/labels
     def labels(self) -> Optional[Dict[str, str]]:
+        """
+        Map of string keys and values that can be used to organize and categorize
+        (scope and select) objects. May match selectors of replication controllers
+        and services.
+        More info: http://kubernetes.io/docs/user-guide/labels
+        """
         return self.__labels
 
-    # Annotations is an unstructured key value map stored with a resource that may be
-    # set by external tools to store and retrieve arbitrary metadata. They are not
-    # queryable and should be preserved when modifying objects.
-    # More info: http://kubernetes.io/docs/user-guide/annotations
     def annotations(self) -> Optional[Dict[str, str]]:
+        """
+        Annotations is an unstructured key value map stored with a resource that may be
+        set by external tools to store and retrieve arbitrary metadata. They are not
+        queryable and should be preserved when modifying objects.
+        More info: http://kubernetes.io/docs/user-guide/annotations
+        """
         return self.__annotations
 
 
@@ -663,26 +701,32 @@ class StatusCause(types.Object):
             v["field"] = field
         return v
 
-    # A machine-readable description of the cause of the error. If this value is
-    # empty there is no information available.
     def reason(self) -> Optional[CauseType]:
+        """
+        A machine-readable description of the cause of the error. If this value is
+        empty there is no information available.
+        """
         return self.__reason
 
-    # A human-readable description of the cause of the error.  This field may be
-    # presented as-is to a reader.
     def message(self) -> Optional[str]:
+        """
+        A human-readable description of the cause of the error.  This field may be
+        presented as-is to a reader.
+        """
         return self.__message
 
-    # The field of the resource that has caused this error, as named by its JSON
-    # serialization. May include dot and postfix notation for nested attributes.
-    # Arrays are zero-indexed.  Fields may appear more than once in an array of
-    # causes due to fields having multiple errors.
-    # Optional.
-    #
-    # Examples:
-    #   "name" - the field "name" on the current resource
-    #   "items[0].name" - the field "name" on the first array entry in "items"
     def field(self) -> Optional[str]:
+        """
+        The field of the resource that has caused this error, as named by its JSON
+        serialization. May include dot and postfix notation for nested attributes.
+        Arrays are zero-indexed.  Fields may appear more than once in an array of
+        causes due to fields having multiple errors.
+        Optional.
+        
+        Examples:
+          "name" - the field "name" on the current resource
+          "items[0].name" - the field "name" on the first array entry in "items"
+        """
         return self.__field
 
 
@@ -741,36 +785,48 @@ class StatusDetails(types.Object):
             v["retryAfterSeconds"] = retryAfterSeconds
         return v
 
-    # The name attribute of the resource associated with the status StatusReason
-    # (when there is a single name which can be described).
     def name(self) -> Optional[str]:
+        """
+        The name attribute of the resource associated with the status StatusReason
+        (when there is a single name which can be described).
+        """
         return self.__name
 
-    # The group attribute of the resource associated with the status StatusReason.
     def group(self) -> Optional[str]:
+        """
+        The group attribute of the resource associated with the status StatusReason.
+        """
         return self.__group
 
-    # The kind attribute of the resource associated with the status StatusReason.
-    # On some operations may differ from the requested resource Kind.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     def kind(self) -> Optional[str]:
+        """
+        The kind attribute of the resource associated with the status StatusReason.
+        On some operations may differ from the requested resource Kind.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        """
         return self.__kind
 
-    # UID of the resource.
-    # (when there is a single resource which can be described).
-    # More info: http://kubernetes.io/docs/user-guide/identifiers#uids
     def uid(self) -> Optional[str]:
+        """
+        UID of the resource.
+        (when there is a single resource which can be described).
+        More info: http://kubernetes.io/docs/user-guide/identifiers#uids
+        """
         return self.__uid
 
-    # The Causes array includes more details associated with the StatusReason
-    # failure. Not all StatusReasons may provide detailed causes.
     def causes(self) -> Optional[List[StatusCause]]:
+        """
+        The Causes array includes more details associated with the StatusReason
+        failure. Not all StatusReasons may provide detailed causes.
+        """
         return self.__causes
 
-    # If specified, the time in seconds before the operation should be retried. Some errors may indicate
-    # the client must take an alternate action - for those errors this field may indicate how long to wait
-    # before taking the alternate action.
     def retryAfterSeconds(self) -> Optional[int]:
+        """
+        If specified, the time in seconds before the operation should be retried. Some errors may indicate
+        the client must take an alternate action - for those errors this field may indicate how long to wait
+        before taking the alternate action.
+        """
         return self.__retryAfterSeconds
 
 
@@ -823,35 +879,47 @@ class Status(base.TypedObject):
             v["code"] = code
         return v
 
-    # Standard list metadata.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     def metadata(self) -> Optional[ListMeta]:
+        """
+        Standard list metadata.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        """
         return self.__metadata
 
-    # Status of the operation.
-    # One of: "Success" or "Failure".
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def status(self) -> Optional[str]:
+        """
+        Status of the operation.
+        One of: "Success" or "Failure".
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__status
 
-    # A human-readable description of the status of this operation.
     def message(self) -> Optional[str]:
+        """
+        A human-readable description of the status of this operation.
+        """
         return self.__message
 
-    # A machine-readable description of why this operation is in the
-    # "Failure" status. If this value is empty there
-    # is no information available. A Reason clarifies an HTTP status
-    # code but does not override it.
     def reason(self) -> Optional[StatusReason]:
+        """
+        A machine-readable description of why this operation is in the
+        "Failure" status. If this value is empty there
+        is no information available. A Reason clarifies an HTTP status
+        code but does not override it.
+        """
         return self.__reason
 
-    # Extended data associated with the reason.  Each reason may define its
-    # own extended details. This field is optional and the data returned
-    # is not guaranteed to conform to any schema except that defined by
-    # the reason type.
     def details(self) -> Optional[StatusDetails]:
+        """
+        Extended data associated with the reason.  Each reason may define its
+        own extended details. This field is optional and the data returned
+        is not guaranteed to conform to any schema except that defined by
+        the reason type.
+        """
         return self.__details
 
-    # Suggested HTTP return code for this status, 0 if not set.
     def code(self) -> Optional[int]:
+        """
+        Suggested HTTP return code for this status, 0 if not set.
+        """
         return self.__code

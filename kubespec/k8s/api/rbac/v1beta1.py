@@ -36,9 +36,11 @@ class AggregationRule(types.Object):
             v["clusterRoleSelectors"] = clusterRoleSelectors
         return v
 
-    # ClusterRoleSelectors holds a list of selectors which will be used to find ClusterRoles and create the rules.
-    # If any of the selectors match, then the ClusterRole's permissions will be added
     def clusterRoleSelectors(self) -> Optional[List["metav1.LabelSelector"]]:
+        """
+        ClusterRoleSelectors holds a list of selectors which will be used to find ClusterRoles and create the rules.
+        If any of the selectors match, then the ClusterRole's permissions will be added
+        """
         return self.__clusterRoleSelectors
 
 
@@ -86,28 +88,38 @@ class PolicyRule(types.Object):
             v["nonResourceURLs"] = nonResourceURLs
         return v
 
-    # Verbs is a list of Verbs that apply to ALL the ResourceKinds and AttributeRestrictions contained in this rule.  VerbAll represents all kinds.
     def verbs(self) -> List[str]:
+        """
+        Verbs is a list of Verbs that apply to ALL the ResourceKinds and AttributeRestrictions contained in this rule.  VerbAll represents all kinds.
+        """
         return self.__verbs
 
-    # APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
-    # the enumerated resources in any API group will be allowed.
     def apiGroups(self) -> Optional[List[str]]:
+        """
+        APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
+        the enumerated resources in any API group will be allowed.
+        """
         return self.__apiGroups
 
-    # Resources is a list of resources this rule applies to.  '*' represents all resources in the specified apiGroups.
-    # '*/foo' represents the subresource 'foo' for all resources in the specified apiGroups.
     def resources(self) -> Optional[List[str]]:
+        """
+        Resources is a list of resources this rule applies to.  '*' represents all resources in the specified apiGroups.
+        '*/foo' represents the subresource 'foo' for all resources in the specified apiGroups.
+        """
         return self.__resources
 
-    # ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
     def resourceNames(self) -> Optional[List[str]]:
+        """
+        ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
+        """
         return self.__resourceNames
 
-    # NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
-    # Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding.
-    # Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
     def nonResourceURLs(self) -> Optional[List[str]]:
+        """
+        NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
+        Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding.
+        Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
+        """
         return self.__nonResourceURLs
 
 
@@ -145,14 +157,18 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
             v["aggregationRule"] = aggregationRule
         return v
 
-    # Rules holds all the PolicyRules for this ClusterRole
     def rules(self) -> List[PolicyRule]:
+        """
+        Rules holds all the PolicyRules for this ClusterRole
+        """
         return self.__rules
 
-    # AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
-    # If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
-    # stomped by the controller.
     def aggregationRule(self) -> Optional[AggregationRule]:
+        """
+        AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
+        If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
+        stomped by the controller.
+        """
         return self.__aggregationRule
 
 
@@ -185,16 +201,22 @@ class RoleRef(types.Object):
         v["name"] = name
         return v
 
-    # APIGroup is the group for the resource being referenced
     def apiGroup(self) -> str:
+        """
+        APIGroup is the group for the resource being referenced
+        """
         return self.__apiGroup
 
-    # Kind is the type of resource being referenced
     def kind(self) -> str:
+        """
+        Kind is the type of resource being referenced
+        """
         return self.__kind
 
-    # Name is the name of resource being referenced
     def name(self) -> str:
+        """
+        Name is the name of resource being referenced
+        """
         return self.__name
 
 
@@ -235,24 +257,32 @@ class Subject(types.Object):
             v["namespace"] = namespace
         return v
 
-    # Kind of object being referenced. Values defined by this API group are "User", "Group", and "ServiceAccount".
-    # If the Authorizer does not recognized the kind value, the Authorizer should report an error.
     def kind(self) -> str:
+        """
+        Kind of object being referenced. Values defined by this API group are "User", "Group", and "ServiceAccount".
+        If the Authorizer does not recognized the kind value, the Authorizer should report an error.
+        """
         return self.__kind
 
-    # APIGroup holds the API group of the referenced subject.
-    # Defaults to "" for ServiceAccount subjects.
-    # Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
     def apiGroup(self) -> Optional[str]:
+        """
+        APIGroup holds the API group of the referenced subject.
+        Defaults to "" for ServiceAccount subjects.
+        Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
+        """
         return self.__apiGroup
 
-    # Name of the object being referenced.
     def name(self) -> str:
+        """
+        Name of the object being referenced.
+        """
         return self.__name
 
-    # Namespace of the referenced object.  If the object kind is non-namespace, such as "User" or "Group", and this value is not empty
-    # the Authorizer should report an error.
     def namespace(self) -> Optional[str]:
+        """
+        Namespace of the referenced object.  If the object kind is non-namespace, such as "User" or "Group", and this value is not empty
+        the Authorizer should report an error.
+        """
         return self.__namespace
 
 
@@ -291,13 +321,17 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         v["roleRef"] = roleRef
         return v
 
-    # Subjects holds references to the objects the role applies to.
     def subjects(self) -> Optional[Dict[str, Subject]]:
+        """
+        Subjects holds references to the objects the role applies to.
+        """
         return self.__subjects
 
-    # RoleRef can only reference a ClusterRole in the global namespace.
-    # If the RoleRef cannot be resolved, the Authorizer must return an error.
     def roleRef(self) -> RoleRef:
+        """
+        RoleRef can only reference a ClusterRole in the global namespace.
+        If the RoleRef cannot be resolved, the Authorizer must return an error.
+        """
         return self.__roleRef
 
 
@@ -331,8 +365,10 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         v["rules"] = rules
         return v
 
-    # Rules holds all the PolicyRules for this Role
     def rules(self) -> List[PolicyRule]:
+        """
+        Rules holds all the PolicyRules for this Role
+        """
         return self.__rules
 
 
@@ -374,11 +410,15 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         v["roleRef"] = roleRef
         return v
 
-    # Subjects holds references to the objects the role applies to.
     def subjects(self) -> Optional[Dict[str, Subject]]:
+        """
+        Subjects holds references to the objects the role applies to.
+        """
         return self.__subjects
 
-    # RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
-    # If the RoleRef cannot be resolved, the Authorizer must return an error.
     def roleRef(self) -> RoleRef:
+        """
+        RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
+        If the RoleRef cannot be resolved, the Authorizer must return an error.
+        """
         return self.__roleRef

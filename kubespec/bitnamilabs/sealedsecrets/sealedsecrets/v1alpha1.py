@@ -43,8 +43,10 @@ class SecretTemplateSpec(base.NamespacedMetadataObject):
             v["type"] = type
         return v
 
-    # Used to facilitate programmatic handling of secret data.
     def type(self) -> Optional[corev1.SecretType]:
+        """
+        Used to facilitate programmatic handling of secret data.
+        """
         return self.__type
 
 
@@ -78,13 +80,17 @@ class SealedSecretSpec(types.Object):
         v["encryptedData"] = encryptedData
         return v
 
-    # Template defines the structure of the Secret that will be
-    # created from this sealed secret.
     def template(self) -> Optional[SecretTemplateSpec]:
+        """
+        Template defines the structure of the Secret that will be
+        created from this sealed secret.
+        """
         return self.__template
 
-    # Data is deprecated and will be removed eventually. Use per-value EncryptedData instead.
     def data(self) -> Optional[bytes]:
+        """
+        Data is deprecated and will be removed eventually. Use per-value EncryptedData instead.
+        """
         return self.__data
 
     def encryptedData(self) -> Dict[str, str]:

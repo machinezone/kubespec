@@ -109,12 +109,16 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         v["revision"] = revision
         return v
 
-    # Data is the serialized representation of the state.
     def data(self) -> Optional["runtime.RawExtension"]:
+        """
+        Data is the serialized representation of the state.
+        """
         return self.__data
 
-    # Revision indicates the revision of the state represented by Data.
     def revision(self) -> int:
+        """
+        Revision indicates the revision of the state represented by Data.
+        """
         return self.__revision
 
 
@@ -142,31 +146,35 @@ class RollingUpdateDeployment(types.Object):
             v["maxSurge"] = maxSurge
         return v
 
-    # The maximum number of pods that can be unavailable during the update.
-    # Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
-    # Absolute number is calculated from percentage by rounding down.
-    # This can not be 0 if MaxSurge is 0.
-    # Defaults to 25%.
-    # Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods
-    # immediately when the rolling update starts. Once new pods are ready, old ReplicaSet
-    # can be scaled down further, followed by scaling up the new ReplicaSet, ensuring
-    # that the total number of pods available at all times during the update is at
-    # least 70% of desired pods.
     def maxUnavailable(self) -> Optional[Union[int, str]]:
+        """
+        The maximum number of pods that can be unavailable during the update.
+        Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+        Absolute number is calculated from percentage by rounding down.
+        This can not be 0 if MaxSurge is 0.
+        Defaults to 25%.
+        Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods
+        immediately when the rolling update starts. Once new pods are ready, old ReplicaSet
+        can be scaled down further, followed by scaling up the new ReplicaSet, ensuring
+        that the total number of pods available at all times during the update is at
+        least 70% of desired pods.
+        """
         return self.__maxUnavailable
 
-    # The maximum number of pods that can be scheduled above the desired number of
-    # pods.
-    # Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
-    # This can not be 0 if MaxUnavailable is 0.
-    # Absolute number is calculated from percentage by rounding up.
-    # Defaults to 25%.
-    # Example: when this is set to 30%, the new ReplicaSet can be scaled up immediately when
-    # the rolling update starts, such that the total number of old and new pods do not exceed
-    # 130% of desired pods. Once old pods have been killed,
-    # new ReplicaSet can be scaled up further, ensuring that total number of pods running
-    # at any time during the update is at most 130% of desired pods.
     def maxSurge(self) -> Optional[Union[int, str]]:
+        """
+        The maximum number of pods that can be scheduled above the desired number of
+        pods.
+        Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+        This can not be 0 if MaxUnavailable is 0.
+        Absolute number is calculated from percentage by rounding up.
+        Defaults to 25%.
+        Example: when this is set to 30%, the new ReplicaSet can be scaled up immediately when
+        the rolling update starts, such that the total number of old and new pods do not exceed
+        130% of desired pods. Once old pods have been killed,
+        new ReplicaSet can be scaled up further, ensuring that total number of pods running
+        at any time during the update is at most 130% of desired pods.
+        """
         return self.__maxSurge
 
 
@@ -198,16 +206,20 @@ class DeploymentStrategy(types.Object):
             v["rollingUpdate"] = rollingUpdate
         return v
 
-    # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
     def type(self) -> Optional[DeploymentStrategyType]:
+        """
+        Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
+        """
         return self.__type
 
-    # Rolling update config params. Present only if DeploymentStrategyType =
-    # RollingUpdate.
-    # ---
-    # TODO: Update this to follow our convention for oneOf, whatever we decide it
-    # to be.
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
+        """
+        Rolling update config params. Present only if DeploymentStrategyType =
+        RollingUpdate.
+        ---
+        TODO: Update this to follow our convention for oneOf, whatever we decide it
+        to be.
+        """
         return self.__rollingUpdate
 
 
@@ -275,46 +287,62 @@ class DeploymentSpec(types.Object):
             v["progressDeadlineSeconds"] = progressDeadlineSeconds
         return v
 
-    # Number of desired pods. This is a pointer to distinguish between explicit
-    # zero and not specified. Defaults to 1.
     def replicas(self) -> Optional[int]:
+        """
+        Number of desired pods. This is a pointer to distinguish between explicit
+        zero and not specified. Defaults to 1.
+        """
         return self.__replicas
 
-    # Label selector for pods. Existing ReplicaSets whose pods are
-    # selected by this will be the ones affected by this deployment.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Label selector for pods. Existing ReplicaSets whose pods are
+        selected by this will be the ones affected by this deployment.
+        """
         return self.__selector
 
-    # Template describes the pods that will be created.
     def template(self) -> "corev1.PodTemplateSpec":
+        """
+        Template describes the pods that will be created.
+        """
         return self.__template
 
-    # The deployment strategy to use to replace existing pods with new ones.
     def strategy(self) -> Optional[DeploymentStrategy]:
+        """
+        The deployment strategy to use to replace existing pods with new ones.
+        """
         return self.__strategy
 
-    # Minimum number of seconds for which a newly created pod should be ready
-    # without any of its container crashing, for it to be considered available.
-    # Defaults to 0 (pod will be considered available as soon as it is ready)
     def minReadySeconds(self) -> Optional[int]:
+        """
+        Minimum number of seconds for which a newly created pod should be ready
+        without any of its container crashing, for it to be considered available.
+        Defaults to 0 (pod will be considered available as soon as it is ready)
+        """
         return self.__minReadySeconds
 
-    # The number of old ReplicaSets to retain to allow rollback.
-    # This is a pointer to distinguish between explicit zero and not specified.
-    # Defaults to 2.
     def revisionHistoryLimit(self) -> Optional[int]:
+        """
+        The number of old ReplicaSets to retain to allow rollback.
+        This is a pointer to distinguish between explicit zero and not specified.
+        Defaults to 2.
+        """
         return self.__revisionHistoryLimit
 
-    # Indicates that the deployment is paused.
     def paused(self) -> Optional[bool]:
+        """
+        Indicates that the deployment is paused.
+        """
         return self.__paused
 
-    # The maximum time in seconds for a deployment to make progress before it
-    # is considered to be failed. The deployment controller will continue to
-    # process failed deployments and a condition with a ProgressDeadlineExceeded
-    # reason will be surfaced in the deployment status. Note that progress will
-    # not be estimated during the time a deployment is paused. Defaults to 600s.
     def progressDeadlineSeconds(self) -> Optional[int]:
+        """
+        The maximum time in seconds for a deployment to make progress before it
+        is considered to be failed. The deployment controller will continue to
+        process failed deployments and a condition with a ProgressDeadlineExceeded
+        reason will be surfaced in the deployment status. Note that progress will
+        not be estimated during the time a deployment is paused. Defaults to 600s.
+        """
         return self.__progressDeadlineSeconds
 
 
@@ -350,8 +378,10 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the Deployment.
     def spec(self) -> Optional[DeploymentSpec]:
+        """
+        Specification of the desired behavior of the Deployment.
+        """
         return self.__spec
 
 
@@ -372,8 +402,10 @@ class RollbackConfig(types.Object):
             v["revision"] = revision
         return v
 
-    # The revision to rollback to. If set to 0, rollback to the last revision.
     def revision(self) -> Optional[int]:
+        """
+        The revision to rollback to. If set to 0, rollback to the last revision.
+        """
         return self.__revision
 
 
@@ -410,16 +442,22 @@ class DeploymentRollback(base.TypedObject):
         v["rollbackTo"] = rollbackTo
         return v
 
-    # Required: This must match the Name of a deployment.
     def name(self) -> str:
+        """
+        Required: This must match the Name of a deployment.
+        """
         return self.__name
 
-    # The annotations to be updated to a deployment
     def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+        """
+        The annotations to be updated to a deployment
+        """
         return self.__updatedAnnotations
 
-    # The config of this deployment rollback.
     def rollbackTo(self) -> RollbackConfig:
+        """
+        The config of this deployment rollback.
+        """
         return self.__rollbackTo
 
 
@@ -440,9 +478,11 @@ class RollingUpdateStatefulSetStrategy(types.Object):
             v["partition"] = partition
         return v
 
-    # Partition indicates the ordinal at which the StatefulSet should be
-    # partitioned.
     def partition(self) -> Optional[int]:
+        """
+        Partition indicates the ordinal at which the StatefulSet should be
+        partitioned.
+        """
         return self.__partition
 
 
@@ -463,8 +503,10 @@ class ScaleSpec(types.Object):
             v["replicas"] = replicas
         return v
 
-    # desired number of instances for the scaled object.
     def replicas(self) -> Optional[int]:
+        """
+        desired number of instances for the scaled object.
+        """
         return self.__replicas
 
 
@@ -498,8 +540,10 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     def spec(self) -> Optional[ScaleSpec]:
+        """
+        defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
+        """
         return self.__spec
 
 
@@ -533,12 +577,16 @@ class StatefulSetUpdateStrategy(types.Object):
             v["rollingUpdate"] = rollingUpdate
         return v
 
-    # Type indicates the type of the StatefulSetUpdateStrategy.
     def type(self) -> Optional[StatefulSetUpdateStrategyType]:
+        """
+        Type indicates the type of the StatefulSetUpdateStrategy.
+        """
         return self.__type
 
-    # RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
     def rollingUpdate(self) -> Optional[RollingUpdateStatefulSetStrategy]:
+        """
+        RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
+        """
         return self.__rollingUpdate
 
 
@@ -621,67 +669,83 @@ class StatefulSetSpec(types.Object):
             v["revisionHistoryLimit"] = revisionHistoryLimit
         return v
 
-    # replicas is the desired number of replicas of the given Template.
-    # These are replicas in the sense that they are instantiations of the
-    # same Template, but individual replicas also have a consistent identity.
-    # If unspecified, defaults to 1.
-    # TODO: Consider a rename of this field.
     def replicas(self) -> Optional[int]:
+        """
+        replicas is the desired number of replicas of the given Template.
+        These are replicas in the sense that they are instantiations of the
+        same Template, but individual replicas also have a consistent identity.
+        If unspecified, defaults to 1.
+        TODO: Consider a rename of this field.
+        """
         return self.__replicas
 
-    # selector is a label query over pods that should match the replica count.
-    # If empty, defaulted to labels on the pod template.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        selector is a label query over pods that should match the replica count.
+        If empty, defaulted to labels on the pod template.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
+        """
         return self.__selector
 
-    # template is the object that describes the pod that will be created if
-    # insufficient replicas are detected. Each pod stamped out by the StatefulSet
-    # will fulfill this Template, but have a unique identity from the rest
-    # of the StatefulSet.
     def template(self) -> "corev1.PodTemplateSpec":
+        """
+        template is the object that describes the pod that will be created if
+        insufficient replicas are detected. Each pod stamped out by the StatefulSet
+        will fulfill this Template, but have a unique identity from the rest
+        of the StatefulSet.
+        """
         return self.__template
 
-    # volumeClaimTemplates is a list of claims that pods are allowed to reference.
-    # The StatefulSet controller is responsible for mapping network identities to
-    # claims in a way that maintains the identity of a pod. Every claim in
-    # this list must have at least one matching (by name) volumeMount in one
-    # container in the template. A claim in this list takes precedence over
-    # any volumes in the template, with the same name.
-    # TODO: Define the behavior if a claim already exists with the same name.
     def volumeClaimTemplates(self) -> Optional[List["corev1.PersistentVolumeClaim"]]:
+        """
+        volumeClaimTemplates is a list of claims that pods are allowed to reference.
+        The StatefulSet controller is responsible for mapping network identities to
+        claims in a way that maintains the identity of a pod. Every claim in
+        this list must have at least one matching (by name) volumeMount in one
+        container in the template. A claim in this list takes precedence over
+        any volumes in the template, with the same name.
+        TODO: Define the behavior if a claim already exists with the same name.
+        """
         return self.__volumeClaimTemplates
 
-    # serviceName is the name of the service that governs this StatefulSet.
-    # This service must exist before the StatefulSet, and is responsible for
-    # the network identity of the set. Pods get DNS/hostnames that follow the
-    # pattern: pod-specific-string.serviceName.default.svc.cluster.local
-    # where "pod-specific-string" is managed by the StatefulSet controller.
     def serviceName(self) -> str:
+        """
+        serviceName is the name of the service that governs this StatefulSet.
+        This service must exist before the StatefulSet, and is responsible for
+        the network identity of the set. Pods get DNS/hostnames that follow the
+        pattern: pod-specific-string.serviceName.default.svc.cluster.local
+        where "pod-specific-string" is managed by the StatefulSet controller.
+        """
         return self.__serviceName
 
-    # podManagementPolicy controls how pods are created during initial scale up,
-    # when replacing pods on nodes, or when scaling down. The default policy is
-    # `OrderedReady`, where pods are created in increasing order (pod-0, then
-    # pod-1, etc) and the controller will wait until each pod is ready before
-    # continuing. When scaling down, the pods are removed in the opposite order.
-    # The alternative policy is `Parallel` which will create pods in parallel
-    # to match the desired scale without waiting, and on scale down will delete
-    # all pods at once.
     def podManagementPolicy(self) -> Optional[PodManagementPolicyType]:
+        """
+        podManagementPolicy controls how pods are created during initial scale up,
+        when replacing pods on nodes, or when scaling down. The default policy is
+        `OrderedReady`, where pods are created in increasing order (pod-0, then
+        pod-1, etc) and the controller will wait until each pod is ready before
+        continuing. When scaling down, the pods are removed in the opposite order.
+        The alternative policy is `Parallel` which will create pods in parallel
+        to match the desired scale without waiting, and on scale down will delete
+        all pods at once.
+        """
         return self.__podManagementPolicy
 
-    # updateStrategy indicates the StatefulSetUpdateStrategy that will be
-    # employed to update Pods in the StatefulSet when a revision is made to
-    # Template.
     def updateStrategy(self) -> Optional[StatefulSetUpdateStrategy]:
+        """
+        updateStrategy indicates the StatefulSetUpdateStrategy that will be
+        employed to update Pods in the StatefulSet when a revision is made to
+        Template.
+        """
         return self.__updateStrategy
 
-    # revisionHistoryLimit is the maximum number of revisions that will
-    # be maintained in the StatefulSet's revision history. The revision history
-    # consists of all revisions not represented by a currently applied
-    # StatefulSetSpec version. The default value is 10.
     def revisionHistoryLimit(self) -> Optional[int]:
+        """
+        revisionHistoryLimit is the maximum number of revisions that will
+        be maintained in the StatefulSet's revision history. The revision history
+        consists of all revisions not represented by a currently applied
+        StatefulSetSpec version. The default value is 10.
+        """
         return self.__revisionHistoryLimit
 
 
@@ -722,6 +786,8 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the desired identities of pods in this set.
     def spec(self) -> Optional[StatefulSetSpec]:
+        """
+        Spec defines the desired identities of pods in this set.
+        """
         return self.__spec

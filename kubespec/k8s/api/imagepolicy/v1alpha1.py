@@ -29,8 +29,10 @@ class ImageReviewContainerSpec(types.Object):
             v["image"] = image
         return v
 
-    # This can be in the form image:tag or image@SHA:012345679abcdef.
     def image(self) -> Optional[str]:
+        """
+        This can be in the form image:tag or image@SHA:012345679abcdef.
+        """
         return self.__image
 
 
@@ -66,18 +68,24 @@ class ImageReviewSpec(types.Object):
             v["namespace"] = namespace
         return v
 
-    # Containers is a list of a subset of the information in each container of the Pod being created.
     def containers(self) -> Optional[List[ImageReviewContainerSpec]]:
+        """
+        Containers is a list of a subset of the information in each container of the Pod being created.
+        """
         return self.__containers
 
-    # Annotations is a list of key-value pairs extracted from the Pod's annotations.
-    # It only includes keys which match the pattern `*.image-policy.k8s.io/*`.
-    # It is up to each webhook backend to determine how to interpret these annotations, if at all.
     def annotations(self) -> Optional[Dict[str, str]]:
+        """
+        Annotations is a list of key-value pairs extracted from the Pod's annotations.
+        It only includes keys which match the pattern `*.image-policy.k8s.io/*`.
+        It is up to each webhook backend to determine how to interpret these annotations, if at all.
+        """
         return self.__annotations
 
-    # Namespace is the namespace the pod is being created in.
     def namespace(self) -> Optional[str]:
+        """
+        Namespace is the namespace the pod is being created in.
+        """
         return self.__namespace
 
 
@@ -109,6 +117,8 @@ class ImageReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the pod being evaluated
     def spec(self) -> ImageReviewSpec:
+        """
+        Spec holds information about the pod being evaluated
+        """
         return self.__spec

@@ -50,15 +50,19 @@ class IPBlock(types.Object):
             v["except"] = except_
         return v
 
-    # CIDR is a string representing the IP Block
-    # Valid examples are "192.168.1.1/24"
     def cidr(self) -> str:
+        """
+        CIDR is a string representing the IP Block
+        Valid examples are "192.168.1.1/24"
+        """
         return self.__cidr
 
-    # Except is a slice of CIDRs that should not be included within an IP Block
-    # Valid examples are "192.168.1.1/24"
-    # Except values will be rejected if they are outside the CIDR range
     def except_(self) -> Optional[List[str]]:
+        """
+        Except is a slice of CIDRs that should not be included within an IP Block
+        Valid examples are "192.168.1.1/24"
+        Except values will be rejected if they are outside the CIDR range
+        """
         return self.__except_
 
 
@@ -97,27 +101,33 @@ class NetworkPolicyPeer(types.Object):
             v["ipBlock"] = ipBlock
         return v
 
-    # This is a label selector which selects Pods. This field follows standard label
-    # selector semantics; if present but empty, it selects all pods.
-    #
-    # If NamespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
-    # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
-    # Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
     def podSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        This is a label selector which selects Pods. This field follows standard label
+        selector semantics; if present but empty, it selects all pods.
+        
+        If NamespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
+        the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
+        Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
+        """
         return self.__podSelector
 
-    # Selects Namespaces using cluster-scoped labels. This field follows standard label
-    # selector semantics; if present but empty, it selects all namespaces.
-    #
-    # If PodSelector is also set, then the NetworkPolicyPeer as a whole selects
-    # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
-    # Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Selects Namespaces using cluster-scoped labels. This field follows standard label
+        selector semantics; if present but empty, it selects all namespaces.
+        
+        If PodSelector is also set, then the NetworkPolicyPeer as a whole selects
+        the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
+        Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
+        """
         return self.__namespaceSelector
 
-    # IPBlock defines policy on a particular IPBlock. If this field is set then
-    # neither of the other fields can be.
     def ipBlock(self) -> Optional[IPBlock]:
+        """
+        IPBlock defines policy on a particular IPBlock. If this field is set then
+        neither of the other fields can be.
+        """
         return self.__ipBlock
 
 
@@ -143,14 +153,18 @@ class NetworkPolicyPort(types.Object):
             v["port"] = port
         return v
 
-    # The protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this
-    # field defaults to TCP.
     def protocol(self) -> Optional[corev1.Protocol]:
+        """
+        The protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this
+        field defaults to TCP.
+        """
         return self.__protocol
 
-    # The port on the given protocol. This can either be a numerical or named port on
-    # a pod. If this field is not provided, this matches all port names and numbers.
     def port(self) -> Optional[Union[int, str]]:
+        """
+        The port on the given protocol. This can either be a numerical or named port on
+        a pod. If this field is not provided, this matches all port names and numbers.
+        """
         return self.__port
 
 
@@ -180,20 +194,24 @@ class NetworkPolicyEgressRule(types.Object):
             v["to"] = to
         return v
 
-    # List of destination ports for outgoing traffic.
-    # Each item in this list is combined using a logical OR. If this field is
-    # empty or missing, this rule matches all ports (traffic not restricted by port).
-    # If this field is present and contains at least one item, then this rule allows
-    # traffic only if the traffic matches at least one port in the list.
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        """
+        List of destination ports for outgoing traffic.
+        Each item in this list is combined using a logical OR. If this field is
+        empty or missing, this rule matches all ports (traffic not restricted by port).
+        If this field is present and contains at least one item, then this rule allows
+        traffic only if the traffic matches at least one port in the list.
+        """
         return self.__ports
 
-    # List of destinations for outgoing traffic of pods selected for this rule.
-    # Items in this list are combined using a logical OR operation. If this field is
-    # empty or missing, this rule matches all destinations (traffic not restricted by
-    # destination). If this field is present and contains at least one item, this rule
-    # allows traffic only if the traffic matches at least one item in the to list.
     def to(self) -> Optional[List[NetworkPolicyPeer]]:
+        """
+        List of destinations for outgoing traffic of pods selected for this rule.
+        Items in this list are combined using a logical OR operation. If this field is
+        empty or missing, this rule matches all destinations (traffic not restricted by
+        destination). If this field is present and contains at least one item, this rule
+        allows traffic only if the traffic matches at least one item in the to list.
+        """
         return self.__to
 
 
@@ -224,20 +242,24 @@ class NetworkPolicyIngressRule(types.Object):
             v["from"] = from_
         return v
 
-    # List of ports which should be made accessible on the pods selected for this
-    # rule. Each item in this list is combined using a logical OR. If this field is
-    # empty or missing, this rule matches all ports (traffic not restricted by port).
-    # If this field is present and contains at least one item, then this rule allows
-    # traffic only if the traffic matches at least one port in the list.
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        """
+        List of ports which should be made accessible on the pods selected for this
+        rule. Each item in this list is combined using a logical OR. If this field is
+        empty or missing, this rule matches all ports (traffic not restricted by port).
+        If this field is present and contains at least one item, then this rule allows
+        traffic only if the traffic matches at least one port in the list.
+        """
         return self.__ports
 
-    # List of sources which should be able to access the pods selected for this rule.
-    # Items in this list are combined using a logical OR operation. If this field is
-    # empty or missing, this rule matches all sources (traffic not restricted by
-    # source). If this field is present and contains at least one item, this rule
-    # allows traffic only if the traffic matches at least one item in the from list.
     def from_(self) -> Optional[List[NetworkPolicyPeer]]:
+        """
+        List of sources which should be able to access the pods selected for this rule.
+        Items in this list are combined using a logical OR operation. If this field is
+        empty or missing, this rule matches all sources (traffic not restricted by
+        source). If this field is present and contains at least one item, this rule
+        allows traffic only if the traffic matches at least one item in the from list.
+        """
         return self.__from_
 
 
@@ -280,46 +302,54 @@ class NetworkPolicySpec(types.Object):
             v["policyTypes"] = policyTypes
         return v
 
-    # Selects the pods to which this NetworkPolicy object applies. The array of
-    # ingress rules is applied to any pods selected by this field. Multiple network
-    # policies can select the same set of pods. In this case, the ingress rules for
-    # each are combined additively. This field is NOT optional and follows standard
-    # label selector semantics. An empty podSelector matches all pods in this
-    # namespace.
     def podSelector(self) -> "metav1.LabelSelector":
+        """
+        Selects the pods to which this NetworkPolicy object applies. The array of
+        ingress rules is applied to any pods selected by this field. Multiple network
+        policies can select the same set of pods. In this case, the ingress rules for
+        each are combined additively. This field is NOT optional and follows standard
+        label selector semantics. An empty podSelector matches all pods in this
+        namespace.
+        """
         return self.__podSelector
 
-    # List of ingress rules to be applied to the selected pods. Traffic is allowed to
-    # a pod if there are no NetworkPolicies selecting the pod
-    # (and cluster policy otherwise allows the traffic), OR if the traffic source is
-    # the pod's local node, OR if the traffic matches at least one ingress rule
-    # across all of the NetworkPolicy objects whose podSelector matches the pod. If
-    # this field is empty then this NetworkPolicy does not allow any traffic (and serves
-    # solely to ensure that the pods it selects are isolated by default)
     def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
+        """
+        List of ingress rules to be applied to the selected pods. Traffic is allowed to
+        a pod if there are no NetworkPolicies selecting the pod
+        (and cluster policy otherwise allows the traffic), OR if the traffic source is
+        the pod's local node, OR if the traffic matches at least one ingress rule
+        across all of the NetworkPolicy objects whose podSelector matches the pod. If
+        this field is empty then this NetworkPolicy does not allow any traffic (and serves
+        solely to ensure that the pods it selects are isolated by default)
+        """
         return self.__ingress
 
-    # List of egress rules to be applied to the selected pods. Outgoing traffic is
-    # allowed if there are no NetworkPolicies selecting the pod (and cluster policy
-    # otherwise allows the traffic), OR if the traffic matches at least one egress rule
-    # across all of the NetworkPolicy objects whose podSelector matches the pod. If
-    # this field is empty then this NetworkPolicy limits all outgoing traffic (and serves
-    # solely to ensure that the pods it selects are isolated by default).
-    # This field is beta-level in 1.8
     def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
+        """
+        List of egress rules to be applied to the selected pods. Outgoing traffic is
+        allowed if there are no NetworkPolicies selecting the pod (and cluster policy
+        otherwise allows the traffic), OR if the traffic matches at least one egress rule
+        across all of the NetworkPolicy objects whose podSelector matches the pod. If
+        this field is empty then this NetworkPolicy limits all outgoing traffic (and serves
+        solely to ensure that the pods it selects are isolated by default).
+        This field is beta-level in 1.8
+        """
         return self.__egress
 
-    # List of rule types that the NetworkPolicy relates to.
-    # Valid options are "Ingress", "Egress", or "Ingress,Egress".
-    # If this field is not specified, it will default based on the existence of Ingress or Egress rules;
-    # policies that contain an Egress section are assumed to affect Egress, and all policies
-    # (whether or not they contain an Ingress section) are assumed to affect Ingress.
-    # If you want to write an egress-only policy, you must explicitly specify policyTypes [ "Egress" ].
-    # Likewise, if you want to write a policy that specifies that no egress is allowed,
-    # you must specify a policyTypes value that include "Egress" (since such a policy would not include
-    # an Egress section and would otherwise default to just [ "Ingress" ]).
-    # This field is beta-level in 1.8
     def policyTypes(self) -> Optional[List[PolicyType]]:
+        """
+        List of rule types that the NetworkPolicy relates to.
+        Valid options are "Ingress", "Egress", or "Ingress,Egress".
+        If this field is not specified, it will default based on the existence of Ingress or Egress rules;
+        policies that contain an Egress section are assumed to affect Egress, and all policies
+        (whether or not they contain an Ingress section) are assumed to affect Ingress.
+        If you want to write an egress-only policy, you must explicitly specify policyTypes [ "Egress" ].
+        Likewise, if you want to write a policy that specifies that no egress is allowed,
+        you must specify a policyTypes value that include "Egress" (since such a policy would not include
+        an Egress section and would otherwise default to just [ "Ingress" ]).
+        This field is beta-level in 1.8
+        """
         return self.__policyTypes
 
 
@@ -353,6 +383,8 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior for this NetworkPolicy.
     def spec(self) -> Optional[NetworkPolicySpec]:
+        """
+        Specification of the desired behavior for this NetworkPolicy.
+        """
         return self.__spec

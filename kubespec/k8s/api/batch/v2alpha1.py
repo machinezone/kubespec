@@ -59,9 +59,11 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the job.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional["batchv1.JobSpec"]:
+        """
+        Specification of the desired behavior of the job.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -123,40 +125,54 @@ class CronJobSpec(types.Object):
             v["failedJobsHistoryLimit"] = failedJobsHistoryLimit
         return v
 
-    # The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
     def schedule(self) -> str:
+        """
+        The schedule in Cron format, see https://en.wikipedia.org/wiki/Cron.
+        """
         return self.__schedule
 
-    # Optional deadline in seconds for starting the job if it misses scheduled
-    # time for any reason.  Missed jobs executions will be counted as failed ones.
     def startingDeadlineSeconds(self) -> Optional[int]:
+        """
+        Optional deadline in seconds for starting the job if it misses scheduled
+        time for any reason.  Missed jobs executions will be counted as failed ones.
+        """
         return self.__startingDeadlineSeconds
 
-    # Specifies how to treat concurrent executions of a Job.
-    # Valid values are:
-    # - "Allow" (default): allows CronJobs to run concurrently;
-    # - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
-    # - "Replace": cancels currently running job and replaces it with a new one
     def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
+        """
+        Specifies how to treat concurrent executions of a Job.
+        Valid values are:
+        - "Allow" (default): allows CronJobs to run concurrently;
+        - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
+        - "Replace": cancels currently running job and replaces it with a new one
+        """
         return self.__concurrencyPolicy
 
-    # This flag tells the controller to suspend subsequent executions, it does
-    # not apply to already started executions.  Defaults to false.
     def suspend(self) -> Optional[bool]:
+        """
+        This flag tells the controller to suspend subsequent executions, it does
+        not apply to already started executions.  Defaults to false.
+        """
         return self.__suspend
 
-    # Specifies the job that will be created when executing a CronJob.
     def jobTemplate(self) -> JobTemplateSpec:
+        """
+        Specifies the job that will be created when executing a CronJob.
+        """
         return self.__jobTemplate
 
-    # The number of successful finished jobs to retain.
-    # This is a pointer to distinguish between explicit zero and not specified.
     def successfulJobsHistoryLimit(self) -> Optional[int]:
+        """
+        The number of successful finished jobs to retain.
+        This is a pointer to distinguish between explicit zero and not specified.
+        """
         return self.__successfulJobsHistoryLimit
 
-    # The number of failed finished jobs to retain.
-    # This is a pointer to distinguish between explicit zero and not specified.
     def failedJobsHistoryLimit(self) -> Optional[int]:
+        """
+        The number of failed finished jobs to retain.
+        This is a pointer to distinguish between explicit zero and not specified.
+        """
         return self.__failedJobsHistoryLimit
 
 
@@ -190,9 +206,11 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of a cron job, including the schedule.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[CronJobSpec]:
+        """
+        Specification of the desired behavior of a cron job, including the schedule.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -226,7 +244,9 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
         v["template"] = template
         return v
 
-    # Defines jobs that will be created from this template.
-    # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def template(self) -> Optional[JobTemplateSpec]:
+        """
+        Defines jobs that will be created from this template.
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__template

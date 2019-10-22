@@ -143,8 +143,10 @@ class AllowedCSIDriver(types.Object):
         v["name"] = name
         return v
 
-    # Name is the registered name of the CSI driver
     def name(self) -> str:
+        """
+        Name is the registered name of the CSI driver
+        """
         return self.__name
 
 
@@ -164,8 +166,10 @@ class AllowedFlexVolume(types.Object):
         v["driver"] = driver
         return v
 
-    # driver is the name of the Flexvolume driver.
     def driver(self) -> str:
+        """
+        driver is the name of the Flexvolume driver.
+        """
         return self.__driver
 
 
@@ -192,18 +196,22 @@ class AllowedHostPath(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # pathPrefix is the path prefix that the host volume must match.
-    # It does not support `*`.
-    # Trailing slashes are trimmed when validating the path prefix with a host path.
-    #
-    # Examples:
-    # `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
-    # `/foo` would not allow `/food` or `/etc/foo`
     def pathPrefix(self) -> Optional[str]:
+        """
+        pathPrefix is the path prefix that the host volume must match.
+        It does not support `*`.
+        Trailing slashes are trimmed when validating the path prefix with a host path.
+        
+        Examples:
+        `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
+        `/foo` would not allow `/food` or `/etc/foo`
+        """
         return self.__pathPrefix
 
-    # when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
     def readOnly(self) -> Optional[bool]:
+        """
+        when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
+        """
         return self.__readOnly
 
 
@@ -240,8 +248,10 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
             v["deleteOptions"] = deleteOptions
         return v
 
-    # DeleteOptions may be provided
     def deleteOptions(self) -> Optional["metav1.DeleteOptions"]:
+        """
+        DeleteOptions may be provided
+        """
         return self.__deleteOptions
 
 
@@ -265,12 +275,16 @@ class IDRange(types.Object):
         v["max"] = max
         return v
 
-    # min is the start of the range, inclusive.
     def min(self) -> int:
+        """
+        min is the start of the range, inclusive.
+        """
         return self.__min
 
-    # max is the end of the range, inclusive.
     def max(self) -> int:
+        """
+        max is the end of the range, inclusive.
+        """
         return self.__max
 
 
@@ -296,13 +310,17 @@ class FSGroupStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
     def rule(self) -> Optional[FSGroupStrategyType]:
+        """
+        rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of fs groups.  If you would like to force a single
-    # fs group then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of fs groups.  If you would like to force a single
+        fs group then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -327,12 +345,16 @@ class HostPortRange(types.Object):
         v["max"] = max
         return v
 
-    # min is the start of the range, inclusive.
     def min(self) -> int:
+        """
+        min is the start of the range, inclusive.
+        """
         return self.__min
 
-    # max is the end of the range, inclusive.
     def max(self) -> int:
+        """
+        max is the end of the range, inclusive.
+        """
         return self.__max
 
 
@@ -368,23 +390,29 @@ class PodDisruptionBudgetSpec(types.Object):
             v["maxUnavailable"] = maxUnavailable
         return v
 
-    # An eviction is allowed if at least "minAvailable" pods selected by
-    # "selector" will still be available after the eviction, i.e. even in the
-    # absence of the evicted pod.  So for example you can prevent all voluntary
-    # evictions by specifying "100%".
     def minAvailable(self) -> Optional[Union[int, str]]:
+        """
+        An eviction is allowed if at least "minAvailable" pods selected by
+        "selector" will still be available after the eviction, i.e. even in the
+        absence of the evicted pod.  So for example you can prevent all voluntary
+        evictions by specifying "100%".
+        """
         return self.__minAvailable
 
-    # Label query over pods whose evictions are managed by the disruption
-    # budget.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Label query over pods whose evictions are managed by the disruption
+        budget.
+        """
         return self.__selector
 
-    # An eviction is allowed if at most "maxUnavailable" pods selected by
-    # "selector" are unavailable after the eviction, i.e. even in absence of
-    # the evicted pod. For example, one can prevent all voluntary evictions
-    # by specifying 0. This is a mutually exclusive setting with "minAvailable".
     def maxUnavailable(self) -> Optional[Union[int, str]]:
+        """
+        An eviction is allowed if at most "maxUnavailable" pods selected by
+        "selector" are unavailable after the eviction, i.e. even in absence of
+        the evicted pod. For example, one can prevent all voluntary evictions
+        by specifying 0. This is a mutually exclusive setting with "minAvailable".
+        """
         return self.__maxUnavailable
 
 
@@ -418,8 +446,10 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the PodDisruptionBudget.
     def spec(self) -> Optional[PodDisruptionBudgetSpec]:
+        """
+        Specification of the desired behavior of the PodDisruptionBudget.
+        """
         return self.__spec
 
 
@@ -444,13 +474,17 @@ class RunAsGroupStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
     def rule(self) -> RunAsGroupStrategy:
+        """
+        rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
-    # then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
+        then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -475,13 +509,17 @@ class RunAsUserStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate the allowable RunAsUser values that may be set.
     def rule(self) -> RunAsUserStrategy:
+        """
+        rule is the strategy that will dictate the allowable RunAsUser values that may be set.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
-    # then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
+        then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -513,16 +551,20 @@ class RuntimeClassStrategyOptions(types.Object):
             v["defaultRuntimeClassName"] = defaultRuntimeClassName
         return v
 
-    # allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
-    # A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
-    # list. An empty list requires the RuntimeClassName field to be unset.
     def allowedRuntimeClassNames(self) -> List[str]:
+        """
+        allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
+        A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
+        list. An empty list requires the RuntimeClassName field to be unset.
+        """
         return self.__allowedRuntimeClassNames
 
-    # defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
-    # The default MUST be allowed by the allowedRuntimeClassNames list.
-    # A value of nil does not mutate the Pod.
     def defaultRuntimeClassName(self) -> Optional[str]:
+        """
+        defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
+        The default MUST be allowed by the allowedRuntimeClassNames list.
+        A value of nil does not mutate the Pod.
+        """
         return self.__defaultRuntimeClassName
 
 
@@ -551,13 +593,17 @@ class SELinuxStrategyOptions(types.Object):
             v["seLinuxOptions"] = seLinuxOptions
         return v
 
-    # rule is the strategy that will dictate the allowable labels that may be set.
     def rule(self) -> SELinuxStrategy:
+        """
+        rule is the strategy that will dictate the allowable labels that may be set.
+        """
         return self.__rule
 
-    # seLinuxOptions required to run as; required for MustRunAs
-    # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
+        """
+        seLinuxOptions required to run as; required for MustRunAs
+        More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+        """
         return self.__seLinuxOptions
 
 
@@ -585,13 +631,17 @@ class SupplementalGroupsStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
     def rule(self) -> Optional[SupplementalGroupsStrategyType]:
+        """
+        rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of supplemental groups.  If you would like to force a single
-    # supplemental group then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of supplemental groups.  If you would like to force a single
+        supplemental group then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -805,137 +855,185 @@ class PodSecurityPolicySpec(types.Object):
             v["runtimeClass"] = runtimeClass
         return v
 
-    # privileged determines if a pod can request to be run as privileged.
     def privileged(self) -> Optional[bool]:
+        """
+        privileged determines if a pod can request to be run as privileged.
+        """
         return self.__privileged
 
-    # defaultAddCapabilities is the default set of capabilities that will be added to the container
-    # unless the pod spec specifically drops the capability.  You may not list a capability in both
-    # defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
-    # allowed, and need not be included in the allowedCapabilities list.
     def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        defaultAddCapabilities is the default set of capabilities that will be added to the container
+        unless the pod spec specifically drops the capability.  You may not list a capability in both
+        defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
+        allowed, and need not be included in the allowedCapabilities list.
+        """
         return self.__defaultAddCapabilities
 
-    # requiredDropCapabilities are the capabilities that will be dropped from the container.  These
-    # are required to be dropped and cannot be added.
     def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        requiredDropCapabilities are the capabilities that will be dropped from the container.  These
+        are required to be dropped and cannot be added.
+        """
         return self.__requiredDropCapabilities
 
-    # allowedCapabilities is a list of capabilities that can be requested to add to the container.
-    # Capabilities in this field may be added at the pod author's discretion.
-    # You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
     def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        allowedCapabilities is a list of capabilities that can be requested to add to the container.
+        Capabilities in this field may be added at the pod author's discretion.
+        You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
+        """
         return self.__allowedCapabilities
 
-    # volumes is a white list of allowed volume plugins. Empty indicates that
-    # no volumes may be used. To allow all volumes you may use '*'.
     def volumes(self) -> Optional[List[FSType]]:
+        """
+        volumes is a white list of allowed volume plugins. Empty indicates that
+        no volumes may be used. To allow all volumes you may use '*'.
+        """
         return self.__volumes
 
-    # hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
     def hostNetwork(self) -> Optional[bool]:
+        """
+        hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
+        """
         return self.__hostNetwork
 
-    # hostPorts determines which host port ranges are allowed to be exposed.
     def hostPorts(self) -> Optional[List[HostPortRange]]:
+        """
+        hostPorts determines which host port ranges are allowed to be exposed.
+        """
         return self.__hostPorts
 
-    # hostPID determines if the policy allows the use of HostPID in the pod spec.
     def hostPID(self) -> Optional[bool]:
+        """
+        hostPID determines if the policy allows the use of HostPID in the pod spec.
+        """
         return self.__hostPID
 
-    # hostIPC determines if the policy allows the use of HostIPC in the pod spec.
     def hostIPC(self) -> Optional[bool]:
+        """
+        hostIPC determines if the policy allows the use of HostIPC in the pod spec.
+        """
         return self.__hostIPC
 
-    # seLinux is the strategy that will dictate the allowable labels that may be set.
     def seLinux(self) -> SELinuxStrategyOptions:
+        """
+        seLinux is the strategy that will dictate the allowable labels that may be set.
+        """
         return self.__seLinux
 
-    # runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
     def runAsUser(self) -> RunAsUserStrategyOptions:
+        """
+        runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
+        """
         return self.__runAsUser
 
-    # RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
-    # If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
-    # RunAsGroup feature gate to be enabled.
     def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
+        """
+        RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
+        If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
+        RunAsGroup feature gate to be enabled.
+        """
         return self.__runAsGroup
 
-    # supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
     def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
+        """
+        supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
+        """
         return self.__supplementalGroups
 
-    # fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
     def fsGroup(self) -> FSGroupStrategyOptions:
+        """
+        fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
+        """
         return self.__fsGroup
 
-    # readOnlyRootFilesystem when set to true will force containers to run with a read only root file
-    # system.  If the container specifically requests to run with a non-read only root file system
-    # the PSP should deny the pod.
-    # If set to false the container may run with a read only root file system if it wishes but it
-    # will not be forced to.
     def readOnlyRootFilesystem(self) -> Optional[bool]:
+        """
+        readOnlyRootFilesystem when set to true will force containers to run with a read only root file
+        system.  If the container specifically requests to run with a non-read only root file system
+        the PSP should deny the pod.
+        If set to false the container may run with a read only root file system if it wishes but it
+        will not be forced to.
+        """
         return self.__readOnlyRootFilesystem
 
-    # defaultAllowPrivilegeEscalation controls the default setting for whether a
-    # process can gain more privileges than its parent process.
     def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
+        """
+        defaultAllowPrivilegeEscalation controls the default setting for whether a
+        process can gain more privileges than its parent process.
+        """
         return self.__defaultAllowPrivilegeEscalation
 
-    # allowPrivilegeEscalation determines if a pod can request to allow
-    # privilege escalation. If unspecified, defaults to true.
     def allowPrivilegeEscalation(self) -> Optional[bool]:
+        """
+        allowPrivilegeEscalation determines if a pod can request to allow
+        privilege escalation. If unspecified, defaults to true.
+        """
         return self.__allowPrivilegeEscalation
 
-    # allowedHostPaths is a white list of allowed host paths. Empty indicates
-    # that all host paths may be used.
     def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+        """
+        allowedHostPaths is a white list of allowed host paths. Empty indicates
+        that all host paths may be used.
+        """
         return self.__allowedHostPaths
 
-    # allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
-    # Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
-    # is allowed in the "volumes" field.
     def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+        """
+        allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
+        Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
+        is allowed in the "volumes" field.
+        """
         return self.__allowedFlexVolumes
 
-    # AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
-    # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
-    # This is an alpha field, and is only honored if the API server enables the CSIInlineVolume feature gate.
     def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+        """
+        AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
+        An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
+        This is an alpha field, and is only honored if the API server enables the CSIInlineVolume feature gate.
+        """
         return self.__allowedCSIDrivers
 
-    # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
-    # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
-    # as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed.
-    # Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.
-    #
-    # Examples:
-    # e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
-    # e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
     def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+        """
+        allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
+        Each entry is either a plain sysctl name or ends in "*" in which case it is considered
+        as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed.
+        Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.
+        
+        Examples:
+        e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
+        e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
+        """
         return self.__allowedUnsafeSysctls
 
-    # forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
-    # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
-    # as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.
-    #
-    # Examples:
-    # e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
-    # e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
     def forbiddenSysctls(self) -> Optional[List[str]]:
+        """
+        forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
+        Each entry is either a plain sysctl name or ends in "*" in which case it is considered
+        as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.
+        
+        Examples:
+        e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
+        e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
+        """
         return self.__forbiddenSysctls
 
-    # AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
-    # Empty or nil indicates that only the DefaultProcMountType may be used.
-    # This requires the ProcMountType feature flag to be enabled.
     def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+        """
+        AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
+        Empty or nil indicates that only the DefaultProcMountType may be used.
+        This requires the ProcMountType feature flag to be enabled.
+        """
         return self.__allowedProcMountTypes
 
-    # runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
-    # If this field is omitted, the pod's runtimeClassName field is unrestricted.
-    # Enforcement of this field depends on the RuntimeClass feature gate being enabled.
     def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
+        """
+        runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
+        If this field is omitted, the pod's runtimeClassName field is unrestricted.
+        Enforcement of this field depends on the RuntimeClass feature gate being enabled.
+        """
         return self.__runtimeClass
 
 
@@ -968,6 +1066,8 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # spec defines the policy enforced.
     def spec(self) -> Optional[PodSecurityPolicySpec]:
+        """
+        spec defines the policy enforced.
+        """
         return self.__spec

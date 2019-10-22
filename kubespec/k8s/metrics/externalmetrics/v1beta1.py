@@ -57,25 +57,35 @@ class ExternalMetricValue(base.TypedObject):
         v["value"] = value
         return v
 
-    # the name of the metric
     def metricName(self) -> str:
+        """
+        the name of the metric
+        """
         return self.__metricName
 
-    # a set of labels that identify a single time series for the metric
     def metricLabels(self) -> Dict[str, str]:
+        """
+        a set of labels that identify a single time series for the metric
+        """
         return self.__metricLabels
 
-    # indicates the time at which the metrics were produced
     def timestamp(self) -> "base.Time":
+        """
+        indicates the time at which the metrics were produced
+        """
         return self.__timestamp
 
-    # indicates the window ([Timestamp-Window, Timestamp]) from
-    # which these metrics were calculated, when returning rate
-    # metrics calculated from cumulative metrics (or zero for
-    # non-calculated instantaneous metrics).
     def window(self) -> Optional[int]:
+        """
+        indicates the window ([Timestamp-Window, Timestamp]) from
+        which these metrics were calculated, when returning rate
+        metrics calculated from cumulative metrics (or zero for
+        non-calculated instantaneous metrics).
+        """
         return self.__window
 
-    # the value of the metric
     def value(self) -> "resource.Quantity":
+        """
+        the value of the metric
+        """
         return self.__value

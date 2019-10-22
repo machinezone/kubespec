@@ -50,20 +50,28 @@ class BoundObjectReference(types.Object):
             v["uid"] = uid
         return v
 
-    # Kind of the referent. Valid kinds are 'Pod' and 'Secret'.
     def kind(self) -> Optional[str]:
+        """
+        Kind of the referent. Valid kinds are 'Pod' and 'Secret'.
+        """
         return self.__kind
 
-    # API version of the referent.
     def apiVersion(self) -> Optional[str]:
+        """
+        API version of the referent.
+        """
         return self.__apiVersion
 
-    # Name of the referent.
     def name(self) -> Optional[str]:
+        """
+        Name of the referent.
+        """
         return self.__name
 
-    # UID of the referent.
     def uid(self) -> Optional[str]:
+        """
+        UID of the referent.
+        """
         return self.__uid
 
 
@@ -98,27 +106,33 @@ class TokenRequestSpec(types.Object):
         v["boundObjectRef"] = boundObjectRef
         return v
 
-    # Audiences are the intendend audiences of the token. A recipient of a
-    # token must identitfy themself with an identifier in the list of
-    # audiences of the token, and otherwise should reject the token. A
-    # token issued for multiple audiences may be used to authenticate
-    # against any of the audiences listed but implies a high degree of
-    # trust between the target audiences.
     def audiences(self) -> List[str]:
+        """
+        Audiences are the intendend audiences of the token. A recipient of a
+        token must identitfy themself with an identifier in the list of
+        audiences of the token, and otherwise should reject the token. A
+        token issued for multiple audiences may be used to authenticate
+        against any of the audiences listed but implies a high degree of
+        trust between the target audiences.
+        """
         return self.__audiences
 
-    # ExpirationSeconds is the requested duration of validity of the request. The
-    # token issuer may return a token with a different validity duration so a
-    # client needs to check the 'expiration' field in a response.
     def expirationSeconds(self) -> Optional[int]:
+        """
+        ExpirationSeconds is the requested duration of validity of the request. The
+        token issuer may return a token with a different validity duration so a
+        client needs to check the 'expiration' field in a response.
+        """
         return self.__expirationSeconds
 
-    # BoundObjectRef is a reference to an object that the token will be bound to.
-    # The token will only be valid for as long as the bound object exists.
-    # NOTE: The API server's TokenReview endpoint will validate the
-    # BoundObjectRef, but other audiences may not. Keep ExpirationSeconds
-    # small if you want prompt revocation.
     def boundObjectRef(self) -> Optional[BoundObjectReference]:
+        """
+        BoundObjectRef is a reference to an object that the token will be bound to.
+        The token will only be valid for as long as the bound object exists.
+        NOTE: The API server's TokenReview endpoint will validate the
+        BoundObjectRef, but other audiences may not. Keep ExpirationSeconds
+        small if you want prompt revocation.
+        """
         return self.__boundObjectRef
 
 
@@ -178,16 +192,20 @@ class TokenReviewSpec(types.Object):
             v["audiences"] = audiences
         return v
 
-    # Token is the opaque bearer token.
     def token(self) -> Optional[str]:
+        """
+        Token is the opaque bearer token.
+        """
         return self.__token
 
-    # Audiences is a list of the identifiers that the resource server presented
-    # with the token identifies as. Audience-aware token authenticators will
-    # verify that the token was intended for at least one of the audiences in
-    # this list. If no audiences are provided, the audience will default to the
-    # audience of the Kubernetes apiserver.
     def audiences(self) -> Optional[List[str]]:
+        """
+        Audiences is a list of the identifiers that the resource server presented
+        with the token identifies as. Audience-aware token authenticators will
+        verify that the token was intended for at least one of the audiences in
+        this list. If no audiences are provided, the audience will default to the
+        audience of the Kubernetes apiserver.
+        """
         return self.__audiences
 
 
@@ -221,8 +239,10 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated
     def spec(self) -> TokenReviewSpec:
+        """
+        Spec holds information about the request being evaluated
+        """
         return self.__spec
 
 
@@ -265,20 +285,28 @@ class UserInfo(types.Object):
             v["extra"] = extra
         return v
 
-    # The name that uniquely identifies this user among all active users.
     def username(self) -> Optional[str]:
+        """
+        The name that uniquely identifies this user among all active users.
+        """
         return self.__username
 
-    # A unique value that identifies this user across time. If this user is
-    # deleted and another user by the same name is added, they will have
-    # different UIDs.
     def uid(self) -> Optional[str]:
+        """
+        A unique value that identifies this user across time. If this user is
+        deleted and another user by the same name is added, they will have
+        different UIDs.
+        """
         return self.__uid
 
-    # The names of groups this user is a part of.
     def groups(self) -> Optional[List[str]]:
+        """
+        The names of groups this user is a part of.
+        """
         return self.__groups
 
-    # Any additional information provided by the authenticator.
     def extra(self) -> Optional[Dict[str, List[str]]]:
+        """
+        Any additional information provided by the authenticator.
+        """
         return self.__extra

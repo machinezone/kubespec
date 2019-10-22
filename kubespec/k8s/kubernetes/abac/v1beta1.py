@@ -68,41 +68,55 @@ class PolicySpec(types.Object):
             v["nonResourcePath"] = nonResourcePath
         return v
 
-    # User is the username this rule applies to.
-    # Either user or group is required to match the request.
-    # "*" matches all users.
     def user(self) -> Optional[str]:
+        """
+        User is the username this rule applies to.
+        Either user or group is required to match the request.
+        "*" matches all users.
+        """
         return self.__user
 
-    # Group is the group this rule applies to.
-    # Either user or group is required to match the request.
-    # "*" matches all groups.
     def group(self) -> Optional[str]:
+        """
+        Group is the group this rule applies to.
+        Either user or group is required to match the request.
+        "*" matches all groups.
+        """
         return self.__group
 
-    # Readonly matches readonly requests when true, and all requests when false
     def readonly(self) -> Optional[bool]:
+        """
+        Readonly matches readonly requests when true, and all requests when false
+        """
         return self.__readonly
 
-    # APIGroup is the name of an API group. APIGroup, Resource, and Namespace are required to match resource requests.
-    # "*" matches all API groups
     def apiGroup(self) -> Optional[str]:
+        """
+        APIGroup is the name of an API group. APIGroup, Resource, and Namespace are required to match resource requests.
+        "*" matches all API groups
+        """
         return self.__apiGroup
 
-    # Resource is the name of a resource. APIGroup, Resource, and Namespace are required to match resource requests.
-    # "*" matches all resources
     def resource(self) -> Optional[str]:
+        """
+        Resource is the name of a resource. APIGroup, Resource, and Namespace are required to match resource requests.
+        "*" matches all resources
+        """
         return self.__resource
 
-    # Namespace is the name of a namespace. APIGroup, Resource, and Namespace are required to match resource requests.
-    # "*" matches all namespaces (including unnamespaced requests)
     def namespace(self) -> Optional[str]:
+        """
+        Namespace is the name of a namespace. APIGroup, Resource, and Namespace are required to match resource requests.
+        "*" matches all namespaces (including unnamespaced requests)
+        """
         return self.__namespace
 
-    # NonResourcePath matches non-resource request paths.
-    # "*" matches all paths
-    # "/foo/*" matches all subpaths of foo
     def nonResourcePath(self) -> Optional[str]:
+        """
+        NonResourcePath matches non-resource request paths.
+        "*" matches all paths
+        "/foo/*" matches all subpaths of foo
+        """
         return self.__nonResourcePath
 
 
@@ -124,6 +138,8 @@ class Policy(base.TypedObject):
         v["spec"] = spec
         return v
 
-    # Spec describes the policy rule
     def spec(self) -> PolicySpec:
+        """
+        Spec describes the policy rule
+        """
         return self.__spec

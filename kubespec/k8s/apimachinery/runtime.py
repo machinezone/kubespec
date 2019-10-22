@@ -87,18 +87,24 @@ class Unknown(base.TypedObject):
         v["ContentType"] = contentType
         return v
 
-    # Raw will hold the complete serialized object which couldn't be matched
-    # with a registered type. Most likely, nothing should be done with this
-    # except for passing it through the system.
     def raw(self) -> bytes:
+        """
+        Raw will hold the complete serialized object which couldn't be matched
+        with a registered type. Most likely, nothing should be done with this
+        except for passing it through the system.
+        """
         return self.__raw
 
-    # ContentEncoding is encoding used to encode 'Raw' data.
-    # Unspecified means no encoding.
     def contentEncoding(self) -> str:
+        """
+        ContentEncoding is encoding used to encode 'Raw' data.
+        Unspecified means no encoding.
+        """
         return self.__contentEncoding
 
-    # ContentType  is serialization method used to serialize 'Raw'.
-    # Unspecified means ContentTypeJSON.
     def contentType(self) -> str:
+        """
+        ContentType  is serialization method used to serialize 'Raw'.
+        Unspecified means ContentTypeJSON.
+        """
         return self.__contentType

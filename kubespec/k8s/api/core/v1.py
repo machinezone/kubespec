@@ -629,30 +629,38 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # Unique ID of the persistent disk resource in AWS (Amazon EBS volume).
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     def volumeID(self) -> str:
+        """
+        Unique ID of the persistent disk resource in AWS (Amazon EBS volume).
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+        """
         return self.__volumeID
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # The partition in the volume that you want to mount.
-    # If omitted, the default is to mount by volume name.
-    # Examples: For volume /dev/sda1, you specify the partition as "1".
-    # Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
     def partition(self) -> Optional[int]:
+        """
+        The partition in the volume that you want to mount.
+        If omitted, the default is to mount by volume name.
+        Examples: For volume /dev/sda1, you specify the partition as "1".
+        Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
+        """
         return self.__partition
 
-    # Specify "true" to force and set the ReadOnly property in VolumeMounts to "true".
-    # If omitted, the default is "false".
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     def readOnly(self) -> Optional[bool]:
+        """
+        Specify "true" to force and set the ReadOnly property in VolumeMounts to "true".
+        If omitted, the default is "false".
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+        """
         return self.__readOnly
 
 
@@ -687,21 +695,27 @@ class NodeSelectorRequirement(types.Object):
             v["values"] = values
         return v
 
-    # The label key that the selector applies to.
     def key(self) -> str:
+        """
+        The label key that the selector applies to.
+        """
         return self.__key
 
-    # Represents a key's relationship to a set of values.
-    # Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
     def operator(self) -> NodeSelectorOperator:
+        """
+        Represents a key's relationship to a set of values.
+        Valid operators are In, NotIn, Exists, DoesNotExist. Gt, and Lt.
+        """
         return self.__operator
 
-    # An array of string values. If the operator is In or NotIn,
-    # the values array must be non-empty. If the operator is Exists or DoesNotExist,
-    # the values array must be empty. If the operator is Gt or Lt, the values
-    # array must have a single element, which will be interpreted as an integer.
-    # This array is replaced during a strategic merge patch.
     def values(self) -> Optional[List[str]]:
+        """
+        An array of string values. If the operator is In or NotIn,
+        the values array must be non-empty. If the operator is Exists or DoesNotExist,
+        the values array must be empty. If the operator is Gt or Lt, the values
+        array must have a single element, which will be interpreted as an integer.
+        This array is replaced during a strategic merge patch.
+        """
         return self.__values
 
 
@@ -739,12 +753,16 @@ class NodeSelectorTerm(types.Object):
             v["matchFields"] = matchFields
         return v
 
-    # A list of node selector requirements by node's labels.
     def matchExpressions(self) -> Optional[List[NodeSelectorRequirement]]:
+        """
+        A list of node selector requirements by node's labels.
+        """
         return self.__matchExpressions
 
-    # A list of node selector requirements by node's fields.
     def matchFields(self) -> Optional[List[NodeSelectorRequirement]]:
+        """
+        A list of node selector requirements by node's fields.
+        """
         return self.__matchFields
 
 
@@ -768,8 +786,10 @@ class NodeSelector(types.Object):
         v["nodeSelectorTerms"] = nodeSelectorTerms
         return v
 
-    # Required. A list of node selector terms. The terms are ORed.
     def nodeSelectorTerms(self) -> List[NodeSelectorTerm]:
+        """
+        Required. A list of node selector terms. The terms are ORed.
+        """
         return self.__nodeSelectorTerms
 
 
@@ -794,12 +814,16 @@ class PreferredSchedulingTerm(types.Object):
         v["preference"] = preference
         return v
 
-    # Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
     def weight(self) -> int:
+        """
+        Weight associated with matching the corresponding nodeSelectorTerm, in the range 1-100.
+        """
         return self.__weight
 
-    # A node selector term, associated with the corresponding weight.
     def preference(self) -> NodeSelectorTerm:
+        """
+        A node selector term, associated with the corresponding weight.
+        """
         return self.__preference
 
 
@@ -853,26 +877,30 @@ class NodeAffinity(types.Object):
             ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
 
-    # If the affinity requirements specified by this field are not met at
-    # scheduling time, the pod will not be scheduled onto the node.
-    # If the affinity requirements specified by this field cease to be met
-    # at some point during pod execution (e.g. due to an update), the system
-    # may or may not try to eventually evict the pod from its node.
     def requiredDuringSchedulingIgnoredDuringExecution(self) -> Optional[NodeSelector]:
+        """
+        If the affinity requirements specified by this field are not met at
+        scheduling time, the pod will not be scheduled onto the node.
+        If the affinity requirements specified by this field cease to be met
+        at some point during pod execution (e.g. due to an update), the system
+        may or may not try to eventually evict the pod from its node.
+        """
         return self.__requiredDuringSchedulingIgnoredDuringExecution
 
-    # The scheduler will prefer to schedule pods to nodes that satisfy
-    # the affinity expressions specified by this field, but it may choose
-    # a node that violates one or more of the expressions. The node that is
-    # most preferred is the one with the greatest sum of weights, i.e.
-    # for each node that meets all of the scheduling requirements (resource
-    # request, requiredDuringScheduling affinity expressions, etc.),
-    # compute a sum by iterating through the elements of this field and adding
-    # "weight" to the sum if the node matches the corresponding matchExpressions; the
-    # node(s) with the highest sum are the most preferred.
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
     ) -> Optional[List[PreferredSchedulingTerm]]:
+        """
+        The scheduler will prefer to schedule pods to nodes that satisfy
+        the affinity expressions specified by this field, but it may choose
+        a node that violates one or more of the expressions. The node that is
+        most preferred is the one with the greatest sum of weights, i.e.
+        for each node that meets all of the scheduling requirements (resource
+        request, requiredDuringScheduling affinity expressions, etc.),
+        compute a sum by iterating through the elements of this field and adding
+        "weight" to the sum if the node matches the corresponding matchExpressions; the
+        node(s) with the highest sum are the most preferred.
+        """
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
@@ -912,21 +940,27 @@ class PodAffinityTerm(types.Object):
         v["topologyKey"] = topologyKey
         return v
 
-    # A label query over a set of resources, in this case pods.
     def labelSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        A label query over a set of resources, in this case pods.
+        """
         return self.__labelSelector
 
-    # namespaces specifies which namespaces the labelSelector applies to (matches against);
-    # null or empty list means "this pod's namespace"
     def namespaces(self) -> Optional[List[str]]:
+        """
+        namespaces specifies which namespaces the labelSelector applies to (matches against);
+        null or empty list means "this pod's namespace"
+        """
         return self.__namespaces
 
-    # This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching
-    # the labelSelector in the specified namespaces, where co-located is defined as running on a node
-    # whose value of the label with key topologyKey matches that of any node on which any of the
-    # selected pods is running.
-    # Empty topologyKey is not allowed.
     def topologyKey(self) -> str:
+        """
+        This pod should be co-located (affinity) or not co-located (anti-affinity) with the pods matching
+        the labelSelector in the specified namespaces, where co-located is defined as running on a node
+        whose value of the label with key topologyKey matches that of any node on which any of the
+        selected pods is running.
+        Empty topologyKey is not allowed.
+        """
         return self.__topologyKey
 
 
@@ -952,13 +986,17 @@ class WeightedPodAffinityTerm(types.Object):
         v["podAffinityTerm"] = podAffinityTerm
         return v
 
-    # weight associated with matching the corresponding podAffinityTerm,
-    # in the range 1-100.
     def weight(self) -> int:
+        """
+        weight associated with matching the corresponding podAffinityTerm,
+        in the range 1-100.
+        """
         return self.__weight
 
-    # Required. A pod affinity term, associated with the corresponding weight.
     def podAffinityTerm(self) -> PodAffinityTerm:
+        """
+        Required. A pod affinity term, associated with the corresponding weight.
+        """
         return self.__podAffinityTerm
 
 
@@ -1014,30 +1052,34 @@ class PodAffinity(types.Object):
             ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
 
-    # If the affinity requirements specified by this field are not met at
-    # scheduling time, the pod will not be scheduled onto the node.
-    # If the affinity requirements specified by this field cease to be met
-    # at some point during pod execution (e.g. due to a pod label update), the
-    # system may or may not try to eventually evict the pod from its node.
-    # When there are multiple elements, the lists of nodes corresponding to each
-    # podAffinityTerm are intersected, i.e. all terms must be satisfied.
     def requiredDuringSchedulingIgnoredDuringExecution(
         self
     ) -> Optional[List[PodAffinityTerm]]:
+        """
+        If the affinity requirements specified by this field are not met at
+        scheduling time, the pod will not be scheduled onto the node.
+        If the affinity requirements specified by this field cease to be met
+        at some point during pod execution (e.g. due to a pod label update), the
+        system may or may not try to eventually evict the pod from its node.
+        When there are multiple elements, the lists of nodes corresponding to each
+        podAffinityTerm are intersected, i.e. all terms must be satisfied.
+        """
         return self.__requiredDuringSchedulingIgnoredDuringExecution
 
-    # The scheduler will prefer to schedule pods to nodes that satisfy
-    # the affinity expressions specified by this field, but it may choose
-    # a node that violates one or more of the expressions. The node that is
-    # most preferred is the one with the greatest sum of weights, i.e.
-    # for each node that meets all of the scheduling requirements (resource
-    # request, requiredDuringScheduling affinity expressions, etc.),
-    # compute a sum by iterating through the elements of this field and adding
-    # "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
-    # node(s) with the highest sum are the most preferred.
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
     ) -> Optional[List[WeightedPodAffinityTerm]]:
+        """
+        The scheduler will prefer to schedule pods to nodes that satisfy
+        the affinity expressions specified by this field, but it may choose
+        a node that violates one or more of the expressions. The node that is
+        most preferred is the one with the greatest sum of weights, i.e.
+        for each node that meets all of the scheduling requirements (resource
+        request, requiredDuringScheduling affinity expressions, etc.),
+        compute a sum by iterating through the elements of this field and adding
+        "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
+        node(s) with the highest sum are the most preferred.
+        """
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
@@ -1093,30 +1135,34 @@ class PodAntiAffinity(types.Object):
             ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
 
-    # If the anti-affinity requirements specified by this field are not met at
-    # scheduling time, the pod will not be scheduled onto the node.
-    # If the anti-affinity requirements specified by this field cease to be met
-    # at some point during pod execution (e.g. due to a pod label update), the
-    # system may or may not try to eventually evict the pod from its node.
-    # When there are multiple elements, the lists of nodes corresponding to each
-    # podAffinityTerm are intersected, i.e. all terms must be satisfied.
     def requiredDuringSchedulingIgnoredDuringExecution(
         self
     ) -> Optional[List[PodAffinityTerm]]:
+        """
+        If the anti-affinity requirements specified by this field are not met at
+        scheduling time, the pod will not be scheduled onto the node.
+        If the anti-affinity requirements specified by this field cease to be met
+        at some point during pod execution (e.g. due to a pod label update), the
+        system may or may not try to eventually evict the pod from its node.
+        When there are multiple elements, the lists of nodes corresponding to each
+        podAffinityTerm are intersected, i.e. all terms must be satisfied.
+        """
         return self.__requiredDuringSchedulingIgnoredDuringExecution
 
-    # The scheduler will prefer to schedule pods to nodes that satisfy
-    # the anti-affinity expressions specified by this field, but it may choose
-    # a node that violates one or more of the expressions. The node that is
-    # most preferred is the one with the greatest sum of weights, i.e.
-    # for each node that meets all of the scheduling requirements (resource
-    # request, requiredDuringScheduling anti-affinity expressions, etc.),
-    # compute a sum by iterating through the elements of this field and adding
-    # "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
-    # node(s) with the highest sum are the most preferred.
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
     ) -> Optional[List[WeightedPodAffinityTerm]]:
+        """
+        The scheduler will prefer to schedule pods to nodes that satisfy
+        the anti-affinity expressions specified by this field, but it may choose
+        a node that violates one or more of the expressions. The node that is
+        most preferred is the one with the greatest sum of weights, i.e.
+        for each node that meets all of the scheduling requirements (resource
+        request, requiredDuringScheduling anti-affinity expressions, etc.),
+        compute a sum by iterating through the elements of this field and adding
+        "weight" to the sum if the node has pods which matches the corresponding podAffinityTerm; the
+        node(s) with the highest sum are the most preferred.
+        """
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
@@ -1152,16 +1198,22 @@ class Affinity(types.Object):
             v["podAntiAffinity"] = podAntiAffinity
         return v
 
-    # Describes node affinity scheduling rules for the pod.
     def nodeAffinity(self) -> Optional[NodeAffinity]:
+        """
+        Describes node affinity scheduling rules for the pod.
+        """
         return self.__nodeAffinity
 
-    # Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
     def podAffinity(self) -> Optional[PodAffinity]:
+        """
+        Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
+        """
         return self.__podAffinity
 
-    # Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
     def podAntiAffinity(self) -> Optional[PodAntiAffinity]:
+        """
+        Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
+        """
         return self.__podAntiAffinity
 
 
@@ -1217,31 +1269,43 @@ class AzureDiskVolumeSource(types.Object):
             v["kind"] = kind
         return v
 
-    # The Name of the data disk in the blob storage
     def diskName(self) -> str:
+        """
+        The Name of the data disk in the blob storage
+        """
         return self.__diskName
 
-    # The URI the data disk in the blob storage
     def diskURI(self) -> str:
+        """
+        The URI the data disk in the blob storage
+        """
         return self.__diskURI
 
-    # Host Caching mode: None, Read Only, Read Write.
     def cachingMode(self) -> Optional[AzureDataDiskCachingMode]:
+        """
+        Host Caching mode: None, Read Only, Read Write.
+        """
         return self.__cachingMode
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # Expected values Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
     def kind(self) -> Optional[AzureDataDiskKind]:
+        """
+        Expected values Shared: multiple blob disks per storage account  Dedicated: single blob disk per storage account  Managed: azure managed data disk (only in managed availability set). defaults to shared
+        """
         return self.__kind
 
 
@@ -1280,22 +1344,30 @@ class AzureFilePersistentVolumeSource(types.Object):
         v["secretNamespace"] = secretNamespace
         return v
 
-    # the name of secret that contains Azure Storage Account Name and Key
     def secretName(self) -> str:
+        """
+        the name of secret that contains Azure Storage Account Name and Key
+        """
         return self.__secretName
 
-    # Share Name
     def shareName(self) -> str:
+        """
+        Share Name
+        """
         return self.__shareName
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # the namespace of the secret that contains Azure Storage Account Name and Key
-    # default is the same as the Pod
     def secretNamespace(self) -> Optional[str]:
+        """
+        the namespace of the secret that contains Azure Storage Account Name and Key
+        default is the same as the Pod
+        """
         return self.__secretNamespace
 
 
@@ -1326,17 +1398,23 @@ class AzureFileVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # the name of secret that contains Azure Storage Account Name and Key
     def secretName(self) -> str:
+        """
+        the name of secret that contains Azure Storage Account Name and Key
+        """
         return self.__secretName
 
-    # Share Name
     def shareName(self) -> str:
+        """
+        Share Name
+        """
         return self.__shareName
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
 
@@ -1396,44 +1474,58 @@ class ObjectReference(types.Object):
             v["fieldPath"] = fieldPath
         return v
 
-    # Kind of the referent.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
     def kind(self) -> Optional[str]:
+        """
+        Kind of the referent.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        """
         return self.__kind
 
-    # Namespace of the referent.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
     def namespace(self) -> Optional[str]:
+        """
+        Namespace of the referent.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+        """
         return self.__namespace
 
-    # Name of the referent.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
     def name(self) -> Optional[str]:
+        """
+        Name of the referent.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+        """
         return self.__name
 
-    # UID of the referent.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
     def uid(self) -> Optional[str]:
+        """
+        UID of the referent.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
+        """
         return self.__uid
 
-    # API version of the referent.
     def apiVersion(self) -> Optional[str]:
+        """
+        API version of the referent.
+        """
         return self.__apiVersion
 
-    # Specific resourceVersion to which this reference is made, if any.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
     def resourceVersion(self) -> Optional[str]:
+        """
+        Specific resourceVersion to which this reference is made, if any.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+        """
         return self.__resourceVersion
 
-    # If referring to a piece of an object instead of an entire object, this string
-    # should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
-    # For example, if the object reference is to a container within a pod, this would take on a value like:
-    # "spec.containers{name}" (where "name" refers to the name of the container that triggered
-    # the event) or if no container name is specified "spec.containers[2]" (container with
-    # index 2 in this pod). This syntax is chosen only to have some well-defined way of
-    # referencing a part of an object.
-    # TODO: this design is not final and this field is subject to change in the future.
     def fieldPath(self) -> Optional[str]:
+        """
+        If referring to a piece of an object instead of an entire object, this string
+        should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
+        For example, if the object reference is to a container within a pod, this would take on a value like:
+        "spec.containers{name}" (where "name" refers to the name of the container that triggered
+        the event) or if no container name is specified "spec.containers[2]" (container with
+        index 2 in this pod). This syntax is chosen only to have some well-defined way of
+        referencing a part of an object.
+        TODO: this design is not final and this field is subject to change in the future.
+        """
         return self.__fieldPath
 
 
@@ -1468,8 +1560,10 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
         v["target"] = target
         return v
 
-    # The target object that you want to bind to the standard object.
     def target(self) -> ObjectReference:
+        """
+        The target object that you want to bind to the standard object.
+        """
         return self.__target
 
 
@@ -1496,12 +1590,16 @@ class SecretReference(types.Object):
             v["namespace"] = namespace
         return v
 
-    # Name is unique within a namespace to reference a secret resource.
     def name(self) -> Optional[str]:
+        """
+        Name is unique within a namespace to reference a secret resource.
+        """
         return self.__name
 
-    # Namespace defines the space within which the secret name must be unique.
     def namespace(self) -> Optional[str]:
+        """
+        Namespace defines the space within which the secret name must be unique.
+        """
         return self.__namespace
 
 
@@ -1583,63 +1681,81 @@ class CSIPersistentVolumeSource(types.Object):
             v["controllerExpandSecretRef"] = controllerExpandSecretRef
         return v
 
-    # Driver is the name of the driver to use for this volume.
-    # Required.
     def driver(self) -> str:
+        """
+        Driver is the name of the driver to use for this volume.
+        Required.
+        """
         return self.__driver
 
-    # VolumeHandle is the unique volume name returned by the CSI volume
-    # plugin’s CreateVolume to refer to the volume on all subsequent calls.
-    # Required.
     def volumeHandle(self) -> str:
+        """
+        VolumeHandle is the unique volume name returned by the CSI volume
+        plugin’s CreateVolume to refer to the volume on all subsequent calls.
+        Required.
+        """
         return self.__volumeHandle
 
-    # Optional: The value to pass to ControllerPublishVolumeRequest.
-    # Defaults to false (read/write).
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: The value to pass to ControllerPublishVolumeRequest.
+        Defaults to false (read/write).
+        """
         return self.__readOnly
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs".
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs".
+        """
         return self.__fsType
 
-    # Attributes of the volume to publish.
     def volumeAttributes(self) -> Optional[Dict[str, str]]:
+        """
+        Attributes of the volume to publish.
+        """
         return self.__volumeAttributes
 
-    # ControllerPublishSecretRef is a reference to the secret object containing
-    # sensitive information to pass to the CSI driver to complete the CSI
-    # ControllerPublishVolume and ControllerUnpublishVolume calls.
-    # This field is optional, and may be empty if no secret is required. If the
-    # secret object contains more than one secret, all secrets are passed.
     def controllerPublishSecretRef(self) -> Optional[SecretReference]:
+        """
+        ControllerPublishSecretRef is a reference to the secret object containing
+        sensitive information to pass to the CSI driver to complete the CSI
+        ControllerPublishVolume and ControllerUnpublishVolume calls.
+        This field is optional, and may be empty if no secret is required. If the
+        secret object contains more than one secret, all secrets are passed.
+        """
         return self.__controllerPublishSecretRef
 
-    # NodeStageSecretRef is a reference to the secret object containing sensitive
-    # information to pass to the CSI driver to complete the CSI NodeStageVolume
-    # and NodeStageVolume and NodeUnstageVolume calls.
-    # This field is optional, and may be empty if no secret is required. If the
-    # secret object contains more than one secret, all secrets are passed.
     def nodeStageSecretRef(self) -> Optional[SecretReference]:
+        """
+        NodeStageSecretRef is a reference to the secret object containing sensitive
+        information to pass to the CSI driver to complete the CSI NodeStageVolume
+        and NodeStageVolume and NodeUnstageVolume calls.
+        This field is optional, and may be empty if no secret is required. If the
+        secret object contains more than one secret, all secrets are passed.
+        """
         return self.__nodeStageSecretRef
 
-    # NodePublishSecretRef is a reference to the secret object containing
-    # sensitive information to pass to the CSI driver to complete the CSI
-    # NodePublishVolume and NodeUnpublishVolume calls.
-    # This field is optional, and may be empty if no secret is required. If the
-    # secret object contains more than one secret, all secrets are passed.
     def nodePublishSecretRef(self) -> Optional[SecretReference]:
+        """
+        NodePublishSecretRef is a reference to the secret object containing
+        sensitive information to pass to the CSI driver to complete the CSI
+        NodePublishVolume and NodeUnpublishVolume calls.
+        This field is optional, and may be empty if no secret is required. If the
+        secret object contains more than one secret, all secrets are passed.
+        """
         return self.__nodePublishSecretRef
 
-    # ControllerExpandSecretRef is a reference to the secret object containing
-    # sensitive information to pass to the CSI driver to complete the CSI
-    # ControllerExpandVolume call.
-    # This is an alpha field and requires enabling ExpandCSIVolumes feature gate.
-    # This field is optional, and may be empty if no secret is required. If the
-    # secret object contains more than one secret, all secrets are passed.
     def controllerExpandSecretRef(self) -> Optional[SecretReference]:
+        """
+        ControllerExpandSecretRef is a reference to the secret object containing
+        sensitive information to pass to the CSI driver to complete the CSI
+        ControllerExpandVolume call.
+        This is an alpha field and requires enabling ExpandCSIVolumes feature gate.
+        This field is optional, and may be empty if no secret is required. If the
+        secret object contains more than one secret, all secrets are passed.
+        """
         return self.__controllerExpandSecretRef
 
 
@@ -1661,10 +1777,12 @@ class LocalObjectReference(types.Object):
             v["name"] = name
         return v
 
-    # Name of the referent.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-    # TODO: Add other useful fields. apiVersion, kind, uid?
     def name(self) -> Optional[str]:
+        """
+        Name of the referent.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+        TODO: Add other useful fields. apiVersion, kind, uid?
+        """
         return self.__name
 
 
@@ -1715,33 +1833,43 @@ class CSIVolumeSource(types.Object):
             v["nodePublishSecretRef"] = nodePublishSecretRef
         return v
 
-    # Driver is the name of the CSI driver that handles this volume.
-    # Consult with your admin for the correct name as registered in the cluster.
     def driver(self) -> str:
+        """
+        Driver is the name of the CSI driver that handles this volume.
+        Consult with your admin for the correct name as registered in the cluster.
+        """
         return self.__driver
 
-    # Specifies a read-only configuration for the volume.
-    # Defaults to false (read/write).
     def readOnly(self) -> Optional[bool]:
+        """
+        Specifies a read-only configuration for the volume.
+        Defaults to false (read/write).
+        """
         return self.__readOnly
 
-    # Filesystem type to mount. Ex. "ext4", "xfs", "ntfs".
-    # If not provided, the empty value is passed to the associated CSI driver
-    # which will determine the default filesystem to apply.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount. Ex. "ext4", "xfs", "ntfs".
+        If not provided, the empty value is passed to the associated CSI driver
+        which will determine the default filesystem to apply.
+        """
         return self.__fsType
 
-    # VolumeAttributes stores driver-specific properties that are passed to the CSI
-    # driver. Consult your driver's documentation for supported values.
     def volumeAttributes(self) -> Optional[Dict[str, str]]:
+        """
+        VolumeAttributes stores driver-specific properties that are passed to the CSI
+        driver. Consult your driver's documentation for supported values.
+        """
         return self.__volumeAttributes
 
-    # NodePublishSecretRef is a reference to the secret object containing
-    # sensitive information to pass to the CSI driver to complete the CSI
-    # NodePublishVolume and NodeUnpublishVolume calls.
-    # This field is optional, and  may be empty if no secret is required. If the
-    # secret object contains more than one secret, all secret references are passed.
     def nodePublishSecretRef(self) -> Optional[LocalObjectReference]:
+        """
+        NodePublishSecretRef is a reference to the secret object containing
+        sensitive information to pass to the CSI driver to complete the CSI
+        NodePublishVolume and NodeUnpublishVolume calls.
+        This field is optional, and  may be empty if no secret is required. If the
+        secret object contains more than one secret, all secret references are passed.
+        """
         return self.__nodePublishSecretRef
 
 
@@ -1767,12 +1895,16 @@ class Capabilities(types.Object):
             v["drop"] = drop
         return v
 
-    # Added capabilities
     def add(self) -> Optional[List[Capability]]:
+        """
+        Added capabilities
+        """
         return self.__add
 
-    # Removed capabilities
     def drop(self) -> Optional[List[Capability]]:
+        """
+        Removed capabilities
+        """
         return self.__drop
 
 
@@ -1826,34 +1958,46 @@ class CephFSPersistentVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # Required: Monitors is a collection of Ceph monitors
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def monitors(self) -> List[str]:
+        """
+        Required: Monitors is a collection of Ceph monitors
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__monitors
 
-    # Optional: Used as the mounted root, rather than the full Ceph tree, default is /
     def path(self) -> Optional[str]:
+        """
+        Optional: Used as the mounted root, rather than the full Ceph tree, default is /
+        """
         return self.__path
 
-    # Optional: User is the rados user name, default is admin
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def user(self) -> Optional[str]:
+        """
+        Optional: User is the rados user name, default is admin
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__user
 
-    # Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def secretFile(self) -> Optional[str]:
+        """
+        Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__secretFile
 
-    # Optional: SecretRef is reference to the authentication secret for User, default is empty.
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        Optional: SecretRef is reference to the authentication secret for User, default is empty.
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__secretRef
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__readOnly
 
 
@@ -1907,34 +2051,46 @@ class CephFSVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # Required: Monitors is a collection of Ceph monitors
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def monitors(self) -> List[str]:
+        """
+        Required: Monitors is a collection of Ceph monitors
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__monitors
 
-    # Optional: Used as the mounted root, rather than the full Ceph tree, default is /
     def path(self) -> Optional[str]:
+        """
+        Optional: Used as the mounted root, rather than the full Ceph tree, default is /
+        """
         return self.__path
 
-    # Optional: User is the rados user name, default is admin
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def user(self) -> Optional[str]:
+        """
+        Optional: User is the rados user name, default is admin
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__user
 
-    # Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def secretFile(self) -> Optional[str]:
+        """
+        Optional: SecretFile is the path to key ring for User, default is /etc/ceph/user.secret
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__secretFile
 
-    # Optional: SecretRef is reference to the authentication secret for User, default is empty.
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        Optional: SecretRef is reference to the authentication secret for User, default is empty.
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__secretRef
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
-    # More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
+        """
         return self.__readOnly
 
 
@@ -1978,27 +2134,35 @@ class CinderPersistentVolumeSource(types.Object):
             v["secretRef"] = secretRef
         return v
 
-    # volume id used to identify the volume in cinder.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def volumeID(self) -> str:
+        """
+        volume id used to identify the volume in cinder.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__volumeID
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__fsType
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__readOnly
 
-    # Optional: points to a secret object containing parameters used to connect
-    # to OpenStack.
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        Optional: points to a secret object containing parameters used to connect
+        to OpenStack.
+        """
         return self.__secretRef
 
 
@@ -2042,27 +2206,35 @@ class CinderVolumeSource(types.Object):
             v["secretRef"] = secretRef
         return v
 
-    # volume id used to identify the volume in cinder.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def volumeID(self) -> str:
+        """
+        volume id used to identify the volume in cinder.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__volumeID
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__fsType
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__readOnly
 
-    # Optional: points to a secret object containing parameters used to connect
-    # to OpenStack.
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        Optional: points to a secret object containing parameters used to connect
+        to OpenStack.
+        """
         return self.__secretRef
 
 
@@ -2083,10 +2255,12 @@ class ClientIPConfig(types.Object):
             v["timeoutSeconds"] = timeoutSeconds
         return v
 
-    # timeoutSeconds specifies the seconds of ClientIP type session sticky time.
-    # The value must be >0 && <=86400(for 1 day) if ServiceAffinity == "ClientIP".
-    # Default value is 10800(for 3 hours).
     def timeoutSeconds(self) -> Optional[int]:
+        """
+        timeoutSeconds specifies the seconds of ClientIP type session sticky time.
+        The value must be >0 && <=86400(for 1 day) if ServiceAffinity == "ClientIP".
+        Default value is 10800(for 3 hours).
+        """
         return self.__timeoutSeconds
 
 
@@ -2126,24 +2300,32 @@ class ComponentCondition(types.Object):
             v["error"] = error
         return v
 
-    # Type of condition for a component.
-    # Valid value: "Healthy"
     def type(self) -> ComponentConditionType:
+        """
+        Type of condition for a component.
+        Valid value: "Healthy"
+        """
         return self.__type
 
-    # Status of the condition for a component.
-    # Valid values for "Healthy": "True", "False", or "Unknown".
     def status(self) -> ConditionStatus:
+        """
+        Status of the condition for a component.
+        Valid values for "Healthy": "True", "False", or "Unknown".
+        """
         return self.__status
 
-    # Message about the condition for a component.
-    # For example, information about a health check.
     def message(self) -> Optional[str]:
+        """
+        Message about the condition for a component.
+        For example, information about a health check.
+        """
         return self.__message
 
-    # Condition error code for a component.
-    # For example, a health check error code.
     def error(self) -> Optional[str]:
+        """
+        Condition error code for a component.
+        For example, a health check error code.
+        """
         return self.__error
 
 
@@ -2176,8 +2358,10 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
             v["conditions"] = conditions
         return v
 
-    # List of component conditions observed
     def conditions(self) -> Optional[List[ComponentCondition]]:
+        """
+        List of component conditions observed
+        """
         return self.__conditions
 
 
@@ -2218,22 +2402,26 @@ class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
             v["binaryData"] = binaryData
         return v
 
-    # Data contains the configuration data.
-    # Each key must consist of alphanumeric characters, '-', '_' or '.'.
-    # Values with non-UTF-8 byte sequences must use the BinaryData field.
-    # The keys stored in Data must not overlap with the keys in
-    # the BinaryData field, this is enforced during validation process.
     def data(self) -> Optional[Dict[str, str]]:
+        """
+        Data contains the configuration data.
+        Each key must consist of alphanumeric characters, '-', '_' or '.'.
+        Values with non-UTF-8 byte sequences must use the BinaryData field.
+        The keys stored in Data must not overlap with the keys in
+        the BinaryData field, this is enforced during validation process.
+        """
         return self.__data
 
-    # BinaryData contains the binary data.
-    # Each key must consist of alphanumeric characters, '-', '_' or '.'.
-    # BinaryData can contain byte sequences that are not in the UTF-8 range.
-    # The keys stored in BinaryData must not overlap with the ones in
-    # the Data field, this is enforced during validation process.
-    # Using this field will require 1.10+ apiserver and
-    # kubelet.
     def binaryData(self) -> Optional[Dict[str, bytes]]:
+        """
+        BinaryData contains the binary data.
+        Each key must consist of alphanumeric characters, '-', '_' or '.'.
+        BinaryData can contain byte sequences that are not in the UTF-8 range.
+        The keys stored in BinaryData must not overlap with the ones in
+        the Data field, this is enforced during validation process.
+        Using this field will require 1.10+ apiserver and
+        kubelet.
+        """
         return self.__binaryData
 
 
@@ -2268,12 +2456,16 @@ class ConfigMapEnvSource(types.Object):
             v["optional"] = optional
         return v
 
-    # The ConfigMap to select from.
     def localObjectReference(self) -> LocalObjectReference:
+        """
+        The ConfigMap to select from.
+        """
         return self.__localObjectReference
 
-    # Specify whether the ConfigMap must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the ConfigMap must be defined
+        """
         return self.__optional
 
 
@@ -2311,16 +2503,22 @@ class ConfigMapKeySelector(types.Object):
             v["optional"] = optional
         return v
 
-    # The ConfigMap to select from.
     def localObjectReference(self) -> LocalObjectReference:
+        """
+        The ConfigMap to select from.
+        """
         return self.__localObjectReference
 
-    # The key to select.
     def key(self) -> str:
+        """
+        The key to select.
+        """
         return self.__key
 
-    # Specify whether the ConfigMap or its key must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the ConfigMap or its key must be defined
+        """
         return self.__optional
 
 
@@ -2365,29 +2563,39 @@ class ConfigMapNodeConfigSource(types.Object):
         v["kubeletConfigKey"] = kubeletConfigKey
         return v
 
-    # Namespace is the metadata.namespace of the referenced ConfigMap.
-    # This field is required in all cases.
     def namespace(self) -> str:
+        """
+        Namespace is the metadata.namespace of the referenced ConfigMap.
+        This field is required in all cases.
+        """
         return self.__namespace
 
-    # Name is the metadata.name of the referenced ConfigMap.
-    # This field is required in all cases.
     def name(self) -> str:
+        """
+        Name is the metadata.name of the referenced ConfigMap.
+        This field is required in all cases.
+        """
         return self.__name
 
-    # UID is the metadata.UID of the referenced ConfigMap.
-    # This field is forbidden in Node.Spec, and required in Node.Status.
     def uid(self) -> Optional[str]:
+        """
+        UID is the metadata.UID of the referenced ConfigMap.
+        This field is forbidden in Node.Spec, and required in Node.Status.
+        """
         return self.__uid
 
-    # ResourceVersion is the metadata.ResourceVersion of the referenced ConfigMap.
-    # This field is forbidden in Node.Spec, and required in Node.Status.
     def resourceVersion(self) -> Optional[str]:
+        """
+        ResourceVersion is the metadata.ResourceVersion of the referenced ConfigMap.
+        This field is forbidden in Node.Spec, and required in Node.Status.
+        """
         return self.__resourceVersion
 
-    # KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure
-    # This field is required in all cases.
     def kubeletConfigKey(self) -> str:
+        """
+        KubeletConfigKey declares which key of the referenced ConfigMap corresponds to the KubeletConfiguration structure
+        This field is required in all cases.
+        """
         return self.__kubeletConfigKey
 
 
@@ -2416,22 +2624,28 @@ class KeyToPath(types.Object):
             v["mode"] = mode
         return v
 
-    # The key to project.
     def key(self) -> str:
+        """
+        The key to project.
+        """
         return self.__key
 
-    # The relative path of the file to map the key to.
-    # May not be an absolute path.
-    # May not contain the path element '..'.
-    # May not start with the string '..'.
     def path(self) -> str:
+        """
+        The relative path of the file to map the key to.
+        May not be an absolute path.
+        May not contain the path element '..'.
+        May not start with the string '..'.
+        """
         return self.__path
 
-    # Optional: mode bits to use on this file, must be a value between 0
-    # and 0777. If not specified, the volume defaultMode will be used.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def mode(self) -> Optional[int]:
+        """
+        Optional: mode bits to use on this file, must be a value between 0
+        and 0777. If not specified, the volume defaultMode will be used.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__mode
 
 
@@ -2479,18 +2693,22 @@ class ConfigMapProjection(types.Object):
     def localObjectReference(self) -> LocalObjectReference:
         return self.__localObjectReference
 
-    # If unspecified, each key-value pair in the Data field of the referenced
-    # ConfigMap will be projected into the volume as a file whose name is the
-    # key and content is the value. If specified, the listed keys will be
-    # projected into the specified paths, and unlisted keys will not be
-    # present. If a key is specified which is not present in the ConfigMap,
-    # the volume setup will error unless it is marked optional. Paths must be
-    # relative and may not contain the '..' path or start with '..'.
     def items(self) -> Optional[List[KeyToPath]]:
+        """
+        If unspecified, each key-value pair in the Data field of the referenced
+        ConfigMap will be projected into the volume as a file whose name is the
+        key and content is the value. If specified, the listed keys will be
+        projected into the specified paths, and unlisted keys will not be
+        present. If a key is specified which is not present in the ConfigMap,
+        the volume setup will error unless it is marked optional. Paths must be
+        relative and may not contain the '..' path or start with '..'.
+        """
         return self.__items
 
-    # Specify whether the ConfigMap or its keys must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the ConfigMap or its keys must be defined
+        """
         return self.__optional
 
 
@@ -2543,26 +2761,32 @@ class ConfigMapVolumeSource(types.Object):
     def localObjectReference(self) -> LocalObjectReference:
         return self.__localObjectReference
 
-    # If unspecified, each key-value pair in the Data field of the referenced
-    # ConfigMap will be projected into the volume as a file whose name is the
-    # key and content is the value. If specified, the listed keys will be
-    # projected into the specified paths, and unlisted keys will not be
-    # present. If a key is specified which is not present in the ConfigMap,
-    # the volume setup will error unless it is marked optional. Paths must be
-    # relative and may not contain the '..' path or start with '..'.
     def items(self) -> Optional[List[KeyToPath]]:
+        """
+        If unspecified, each key-value pair in the Data field of the referenced
+        ConfigMap will be projected into the volume as a file whose name is the
+        key and content is the value. If specified, the listed keys will be
+        projected into the specified paths, and unlisted keys will not be
+        present. If a key is specified which is not present in the ConfigMap,
+        the volume setup will error unless it is marked optional. Paths must be
+        relative and may not contain the '..' path or start with '..'.
+        """
         return self.__items
 
-    # Optional: mode bits to use on created files by default. Must be a
-    # value between 0 and 0777. Defaults to 0644.
-    # Directories within the path are not affected by this setting.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def defaultMode(self) -> Optional[int]:
+        """
+        Optional: mode bits to use on created files by default. Must be a
+        value between 0 and 0777. Defaults to 0644.
+        Directories within the path are not affected by this setting.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__defaultMode
 
-    # Specify whether the ConfigMap or its keys must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the ConfigMap or its keys must be defined
+        """
         return self.__optional
 
 
@@ -2609,31 +2833,41 @@ class ContainerPort(types.Object):
             v["hostIP"] = hostIP
         return v
 
-    # If specified, this must be an IANA_SVC_NAME and unique within the pod. Each
-    # named port in a pod must have a unique name. Name for the port that can be
-    # referred to by services.
     def name(self) -> Optional[str]:
+        """
+        If specified, this must be an IANA_SVC_NAME and unique within the pod. Each
+        named port in a pod must have a unique name. Name for the port that can be
+        referred to by services.
+        """
         return self.__name
 
-    # Number of port to expose on the host.
-    # If specified, this must be a valid port number, 0 < x < 65536.
-    # If HostNetwork is specified, this must match ContainerPort.
-    # Most containers do not need this.
     def hostPort(self) -> Optional[int]:
+        """
+        Number of port to expose on the host.
+        If specified, this must be a valid port number, 0 < x < 65536.
+        If HostNetwork is specified, this must match ContainerPort.
+        Most containers do not need this.
+        """
         return self.__hostPort
 
-    # Number of port to expose on the pod's IP address.
-    # This must be a valid port number, 0 < x < 65536.
     def containerPort(self) -> int:
+        """
+        Number of port to expose on the pod's IP address.
+        This must be a valid port number, 0 < x < 65536.
+        """
         return self.__containerPort
 
-    # Protocol for port. Must be UDP, TCP, or SCTP.
-    # Defaults to "TCP".
     def protocol(self) -> Optional[Protocol]:
+        """
+        Protocol for port. Must be UDP, TCP, or SCTP.
+        Defaults to "TCP".
+        """
         return self.__protocol
 
-    # What host IP to bind the external port to.
     def hostIP(self) -> Optional[str]:
+        """
+        What host IP to bind the external port to.
+        """
         return self.__hostIP
 
 
@@ -2668,12 +2902,16 @@ class SecretEnvSource(types.Object):
             v["optional"] = optional
         return v
 
-    # The Secret to select from.
     def localObjectReference(self) -> LocalObjectReference:
+        """
+        The Secret to select from.
+        """
         return self.__localObjectReference
 
-    # Specify whether the Secret must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the Secret must be defined
+        """
         return self.__optional
 
 
@@ -2709,16 +2947,22 @@ class EnvFromSource(types.Object):
             v["secretRef"] = secretRef
         return v
 
-    # An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
     def prefix(self) -> Optional[str]:
+        """
+        An optional identifier to prepend to each key in the ConfigMap. Must be a C_IDENTIFIER.
+        """
         return self.__prefix
 
-    # The ConfigMap to select from
     def configMapRef(self) -> Optional[ConfigMapEnvSource]:
+        """
+        The ConfigMap to select from
+        """
         return self.__configMapRef
 
-    # The Secret to select from
     def secretRef(self) -> Optional[SecretEnvSource]:
+        """
+        The Secret to select from
+        """
         return self.__secretRef
 
 
@@ -2743,12 +2987,16 @@ class ObjectFieldSelector(types.Object):
         v["fieldPath"] = fieldPath
         return v
 
-    # Version of the schema the FieldPath is written in terms of, defaults to "v1".
     def apiVersion(self) -> Optional[str]:
+        """
+        Version of the schema the FieldPath is written in terms of, defaults to "v1".
+        """
         return self.__apiVersion
 
-    # Path of the field to select in the specified API version.
     def fieldPath(self) -> str:
+        """
+        Path of the field to select in the specified API version.
+        """
         return self.__fieldPath
 
 
@@ -2782,16 +3030,22 @@ class ResourceFieldSelector(types.Object):
         v["divisor"] = divisor
         return v
 
-    # Container name: required for volumes, optional for env vars
     def containerName(self) -> Optional[str]:
+        """
+        Container name: required for volumes, optional for env vars
+        """
         return self.__containerName
 
-    # Required: resource to select
     def resource(self) -> str:
+        """
+        Required: resource to select
+        """
         return self.__resource
 
-    # Specifies the output format of the exposed resources, defaults to "1"
     def divisor(self) -> Optional["resource.Quantity"]:
+        """
+        Specifies the output format of the exposed resources, defaults to "1"
+        """
         return self.__divisor
 
 
@@ -2829,16 +3083,22 @@ class SecretKeySelector(types.Object):
             v["optional"] = optional
         return v
 
-    # The name of the secret in the pod's namespace to select from.
     def localObjectReference(self) -> LocalObjectReference:
+        """
+        The name of the secret in the pod's namespace to select from.
+        """
         return self.__localObjectReference
 
-    # The key of the secret to select from.  Must be a valid secret key.
     def key(self) -> str:
+        """
+        The key of the secret to select from.  Must be a valid secret key.
+        """
         return self.__key
 
-    # Specify whether the Secret or its key must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the Secret or its key must be defined
+        """
         return self.__optional
 
 
@@ -2882,22 +3142,30 @@ class EnvVarSource(types.Object):
             v["secretKeyRef"] = secretKeyRef
         return v
 
-    # Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations,
-    # spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
     def fieldRef(self) -> Optional[ObjectFieldSelector]:
+        """
+        Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations,
+        spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
+        """
         return self.__fieldRef
 
-    # Selects a resource of the container: only resources limits and requests
-    # (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
     def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
+        """
+        Selects a resource of the container: only resources limits and requests
+        (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
+        """
         return self.__resourceFieldRef
 
-    # Selects a key of a ConfigMap.
     def configMapKeyRef(self) -> Optional[ConfigMapKeySelector]:
+        """
+        Selects a key of a ConfigMap.
+        """
         return self.__configMapKeyRef
 
-    # Selects a key of a secret in the pod's namespace
     def secretKeyRef(self) -> Optional[SecretKeySelector]:
+        """
+        Selects a key of a secret in the pod's namespace
+        """
         return self.__secretKeyRef
 
 
@@ -2929,23 +3197,29 @@ class EnvVar(types.Object):
             v["valueFrom"] = valueFrom
         return v
 
-    # Name of the environment variable. Must be a C_IDENTIFIER.
     def name(self) -> str:
+        """
+        Name of the environment variable. Must be a C_IDENTIFIER.
+        """
         return self.__name
 
-    # Variable references $(VAR_NAME) are expanded
-    # using the previous defined environment variables in the container and
-    # any service environment variables. If a variable cannot be resolved,
-    # the reference in the input string will be unchanged. The $(VAR_NAME)
-    # syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped
-    # references will never be expanded, regardless of whether the variable
-    # exists or not.
-    # Defaults to "".
     def value(self) -> Optional[str]:
+        """
+        Variable references $(VAR_NAME) are expanded
+        using the previous defined environment variables in the container and
+        any service environment variables. If a variable cannot be resolved,
+        the reference in the input string will be unchanged. The $(VAR_NAME)
+        syntax can be escaped with a double $$, ie: $$(VAR_NAME). Escaped
+        references will never be expanded, regardless of whether the variable
+        exists or not.
+        Defaults to "".
+        """
         return self.__value
 
-    # Source for the environment variable's value. Cannot be used if value is not empty.
     def valueFrom(self) -> Optional[EnvVarSource]:
+        """
+        Source for the environment variable's value. Cannot be used if value is not empty.
+        """
         return self.__valueFrom
 
 
@@ -2966,12 +3240,14 @@ class ExecAction(types.Object):
             v["command"] = command
         return v
 
-    # Command is the command line to execute inside the container, the working directory for the
-    # command  is root ('/') in the container's filesystem. The command is simply exec'd, it is
-    # not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
-    # a shell, you need to explicitly call out to that shell.
-    # Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
     def command(self) -> Optional[List[str]]:
+        """
+        Command is the command line to execute inside the container, the working directory for the
+        command  is root ('/') in the container's filesystem. The command is simply exec'd, it is
+        not run inside a shell, so traditional shell instructions ('|', etc) won't work. To use
+        a shell, you need to explicitly call out to that shell.
+        Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+        """
         return self.__command
 
 
@@ -2995,12 +3271,16 @@ class HTTPHeader(types.Object):
         v["value"] = value
         return v
 
-    # The header field name
     def name(self) -> str:
+        """
+        The header field name
+        """
         return self.__name
 
-    # The header field value
     def value(self) -> str:
+        """
+        The header field value
+        """
         return self.__value
 
 
@@ -3047,28 +3327,38 @@ class HTTPGetAction(types.Object):
             v["httpHeaders"] = httpHeaders.values()  # named list
         return v
 
-    # Path to access on the HTTP server.
     def path(self) -> Optional[str]:
+        """
+        Path to access on the HTTP server.
+        """
         return self.__path
 
-    # Name or number of the port to access on the container.
-    # Number must be in the range 1 to 65535.
-    # Name must be an IANA_SVC_NAME.
     def port(self) -> Union[int, str]:
+        """
+        Name or number of the port to access on the container.
+        Number must be in the range 1 to 65535.
+        Name must be an IANA_SVC_NAME.
+        """
         return self.__port
 
-    # Host name to connect to, defaults to the pod IP. You probably want to set
-    # "Host" in httpHeaders instead.
     def host(self) -> Optional[str]:
+        """
+        Host name to connect to, defaults to the pod IP. You probably want to set
+        "Host" in httpHeaders instead.
+        """
         return self.__host
 
-    # Scheme to use for connecting to the host.
-    # Defaults to HTTP.
     def scheme(self) -> Optional[URIScheme]:
+        """
+        Scheme to use for connecting to the host.
+        Defaults to HTTP.
+        """
         return self.__scheme
 
-    # Custom headers to set in the request. HTTP allows repeated headers.
     def httpHeaders(self) -> Optional[Dict[str, HTTPHeader]]:
+        """
+        Custom headers to set in the request. HTTP allows repeated headers.
+        """
         return self.__httpHeaders
 
 
@@ -3093,14 +3383,18 @@ class TCPSocketAction(types.Object):
             v["host"] = host
         return v
 
-    # Number or name of the port to access on the container.
-    # Number must be in the range 1 to 65535.
-    # Name must be an IANA_SVC_NAME.
     def port(self) -> Union[int, str]:
+        """
+        Number or name of the port to access on the container.
+        Number must be in the range 1 to 65535.
+        Name must be an IANA_SVC_NAME.
+        """
         return self.__port
 
-    # Optional: Host name to connect to, defaults to the pod IP.
     def host(self) -> Optional[str]:
+        """
+        Optional: Host name to connect to, defaults to the pod IP.
+        """
         return self.__host
 
 
@@ -3137,19 +3431,25 @@ class Handler(types.Object):
             v["tcpSocket"] = tcpSocket
         return v
 
-    # One and only one of the following should be specified.
-    # Exec specifies the action to take.
     def exec_(self) -> Optional[ExecAction]:
+        """
+        One and only one of the following should be specified.
+        Exec specifies the action to take.
+        """
         return self.__exec_
 
-    # HTTPGet specifies the http request to perform.
     def httpGet(self) -> Optional[HTTPGetAction]:
+        """
+        HTTPGet specifies the http request to perform.
+        """
         return self.__httpGet
 
-    # TCPSocket specifies an action involving a TCP port.
-    # TCP hooks not yet supported
-    # TODO: implement a realistic TCP lifecycle hook
     def tcpSocket(self) -> Optional[TCPSocketAction]:
+        """
+        TCPSocket specifies an action involving a TCP port.
+        TCP hooks not yet supported
+        TODO: implement a realistic TCP lifecycle hook
+        """
         return self.__tcpSocket
 
 
@@ -3177,24 +3477,28 @@ class Lifecycle(types.Object):
             v["preStop"] = preStop
         return v
 
-    # PostStart is called immediately after a container is created. If the handler fails,
-    # the container is terminated and restarted according to its restart policy.
-    # Other management of the container blocks until the hook completes.
-    # More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
     def postStart(self) -> Optional[Handler]:
+        """
+        PostStart is called immediately after a container is created. If the handler fails,
+        the container is terminated and restarted according to its restart policy.
+        Other management of the container blocks until the hook completes.
+        More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+        """
         return self.__postStart
 
-    # PreStop is called immediately before a container is terminated due to an
-    # API request or management event such as liveness/startup probe failure,
-    # preemption, resource contention, etc. The handler is not called if the
-    # container crashes or exits. The reason for termination is passed to the
-    # handler. The Pod's termination grace period countdown begins before the
-    # PreStop hooked is executed. Regardless of the outcome of the handler, the
-    # container will eventually terminate within the Pod's termination grace
-    # period. Other management of the container blocks until the hook completes
-    # or until the termination grace period is reached.
-    # More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
     def preStop(self) -> Optional[Handler]:
+        """
+        PreStop is called immediately before a container is terminated due to an
+        API request or management event such as liveness/startup probe failure,
+        preemption, resource contention, etc. The handler is not called if the
+        container crashes or exits. The reason for termination is passed to the
+        handler. The Pod's termination grace period countdown begins before the
+        PreStop hooked is executed. Regardless of the outcome of the handler, the
+        container will eventually terminate within the Pod's termination grace
+        period. Other management of the container blocks until the hook completes
+        or until the termination grace period is reached.
+        More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
+        """
         return self.__preStop
 
 
@@ -3248,34 +3552,46 @@ class Probe(types.Object):
             v["failureThreshold"] = failureThreshold
         return v
 
-    # The action taken to determine the health of a container
     def handler(self) -> Handler:
+        """
+        The action taken to determine the health of a container
+        """
         return self.__handler
 
-    # Number of seconds after the container has started before liveness probes are initiated.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     def initialDelaySeconds(self) -> Optional[int]:
+        """
+        Number of seconds after the container has started before liveness probes are initiated.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+        """
         return self.__initialDelaySeconds
 
-    # Number of seconds after which the probe times out.
-    # Defaults to 1 second. Minimum value is 1.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     def timeoutSeconds(self) -> Optional[int]:
+        """
+        Number of seconds after which the probe times out.
+        Defaults to 1 second. Minimum value is 1.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+        """
         return self.__timeoutSeconds
 
-    # How often (in seconds) to perform the probe.
-    # Default to 10 seconds. Minimum value is 1.
     def periodSeconds(self) -> Optional[int]:
+        """
+        How often (in seconds) to perform the probe.
+        Default to 10 seconds. Minimum value is 1.
+        """
         return self.__periodSeconds
 
-    # Minimum consecutive successes for the probe to be considered successful after having failed.
-    # Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
     def successThreshold(self) -> Optional[int]:
+        """
+        Minimum consecutive successes for the probe to be considered successful after having failed.
+        Defaults to 1. Must be 1 for liveness and startup. Minimum value is 1.
+        """
         return self.__successThreshold
 
-    # Minimum consecutive failures for the probe to be considered failed after having succeeded.
-    # Defaults to 3. Minimum value is 1.
     def failureThreshold(self) -> Optional[int]:
+        """
+        Minimum consecutive failures for the probe to be considered failed after having succeeded.
+        Defaults to 3. Minimum value is 1.
+        """
         return self.__failureThreshold
 
 
@@ -3307,16 +3623,20 @@ class ResourceRequirements(types.Object):
             v["requests"] = requests
         return v
 
-    # Limits describes the maximum amount of compute resources allowed.
-    # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     def limits(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Limits describes the maximum amount of compute resources allowed.
+        More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+        """
         return self.__limits
 
-    # Requests describes the minimum amount of compute resources required.
-    # If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
-    # otherwise to an implementation-defined value.
-    # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     def requests(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Requests describes the minimum amount of compute resources required.
+        If Requests is omitted for a container, it defaults to Limits if that is explicitly specified,
+        otherwise to an implementation-defined value.
+        More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+        """
         return self.__requests
 
 
@@ -3354,20 +3674,28 @@ class SELinuxOptions(types.Object):
             v["level"] = level
         return v
 
-    # User is a SELinux user label that applies to the container.
     def user(self) -> Optional[str]:
+        """
+        User is a SELinux user label that applies to the container.
+        """
         return self.__user
 
-    # Role is a SELinux role label that applies to the container.
     def role(self) -> Optional[str]:
+        """
+        Role is a SELinux role label that applies to the container.
+        """
         return self.__role
 
-    # Type is a SELinux type label that applies to the container.
     def type(self) -> Optional[str]:
+        """
+        Type is a SELinux type label that applies to the container.
+        """
         return self.__type
 
-    # Level is SELinux level label that applies to the container.
     def level(self) -> Optional[str]:
+        """
+        Level is SELinux level label that applies to the container.
+        """
         return self.__level
 
 
@@ -3403,24 +3731,30 @@ class WindowsSecurityContextOptions(types.Object):
             v["runAsUserName"] = runAsUserName
         return v
 
-    # GMSACredentialSpecName is the name of the GMSA credential spec to use.
-    # This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
     def gmsaCredentialSpecName(self) -> Optional[str]:
+        """
+        GMSACredentialSpecName is the name of the GMSA credential spec to use.
+        This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
+        """
         return self.__gmsaCredentialSpecName
 
-    # GMSACredentialSpec is where the GMSA admission webhook
-    # (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
-    # GMSA credential spec named by the GMSACredentialSpecName field.
-    # This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
     def gmsaCredentialSpec(self) -> Optional[str]:
+        """
+        GMSACredentialSpec is where the GMSA admission webhook
+        (https://github.com/kubernetes-sigs/windows-gmsa) inlines the contents of the
+        GMSA credential spec named by the GMSACredentialSpecName field.
+        This field is alpha-level and is only honored by servers that enable the WindowsGMSA feature flag.
+        """
         return self.__gmsaCredentialSpec
 
-    # The UserName in Windows to run the entrypoint of the container process.
-    # Defaults to the user specified in image metadata if unspecified.
-    # May also be set in PodSecurityContext. If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
-    # This field is alpha-level and it is only honored by servers that enable the WindowsRunAsUserName feature flag.
     def runAsUserName(self) -> Optional[str]:
+        """
+        The UserName in Windows to run the entrypoint of the container process.
+        Defaults to the user specified in image metadata if unspecified.
+        May also be set in PodSecurityContext. If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        This field is alpha-level and it is only honored by servers that enable the WindowsRunAsUserName feature flag.
+        """
         return self.__runAsUserName
 
 
@@ -3502,72 +3836,92 @@ class SecurityContext(types.Object):
             v["procMount"] = procMount
         return v
 
-    # The capabilities to add/drop when running containers.
-    # Defaults to the default set of capabilities granted by the container runtime.
     def capabilities(self) -> Optional[Capabilities]:
+        """
+        The capabilities to add/drop when running containers.
+        Defaults to the default set of capabilities granted by the container runtime.
+        """
         return self.__capabilities
 
-    # Run container in privileged mode.
-    # Processes in privileged containers are essentially equivalent to root on the host.
-    # Defaults to false.
     def privileged(self) -> Optional[bool]:
+        """
+        Run container in privileged mode.
+        Processes in privileged containers are essentially equivalent to root on the host.
+        Defaults to false.
+        """
         return self.__privileged
 
-    # The SELinux context to be applied to the container.
-    # If unspecified, the container runtime will allocate a random SELinux context for each
-    # container.  May also be set in PodSecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
     def seLinuxOptions(self) -> Optional[SELinuxOptions]:
+        """
+        The SELinux context to be applied to the container.
+        If unspecified, the container runtime will allocate a random SELinux context for each
+        container.  May also be set in PodSecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__seLinuxOptions
 
-    # The Windows specific settings applied to all containers.
-    # If unspecified, the options from the PodSecurityContext will be used.
-    # If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
     def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
+        """
+        The Windows specific settings applied to all containers.
+        If unspecified, the options from the PodSecurityContext will be used.
+        If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__windowsOptions
 
-    # The UID to run the entrypoint of the container process.
-    # Defaults to user specified in image metadata if unspecified.
-    # May also be set in PodSecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
     def runAsUser(self) -> Optional[int]:
+        """
+        The UID to run the entrypoint of the container process.
+        Defaults to user specified in image metadata if unspecified.
+        May also be set in PodSecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__runAsUser
 
-    # The GID to run the entrypoint of the container process.
-    # Uses runtime default if unset.
-    # May also be set in PodSecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
     def runAsGroup(self) -> Optional[int]:
+        """
+        The GID to run the entrypoint of the container process.
+        Uses runtime default if unset.
+        May also be set in PodSecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__runAsGroup
 
-    # Indicates that the container must run as a non-root user.
-    # If true, the Kubelet will validate the image at runtime to ensure that it
-    # does not run as UID 0 (root) and fail to start the container if it does.
-    # If unset or false, no such validation will be performed.
-    # May also be set in PodSecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
     def runAsNonRoot(self) -> Optional[bool]:
+        """
+        Indicates that the container must run as a non-root user.
+        If true, the Kubelet will validate the image at runtime to ensure that it
+        does not run as UID 0 (root) and fail to start the container if it does.
+        If unset or false, no such validation will be performed.
+        May also be set in PodSecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__runAsNonRoot
 
-    # Whether this container has a read-only root filesystem.
-    # Default is false.
     def readOnlyRootFilesystem(self) -> Optional[bool]:
+        """
+        Whether this container has a read-only root filesystem.
+        Default is false.
+        """
         return self.__readOnlyRootFilesystem
 
-    # AllowPrivilegeEscalation controls whether a process can gain more
-    # privileges than its parent process. This bool directly controls if
-    # the no_new_privs flag will be set on the container process.
-    # AllowPrivilegeEscalation is true always when the container is:
-    # 1) run as Privileged
-    # 2) has CAP_SYS_ADMIN
     def allowPrivilegeEscalation(self) -> Optional[bool]:
+        """
+        AllowPrivilegeEscalation controls whether a process can gain more
+        privileges than its parent process. This bool directly controls if
+        the no_new_privs flag will be set on the container process.
+        AllowPrivilegeEscalation is true always when the container is:
+        1) run as Privileged
+        2) has CAP_SYS_ADMIN
+        """
         return self.__allowPrivilegeEscalation
 
-    # procMount denotes the type of proc mount to use for the containers.
-    # The default is DefaultProcMount which uses the container runtime defaults for
-    # readonly paths and masked paths.
-    # This requires the ProcMountType feature flag to be enabled.
     def procMount(self) -> Optional[ProcMountType]:
+        """
+        procMount denotes the type of proc mount to use for the containers.
+        The default is DefaultProcMount which uses the container runtime defaults for
+        readonly paths and masked paths.
+        This requires the ProcMountType feature flag to be enabled.
+        """
         return self.__procMount
 
 
@@ -3591,12 +3945,16 @@ class VolumeDevice(types.Object):
         v["devicePath"] = devicePath
         return v
 
-    # name must match the name of a persistentVolumeClaim in the pod
     def name(self) -> str:
+        """
+        name must match the name of a persistentVolumeClaim in the pod
+        """
         return self.__name
 
-    # devicePath is the path inside of the container that the device will be mapped to.
     def devicePath(self) -> str:
+        """
+        devicePath is the path inside of the container that the device will be mapped to.
+        """
         return self.__devicePath
 
 
@@ -3648,38 +4006,50 @@ class VolumeMount(types.Object):
             v["subPathExpr"] = subPathExpr
         return v
 
-    # This must match the Name of a Volume.
     def name(self) -> str:
+        """
+        This must match the Name of a Volume.
+        """
         return self.__name
 
-    # Mounted read-only if true, read-write otherwise (false or unspecified).
-    # Defaults to false.
     def readOnly(self) -> Optional[bool]:
+        """
+        Mounted read-only if true, read-write otherwise (false or unspecified).
+        Defaults to false.
+        """
         return self.__readOnly
 
-    # Path within the container at which the volume should be mounted.  Must
-    # not contain ':'.
     def mountPath(self) -> str:
+        """
+        Path within the container at which the volume should be mounted.  Must
+        not contain ':'.
+        """
         return self.__mountPath
 
-    # Path within the volume from which the container's volume should be mounted.
-    # Defaults to "" (volume's root).
     def subPath(self) -> Optional[str]:
+        """
+        Path within the volume from which the container's volume should be mounted.
+        Defaults to "" (volume's root).
+        """
         return self.__subPath
 
-    # mountPropagation determines how mounts are propagated from the host
-    # to container and the other way around.
-    # When not set, MountPropagationNone is used.
-    # This field is beta in 1.10.
     def mountPropagation(self) -> Optional[MountPropagationMode]:
+        """
+        mountPropagation determines how mounts are propagated from the host
+        to container and the other way around.
+        When not set, MountPropagationNone is used.
+        This field is beta in 1.10.
+        """
         return self.__mountPropagation
 
-    # Expanded path within the volume from which the container's volume should be mounted.
-    # Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment.
-    # Defaults to "" (volume's root).
-    # SubPathExpr and SubPath are mutually exclusive.
-    # This field is beta in 1.15.
     def subPathExpr(self) -> Optional[str]:
+        """
+        Expanded path within the volume from which the container's volume should be mounted.
+        Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment.
+        Defaults to "" (volume's root).
+        SubPathExpr and SubPath are mutually exclusive.
+        This field is beta in 1.15.
+        """
         return self.__subPathExpr
 
 
@@ -3835,174 +4205,218 @@ class Container(types.Object):
             v["tty"] = tty
         return v
 
-    # Name of the container specified as a DNS_LABEL.
-    # Each container in a pod must have a unique name (DNS_LABEL).
-    # Cannot be updated.
     def name(self) -> str:
+        """
+        Name of the container specified as a DNS_LABEL.
+        Each container in a pod must have a unique name (DNS_LABEL).
+        Cannot be updated.
+        """
         return self.__name
 
-    # Docker image name.
-    # More info: https://kubernetes.io/docs/concepts/containers/images
-    # This field is optional to allow higher level config management to default or override
-    # container images in workload controllers like Deployments and StatefulSets.
     def image(self) -> Optional[str]:
+        """
+        Docker image name.
+        More info: https://kubernetes.io/docs/concepts/containers/images
+        This field is optional to allow higher level config management to default or override
+        container images in workload controllers like Deployments and StatefulSets.
+        """
         return self.__image
 
-    # Entrypoint array. Not executed within a shell.
-    # The docker image's ENTRYPOINT is used if this is not provided.
-    # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
-    # cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
-    # can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
-    # regardless of whether the variable exists or not.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     def command(self) -> Optional[List[str]]:
+        """
+        Entrypoint array. Not executed within a shell.
+        The docker image's ENTRYPOINT is used if this is not provided.
+        Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+        cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
+        can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
+        regardless of whether the variable exists or not.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+        """
         return self.__command
 
-    # Arguments to the entrypoint.
-    # The docker image's CMD is used if this is not provided.
-    # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
-    # cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
-    # can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
-    # regardless of whether the variable exists or not.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     def args(self) -> Optional[List[str]]:
+        """
+        Arguments to the entrypoint.
+        The docker image's CMD is used if this is not provided.
+        Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+        cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
+        can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
+        regardless of whether the variable exists or not.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+        """
         return self.__args
 
-    # Container's working directory.
-    # If not specified, the container runtime's default will be used, which
-    # might be configured in the container image.
-    # Cannot be updated.
     def workingDir(self) -> Optional[str]:
+        """
+        Container's working directory.
+        If not specified, the container runtime's default will be used, which
+        might be configured in the container image.
+        Cannot be updated.
+        """
         return self.__workingDir
 
-    # List of ports to expose from the container. Exposing a port here gives
-    # the system additional information about the network connections a
-    # container uses, but is primarily informational. Not specifying a port here
-    # DOES NOT prevent that port from being exposed. Any port which is
-    # listening on the default "0.0.0.0" address inside a container will be
-    # accessible from the network.
-    # Cannot be updated.
-    # +listType=map
-    # +listMapKey=containerPort
-    # +listMapKey=protocol
     def ports(self) -> Optional[Dict[str, ContainerPort]]:
+        """
+        List of ports to expose from the container. Exposing a port here gives
+        the system additional information about the network connections a
+        container uses, but is primarily informational. Not specifying a port here
+        DOES NOT prevent that port from being exposed. Any port which is
+        listening on the default "0.0.0.0" address inside a container will be
+        accessible from the network.
+        Cannot be updated.
+        +listType=map
+        +listMapKey=containerPort
+        +listMapKey=protocol
+        """
         return self.__ports
 
-    # List of sources to populate environment variables in the container.
-    # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
-    # will be reported as an event when the container is starting. When a key exists in multiple
-    # sources, the value associated with the last source will take precedence.
-    # Values defined by an Env with a duplicate key will take precedence.
-    # Cannot be updated.
     def envFrom(self) -> Optional[List[EnvFromSource]]:
+        """
+        List of sources to populate environment variables in the container.
+        The keys defined within a source must be a C_IDENTIFIER. All invalid keys
+        will be reported as an event when the container is starting. When a key exists in multiple
+        sources, the value associated with the last source will take precedence.
+        Values defined by an Env with a duplicate key will take precedence.
+        Cannot be updated.
+        """
         return self.__envFrom
 
-    # List of environment variables to set in the container.
-    # Cannot be updated.
     def env(self) -> Optional[Dict[str, EnvVar]]:
+        """
+        List of environment variables to set in the container.
+        Cannot be updated.
+        """
         return self.__env
 
-    # Compute Resources required by this container.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
     def resources(self) -> Optional[ResourceRequirements]:
+        """
+        Compute Resources required by this container.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/
+        """
         return self.__resources
 
-    # Pod volumes to mount into the container's filesystem.
-    # Cannot be updated.
     def volumeMounts(self) -> Optional[Dict[str, VolumeMount]]:
+        """
+        Pod volumes to mount into the container's filesystem.
+        Cannot be updated.
+        """
         return self.__volumeMounts
 
-    # volumeDevices is the list of block devices to be used by the container.
-    # This is a beta feature.
     def volumeDevices(self) -> Optional[Dict[str, VolumeDevice]]:
+        """
+        volumeDevices is the list of block devices to be used by the container.
+        This is a beta feature.
+        """
         return self.__volumeDevices
 
-    # Periodic probe of container liveness.
-    # Container will be restarted if the probe fails.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     def livenessProbe(self) -> Optional[Probe]:
+        """
+        Periodic probe of container liveness.
+        Container will be restarted if the probe fails.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+        """
         return self.__livenessProbe
 
-    # Periodic probe of container service readiness.
-    # Container will be removed from service endpoints if the probe fails.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     def readinessProbe(self) -> Optional[Probe]:
+        """
+        Periodic probe of container service readiness.
+        Container will be removed from service endpoints if the probe fails.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+        """
         return self.__readinessProbe
 
-    # StartupProbe indicates that the Pod has successfully initialized.
-    # If specified, no other probes are executed until this completes successfully.
-    # If this probe fails, the Pod will be restarted, just as if the livenessProbe failed.
-    # This can be used to provide different probe parameters at the beginning of a Pod's lifecycle,
-    # when it might take a long time to load data or warm a cache, than during steady-state operation.
-    # This cannot be updated.
-    # This is an alpha feature enabled by the StartupProbe feature flag.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
     def startupProbe(self) -> Optional[Probe]:
+        """
+        StartupProbe indicates that the Pod has successfully initialized.
+        If specified, no other probes are executed until this completes successfully.
+        If this probe fails, the Pod will be restarted, just as if the livenessProbe failed.
+        This can be used to provide different probe parameters at the beginning of a Pod's lifecycle,
+        when it might take a long time to load data or warm a cache, than during steady-state operation.
+        This cannot be updated.
+        This is an alpha feature enabled by the StartupProbe feature flag.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle#container-probes
+        """
         return self.__startupProbe
 
-    # Actions that the management system should take in response to container lifecycle events.
-    # Cannot be updated.
     def lifecycle(self) -> Optional[Lifecycle]:
+        """
+        Actions that the management system should take in response to container lifecycle events.
+        Cannot be updated.
+        """
         return self.__lifecycle
 
-    # Optional: Path at which the file to which the container's termination message
-    # will be written is mounted into the container's filesystem.
-    # Message written is intended to be brief final status, such as an assertion failure message.
-    # Will be truncated by the node if greater than 4096 bytes. The total message length across
-    # all containers will be limited to 12kb.
-    # Defaults to /dev/termination-log.
-    # Cannot be updated.
     def terminationMessagePath(self) -> Optional[str]:
+        """
+        Optional: Path at which the file to which the container's termination message
+        will be written is mounted into the container's filesystem.
+        Message written is intended to be brief final status, such as an assertion failure message.
+        Will be truncated by the node if greater than 4096 bytes. The total message length across
+        all containers will be limited to 12kb.
+        Defaults to /dev/termination-log.
+        Cannot be updated.
+        """
         return self.__terminationMessagePath
 
-    # Indicate how the termination message should be populated. File will use the contents of
-    # terminationMessagePath to populate the container status message on both success and failure.
-    # FallbackToLogsOnError will use the last chunk of container log output if the termination
-    # message file is empty and the container exited with an error.
-    # The log output is limited to 2048 bytes or 80 lines, whichever is smaller.
-    # Defaults to File.
-    # Cannot be updated.
     def terminationMessagePolicy(self) -> Optional[TerminationMessagePolicy]:
+        """
+        Indicate how the termination message should be populated. File will use the contents of
+        terminationMessagePath to populate the container status message on both success and failure.
+        FallbackToLogsOnError will use the last chunk of container log output if the termination
+        message file is empty and the container exited with an error.
+        The log output is limited to 2048 bytes or 80 lines, whichever is smaller.
+        Defaults to File.
+        Cannot be updated.
+        """
         return self.__terminationMessagePolicy
 
-    # Image pull policy.
-    # One of Always, Never, IfNotPresent.
-    # Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
     def imagePullPolicy(self) -> Optional[PullPolicy]:
+        """
+        Image pull policy.
+        One of Always, Never, IfNotPresent.
+        Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+        """
         return self.__imagePullPolicy
 
-    # Security options the pod should run with.
-    # More info: https://kubernetes.io/docs/concepts/policy/security-context/
-    # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     def securityContext(self) -> Optional[SecurityContext]:
+        """
+        Security options the pod should run with.
+        More info: https://kubernetes.io/docs/concepts/policy/security-context/
+        More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+        """
         return self.__securityContext
 
-    # Whether this container should allocate a buffer for stdin in the container runtime. If this
-    # is not set, reads from stdin in the container will always result in EOF.
-    # Default is false.
     def stdin(self) -> Optional[bool]:
+        """
+        Whether this container should allocate a buffer for stdin in the container runtime. If this
+        is not set, reads from stdin in the container will always result in EOF.
+        Default is false.
+        """
         return self.__stdin
 
-    # Whether the container runtime should close the stdin channel after it has been opened by
-    # a single attach. When stdin is true the stdin stream will remain open across multiple attach
-    # sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
-    # first client attaches to stdin, and then remains open and accepts data until the client disconnects,
-    # at which time stdin is closed and remains closed until the container is restarted. If this
-    # flag is false, a container processes that reads from stdin will never receive an EOF.
-    # Default is false
     def stdinOnce(self) -> Optional[bool]:
+        """
+        Whether the container runtime should close the stdin channel after it has been opened by
+        a single attach. When stdin is true the stdin stream will remain open across multiple attach
+        sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
+        first client attaches to stdin, and then remains open and accepts data until the client disconnects,
+        at which time stdin is closed and remains closed until the container is restarted. If this
+        flag is false, a container processes that reads from stdin will never receive an EOF.
+        Default is false
+        """
         return self.__stdinOnce
 
-    # Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
-    # Default is false.
     def tty(self) -> Optional[bool]:
+        """
+        Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
+        Default is false.
+        """
         return self.__tty
 
 
@@ -4045,24 +4459,32 @@ class DownwardAPIVolumeFile(types.Object):
             v["mode"] = mode
         return v
 
-    # Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
     def path(self) -> str:
+        """
+        Required: Path is  the relative path name of the file to be created. Must not be absolute or contain the '..' path. Must be utf-8 encoded. The first item of the relative path must not start with '..'
+        """
         return self.__path
 
-    # Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
     def fieldRef(self) -> Optional[ObjectFieldSelector]:
+        """
+        Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
+        """
         return self.__fieldRef
 
-    # Selects a resource of the container: only resources limits and requests
-    # (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
     def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
+        """
+        Selects a resource of the container: only resources limits and requests
+        (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
+        """
         return self.__resourceFieldRef
 
-    # Optional: mode bits to use on this file, must be a value between 0
-    # and 0777. If not specified, the volume defaultMode will be used.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def mode(self) -> Optional[int]:
+        """
+        Optional: mode bits to use on this file, must be a value between 0
+        and 0777. If not specified, the volume defaultMode will be used.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__mode
 
 
@@ -4085,8 +4507,10 @@ class DownwardAPIProjection(types.Object):
             v["items"] = items
         return v
 
-    # Items is a list of DownwardAPIVolume file
     def items(self) -> Optional[List[DownwardAPIVolumeFile]]:
+        """
+        Items is a list of DownwardAPIVolume file
+        """
         return self.__items
 
 
@@ -4115,16 +4539,20 @@ class DownwardAPIVolumeSource(types.Object):
             v["defaultMode"] = defaultMode
         return v
 
-    # Items is a list of downward API volume file
     def items(self) -> Optional[List[DownwardAPIVolumeFile]]:
+        """
+        Items is a list of downward API volume file
+        """
         return self.__items
 
-    # Optional: mode bits to use on created files by default. Must be a
-    # value between 0 and 0777. Defaults to 0644.
-    # Directories within the path are not affected by this setting.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def defaultMode(self) -> Optional[int]:
+        """
+        Optional: mode bits to use on created files by default. Must be a
+        value between 0 and 0777. Defaults to 0644.
+        Directories within the path are not affected by this setting.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__defaultMode
 
 
@@ -4153,20 +4581,24 @@ class EmptyDirVolumeSource(types.Object):
             v["sizeLimit"] = sizeLimit
         return v
 
-    # What type of storage medium should back this directory.
-    # The default is "" which means to use the node's default medium.
-    # Must be an empty string (default) or Memory.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
     def medium(self) -> Optional[StorageMedium]:
+        """
+        What type of storage medium should back this directory.
+        The default is "" which means to use the node's default medium.
+        Must be an empty string (default) or Memory.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+        """
         return self.__medium
 
-    # Total amount of local storage required for this EmptyDir volume.
-    # The size limit is also applicable for memory medium.
-    # The maximum usage on memory medium EmptyDir would be the minimum value between
-    # the SizeLimit specified here and the sum of memory limits of all containers in a pod.
-    # The default is nil which means that the limit is undefined.
-    # More info: http://kubernetes.io/docs/user-guide/volumes#emptydir
     def sizeLimit(self) -> Optional["resource.Quantity"]:
+        """
+        Total amount of local storage required for this EmptyDir volume.
+        The size limit is also applicable for memory medium.
+        The maximum usage on memory medium EmptyDir would be the minimum value between
+        the SizeLimit specified here and the sum of memory limits of all containers in a pod.
+        The default is nil which means that the limit is undefined.
+        More info: http://kubernetes.io/docs/user-guide/volumes#emptydir
+        """
         return self.__sizeLimit
 
 
@@ -4207,25 +4639,33 @@ class EndpointAddress(types.Object):
             v["targetRef"] = targetRef
         return v
 
-    # The IP of this endpoint.
-    # May not be loopback (127.0.0.0/8), link-local (169.254.0.0/16),
-    # or link-local multicast ((224.0.0.0/24).
-    # IPv6 is also accepted but not fully supported on all platforms. Also, certain
-    # kubernetes components, like kube-proxy, are not IPv6 ready.
-    # TODO: This should allow hostname or IP, See #4447.
     def ip(self) -> str:
+        """
+        The IP of this endpoint.
+        May not be loopback (127.0.0.0/8), link-local (169.254.0.0/16),
+        or link-local multicast ((224.0.0.0/24).
+        IPv6 is also accepted but not fully supported on all platforms. Also, certain
+        kubernetes components, like kube-proxy, are not IPv6 ready.
+        TODO: This should allow hostname or IP, See #4447.
+        """
         return self.__ip
 
-    # The Hostname of this endpoint
     def hostname(self) -> Optional[str]:
+        """
+        The Hostname of this endpoint
+        """
         return self.__hostname
 
-    # Optional: Node hosting this endpoint. This can be used to determine endpoints local to a node.
     def nodeName(self) -> Optional[str]:
+        """
+        Optional: Node hosting this endpoint. This can be used to determine endpoints local to a node.
+        """
         return self.__nodeName
 
-    # Reference to object providing the endpoint.
     def targetRef(self) -> Optional[ObjectReference]:
+        """
+        Reference to object providing the endpoint.
+        """
         return self.__targetRef
 
 
@@ -4255,21 +4695,27 @@ class EndpointPort(types.Object):
             v["protocol"] = protocol
         return v
 
-    # The name of this port.  This must match the 'name' field in the
-    # corresponding ServicePort.
-    # Must be a DNS_LABEL.
-    # Optional only if one port is defined.
     def name(self) -> Optional[str]:
+        """
+        The name of this port.  This must match the 'name' field in the
+        corresponding ServicePort.
+        Must be a DNS_LABEL.
+        Optional only if one port is defined.
+        """
         return self.__name
 
-    # The port number of the endpoint.
     def port(self) -> int:
+        """
+        The port number of the endpoint.
+        """
         return self.__port
 
-    # The IP protocol for this port.
-    # Must be UDP, TCP, or SCTP.
-    # Default is TCP.
     def protocol(self) -> Optional[Protocol]:
+        """
+        The IP protocol for this port.
+        Must be UDP, TCP, or SCTP.
+        Default is TCP.
+        """
         return self.__protocol
 
 
@@ -4318,19 +4764,25 @@ class EndpointSubset(types.Object):
             v["ports"] = ports.values()  # named list
         return v
 
-    # IP addresses which offer the related ports that are marked as ready. These endpoints
-    # should be considered safe for load balancers and clients to utilize.
     def addresses(self) -> Optional[List[EndpointAddress]]:
+        """
+        IP addresses which offer the related ports that are marked as ready. These endpoints
+        should be considered safe for load balancers and clients to utilize.
+        """
         return self.__addresses
 
-    # IP addresses which offer the related ports but are not currently marked as ready
-    # because they have not yet finished starting, have recently failed a readiness check,
-    # or have recently failed a liveness check.
     def notReadyAddresses(self) -> Optional[List[EndpointAddress]]:
+        """
+        IP addresses which offer the related ports but are not currently marked as ready
+        because they have not yet finished starting, have recently failed a readiness check,
+        or have recently failed a liveness check.
+        """
         return self.__notReadyAddresses
 
-    # Port numbers available on the related IP addresses.
     def ports(self) -> Optional[Dict[str, EndpointPort]]:
+        """
+        Port numbers available on the related IP addresses.
+        """
         return self.__ports
 
 
@@ -4376,14 +4828,16 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
             v["subsets"] = subsets
         return v
 
-    # The set of all endpoints is the union of all subsets. Addresses are placed into
-    # subsets according to the IPs they share. A single address with multiple ports,
-    # some of which are ready and some of which are not (because they come from
-    # different containers) will result in the address being displayed in different
-    # subsets for the different ports. No address will appear in both Addresses and
-    # NotReadyAddresses in the same subset.
-    # Sets of addresses and ports that comprise a service.
     def subsets(self) -> Optional[List[EndpointSubset]]:
+        """
+        The set of all endpoints is the union of all subsets. Addresses are placed into
+        subsets according to the IPs they share. A single address with multiple ports,
+        some of which are ready and some of which are not (because they come from
+        different containers) will result in the address being displayed in different
+        subsets for the different ports. No address will appear in both Addresses and
+        NotReadyAddresses in the same subset.
+        Sets of addresses and ports that comprise a service.
+        """
         return self.__subsets
 
 
@@ -4540,145 +4994,189 @@ class EphemeralContainerCommon(types.Object):
             v["tty"] = tty
         return v
 
-    # Name of the ephemeral container specified as a DNS_LABEL.
-    # This name must be unique among all containers, init containers and ephemeral containers.
     def name(self) -> str:
+        """
+        Name of the ephemeral container specified as a DNS_LABEL.
+        This name must be unique among all containers, init containers and ephemeral containers.
+        """
         return self.__name
 
-    # Docker image name.
-    # More info: https://kubernetes.io/docs/concepts/containers/images
     def image(self) -> Optional[str]:
+        """
+        Docker image name.
+        More info: https://kubernetes.io/docs/concepts/containers/images
+        """
         return self.__image
 
-    # Entrypoint array. Not executed within a shell.
-    # The docker image's ENTRYPOINT is used if this is not provided.
-    # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
-    # cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
-    # can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
-    # regardless of whether the variable exists or not.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     def command(self) -> Optional[List[str]]:
+        """
+        Entrypoint array. Not executed within a shell.
+        The docker image's ENTRYPOINT is used if this is not provided.
+        Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+        cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
+        can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
+        regardless of whether the variable exists or not.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+        """
         return self.__command
 
-    # Arguments to the entrypoint.
-    # The docker image's CMD is used if this is not provided.
-    # Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
-    # cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
-    # can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
-    # regardless of whether the variable exists or not.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
     def args(self) -> Optional[List[str]]:
+        """
+        Arguments to the entrypoint.
+        The docker image's CMD is used if this is not provided.
+        Variable references $(VAR_NAME) are expanded using the container's environment. If a variable
+        cannot be resolved, the reference in the input string will be unchanged. The $(VAR_NAME) syntax
+        can be escaped with a double $$, ie: $$(VAR_NAME). Escaped references will never be expanded,
+        regardless of whether the variable exists or not.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/#running-a-command-in-a-shell
+        """
         return self.__args
 
-    # Container's working directory.
-    # If not specified, the container runtime's default will be used, which
-    # might be configured in the container image.
-    # Cannot be updated.
     def workingDir(self) -> Optional[str]:
+        """
+        Container's working directory.
+        If not specified, the container runtime's default will be used, which
+        might be configured in the container image.
+        Cannot be updated.
+        """
         return self.__workingDir
 
-    # Ports are not allowed for ephemeral containers.
     def ports(self) -> Optional[Dict[str, ContainerPort]]:
+        """
+        Ports are not allowed for ephemeral containers.
+        """
         return self.__ports
 
-    # List of sources to populate environment variables in the container.
-    # The keys defined within a source must be a C_IDENTIFIER. All invalid keys
-    # will be reported as an event when the container is starting. When a key exists in multiple
-    # sources, the value associated with the last source will take precedence.
-    # Values defined by an Env with a duplicate key will take precedence.
-    # Cannot be updated.
     def envFrom(self) -> Optional[List[EnvFromSource]]:
+        """
+        List of sources to populate environment variables in the container.
+        The keys defined within a source must be a C_IDENTIFIER. All invalid keys
+        will be reported as an event when the container is starting. When a key exists in multiple
+        sources, the value associated with the last source will take precedence.
+        Values defined by an Env with a duplicate key will take precedence.
+        Cannot be updated.
+        """
         return self.__envFrom
 
-    # List of environment variables to set in the container.
-    # Cannot be updated.
     def env(self) -> Optional[Dict[str, EnvVar]]:
+        """
+        List of environment variables to set in the container.
+        Cannot be updated.
+        """
         return self.__env
 
-    # Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources
-    # already allocated to the pod.
     def resources(self) -> Optional[ResourceRequirements]:
+        """
+        Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources
+        already allocated to the pod.
+        """
         return self.__resources
 
-    # Pod volumes to mount into the container's filesystem.
-    # Cannot be updated.
     def volumeMounts(self) -> Optional[Dict[str, VolumeMount]]:
+        """
+        Pod volumes to mount into the container's filesystem.
+        Cannot be updated.
+        """
         return self.__volumeMounts
 
-    # volumeDevices is the list of block devices to be used by the container.
-    # This is a beta feature.
     def volumeDevices(self) -> Optional[Dict[str, VolumeDevice]]:
+        """
+        volumeDevices is the list of block devices to be used by the container.
+        This is a beta feature.
+        """
         return self.__volumeDevices
 
-    # Probes are not allowed for ephemeral containers.
     def livenessProbe(self) -> Optional[Probe]:
+        """
+        Probes are not allowed for ephemeral containers.
+        """
         return self.__livenessProbe
 
-    # Probes are not allowed for ephemeral containers.
     def readinessProbe(self) -> Optional[Probe]:
+        """
+        Probes are not allowed for ephemeral containers.
+        """
         return self.__readinessProbe
 
-    # Probes are not allowed for ephemeral containers.
     def startupProbe(self) -> Optional[Probe]:
+        """
+        Probes are not allowed for ephemeral containers.
+        """
         return self.__startupProbe
 
-    # Lifecycle is not allowed for ephemeral containers.
     def lifecycle(self) -> Optional[Lifecycle]:
+        """
+        Lifecycle is not allowed for ephemeral containers.
+        """
         return self.__lifecycle
 
-    # Optional: Path at which the file to which the container's termination message
-    # will be written is mounted into the container's filesystem.
-    # Message written is intended to be brief final status, such as an assertion failure message.
-    # Will be truncated by the node if greater than 4096 bytes. The total message length across
-    # all containers will be limited to 12kb.
-    # Defaults to /dev/termination-log.
-    # Cannot be updated.
     def terminationMessagePath(self) -> Optional[str]:
+        """
+        Optional: Path at which the file to which the container's termination message
+        will be written is mounted into the container's filesystem.
+        Message written is intended to be brief final status, such as an assertion failure message.
+        Will be truncated by the node if greater than 4096 bytes. The total message length across
+        all containers will be limited to 12kb.
+        Defaults to /dev/termination-log.
+        Cannot be updated.
+        """
         return self.__terminationMessagePath
 
-    # Indicate how the termination message should be populated. File will use the contents of
-    # terminationMessagePath to populate the container status message on both success and failure.
-    # FallbackToLogsOnError will use the last chunk of container log output if the termination
-    # message file is empty and the container exited with an error.
-    # The log output is limited to 2048 bytes or 80 lines, whichever is smaller.
-    # Defaults to File.
-    # Cannot be updated.
     def terminationMessagePolicy(self) -> Optional[TerminationMessagePolicy]:
+        """
+        Indicate how the termination message should be populated. File will use the contents of
+        terminationMessagePath to populate the container status message on both success and failure.
+        FallbackToLogsOnError will use the last chunk of container log output if the termination
+        message file is empty and the container exited with an error.
+        The log output is limited to 2048 bytes or 80 lines, whichever is smaller.
+        Defaults to File.
+        Cannot be updated.
+        """
         return self.__terminationMessagePolicy
 
-    # Image pull policy.
-    # One of Always, Never, IfNotPresent.
-    # Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
     def imagePullPolicy(self) -> Optional[PullPolicy]:
+        """
+        Image pull policy.
+        One of Always, Never, IfNotPresent.
+        Defaults to Always if :latest tag is specified, or IfNotPresent otherwise.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+        """
         return self.__imagePullPolicy
 
-    # SecurityContext is not allowed for ephemeral containers.
     def securityContext(self) -> Optional[SecurityContext]:
+        """
+        SecurityContext is not allowed for ephemeral containers.
+        """
         return self.__securityContext
 
-    # Whether this container should allocate a buffer for stdin in the container runtime. If this
-    # is not set, reads from stdin in the container will always result in EOF.
-    # Default is false.
     def stdin(self) -> Optional[bool]:
+        """
+        Whether this container should allocate a buffer for stdin in the container runtime. If this
+        is not set, reads from stdin in the container will always result in EOF.
+        Default is false.
+        """
         return self.__stdin
 
-    # Whether the container runtime should close the stdin channel after it has been opened by
-    # a single attach. When stdin is true the stdin stream will remain open across multiple attach
-    # sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
-    # first client attaches to stdin, and then remains open and accepts data until the client disconnects,
-    # at which time stdin is closed and remains closed until the container is restarted. If this
-    # flag is false, a container processes that reads from stdin will never receive an EOF.
-    # Default is false
     def stdinOnce(self) -> Optional[bool]:
+        """
+        Whether the container runtime should close the stdin channel after it has been opened by
+        a single attach. When stdin is true the stdin stream will remain open across multiple attach
+        sessions. If stdinOnce is set to true, stdin is opened on container start, is empty until the
+        first client attaches to stdin, and then remains open and accepts data until the client disconnects,
+        at which time stdin is closed and remains closed until the container is restarted. If this
+        flag is false, a container processes that reads from stdin will never receive an EOF.
+        Default is false
+        """
         return self.__stdinOnce
 
-    # Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
-    # Default is false.
     def tty(self) -> Optional[bool]:
+        """
+        Whether this container should allocate a TTY for itself, also requires 'stdin' to be true.
+        Default is false.
+        """
         return self.__tty
 
 
@@ -4723,18 +5221,22 @@ class EphemeralContainer(types.Object):
             v["targetContainerName"] = targetContainerName
         return v
 
-    # Ephemeral containers have all of the fields of Container, plus additional fields
-    # specific to ephemeral containers. Fields in common with Container are in the
-    # following inlined struct so than an EphemeralContainer may easily be converted
-    # to a Container.
     def ephemeralContainerCommon(self) -> EphemeralContainerCommon:
+        """
+        Ephemeral containers have all of the fields of Container, plus additional fields
+        specific to ephemeral containers. Fields in common with Container are in the
+        following inlined struct so than an EphemeralContainer may easily be converted
+        to a Container.
+        """
         return self.__ephemeralContainerCommon
 
-    # If set, the name of the container from PodSpec that this ephemeral container targets.
-    # The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container.
-    # If not set then the ephemeral container is run in whatever namespaces are shared
-    # for the pod. Note that the container runtime must support this feature.
     def targetContainerName(self) -> Optional[str]:
+        """
+        If set, the name of the container from PodSpec that this ephemeral container targets.
+        The ephemeral container will be run in the namespaces (IPC, PID, etc) of this container.
+        If not set then the ephemeral container is run in whatever namespaces are shared
+        for the pod. Note that the container runtime must support this feature.
+        """
         return self.__targetContainerName
 
 
@@ -4770,10 +5272,12 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
         v["ephemeralContainers"] = ephemeralContainers
         return v
 
-    # A list of ephemeral containers associated with this pod. New ephemeral containers
-    # may be appended to this list, but existing ephemeral containers may not be removed
-    # or modified.
     def ephemeralContainers(self) -> List[EphemeralContainer]:
+        """
+        A list of ephemeral containers associated with this pod. New ephemeral containers
+        may be appended to this list, but existing ephemeral containers may not be removed
+        or modified.
+        """
         return self.__ephemeralContainers
 
 
@@ -4799,12 +5303,16 @@ class EventSeries(types.Object):
         v["lastObservedTime"] = lastObservedTime
         return v
 
-    # Number of occurrences in this series up to the last heartbeat time
     def count(self) -> Optional[int]:
+        """
+        Number of occurrences in this series up to the last heartbeat time
+        """
         return self.__count
 
-    # Time of the last occurrence observed
     def lastObservedTime(self) -> Optional["base.MicroTime"]:
+        """
+        Time of the last occurrence observed
+        """
         return self.__lastObservedTime
 
 
@@ -4830,12 +5338,16 @@ class EventSource(types.Object):
             v["host"] = host
         return v
 
-    # Component from which the event is generated.
     def component(self) -> Optional[str]:
+        """
+        Component from which the event is generated.
+        """
         return self.__component
 
-    # Node name on which the event is generated.
     def host(self) -> Optional[str]:
+        """
+        Node name on which the event is generated.
+        """
         return self.__host
 
 
@@ -4943,63 +5455,91 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         v["reportingInstance"] = reportingInstance
         return v
 
-    # The object that this event is about.
     def involvedObject(self) -> ObjectReference:
+        """
+        The object that this event is about.
+        """
         return self.__involvedObject
 
-    # This should be a short, machine understandable string that gives the reason
-    # for the transition into the object's current status.
-    # TODO: provide exact specification for format.
     def reason(self) -> Optional[str]:
+        """
+        This should be a short, machine understandable string that gives the reason
+        for the transition into the object's current status.
+        TODO: provide exact specification for format.
+        """
         return self.__reason
 
-    # A human-readable description of the status of this operation.
-    # TODO: decide on maximum length.
     def message(self) -> Optional[str]:
+        """
+        A human-readable description of the status of this operation.
+        TODO: decide on maximum length.
+        """
         return self.__message
 
-    # The component reporting this event. Should be a short machine understandable string.
     def source(self) -> Optional[EventSource]:
+        """
+        The component reporting this event. Should be a short machine understandable string.
+        """
         return self.__source
 
-    # The time at which the event was first recorded. (Time of server receipt is in TypeMeta.)
     def firstTimestamp(self) -> Optional["base.Time"]:
+        """
+        The time at which the event was first recorded. (Time of server receipt is in TypeMeta.)
+        """
         return self.__firstTimestamp
 
-    # The time at which the most recent occurrence of this event was recorded.
     def lastTimestamp(self) -> Optional["base.Time"]:
+        """
+        The time at which the most recent occurrence of this event was recorded.
+        """
         return self.__lastTimestamp
 
-    # The number of times this event has occurred.
     def count(self) -> Optional[int]:
+        """
+        The number of times this event has occurred.
+        """
         return self.__count
 
-    # Type of this event (Normal, Warning), new types could be added in the future
     def type(self) -> Optional[str]:
+        """
+        Type of this event (Normal, Warning), new types could be added in the future
+        """
         return self.__type
 
-    # Time when this Event was first observed.
     def eventTime(self) -> Optional["base.MicroTime"]:
+        """
+        Time when this Event was first observed.
+        """
         return self.__eventTime
 
-    # Data about the Event series this event represents or nil if it's a singleton Event.
     def series(self) -> Optional[EventSeries]:
+        """
+        Data about the Event series this event represents or nil if it's a singleton Event.
+        """
         return self.__series
 
-    # What action was taken/failed regarding to the Regarding object.
     def action(self) -> Optional[str]:
+        """
+        What action was taken/failed regarding to the Regarding object.
+        """
         return self.__action
 
-    # Optional secondary object for more complex actions.
     def related(self) -> Optional[ObjectReference]:
+        """
+        Optional secondary object for more complex actions.
+        """
         return self.__related
 
-    # Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
     def reportingComponent(self) -> str:
+        """
+        Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
+        """
         return self.__reportingComponent
 
-    # ID of the controller instance, e.g. `kubelet-xyzf`.
     def reportingInstance(self) -> str:
+        """
+        ID of the controller instance, e.g. `kubelet-xyzf`.
+        """
         return self.__reportingInstance
 
 
@@ -5049,29 +5589,39 @@ class FCVolumeSource(types.Object):
             v["wwids"] = wwids
         return v
 
-    # Optional: FC target worldwide names (WWNs)
     def targetWWNs(self) -> Optional[List[str]]:
+        """
+        Optional: FC target worldwide names (WWNs)
+        """
         return self.__targetWWNs
 
-    # Optional: FC target lun number
     def lun(self) -> Optional[int]:
+        """
+        Optional: FC target lun number
+        """
         return self.__lun
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # Optional: FC volume world wide identifiers (wwids)
-    # Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
     def wwids(self) -> Optional[List[str]]:
+        """
+        Optional: FC volume world wide identifiers (wwids)
+        Either wwids or combination of targetWWNs and lun must be set, but not both simultaneously.
+        """
         return self.__wwids
 
 
@@ -5119,31 +5669,41 @@ class FlexPersistentVolumeSource(types.Object):
             v["options"] = options
         return v
 
-    # Driver is the name of the driver to use for this volume.
     def driver(self) -> str:
+        """
+        Driver is the name of the driver to use for this volume.
+        """
         return self.__driver
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
+        """
         return self.__fsType
 
-    # Optional: SecretRef is reference to the secret object containing
-    # sensitive information to pass to the plugin scripts. This may be
-    # empty if no secret object is specified. If the secret object
-    # contains more than one secret, all secrets are passed to the plugin
-    # scripts.
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        Optional: SecretRef is reference to the secret object containing
+        sensitive information to pass to the plugin scripts. This may be
+        empty if no secret object is specified. If the secret object
+        contains more than one secret, all secrets are passed to the plugin
+        scripts.
+        """
         return self.__secretRef
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # Optional: Extra command options if any.
     def options(self) -> Optional[Dict[str, str]]:
+        """
+        Optional: Extra command options if any.
+        """
         return self.__options
 
 
@@ -5191,31 +5751,41 @@ class FlexVolumeSource(types.Object):
             v["options"] = options
         return v
 
-    # Driver is the name of the driver to use for this volume.
     def driver(self) -> str:
+        """
+        Driver is the name of the driver to use for this volume.
+        """
         return self.__driver
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". The default filesystem depends on FlexVolume script.
+        """
         return self.__fsType
 
-    # Optional: SecretRef is reference to the secret object containing
-    # sensitive information to pass to the plugin scripts. This may be
-    # empty if no secret object is specified. If the secret object
-    # contains more than one secret, all secrets are passed to the plugin
-    # scripts.
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        Optional: SecretRef is reference to the secret object containing
+        sensitive information to pass to the plugin scripts. This may be
+        empty if no secret object is specified. If the secret object
+        contains more than one secret, all secrets are passed to the plugin
+        scripts.
+        """
         return self.__secretRef
 
-    # Optional: Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Optional: Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # Optional: Extra command options if any.
     def options(self) -> Optional[Dict[str, str]]:
+        """
+        Optional: Extra command options if any.
+        """
         return self.__options
 
 
@@ -5243,13 +5813,17 @@ class FlockerVolumeSource(types.Object):
             v["datasetUUID"] = datasetUUID
         return v
 
-    # Name of the dataset stored as metadata -> name on the dataset for Flocker
-    # should be considered as deprecated
     def datasetName(self) -> Optional[str]:
+        """
+        Name of the dataset stored as metadata -> name on the dataset for Flocker
+        should be considered as deprecated
+        """
         return self.__datasetName
 
-    # UUID of the dataset. This is unique identifier of a Flocker dataset
     def datasetUUID(self) -> Optional[str]:
+        """
+        UUID of the dataset. This is unique identifier of a Flocker dataset
+        """
         return self.__datasetUUID
 
 
@@ -5295,31 +5869,39 @@ class GCEPersistentDiskVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # Unique name of the PD resource in GCE. Used to identify the disk in GCE.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     def pdName(self) -> str:
+        """
+        Unique name of the PD resource in GCE. Used to identify the disk in GCE.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        """
         return self.__pdName
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # The partition in the volume that you want to mount.
-    # If omitted, the default is to mount by volume name.
-    # Examples: For volume /dev/sda1, you specify the partition as "1".
-    # Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     def partition(self) -> Optional[int]:
+        """
+        The partition in the volume that you want to mount.
+        If omitted, the default is to mount by volume name.
+        Examples: For volume /dev/sda1, you specify the partition as "1".
+        Similarly, the volume partition for /dev/sda is "0" (or you can leave the property empty).
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        """
         return self.__partition
 
-    # ReadOnly here will force the ReadOnly setting in VolumeMounts.
-    # Defaults to false.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the ReadOnly setting in VolumeMounts.
+        Defaults to false.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        """
         return self.__readOnly
 
 
@@ -5360,26 +5942,34 @@ class GlusterfsPersistentVolumeSource(types.Object):
             v["endpointsNamespace"] = endpointsNamespace
         return v
 
-    # EndpointsName is the endpoint name that details Glusterfs topology.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def endpoints(self) -> str:
+        """
+        EndpointsName is the endpoint name that details Glusterfs topology.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__endpoints
 
-    # Path is the Glusterfs volume path.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def path(self) -> str:
+        """
+        Path is the Glusterfs volume path.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__path
 
-    # ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
-    # Defaults to false.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
+        Defaults to false.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__readOnly
 
-    # EndpointsNamespace is the namespace that contains Glusterfs endpoint.
-    # If this field is empty, the EndpointNamespace defaults to the same namespace as the bound PVC.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def endpointsNamespace(self) -> Optional[str]:
+        """
+        EndpointsNamespace is the namespace that contains Glusterfs endpoint.
+        If this field is empty, the EndpointNamespace defaults to the same namespace as the bound PVC.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__endpointsNamespace
 
 
@@ -5409,20 +5999,26 @@ class GlusterfsVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # EndpointsName is the endpoint name that details Glusterfs topology.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def endpoints(self) -> str:
+        """
+        EndpointsName is the endpoint name that details Glusterfs topology.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__endpoints
 
-    # Path is the Glusterfs volume path.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def path(self) -> str:
+        """
+        Path is the Glusterfs volume path.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__path
 
-    # ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
-    # Defaults to false.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the Glusterfs volume to be mounted with read-only permissions.
+        Defaults to false.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md#create-a-pod
+        """
         return self.__readOnly
 
 
@@ -5449,12 +6045,16 @@ class HostAlias(types.Object):
             v["hostnames"] = hostnames
         return v
 
-    # IP address of the host file entry.
     def ip(self) -> Optional[str]:
+        """
+        IP address of the host file entry.
+        """
         return self.__ip
 
-    # Hostnames for the above IP address.
     def hostnames(self) -> Optional[List[str]]:
+        """
+        Hostnames for the above IP address.
+        """
         return self.__hostnames
 
 
@@ -5480,16 +6080,20 @@ class HostPathVolumeSource(types.Object):
             v["type"] = type
         return v
 
-    # Path of the directory on the host.
-    # If the path is a symlink, it will follow the link to the real path.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     def path(self) -> str:
+        """
+        Path of the directory on the host.
+        If the path is a symlink, it will follow the link to the real path.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+        """
         return self.__path
 
-    # Type for HostPath Volume
-    # Defaults to ""
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     def type(self) -> Optional[HostPathType]:
+        """
+        Type for HostPath Volume
+        Defaults to ""
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+        """
         return self.__type
 
 
@@ -5572,58 +6176,80 @@ class ISCSIPersistentVolumeSource(types.Object):
             v["initiatorName"] = initiatorName
         return v
 
-    # iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
-    # is other than default (typically TCP ports 860 and 3260).
     def targetPortal(self) -> str:
+        """
+        iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
+        is other than default (typically TCP ports 860 and 3260).
+        """
         return self.__targetPortal
 
-    # Target iSCSI Qualified Name.
     def iqn(self) -> str:
+        """
+        Target iSCSI Qualified Name.
+        """
         return self.__iqn
 
-    # iSCSI Target Lun number.
     def lun(self) -> int:
+        """
+        iSCSI Target Lun number.
+        """
         return self.__lun
 
-    # iSCSI Interface Name that uses an iSCSI transport.
-    # Defaults to 'default' (tcp).
     def iscsiInterface(self) -> Optional[str]:
+        """
+        iSCSI Interface Name that uses an iSCSI transport.
+        Defaults to 'default' (tcp).
+        """
         return self.__iscsiInterface
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # ReadOnly here will force the ReadOnly setting in VolumeMounts.
-    # Defaults to false.
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the ReadOnly setting in VolumeMounts.
+        Defaults to false.
+        """
         return self.__readOnly
 
-    # iSCSI Target Portal List. The Portal is either an IP or ip_addr:port if the port
-    # is other than default (typically TCP ports 860 and 3260).
     def portals(self) -> Optional[List[str]]:
+        """
+        iSCSI Target Portal List. The Portal is either an IP or ip_addr:port if the port
+        is other than default (typically TCP ports 860 and 3260).
+        """
         return self.__portals
 
-    # whether support iSCSI Discovery CHAP authentication
     def chapAuthDiscovery(self) -> Optional[bool]:
+        """
+        whether support iSCSI Discovery CHAP authentication
+        """
         return self.__chapAuthDiscovery
 
-    # whether support iSCSI Session CHAP authentication
     def chapAuthSession(self) -> Optional[bool]:
+        """
+        whether support iSCSI Session CHAP authentication
+        """
         return self.__chapAuthSession
 
-    # CHAP Secret for iSCSI target and initiator authentication
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        CHAP Secret for iSCSI target and initiator authentication
+        """
         return self.__secretRef
 
-    # Custom iSCSI Initiator Name.
-    # If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
-    # <target portal>:<volume name> will be created for the connection.
     def initiatorName(self) -> Optional[str]:
+        """
+        Custom iSCSI Initiator Name.
+        If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
+        <target portal>:<volume name> will be created for the connection.
+        """
         return self.__initiatorName
 
 
@@ -5706,58 +6332,80 @@ class ISCSIVolumeSource(types.Object):
             v["initiatorName"] = initiatorName
         return v
 
-    # iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
-    # is other than default (typically TCP ports 860 and 3260).
     def targetPortal(self) -> str:
+        """
+        iSCSI Target Portal. The Portal is either an IP or ip_addr:port if the port
+        is other than default (typically TCP ports 860 and 3260).
+        """
         return self.__targetPortal
 
-    # Target iSCSI Qualified Name.
     def iqn(self) -> str:
+        """
+        Target iSCSI Qualified Name.
+        """
         return self.__iqn
 
-    # iSCSI Target Lun number.
     def lun(self) -> int:
+        """
+        iSCSI Target Lun number.
+        """
         return self.__lun
 
-    # iSCSI Interface Name that uses an iSCSI transport.
-    # Defaults to 'default' (tcp).
     def iscsiInterface(self) -> Optional[str]:
+        """
+        iSCSI Interface Name that uses an iSCSI transport.
+        Defaults to 'default' (tcp).
+        """
         return self.__iscsiInterface
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#iscsi
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # ReadOnly here will force the ReadOnly setting in VolumeMounts.
-    # Defaults to false.
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the ReadOnly setting in VolumeMounts.
+        Defaults to false.
+        """
         return self.__readOnly
 
-    # iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port
-    # is other than default (typically TCP ports 860 and 3260).
     def portals(self) -> Optional[List[str]]:
+        """
+        iSCSI Target Portal List. The portal is either an IP or ip_addr:port if the port
+        is other than default (typically TCP ports 860 and 3260).
+        """
         return self.__portals
 
-    # whether support iSCSI Discovery CHAP authentication
     def chapAuthDiscovery(self) -> Optional[bool]:
+        """
+        whether support iSCSI Discovery CHAP authentication
+        """
         return self.__chapAuthDiscovery
 
-    # whether support iSCSI Session CHAP authentication
     def chapAuthSession(self) -> Optional[bool]:
+        """
+        whether support iSCSI Session CHAP authentication
+        """
         return self.__chapAuthSession
 
-    # CHAP Secret for iSCSI target and initiator authentication
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        CHAP Secret for iSCSI target and initiator authentication
+        """
         return self.__secretRef
 
-    # Custom iSCSI Initiator Name.
-    # If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
-    # <target portal>:<volume name> will be created for the connection.
     def initiatorName(self) -> Optional[str]:
+        """
+        Custom iSCSI Initiator Name.
+        If initiatorName is specified with iscsiInterface simultaneously, new iSCSI interface
+        <target portal>:<volume name> will be created for the connection.
+        """
         return self.__initiatorName
 
 
@@ -5823,28 +6471,40 @@ class LimitRangeItem(types.Object):
             v["maxLimitRequestRatio"] = maxLimitRequestRatio
         return v
 
-    # Type of resource that this limit applies to.
     def type(self) -> Optional[LimitType]:
+        """
+        Type of resource that this limit applies to.
+        """
         return self.__type
 
-    # Max usage constraints on this kind by resource name.
     def max(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Max usage constraints on this kind by resource name.
+        """
         return self.__max
 
-    # Min usage constraints on this kind by resource name.
     def min(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Min usage constraints on this kind by resource name.
+        """
         return self.__min
 
-    # Default resource requirement limit value by resource name if resource limit is omitted.
     def default(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Default resource requirement limit value by resource name if resource limit is omitted.
+        """
         return self.__default
 
-    # DefaultRequest is the default resource requirement request value by resource name if resource request is omitted.
     def defaultRequest(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        DefaultRequest is the default resource requirement request value by resource name if resource request is omitted.
+        """
         return self.__defaultRequest
 
-    # MaxLimitRequestRatio if specified, the named resource must have a request and limit that are both non-zero where limit divided by request is less than or equal to the enumerated value; this represents the max burst for the named resource.
     def maxLimitRequestRatio(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        MaxLimitRequestRatio if specified, the named resource must have a request and limit that are both non-zero where limit divided by request is less than or equal to the enumerated value; this represents the max burst for the named resource.
+        """
         return self.__maxLimitRequestRatio
 
 
@@ -5864,8 +6524,10 @@ class LimitRangeSpec(types.Object):
         v["limits"] = limits
         return v
 
-    # Limits is the list of LimitRangeItem objects that are enforced.
     def limits(self) -> List[LimitRangeItem]:
+        """
+        Limits is the list of LimitRangeItem objects that are enforced.
+        """
         return self.__limits
 
 
@@ -5899,9 +6561,11 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the limits enforced.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[LimitRangeSpec]:
+        """
+        Spec defines the limits enforced.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -5926,16 +6590,20 @@ class LocalVolumeSource(types.Object):
             v["fsType"] = fsType
         return v
 
-    # The full path to the volume on the node.
-    # It can be either a directory or block device (disk, partition, ...).
     def path(self) -> str:
+        """
+        The full path to the volume on the node.
+        It can be either a directory or block device (disk, partition, ...).
+        """
         return self.__path
 
-    # Filesystem type to mount.
-    # It applies only when the Path is a block device.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". The default value is to auto-select a fileystem if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        It applies only when the Path is a block device.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". The default value is to auto-select a fileystem if unspecified.
+        """
         return self.__fsType
 
 
@@ -5965,21 +6633,27 @@ class NFSVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # Server is the hostname or IP address of the NFS server.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     def server(self) -> str:
+        """
+        Server is the hostname or IP address of the NFS server.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+        """
         return self.__server
 
-    # Path that is exported by the NFS server.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     def path(self) -> str:
+        """
+        Path that is exported by the NFS server.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+        """
         return self.__path
 
-    # ReadOnly here will force
-    # the NFS export to be mounted with read-only permissions.
-    # Defaults to false.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force
+        the NFS export to be mounted with read-only permissions.
+        Defaults to false.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+        """
         return self.__readOnly
 
 
@@ -6000,9 +6674,11 @@ class NamespaceSpec(types.Object):
             v["finalizers"] = finalizers
         return v
 
-    # Finalizers is an opaque list of values that must be empty to permanently remove object from storage.
-    # More info: https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
     def finalizers(self) -> Optional[List[FinalizerName]]:
+        """
+        Finalizers is an opaque list of values that must be empty to permanently remove object from storage.
+        More info: https://kubernetes.io/docs/tasks/administer-cluster/namespaces/
+        """
         return self.__finalizers
 
 
@@ -6035,9 +6711,11 @@ class Namespace(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the behavior of the Namespace.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[NamespaceSpec]:
+        """
+        Spec defines the behavior of the Namespace.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -6058,8 +6736,10 @@ class NodeConfigSource(types.Object):
             v["configMap"] = configMap
         return v
 
-    # ConfigMap is a reference to a Node's ConfigMap
     def configMap(self) -> Optional[ConfigMapNodeConfigSource]:
+        """
+        ConfigMap is a reference to a Node's ConfigMap
+        """
         return self.__configMap
 
 
@@ -6100,23 +6780,31 @@ class Taint(types.Object):
             v["timeAdded"] = timeAdded
         return v
 
-    # Required. The taint key to be applied to a node.
     def key(self) -> str:
+        """
+        Required. The taint key to be applied to a node.
+        """
         return self.__key
 
-    # Required. The taint value corresponding to the taint key.
     def value(self) -> Optional[str]:
+        """
+        Required. The taint value corresponding to the taint key.
+        """
         return self.__value
 
-    # Required. The effect of the taint on pods
-    # that do not tolerate the taint.
-    # Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
     def effect(self) -> TaintEffect:
+        """
+        Required. The effect of the taint on pods
+        that do not tolerate the taint.
+        Valid effects are NoSchedule, PreferNoSchedule and NoExecute.
+        """
         return self.__effect
 
-    # TimeAdded represents the time at which the taint was added.
-    # It is only written for NoExecute taints.
     def timeAdded(self) -> Optional["base.Time"]:
+        """
+        TimeAdded represents the time at which the taint was added.
+        It is only written for NoExecute taints.
+        """
         return self.__timeAdded
 
 
@@ -6170,32 +6858,44 @@ class NodeSpec(types.Object):
             v["configSource"] = configSource
         return v
 
-    # PodCIDR represents the pod IP range assigned to the node.
     def podCIDR(self) -> Optional[str]:
+        """
+        PodCIDR represents the pod IP range assigned to the node.
+        """
         return self.__podCIDR
 
-    # podCIDRs represents the IP ranges assigned to the node for usage by Pods on that node. If this
-    # field is specified, the 0th entry must match the podCIDR field. It may contain at most 1 value for
-    # each of IPv4 and IPv6.
     def podCIDRs(self) -> Optional[List[str]]:
+        """
+        podCIDRs represents the IP ranges assigned to the node for usage by Pods on that node. If this
+        field is specified, the 0th entry must match the podCIDR field. It may contain at most 1 value for
+        each of IPv4 and IPv6.
+        """
         return self.__podCIDRs
 
-    # ID of the node assigned by the cloud provider in the format: <ProviderName>://<ProviderSpecificNodeID>
     def providerID(self) -> Optional[str]:
+        """
+        ID of the node assigned by the cloud provider in the format: <ProviderName>://<ProviderSpecificNodeID>
+        """
         return self.__providerID
 
-    # Unschedulable controls node schedulability of new pods. By default, node is schedulable.
-    # More info: https://kubernetes.io/docs/concepts/nodes/node/#manual-node-administration
     def unschedulable(self) -> Optional[bool]:
+        """
+        Unschedulable controls node schedulability of new pods. By default, node is schedulable.
+        More info: https://kubernetes.io/docs/concepts/nodes/node/#manual-node-administration
+        """
         return self.__unschedulable
 
-    # If specified, the node's taints.
     def taints(self) -> Optional[List[Taint]]:
+        """
+        If specified, the node's taints.
+        """
         return self.__taints
 
-    # If specified, the source to get node configuration from
-    # The DynamicKubeletConfig feature gate must be enabled for the Kubelet to use this field
     def configSource(self) -> Optional[NodeConfigSource]:
+        """
+        If specified, the source to get node configuration from
+        The DynamicKubeletConfig feature gate must be enabled for the Kubelet to use this field
+        """
         return self.__configSource
 
 
@@ -6228,9 +6928,11 @@ class Node(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the behavior of a node.
-    # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[NodeSpec]:
+        """
+        Spec defines the behavior of a node.
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -6251,8 +6953,10 @@ class NodeProxyOptions(base.TypedObject):
             v["path"] = path
         return v
 
-    # Path is the URL path to use for the current proxy request to node.
     def path(self) -> Optional[str]:
+        """
+        Path is the URL path to use for the current proxy request to node.
+        """
         return self.__path
 
 
@@ -6277,14 +6981,18 @@ class PhotonPersistentDiskVolumeSource(types.Object):
             v["fsType"] = fsType
         return v
 
-    # ID that identifies Photon Controller persistent disk
     def pdID(self) -> str:
+        """
+        ID that identifies Photon Controller persistent disk
+        """
         return self.__pdID
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
 
@@ -6314,19 +7022,25 @@ class PortworxVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # VolumeID uniquely identifies a Portworx volume
     def volumeID(self) -> str:
+        """
+        VolumeID uniquely identifies a Portworx volume
+        """
         return self.__volumeID
 
-    # FSType represents the filesystem type to mount
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        FSType represents the filesystem type to mount
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
 
@@ -6379,34 +7093,46 @@ class QuobyteVolumeSource(types.Object):
             v["tenant"] = tenant
         return v
 
-    # Registry represents a single or multiple Quobyte Registry services
-    # specified as a string as host:port pair (multiple entries are separated with commas)
-    # which acts as the central registry for volumes
     def registry(self) -> str:
+        """
+        Registry represents a single or multiple Quobyte Registry services
+        specified as a string as host:port pair (multiple entries are separated with commas)
+        which acts as the central registry for volumes
+        """
         return self.__registry
 
-    # Volume is a string that references an already created Quobyte volume by name.
     def volume(self) -> str:
+        """
+        Volume is a string that references an already created Quobyte volume by name.
+        """
         return self.__volume
 
-    # ReadOnly here will force the Quobyte volume to be mounted with read-only permissions.
-    # Defaults to false.
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the Quobyte volume to be mounted with read-only permissions.
+        Defaults to false.
+        """
         return self.__readOnly
 
-    # User to map volume access to
-    # Defaults to serivceaccount user
     def user(self) -> Optional[str]:
+        """
+        User to map volume access to
+        Defaults to serivceaccount user
+        """
         return self.__user
 
-    # Group to map volume access to
-    # Default is no group
     def group(self) -> Optional[str]:
+        """
+        Group to map volume access to
+        Default is no group
+        """
         return self.__group
 
-    # Tenant owning the given Quobyte volume in the Backend
-    # Used with dynamically provisioned Quobyte volumes, value is set by the plugin
     def tenant(self) -> Optional[str]:
+        """
+        Tenant owning the given Quobyte volume in the Backend
+        Used with dynamically provisioned Quobyte volumes, value is set by the plugin
+        """
         return self.__tenant
 
 
@@ -6471,53 +7197,69 @@ class RBDPersistentVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # A collection of Ceph monitors.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def monitors(self) -> List[str]:
+        """
+        A collection of Ceph monitors.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__monitors
 
-    # The rados image name.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def image(self) -> str:
+        """
+        The rados image name.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__image
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # The rados pool name.
-    # Default is rbd.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def pool(self) -> Optional[str]:
+        """
+        The rados pool name.
+        Default is rbd.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__pool
 
-    # The rados user name.
-    # Default is admin.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def user(self) -> Optional[str]:
+        """
+        The rados user name.
+        Default is admin.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__user
 
-    # Keyring is the path to key ring for RBDUser.
-    # Default is /etc/ceph/keyring.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def keyring(self) -> Optional[str]:
+        """
+        Keyring is the path to key ring for RBDUser.
+        Default is /etc/ceph/keyring.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__keyring
 
-    # SecretRef is name of the authentication secret for RBDUser. If provided
-    # overrides keyring.
-    # Default is nil.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        SecretRef is name of the authentication secret for RBDUser. If provided
+        overrides keyring.
+        Default is nil.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__secretRef
 
-    # ReadOnly here will force the ReadOnly setting in VolumeMounts.
-    # Defaults to false.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the ReadOnly setting in VolumeMounts.
+        Defaults to false.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__readOnly
 
 
@@ -6592,51 +7334,71 @@ class ScaleIOPersistentVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # The host address of the ScaleIO API Gateway.
     def gateway(self) -> str:
+        """
+        The host address of the ScaleIO API Gateway.
+        """
         return self.__gateway
 
-    # The name of the storage system as configured in ScaleIO.
     def system(self) -> str:
+        """
+        The name of the storage system as configured in ScaleIO.
+        """
         return self.__system
 
-    # SecretRef references to the secret for ScaleIO user and other
-    # sensitive information. If this is not provided, Login operation will fail.
     def secretRef(self) -> Optional[SecretReference]:
+        """
+        SecretRef references to the secret for ScaleIO user and other
+        sensitive information. If this is not provided, Login operation will fail.
+        """
         return self.__secretRef
 
-    # Flag to enable/disable SSL communication with Gateway, default false
     def sslEnabled(self) -> Optional[bool]:
+        """
+        Flag to enable/disable SSL communication with Gateway, default false
+        """
         return self.__sslEnabled
 
-    # The name of the ScaleIO Protection Domain for the configured storage.
     def protectionDomain(self) -> Optional[str]:
+        """
+        The name of the ScaleIO Protection Domain for the configured storage.
+        """
         return self.__protectionDomain
 
-    # The ScaleIO Storage Pool associated with the protection domain.
     def storagePool(self) -> Optional[str]:
+        """
+        The ScaleIO Storage Pool associated with the protection domain.
+        """
         return self.__storagePool
 
-    # Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
-    # Default is ThinProvisioned.
     def storageMode(self) -> Optional[str]:
+        """
+        Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
+        Default is ThinProvisioned.
+        """
         return self.__storageMode
 
-    # The name of a volume already created in the ScaleIO system
-    # that is associated with this volume source.
     def volumeName(self) -> Optional[str]:
+        """
+        The name of a volume already created in the ScaleIO system
+        that is associated with this volume source.
+        """
         return self.__volumeName
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs".
-    # Default is "xfs"
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs".
+        Default is "xfs"
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
 
@@ -6684,34 +7446,44 @@ class StorageOSPersistentVolumeSource(types.Object):
             v["secretRef"] = secretRef
         return v
 
-    # VolumeName is the human-readable name of the StorageOS volume.  Volume
-    # names are only unique within a namespace.
     def volumeName(self) -> Optional[str]:
+        """
+        VolumeName is the human-readable name of the StorageOS volume.  Volume
+        names are only unique within a namespace.
+        """
         return self.__volumeName
 
-    # VolumeNamespace specifies the scope of the volume within StorageOS.  If no
-    # namespace is specified then the Pod's namespace will be used.  This allows the
-    # Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
-    # Set VolumeName to any name to override the default behaviour.
-    # Set to "default" if you are not using namespaces within StorageOS.
-    # Namespaces that do not pre-exist within StorageOS will be created.
     def volumeNamespace(self) -> Optional[str]:
+        """
+        VolumeNamespace specifies the scope of the volume within StorageOS.  If no
+        namespace is specified then the Pod's namespace will be used.  This allows the
+        Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
+        Set VolumeName to any name to override the default behaviour.
+        Set to "default" if you are not using namespaces within StorageOS.
+        Namespaces that do not pre-exist within StorageOS will be created.
+        """
         return self.__volumeNamespace
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # SecretRef specifies the secret to use for obtaining the StorageOS API
-    # credentials.  If not specified, default values will be attempted.
     def secretRef(self) -> Optional[ObjectReference]:
+        """
+        SecretRef specifies the secret to use for obtaining the StorageOS API
+        credentials.  If not specified, default values will be attempted.
+        """
         return self.__secretRef
 
 
@@ -6752,22 +7524,30 @@ class VsphereVirtualDiskVolumeSource(types.Object):
             v["storagePolicyID"] = storagePolicyID
         return v
 
-    # Path that identifies vSphere volume vmdk
     def volumePath(self) -> str:
+        """
+        Path that identifies vSphere volume vmdk
+        """
         return self.__volumePath
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
-    # Storage Policy Based Management (SPBM) profile name.
     def storagePolicyName(self) -> Optional[str]:
+        """
+        Storage Policy Based Management (SPBM) profile name.
+        """
         return self.__storagePolicyName
 
-    # Storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
     def storagePolicyID(self) -> Optional[str]:
+        """
+        Storage Policy Based Management (SPBM) profile ID associated with the StoragePolicyName.
+        """
         return self.__storagePolicyID
 
 
@@ -6932,108 +7712,152 @@ class PersistentVolumeSource(types.Object):
             v["csi"] = csi
         return v
 
-    # GCEPersistentDisk represents a GCE Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod. Provisioned by an admin.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
+        """
+        GCEPersistentDisk represents a GCE Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod. Provisioned by an admin.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        """
         return self.__gcePersistentDisk
 
-    # AWSElasticBlockStore represents an AWS Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
+        """
+        AWSElasticBlockStore represents an AWS Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+        """
         return self.__awsElasticBlockStore
 
-    # HostPath represents a directory on the host.
-    # Provisioned by a developer or tester.
-    # This is useful for single-node development and testing only!
-    # On-host storage is not supported in any way and WILL NOT WORK in a multi-node cluster.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
     def hostPath(self) -> Optional[HostPathVolumeSource]:
+        """
+        HostPath represents a directory on the host.
+        Provisioned by a developer or tester.
+        This is useful for single-node development and testing only!
+        On-host storage is not supported in any way and WILL NOT WORK in a multi-node cluster.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+        """
         return self.__hostPath
 
-    # Glusterfs represents a Glusterfs volume that is attached to a host and
-    # exposed to the pod. Provisioned by an admin.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md
     def glusterfs(self) -> Optional[GlusterfsPersistentVolumeSource]:
+        """
+        Glusterfs represents a Glusterfs volume that is attached to a host and
+        exposed to the pod. Provisioned by an admin.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md
+        """
         return self.__glusterfs
 
-    # NFS represents an NFS mount on the host. Provisioned by an admin.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     def nfs(self) -> Optional[NFSVolumeSource]:
+        """
+        NFS represents an NFS mount on the host. Provisioned by an admin.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+        """
         return self.__nfs
 
-    # RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md
     def rbd(self) -> Optional[RBDPersistentVolumeSource]:
+        """
+        RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
+        More info: https://examples.k8s.io/volumes/rbd/README.md
+        """
         return self.__rbd
 
-    # ISCSI represents an ISCSI Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod. Provisioned by an admin.
     def iscsi(self) -> Optional[ISCSIPersistentVolumeSource]:
+        """
+        ISCSI represents an ISCSI Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod. Provisioned by an admin.
+        """
         return self.__iscsi
 
-    # Cinder represents a cinder volume attached and mounted on kubelets host machine.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def cinder(self) -> Optional[CinderPersistentVolumeSource]:
+        """
+        Cinder represents a cinder volume attached and mounted on kubelets host machine.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__cinder
 
-    # CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
     def cephfs(self) -> Optional[CephFSPersistentVolumeSource]:
+        """
+        CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
+        """
         return self.__cephfs
 
-    # FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
     def fc(self) -> Optional[FCVolumeSource]:
+        """
+        FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
+        """
         return self.__fc
 
-    # Flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running
     def flocker(self) -> Optional[FlockerVolumeSource]:
+        """
+        Flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running
+        """
         return self.__flocker
 
-    # FlexVolume represents a generic volume resource that is
-    # provisioned/attached using an exec based plugin.
     def flexVolume(self) -> Optional[FlexPersistentVolumeSource]:
+        """
+        FlexVolume represents a generic volume resource that is
+        provisioned/attached using an exec based plugin.
+        """
         return self.__flexVolume
 
-    # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
     def azureFile(self) -> Optional[AzureFilePersistentVolumeSource]:
+        """
+        AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
+        """
         return self.__azureFile
 
-    # VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
     def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
+        """
+        VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
+        """
         return self.__vsphereVolume
 
-    # Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
     def quobyte(self) -> Optional[QuobyteVolumeSource]:
+        """
+        Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
+        """
         return self.__quobyte
 
-    # AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
     def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
+        """
+        AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+        """
         return self.__azureDisk
 
-    # PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
     def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
+        """
+        PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
+        """
         return self.__photonPersistentDisk
 
-    # PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
     def portworxVolume(self) -> Optional[PortworxVolumeSource]:
+        """
+        PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
+        """
         return self.__portworxVolume
 
-    # ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
     def scaleIO(self) -> Optional[ScaleIOPersistentVolumeSource]:
+        """
+        ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
+        """
         return self.__scaleIO
 
-    # Local represents directly-attached storage with node affinity
     def local(self) -> Optional[LocalVolumeSource]:
+        """
+        Local represents directly-attached storage with node affinity
+        """
         return self.__local
 
-    # StorageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod
-    # More info: https://examples.k8s.io/volumes/storageos/README.md
     def storageos(self) -> Optional[StorageOSPersistentVolumeSource]:
+        """
+        StorageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod
+        More info: https://examples.k8s.io/volumes/storageos/README.md
+        """
         return self.__storageos
 
-    # CSI represents storage that is handled by an external CSI driver (Beta feature).
     def csi(self) -> Optional[CSIPersistentVolumeSource]:
+        """
+        CSI represents storage that is handled by an external CSI driver (Beta feature).
+        """
         return self.__csi
 
 
@@ -7054,8 +7878,10 @@ class VolumeNodeAffinity(types.Object):
             v["required"] = required
         return v
 
-    # Required specifies hard node constraints that must be met.
     def required(self) -> Optional[NodeSelector]:
+        """
+        Required specifies hard node constraints that must be met.
+        """
         return self.__required
 
 
@@ -7144,55 +7970,73 @@ class PersistentVolumeSpec(types.Object):
             v["nodeAffinity"] = nodeAffinity
         return v
 
-    # A description of the persistent volume's resources and capacity.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
     def capacity(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        A description of the persistent volume's resources and capacity.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#capacity
+        """
         return self.__capacity
 
-    # The actual volume backing the persistent volume.
     def persistentVolumeSource(self) -> PersistentVolumeSource:
+        """
+        The actual volume backing the persistent volume.
+        """
         return self.__persistentVolumeSource
 
-    # AccessModes contains all ways the volume can be mounted.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes
     def accessModes(self) -> Optional[List[PersistentVolumeAccessMode]]:
+        """
+        AccessModes contains all ways the volume can be mounted.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes
+        """
         return self.__accessModes
 
-    # ClaimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim.
-    # Expected to be non-nil when bound.
-    # claim.VolumeName is the authoritative bind between PV and PVC.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding
     def claimRef(self) -> Optional[ObjectReference]:
+        """
+        ClaimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim.
+        Expected to be non-nil when bound.
+        claim.VolumeName is the authoritative bind between PV and PVC.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#binding
+        """
         return self.__claimRef
 
-    # What happens to a persistent volume when released from its claim.
-    # Valid options are Retain (default for manually created PersistentVolumes), Delete (default
-    # for dynamically provisioned PersistentVolumes), and Recycle (deprecated).
-    # Recycle must be supported by the volume plugin underlying this PersistentVolume.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming
     def persistentVolumeReclaimPolicy(self) -> Optional[PersistentVolumeReclaimPolicy]:
+        """
+        What happens to a persistent volume when released from its claim.
+        Valid options are Retain (default for manually created PersistentVolumes), Delete (default
+        for dynamically provisioned PersistentVolumes), and Recycle (deprecated).
+        Recycle must be supported by the volume plugin underlying this PersistentVolume.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#reclaiming
+        """
         return self.__persistentVolumeReclaimPolicy
 
-    # Name of StorageClass to which this persistent volume belongs. Empty value
-    # means that this volume does not belong to any StorageClass.
     def storageClassName(self) -> Optional[str]:
+        """
+        Name of StorageClass to which this persistent volume belongs. Empty value
+        means that this volume does not belong to any StorageClass.
+        """
         return self.__storageClassName
 
-    # A list of mount options, e.g. ["ro", "soft"]. Not validated - mount will
-    # simply fail if one is invalid.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options
     def mountOptions(self) -> Optional[List[str]]:
+        """
+        A list of mount options, e.g. ["ro", "soft"]. Not validated - mount will
+        simply fail if one is invalid.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#mount-options
+        """
         return self.__mountOptions
 
-    # volumeMode defines if a volume is intended to be used with a formatted filesystem
-    # or to remain in raw block state. Value of Filesystem is implied when not included in spec.
-    # This is a beta feature.
     def volumeMode(self) -> Optional[PersistentVolumeMode]:
+        """
+        volumeMode defines if a volume is intended to be used with a formatted filesystem
+        or to remain in raw block state. Value of Filesystem is implied when not included in spec.
+        This is a beta feature.
+        """
         return self.__volumeMode
 
-    # NodeAffinity defines constraints that limit what nodes this volume can be accessed from.
-    # This field influences the scheduling of pods that use this volume.
     def nodeAffinity(self) -> Optional[VolumeNodeAffinity]:
+        """
+        NodeAffinity defines constraints that limit what nodes this volume can be accessed from.
+        This field influences the scheduling of pods that use this volume.
+        """
         return self.__nodeAffinity
 
 
@@ -7226,10 +8070,12 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines a specification of a persistent volume owned by the cluster.
-    # Provisioned by an administrator.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes
     def spec(self) -> Optional[PersistentVolumeSpec]:
+        """
+        Spec defines a specification of a persistent volume owned by the cluster.
+        Provisioned by an administrator.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistent-volumes
+        """
         return self.__spec
 
 
@@ -7258,18 +8104,24 @@ class TypedLocalObjectReference(types.Object):
         v["name"] = name
         return v
 
-    # APIGroup is the group for the resource being referenced.
-    # If APIGroup is not specified, the specified Kind must be in the core API group.
-    # For any other third-party types, APIGroup is required.
     def apiGroup(self) -> Optional[str]:
+        """
+        APIGroup is the group for the resource being referenced.
+        If APIGroup is not specified, the specified Kind must be in the core API group.
+        For any other third-party types, APIGroup is required.
+        """
         return self.__apiGroup
 
-    # Kind is the type of resource being referenced
     def kind(self) -> str:
+        """
+        Kind is the type of resource being referenced
+        """
         return self.__kind
 
-    # Name is the name of resource being referenced
     def name(self) -> str:
+        """
+        Name is the name of resource being referenced
+        """
         return self.__name
 
 
@@ -7335,44 +8187,58 @@ class PersistentVolumeClaimSpec(types.Object):
             v["dataSource"] = dataSource
         return v
 
-    # AccessModes contains the desired access modes the volume should have.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
     def accessModes(self) -> Optional[List[PersistentVolumeAccessMode]]:
+        """
+        AccessModes contains the desired access modes the volume should have.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#access-modes-1
+        """
         return self.__accessModes
 
-    # A label query over volumes to consider for binding.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        A label query over volumes to consider for binding.
+        """
         return self.__selector
 
-    # Resources represents the minimum resources the volume should have.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
     def resources(self) -> Optional[ResourceRequirements]:
+        """
+        Resources represents the minimum resources the volume should have.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
+        """
         return self.__resources
 
-    # VolumeName is the binding reference to the PersistentVolume backing this claim.
     def volumeName(self) -> Optional[str]:
+        """
+        VolumeName is the binding reference to the PersistentVolume backing this claim.
+        """
         return self.__volumeName
 
-    # Name of the StorageClass required by the claim.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
     def storageClassName(self) -> Optional[str]:
+        """
+        Name of the StorageClass required by the claim.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#class-1
+        """
         return self.__storageClassName
 
-    # volumeMode defines what type of volume is required by the claim.
-    # Value of Filesystem is implied when not included in claim spec.
-    # This is a beta feature.
     def volumeMode(self) -> Optional[PersistentVolumeMode]:
+        """
+        volumeMode defines what type of volume is required by the claim.
+        Value of Filesystem is implied when not included in claim spec.
+        This is a beta feature.
+        """
         return self.__volumeMode
 
-    # This field requires the VolumeSnapshotDataSource alpha feature gate to be
-    # enabled and currently VolumeSnapshot is the only supported data source.
-    # If the provisioner can support VolumeSnapshot data source, it will create
-    # a new volume and data will be restored to the volume at the same time.
-    # If the provisioner does not support VolumeSnapshot data source, volume will
-    # not be created and the failure will be reported as an event.
-    # In the future, we plan to support more data source types and the behavior
-    # of the provisioner may change.
     def dataSource(self) -> Optional[TypedLocalObjectReference]:
+        """
+        This field requires the VolumeSnapshotDataSource alpha feature gate to be
+        enabled and currently VolumeSnapshot is the only supported data source.
+        If the provisioner can support VolumeSnapshot data source, it will create
+        a new volume and data will be restored to the volume at the same time.
+        If the provisioner does not support VolumeSnapshot data source, volume will
+        not be created and the failure will be reported as an event.
+        In the future, we plan to support more data source types and the behavior
+        of the provisioner may change.
+        """
         return self.__dataSource
 
 
@@ -7406,9 +8272,11 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the desired characteristics of a volume requested by a pod author.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     def spec(self) -> Optional[PersistentVolumeClaimSpec]:
+        """
+        Spec defines the desired characteristics of a volume requested by a pod author.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+        """
         return self.__spec
 
 
@@ -7436,14 +8304,18 @@ class PersistentVolumeClaimVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # ClaimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     def claimName(self) -> str:
+        """
+        ClaimName is the name of a PersistentVolumeClaim in the same namespace as the pod using this volume.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+        """
         return self.__claimName
 
-    # Will force the ReadOnly setting in VolumeMounts.
-    # Default false.
     def readOnly(self) -> Optional[bool]:
+        """
+        Will force the ReadOnly setting in VolumeMounts.
+        Default false.
+        """
         return self.__readOnly
 
 
@@ -7469,8 +8341,10 @@ class PodDNSConfigOption(types.Object):
             v["value"] = value
         return v
 
-    # Required.
     def name(self) -> Optional[str]:
+        """
+        Required.
+        """
         return self.__name
 
     def value(self) -> Optional[str]:
@@ -7510,23 +8384,29 @@ class PodDNSConfig(types.Object):
             v["options"] = options.values()  # named list
         return v
 
-    # A list of DNS name server IP addresses.
-    # This will be appended to the base nameservers generated from DNSPolicy.
-    # Duplicated nameservers will be removed.
     def nameservers(self) -> Optional[List[str]]:
+        """
+        A list of DNS name server IP addresses.
+        This will be appended to the base nameservers generated from DNSPolicy.
+        Duplicated nameservers will be removed.
+        """
         return self.__nameservers
 
-    # A list of DNS search domains for host-name lookup.
-    # This will be appended to the base search paths generated from DNSPolicy.
-    # Duplicated search paths will be removed.
     def searches(self) -> Optional[List[str]]:
+        """
+        A list of DNS search domains for host-name lookup.
+        This will be appended to the base search paths generated from DNSPolicy.
+        Duplicated search paths will be removed.
+        """
         return self.__searches
 
-    # A list of DNS resolver options.
-    # This will be merged with the base options generated from DNSPolicy.
-    # Duplicated entries will be removed. Resolution options given in Options
-    # will override those that appear in the base DNSPolicy.
     def options(self) -> Optional[Dict[str, PodDNSConfigOption]]:
+        """
+        A list of DNS resolver options.
+        This will be merged with the base options generated from DNSPolicy.
+        Duplicated entries will be removed. Resolution options given in Options
+        will override those that appear in the base DNSPolicy.
+        """
         return self.__options
 
 
@@ -7546,8 +8426,10 @@ class PodReadinessGate(types.Object):
         v["conditionType"] = conditionType
         return v
 
-    # ConditionType refers to a condition in the pod's condition list with matching type.
     def conditionType(self) -> PodConditionType:
+        """
+        ConditionType refers to a condition in the pod's condition list with matching type.
+        """
         return self.__conditionType
 
 
@@ -7571,12 +8453,16 @@ class Sysctl(types.Object):
         v["value"] = value
         return v
 
-    # Name of a property to set
     def name(self) -> str:
+        """
+        Name of a property to set
+        """
         return self.__name
 
-    # Value of a property to set
     def value(self) -> str:
+        """
+        Value of a property to set
+        """
         return self.__value
 
 
@@ -7648,66 +8534,82 @@ class PodSecurityContext(types.Object):
             v["sysctls"] = sysctls.values()  # named list
         return v
 
-    # The SELinux context to be applied to all containers.
-    # If unspecified, the container runtime will allocate a random SELinux context for each
-    # container.  May also be set in SecurityContext.  If set in
-    # both SecurityContext and PodSecurityContext, the value specified in SecurityContext
-    # takes precedence for that container.
     def seLinuxOptions(self) -> Optional[SELinuxOptions]:
+        """
+        The SELinux context to be applied to all containers.
+        If unspecified, the container runtime will allocate a random SELinux context for each
+        container.  May also be set in SecurityContext.  If set in
+        both SecurityContext and PodSecurityContext, the value specified in SecurityContext
+        takes precedence for that container.
+        """
         return self.__seLinuxOptions
 
-    # The Windows specific settings applied to all containers.
-    # If unspecified, the options within a container's SecurityContext will be used.
-    # If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
     def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
+        """
+        The Windows specific settings applied to all containers.
+        If unspecified, the options within a container's SecurityContext will be used.
+        If set in both SecurityContext and PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__windowsOptions
 
-    # The UID to run the entrypoint of the container process.
-    # Defaults to user specified in image metadata if unspecified.
-    # May also be set in SecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence
-    # for that container.
     def runAsUser(self) -> Optional[int]:
+        """
+        The UID to run the entrypoint of the container process.
+        Defaults to user specified in image metadata if unspecified.
+        May also be set in SecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence
+        for that container.
+        """
         return self.__runAsUser
 
-    # The GID to run the entrypoint of the container process.
-    # Uses runtime default if unset.
-    # May also be set in SecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence
-    # for that container.
     def runAsGroup(self) -> Optional[int]:
+        """
+        The GID to run the entrypoint of the container process.
+        Uses runtime default if unset.
+        May also be set in SecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence
+        for that container.
+        """
         return self.__runAsGroup
 
-    # Indicates that the container must run as a non-root user.
-    # If true, the Kubelet will validate the image at runtime to ensure that it
-    # does not run as UID 0 (root) and fail to start the container if it does.
-    # If unset or false, no such validation will be performed.
-    # May also be set in SecurityContext.  If set in both SecurityContext and
-    # PodSecurityContext, the value specified in SecurityContext takes precedence.
     def runAsNonRoot(self) -> Optional[bool]:
+        """
+        Indicates that the container must run as a non-root user.
+        If true, the Kubelet will validate the image at runtime to ensure that it
+        does not run as UID 0 (root) and fail to start the container if it does.
+        If unset or false, no such validation will be performed.
+        May also be set in SecurityContext.  If set in both SecurityContext and
+        PodSecurityContext, the value specified in SecurityContext takes precedence.
+        """
         return self.__runAsNonRoot
 
-    # A list of groups applied to the first process run in each container, in addition
-    # to the container's primary GID.  If unspecified, no groups will be added to
-    # any container.
     def supplementalGroups(self) -> Optional[List[int]]:
+        """
+        A list of groups applied to the first process run in each container, in addition
+        to the container's primary GID.  If unspecified, no groups will be added to
+        any container.
+        """
         return self.__supplementalGroups
 
-    # A special supplemental group that applies to all containers in a pod.
-    # Some volume types allow the Kubelet to change the ownership of that volume
-    # to be owned by the pod:
-    #
-    # 1. The owning GID will be the FSGroup
-    # 2. The setgid bit is set (new files created in the volume will be owned by FSGroup)
-    # 3. The permission bits are OR'd with rw-rw----
-    #
-    # If unset, the Kubelet will not modify the ownership and permissions of any volume.
     def fsGroup(self) -> Optional[int]:
+        """
+        A special supplemental group that applies to all containers in a pod.
+        Some volume types allow the Kubelet to change the ownership of that volume
+        to be owned by the pod:
+        
+        1. The owning GID will be the FSGroup
+        2. The setgid bit is set (new files created in the volume will be owned by FSGroup)
+        3. The permission bits are OR'd with rw-rw----
+        
+        If unset, the Kubelet will not modify the ownership and permissions of any volume.
+        """
         return self.__fsGroup
 
-    # Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
-    # sysctls (by the container runtime) might fail to launch.
     def sysctls(self) -> Optional[Dict[str, Sysctl]]:
+        """
+        Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
+        sysctls (by the container runtime) might fail to launch.
+        """
         return self.__sysctls
 
 
@@ -7756,33 +8658,43 @@ class Toleration(types.Object):
             v["tolerationSeconds"] = tolerationSeconds
         return v
 
-    # Key is the taint key that the toleration applies to. Empty means match all taint keys.
-    # If the key is empty, operator must be Exists; this combination means to match all values and all keys.
     def key(self) -> Optional[str]:
+        """
+        Key is the taint key that the toleration applies to. Empty means match all taint keys.
+        If the key is empty, operator must be Exists; this combination means to match all values and all keys.
+        """
         return self.__key
 
-    # Operator represents a key's relationship to the value.
-    # Valid operators are Exists and Equal. Defaults to Equal.
-    # Exists is equivalent to wildcard for value, so that a pod can
-    # tolerate all taints of a particular category.
     def operator(self) -> Optional[TolerationOperator]:
+        """
+        Operator represents a key's relationship to the value.
+        Valid operators are Exists and Equal. Defaults to Equal.
+        Exists is equivalent to wildcard for value, so that a pod can
+        tolerate all taints of a particular category.
+        """
         return self.__operator
 
-    # Value is the taint value the toleration matches to.
-    # If the operator is Exists, the value should be empty, otherwise just a regular string.
     def value(self) -> Optional[str]:
+        """
+        Value is the taint value the toleration matches to.
+        If the operator is Exists, the value should be empty, otherwise just a regular string.
+        """
         return self.__value
 
-    # Effect indicates the taint effect to match. Empty means match all taint effects.
-    # When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
     def effect(self) -> Optional[TaintEffect]:
+        """
+        Effect indicates the taint effect to match. Empty means match all taint effects.
+        When specified, allowed values are NoSchedule, PreferNoSchedule and NoExecute.
+        """
         return self.__effect
 
-    # TolerationSeconds represents the period of time the toleration (which must be
-    # of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
-    # it is not set, which means tolerate the taint forever (do not evict). Zero and
-    # negative values will be treated as 0 (evict immediately) by the system.
     def tolerationSeconds(self) -> Optional[int]:
+        """
+        TolerationSeconds represents the period of time the toleration (which must be
+        of effect NoExecute, otherwise this field is ignored) tolerates the taint. By default,
+        it is not set, which means tolerate the taint forever (do not evict). Zero and
+        negative values will be treated as 0 (evict immediately) by the system.
+        """
         return self.__tolerationSeconds
 
 
@@ -7823,57 +8735,65 @@ class TopologySpreadConstraint(types.Object):
             v["labelSelector"] = labelSelector
         return v
 
-    # MaxSkew describes the degree to which pods may be unevenly distributed.
-    # It's the maximum permitted difference between the number of matching pods in
-    # any two topology domains of a given topology type.
-    # For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same
-    # labelSelector spread as 1/1/0:
-    # +-------+-------+-------+
-    # | zone1 | zone2 | zone3 |
-    # +-------+-------+-------+
-    # |   P   |   P   |       |
-    # +-------+-------+-------+
-    # - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 1/1/1;
-    # scheduling it onto zone1(zone2) would make the ActualSkew(2-0) on zone1(zone2)
-    # violate MaxSkew(1).
-    # - if MaxSkew is 2, incoming pod can be scheduled onto any zone.
-    # It's a required field. Default value is 1 and 0 is not allowed.
     def maxSkew(self) -> int:
+        """
+        MaxSkew describes the degree to which pods may be unevenly distributed.
+        It's the maximum permitted difference between the number of matching pods in
+        any two topology domains of a given topology type.
+        For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same
+        labelSelector spread as 1/1/0:
+        +-------+-------+-------+
+        | zone1 | zone2 | zone3 |
+        +-------+-------+-------+
+        |   P   |   P   |       |
+        +-------+-------+-------+
+        - if MaxSkew is 1, incoming pod can only be scheduled to zone3 to become 1/1/1;
+        scheduling it onto zone1(zone2) would make the ActualSkew(2-0) on zone1(zone2)
+        violate MaxSkew(1).
+        - if MaxSkew is 2, incoming pod can be scheduled onto any zone.
+        It's a required field. Default value is 1 and 0 is not allowed.
+        """
         return self.__maxSkew
 
-    # TopologyKey is the key of node labels. Nodes that have a label with this key
-    # and identical values are considered to be in the same topology.
-    # We consider each <key, value> as a "bucket", and try to put balanced number
-    # of pods into each bucket.
-    # It's a required field.
     def topologyKey(self) -> str:
+        """
+        TopologyKey is the key of node labels. Nodes that have a label with this key
+        and identical values are considered to be in the same topology.
+        We consider each <key, value> as a "bucket", and try to put balanced number
+        of pods into each bucket.
+        It's a required field.
+        """
         return self.__topologyKey
 
-    # WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
-    # the spread constraint.
-    # - DoNotSchedule (default) tells the scheduler not to schedule it
-    # - ScheduleAnyway tells the scheduler to still schedule it
-    # It's considered as "Unsatisfiable" if and only if placing incoming pod on any
-    # topology violates "MaxSkew".
-    # For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same
-    # labelSelector spread as 3/1/1:
-    # +-------+-------+-------+
-    # | zone1 | zone2 | zone3 |
-    # +-------+-------+-------+
-    # | P P P |   P   |   P   |
-    # +-------+-------+-------+
-    # If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled
-    # to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies
-    # MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler
-    # won't make it *more* imbalanced.
-    # It's a required field.
     def whenUnsatisfiable(self) -> UnsatisfiableConstraintAction:
+        """
+        WhenUnsatisfiable indicates how to deal with a pod if it doesn't satisfy
+        the spread constraint.
+        - DoNotSchedule (default) tells the scheduler not to schedule it
+        - ScheduleAnyway tells the scheduler to still schedule it
+        It's considered as "Unsatisfiable" if and only if placing incoming pod on any
+        topology violates "MaxSkew".
+        For example, in a 3-zone cluster, MaxSkew is set to 1, and pods with the same
+        labelSelector spread as 3/1/1:
+        +-------+-------+-------+
+        | zone1 | zone2 | zone3 |
+        +-------+-------+-------+
+        | P P P |   P   |   P   |
+        +-------+-------+-------+
+        If WhenUnsatisfiable is set to DoNotSchedule, incoming pod can only be scheduled
+        to zone2(zone3) to become 3/2/1(3/1/2) as ActualSkew(2-1) on zone2(zone3) satisfies
+        MaxSkew(1). In other words, the cluster can still be imbalanced, but scheduler
+        won't make it *more* imbalanced.
+        It's a required field.
+        """
         return self.__whenUnsatisfiable
 
-    # LabelSelector is used to find matching pods.
-    # Pods that match this label selector are counted to determine the number of pods
-    # in their corresponding topology domain.
     def labelSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        LabelSelector is used to find matching pods.
+        Pods that match this label selector are counted to determine the number of pods
+        in their corresponding topology domain.
+        """
         return self.__labelSelector
 
 
@@ -7920,18 +8840,22 @@ class SecretProjection(types.Object):
     def localObjectReference(self) -> LocalObjectReference:
         return self.__localObjectReference
 
-    # If unspecified, each key-value pair in the Data field of the referenced
-    # Secret will be projected into the volume as a file whose name is the
-    # key and content is the value. If specified, the listed keys will be
-    # projected into the specified paths, and unlisted keys will not be
-    # present. If a key is specified which is not present in the Secret,
-    # the volume setup will error unless it is marked optional. Paths must be
-    # relative and may not contain the '..' path or start with '..'.
     def items(self) -> Optional[List[KeyToPath]]:
+        """
+        If unspecified, each key-value pair in the Data field of the referenced
+        Secret will be projected into the volume as a file whose name is the
+        key and content is the value. If specified, the listed keys will be
+        projected into the specified paths, and unlisted keys will not be
+        present. If a key is specified which is not present in the Secret,
+        the volume setup will error unless it is marked optional. Paths must be
+        relative and may not contain the '..' path or start with '..'.
+        """
         return self.__items
 
-    # Specify whether the Secret or its key must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the Secret or its key must be defined
+        """
         return self.__optional
 
 
@@ -7968,25 +8892,31 @@ class ServiceAccountTokenProjection(types.Object):
         v["path"] = path
         return v
 
-    # Audience is the intended audience of the token. A recipient of a token
-    # must identify itself with an identifier specified in the audience of the
-    # token, and otherwise should reject the token. The audience defaults to the
-    # identifier of the apiserver.
     def audience(self) -> Optional[str]:
+        """
+        Audience is the intended audience of the token. A recipient of a token
+        must identify itself with an identifier specified in the audience of the
+        token, and otherwise should reject the token. The audience defaults to the
+        identifier of the apiserver.
+        """
         return self.__audience
 
-    # ExpirationSeconds is the requested duration of validity of the service
-    # account token. As the token approaches expiration, the kubelet volume
-    # plugin will proactively rotate the service account token. The kubelet will
-    # start trying to rotate the token if the token is older than 80 percent of
-    # its time to live or if the token is older than 24 hours.Defaults to 1 hour
-    # and must be at least 10 minutes.
     def expirationSeconds(self) -> Optional[int]:
+        """
+        ExpirationSeconds is the requested duration of validity of the service
+        account token. As the token approaches expiration, the kubelet volume
+        plugin will proactively rotate the service account token. The kubelet will
+        start trying to rotate the token if the token is older than 80 percent of
+        its time to live or if the token is older than 24 hours.Defaults to 1 hour
+        and must be at least 10 minutes.
+        """
         return self.__expirationSeconds
 
-    # Path is the path relative to the mount point of the file to project the
-    # token into.
     def path(self) -> str:
+        """
+        Path is the path relative to the mount point of the file to project the
+        token into.
+        """
         return self.__path
 
 
@@ -8032,20 +8962,28 @@ class VolumeProjection(types.Object):
             v["serviceAccountToken"] = serviceAccountToken
         return v
 
-    # information about the secret data to project
     def secret(self) -> Optional[SecretProjection]:
+        """
+        information about the secret data to project
+        """
         return self.__secret
 
-    # information about the downwardAPI data to project
     def downwardAPI(self) -> Optional[DownwardAPIProjection]:
+        """
+        information about the downwardAPI data to project
+        """
         return self.__downwardAPI
 
-    # information about the configMap data to project
     def configMap(self) -> Optional[ConfigMapProjection]:
+        """
+        information about the configMap data to project
+        """
         return self.__configMap
 
-    # information about the serviceAccountToken data to project
     def serviceAccountToken(self) -> Optional[ServiceAccountTokenProjection]:
+        """
+        information about the serviceAccountToken data to project
+        """
         return self.__serviceAccountToken
 
 
@@ -8070,16 +9008,20 @@ class ProjectedVolumeSource(types.Object):
             v["defaultMode"] = defaultMode
         return v
 
-    # list of volume projections
     def sources(self) -> List[VolumeProjection]:
+        """
+        list of volume projections
+        """
         return self.__sources
 
-    # Mode bits to use on created files by default. Must be a value between
-    # 0 and 0777.
-    # Directories within the path are not affected by this setting.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def defaultMode(self) -> Optional[int]:
+        """
+        Mode bits to use on created files by default. Must be a value between
+        0 and 0777.
+        Directories within the path are not affected by this setting.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__defaultMode
 
 
@@ -8144,53 +9086,69 @@ class RBDVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # A collection of Ceph monitors.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def monitors(self) -> List[str]:
+        """
+        A collection of Ceph monitors.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__monitors
 
-    # The rados image name.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def image(self) -> str:
+        """
+        The rados image name.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__image
 
-    # Filesystem type of the volume that you want to mount.
-    # Tip: Ensure that the filesystem type is supported by the host operating system.
-    # Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
-    # TODO: how do we prevent errors in the filesystem from compromising the machine
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type of the volume that you want to mount.
+        Tip: Ensure that the filesystem type is supported by the host operating system.
+        Examples: "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#rbd
+        TODO: how do we prevent errors in the filesystem from compromising the machine
+        """
         return self.__fsType
 
-    # The rados pool name.
-    # Default is rbd.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def pool(self) -> Optional[str]:
+        """
+        The rados pool name.
+        Default is rbd.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__pool
 
-    # The rados user name.
-    # Default is admin.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def user(self) -> Optional[str]:
+        """
+        The rados user name.
+        Default is admin.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__user
 
-    # Keyring is the path to key ring for RBDUser.
-    # Default is /etc/ceph/keyring.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def keyring(self) -> Optional[str]:
+        """
+        Keyring is the path to key ring for RBDUser.
+        Default is /etc/ceph/keyring.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__keyring
 
-    # SecretRef is name of the authentication secret for RBDUser. If provided
-    # overrides keyring.
-    # Default is nil.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        SecretRef is name of the authentication secret for RBDUser. If provided
+        overrides keyring.
+        Default is nil.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__secretRef
 
-    # ReadOnly here will force the ReadOnly setting in VolumeMounts.
-    # Defaults to false.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
     def readOnly(self) -> Optional[bool]:
+        """
+        ReadOnly here will force the ReadOnly setting in VolumeMounts.
+        Defaults to false.
+        More info: https://examples.k8s.io/volumes/rbd/README.md#how-to-use-it
+        """
         return self.__readOnly
 
 
@@ -8265,51 +9223,71 @@ class ScaleIOVolumeSource(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # The host address of the ScaleIO API Gateway.
     def gateway(self) -> str:
+        """
+        The host address of the ScaleIO API Gateway.
+        """
         return self.__gateway
 
-    # The name of the storage system as configured in ScaleIO.
     def system(self) -> str:
+        """
+        The name of the storage system as configured in ScaleIO.
+        """
         return self.__system
 
-    # SecretRef references to the secret for ScaleIO user and other
-    # sensitive information. If this is not provided, Login operation will fail.
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        SecretRef references to the secret for ScaleIO user and other
+        sensitive information. If this is not provided, Login operation will fail.
+        """
         return self.__secretRef
 
-    # Flag to enable/disable SSL communication with Gateway, default false
     def sslEnabled(self) -> Optional[bool]:
+        """
+        Flag to enable/disable SSL communication with Gateway, default false
+        """
         return self.__sslEnabled
 
-    # The name of the ScaleIO Protection Domain for the configured storage.
     def protectionDomain(self) -> Optional[str]:
+        """
+        The name of the ScaleIO Protection Domain for the configured storage.
+        """
         return self.__protectionDomain
 
-    # The ScaleIO Storage Pool associated with the protection domain.
     def storagePool(self) -> Optional[str]:
+        """
+        The ScaleIO Storage Pool associated with the protection domain.
+        """
         return self.__storagePool
 
-    # Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
-    # Default is ThinProvisioned.
     def storageMode(self) -> Optional[str]:
+        """
+        Indicates whether the storage for a volume should be ThickProvisioned or ThinProvisioned.
+        Default is ThinProvisioned.
+        """
         return self.__storageMode
 
-    # The name of a volume already created in the ScaleIO system
-    # that is associated with this volume source.
     def volumeName(self) -> Optional[str]:
+        """
+        The name of a volume already created in the ScaleIO system
+        that is associated with this volume source.
+        """
         return self.__volumeName
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs".
-    # Default is "xfs".
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs".
+        Default is "xfs".
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
 
@@ -8355,31 +9333,39 @@ class SecretVolumeSource(types.Object):
             v["optional"] = optional
         return v
 
-    # Name of the secret in the pod's namespace to use.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
     def secretName(self) -> Optional[str]:
+        """
+        Name of the secret in the pod's namespace to use.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+        """
         return self.__secretName
 
-    # If unspecified, each key-value pair in the Data field of the referenced
-    # Secret will be projected into the volume as a file whose name is the
-    # key and content is the value. If specified, the listed keys will be
-    # projected into the specified paths, and unlisted keys will not be
-    # present. If a key is specified which is not present in the Secret,
-    # the volume setup will error unless it is marked optional. Paths must be
-    # relative and may not contain the '..' path or start with '..'.
     def items(self) -> Optional[List[KeyToPath]]:
+        """
+        If unspecified, each key-value pair in the Data field of the referenced
+        Secret will be projected into the volume as a file whose name is the
+        key and content is the value. If specified, the listed keys will be
+        projected into the specified paths, and unlisted keys will not be
+        present. If a key is specified which is not present in the Secret,
+        the volume setup will error unless it is marked optional. Paths must be
+        relative and may not contain the '..' path or start with '..'.
+        """
         return self.__items
 
-    # Optional: mode bits to use on created files by default. Must be a
-    # value between 0 and 0777. Defaults to 0644.
-    # Directories within the path are not affected by this setting.
-    # This might be in conflict with other options that affect the file
-    # mode, like fsGroup, and the result can be other mode bits set.
     def defaultMode(self) -> Optional[int]:
+        """
+        Optional: mode bits to use on created files by default. Must be a
+        value between 0 and 0777. Defaults to 0644.
+        Directories within the path are not affected by this setting.
+        This might be in conflict with other options that affect the file
+        mode, like fsGroup, and the result can be other mode bits set.
+        """
         return self.__defaultMode
 
-    # Specify whether the Secret or its keys must be defined
     def optional(self) -> Optional[bool]:
+        """
+        Specify whether the Secret or its keys must be defined
+        """
         return self.__optional
 
 
@@ -8427,34 +9413,44 @@ class StorageOSVolumeSource(types.Object):
             v["secretRef"] = secretRef
         return v
 
-    # VolumeName is the human-readable name of the StorageOS volume.  Volume
-    # names are only unique within a namespace.
     def volumeName(self) -> Optional[str]:
+        """
+        VolumeName is the human-readable name of the StorageOS volume.  Volume
+        names are only unique within a namespace.
+        """
         return self.__volumeName
 
-    # VolumeNamespace specifies the scope of the volume within StorageOS.  If no
-    # namespace is specified then the Pod's namespace will be used.  This allows the
-    # Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
-    # Set VolumeName to any name to override the default behaviour.
-    # Set to "default" if you are not using namespaces within StorageOS.
-    # Namespaces that do not pre-exist within StorageOS will be created.
     def volumeNamespace(self) -> Optional[str]:
+        """
+        VolumeNamespace specifies the scope of the volume within StorageOS.  If no
+        namespace is specified then the Pod's namespace will be used.  This allows the
+        Kubernetes name scoping to be mirrored within StorageOS for tighter integration.
+        Set VolumeName to any name to override the default behaviour.
+        Set to "default" if you are not using namespaces within StorageOS.
+        Namespaces that do not pre-exist within StorageOS will be created.
+        """
         return self.__volumeNamespace
 
-    # Filesystem type to mount.
-    # Must be a filesystem type supported by the host operating system.
-    # Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
     def fsType(self) -> Optional[str]:
+        """
+        Filesystem type to mount.
+        Must be a filesystem type supported by the host operating system.
+        Ex. "ext4", "xfs", "ntfs". Implicitly inferred to be "ext4" if unspecified.
+        """
         return self.__fsType
 
-    # Defaults to false (read/write). ReadOnly here will force
-    # the ReadOnly setting in VolumeMounts.
     def readOnly(self) -> Optional[bool]:
+        """
+        Defaults to false (read/write). ReadOnly here will force
+        the ReadOnly setting in VolumeMounts.
+        """
         return self.__readOnly
 
-    # SecretRef specifies the secret to use for obtaining the StorageOS API
-    # credentials.  If not specified, default values will be attempted.
     def secretRef(self) -> Optional[LocalObjectReference]:
+        """
+        SecretRef specifies the secret to use for obtaining the StorageOS API
+        credentials.  If not specified, default values will be attempted.
+        """
         return self.__secretRef
 
 
@@ -8653,134 +9649,188 @@ class VolumeSource(types.Object):
             v["csi"] = csi
         return v
 
-    # HostPath represents a pre-existing file or directory on the host
-    # machine that is directly exposed to the container. This is generally
-    # used for system agents or other privileged things that are allowed
-    # to see the host machine. Most containers will NOT need this.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
-    # ---
-    # TODO(jonesdl) We need to restrict who can use host directory mounts and who can/can not
-    # mount host directories as read/write.
     def hostPath(self) -> Optional[HostPathVolumeSource]:
+        """
+        HostPath represents a pre-existing file or directory on the host
+        machine that is directly exposed to the container. This is generally
+        used for system agents or other privileged things that are allowed
+        to see the host machine. Most containers will NOT need this.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#hostpath
+        ---
+        TODO(jonesdl) We need to restrict who can use host directory mounts and who can/can not
+        mount host directories as read/write.
+        """
         return self.__hostPath
 
-    # EmptyDir represents a temporary directory that shares a pod's lifetime.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
     def emptyDir(self) -> Optional[EmptyDirVolumeSource]:
+        """
+        EmptyDir represents a temporary directory that shares a pod's lifetime.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
+        """
         return self.__emptyDir
 
-    # GCEPersistentDisk represents a GCE Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
     def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
+        """
+        GCEPersistentDisk represents a GCE Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#gcepersistentdisk
+        """
         return self.__gcePersistentDisk
 
-    # AWSElasticBlockStore represents an AWS Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
     def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
+        """
+        AWSElasticBlockStore represents an AWS Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#awselasticblockstore
+        """
         return self.__awsElasticBlockStore
 
-    # Secret represents a secret that should populate this volume.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
     def secret(self) -> Optional[SecretVolumeSource]:
+        """
+        Secret represents a secret that should populate this volume.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
+        """
         return self.__secret
 
-    # NFS represents an NFS mount on the host that shares a pod's lifetime
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
     def nfs(self) -> Optional[NFSVolumeSource]:
+        """
+        NFS represents an NFS mount on the host that shares a pod's lifetime
+        More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
+        """
         return self.__nfs
 
-    # ISCSI represents an ISCSI Disk resource that is attached to a
-    # kubelet's host machine and then exposed to the pod.
-    # More info: https://examples.k8s.io/volumes/iscsi/README.md
     def iscsi(self) -> Optional[ISCSIVolumeSource]:
+        """
+        ISCSI represents an ISCSI Disk resource that is attached to a
+        kubelet's host machine and then exposed to the pod.
+        More info: https://examples.k8s.io/volumes/iscsi/README.md
+        """
         return self.__iscsi
 
-    # Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime.
-    # More info: https://examples.k8s.io/volumes/glusterfs/README.md
     def glusterfs(self) -> Optional[GlusterfsVolumeSource]:
+        """
+        Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime.
+        More info: https://examples.k8s.io/volumes/glusterfs/README.md
+        """
         return self.__glusterfs
 
-    # PersistentVolumeClaimVolumeSource represents a reference to a
-    # PersistentVolumeClaim in the same namespace.
-    # More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
     def persistentVolumeClaim(self) -> Optional[PersistentVolumeClaimVolumeSource]:
+        """
+        PersistentVolumeClaimVolumeSource represents a reference to a
+        PersistentVolumeClaim in the same namespace.
+        More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
+        """
         return self.__persistentVolumeClaim
 
-    # RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
-    # More info: https://examples.k8s.io/volumes/rbd/README.md
     def rbd(self) -> Optional[RBDVolumeSource]:
+        """
+        RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
+        More info: https://examples.k8s.io/volumes/rbd/README.md
+        """
         return self.__rbd
 
-    # FlexVolume represents a generic volume resource that is
-    # provisioned/attached using an exec based plugin.
     def flexVolume(self) -> Optional[FlexVolumeSource]:
+        """
+        FlexVolume represents a generic volume resource that is
+        provisioned/attached using an exec based plugin.
+        """
         return self.__flexVolume
 
-    # Cinder represents a cinder volume attached and mounted on kubelets host machine.
-    # More info: https://examples.k8s.io/mysql-cinder-pd/README.md
     def cinder(self) -> Optional[CinderVolumeSource]:
+        """
+        Cinder represents a cinder volume attached and mounted on kubelets host machine.
+        More info: https://examples.k8s.io/mysql-cinder-pd/README.md
+        """
         return self.__cinder
 
-    # CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
     def cephfs(self) -> Optional[CephFSVolumeSource]:
+        """
+        CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
+        """
         return self.__cephfs
 
-    # Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
     def flocker(self) -> Optional[FlockerVolumeSource]:
+        """
+        Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
+        """
         return self.__flocker
 
-    # DownwardAPI represents downward API about the pod that should populate this volume
     def downwardAPI(self) -> Optional[DownwardAPIVolumeSource]:
+        """
+        DownwardAPI represents downward API about the pod that should populate this volume
+        """
         return self.__downwardAPI
 
-    # FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
     def fc(self) -> Optional[FCVolumeSource]:
+        """
+        FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
+        """
         return self.__fc
 
-    # AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
     def azureFile(self) -> Optional[AzureFileVolumeSource]:
+        """
+        AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
+        """
         return self.__azureFile
 
-    # ConfigMap represents a configMap that should populate this volume
     def configMap(self) -> Optional[ConfigMapVolumeSource]:
+        """
+        ConfigMap represents a configMap that should populate this volume
+        """
         return self.__configMap
 
-    # VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
     def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
+        """
+        VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
+        """
         return self.__vsphereVolume
 
-    # Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
     def quobyte(self) -> Optional[QuobyteVolumeSource]:
+        """
+        Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
+        """
         return self.__quobyte
 
-    # AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
     def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
+        """
+        AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+        """
         return self.__azureDisk
 
-    # PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
     def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
+        """
+        PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
+        """
         return self.__photonPersistentDisk
 
-    # Items for all in one resources secrets, configmaps, and downward API
     def projected(self) -> Optional[ProjectedVolumeSource]:
+        """
+        Items for all in one resources secrets, configmaps, and downward API
+        """
         return self.__projected
 
-    # PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
     def portworxVolume(self) -> Optional[PortworxVolumeSource]:
+        """
+        PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
+        """
         return self.__portworxVolume
 
-    # ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
     def scaleIO(self) -> Optional[ScaleIOVolumeSource]:
+        """
+        ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
+        """
         return self.__scaleIO
 
-    # StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
     def storageos(self) -> Optional[StorageOSVolumeSource]:
+        """
+        StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
+        """
         return self.__storageos
 
-    # CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).
     def csi(self) -> Optional[CSIVolumeSource]:
+        """
+        CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).
+        """
         return self.__csi
 
 
@@ -8806,16 +9856,20 @@ class Volume(types.Object):
         v.update(volumeSource._root())  # inline
         return v
 
-    # Volume's name.
-    # Must be a DNS_LABEL and unique within the pod.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
     def name(self) -> str:
+        """
+        Volume's name.
+        Must be a DNS_LABEL and unique within the pod.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+        """
         return self.__name
 
-    # VolumeSource represents the location and type of the mounted volume.
-    # If not specified, the Volume is implied to be an EmptyDir.
-    # This implied behavior is deprecated and will be removed in a future version.
     def volumeSource(self) -> VolumeSource:
+        """
+        VolumeSource represents the location and type of the mounted volume.
+        If not specified, the Volume is implied to be an EmptyDir.
+        This implied behavior is deprecated and will be removed in a future version.
+        """
         return self.__volumeSource
 
 
@@ -9060,232 +10114,298 @@ class PodSpec(types.Object):
             v["topologySpreadConstraints"] = topologySpreadConstraints
         return v
 
-    # List of volumes that can be mounted by containers belonging to the pod.
-    # More info: https://kubernetes.io/docs/concepts/storage/volumes
     def volumes(self) -> Optional[Dict[str, Volume]]:
+        """
+        List of volumes that can be mounted by containers belonging to the pod.
+        More info: https://kubernetes.io/docs/concepts/storage/volumes
+        """
         return self.__volumes
 
-    # List of initialization containers belonging to the pod.
-    # Init containers are executed in order prior to containers being started. If any
-    # init container fails, the pod is considered to have failed and is handled according
-    # to its restartPolicy. The name for an init container or normal container must be
-    # unique among all containers.
-    # Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
-    # The resourceRequirements of an init container are taken into account during scheduling
-    # by finding the highest request/limit for each resource type, and then using the max of
-    # of that value or the sum of the normal containers. Limits are applied to init containers
-    # in a similar fashion.
-    # Init containers cannot currently be added or removed.
-    # Cannot be updated.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
     def initContainers(self) -> Optional[Dict[str, Container]]:
+        """
+        List of initialization containers belonging to the pod.
+        Init containers are executed in order prior to containers being started. If any
+        init container fails, the pod is considered to have failed and is handled according
+        to its restartPolicy. The name for an init container or normal container must be
+        unique among all containers.
+        Init containers may not have Lifecycle actions, Readiness probes, Liveness probes, or Startup probes.
+        The resourceRequirements of an init container are taken into account during scheduling
+        by finding the highest request/limit for each resource type, and then using the max of
+        of that value or the sum of the normal containers. Limits are applied to init containers
+        in a similar fashion.
+        Init containers cannot currently be added or removed.
+        Cannot be updated.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+        """
         return self.__initContainers
 
-    # List of containers belonging to the pod.
-    # Containers cannot currently be added or removed.
-    # There must be at least one container in a Pod.
-    # Cannot be updated.
     def containers(self) -> Dict[str, Container]:
+        """
+        List of containers belonging to the pod.
+        Containers cannot currently be added or removed.
+        There must be at least one container in a Pod.
+        Cannot be updated.
+        """
         return self.__containers
 
-    # List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
-    # pod to perform user-initiated actions such as debugging. This list cannot be specified when
-    # creating a pod, and it cannot be modified by updating the pod spec. In order to add an
-    # ephemeral container to an existing pod, use the pod's ephemeralcontainers subresource.
-    # This field is alpha-level and is only honored by servers that enable the EphemeralContainers feature.
     def ephemeralContainers(self) -> Optional[List[EphemeralContainer]]:
+        """
+        List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
+        pod to perform user-initiated actions such as debugging. This list cannot be specified when
+        creating a pod, and it cannot be modified by updating the pod spec. In order to add an
+        ephemeral container to an existing pod, use the pod's ephemeralcontainers subresource.
+        This field is alpha-level and is only honored by servers that enable the EphemeralContainers feature.
+        """
         return self.__ephemeralContainers
 
-    # Restart policy for all containers within the pod.
-    # One of Always, OnFailure, Never.
-    # Default to Always.
-    # More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
     def restartPolicy(self) -> Optional[RestartPolicy]:
+        """
+        Restart policy for all containers within the pod.
+        One of Always, OnFailure, Never.
+        Default to Always.
+        More info: https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#restart-policy
+        """
         return self.__restartPolicy
 
-    # Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request.
-    # Value must be non-negative integer. The value zero indicates delete immediately.
-    # If this value is nil, the default grace period will be used instead.
-    # The grace period is the duration in seconds after the processes running in the pod are sent
-    # a termination signal and the time when the processes are forcibly halted with a kill signal.
-    # Set this value longer than the expected cleanup time for your process.
-    # Defaults to 30 seconds.
     def terminationGracePeriodSeconds(self) -> Optional[int]:
+        """
+        Optional duration in seconds the pod needs to terminate gracefully. May be decreased in delete request.
+        Value must be non-negative integer. The value zero indicates delete immediately.
+        If this value is nil, the default grace period will be used instead.
+        The grace period is the duration in seconds after the processes running in the pod are sent
+        a termination signal and the time when the processes are forcibly halted with a kill signal.
+        Set this value longer than the expected cleanup time for your process.
+        Defaults to 30 seconds.
+        """
         return self.__terminationGracePeriodSeconds
 
-    # Optional duration in seconds the pod may be active on the node relative to
-    # StartTime before the system will actively try to mark it failed and kill associated containers.
-    # Value must be a positive integer.
     def activeDeadlineSeconds(self) -> Optional[int]:
+        """
+        Optional duration in seconds the pod may be active on the node relative to
+        StartTime before the system will actively try to mark it failed and kill associated containers.
+        Value must be a positive integer.
+        """
         return self.__activeDeadlineSeconds
 
-    # Set DNS policy for the pod.
-    # Defaults to "ClusterFirst".
-    # Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'.
-    # DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy.
-    # To have DNS options set along with hostNetwork, you have to specify DNS policy
-    # explicitly to 'ClusterFirstWithHostNet'.
     def dnsPolicy(self) -> Optional[DNSPolicy]:
+        """
+        Set DNS policy for the pod.
+        Defaults to "ClusterFirst".
+        Valid values are 'ClusterFirstWithHostNet', 'ClusterFirst', 'Default' or 'None'.
+        DNS parameters given in DNSConfig will be merged with the policy selected with DNSPolicy.
+        To have DNS options set along with hostNetwork, you have to specify DNS policy
+        explicitly to 'ClusterFirstWithHostNet'.
+        """
         return self.__dnsPolicy
 
-    # NodeSelector is a selector which must be true for the pod to fit on a node.
-    # Selector which must match a node's labels for the pod to be scheduled on that node.
-    # More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
     def nodeSelector(self) -> Optional[Dict[str, str]]:
+        """
+        NodeSelector is a selector which must be true for the pod to fit on a node.
+        Selector which must match a node's labels for the pod to be scheduled on that node.
+        More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+        """
         return self.__nodeSelector
 
-    # ServiceAccountName is the name of the ServiceAccount to use to run this pod.
-    # More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
     def serviceAccountName(self) -> Optional[str]:
+        """
+        ServiceAccountName is the name of the ServiceAccount to use to run this pod.
+        More info: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+        """
         return self.__serviceAccountName
 
-    # AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
     def automountServiceAccountToken(self) -> Optional[bool]:
+        """
+        AutomountServiceAccountToken indicates whether a service account token should be automatically mounted.
+        """
         return self.__automountServiceAccountToken
 
-    # NodeName is a request to schedule this pod onto a specific node. If it is non-empty,
-    # the scheduler simply schedules this pod onto that node, assuming that it fits resource
-    # requirements.
     def nodeName(self) -> Optional[str]:
+        """
+        NodeName is a request to schedule this pod onto a specific node. If it is non-empty,
+        the scheduler simply schedules this pod onto that node, assuming that it fits resource
+        requirements.
+        """
         return self.__nodeName
 
-    # Host networking requested for this pod. Use the host's network namespace.
-    # If this option is set, the ports that will be used must be specified.
-    # Default to false.
     def hostNetwork(self) -> Optional[bool]:
+        """
+        Host networking requested for this pod. Use the host's network namespace.
+        If this option is set, the ports that will be used must be specified.
+        Default to false.
+        """
         return self.__hostNetwork
 
-    # Use the host's pid namespace.
-    # Optional: Default to false.
     def hostPID(self) -> Optional[bool]:
+        """
+        Use the host's pid namespace.
+        Optional: Default to false.
+        """
         return self.__hostPID
 
-    # Use the host's ipc namespace.
-    # Optional: Default to false.
     def hostIPC(self) -> Optional[bool]:
+        """
+        Use the host's ipc namespace.
+        Optional: Default to false.
+        """
         return self.__hostIPC
 
-    # Share a single process namespace between all of the containers in a pod.
-    # When this is set containers will be able to view and signal processes from other containers
-    # in the same pod, and the first process in each container will not be assigned PID 1.
-    # HostPID and ShareProcessNamespace cannot both be set.
-    # Optional: Default to false.
-    # This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
     def shareProcessNamespace(self) -> Optional[bool]:
+        """
+        Share a single process namespace between all of the containers in a pod.
+        When this is set containers will be able to view and signal processes from other containers
+        in the same pod, and the first process in each container will not be assigned PID 1.
+        HostPID and ShareProcessNamespace cannot both be set.
+        Optional: Default to false.
+        This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
+        """
         return self.__shareProcessNamespace
 
-    # SecurityContext holds pod-level security attributes and common container settings.
-    # Optional: Defaults to empty.  See type description for default values of each field.
     def securityContext(self) -> Optional[PodSecurityContext]:
+        """
+        SecurityContext holds pod-level security attributes and common container settings.
+        Optional: Defaults to empty.  See type description for default values of each field.
+        """
         return self.__securityContext
 
-    # ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
-    # If specified, these secrets will be passed to individual puller implementations for them to use. For example,
-    # in the case of docker, only DockerConfig type secrets are honored.
-    # More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
     def imagePullSecrets(self) -> Optional[Dict[str, LocalObjectReference]]:
+        """
+        ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
+        If specified, these secrets will be passed to individual puller implementations for them to use. For example,
+        in the case of docker, only DockerConfig type secrets are honored.
+        More info: https://kubernetes.io/docs/concepts/containers/images#specifying-imagepullsecrets-on-a-pod
+        """
         return self.__imagePullSecrets
 
-    # Specifies the hostname of the Pod
-    # If not specified, the pod's hostname will be set to a system-defined value.
     def hostname(self) -> Optional[str]:
+        """
+        Specifies the hostname of the Pod
+        If not specified, the pod's hostname will be set to a system-defined value.
+        """
         return self.__hostname
 
-    # If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>".
-    # If not specified, the pod will not have a domainname at all.
     def subdomain(self) -> Optional[str]:
+        """
+        If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>".
+        If not specified, the pod will not have a domainname at all.
+        """
         return self.__subdomain
 
-    # If specified, the pod's scheduling constraints
     def affinity(self) -> Optional[Affinity]:
+        """
+        If specified, the pod's scheduling constraints
+        """
         return self.__affinity
 
-    # If specified, the pod will be dispatched by specified scheduler.
-    # If not specified, the pod will be dispatched by default scheduler.
     def schedulerName(self) -> Optional[str]:
+        """
+        If specified, the pod will be dispatched by specified scheduler.
+        If not specified, the pod will be dispatched by default scheduler.
+        """
         return self.__schedulerName
 
-    # If specified, the pod's tolerations.
     def tolerations(self) -> Optional[List[Toleration]]:
+        """
+        If specified, the pod's tolerations.
+        """
         return self.__tolerations
 
-    # HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts
-    # file if specified. This is only valid for non-hostNetwork pods.
     def hostAliases(self) -> Optional[List[HostAlias]]:
+        """
+        HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts
+        file if specified. This is only valid for non-hostNetwork pods.
+        """
         return self.__hostAliases
 
-    # If specified, indicates the pod's priority. "system-node-critical" and
-    # "system-cluster-critical" are two special keywords which indicate the
-    # highest priorities with the former being the highest priority. Any other
-    # name must be defined by creating a PriorityClass object with that name.
-    # If not specified, the pod priority will be default or zero if there is no
-    # default.
     def priorityClassName(self) -> Optional[str]:
+        """
+        If specified, indicates the pod's priority. "system-node-critical" and
+        "system-cluster-critical" are two special keywords which indicate the
+        highest priorities with the former being the highest priority. Any other
+        name must be defined by creating a PriorityClass object with that name.
+        If not specified, the pod priority will be default or zero if there is no
+        default.
+        """
         return self.__priorityClassName
 
-    # The priority value. Various system components use this field to find the
-    # priority of the pod. When Priority Admission Controller is enabled, it
-    # prevents users from setting this field. The admission controller populates
-    # this field from PriorityClassName.
-    # The higher the value, the higher the priority.
     def priority(self) -> Optional[int]:
+        """
+        The priority value. Various system components use this field to find the
+        priority of the pod. When Priority Admission Controller is enabled, it
+        prevents users from setting this field. The admission controller populates
+        this field from PriorityClassName.
+        The higher the value, the higher the priority.
+        """
         return self.__priority
 
-    # Specifies the DNS parameters of a pod.
-    # Parameters specified here will be merged to the generated DNS
-    # configuration based on DNSPolicy.
     def dnsConfig(self) -> Optional[PodDNSConfig]:
+        """
+        Specifies the DNS parameters of a pod.
+        Parameters specified here will be merged to the generated DNS
+        configuration based on DNSPolicy.
+        """
         return self.__dnsConfig
 
-    # If specified, all readiness gates will be evaluated for pod readiness.
-    # A pod is ready when all its containers are ready AND
-    # all conditions specified in the readiness gates have status equal to "True"
-    # More info: https://git.k8s.io/enhancements/keps/sig-network/0007-pod-ready%2B%2B.md
     def readinessGates(self) -> Optional[List[PodReadinessGate]]:
+        """
+        If specified, all readiness gates will be evaluated for pod readiness.
+        A pod is ready when all its containers are ready AND
+        all conditions specified in the readiness gates have status equal to "True"
+        More info: https://git.k8s.io/enhancements/keps/sig-network/0007-pod-ready%2B%2B.md
+        """
         return self.__readinessGates
 
-    # RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used
-    # to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run.
-    # If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an
-    # empty definition that uses the default runtime handler.
-    # More info: https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
-    # This is a beta feature as of Kubernetes v1.14.
     def runtimeClassName(self) -> Optional[str]:
+        """
+        RuntimeClassName refers to a RuntimeClass object in the node.k8s.io group, which should be used
+        to run this pod.  If no RuntimeClass resource matches the named class, the pod will not be run.
+        If unset or empty, the "legacy" RuntimeClass will be used, which is an implicit class with an
+        empty definition that uses the default runtime handler.
+        More info: https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
+        This is a beta feature as of Kubernetes v1.14.
+        """
         return self.__runtimeClassName
 
-    # EnableServiceLinks indicates whether information about services should be injected into pod's
-    # environment variables, matching the syntax of Docker links.
-    # Optional: Defaults to true.
     def enableServiceLinks(self) -> Optional[bool]:
+        """
+        EnableServiceLinks indicates whether information about services should be injected into pod's
+        environment variables, matching the syntax of Docker links.
+        Optional: Defaults to true.
+        """
         return self.__enableServiceLinks
 
-    # PreemptionPolicy is the Policy for preempting pods with lower priority.
-    # One of Never, PreemptLowerPriority.
-    # Defaults to PreemptLowerPriority if unset.
-    # This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
     def preemptionPolicy(self) -> Optional[PreemptionPolicy]:
+        """
+        PreemptionPolicy is the Policy for preempting pods with lower priority.
+        One of Never, PreemptLowerPriority.
+        Defaults to PreemptLowerPriority if unset.
+        This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
+        """
         return self.__preemptionPolicy
 
-    # Overhead represents the resource overhead associated with running a pod for a given RuntimeClass.
-    # This field will be autopopulated at admission time by the RuntimeClass admission controller. If
-    # the RuntimeClass admission controller is enabled, overhead must not be set in Pod create requests.
-    # The RuntimeClass admission controller will reject Pod create requests which have the overhead already
-    # set. If RuntimeClass is configured and selected in the PodSpec, Overhead will be set to the value
-    # defined in the corresponding RuntimeClass, otherwise it will remain unset and treated as zero.
-    # More info: https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
-    # This field is alpha-level as of Kubernetes v1.16, and is only honored by servers that enable the PodOverhead feature.
     def overhead(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        Overhead represents the resource overhead associated with running a pod for a given RuntimeClass.
+        This field will be autopopulated at admission time by the RuntimeClass admission controller. If
+        the RuntimeClass admission controller is enabled, overhead must not be set in Pod create requests.
+        The RuntimeClass admission controller will reject Pod create requests which have the overhead already
+        set. If RuntimeClass is configured and selected in the PodSpec, Overhead will be set to the value
+        defined in the corresponding RuntimeClass, otherwise it will remain unset and treated as zero.
+        More info: https://git.k8s.io/enhancements/keps/sig-node/20190226-pod-overhead.md
+        This field is alpha-level as of Kubernetes v1.16, and is only honored by servers that enable the PodOverhead feature.
+        """
         return self.__overhead
 
-    # TopologySpreadConstraints describes how a group of pods ought to spread across topology
-    # domains. Scheduler will schedule pods in a way which abides by the constraints.
-    # This field is alpha-level and is only honored by clusters that enables the EvenPodsSpread
-    # feature.
-    # All topologySpreadConstraints are ANDed.
-    # +listType=map
-    # +listMapKey=topologyKey
-    # +listMapKey=whenUnsatisfiable
     def topologySpreadConstraints(self) -> Optional[List[TopologySpreadConstraint]]:
+        """
+        TopologySpreadConstraints describes how a group of pods ought to spread across topology
+        domains. Scheduler will schedule pods in a way which abides by the constraints.
+        This field is alpha-level and is only honored by clusters that enables the EvenPodsSpread
+        feature.
+        All topologySpreadConstraints are ANDed.
+        +listType=map
+        +listMapKey=topologyKey
+        +listMapKey=whenUnsatisfiable
+        """
         return self.__topologySpreadConstraints
 
 
@@ -9320,9 +10440,11 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the pod.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[PodSpec]:
+        """
+        Specification of the desired behavior of the pod.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -9373,31 +10495,41 @@ class PodAttachOptions(base.TypedObject):
             v["container"] = container
         return v
 
-    # Stdin if true, redirects the standard input stream of the pod for this call.
-    # Defaults to false.
     def stdin(self) -> Optional[bool]:
+        """
+        Stdin if true, redirects the standard input stream of the pod for this call.
+        Defaults to false.
+        """
         return self.__stdin
 
-    # Stdout if true indicates that stdout is to be redirected for the attach call.
-    # Defaults to true.
     def stdout(self) -> Optional[bool]:
+        """
+        Stdout if true indicates that stdout is to be redirected for the attach call.
+        Defaults to true.
+        """
         return self.__stdout
 
-    # Stderr if true indicates that stderr is to be redirected for the attach call.
-    # Defaults to true.
     def stderr(self) -> Optional[bool]:
+        """
+        Stderr if true indicates that stderr is to be redirected for the attach call.
+        Defaults to true.
+        """
         return self.__stderr
 
-    # TTY if true indicates that a tty will be allocated for the attach call.
-    # This is passed through the container runtime so the tty
-    # is allocated on the worker node by the container runtime.
-    # Defaults to false.
     def tty(self) -> Optional[bool]:
+        """
+        TTY if true indicates that a tty will be allocated for the attach call.
+        This is passed through the container runtime so the tty
+        is allocated on the worker node by the container runtime.
+        Defaults to false.
+        """
         return self.__tty
 
-    # The container in which to execute the command.
-    # Defaults to only container if there is only one container in the pod.
     def container(self) -> Optional[str]:
+        """
+        The container in which to execute the command.
+        Defaults to only container if there is only one container in the pod.
+        """
         return self.__container
 
 
@@ -9453,33 +10585,45 @@ class PodExecOptions(base.TypedObject):
         v["command"] = command
         return v
 
-    # Redirect the standard input stream of the pod for this call.
-    # Defaults to false.
     def stdin(self) -> Optional[bool]:
+        """
+        Redirect the standard input stream of the pod for this call.
+        Defaults to false.
+        """
         return self.__stdin
 
-    # Redirect the standard output stream of the pod for this call.
-    # Defaults to true.
     def stdout(self) -> Optional[bool]:
+        """
+        Redirect the standard output stream of the pod for this call.
+        Defaults to true.
+        """
         return self.__stdout
 
-    # Redirect the standard error stream of the pod for this call.
-    # Defaults to true.
     def stderr(self) -> Optional[bool]:
+        """
+        Redirect the standard error stream of the pod for this call.
+        Defaults to true.
+        """
         return self.__stderr
 
-    # TTY if true indicates that a tty will be allocated for the exec call.
-    # Defaults to false.
     def tty(self) -> Optional[bool]:
+        """
+        TTY if true indicates that a tty will be allocated for the exec call.
+        Defaults to false.
+        """
         return self.__tty
 
-    # Container in which to execute the command.
-    # Defaults to only container if there is only one container in the pod.
     def container(self) -> Optional[str]:
+        """
+        Container in which to execute the command.
+        Defaults to only container if there is only one container in the pod.
+        """
         return self.__container
 
-    # Command is the remote command to execute. argv array. Not executed within a shell.
     def command(self) -> List[str]:
+        """
+        Command is the remote command to execute. argv array. Not executed within a shell.
+        """
         return self.__command
 
 
@@ -9545,46 +10689,62 @@ class PodLogOptions(base.TypedObject):
             v["limitBytes"] = limitBytes
         return v
 
-    # The container for which to stream logs. Defaults to only container if there is one container in the pod.
     def container(self) -> Optional[str]:
+        """
+        The container for which to stream logs. Defaults to only container if there is one container in the pod.
+        """
         return self.__container
 
-    # Follow the log stream of the pod. Defaults to false.
     def follow(self) -> Optional[bool]:
+        """
+        Follow the log stream of the pod. Defaults to false.
+        """
         return self.__follow
 
-    # Return previous terminated container logs. Defaults to false.
     def previous(self) -> Optional[bool]:
+        """
+        Return previous terminated container logs. Defaults to false.
+        """
         return self.__previous
 
-    # A relative time in seconds before the current time from which to show logs. If this value
-    # precedes the time a pod was started, only logs since the pod start will be returned.
-    # If this value is in the future, no logs will be returned.
-    # Only one of sinceSeconds or sinceTime may be specified.
     def sinceSeconds(self) -> Optional[int]:
+        """
+        A relative time in seconds before the current time from which to show logs. If this value
+        precedes the time a pod was started, only logs since the pod start will be returned.
+        If this value is in the future, no logs will be returned.
+        Only one of sinceSeconds or sinceTime may be specified.
+        """
         return self.__sinceSeconds
 
-    # An RFC3339 timestamp from which to show logs. If this value
-    # precedes the time a pod was started, only logs since the pod start will be returned.
-    # If this value is in the future, no logs will be returned.
-    # Only one of sinceSeconds or sinceTime may be specified.
     def sinceTime(self) -> Optional["base.Time"]:
+        """
+        An RFC3339 timestamp from which to show logs. If this value
+        precedes the time a pod was started, only logs since the pod start will be returned.
+        If this value is in the future, no logs will be returned.
+        Only one of sinceSeconds or sinceTime may be specified.
+        """
         return self.__sinceTime
 
-    # If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line
-    # of log output. Defaults to false.
     def timestamps(self) -> Optional[bool]:
+        """
+        If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line
+        of log output. Defaults to false.
+        """
         return self.__timestamps
 
-    # If set, the number of lines from the end of the logs to show. If not specified,
-    # logs are shown from the creation of the container or sinceSeconds or sinceTime
     def tailLines(self) -> Optional[int]:
+        """
+        If set, the number of lines from the end of the logs to show. If not specified,
+        logs are shown from the creation of the container or sinceSeconds or sinceTime
+        """
         return self.__tailLines
 
-    # If set, the number of bytes to read from the server before terminating the
-    # log output. This may not display a complete final line of logging, and may return
-    # slightly more or slightly less than the specified limit.
     def limitBytes(self) -> Optional[int]:
+        """
+        If set, the number of bytes to read from the server before terminating the
+        log output. This may not display a complete final line of logging, and may return
+        slightly more or slightly less than the specified limit.
+        """
         return self.__limitBytes
 
 
@@ -9610,9 +10770,11 @@ class PodPortForwardOptions(base.TypedObject):
             v["ports"] = ports
         return v
 
-    # List of ports to forward
-    # Required when using WebSockets
     def ports(self) -> Optional[List[int]]:
+        """
+        List of ports to forward
+        Required when using WebSockets
+        """
         return self.__ports
 
 
@@ -9633,8 +10795,10 @@ class PodProxyOptions(base.TypedObject):
             v["path"] = path
         return v
 
-    # Path is the URL path to use for the current proxy request to pod.
     def path(self) -> Optional[str]:
+        """
+        Path is the URL path to use for the current proxy request to pod.
+        """
         return self.__path
 
 
@@ -9692,9 +10856,11 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the pod.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[PodSpec]:
+        """
+        Specification of the desired behavior of the pod.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -9728,9 +10894,11 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
         v["template"] = template
         return v
 
-    # Template defines the pods that will be created from this pod template.
-    # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def template(self) -> Optional[PodTemplateSpec]:
+        """
+        Template defines the pods that will be created from this pod template.
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__template
 
 
@@ -9769,12 +10937,16 @@ class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
         v["data"] = data
         return v
 
-    # Range is string that identifies the range represented by 'data'.
     def range(self) -> str:
+        """
+        Range is string that identifies the range represented by 'data'.
+        """
         return self.__range
 
-    # Data is a bit array containing all allocated addresses in the previous segment.
     def data(self) -> bytes:
+        """
+        Data is a bit array containing all allocated addresses in the previous segment.
+        """
         return self.__data
 
 
@@ -9816,31 +10988,39 @@ class ReplicationControllerSpec(types.Object):
             v["template"] = template
         return v
 
-    # Replicas is the number of desired replicas.
-    # This is a pointer to distinguish between explicit zero and unspecified.
-    # Defaults to 1.
-    # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#what-is-a-replicationcontroller
     def replicas(self) -> Optional[int]:
+        """
+        Replicas is the number of desired replicas.
+        This is a pointer to distinguish between explicit zero and unspecified.
+        Defaults to 1.
+        More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#what-is-a-replicationcontroller
+        """
         return self.__replicas
 
-    # Minimum number of seconds for which a newly created pod should be ready
-    # without any of its container crashing, for it to be considered available.
-    # Defaults to 0 (pod will be considered available as soon as it is ready)
     def minReadySeconds(self) -> Optional[int]:
+        """
+        Minimum number of seconds for which a newly created pod should be ready
+        without any of its container crashing, for it to be considered available.
+        Defaults to 0 (pod will be considered available as soon as it is ready)
+        """
         return self.__minReadySeconds
 
-    # Selector is a label query over pods that should match the Replicas count.
-    # If Selector is empty, it is defaulted to the labels present on the Pod template.
-    # Label keys and values that must match in order to be controlled by this replication
-    # controller, if empty defaulted to labels on Pod template.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     def selector(self) -> Optional[Dict[str, str]]:
+        """
+        Selector is a label query over pods that should match the Replicas count.
+        If Selector is empty, it is defaulted to the labels present on the Pod template.
+        Label keys and values that must match in order to be controlled by this replication
+        controller, if empty defaulted to labels on Pod template.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
+        """
         return self.__selector
 
-    # Template is the object that describes the pod that will be created if
-    # insufficient replicas are detected. This takes precedence over a TemplateRef.
-    # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     def template(self) -> Optional[PodTemplateSpec]:
+        """
+        Template is the object that describes the pod that will be created if
+        insufficient replicas are detected. This takes precedence over a TemplateRef.
+        More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
+        """
         return self.__template
 
 
@@ -9874,9 +11054,11 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the specification of the desired behavior of the replication controller.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[ReplicationControllerSpec]:
+        """
+        Spec defines the specification of the desired behavior of the replication controller.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -9911,20 +11093,26 @@ class ScopedResourceSelectorRequirement(types.Object):
             v["values"] = values
         return v
 
-    # The name of the scope that the selector applies to.
     def scopeName(self) -> ResourceQuotaScope:
+        """
+        The name of the scope that the selector applies to.
+        """
         return self.__scopeName
 
-    # Represents a scope's relationship to a set of values.
-    # Valid operators are In, NotIn, Exists, DoesNotExist.
     def operator(self) -> ScopeSelectorOperator:
+        """
+        Represents a scope's relationship to a set of values.
+        Valid operators are In, NotIn, Exists, DoesNotExist.
+        """
         return self.__operator
 
-    # An array of string values. If the operator is In or NotIn,
-    # the values array must be non-empty. If the operator is Exists or DoesNotExist,
-    # the values array must be empty.
-    # This array is replaced during a strategic merge patch.
     def values(self) -> Optional[List[str]]:
+        """
+        An array of string values. If the operator is In or NotIn,
+        the values array must be non-empty. If the operator is Exists or DoesNotExist,
+        the values array must be empty.
+        This array is replaced during a strategic merge patch.
+        """
         return self.__values
 
 
@@ -9954,8 +11142,10 @@ class ScopeSelector(types.Object):
             v["matchExpressions"] = matchExpressions
         return v
 
-    # A list of scope selector requirements by scope of the resources.
     def matchExpressions(self) -> Optional[List[ScopedResourceSelectorRequirement]]:
+        """
+        A list of scope selector requirements by scope of the resources.
+        """
         return self.__matchExpressions
 
 
@@ -9991,20 +11181,26 @@ class ResourceQuotaSpec(types.Object):
             v["scopeSelector"] = scopeSelector
         return v
 
-    # hard is the set of desired hard limits for each named resource.
-    # More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
     def hard(self) -> Optional[Dict[ResourceName, "resource.Quantity"]]:
+        """
+        hard is the set of desired hard limits for each named resource.
+        More info: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+        """
         return self.__hard
 
-    # A collection of filters that must match each object tracked by a quota.
-    # If not specified, the quota matches all objects.
     def scopes(self) -> Optional[List[ResourceQuotaScope]]:
+        """
+        A collection of filters that must match each object tracked by a quota.
+        If not specified, the quota matches all objects.
+        """
         return self.__scopes
 
-    # scopeSelector is also a collection of filters like scopes that must match each object tracked by a quota
-    # but expressed using ScopeSelectorOperator in combination with possible values.
-    # For a resource to match, both scopes AND scopeSelector (if specified in spec), must be matched.
     def scopeSelector(self) -> Optional[ScopeSelector]:
+        """
+        scopeSelector is also a collection of filters like scopes that must match each object tracked by a quota
+        but expressed using ScopeSelectorOperator in combination with possible values.
+        For a resource to match, both scopes AND scopeSelector (if specified in spec), must be matched.
+        """
         return self.__scopeSelector
 
 
@@ -10038,9 +11234,11 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the desired quota.
-    # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[ResourceQuotaSpec]:
+        """
+        Spec defines the desired quota.
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -10088,22 +11286,28 @@ class Secret(base.TypedObject, base.NamespacedMetadataObject):
             v["type"] = type
         return v
 
-    # Data contains the secret data. Each key must consist of alphanumeric
-    # characters, '-', '_' or '.'. The serialized form of the secret data is a
-    # base64 encoded string, representing the arbitrary (possibly non-string)
-    # data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
     def data(self) -> Optional[Dict[str, bytes]]:
+        """
+        Data contains the secret data. Each key must consist of alphanumeric
+        characters, '-', '_' or '.'. The serialized form of the secret data is a
+        base64 encoded string, representing the arbitrary (possibly non-string)
+        data value here. Described in https://tools.ietf.org/html/rfc4648#section-4
+        """
         return self.__data
 
-    # stringData allows specifying non-binary secret data in string form.
-    # It is provided as a write-only convenience method.
-    # All keys and values are merged into the data field on write, overwriting any existing values.
-    # It is never output when reading from the API.
     def stringData(self) -> Optional[Dict[str, str]]:
+        """
+        stringData allows specifying non-binary secret data in string form.
+        It is provided as a write-only convenience method.
+        All keys and values are merged into the data field on write, overwriting any existing values.
+        It is never output when reading from the API.
+        """
         return self.__stringData
 
-    # Used to facilitate programmatic handling of secret data.
     def type(self) -> Optional[SecretType]:
+        """
+        Used to facilitate programmatic handling of secret data.
+        """
         return self.__type
 
 
@@ -10123,8 +11327,10 @@ class SerializedReference(base.TypedObject):
         v["reference"] = reference
         return v
 
-    # The reference to an object in the system.
     def reference(self) -> Optional[ObjectReference]:
+        """
+        The reference to an object in the system.
+        """
         return self.__reference
 
 
@@ -10170,40 +11376,50 @@ class ServicePort(types.Object):
             v["nodePort"] = nodePort
         return v
 
-    # The name of this port within the service. This must be a DNS_LABEL.
-    # All ports within a ServiceSpec must have unique names. When considering
-    # the endpoints for a Service, this must match the 'name' field in the
-    # EndpointPort.
-    # Optional if only one ServicePort is defined on this service.
     def name(self) -> Optional[str]:
+        """
+        The name of this port within the service. This must be a DNS_LABEL.
+        All ports within a ServiceSpec must have unique names. When considering
+        the endpoints for a Service, this must match the 'name' field in the
+        EndpointPort.
+        Optional if only one ServicePort is defined on this service.
+        """
         return self.__name
 
-    # The IP protocol for this port. Supports "TCP", "UDP", and "SCTP".
-    # Default is TCP.
     def protocol(self) -> Optional[Protocol]:
+        """
+        The IP protocol for this port. Supports "TCP", "UDP", and "SCTP".
+        Default is TCP.
+        """
         return self.__protocol
 
-    # The port that will be exposed by this service.
     def port(self) -> int:
+        """
+        The port that will be exposed by this service.
+        """
         return self.__port
 
-    # Number or name of the port to access on the pods targeted by the service.
-    # Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
-    # If this is a string, it will be looked up as a named port in the
-    # target Pod's container ports. If this is not specified, the value
-    # of the 'port' field is used (an identity map).
-    # This field is ignored for services with clusterIP=None, and should be
-    # omitted or set equal to the 'port' field.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
     def targetPort(self) -> Optional[Union[int, str]]:
+        """
+        Number or name of the port to access on the pods targeted by the service.
+        Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME.
+        If this is a string, it will be looked up as a named port in the
+        target Pod's container ports. If this is not specified, the value
+        of the 'port' field is used (an identity map).
+        This field is ignored for services with clusterIP=None, and should be
+        omitted or set equal to the 'port' field.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service
+        """
         return self.__targetPort
 
-    # The port on each node on which this service is exposed when type=NodePort or LoadBalancer.
-    # Usually assigned by the system. If specified, it will be allocated to the service
-    # if unused or else creation of the service will fail.
-    # Default is to auto-allocate a port if the ServiceType of this Service requires one.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
     def nodePort(self) -> Optional[int]:
+        """
+        The port on each node on which this service is exposed when type=NodePort or LoadBalancer.
+        Usually assigned by the system. If specified, it will be allocated to the service
+        if unused or else creation of the service will fail.
+        Default is to auto-allocate a port if the ServiceType of this Service requires one.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+        """
         return self.__nodePort
 
 
@@ -10224,8 +11440,10 @@ class SessionAffinityConfig(types.Object):
             v["clientIP"] = clientIP
         return v
 
-    # clientIP contains the configurations of Client IP based session affinity.
     def clientIP(self) -> Optional[ClientIPConfig]:
+        """
+        clientIP contains the configurations of Client IP based session affinity.
+        """
         return self.__clientIP
 
 
@@ -10339,128 +11557,156 @@ class ServiceSpec(types.Object):
             v["ipFamily"] = ipFamily
         return v
 
-    # The list of ports that are exposed by this service.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
-    # +listType=map
-    # +listMapKey=port
-    # +listMapKey=protocol
     def ports(self) -> Optional[Dict[str, ServicePort]]:
+        """
+        The list of ports that are exposed by this service.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+        +listType=map
+        +listMapKey=port
+        +listMapKey=protocol
+        """
         return self.__ports
 
-    # Route service traffic to pods with label keys and values matching this
-    # selector. If empty or not present, the service is assumed to have an
-    # external process managing its endpoints, which Kubernetes will not
-    # modify. Only applies to types ClusterIP, NodePort, and LoadBalancer.
-    # Ignored if type is ExternalName.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/
     def selector(self) -> Optional[Dict[str, str]]:
+        """
+        Route service traffic to pods with label keys and values matching this
+        selector. If empty or not present, the service is assumed to have an
+        external process managing its endpoints, which Kubernetes will not
+        modify. Only applies to types ClusterIP, NodePort, and LoadBalancer.
+        Ignored if type is ExternalName.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/
+        """
         return self.__selector
 
-    # clusterIP is the IP address of the service and is usually assigned
-    # randomly by the master. If an address is specified manually and is not in
-    # use by others, it will be allocated to the service; otherwise, creation
-    # of the service will fail. This field can not be changed through updates.
-    # Valid values are "None", empty string (""), or a valid IP address. "None"
-    # can be specified for headless services when proxying is not required.
-    # Only applies to types ClusterIP, NodePort, and LoadBalancer. Ignored if
-    # type is ExternalName.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     def clusterIP(self) -> Optional[str]:
+        """
+        clusterIP is the IP address of the service and is usually assigned
+        randomly by the master. If an address is specified manually and is not in
+        use by others, it will be allocated to the service; otherwise, creation
+        of the service will fail. This field can not be changed through updates.
+        Valid values are "None", empty string (""), or a valid IP address. "None"
+        can be specified for headless services when proxying is not required.
+        Only applies to types ClusterIP, NodePort, and LoadBalancer. Ignored if
+        type is ExternalName.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+        """
         return self.__clusterIP
 
-    # type determines how the Service is exposed. Defaults to ClusterIP. Valid
-    # options are ExternalName, ClusterIP, NodePort, and LoadBalancer.
-    # "ExternalName" maps to the specified externalName.
-    # "ClusterIP" allocates a cluster-internal IP address for load-balancing to
-    # endpoints. Endpoints are determined by the selector or if that is not
-    # specified, by manual construction of an Endpoints object. If clusterIP is
-    # "None", no virtual IP is allocated and the endpoints are published as a
-    # set of endpoints rather than a stable IP.
-    # "NodePort" builds on ClusterIP and allocates a port on every node which
-    # routes to the clusterIP.
-    # "LoadBalancer" builds on NodePort and creates an
-    # external load-balancer (if supported in the current cloud) which routes
-    # to the clusterIP.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
     def type(self) -> Optional[ServiceType]:
+        """
+        type determines how the Service is exposed. Defaults to ClusterIP. Valid
+        options are ExternalName, ClusterIP, NodePort, and LoadBalancer.
+        "ExternalName" maps to the specified externalName.
+        "ClusterIP" allocates a cluster-internal IP address for load-balancing to
+        endpoints. Endpoints are determined by the selector or if that is not
+        specified, by manual construction of an Endpoints object. If clusterIP is
+        "None", no virtual IP is allocated and the endpoints are published as a
+        set of endpoints rather than a stable IP.
+        "NodePort" builds on ClusterIP and allocates a port on every node which
+        routes to the clusterIP.
+        "LoadBalancer" builds on NodePort and creates an
+        external load-balancer (if supported in the current cloud) which routes
+        to the clusterIP.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
+        """
         return self.__type
 
-    # externalIPs is a list of IP addresses for which nodes in the cluster
-    # will also accept traffic for this service.  These IPs are not managed by
-    # Kubernetes.  The user is responsible for ensuring that traffic arrives
-    # at a node with this IP.  A common example is external load-balancers
-    # that are not part of the Kubernetes system.
     def externalIPs(self) -> Optional[List[str]]:
+        """
+        externalIPs is a list of IP addresses for which nodes in the cluster
+        will also accept traffic for this service.  These IPs are not managed by
+        Kubernetes.  The user is responsible for ensuring that traffic arrives
+        at a node with this IP.  A common example is external load-balancers
+        that are not part of the Kubernetes system.
+        """
         return self.__externalIPs
 
-    # Supports "ClientIP" and "None". Used to maintain session affinity.
-    # Enable client IP based session affinity.
-    # Must be ClientIP or None.
-    # Defaults to None.
-    # More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
     def sessionAffinity(self) -> Optional[ServiceAffinity]:
+        """
+        Supports "ClientIP" and "None". Used to maintain session affinity.
+        Enable client IP based session affinity.
+        Must be ClientIP or None.
+        Defaults to None.
+        More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+        """
         return self.__sessionAffinity
 
-    # Only applies to Service Type: LoadBalancer
-    # LoadBalancer will get created with the IP specified in this field.
-    # This feature depends on whether the underlying cloud-provider supports specifying
-    # the loadBalancerIP when a load balancer is created.
-    # This field will be ignored if the cloud-provider does not support the feature.
     def loadBalancerIP(self) -> Optional[str]:
+        """
+        Only applies to Service Type: LoadBalancer
+        LoadBalancer will get created with the IP specified in this field.
+        This feature depends on whether the underlying cloud-provider supports specifying
+        the loadBalancerIP when a load balancer is created.
+        This field will be ignored if the cloud-provider does not support the feature.
+        """
         return self.__loadBalancerIP
 
-    # If specified and supported by the platform, this will restrict traffic through the cloud-provider
-    # load-balancer will be restricted to the specified client IPs. This field will be ignored if the
-    # cloud-provider does not support the feature."
-    # More info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/
     def loadBalancerSourceRanges(self) -> Optional[List[str]]:
+        """
+        If specified and supported by the platform, this will restrict traffic through the cloud-provider
+        load-balancer will be restricted to the specified client IPs. This field will be ignored if the
+        cloud-provider does not support the feature."
+        More info: https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/
+        """
         return self.__loadBalancerSourceRanges
 
-    # externalName is the external reference that kubedns or equivalent will
-    # return as a CNAME record for this service. No proxying will be involved.
-    # Must be a valid RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
-    # and requires Type to be ExternalName.
     def externalName(self) -> Optional[str]:
+        """
+        externalName is the external reference that kubedns or equivalent will
+        return as a CNAME record for this service. No proxying will be involved.
+        Must be a valid RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)
+        and requires Type to be ExternalName.
+        """
         return self.__externalName
 
-    # externalTrafficPolicy denotes if this Service desires to route external
-    # traffic to node-local or cluster-wide endpoints. "Local" preserves the
-    # client source IP and avoids a second hop for LoadBalancer and Nodeport
-    # type services, but risks potentially imbalanced traffic spreading.
-    # "Cluster" obscures the client source IP and may cause a second hop to
-    # another node, but should have good overall load-spreading.
     def externalTrafficPolicy(self) -> Optional[ServiceExternalTrafficPolicyType]:
+        """
+        externalTrafficPolicy denotes if this Service desires to route external
+        traffic to node-local or cluster-wide endpoints. "Local" preserves the
+        client source IP and avoids a second hop for LoadBalancer and Nodeport
+        type services, but risks potentially imbalanced traffic spreading.
+        "Cluster" obscures the client source IP and may cause a second hop to
+        another node, but should have good overall load-spreading.
+        """
         return self.__externalTrafficPolicy
 
-    # healthCheckNodePort specifies the healthcheck nodePort for the service.
-    # If not specified, HealthCheckNodePort is created by the service api
-    # backend with the allocated nodePort. Will use user-specified nodePort value
-    # if specified by the client. Only effects when Type is set to LoadBalancer
-    # and ExternalTrafficPolicy is set to Local.
     def healthCheckNodePort(self) -> Optional[int]:
+        """
+        healthCheckNodePort specifies the healthcheck nodePort for the service.
+        If not specified, HealthCheckNodePort is created by the service api
+        backend with the allocated nodePort. Will use user-specified nodePort value
+        if specified by the client. Only effects when Type is set to LoadBalancer
+        and ExternalTrafficPolicy is set to Local.
+        """
         return self.__healthCheckNodePort
 
-    # publishNotReadyAddresses, when set to true, indicates that DNS implementations
-    # must publish the notReadyAddresses of subsets for the Endpoints associated with
-    # the Service. The default value is false.
-    # The primary use case for setting this field is to use a StatefulSet's Headless Service
-    # to propagate SRV records for its Pods without respect to their readiness for purpose
-    # of peer discovery.
     def publishNotReadyAddresses(self) -> Optional[bool]:
+        """
+        publishNotReadyAddresses, when set to true, indicates that DNS implementations
+        must publish the notReadyAddresses of subsets for the Endpoints associated with
+        the Service. The default value is false.
+        The primary use case for setting this field is to use a StatefulSet's Headless Service
+        to propagate SRV records for its Pods without respect to their readiness for purpose
+        of peer discovery.
+        """
         return self.__publishNotReadyAddresses
 
-    # sessionAffinityConfig contains the configurations of session affinity.
     def sessionAffinityConfig(self) -> Optional[SessionAffinityConfig]:
+        """
+        sessionAffinityConfig contains the configurations of session affinity.
+        """
         return self.__sessionAffinityConfig
 
-    # ipFamily specifies whether this Service has a preference for a particular IP family (e.g. IPv4 vs.
-    # IPv6).  If a specific IP family is requested, the clusterIP field will be allocated from that family, if it is
-    # available in the cluster.  If no IP family is requested, the cluster's primary IP family will be used.
-    # Other IP fields (loadBalancerIP, loadBalancerSourceRanges, externalIPs) and controllers which
-    # allocate external load-balancers should use the same IP family.  Endpoints for this Service will be of
-    # this family.  This field is immutable after creation. Assigning a ServiceIPFamily not available in the
-    # cluster (e.g. IPv6 in IPv4 only cluster) is an error condition and will fail during clusterIP assignment.
     def ipFamily(self) -> Optional[IPFamily]:
+        """
+        ipFamily specifies whether this Service has a preference for a particular IP family (e.g. IPv4 vs.
+        IPv6).  If a specific IP family is requested, the clusterIP field will be allocated from that family, if it is
+        available in the cluster.  If no IP family is requested, the cluster's primary IP family will be used.
+        Other IP fields (loadBalancerIP, loadBalancerSourceRanges, externalIPs) and controllers which
+        allocate external load-balancers should use the same IP family.  Endpoints for this Service will be of
+        this family.  This field is immutable after creation. Assigning a ServiceIPFamily not available in the
+        cluster (e.g. IPv6 in IPv4 only cluster) is an error condition and will fail during clusterIP assignment.
+        """
         return self.__ipFamily
 
 
@@ -10496,9 +11742,11 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the behavior of a service.
-    # https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[ServiceSpec]:
+        """
+        Spec defines the behavior of a service.
+        https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -10556,21 +11804,27 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
             v["automountServiceAccountToken"] = automountServiceAccountToken
         return v
 
-    # Secrets is the list of secrets allowed to be used by pods running using this ServiceAccount.
-    # More info: https://kubernetes.io/docs/concepts/configuration/secret
     def secrets(self) -> Optional[Dict[str, ObjectReference]]:
+        """
+        Secrets is the list of secrets allowed to be used by pods running using this ServiceAccount.
+        More info: https://kubernetes.io/docs/concepts/configuration/secret
+        """
         return self.__secrets
 
-    # ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
-    # in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
-    # can be mounted in the pod, but ImagePullSecrets are only accessed by the kubelet.
-    # More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
     def imagePullSecrets(self) -> Optional[Dict[str, LocalObjectReference]]:
+        """
+        ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
+        in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
+        can be mounted in the pod, but ImagePullSecrets are only accessed by the kubelet.
+        More info: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+        """
         return self.__imagePullSecrets
 
-    # AutomountServiceAccountToken indicates whether pods running as this service account should have an API token automatically mounted.
-    # Can be overridden at the pod level.
     def automountServiceAccountToken(self) -> Optional[bool]:
+        """
+        AutomountServiceAccountToken indicates whether pods running as this service account should have an API token automatically mounted.
+        Can be overridden at the pod level.
+        """
         return self.__automountServiceAccountToken
 
 
@@ -10591,12 +11845,14 @@ class ServiceProxyOptions(base.TypedObject):
             v["path"] = path
         return v
 
-    # Path is the part of URLs that include service endpoints, suffixes,
-    # and parameters to use for the current proxy request to service.
-    # For example, the whole request URL is
-    # http://localhost/api/v1/namespaces/kube-system/services/elasticsearch-logging/_search?q=user:kimchy.
-    # Path is _search?q=user:kimchy.
     def path(self) -> Optional[str]:
+        """
+        Path is the part of URLs that include service endpoints, suffixes,
+        and parameters to use for the current proxy request to service.
+        For example, the whole request URL is
+        http://localhost/api/v1/namespaces/kube-system/services/elasticsearch-logging/_search?q=user:kimchy.
+        Path is _search?q=user:kimchy.
+        """
         return self.__path
 
 
@@ -10621,13 +11877,17 @@ class TopologySelectorLabelRequirement(types.Object):
         v["values"] = values
         return v
 
-    # The label key that the selector applies to.
     def key(self) -> str:
+        """
+        The label key that the selector applies to.
+        """
         return self.__key
 
-    # An array of string values. One value must match the label to be selected.
-    # Each entry in Values is ORed.
     def values(self) -> List[str]:
+        """
+        An array of string values. One value must match the label to be selected.
+        Each entry in Values is ORed.
+        """
         return self.__values
 
 
@@ -10660,6 +11920,8 @@ class TopologySelectorTerm(types.Object):
             v["matchLabelExpressions"] = matchLabelExpressions
         return v
 
-    # A list of topology selector requirements by labels.
     def matchLabelExpressions(self) -> Optional[List[TopologySelectorLabelRequirement]]:
+        """
+        A list of topology selector requirements by labels.
+        """
         return self.__matchLabelExpressions

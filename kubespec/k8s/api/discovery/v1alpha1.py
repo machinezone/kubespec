@@ -40,11 +40,13 @@ class EndpointConditions(types.Object):
             v["ready"] = ready
         return v
 
-    # ready indicates that this endpoint is prepared to receive traffic,
-    # according to whatever system is managing the endpoint. A nil value
-    # indicates an unknown state. In most cases consumers should interpret this
-    # unknown state as ready.
     def ready(self) -> Optional[bool]:
+        """
+        ready indicates that this endpoint is prepared to receive traffic,
+        according to whatever system is managing the endpoint. A nil value
+        indicates an unknown state. In most cases consumers should interpret this
+        unknown state as ready.
+        """
         return self.__ready
 
 
@@ -92,46 +94,56 @@ class Endpoint(types.Object):
             v["topology"] = topology
         return v
 
-    # addresses of this endpoint. The contents of this field are interpreted
-    # according to the corresponding EndpointSlice addressType field. This
-    # allows for cases like dual-stack (IPv4 and IPv6) networking. Consumers
-    # (e.g. kube-proxy) must handle different types of addresses in the context
-    # of their own capabilities. This must contain at least one address but no
-    # more than 100.
-    # +listType=set
     def addresses(self) -> List[str]:
+        """
+        addresses of this endpoint. The contents of this field are interpreted
+        according to the corresponding EndpointSlice addressType field. This
+        allows for cases like dual-stack (IPv4 and IPv6) networking. Consumers
+        (e.g. kube-proxy) must handle different types of addresses in the context
+        of their own capabilities. This must contain at least one address but no
+        more than 100.
+        +listType=set
+        """
         return self.__addresses
 
-    # conditions contains information about the current status of the endpoint.
     def conditions(self) -> Optional[EndpointConditions]:
+        """
+        conditions contains information about the current status of the endpoint.
+        """
         return self.__conditions
 
-    # hostname of this endpoint. This field may be used by consumers of
-    # endpoints to distinguish endpoints from each other (e.g. in DNS names).
-    # Multiple endpoints which use the same hostname should be considered
-    # fungible (e.g. multiple A values in DNS). Must pass DNS Label (RFC 1123)
-    # validation.
     def hostname(self) -> Optional[str]:
+        """
+        hostname of this endpoint. This field may be used by consumers of
+        endpoints to distinguish endpoints from each other (e.g. in DNS names).
+        Multiple endpoints which use the same hostname should be considered
+        fungible (e.g. multiple A values in DNS). Must pass DNS Label (RFC 1123)
+        validation.
+        """
         return self.__hostname
 
-    # targetRef is a reference to a Kubernetes object that represents this
-    # endpoint.
     def targetRef(self) -> Optional["corev1.ObjectReference"]:
+        """
+        targetRef is a reference to a Kubernetes object that represents this
+        endpoint.
+        """
         return self.__targetRef
 
-    # topology contains arbitrary topology information associated with the
-    # endpoint. These key/value pairs must conform with the label format.
-    # https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
-    # Topology may include a maximum of 16 key/value pairs. This includes, but
-    # is not limited to the following well known keys:
-    # * kubernetes.io/hostname: the value indicates the hostname of the node
-    #   where the endpoint is located. This should match the corresponding
-    #   node label.
-    # * topology.kubernetes.io/zone: the value indicates the zone where the
-    #   endpoint is located. This should match the corresponding node label.
-    # * topology.kubernetes.io/region: the value indicates the region where the
-    #   endpoint is located. This should match the corresponding node label.
     def topology(self) -> Optional[Dict[str, str]]:
+        """
+        topology contains arbitrary topology information associated with the
+        endpoint. These key/value pairs must conform with the label format.
+        https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+        Topology may include a maximum of 16 key/value pairs. This includes, but
+        is not limited to the following well known keys:
+        * kubernetes.io/hostname: the value indicates the hostname of the node
+          where the endpoint is located. This should match the corresponding
+          node label.
+        * topology.kubernetes.io/zone: the value indicates the zone where the
+          endpoint is located. This should match the corresponding node label.
+        * topology.kubernetes.io/region: the value indicates the region where the
+          endpoint is located. This should match the corresponding node label.
+        """
         return self.__topology
 
 
@@ -164,28 +176,34 @@ class EndpointPort(types.Object):
             v["port"] = port
         return v
 
-    # The name of this port. All ports in an EndpointSlice must have a unique
-    # name. If the EndpointSlice is dervied from a Kubernetes service, this
-    # corresponds to the Service.ports[].name.
-    # Name must either be an empty string or pass IANA_SVC_NAME validation:
-    # * must be no more than 15 characters long
-    # * may contain only [-a-z0-9]
-    # * must contain at least one letter [a-z]
-    # * it must not start or end with a hyphen, nor contain adjacent hyphens
-    # Default is empty string.
     def name(self) -> Optional[str]:
+        """
+        The name of this port. All ports in an EndpointSlice must have a unique
+        name. If the EndpointSlice is dervied from a Kubernetes service, this
+        corresponds to the Service.ports[].name.
+        Name must either be an empty string or pass IANA_SVC_NAME validation:
+        * must be no more than 15 characters long
+        * may contain only [-a-z0-9]
+        * must contain at least one letter [a-z]
+        * it must not start or end with a hyphen, nor contain adjacent hyphens
+        Default is empty string.
+        """
         return self.__name
 
-    # The IP protocol for this port.
-    # Must be UDP, TCP, or SCTP.
-    # Default is TCP.
     def protocol(self) -> Optional[corev1.Protocol]:
+        """
+        The IP protocol for this port.
+        Must be UDP, TCP, or SCTP.
+        Default is TCP.
+        """
         return self.__protocol
 
-    # The port number of the endpoint.
-    # If this is not specified, ports are not restricted and must be
-    # interpreted in the context of the specific consumer.
     def port(self) -> Optional[int]:
+        """
+        The port number of the endpoint.
+        If this is not specified, ports are not restricted and must be
+        interpreted in the context of the specific consumer.
+        """
         return self.__port
 
 
@@ -233,23 +251,29 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         v["ports"] = ports
         return v
 
-    # addressType specifies the type of address carried by this EndpointSlice.
-    # All addresses in this slice must be the same type.
-    # Default is IP
     def addressType(self) -> Optional[AddressType]:
+        """
+        addressType specifies the type of address carried by this EndpointSlice.
+        All addresses in this slice must be the same type.
+        Default is IP
+        """
         return self.__addressType
 
-    # endpoints is a list of unique endpoints in this slice. Each slice may
-    # include a maximum of 1000 endpoints.
-    # +listType=atomic
     def endpoints(self) -> List[Endpoint]:
+        """
+        endpoints is a list of unique endpoints in this slice. Each slice may
+        include a maximum of 1000 endpoints.
+        +listType=atomic
+        """
         return self.__endpoints
 
-    # ports specifies the list of network ports exposed by each endpoint in
-    # this slice. Each port must have a unique name. When ports is empty, it
-    # indicates that there are no defined ports. When a port is defined with a
-    # nil port value, it indicates "all ports". Each slice may include a
-    # maximum of 100 ports.
-    # +listType=atomic
     def ports(self) -> List[EndpointPort]:
+        """
+        ports specifies the list of network ports exposed by each endpoint in
+        this slice. Each port must have a unique name. When ports is empty, it
+        indicates that there are no defined ports. When a port is defined with a
+        nil port value, it indicates "all ports". Each slice may include a
+        maximum of 100 ports.
+        +listType=atomic
+        """
         return self.__ports

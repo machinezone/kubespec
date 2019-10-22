@@ -33,12 +33,16 @@ class Key(types.Object):
         v["secret"] = secret
         return v
 
-    # name is the name of the key to be used while storing data to disk.
     def name(self) -> str:
+        """
+        name is the name of the key to be used while storing data to disk.
+        """
         return self.__name
 
-    # secret is the actual key, encoded in base64.
     def secret(self) -> str:
+        """
+        secret is the actual key, encoded in base64.
+        """
         return self.__secret
 
 
@@ -58,9 +62,11 @@ class AESConfiguration(types.Object):
         v["keys"] = keys.values()  # named list
         return v
 
-    # keys is a list of keys to be used for creating the AES transformer.
-    # Each key has to be 32 bytes long for AES-CBC and 16, 24 or 32 bytes for AES-GCM.
     def keys(self) -> Dict[str, Key]:
+        """
+        keys is a list of keys to be used for creating the AES transformer.
+        Each key has to be 32 bytes long for AES-CBC and 16, 24 or 32 bytes for AES-GCM.
+        """
         return self.__keys
 
 
@@ -105,20 +111,28 @@ class KMSConfiguration(types.Object):
             v["timeout"] = timeout
         return v
 
-    # name is the name of the KMS plugin to be used.
     def name(self) -> str:
+        """
+        name is the name of the KMS plugin to be used.
+        """
         return self.__name
 
-    # cacheSize is the maximum number of secrets which are cached in memory. The default value is 1000.
     def cachesize(self) -> Optional[int]:
+        """
+        cacheSize is the maximum number of secrets which are cached in memory. The default value is 1000.
+        """
         return self.__cachesize
 
-    # endpoint is the gRPC server listening address, for example "unix:///var/run/kms-provider.sock".
     def endpoint(self) -> str:
+        """
+        endpoint is the gRPC server listening address, for example "unix:///var/run/kms-provider.sock".
+        """
         return self.__endpoint
 
-    # Timeout for gRPC calls to kms-plugin (ex. 5s). The default is 3 seconds.
     def timeout(self) -> Optional["base.Duration"]:
+        """
+        Timeout for gRPC calls to kms-plugin (ex. 5s). The default is 3 seconds.
+        """
         return self.__timeout
 
 
@@ -138,9 +152,11 @@ class SecretboxConfiguration(types.Object):
         v["keys"] = keys.values()  # named list
         return v
 
-    # keys is a list of keys to be used for creating the Secretbox transformer.
-    # Each key has to be 32 bytes long.
     def keys(self) -> Dict[str, Key]:
+        """
+        keys is a list of keys to be used for creating the Secretbox transformer.
+        Each key has to be 32 bytes long.
+        """
         return self.__keys
 
 
@@ -188,24 +204,34 @@ class ProviderConfiguration(types.Object):
             v["kms"] = kms
         return v
 
-    # aesgcm is the configuration for the AES-GCM transformer.
     def aesgcm(self) -> Optional[AESConfiguration]:
+        """
+        aesgcm is the configuration for the AES-GCM transformer.
+        """
         return self.__aesgcm
 
-    # aescbc is the configuration for the AES-CBC transformer.
     def aescbc(self) -> Optional[AESConfiguration]:
+        """
+        aescbc is the configuration for the AES-CBC transformer.
+        """
         return self.__aescbc
 
-    # secretbox is the configuration for the Secretbox based transformer.
     def secretbox(self) -> Optional[SecretboxConfiguration]:
+        """
+        secretbox is the configuration for the Secretbox based transformer.
+        """
         return self.__secretbox
 
-    # identity is the (empty) configuration for the identity transformer.
     def identity(self) -> Optional[IdentityConfiguration]:
+        """
+        identity is the (empty) configuration for the identity transformer.
+        """
         return self.__identity
 
-    # kms contains the name, cache size and path to configuration file for a KMS based envelope transformer.
     def kms(self) -> Optional[KMSConfiguration]:
+        """
+        kms contains the name, cache size and path to configuration file for a KMS based envelope transformer.
+        """
         return self.__kms
 
 
@@ -231,13 +257,17 @@ class ResourceConfiguration(types.Object):
         v["providers"] = providers
         return v
 
-    # resources is a list of kubernetes resources which have to be encrypted.
     def resources(self) -> List[str]:
+        """
+        resources is a list of kubernetes resources which have to be encrypted.
+        """
         return self.__resources
 
-    # providers is a list of transformers to be used for reading and writing the resources to disk.
-    # eg: aesgcm, aescbc, secretbox, identity.
     def providers(self) -> List[ProviderConfiguration]:
+        """
+        providers is a list of transformers to be used for reading and writing the resources to disk.
+        eg: aesgcm, aescbc, secretbox, identity.
+        """
         return self.__providers
 
 
@@ -268,6 +298,8 @@ class EncryptionConfiguration(types.Object):
     def typeMeta(self) -> "metav1.TypeMeta":
         return self.__typeMeta
 
-    # resources is a list containing resources, and their corresponding encryption providers.
     def resources(self) -> List[ResourceConfiguration]:
+        """
+        resources is a list containing resources, and their corresponding encryption providers.
+        """
         return self.__resources

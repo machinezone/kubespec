@@ -56,28 +56,38 @@ class LeaseSpec(types.Object):
             v["leaseTransitions"] = leaseTransitions
         return v
 
-    # holderIdentity contains the identity of the holder of a current lease.
     def holderIdentity(self) -> Optional[str]:
+        """
+        holderIdentity contains the identity of the holder of a current lease.
+        """
         return self.__holderIdentity
 
-    # leaseDurationSeconds is a duration that candidates for a lease need
-    # to wait to force acquire it. This is measure against time of last
-    # observed RenewTime.
     def leaseDurationSeconds(self) -> Optional[int]:
+        """
+        leaseDurationSeconds is a duration that candidates for a lease need
+        to wait to force acquire it. This is measure against time of last
+        observed RenewTime.
+        """
         return self.__leaseDurationSeconds
 
-    # acquireTime is a time when the current lease was acquired.
     def acquireTime(self) -> Optional["base.MicroTime"]:
+        """
+        acquireTime is a time when the current lease was acquired.
+        """
         return self.__acquireTime
 
-    # renewTime is a time when the current holder of a lease has last
-    # updated the lease.
     def renewTime(self) -> Optional["base.MicroTime"]:
+        """
+        renewTime is a time when the current holder of a lease has last
+        updated the lease.
+        """
         return self.__renewTime
 
-    # leaseTransitions is the number of transitions of a lease between
-    # holders.
     def leaseTransitions(self) -> Optional[int]:
+        """
+        leaseTransitions is the number of transitions of a lease between
+        holders.
+        """
         return self.__leaseTransitions
 
 
@@ -111,7 +121,9 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the Lease.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[LeaseSpec]:
+        """
+        Specification of the Lease.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec

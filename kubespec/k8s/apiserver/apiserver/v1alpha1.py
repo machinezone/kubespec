@@ -39,19 +39,25 @@ class AdmissionPluginConfiguration(types.Object):
         v["configuration"] = configuration
         return v
 
-    # Name is the name of the admission controller.
-    # It must match the registered admission plugin name.
     def name(self) -> str:
+        """
+        Name is the name of the admission controller.
+        It must match the registered admission plugin name.
+        """
         return self.__name
 
-    # Path is the path to a configuration file that contains the plugin's
-    # configuration
     def path(self) -> str:
+        """
+        Path is the path to a configuration file that contains the plugin's
+        configuration
+        """
         return self.__path
 
-    # Configuration is an embedded configuration object to be used as the plugin's
-    # configuration. If present, it will be used instead of the path to the configuration file.
     def configuration(self) -> Optional["runtime.Unknown"]:
+        """
+        Configuration is an embedded configuration object to be used as the plugin's
+        configuration. If present, it will be used instead of the path to the configuration file.
+        """
         return self.__configuration
 
 
@@ -73,8 +79,10 @@ class AdmissionConfiguration(base.TypedObject):
         v["plugins"] = plugins.values()  # named list
         return v
 
-    # Plugins allows specifying a configuration per admission control plugin.
     def plugins(self) -> Dict[str, AdmissionPluginConfiguration]:
+        """
+        Plugins allows specifying a configuration per admission control plugin.
+        """
         return self.__plugins
 
 
@@ -114,30 +122,38 @@ class HTTPConnectConfig(types.Object):
             v["clientCert"] = clientCert
         return v
 
-    # url is the location of the proxy server to connect to.
-    # As an example it might be "https://127.0.0.1:8131"
     def url(self) -> str:
+        """
+        url is the location of the proxy server to connect to.
+        As an example it might be "https://127.0.0.1:8131"
+        """
         return self.__url
 
-    # caBundle is the file location of the CA to be used to determine trust with the konnectivity server.
-    # Must be absent/empty http-connect using the plain http
-    # Must be configured for http-connect using the https protocol
-    # Misconfiguration will cause an error
     def caBundle(self) -> Optional[str]:
+        """
+        caBundle is the file location of the CA to be used to determine trust with the konnectivity server.
+        Must be absent/empty http-connect using the plain http
+        Must be configured for http-connect using the https protocol
+        Misconfiguration will cause an error
+        """
         return self.__caBundle
 
-    # clientKey is the file location of the client key to be used in mtls handshakes with the konnectivity server.
-    # Must be absent/empty http-connect using the plain http
-    # Must be configured for http-connect using the https protocol
-    # Misconfiguration will cause an error
     def clientKey(self) -> Optional[str]:
+        """
+        clientKey is the file location of the client key to be used in mtls handshakes with the konnectivity server.
+        Must be absent/empty http-connect using the plain http
+        Must be configured for http-connect using the https protocol
+        Misconfiguration will cause an error
+        """
         return self.__clientKey
 
-    # clientCert is the file location of the client certificate to be used in mtls handshakes with the konnectivity server.
-    # Must be absent/empty http-connect using the plain http
-    # Must be configured for http-connect using the https protocol
-    # Misconfiguration will cause an error
     def clientCert(self) -> Optional[str]:
+        """
+        clientCert is the file location of the client certificate to be used in mtls handshakes with the konnectivity server.
+        Must be absent/empty http-connect using the plain http
+        Must be configured for http-connect using the https protocol
+        Misconfiguration will cause an error
+        """
         return self.__clientCert
 
 
@@ -162,15 +178,19 @@ class Connection(types.Object):
             v["httpConnect"] = httpConnect
         return v
 
-    # type is the type of connection used to connect from client to network/konnectivity server.
-    # Currently supported values are "http-connect" and "direct".
     def type(self) -> str:
+        """
+        type is the type of connection used to connect from client to network/konnectivity server.
+        Currently supported values are "http-connect" and "direct".
+        """
         return self.__type
 
-    # httpConnect is the config needed to use http-connect to the konnectivity server.
-    # Absence when the type is "http-connect" will cause an error
-    # Presence when the type is "direct" will also cause an error
     def httpConnect(self) -> Optional[HTTPConnectConfig]:
+        """
+        httpConnect is the config needed to use http-connect to the konnectivity server.
+        Absence when the type is "http-connect" will cause an error
+        Presence when the type is "direct" will also cause an error
+        """
         return self.__httpConnect
 
 
@@ -194,13 +214,17 @@ class EgressSelection(types.Object):
         v["connection"] = connection
         return v
 
-    # name is the name of the egress selection.
-    # Currently supported values are "Master", "Etcd" and "Cluster"
     def name(self) -> str:
+        """
+        name is the name of the egress selection.
+        Currently supported values are "Master", "Etcd" and "Cluster"
+        """
         return self.__name
 
-    # connection is the exact information used to configure the egress selection
     def connection(self) -> Connection:
+        """
+        connection is the exact information used to configure the egress selection
+        """
         return self.__connection
 
 
@@ -224,6 +248,8 @@ class EgressSelectorConfiguration(base.TypedObject):
         v["egressSelections"] = egressSelections.values()  # named list
         return v
 
-    # connectionServices contains a list of egress selection client configurations
     def egressSelections(self) -> Dict[str, EgressSelection]:
+        """
+        connectionServices contains a list of egress selection client configurations
+        """
         return self.__egressSelections

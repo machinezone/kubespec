@@ -39,13 +39,17 @@ class MetricListOptions(base.TypedObject):
             v["metricLabelSelector"] = metricLabelSelector
         return v
 
-    # A selector to restrict the list of returned objects by their labels.
-    # Defaults to everything.
     def labelSelector(self) -> Optional[str]:
+        """
+        A selector to restrict the list of returned objects by their labels.
+        Defaults to everything.
+        """
         return self.__labelSelector
 
-    # A selector to restrict the list of returned metrics by their labels
     def metricLabelSelector(self) -> Optional[str]:
+        """
+        A selector to restrict the list of returned metrics by their labels
+        """
         return self.__metricLabelSelector
 
 
@@ -96,32 +100,44 @@ class MetricValue(base.TypedObject):
         v["selector"] = selector
         return v
 
-    # a reference to the described object
     def describedObject(self) -> "corev1.ObjectReference":
+        """
+        a reference to the described object
+        """
         return self.__describedObject
 
-    # the name of the metric
     def metricName(self) -> str:
+        """
+        the name of the metric
+        """
         return self.__metricName
 
-    # indicates the time at which the metrics were produced
     def timestamp(self) -> "base.Time":
+        """
+        indicates the time at which the metrics were produced
+        """
         return self.__timestamp
 
-    # indicates the window ([Timestamp-Window, Timestamp]) from
-    # which these metrics were calculated, when returning rate
-    # metrics calculated from cumulative metrics (or zero for
-    # non-calculated instantaneous metrics).
     def window(self) -> Optional[int]:
+        """
+        indicates the window ([Timestamp-Window, Timestamp]) from
+        which these metrics were calculated, when returning rate
+        metrics calculated from cumulative metrics (or zero for
+        non-calculated instantaneous metrics).
+        """
         return self.__window
 
-    # the value of the metric for this
     def value(self) -> "resource.Quantity":
+        """
+        the value of the metric for this
+        """
         return self.__value
 
-    # selector represents the label selector that could be used to select
-    # this metric, and will generally just be the selector passed in to
-    # the query used to fetch this metric.
-    # When left blank, only the metric's Name will be used to gather metrics.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        selector represents the label selector that could be used to select
+        this metric, and will generally just be the selector passed in to
+        the query used to fetch this metric.
+        When left blank, only the metric's Name will be used to gather metrics.
+        """
         return self.__selector

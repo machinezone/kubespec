@@ -34,12 +34,16 @@ class NonResourceAttributes(types.Object):
             v["verb"] = verb
         return v
 
-    # Path is the URL path of the request
     def path(self) -> Optional[str]:
+        """
+        Path is the URL path of the request
+        """
         return self.__path
 
-    # Verb is the standard HTTP verb
     def verb(self) -> Optional[str]:
+        """
+        Verb is the standard HTTP verb
+        """
         return self.__verb
 
 
@@ -99,35 +103,49 @@ class ResourceAttributes(types.Object):
             v["name"] = name
         return v
 
-    # Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces
-    # "" (empty) is defaulted for LocalSubjectAccessReviews
-    # "" (empty) is empty for cluster-scoped resources
-    # "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
     def namespace(self) -> Optional[str]:
+        """
+        Namespace is the namespace of the action being requested.  Currently, there is no distinction between no namespace and all namespaces
+        "" (empty) is defaulted for LocalSubjectAccessReviews
+        "" (empty) is empty for cluster-scoped resources
+        "" (empty) means "all" for namespace scoped resources from a SubjectAccessReview or SelfSubjectAccessReview
+        """
         return self.__namespace
 
-    # Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
     def verb(self) -> Optional[str]:
+        """
+        Verb is a kubernetes resource API verb, like: get, list, watch, create, update, delete, proxy.  "*" means all.
+        """
         return self.__verb
 
-    # Group is the API Group of the Resource.  "*" means all.
     def group(self) -> Optional[str]:
+        """
+        Group is the API Group of the Resource.  "*" means all.
+        """
         return self.__group
 
-    # Version is the API Version of the Resource.  "*" means all.
     def version(self) -> Optional[str]:
+        """
+        Version is the API Version of the Resource.  "*" means all.
+        """
         return self.__version
 
-    # Resource is one of the existing resource types.  "*" means all.
     def resource(self) -> Optional[str]:
+        """
+        Resource is one of the existing resource types.  "*" means all.
+        """
         return self.__resource
 
-    # Subresource is one of the existing resource types.  "" means none.
     def subresource(self) -> Optional[str]:
+        """
+        Subresource is one of the existing resource types.  "" means none.
+        """
         return self.__subresource
 
-    # Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
     def name(self) -> Optional[str]:
+        """
+        Name is the name of the resource being requested for a "get" or deleted for a "delete". "" (empty) means all.
+        """
         return self.__name
 
 
@@ -188,30 +206,42 @@ class SubjectAccessReviewSpec(types.Object):
             v["uid"] = uid
         return v
 
-    # ResourceAuthorizationAttributes describes information for a resource access request
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
+        """
+        ResourceAuthorizationAttributes describes information for a resource access request
+        """
         return self.__resourceAttributes
 
-    # NonResourceAttributes describes information for a non-resource access request
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
+        """
+        NonResourceAttributes describes information for a non-resource access request
+        """
         return self.__nonResourceAttributes
 
-    # User is the user you're testing for.
-    # If you specify "User" but not "Group", then is it interpreted as "What if User were not a member of any groups
     def user(self) -> Optional[str]:
+        """
+        User is the user you're testing for.
+        If you specify "User" but not "Group", then is it interpreted as "What if User were not a member of any groups
+        """
         return self.__user
 
-    # Groups is the groups you're testing for.
     def group(self) -> Optional[List[str]]:
+        """
+        Groups is the groups you're testing for.
+        """
         return self.__group
 
-    # Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
-    # it needs a reflection here.
     def extra(self) -> Optional[Dict[str, List[str]]]:
+        """
+        Extra corresponds to the user.Info.GetExtra() method from the authenticator.  Since that is input to the authorizer
+        it needs a reflection here.
+        """
         return self.__extra
 
-    # UID information about the requesting user.
     def uid(self) -> Optional[str]:
+        """
+        UID information about the requesting user.
+        """
         return self.__uid
 
 
@@ -247,9 +277,11 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated.  spec.namespace must be equal to the namespace
-    # you made the request against.  If empty, it is defaulted.
     def spec(self) -> SubjectAccessReviewSpec:
+        """
+        Spec holds information about the request being evaluated.  spec.namespace must be equal to the namespace
+        you made the request against.  If empty, it is defaulted.
+        """
         return self.__spec
 
 
@@ -286,12 +318,16 @@ class SelfSubjectAccessReviewSpec(types.Object):
             v["nonResourceAttributes"] = nonResourceAttributes
         return v
 
-    # ResourceAuthorizationAttributes describes information for a resource access request
     def resourceAttributes(self) -> Optional[ResourceAttributes]:
+        """
+        ResourceAuthorizationAttributes describes information for a resource access request
+        """
         return self.__resourceAttributes
 
-    # NonResourceAttributes describes information for a non-resource access request
     def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
+        """
+        NonResourceAttributes describes information for a non-resource access request
+        """
         return self.__nonResourceAttributes
 
 
@@ -325,8 +361,10 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated.  user and groups must be empty
     def spec(self) -> SelfSubjectAccessReviewSpec:
+        """
+        Spec holds information about the request being evaluated.  user and groups must be empty
+        """
         return self.__spec
 
 
@@ -346,8 +384,10 @@ class SelfSubjectRulesReviewSpec(types.Object):
             v["namespace"] = namespace
         return v
 
-    # Namespace to evaluate rules for. Required.
     def namespace(self) -> Optional[str]:
+        """
+        Namespace to evaluate rules for. Required.
+        """
         return self.__namespace
 
 
@@ -384,8 +424,10 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated.
     def spec(self) -> SelfSubjectRulesReviewSpec:
+        """
+        Spec holds information about the request being evaluated.
+        """
         return self.__spec
 
 
@@ -417,6 +459,8 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec holds information about the request being evaluated
     def spec(self) -> SubjectAccessReviewSpec:
+        """
+        Spec holds information about the request being evaluated
+        """
         return self.__spec

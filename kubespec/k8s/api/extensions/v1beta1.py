@@ -184,8 +184,10 @@ class AllowedCSIDriver(types.Object):
         v["name"] = name
         return v
 
-    # Name is the registered name of the CSI driver
     def name(self) -> str:
+        """
+        Name is the registered name of the CSI driver
+        """
         return self.__name
 
 
@@ -206,8 +208,10 @@ class AllowedFlexVolume(types.Object):
         v["driver"] = driver
         return v
 
-    # driver is the name of the Flexvolume driver.
     def driver(self) -> str:
+        """
+        driver is the name of the Flexvolume driver.
+        """
         return self.__driver
 
 
@@ -235,18 +239,22 @@ class AllowedHostPath(types.Object):
             v["readOnly"] = readOnly
         return v
 
-    # pathPrefix is the path prefix that the host volume must match.
-    # It does not support `*`.
-    # Trailing slashes are trimmed when validating the path prefix with a host path.
-    #
-    # Examples:
-    # `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
-    # `/foo` would not allow `/food` or `/etc/foo`
     def pathPrefix(self) -> Optional[str]:
+        """
+        pathPrefix is the path prefix that the host volume must match.
+        It does not support `*`.
+        Trailing slashes are trimmed when validating the path prefix with a host path.
+        
+        Examples:
+        `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
+        `/foo` would not allow `/food` or `/etc/foo`
+        """
         return self.__pathPrefix
 
-    # when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
     def readOnly(self) -> Optional[bool]:
+        """
+        when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
+        """
         return self.__readOnly
 
 
@@ -267,21 +275,23 @@ class RollingUpdateDaemonSet(types.Object):
             v["maxUnavailable"] = maxUnavailable
         return v
 
-    # The maximum number of DaemonSet pods that can be unavailable during the
-    # update. Value can be an absolute number (ex: 5) or a percentage of total
-    # number of DaemonSet pods at the start of the update (ex: 10%). Absolute
-    # number is calculated from percentage by rounding up.
-    # This cannot be 0.
-    # Default value is 1.
-    # Example: when this is set to 30%, at most 30% of the total number of nodes
-    # that should be running the daemon pod (i.e. status.desiredNumberScheduled)
-    # can have their pods stopped for an update at any given
-    # time. The update starts by stopping at most 30% of those DaemonSet pods
-    # and then brings up new DaemonSet pods in their place. Once the new pods
-    # are available, it then proceeds onto other DaemonSet pods, thus ensuring
-    # that at least 70% of original number of DaemonSet pods are available at
-    # all times during the update.
     def maxUnavailable(self) -> Optional[Union[int, str]]:
+        """
+        The maximum number of DaemonSet pods that can be unavailable during the
+        update. Value can be an absolute number (ex: 5) or a percentage of total
+        number of DaemonSet pods at the start of the update (ex: 10%). Absolute
+        number is calculated from percentage by rounding up.
+        This cannot be 0.
+        Default value is 1.
+        Example: when this is set to 30%, at most 30% of the total number of nodes
+        that should be running the daemon pod (i.e. status.desiredNumberScheduled)
+        can have their pods stopped for an update at any given
+        time. The update starts by stopping at most 30% of those DaemonSet pods
+        and then brings up new DaemonSet pods in their place. Once the new pods
+        are available, it then proceeds onto other DaemonSet pods, thus ensuring
+        that at least 70% of original number of DaemonSet pods are available at
+        all times during the update.
+        """
         return self.__maxUnavailable
 
 
@@ -310,17 +320,21 @@ class DaemonSetUpdateStrategy(types.Object):
             v["rollingUpdate"] = rollingUpdate
         return v
 
-    # Type of daemon set update. Can be "RollingUpdate" or "OnDelete".
-    # Default is OnDelete.
     def type(self) -> Optional[DaemonSetUpdateStrategyType]:
+        """
+        Type of daemon set update. Can be "RollingUpdate" or "OnDelete".
+        Default is OnDelete.
+        """
         return self.__type
 
-    # Rolling update config params. Present only if type = "RollingUpdate".
-    # ---
-    # TODO: Update this to follow our convention for oneOf, whatever we decide it
-    # to be. Same as Deployment `strategy.rollingUpdate`.
-    # See https://github.com/kubernetes/kubernetes/issues/35345
     def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
+        """
+        Rolling update config params. Present only if type = "RollingUpdate".
+        ---
+        TODO: Update this to follow our convention for oneOf, whatever we decide it
+        to be. Same as Deployment `strategy.rollingUpdate`.
+        See https://github.com/kubernetes/kubernetes/issues/35345
+        """
         return self.__rollingUpdate
 
 
@@ -370,36 +384,46 @@ class DaemonSetSpec(types.Object):
             v["revisionHistoryLimit"] = revisionHistoryLimit
         return v
 
-    # A label query over pods that are managed by the daemon set.
-    # Must match in order to be controlled.
-    # If empty, defaulted to labels on Pod template.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        A label query over pods that are managed by the daemon set.
+        Must match in order to be controlled.
+        If empty, defaulted to labels on Pod template.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
+        """
         return self.__selector
 
-    # An object that describes the pod that will be created.
-    # The DaemonSet will create exactly one copy of this pod on every node
-    # that matches the template's node selector (or on every node if no node
-    # selector is specified).
-    # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     def template(self) -> "corev1.PodTemplateSpec":
+        """
+        An object that describes the pod that will be created.
+        The DaemonSet will create exactly one copy of this pod on every node
+        that matches the template's node selector (or on every node if no node
+        selector is specified).
+        More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
+        """
         return self.__template
 
-    # An update strategy to replace existing DaemonSet pods with new pods.
     def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+        """
+        An update strategy to replace existing DaemonSet pods with new pods.
+        """
         return self.__updateStrategy
 
-    # The minimum number of seconds for which a newly created DaemonSet pod should
-    # be ready without any of its container crashing, for it to be considered
-    # available. Defaults to 0 (pod will be considered available as soon as it
-    # is ready).
     def minReadySeconds(self) -> Optional[int]:
+        """
+        The minimum number of seconds for which a newly created DaemonSet pod should
+        be ready without any of its container crashing, for it to be considered
+        available. Defaults to 0 (pod will be considered available as soon as it
+        is ready).
+        """
         return self.__minReadySeconds
 
-    # The number of old history to retain to allow rollback.
-    # This is a pointer to distinguish between explicit zero and not specified.
-    # Defaults to 10.
     def revisionHistoryLimit(self) -> Optional[int]:
+        """
+        The number of old history to retain to allow rollback.
+        This is a pointer to distinguish between explicit zero and not specified.
+        Defaults to 10.
+        """
         return self.__revisionHistoryLimit
 
 
@@ -435,9 +459,11 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # The desired behavior of this daemon set.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[DaemonSetSpec]:
+        """
+        The desired behavior of this daemon set.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -465,31 +491,35 @@ class RollingUpdateDeployment(types.Object):
             v["maxSurge"] = maxSurge
         return v
 
-    # The maximum number of pods that can be unavailable during the update.
-    # Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
-    # Absolute number is calculated from percentage by rounding down.
-    # This can not be 0 if MaxSurge is 0.
-    # By default, a fixed value of 1 is used.
-    # Example: when this is set to 30%, the old RC can be scaled down to 70% of desired pods
-    # immediately when the rolling update starts. Once new pods are ready, old RC
-    # can be scaled down further, followed by scaling up the new RC, ensuring
-    # that the total number of pods available at all times during the update is at
-    # least 70% of desired pods.
     def maxUnavailable(self) -> Optional[Union[int, str]]:
+        """
+        The maximum number of pods that can be unavailable during the update.
+        Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+        Absolute number is calculated from percentage by rounding down.
+        This can not be 0 if MaxSurge is 0.
+        By default, a fixed value of 1 is used.
+        Example: when this is set to 30%, the old RC can be scaled down to 70% of desired pods
+        immediately when the rolling update starts. Once new pods are ready, old RC
+        can be scaled down further, followed by scaling up the new RC, ensuring
+        that the total number of pods available at all times during the update is at
+        least 70% of desired pods.
+        """
         return self.__maxUnavailable
 
-    # The maximum number of pods that can be scheduled above the desired number of
-    # pods.
-    # Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
-    # This can not be 0 if MaxUnavailable is 0.
-    # Absolute number is calculated from percentage by rounding up.
-    # By default, a value of 1 is used.
-    # Example: when this is set to 30%, the new RC can be scaled up immediately when
-    # the rolling update starts, such that the total number of old and new pods do not exceed
-    # 130% of desired pods. Once old pods have been killed,
-    # new RC can be scaled up further, ensuring that total number of pods running
-    # at any time during the update is at most 130% of desired pods.
     def maxSurge(self) -> Optional[Union[int, str]]:
+        """
+        The maximum number of pods that can be scheduled above the desired number of
+        pods.
+        Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+        This can not be 0 if MaxUnavailable is 0.
+        Absolute number is calculated from percentage by rounding up.
+        By default, a value of 1 is used.
+        Example: when this is set to 30%, the new RC can be scaled up immediately when
+        the rolling update starts, such that the total number of old and new pods do not exceed
+        130% of desired pods. Once old pods have been killed,
+        new RC can be scaled up further, ensuring that total number of pods running
+        at any time during the update is at most 130% of desired pods.
+        """
         return self.__maxSurge
 
 
@@ -521,16 +551,20 @@ class DeploymentStrategy(types.Object):
             v["rollingUpdate"] = rollingUpdate
         return v
 
-    # Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
     def type(self) -> Optional[DeploymentStrategyType]:
+        """
+        Type of deployment. Can be "Recreate" or "RollingUpdate". Default is RollingUpdate.
+        """
         return self.__type
 
-    # Rolling update config params. Present only if DeploymentStrategyType =
-    # RollingUpdate.
-    # ---
-    # TODO: Update this to follow our convention for oneOf, whatever we decide it
-    # to be.
     def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
+        """
+        Rolling update config params. Present only if DeploymentStrategyType =
+        RollingUpdate.
+        ---
+        TODO: Update this to follow our convention for oneOf, whatever we decide it
+        to be.
+        """
         return self.__rollingUpdate
 
 
@@ -600,49 +634,65 @@ class DeploymentSpec(types.Object):
             v["progressDeadlineSeconds"] = progressDeadlineSeconds
         return v
 
-    # Number of desired pods. This is a pointer to distinguish between explicit
-    # zero and not specified. Defaults to 1.
     def replicas(self) -> Optional[int]:
+        """
+        Number of desired pods. This is a pointer to distinguish between explicit
+        zero and not specified. Defaults to 1.
+        """
         return self.__replicas
 
-    # Label selector for pods. Existing ReplicaSets whose pods are
-    # selected by this will be the ones affected by this deployment.
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Label selector for pods. Existing ReplicaSets whose pods are
+        selected by this will be the ones affected by this deployment.
+        """
         return self.__selector
 
-    # Template describes the pods that will be created.
     def template(self) -> "corev1.PodTemplateSpec":
+        """
+        Template describes the pods that will be created.
+        """
         return self.__template
 
-    # The deployment strategy to use to replace existing pods with new ones.
     def strategy(self) -> Optional[DeploymentStrategy]:
+        """
+        The deployment strategy to use to replace existing pods with new ones.
+        """
         return self.__strategy
 
-    # Minimum number of seconds for which a newly created pod should be ready
-    # without any of its container crashing, for it to be considered available.
-    # Defaults to 0 (pod will be considered available as soon as it is ready)
     def minReadySeconds(self) -> Optional[int]:
+        """
+        Minimum number of seconds for which a newly created pod should be ready
+        without any of its container crashing, for it to be considered available.
+        Defaults to 0 (pod will be considered available as soon as it is ready)
+        """
         return self.__minReadySeconds
 
-    # The number of old ReplicaSets to retain to allow rollback.
-    # This is a pointer to distinguish between explicit zero and not specified.
-    # This is set to the max value of int32 (i.e. 2147483647) by default, which
-    # means "retaining all old RelicaSets".
     def revisionHistoryLimit(self) -> Optional[int]:
+        """
+        The number of old ReplicaSets to retain to allow rollback.
+        This is a pointer to distinguish between explicit zero and not specified.
+        This is set to the max value of int32 (i.e. 2147483647) by default, which
+        means "retaining all old RelicaSets".
+        """
         return self.__revisionHistoryLimit
 
-    # Indicates that the deployment is paused and will not be processed by the
-    # deployment controller.
     def paused(self) -> Optional[bool]:
+        """
+        Indicates that the deployment is paused and will not be processed by the
+        deployment controller.
+        """
         return self.__paused
 
-    # The maximum time in seconds for a deployment to make progress before it
-    # is considered to be failed. The deployment controller will continue to
-    # process failed deployments and a condition with a ProgressDeadlineExceeded
-    # reason will be surfaced in the deployment status. Note that progress will
-    # not be estimated during the time a deployment is paused. This is set to
-    # the max value of int32 (i.e. 2147483647) by default, which means "no deadline".
     def progressDeadlineSeconds(self) -> Optional[int]:
+        """
+        The maximum time in seconds for a deployment to make progress before it
+        is considered to be failed. The deployment controller will continue to
+        process failed deployments and a condition with a ProgressDeadlineExceeded
+        reason will be surfaced in the deployment status. Note that progress will
+        not be estimated during the time a deployment is paused. This is set to
+        the max value of int32 (i.e. 2147483647) by default, which means "no deadline".
+        """
         return self.__progressDeadlineSeconds
 
 
@@ -678,8 +728,10 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior of the Deployment.
     def spec(self) -> Optional[DeploymentSpec]:
+        """
+        Specification of the desired behavior of the Deployment.
+        """
         return self.__spec
 
 
@@ -700,8 +752,10 @@ class RollbackConfig(types.Object):
             v["revision"] = revision
         return v
 
-    # The revision to rollback to. If set to 0, rollback to the last revision.
     def revision(self) -> Optional[int]:
+        """
+        The revision to rollback to. If set to 0, rollback to the last revision.
+        """
         return self.__revision
 
 
@@ -738,16 +792,22 @@ class DeploymentRollback(base.TypedObject):
         v["rollbackTo"] = rollbackTo
         return v
 
-    # Required: This must match the Name of a deployment.
     def name(self) -> str:
+        """
+        Required: This must match the Name of a deployment.
+        """
         return self.__name
 
-    # The annotations to be updated to a deployment
     def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+        """
+        The annotations to be updated to a deployment
+        """
         return self.__updatedAnnotations
 
-    # The config of this deployment rollback.
     def rollbackTo(self) -> RollbackConfig:
+        """
+        The config of this deployment rollback.
+        """
         return self.__rollbackTo
 
 
@@ -772,12 +832,16 @@ class IDRange(types.Object):
         v["max"] = max
         return v
 
-    # min is the start of the range, inclusive.
     def min(self) -> int:
+        """
+        min is the start of the range, inclusive.
+        """
         return self.__min
 
-    # max is the end of the range, inclusive.
     def max(self) -> int:
+        """
+        max is the end of the range, inclusive.
+        """
         return self.__max
 
 
@@ -804,13 +868,17 @@ class FSGroupStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
     def rule(self) -> Optional[FSGroupStrategyType]:
+        """
+        rule is the strategy that will dictate what FSGroup is used in the SecurityContext.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of fs groups.  If you would like to force a single
-    # fs group then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of fs groups.  If you would like to force a single
+        fs group then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -834,12 +902,16 @@ class IngressBackend(types.Object):
         v["servicePort"] = servicePort
         return v
 
-    # Specifies the name of the referenced service.
     def serviceName(self) -> str:
+        """
+        Specifies the name of the referenced service.
+        """
         return self.__serviceName
 
-    # Specifies the port of the referenced service.
     def servicePort(self) -> Union[int, str]:
+        """
+        Specifies the port of the referenced service.
+        """
         return self.__servicePort
 
 
@@ -865,19 +937,23 @@ class HTTPIngressPath(types.Object):
         v["backend"] = backend
         return v
 
-    # Path is an extended POSIX regex as defined by IEEE Std 1003.1,
-    # (i.e this follows the egrep/unix syntax, not the perl syntax)
-    # matched against the path of an incoming request. Currently it can
-    # contain characters disallowed from the conventional "path"
-    # part of a URL as defined by RFC 3986. Paths must begin with
-    # a '/'. If unspecified, the path defaults to a catch all sending
-    # traffic to the backend.
     def path(self) -> Optional[str]:
+        """
+        Path is an extended POSIX regex as defined by IEEE Std 1003.1,
+        (i.e this follows the egrep/unix syntax, not the perl syntax)
+        matched against the path of an incoming request. Currently it can
+        contain characters disallowed from the conventional "path"
+        part of a URL as defined by RFC 3986. Paths must begin with
+        a '/'. If unspecified, the path defaults to a catch all sending
+        traffic to the backend.
+        """
         return self.__path
 
-    # Backend defines the referenced service endpoint to which the traffic
-    # will be forwarded to.
     def backend(self) -> IngressBackend:
+        """
+        Backend defines the referenced service endpoint to which the traffic
+        will be forwarded to.
+        """
         return self.__backend
 
 
@@ -901,8 +977,10 @@ class HTTPIngressRuleValue(types.Object):
         v["paths"] = paths
         return v
 
-    # A collection of paths that map requests to backends.
     def paths(self) -> List[HTTPIngressPath]:
+        """
+        A collection of paths that map requests to backends.
+        """
         return self.__paths
 
 
@@ -928,12 +1006,16 @@ class HostPortRange(types.Object):
         v["max"] = max
         return v
 
-    # min is the start of the range, inclusive.
     def min(self) -> int:
+        """
+        min is the start of the range, inclusive.
+        """
         return self.__min
 
-    # max is the end of the range, inclusive.
     def max(self) -> int:
+        """
+        max is the end of the range, inclusive.
+        """
         return self.__max
 
 
@@ -961,15 +1043,19 @@ class IPBlock(types.Object):
             v["except"] = except_
         return v
 
-    # CIDR is a string representing the IP Block
-    # Valid examples are "192.168.1.1/24"
     def cidr(self) -> str:
+        """
+        CIDR is a string representing the IP Block
+        Valid examples are "192.168.1.1/24"
+        """
         return self.__cidr
 
-    # Except is a slice of CIDRs that should not be included within an IP Block
-    # Valid examples are "192.168.1.1/24"
-    # Except values will be rejected if they are outside the CIDR range
     def except_(self) -> Optional[List[str]]:
+        """
+        Except is a slice of CIDRs that should not be included within an IP Block
+        Valid examples are "192.168.1.1/24"
+        Except values will be rejected if they are outside the CIDR range
+        """
         return self.__except_
 
 
@@ -1022,27 +1108,31 @@ class IngressRule(types.Object):
         v.update(ingressRuleValue._root())  # inline
         return v
 
-    # Host is the fully qualified domain name of a network host, as defined
-    # by RFC 3986. Note the following deviations from the "host" part of the
-    # URI as defined in the RFC:
-    # 1. IPs are not allowed. Currently an IngressRuleValue can only apply to the
-    # 	  IP in the Spec of the parent Ingress.
-    # 2. The `:` delimiter is not respected because ports are not allowed.
-    # 	  Currently the port of an Ingress is implicitly :80 for http and
-    # 	  :443 for https.
-    # Both these may change in the future.
-    # Incoming requests are matched against the host before the IngressRuleValue.
-    # If the host is unspecified, the Ingress routes all traffic based on the
-    # specified IngressRuleValue.
     def host(self) -> Optional[str]:
+        """
+        Host is the fully qualified domain name of a network host, as defined
+        by RFC 3986. Note the following deviations from the "host" part of the
+        URI as defined in the RFC:
+        1. IPs are not allowed. Currently an IngressRuleValue can only apply to the
+        	  IP in the Spec of the parent Ingress.
+        2. The `:` delimiter is not respected because ports are not allowed.
+        	  Currently the port of an Ingress is implicitly :80 for http and
+        	  :443 for https.
+        Both these may change in the future.
+        Incoming requests are matched against the host before the IngressRuleValue.
+        If the host is unspecified, the Ingress routes all traffic based on the
+        specified IngressRuleValue.
+        """
         return self.__host
 
-    # IngressRuleValue represents a rule to route requests for this IngressRule.
-    # If unspecified, the rule defaults to a http catch-all. Whether that sends
-    # just traffic matching the host to the default backend or all traffic to the
-    # default backend, is left to the controller fulfilling the Ingress. Http is
-    # currently the only supported IngressRuleValue.
     def ingressRuleValue(self) -> Optional[IngressRuleValue]:
+        """
+        IngressRuleValue represents a rule to route requests for this IngressRule.
+        If unspecified, the rule defaults to a http catch-all. Whether that sends
+        just traffic matching the host to the default backend or all traffic to the
+        default backend, is left to the controller fulfilling the Ingress. Http is
+        currently the only supported IngressRuleValue.
+        """
         return self.__ingressRuleValue
 
 
@@ -1068,19 +1158,23 @@ class IngressTLS(types.Object):
             v["secretName"] = secretName
         return v
 
-    # Hosts are a list of hosts included in the TLS certificate. The values in
-    # this list must match the name/s used in the tlsSecret. Defaults to the
-    # wildcard host setting for the loadbalancer controller fulfilling this
-    # Ingress, if left unspecified.
     def hosts(self) -> Optional[List[str]]:
+        """
+        Hosts are a list of hosts included in the TLS certificate. The values in
+        this list must match the name/s used in the tlsSecret. Defaults to the
+        wildcard host setting for the loadbalancer controller fulfilling this
+        Ingress, if left unspecified.
+        """
         return self.__hosts
 
-    # SecretName is the name of the secret used to terminate SSL traffic on 443.
-    # Field is left optional to allow SSL routing based on SNI hostname alone.
-    # If the SNI host in a listener conflicts with the "Host" header field used
-    # by an IngressRule, the SNI host is used for termination and value of the
-    # Host header is used for routing.
     def secretName(self) -> Optional[str]:
+        """
+        SecretName is the name of the secret used to terminate SSL traffic on 443.
+        Field is left optional to allow SSL routing based on SNI hostname alone.
+        If the SNI host in a listener conflicts with the "Host" header field used
+        by an IngressRule, the SNI host is used for termination and value of the
+        Host header is used for routing.
+        """
         return self.__secretName
 
 
@@ -1116,24 +1210,30 @@ class IngressSpec(types.Object):
             v["rules"] = rules
         return v
 
-    # A default backend capable of servicing requests that don't match any
-    # rule. At least one of 'backend' or 'rules' must be specified. This field
-    # is optional to allow the loadbalancer controller or defaulting logic to
-    # specify a global default.
     def backend(self) -> Optional[IngressBackend]:
+        """
+        A default backend capable of servicing requests that don't match any
+        rule. At least one of 'backend' or 'rules' must be specified. This field
+        is optional to allow the loadbalancer controller or defaulting logic to
+        specify a global default.
+        """
         return self.__backend
 
-    # TLS configuration. Currently the Ingress only supports a single TLS
-    # port, 443. If multiple members of this list specify different hosts, they
-    # will be multiplexed on the same port according to the hostname specified
-    # through the SNI TLS extension, if the ingress controller fulfilling the
-    # ingress supports SNI.
     def tls(self) -> Optional[List[IngressTLS]]:
+        """
+        TLS configuration. Currently the Ingress only supports a single TLS
+        port, 443. If multiple members of this list specify different hosts, they
+        will be multiplexed on the same port according to the hostname specified
+        through the SNI TLS extension, if the ingress controller fulfilling the
+        ingress supports SNI.
+        """
         return self.__tls
 
-    # A list of host rules used to configure the Ingress. If unspecified, or
-    # no rule matches, all traffic is sent to the default backend.
     def rules(self) -> Optional[List[IngressRule]]:
+        """
+        A list of host rules used to configure the Ingress. If unspecified, or
+        no rule matches, all traffic is sent to the default backend.
+        """
         return self.__rules
 
 
@@ -1171,9 +1271,11 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec is the desired state of the Ingress.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[IngressSpec]:
+        """
+        Spec is the desired state of the Ingress.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -1211,27 +1313,33 @@ class NetworkPolicyPeer(types.Object):
             v["ipBlock"] = ipBlock
         return v
 
-    # This is a label selector which selects Pods. This field follows standard label
-    # selector semantics; if present but empty, it selects all pods.
-    #
-    # If NamespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
-    # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
-    # Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
     def podSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        This is a label selector which selects Pods. This field follows standard label
+        selector semantics; if present but empty, it selects all pods.
+        
+        If NamespaceSelector is also set, then the NetworkPolicyPeer as a whole selects
+        the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
+        Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
+        """
         return self.__podSelector
 
-    # Selects Namespaces using cluster-scoped labels. This field follows standard label
-    # selector semantics; if present but empty, it selects all namespaces.
-    #
-    # If PodSelector is also set, then the NetworkPolicyPeer as a whole selects
-    # the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
-    # Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
     def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Selects Namespaces using cluster-scoped labels. This field follows standard label
+        selector semantics; if present but empty, it selects all namespaces.
+        
+        If PodSelector is also set, then the NetworkPolicyPeer as a whole selects
+        the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
+        Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
+        """
         return self.__namespaceSelector
 
-    # IPBlock defines policy on a particular IPBlock. If this field is set then
-    # neither of the other fields can be.
     def ipBlock(self) -> Optional[IPBlock]:
+        """
+        IPBlock defines policy on a particular IPBlock. If this field is set then
+        neither of the other fields can be.
+        """
         return self.__ipBlock
 
 
@@ -1257,17 +1365,21 @@ class NetworkPolicyPort(types.Object):
             v["port"] = port
         return v
 
-    # Optional.  The protocol (TCP, UDP, or SCTP) which traffic must match.
-    # If not specified, this field defaults to TCP.
     def protocol(self) -> Optional[corev1.Protocol]:
+        """
+        Optional.  The protocol (TCP, UDP, or SCTP) which traffic must match.
+        If not specified, this field defaults to TCP.
+        """
         return self.__protocol
 
-    # If specified, the port on the given protocol.  This can
-    # either be a numerical or named port on a pod.  If this field is not provided,
-    # this matches all port names and numbers.
-    # If present, only traffic on the specified protocol AND port
-    # will be matched.
     def port(self) -> Optional[Union[int, str]]:
+        """
+        If specified, the port on the given protocol.  This can
+        either be a numerical or named port on a pod.  If this field is not provided,
+        this matches all port names and numbers.
+        If present, only traffic on the specified protocol AND port
+        will be matched.
+        """
         return self.__port
 
 
@@ -1298,20 +1410,24 @@ class NetworkPolicyEgressRule(types.Object):
             v["to"] = to
         return v
 
-    # List of destination ports for outgoing traffic.
-    # Each item in this list is combined using a logical OR. If this field is
-    # empty or missing, this rule matches all ports (traffic not restricted by port).
-    # If this field is present and contains at least one item, then this rule allows
-    # traffic only if the traffic matches at least one port in the list.
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        """
+        List of destination ports for outgoing traffic.
+        Each item in this list is combined using a logical OR. If this field is
+        empty or missing, this rule matches all ports (traffic not restricted by port).
+        If this field is present and contains at least one item, then this rule allows
+        traffic only if the traffic matches at least one port in the list.
+        """
         return self.__ports
 
-    # List of destinations for outgoing traffic of pods selected for this rule.
-    # Items in this list are combined using a logical OR operation. If this field is
-    # empty or missing, this rule matches all destinations (traffic not restricted by
-    # destination). If this field is present and contains at least one item, this rule
-    # allows traffic only if the traffic matches at least one item in the to list.
     def to(self) -> Optional[List[NetworkPolicyPeer]]:
+        """
+        List of destinations for outgoing traffic of pods selected for this rule.
+        Items in this list are combined using a logical OR operation. If this field is
+        empty or missing, this rule matches all destinations (traffic not restricted by
+        destination). If this field is present and contains at least one item, this rule
+        allows traffic only if the traffic matches at least one item in the to list.
+        """
         return self.__to
 
 
@@ -1342,20 +1458,24 @@ class NetworkPolicyIngressRule(types.Object):
             v["from"] = from_
         return v
 
-    # List of ports which should be made accessible on the pods selected for this rule.
-    # Each item in this list is combined using a logical OR.
-    # If this field is empty or missing, this rule matches all ports (traffic not restricted by port).
-    # If this field is present and contains at least one item, then this rule allows traffic
-    # only if the traffic matches at least one port in the list.
     def ports(self) -> Optional[List[NetworkPolicyPort]]:
+        """
+        List of ports which should be made accessible on the pods selected for this rule.
+        Each item in this list is combined using a logical OR.
+        If this field is empty or missing, this rule matches all ports (traffic not restricted by port).
+        If this field is present and contains at least one item, then this rule allows traffic
+        only if the traffic matches at least one port in the list.
+        """
         return self.__ports
 
-    # List of sources which should be able to access the pods selected for this rule.
-    # Items in this list are combined using a logical OR operation.
-    # If this field is empty or missing, this rule matches all sources (traffic not restricted by source).
-    # If this field is present and contains at least one item, this rule allows traffic only if the
-    # traffic matches at least one item in the from list.
     def from_(self) -> Optional[List[NetworkPolicyPeer]]:
+        """
+        List of sources which should be able to access the pods selected for this rule.
+        Items in this list are combined using a logical OR operation.
+        If this field is empty or missing, this rule matches all sources (traffic not restricted by source).
+        If this field is present and contains at least one item, this rule allows traffic only if the
+        traffic matches at least one item in the from list.
+        """
         return self.__from_
 
 
@@ -1398,45 +1518,53 @@ class NetworkPolicySpec(types.Object):
             v["policyTypes"] = policyTypes
         return v
 
-    # Selects the pods to which this NetworkPolicy object applies.  The array of ingress rules
-    # is applied to any pods selected by this field. Multiple network policies can select the
-    # same set of pods.  In this case, the ingress rules for each are combined additively.
-    # This field is NOT optional and follows standard label selector semantics.
-    # An empty podSelector matches all pods in this namespace.
     def podSelector(self) -> "metav1.LabelSelector":
+        """
+        Selects the pods to which this NetworkPolicy object applies.  The array of ingress rules
+        is applied to any pods selected by this field. Multiple network policies can select the
+        same set of pods.  In this case, the ingress rules for each are combined additively.
+        This field is NOT optional and follows standard label selector semantics.
+        An empty podSelector matches all pods in this namespace.
+        """
         return self.__podSelector
 
-    # List of ingress rules to be applied to the selected pods.
-    # Traffic is allowed to a pod if there are no NetworkPolicies selecting the pod
-    # OR if the traffic source is the pod's local node,
-    # OR if the traffic matches at least one ingress rule across all of the NetworkPolicy
-    # objects whose podSelector matches the pod.
-    # If this field is empty then this NetworkPolicy does not allow any traffic
-    # (and serves solely to ensure that the pods it selects are isolated by default).
     def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
+        """
+        List of ingress rules to be applied to the selected pods.
+        Traffic is allowed to a pod if there are no NetworkPolicies selecting the pod
+        OR if the traffic source is the pod's local node,
+        OR if the traffic matches at least one ingress rule across all of the NetworkPolicy
+        objects whose podSelector matches the pod.
+        If this field is empty then this NetworkPolicy does not allow any traffic
+        (and serves solely to ensure that the pods it selects are isolated by default).
+        """
         return self.__ingress
 
-    # List of egress rules to be applied to the selected pods. Outgoing traffic is
-    # allowed if there are no NetworkPolicies selecting the pod (and cluster policy
-    # otherwise allows the traffic), OR if the traffic matches at least one egress rule
-    # across all of the NetworkPolicy objects whose podSelector matches the pod. If
-    # this field is empty then this NetworkPolicy limits all outgoing traffic (and serves
-    # solely to ensure that the pods it selects are isolated by default).
-    # This field is beta-level in 1.8
     def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
+        """
+        List of egress rules to be applied to the selected pods. Outgoing traffic is
+        allowed if there are no NetworkPolicies selecting the pod (and cluster policy
+        otherwise allows the traffic), OR if the traffic matches at least one egress rule
+        across all of the NetworkPolicy objects whose podSelector matches the pod. If
+        this field is empty then this NetworkPolicy limits all outgoing traffic (and serves
+        solely to ensure that the pods it selects are isolated by default).
+        This field is beta-level in 1.8
+        """
         return self.__egress
 
-    # List of rule types that the NetworkPolicy relates to.
-    # Valid options are "Ingress", "Egress", or "Ingress,Egress".
-    # If this field is not specified, it will default based on the existence of Ingress or Egress rules;
-    # policies that contain an Egress section are assumed to affect Egress, and all policies
-    # (whether or not they contain an Ingress section) are assumed to affect Ingress.
-    # If you want to write an egress-only policy, you must explicitly specify policyTypes [ "Egress" ].
-    # Likewise, if you want to write a policy that specifies that no egress is allowed,
-    # you must specify a policyTypes value that include "Egress" (since such a policy would not include
-    # an Egress section and would otherwise default to just [ "Ingress" ]).
-    # This field is beta-level in 1.8
     def policyTypes(self) -> Optional[List[PolicyType]]:
+        """
+        List of rule types that the NetworkPolicy relates to.
+        Valid options are "Ingress", "Egress", or "Ingress,Egress".
+        If this field is not specified, it will default based on the existence of Ingress or Egress rules;
+        policies that contain an Egress section are assumed to affect Egress, and all policies
+        (whether or not they contain an Ingress section) are assumed to affect Ingress.
+        If you want to write an egress-only policy, you must explicitly specify policyTypes [ "Egress" ].
+        Likewise, if you want to write a policy that specifies that no egress is allowed,
+        you must specify a policyTypes value that include "Egress" (since such a policy would not include
+        an Egress section and would otherwise default to just [ "Ingress" ]).
+        This field is beta-level in 1.8
+        """
         return self.__policyTypes
 
 
@@ -1471,8 +1599,10 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Specification of the desired behavior for this NetworkPolicy.
     def spec(self) -> Optional[NetworkPolicySpec]:
+        """
+        Specification of the desired behavior for this NetworkPolicy.
+        """
         return self.__spec
 
 
@@ -1498,13 +1628,17 @@ class RunAsGroupStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
     def rule(self) -> RunAsGroupStrategy:
+        """
+        rule is the strategy that will dictate the allowable RunAsGroup values that may be set.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
-    # then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
+        then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -1530,13 +1664,17 @@ class RunAsUserStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate the allowable RunAsUser values that may be set.
     def rule(self) -> RunAsUserStrategy:
+        """
+        rule is the strategy that will dictate the allowable RunAsUser values that may be set.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
-    # then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
+        then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -1568,16 +1706,20 @@ class RuntimeClassStrategyOptions(types.Object):
             v["defaultRuntimeClassName"] = defaultRuntimeClassName
         return v
 
-    # allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
-    # A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
-    # list. An empty list requires the RuntimeClassName field to be unset.
     def allowedRuntimeClassNames(self) -> List[str]:
+        """
+        allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
+        A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
+        list. An empty list requires the RuntimeClassName field to be unset.
+        """
         return self.__allowedRuntimeClassNames
 
-    # defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
-    # The default MUST be allowed by the allowedRuntimeClassNames list.
-    # A value of nil does not mutate the Pod.
     def defaultRuntimeClassName(self) -> Optional[str]:
+        """
+        defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
+        The default MUST be allowed by the allowedRuntimeClassNames list.
+        A value of nil does not mutate the Pod.
+        """
         return self.__defaultRuntimeClassName
 
 
@@ -1607,13 +1749,17 @@ class SELinuxStrategyOptions(types.Object):
             v["seLinuxOptions"] = seLinuxOptions
         return v
 
-    # rule is the strategy that will dictate the allowable labels that may be set.
     def rule(self) -> SELinuxStrategy:
+        """
+        rule is the strategy that will dictate the allowable labels that may be set.
+        """
         return self.__rule
 
-    # seLinuxOptions required to run as; required for MustRunAs
-    # More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
     def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
+        """
+        seLinuxOptions required to run as; required for MustRunAs
+        More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+        """
         return self.__seLinuxOptions
 
 
@@ -1642,13 +1788,17 @@ class SupplementalGroupsStrategyOptions(types.Object):
             v["ranges"] = ranges
         return v
 
-    # rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
     def rule(self) -> Optional[SupplementalGroupsStrategyType]:
+        """
+        rule is the strategy that will dictate what supplemental groups is used in the SecurityContext.
+        """
         return self.__rule
 
-    # ranges are the allowed ranges of supplemental groups.  If you would like to force a single
-    # supplemental group then supply a single range with the same start and end. Required for MustRunAs.
     def ranges(self) -> Optional[List[IDRange]]:
+        """
+        ranges are the allowed ranges of supplemental groups.  If you would like to force a single
+        supplemental group then supply a single range with the same start and end. Required for MustRunAs.
+        """
         return self.__ranges
 
 
@@ -1863,136 +2013,184 @@ class PodSecurityPolicySpec(types.Object):
             v["runtimeClass"] = runtimeClass
         return v
 
-    # privileged determines if a pod can request to be run as privileged.
     def privileged(self) -> Optional[bool]:
+        """
+        privileged determines if a pod can request to be run as privileged.
+        """
         return self.__privileged
 
-    # defaultAddCapabilities is the default set of capabilities that will be added to the container
-    # unless the pod spec specifically drops the capability.  You may not list a capability in both
-    # defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
-    # allowed, and need not be included in the allowedCapabilities list.
     def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        defaultAddCapabilities is the default set of capabilities that will be added to the container
+        unless the pod spec specifically drops the capability.  You may not list a capability in both
+        defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
+        allowed, and need not be included in the allowedCapabilities list.
+        """
         return self.__defaultAddCapabilities
 
-    # requiredDropCapabilities are the capabilities that will be dropped from the container.  These
-    # are required to be dropped and cannot be added.
     def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        requiredDropCapabilities are the capabilities that will be dropped from the container.  These
+        are required to be dropped and cannot be added.
+        """
         return self.__requiredDropCapabilities
 
-    # allowedCapabilities is a list of capabilities that can be requested to add to the container.
-    # Capabilities in this field may be added at the pod author's discretion.
-    # You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
     def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+        """
+        allowedCapabilities is a list of capabilities that can be requested to add to the container.
+        Capabilities in this field may be added at the pod author's discretion.
+        You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
+        """
         return self.__allowedCapabilities
 
-    # volumes is a white list of allowed volume plugins. Empty indicates that
-    # no volumes may be used. To allow all volumes you may use '*'.
     def volumes(self) -> Optional[List[FSType]]:
+        """
+        volumes is a white list of allowed volume plugins. Empty indicates that
+        no volumes may be used. To allow all volumes you may use '*'.
+        """
         return self.__volumes
 
-    # hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
     def hostNetwork(self) -> Optional[bool]:
+        """
+        hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
+        """
         return self.__hostNetwork
 
-    # hostPorts determines which host port ranges are allowed to be exposed.
     def hostPorts(self) -> Optional[List[HostPortRange]]:
+        """
+        hostPorts determines which host port ranges are allowed to be exposed.
+        """
         return self.__hostPorts
 
-    # hostPID determines if the policy allows the use of HostPID in the pod spec.
     def hostPID(self) -> Optional[bool]:
+        """
+        hostPID determines if the policy allows the use of HostPID in the pod spec.
+        """
         return self.__hostPID
 
-    # hostIPC determines if the policy allows the use of HostIPC in the pod spec.
     def hostIPC(self) -> Optional[bool]:
+        """
+        hostIPC determines if the policy allows the use of HostIPC in the pod spec.
+        """
         return self.__hostIPC
 
-    # seLinux is the strategy that will dictate the allowable labels that may be set.
     def seLinux(self) -> SELinuxStrategyOptions:
+        """
+        seLinux is the strategy that will dictate the allowable labels that may be set.
+        """
         return self.__seLinux
 
-    # runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
     def runAsUser(self) -> RunAsUserStrategyOptions:
+        """
+        runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
+        """
         return self.__runAsUser
 
-    # RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
-    # If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
-    # RunAsGroup feature gate to be enabled.
     def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
+        """
+        RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
+        If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
+        RunAsGroup feature gate to be enabled.
+        """
         return self.__runAsGroup
 
-    # supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
     def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
+        """
+        supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
+        """
         return self.__supplementalGroups
 
-    # fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
     def fsGroup(self) -> FSGroupStrategyOptions:
+        """
+        fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
+        """
         return self.__fsGroup
 
-    # readOnlyRootFilesystem when set to true will force containers to run with a read only root file
-    # system.  If the container specifically requests to run with a non-read only root file system
-    # the PSP should deny the pod.
-    # If set to false the container may run with a read only root file system if it wishes but it
-    # will not be forced to.
     def readOnlyRootFilesystem(self) -> Optional[bool]:
+        """
+        readOnlyRootFilesystem when set to true will force containers to run with a read only root file
+        system.  If the container specifically requests to run with a non-read only root file system
+        the PSP should deny the pod.
+        If set to false the container may run with a read only root file system if it wishes but it
+        will not be forced to.
+        """
         return self.__readOnlyRootFilesystem
 
-    # defaultAllowPrivilegeEscalation controls the default setting for whether a
-    # process can gain more privileges than its parent process.
     def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
+        """
+        defaultAllowPrivilegeEscalation controls the default setting for whether a
+        process can gain more privileges than its parent process.
+        """
         return self.__defaultAllowPrivilegeEscalation
 
-    # allowPrivilegeEscalation determines if a pod can request to allow
-    # privilege escalation. If unspecified, defaults to true.
     def allowPrivilegeEscalation(self) -> Optional[bool]:
+        """
+        allowPrivilegeEscalation determines if a pod can request to allow
+        privilege escalation. If unspecified, defaults to true.
+        """
         return self.__allowPrivilegeEscalation
 
-    # allowedHostPaths is a white list of allowed host paths. Empty indicates
-    # that all host paths may be used.
     def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+        """
+        allowedHostPaths is a white list of allowed host paths. Empty indicates
+        that all host paths may be used.
+        """
         return self.__allowedHostPaths
 
-    # allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
-    # Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
-    # is allowed in the "volumes" field.
     def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+        """
+        allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
+        Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
+        is allowed in the "volumes" field.
+        """
         return self.__allowedFlexVolumes
 
-    # AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
-    # An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
     def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+        """
+        AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
+        An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
+        """
         return self.__allowedCSIDrivers
 
-    # allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
-    # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
-    # as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed.
-    # Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.
-    #
-    # Examples:
-    # e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
-    # e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
     def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+        """
+        allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
+        Each entry is either a plain sysctl name or ends in "*" in which case it is considered
+        as a prefix of allowed sysctls. Single * means all unsafe sysctls are allowed.
+        Kubelet has to whitelist all allowed unsafe sysctls explicitly to avoid rejection.
+        
+        Examples:
+        e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
+        e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
+        """
         return self.__allowedUnsafeSysctls
 
-    # forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
-    # Each entry is either a plain sysctl name or ends in "*" in which case it is considered
-    # as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.
-    #
-    # Examples:
-    # e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
-    # e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
     def forbiddenSysctls(self) -> Optional[List[str]]:
+        """
+        forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
+        Each entry is either a plain sysctl name or ends in "*" in which case it is considered
+        as a prefix of forbidden sysctls. Single * means all sysctls are forbidden.
+        
+        Examples:
+        e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
+        e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
+        """
         return self.__forbiddenSysctls
 
-    # AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
-    # Empty or nil indicates that only the DefaultProcMountType may be used.
-    # This requires the ProcMountType feature flag to be enabled.
     def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+        """
+        AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
+        Empty or nil indicates that only the DefaultProcMountType may be used.
+        This requires the ProcMountType feature flag to be enabled.
+        """
         return self.__allowedProcMountTypes
 
-    # runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
-    # If this field is omitted, the pod's runtimeClassName field is unrestricted.
-    # Enforcement of this field depends on the RuntimeClass feature gate being enabled.
     def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
+        """
+        runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
+        If this field is omitted, the pod's runtimeClassName field is unrestricted.
+        Enforcement of this field depends on the RuntimeClass feature gate being enabled.
+        """
         return self.__runtimeClass
 
 
@@ -2026,8 +2224,10 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         v["spec"] = spec
         return v
 
-    # spec defines the policy enforced.
     def spec(self) -> Optional[PodSecurityPolicySpec]:
+        """
+        spec defines the policy enforced.
+        """
         return self.__spec
 
 
@@ -2068,30 +2268,38 @@ class ReplicaSetSpec(types.Object):
         v["template"] = template
         return v
 
-    # Replicas is the number of desired replicas.
-    # This is a pointer to distinguish between explicit zero and unspecified.
-    # Defaults to 1.
-    # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
     def replicas(self) -> Optional[int]:
+        """
+        Replicas is the number of desired replicas.
+        This is a pointer to distinguish between explicit zero and unspecified.
+        Defaults to 1.
+        More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller/#what-is-a-replicationcontroller
+        """
         return self.__replicas
 
-    # Minimum number of seconds for which a newly created pod should be ready
-    # without any of its container crashing, for it to be considered available.
-    # Defaults to 0 (pod will be considered available as soon as it is ready)
     def minReadySeconds(self) -> Optional[int]:
+        """
+        Minimum number of seconds for which a newly created pod should be ready
+        without any of its container crashing, for it to be considered available.
+        Defaults to 0 (pod will be considered available as soon as it is ready)
+        """
         return self.__minReadySeconds
 
-    # Selector is a label query over pods that should match the replica count.
-    # If the selector is empty, it is defaulted to the labels present on the pod template.
-    # Label keys and values that must match in order to be controlled by this replica set.
-    # More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
     def selector(self) -> Optional["metav1.LabelSelector"]:
+        """
+        Selector is a label query over pods that should match the replica count.
+        If the selector is empty, it is defaulted to the labels present on the pod template.
+        Label keys and values that must match in order to be controlled by this replica set.
+        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors
+        """
         return self.__selector
 
-    # Template is the object that describes the pod that will be created if
-    # insufficient replicas are detected.
-    # More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
     def template(self) -> Optional["corev1.PodTemplateSpec"]:
+        """
+        Template is the object that describes the pod that will be created if
+        insufficient replicas are detected.
+        More info: https://kubernetes.io/docs/concepts/workloads/controllers/replicationcontroller#pod-template
+        """
         return self.__template
 
 
@@ -2127,9 +2335,11 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # Spec defines the specification of the desired behavior of the ReplicaSet.
-    # More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     def spec(self) -> Optional[ReplicaSetSpec]:
+        """
+        Spec defines the specification of the desired behavior of the ReplicaSet.
+        More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+        """
         return self.__spec
 
 
@@ -2165,8 +2375,10 @@ class ScaleSpec(types.Object):
             v["replicas"] = replicas
         return v
 
-    # desired number of instances for the scaled object.
     def replicas(self) -> Optional[int]:
+        """
+        desired number of instances for the scaled object.
+        """
         return self.__replicas
 
 
@@ -2200,6 +2412,8 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         v["spec"] = spec
         return v
 
-    # defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
     def spec(self) -> Optional[ScaleSpec]:
+        """
+        defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
+        """
         return self.__spec
