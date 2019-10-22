@@ -24,24 +24,24 @@ def scoped(func):
         scope = _current_scope.get(None)
         if scope:
             sig = inspect.signature(func, follow_wrapped=True)
-            for i, v in enumerate(sig.parameters.values()):
+            for i, val in enumerate(sig.parameters.values()):
                 if (
-                    v.name in scope
-                    and v.name not in kwargs
+                    val.name in scope
+                    and val.name not in kwargs
                     and (
                         (
-                            v.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
+                            val.kind == inspect.Parameter.POSITIONAL_OR_KEYWORD
                             and len(args) <= i
                         )
-                        or v.kind == inspect.Parameter.KEYWORD_ONLY
+                        or val.kind == inspect.Parameter.KEYWORD_ONLY
                     )
                 ):
-                    if v.annotation != inspect.Parameter.empty:
+                    if val.annotation != inspect.Parameter.empty:
                         try:
-                            typeguard.check_type("", scope[v.name], v.annotation)
+                            typeguard.check_type("", scope[val.name], val.annotation)
                         except TypeError:
                             continue
-                    kwargs[v.name] = scope[v.name]
+                    kwargs[val.name] = scope[val.name]
 
         return func(*args, **kwargs)
 
@@ -51,6 +51,7 @@ def scoped(func):
 class Scope:
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+        self.prev = None
 
     def __enter__(self):
         self.prev = _current_scope.get({})
