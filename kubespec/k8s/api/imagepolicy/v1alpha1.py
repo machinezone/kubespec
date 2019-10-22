@@ -17,7 +17,7 @@ class ImageReviewContainerSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, image: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__image = image
 
     @typechecked
@@ -44,7 +44,7 @@ class ImageReviewSpec(types.Object):
         annotations: Dict[str, str] = None,
         namespace: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__containers = containers if containers is not None else []
         self.__annotations = annotations if annotations is not None else {}
         self.__namespace = namespace
@@ -93,13 +93,11 @@ class ImageReview(base.TypedObject, base.MetadataObject):
         spec: ImageReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "imagepolicy.k8s.io/v1alpha1",
-                "kind": "ImageReview",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="imagepolicy.k8s.io/v1alpha1",
+            kind="ImageReview",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ImageReviewSpec()
 

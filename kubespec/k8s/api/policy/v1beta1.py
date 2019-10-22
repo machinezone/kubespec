@@ -132,7 +132,7 @@ class AllowedCSIDriver(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
 
     @typechecked
@@ -153,7 +153,7 @@ class AllowedFlexVolume(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, driver: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
 
     @typechecked
@@ -175,7 +175,7 @@ class AllowedHostPath(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, pathPrefix: str = None, readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__pathPrefix = pathPrefix
         self.__readOnly = readOnly
 
@@ -222,14 +222,12 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
         deleteOptions: "metav1.DeleteOptions" = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "policy/v1beta1",
-                "kind": "Eviction",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="policy/v1beta1",
+            kind="Eviction",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__deleteOptions = deleteOptions
 
@@ -252,7 +250,7 @@ class IDRange(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
-        super().__init__(**{})
+        super().__init__()
         self.__min = min
         self.__max = max
 
@@ -281,7 +279,7 @@ class FSGroupStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -314,7 +312,7 @@ class HostPortRange(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
-        super().__init__(**{})
+        super().__init__()
         self.__min = min
         self.__max = max
 
@@ -348,7 +346,7 @@ class PodDisruptionBudgetSpec(types.Object):
         selector: "metav1.LabelSelector" = None,
         maxUnavailable: Union[int, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__minAvailable = minAvailable
         self.__selector = selector
         self.__maxUnavailable = maxUnavailable
@@ -403,14 +401,12 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         spec: PodDisruptionBudgetSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "policy/v1beta1",
-                "kind": "PodDisruptionBudget",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="policy/v1beta1",
+            kind="PodDisruptionBudget",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodDisruptionBudgetSpec()
 
@@ -432,7 +428,7 @@ class RunAsGroupStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -463,7 +459,7 @@ class RunAsUserStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -499,7 +495,7 @@ class RuntimeClassStrategyOptions(types.Object):
         allowedRuntimeClassNames: List[str] = None,
         defaultRuntimeClassName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__allowedRuntimeClassNames = (
             allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
         )
@@ -539,7 +535,7 @@ class SELinuxStrategyOptions(types.Object):
         rule: SELinuxStrategy = None,
         seLinuxOptions: "corev1.SELinuxOptions" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__seLinuxOptions = seLinuxOptions
 
@@ -572,7 +568,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
     def __init__(
         self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -630,7 +626,7 @@ class PodSecurityPolicySpec(types.Object):
         allowedProcMountTypes: List[corev1.ProcMountType] = None,
         runtimeClass: RuntimeClassStrategyOptions = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__privileged = privileged
         self.__defaultAddCapabilities = (
             defaultAddCapabilities if defaultAddCapabilities is not None else []
@@ -956,13 +952,11 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         spec: PodSecurityPolicySpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "policy/v1beta1",
-                "kind": "PodSecurityPolicy",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="policy/v1beta1",
+            kind="PodSecurityPolicy",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodSecurityPolicySpec()
 

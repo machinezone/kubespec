@@ -27,12 +27,10 @@ class ConfigMapTemplate(base.NamespacedMetadataObject):
         binaryData: Dict[str, bytes] = None,
     ):
         super().__init__(
-            **{
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__data = data if data is not None else {}
         self.__binaryData = binaryData if binaryData is not None else {}
@@ -78,7 +76,7 @@ class TemplateVariable(types.Object):
         secretValue: "corev1.SecretKeySelector" = None,
         configMapValue: "corev1.ConfigMapKeySelector" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__value = value
         self.__secretValue = secretValue
@@ -137,7 +135,7 @@ class ConfigMapSecretSpec(types.Object):
         template: ConfigMapTemplate = None,
         vars: Dict[str, TemplateVariable] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__template = template if template is not None else ConfigMapTemplate()
         self.__vars = vars if vars is not None else {}
 
@@ -180,14 +178,12 @@ class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
         spec: ConfigMapSecretSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "secrets.k8s.mz.com/v1alpha1",
-                "kind": "ConfigMapSecret",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="secrets.k8s.mz.com/v1alpha1",
+            kind="ConfigMapSecret",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ConfigMapSecretSpec()
 

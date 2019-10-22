@@ -26,7 +26,7 @@ class PolicySpec(types.Object):
         namespace: str = None,
         nonResourcePath: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__user = user
         self.__group = group
         self.__readonly = readonly
@@ -112,10 +112,7 @@ class Policy(base.TypedObject):
     @typechecked
     def __init__(self, spec: PolicySpec = None):
         super().__init__(
-            **{
-                "apiVersion": "abac.authorization.kubernetes.io/v1beta1",
-                "kind": "Policy",
-            }
+            apiVersion="abac.authorization.kubernetes.io/v1beta1", kind="Policy"
         )
         self.__spec = spec if spec is not None else PolicySpec()
 

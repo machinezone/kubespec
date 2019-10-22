@@ -173,7 +173,7 @@ class AllowedCSIDriver(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
 
     @typechecked
@@ -195,7 +195,7 @@ class AllowedFlexVolume(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, driver: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
 
     @typechecked
@@ -218,7 +218,7 @@ class AllowedHostPath(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, pathPrefix: str = None, readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__pathPrefix = pathPrefix
         self.__readOnly = readOnly
 
@@ -255,7 +255,7 @@ class RollingUpdateDaemonSet(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, maxUnavailable: Union[int, str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__maxUnavailable = maxUnavailable
 
     @typechecked
@@ -293,7 +293,7 @@ class DaemonSetUpdateStrategy(types.Object):
         type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType["OnDelete"],
         rollingUpdate: RollingUpdateDaemonSet = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__rollingUpdate = rollingUpdate
 
@@ -336,7 +336,7 @@ class DaemonSetSpec(types.Object):
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__selector = selector
         self.__template = template if template is not None else corev1.PodTemplateSpec()
         self.__updateStrategy = (
@@ -418,14 +418,12 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: DaemonSetSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "DaemonSet",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="DaemonSet",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else DaemonSetSpec()
 
@@ -450,7 +448,7 @@ class RollingUpdateDeployment(types.Object):
     def __init__(
         self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else 1
         self.__maxSurge = maxSurge if maxSurge is not None else 1
 
@@ -504,7 +502,7 @@ class DeploymentStrategy(types.Object):
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
         rollingUpdate: RollingUpdateDeployment = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__rollingUpdate = (
             rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
@@ -551,7 +549,7 @@ class DeploymentSpec(types.Object):
         paused: bool = None,
         progressDeadlineSeconds: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else corev1.PodTemplateSpec()
@@ -663,14 +661,12 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         spec: DeploymentSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "Deployment",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="Deployment",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else DeploymentSpec()
 
@@ -692,7 +688,7 @@ class RollbackConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, revision: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__revision = revision
 
     @typechecked
@@ -720,9 +716,7 @@ class DeploymentRollback(base.TypedObject):
         updatedAnnotations: Dict[str, str] = None,
         rollbackTo: RollbackConfig = None,
     ):
-        super().__init__(
-            **{"apiVersion": "extensions/v1beta1", "kind": "DeploymentRollback"}
-        )
+        super().__init__(apiVersion="extensions/v1beta1", kind="DeploymentRollback")
         self.__name = name
         self.__updatedAnnotations = (
             updatedAnnotations if updatedAnnotations is not None else {}
@@ -763,7 +757,7 @@ class IDRange(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
-        super().__init__(**{})
+        super().__init__()
         self.__min = min
         self.__max = max
 
@@ -793,7 +787,7 @@ class FSGroupStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -825,7 +819,7 @@ class IngressBackend(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__serviceName = serviceName
         self.__servicePort = servicePort if servicePort is not None else 0
 
@@ -855,7 +849,7 @@ class HTTPIngressPath(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, backend: IngressBackend = None):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__backend = backend if backend is not None else IngressBackend()
 
@@ -896,7 +890,7 @@ class HTTPIngressRuleValue(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, paths: List[HTTPIngressPath] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__paths = paths if paths is not None else []
 
     @typechecked
@@ -919,7 +913,7 @@ class HostPortRange(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
-        super().__init__(**{})
+        super().__init__()
         self.__min = min
         self.__max = max
 
@@ -951,7 +945,7 @@ class IPBlock(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, cidr: str = "", except_: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__cidr = cidr
         self.__except_ = except_ if except_ is not None else []
 
@@ -987,7 +981,7 @@ class IngressRuleValue(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, http: HTTPIngressRuleValue = None):
-        super().__init__(**{})
+        super().__init__()
         self.__http = http
 
     @typechecked
@@ -1010,7 +1004,7 @@ class IngressRule(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
-        super().__init__(**{})
+        super().__init__()
         self.__host = host
         self.__ingressRuleValue = (
             ingressRuleValue if ingressRuleValue is not None else IngressRuleValue()
@@ -1057,7 +1051,7 @@ class IngressTLS(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, hosts: List[str] = None, secretName: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__hosts = hosts if hosts is not None else []
         self.__secretName = secretName
 
@@ -1100,7 +1094,7 @@ class IngressSpec(types.Object):
         tls: List[IngressTLS] = None,
         rules: List[IngressRule] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__backend = backend
         self.__tls = tls if tls is not None else []
         self.__rules = rules if rules is not None else []
@@ -1160,14 +1154,12 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         spec: IngressSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "Ingress",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="Ingress",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else IngressSpec()
 
@@ -1195,7 +1187,7 @@ class NetworkPolicyPeer(types.Object):
         namespaceSelector: "metav1.LabelSelector" = None,
         ipBlock: IPBlock = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podSelector = podSelector
         self.__namespaceSelector = namespaceSelector
         self.__ipBlock = ipBlock
@@ -1248,7 +1240,7 @@ class NetworkPolicyPort(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__protocol = protocol
         self.__port = port
 
@@ -1289,7 +1281,7 @@ class NetworkPolicyEgressRule(types.Object):
     def __init__(
         self, ports: List[NetworkPolicyPort] = None, to: List[NetworkPolicyPeer] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ports = ports if ports is not None else []
         self.__to = to if to is not None else []
 
@@ -1333,7 +1325,7 @@ class NetworkPolicyIngressRule(types.Object):
         ports: List[NetworkPolicyPort] = None,
         from_: List[NetworkPolicyPeer] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ports = ports if ports is not None else []
         self.__from_ = from_ if from_ is not None else []
 
@@ -1378,7 +1370,7 @@ class NetworkPolicySpec(types.Object):
         egress: List[NetworkPolicyEgressRule] = None,
         policyTypes: List[PolicyType] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podSelector = (
             podSelector if podSelector is not None else metav1.LabelSelector()
         )
@@ -1462,14 +1454,12 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         spec: NetworkPolicySpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "NetworkPolicy",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="NetworkPolicy",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else NetworkPolicySpec()
 
@@ -1492,7 +1482,7 @@ class RunAsGroupStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -1524,7 +1514,7 @@ class RunAsUserStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -1560,7 +1550,7 @@ class RuntimeClassStrategyOptions(types.Object):
         allowedRuntimeClassNames: List[str] = None,
         defaultRuntimeClassName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__allowedRuntimeClassNames = (
             allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
         )
@@ -1601,7 +1591,7 @@ class SELinuxStrategyOptions(types.Object):
         rule: SELinuxStrategy = None,
         seLinuxOptions: "corev1.SELinuxOptions" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__seLinuxOptions = seLinuxOptions
 
@@ -1635,7 +1625,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
     def __init__(
         self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
 
@@ -1694,7 +1684,7 @@ class PodSecurityPolicySpec(types.Object):
         allowedProcMountTypes: List[corev1.ProcMountType] = None,
         runtimeClass: RuntimeClassStrategyOptions = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__privileged = privileged
         self.__defaultAddCapabilities = (
             defaultAddCapabilities if defaultAddCapabilities is not None else []
@@ -2020,13 +2010,11 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         spec: PodSecurityPolicySpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "PodSecurityPolicy",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="PodSecurityPolicy",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodSecurityPolicySpec()
 
@@ -2054,7 +2042,7 @@ class ReplicaSetSpec(types.Object):
         selector: "metav1.LabelSelector" = None,
         template: "corev1.PodTemplateSpec" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__minReadySeconds = minReadySeconds
         self.__selector = selector
@@ -2122,14 +2110,12 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: ReplicaSetSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "ReplicaSet",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="ReplicaSet",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ReplicaSetSpec()
 
@@ -2153,7 +2139,7 @@ class ReplicationControllerDummy(base.TypedObject):
     @typechecked
     def __init__(self):
         super().__init__(
-            **{"apiVersion": "extensions/v1beta1", "kind": "ReplicationControllerDummy"}
+            apiVersion="extensions/v1beta1", kind="ReplicationControllerDummy"
         )
 
     @typechecked
@@ -2167,7 +2153,7 @@ class ScaleSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas
 
     @typechecked
@@ -2197,14 +2183,12 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         spec: ScaleSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "extensions/v1beta1",
-                "kind": "Scale",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="extensions/v1beta1",
+            kind="Scale",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ScaleSpec()
 

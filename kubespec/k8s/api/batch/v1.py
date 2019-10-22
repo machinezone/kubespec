@@ -29,7 +29,7 @@ class JobSpec(types.Object):
         template: "corev1.PodTemplateSpec" = None,
         ttlSecondsAfterFinished: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__parallelism = parallelism if parallelism is not None else 1
         self.__completions = completions if completions is not None else 1
         self.__activeDeadlineSeconds = activeDeadlineSeconds
@@ -152,14 +152,12 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
         spec: JobSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "batch/v1",
-                "kind": "Job",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="batch/v1",
+            kind="Job",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else JobSpec()
 

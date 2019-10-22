@@ -212,7 +212,7 @@ class Preconditions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, uid: str = None, resourceVersion: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__uid = uid
         self.__resourceVersion = resourceVersion
 
@@ -245,7 +245,7 @@ class TypeMeta(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, kind: str = None, apiVersion: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__kind = kind
         self.__apiVersion = apiVersion
 
@@ -289,7 +289,7 @@ class DeleteOptions(base.TypedObject):
         propagationPolicy: DeletionPropagation = None,
         dryRun: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__gracePeriodSeconds = gracePeriodSeconds
         self.__preconditions = preconditions
         self.__propagationPolicy = propagationPolicy
@@ -356,7 +356,7 @@ class GroupVersionKind(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, group: str = "", version: str = "", kind: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__group = group
         self.__version = version
         self.__kind = kind
@@ -391,7 +391,7 @@ class GroupVersionResource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, group: str = "", version: str = "", resource: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__group = group
         self.__version = version
         self.__resource = resource
@@ -431,7 +431,7 @@ class LabelSelectorRequirement(types.Object):
         operator: LabelSelectorOperator = None,
         values: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__operator = operator
         self.__values = values if values is not None else []
@@ -479,7 +479,7 @@ class LabelSelector(types.Object):
         matchLabels: Dict[str, str] = None,
         matchExpressions: List[LabelSelectorRequirement] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__matchLabels = matchLabels if matchLabels is not None else {}
         self.__matchExpressions = (
             matchExpressions if matchExpressions is not None else []
@@ -519,7 +519,7 @@ class ListMeta(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, continue_: str = None, remainingItemCount: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__continue_ = continue_
         self.__remainingItemCount = remainingItemCount
 
@@ -571,7 +571,7 @@ class ObjectMeta(types.Object):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__namespace = namespace
         self.__labels = labels if labels is not None else {}
@@ -641,7 +641,7 @@ class StatusCause(types.Object):
     def __init__(
         self, reason: CauseType = None, message: str = None, field: str = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__reason = reason
         self.__message = message
         self.__field = field
@@ -704,7 +704,7 @@ class StatusDetails(types.Object):
         causes: List[StatusCause] = None,
         retryAfterSeconds: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__group = group
         self.__kind = kind
@@ -787,7 +787,7 @@ class Status(base.TypedObject):
         details: StatusDetails = None,
         code: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__metadata = metadata if metadata is not None else ListMeta()
         self.__status = status
         self.__message = message

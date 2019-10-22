@@ -17,7 +17,7 @@ class NonResourceAttributes(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, verb: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__verb = verb
 
@@ -57,7 +57,7 @@ class ResourceAttributes(types.Object):
         subresource: str = None,
         name: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__verb = verb
         self.__group = group
@@ -145,7 +145,7 @@ class SubjectAccessReviewSpec(types.Object):
         extra: Dict[str, List[str]] = None,
         uid: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__resourceAttributes = resourceAttributes
         self.__nonResourceAttributes = nonResourceAttributes
         self.__user = user
@@ -230,14 +230,12 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         spec: SubjectAccessReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "authorization.k8s.io/v1",
-                "kind": "LocalSubjectAccessReview",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="authorization.k8s.io/v1",
+            kind="LocalSubjectAccessReview",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
 
@@ -265,7 +263,7 @@ class SelfSubjectAccessReviewSpec(types.Object):
         resourceAttributes: ResourceAttributes = None,
         nonResourceAttributes: NonResourceAttributes = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__resourceAttributes = resourceAttributes
         self.__nonResourceAttributes = nonResourceAttributes
 
@@ -311,13 +309,11 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
         spec: SelfSubjectAccessReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "authorization.k8s.io/v1",
-                "kind": "SelfSubjectAccessReview",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="authorization.k8s.io/v1",
+            kind="SelfSubjectAccessReview",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else SelfSubjectAccessReviewSpec()
 
@@ -338,7 +334,7 @@ class SelfSubjectRulesReviewSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, namespace: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
 
     @typechecked
@@ -372,13 +368,11 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         spec: SelfSubjectRulesReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "authorization.k8s.io/v1",
-                "kind": "SelfSubjectRulesReview",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="authorization.k8s.io/v1",
+            kind="SelfSubjectRulesReview",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else SelfSubjectRulesReviewSpec()
 
@@ -407,13 +401,11 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
         spec: SubjectAccessReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "authorization.k8s.io/v1",
-                "kind": "SubjectAccessReview",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="authorization.k8s.io/v1",
+            kind="SubjectAccessReview",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else SubjectAccessReviewSpec()
 

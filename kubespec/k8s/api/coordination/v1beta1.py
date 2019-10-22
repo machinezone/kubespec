@@ -24,7 +24,7 @@ class LeaseSpec(types.Object):
         renewTime: "base.MicroTime" = None,
         leaseTransitions: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__holderIdentity = holderIdentity
         self.__leaseDurationSeconds = leaseDurationSeconds
         self.__acquireTime = acquireTime
@@ -94,14 +94,12 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
         spec: LeaseSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "coordination.k8s.io/v1beta1",
-                "kind": "Lease",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="coordination.k8s.io/v1beta1",
+            kind="Lease",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else LeaseSpec()
 

@@ -17,7 +17,7 @@ class ServiceReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, namespace: str = None, name: str = None, port: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__port = port if port is not None else 443
@@ -69,7 +69,7 @@ class APIServiceSpec(types.Object):
         groupPriorityMinimum: int = 0,
         versionPriority: int = 0,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__service = service
         self.__group = group
         self.__version = version
@@ -169,13 +169,11 @@ class APIService(base.TypedObject, base.MetadataObject):
         spec: APIServiceSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apiregistration.k8s.io/v1beta1",
-                "kind": "APIService",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apiregistration.k8s.io/v1beta1",
+            kind="APIService",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else APIServiceSpec()
 

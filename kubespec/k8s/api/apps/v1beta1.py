@@ -88,14 +88,12 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         revision: int = 0,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apps/v1beta1",
-                "kind": "ControllerRevision",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apps/v1beta1",
+            kind="ControllerRevision",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__data = data if data is not None else runtime.RawExtension()
         self.__revision = revision
@@ -127,7 +125,7 @@ class RollingUpdateDeployment(types.Object):
     def __init__(
         self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else "25%"
         self.__maxSurge = maxSurge if maxSurge is not None else "25%"
 
@@ -181,7 +179,7 @@ class DeploymentStrategy(types.Object):
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
         rollingUpdate: RollingUpdateDeployment = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__rollingUpdate = (
             rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
@@ -228,7 +226,7 @@ class DeploymentSpec(types.Object):
         paused: bool = None,
         progressDeadlineSeconds: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else corev1.PodTemplateSpec()
@@ -335,14 +333,12 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         spec: DeploymentSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apps/v1beta1",
-                "kind": "Deployment",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apps/v1beta1",
+            kind="Deployment",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else DeploymentSpec()
 
@@ -364,7 +360,7 @@ class RollbackConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, revision: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__revision = revision
 
     @typechecked
@@ -392,7 +388,7 @@ class DeploymentRollback(base.TypedObject):
         updatedAnnotations: Dict[str, str] = None,
         rollbackTo: RollbackConfig = None,
     ):
-        super().__init__(**{"apiVersion": "apps/v1beta1", "kind": "DeploymentRollback"})
+        super().__init__(apiVersion="apps/v1beta1", kind="DeploymentRollback")
         self.__name = name
         self.__updatedAnnotations = (
             updatedAnnotations if updatedAnnotations is not None else {}
@@ -432,7 +428,7 @@ class RollingUpdateStatefulSetStrategy(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, partition: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__partition = partition
 
     @typechecked
@@ -455,7 +451,7 @@ class ScaleSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas
 
     @typechecked
@@ -485,14 +481,12 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         spec: ScaleSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apps/v1beta1",
-                "kind": "Scale",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apps/v1beta1",
+            kind="Scale",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ScaleSpec()
 
@@ -520,7 +514,7 @@ class StatefulSetUpdateStrategy(types.Object):
         type: StatefulSetUpdateStrategyType = StatefulSetUpdateStrategyType["OnDelete"],
         rollingUpdate: RollingUpdateStatefulSetStrategy = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__rollingUpdate = rollingUpdate
 
@@ -565,7 +559,7 @@ class StatefulSetSpec(types.Object):
         updateStrategy: StatefulSetUpdateStrategy = None,
         revisionHistoryLimit: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else corev1.PodTemplateSpec()
@@ -711,14 +705,12 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: StatefulSetSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apps/v1beta1",
-                "kind": "StatefulSet",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apps/v1beta1",
+            kind="StatefulSet",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else StatefulSetSpec()
 

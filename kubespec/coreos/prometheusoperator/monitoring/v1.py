@@ -24,7 +24,7 @@ class BasicAuth(types.Object):
         username: "corev1.SecretKeySelector" = None,
         password: "corev1.SecretKeySelector" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__username = (
             username if username is not None else corev1.SecretKeySelector()
         )
@@ -64,7 +64,7 @@ class TLSConfig(types.Object):
         serverName: str = None,
         insecureSkipVerify: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__caFile = caFile
         self.__certFile = certFile
         self.__keyFile = keyFile
@@ -130,7 +130,7 @@ class APIServerConfig(types.Object):
         bearerTokenFile: str = None,
         tlsConfig: TLSConfig = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__host = host
         self.__basicAuth = basicAuth
         self.__bearerToken = bearerToken
@@ -198,7 +198,7 @@ class AlertmanagerEndpoints(types.Object):
         tlsConfig: TLSConfig = None,
         bearerTokenFile: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__port = port if port is not None else 0
@@ -272,7 +272,7 @@ class AlertingSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, alertmanagers: Dict[str, AlertmanagerEndpoints] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__alertmanagers = alertmanagers if alertmanagers is not None else {}
 
     @typechecked
@@ -298,7 +298,7 @@ class StorageSpec(types.Object):
         emptyDir: "corev1.EmptyDirVolumeSource" = None,
         volumeClaimTemplate: "corev1.PersistentVolumeClaim" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__emptyDir = emptyDir
         self.__volumeClaimTemplate = (
             volumeClaimTemplate
@@ -371,7 +371,7 @@ class AlertmanagerSpec(types.Object):
         additionalPeers: List[str] = None,
         portName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podMetadata = podMetadata
         self.__image = image
         self.__version = version
@@ -724,14 +724,12 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
         spec: AlertmanagerSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "monitoring.coreos.com/v1",
-                "kind": "Alertmanager",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="monitoring.coreos.com/v1",
+            kind="Alertmanager",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else AlertmanagerSpec()
 
@@ -765,7 +763,7 @@ class RelabelConfig(types.Object):
         replacement: str = None,
         action: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__sourceLabels = sourceLabels if sourceLabels is not None else []
         self.__separator = separator
         self.__targetLabel = targetLabel
@@ -861,7 +859,7 @@ class Endpoint(types.Object):
         relabelings: List[RelabelConfig] = None,
         proxyUrl: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__port = port
         self.__targetPort = targetPort
         self.__path = path
@@ -1007,7 +1005,7 @@ class NamespaceSelector(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, any: bool = None, matchNames: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__any = any
         self.__matchNames = matchNames if matchNames is not None else []
 
@@ -1052,7 +1050,7 @@ class PodMetricsEndpoint(types.Object):
         relabelings: List[RelabelConfig] = None,
         proxyUrl: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__port = port
         self.__targetPort = targetPort
         self.__path = path
@@ -1177,7 +1175,7 @@ class PodMonitorSpec(types.Object):
         namespaceSelector: NamespaceSelector = None,
         sampleLimit: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__jobLabel = jobLabel
         self.__podTargetLabels = podTargetLabels if podTargetLabels is not None else []
         self.__podMetricsEndpoints = (
@@ -1254,14 +1252,12 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
         spec: PodMonitorSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "monitoring.coreos.com/v1",
-                "kind": "PodMonitor",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="monitoring.coreos.com/v1",
+            kind="PodMonitor",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodMonitorSpec()
 
@@ -1289,7 +1285,7 @@ class QuerySpec(types.Object):
         maxSamples: int = None,
         timeout: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__lookbackDelta = lookbackDelta
         self.__maxConcurrency = maxConcurrency
         self.__maxSamples = maxSamples
@@ -1349,7 +1345,7 @@ class RemoteReadSpec(types.Object):
         tlsConfig: TLSConfig = None,
         proxyUrl: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__requiredMatchers = (
             requiredMatchers if requiredMatchers is not None else {}
@@ -1457,7 +1453,7 @@ class QueueConfig(types.Object):
         minBackoff: str = None,
         maxBackoff: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__capacity = capacity
         self.__minShards = minShards
         self.__maxShards = maxShards
@@ -1553,7 +1549,7 @@ class RemoteWriteSpec(types.Object):
         proxyUrl: str = None,
         queueConfig: QueueConfig = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__remoteTimeout = remoteTimeout
         self.__writeRelabelConfigs = (
@@ -1655,7 +1651,7 @@ class RulesAlert(types.Object):
         forGracePeriod: str = None,
         resendDelay: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__forOutageTolerance = forOutageTolerance
         self.__forGracePeriod = forGracePeriod
         self.__resendDelay = resendDelay
@@ -1696,7 +1692,7 @@ class Rules(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, alert: RulesAlert = None):
-        super().__init__(**{})
+        super().__init__()
         self.__alert = alert if alert is not None else RulesAlert()
 
     @typechecked
@@ -1725,7 +1721,7 @@ class ThanosSpec(types.Object):
         resources: "corev1.ResourceRequirements" = None,
         objectStorageConfig: "corev1.SecretKeySelector" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__image = image
         self.__version = version
         self.__tag = tag
@@ -1869,7 +1865,7 @@ class PrometheusSpec(types.Object):
         priorityClassName: str = None,
         portName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podMetadata = podMetadata
         self.__serviceMonitorSelector = serviceMonitorSelector
         self.__serviceMonitorNamespaceSelector = serviceMonitorNamespaceSelector
@@ -2506,14 +2502,12 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
         spec: PrometheusSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "monitoring.coreos.com/v1",
-                "kind": "Prometheus",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="monitoring.coreos.com/v1",
+            kind="Prometheus",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PrometheusSpec()
 
@@ -2544,7 +2538,7 @@ class Rule(types.Object):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__record = record
         self.__alert = alert
         self.__expr = expr if expr is not None else 0
@@ -2604,7 +2598,7 @@ class RuleGroup(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", interval: str = None, rules: List[Rule] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__interval = interval
         self.__rules = rules if rules is not None else []
@@ -2639,7 +2633,7 @@ class PrometheusRuleSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, groups: Dict[str, RuleGroup] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__groups = groups if groups is not None else {}
 
     @typechecked
@@ -2670,14 +2664,12 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
         spec: PrometheusRuleSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "monitoring.coreos.com/v1",
-                "kind": "PrometheusRule",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="monitoring.coreos.com/v1",
+            kind="PrometheusRule",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PrometheusRuleSpec()
 
@@ -2708,7 +2700,7 @@ class ServiceMonitorSpec(types.Object):
         namespaceSelector: NamespaceSelector = None,
         sampleLimit: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__jobLabel = jobLabel
         self.__targetLabels = targetLabels if targetLabels is not None else []
         self.__podTargetLabels = podTargetLabels if podTargetLabels is not None else []
@@ -2792,14 +2784,12 @@ class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
         spec: ServiceMonitorSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "monitoring.coreos.com/v1",
-                "kind": "ServiceMonitor",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="monitoring.coreos.com/v1",
+            kind="ServiceMonitor",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ServiceMonitorSpec()
 

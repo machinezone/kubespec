@@ -67,7 +67,7 @@ class ObjectReference(types.Object):
         resourceVersion: str = None,
         subresource: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__resource = resource
         self.__namespace = namespace
         self.__name = name
@@ -165,7 +165,7 @@ class Event(base.TypedObject):
         stageTimestamp: "base.MicroTime" = None,
         annotations: Dict[str, str] = None,
     ):
-        super().__init__(**{"apiVersion": "audit.k8s.io/v1", "kind": "Event"})
+        super().__init__(apiVersion="audit.k8s.io/v1", kind="Event")
         self.__level = level
         self.__auditID = auditID
         self.__stage = stage
@@ -338,7 +338,7 @@ class GroupResources(types.Object):
         resources: List[str] = None,
         resourceNames: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__group = group
         self.__resources = resources if resources is not None else []
         self.__resourceNames = resourceNames if resourceNames is not None else []
@@ -404,7 +404,7 @@ class PolicyRule(types.Object):
         nonResourceURLs: List[str] = None,
         omitStages: List[Stage] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__level = level
         self.__users = users if users is not None else []
         self.__userGroups = userGroups if userGroups is not None else []
@@ -510,14 +510,12 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         omitStages: List[Stage] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "audit.k8s.io/v1",
-                "kind": "Policy",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="audit.k8s.io/v1",
+            kind="Policy",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
         self.__omitStages = omitStages if omitStages is not None else []

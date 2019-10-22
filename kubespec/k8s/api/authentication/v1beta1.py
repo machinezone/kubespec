@@ -17,7 +17,7 @@ class TokenReviewSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, token: str = None, audiences: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__token = token
         self.__audiences = audiences if audiences is not None else []
 
@@ -61,13 +61,11 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         spec: TokenReviewSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "authentication.k8s.io/v1beta1",
-                "kind": "TokenReview",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="authentication.k8s.io/v1beta1",
+            kind="TokenReview",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else TokenReviewSpec()
 

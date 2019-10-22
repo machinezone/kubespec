@@ -21,10 +21,7 @@ class MetricListOptions(base.TypedObject):
     @typechecked
     def __init__(self, labelSelector: str = None, metricLabelSelector: str = None):
         super().__init__(
-            **{
-                "apiVersion": "custom.metrics.k8s.io/v1beta1",
-                "kind": "MetricListOptions",
-            }
+            apiVersion="custom.metrics.k8s.io/v1beta1", kind="MetricListOptions"
         )
         self.__labelSelector = labelSelector
         self.__metricLabelSelector = metricLabelSelector
@@ -65,9 +62,7 @@ class MetricValue(base.TypedObject):
         value: "resource.Quantity" = None,
         selector: "metav1.LabelSelector" = None,
     ):
-        super().__init__(
-            **{"apiVersion": "custom.metrics.k8s.io/v1beta1", "kind": "MetricValue"}
-        )
+        super().__init__(apiVersion="custom.metrics.k8s.io/v1beta1", kind="MetricValue")
         self.__describedObject = (
             describedObject if describedObject is not None else corev1.ObjectReference()
         )

@@ -17,7 +17,7 @@ class IngressBackend(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__serviceName = serviceName
         self.__servicePort = servicePort if servicePort is not None else 0
 
@@ -47,7 +47,7 @@ class HTTPIngressPath(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, backend: IngressBackend = None):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__backend = backend if backend is not None else IngressBackend()
 
@@ -88,7 +88,7 @@ class HTTPIngressRuleValue(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, paths: List[HTTPIngressPath] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__paths = paths if paths is not None else []
 
     @typechecked
@@ -112,7 +112,7 @@ class IngressRuleValue(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, http: HTTPIngressRuleValue = None):
-        super().__init__(**{})
+        super().__init__()
         self.__http = http
 
     @typechecked
@@ -135,7 +135,7 @@ class IngressRule(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
-        super().__init__(**{})
+        super().__init__()
         self.__host = host
         self.__ingressRuleValue = (
             ingressRuleValue if ingressRuleValue is not None else IngressRuleValue()
@@ -182,7 +182,7 @@ class IngressTLS(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, hosts: List[str] = None, secretName: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__hosts = hosts if hosts is not None else []
         self.__secretName = secretName
 
@@ -225,7 +225,7 @@ class IngressSpec(types.Object):
         tls: List[IngressTLS] = None,
         rules: List[IngressRule] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__backend = backend
         self.__tls = tls if tls is not None else []
         self.__rules = rules if rules is not None else []
@@ -284,14 +284,12 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         spec: IngressSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "networking.k8s.io/v1beta1",
-                "kind": "Ingress",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="networking.k8s.io/v1beta1",
+            kind="Ingress",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else IngressSpec()
 

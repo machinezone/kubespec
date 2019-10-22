@@ -44,12 +44,10 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
         spec: "batchv1.JobSpec" = None,
     ):
         super().__init__(
-            **{
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else batchv1.JobSpec()
 
@@ -81,7 +79,7 @@ class CronJobSpec(types.Object):
         successfulJobsHistoryLimit: int = None,
         failedJobsHistoryLimit: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__schedule = schedule
         self.__startingDeadlineSeconds = startingDeadlineSeconds
         self.__concurrencyPolicy = concurrencyPolicy
@@ -181,14 +179,12 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         spec: CronJobSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "batch/v1beta1",
-                "kind": "CronJob",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="batch/v1beta1",
+            kind="CronJob",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else CronJobSpec()
 
@@ -219,14 +215,12 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
         template: JobTemplateSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "batch/v1beta1",
-                "kind": "JobTemplate",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="batch/v1beta1",
+            kind="JobTemplate",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__template = template if template is not None else JobTemplateSpec()
 

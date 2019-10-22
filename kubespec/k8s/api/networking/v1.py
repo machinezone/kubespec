@@ -34,7 +34,7 @@ class IPBlock(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, cidr: str = "", except_: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__cidr = cidr
         self.__except_ = except_ if except_ is not None else []
 
@@ -73,7 +73,7 @@ class NetworkPolicyPeer(types.Object):
         namespaceSelector: "metav1.LabelSelector" = None,
         ipBlock: IPBlock = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podSelector = podSelector
         self.__namespaceSelector = namespaceSelector
         self.__ipBlock = ipBlock
@@ -126,7 +126,7 @@ class NetworkPolicyPort(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__protocol = protocol if protocol is not None else corev1.Protocol["TCP"]
         self.__port = port
 
@@ -163,7 +163,7 @@ class NetworkPolicyEgressRule(types.Object):
     def __init__(
         self, ports: List[NetworkPolicyPort] = None, to: List[NetworkPolicyPeer] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ports = ports if ports is not None else []
         self.__to = to if to is not None else []
 
@@ -207,7 +207,7 @@ class NetworkPolicyIngressRule(types.Object):
         ports: List[NetworkPolicyPort] = None,
         from_: List[NetworkPolicyPeer] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ports = ports if ports is not None else []
         self.__from_ = from_ if from_ is not None else []
 
@@ -252,7 +252,7 @@ class NetworkPolicySpec(types.Object):
         egress: List[NetworkPolicyEgressRule] = None,
         policyTypes: List[PolicyType] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podSelector = (
             podSelector if podSelector is not None else metav1.LabelSelector()
         )
@@ -336,14 +336,12 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         spec: NetworkPolicySpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "networking.k8s.io/v1",
-                "kind": "NetworkPolicy",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="networking.k8s.io/v1",
+            kind="NetworkPolicy",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else NetworkPolicySpec()
 

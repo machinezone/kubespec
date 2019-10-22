@@ -107,7 +107,7 @@ class Rule(types.Object):
         resources: List[str] = None,
         scope: ScopeType = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__apiGroups = apiGroups if apiGroups is not None else []
         self.__apiVersions = apiVersions if apiVersions is not None else []
         self.__resources = resources if resources is not None else []
@@ -182,7 +182,7 @@ class RuleWithOperations(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, operations: List[OperationType] = None, rule: Rule = None):
-        super().__init__(**{})
+        super().__init__()
         self.__operations = operations if operations is not None else []
         self.__rule = rule if rule is not None else Rule()
 
@@ -218,7 +218,7 @@ class ServiceReference(types.Object):
     def __init__(
         self, namespace: str = "", name: str = "", path: str = None, port: int = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__path = path
@@ -273,7 +273,7 @@ class WebhookClientConfig(types.Object):
     def __init__(
         self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__service = service
         self.__caBundle = caBundle if caBundle is not None else b""
@@ -354,7 +354,7 @@ class MutatingWebhook(types.Object):
         admissionReviewVersions: List[str] = None,
         reinvocationPolicy: ReinvocationPolicyType = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__clientConfig = (
             clientConfig if clientConfig is not None else WebhookClientConfig()
@@ -590,13 +590,11 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         webhooks: Dict[str, MutatingWebhook] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "admissionregistration.k8s.io/v1",
-                "kind": "MutatingWebhookConfiguration",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="admissionregistration.k8s.io/v1",
+            kind="MutatingWebhookConfiguration",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__webhooks = webhooks if webhooks is not None else {}
 
@@ -631,7 +629,7 @@ class ValidatingWebhook(types.Object):
         timeoutSeconds: int = None,
         admissionReviewVersions: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__clientConfig = (
             clientConfig if clientConfig is not None else WebhookClientConfig()
@@ -838,13 +836,11 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         webhooks: Dict[str, ValidatingWebhook] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "admissionregistration.k8s.io/v1",
-                "kind": "ValidatingWebhookConfiguration",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="admissionregistration.k8s.io/v1",
+            kind="ValidatingWebhookConfiguration",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__webhooks = webhooks if webhooks is not None else {}
 

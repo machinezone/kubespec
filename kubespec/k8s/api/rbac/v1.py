@@ -18,7 +18,7 @@ class AggregationRule(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, clusterRoleSelectors: List["metav1.LabelSelector"] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__clusterRoleSelectors = (
             clusterRoleSelectors if clusterRoleSelectors is not None else []
         )
@@ -55,7 +55,7 @@ class PolicyRule(types.Object):
         resourceNames: List[str] = None,
         nonResourceURLs: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__verbs = verbs if verbs is not None else []
         self.__apiGroups = apiGroups if apiGroups is not None else []
         self.__resources = resources if resources is not None else []
@@ -123,13 +123,11 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         aggregationRule: AggregationRule = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "rbac.authorization.k8s.io/v1",
-                "kind": "ClusterRole",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="rbac.authorization.k8s.io/v1",
+            kind="ClusterRole",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
         self.__aggregationRule = aggregationRule
@@ -167,7 +165,7 @@ class RoleRef(types.Object):
         kind: str = "",
         name: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__apiGroup = apiGroup
         self.__kind = kind
         self.__name = name
@@ -211,7 +209,7 @@ class Subject(types.Object):
         name: str = "",
         namespace: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__kind = kind
         self.__apiGroup = apiGroup
         self.__name = name
@@ -271,13 +269,11 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         roleRef: RoleRef = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "rbac.authorization.k8s.io/v1",
-                "kind": "ClusterRoleBinding",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="rbac.authorization.k8s.io/v1",
+            kind="ClusterRoleBinding",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__subjects = subjects if subjects is not None else {}
         self.__roleRef = roleRef if roleRef is not None else RoleRef()
@@ -317,14 +313,12 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         rules: List[PolicyRule] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "rbac.authorization.k8s.io/v1",
-                "kind": "Role",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="rbac.authorization.k8s.io/v1",
+            kind="Role",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
 
@@ -357,14 +351,12 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         roleRef: RoleRef = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "rbac.authorization.k8s.io/v1",
-                "kind": "RoleBinding",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="rbac.authorization.k8s.io/v1",
+            kind="RoleBinding",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__subjects = subjects if subjects is not None else {}
         self.__roleRef = roleRef if roleRef is not None else RoleRef()

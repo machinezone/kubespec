@@ -29,13 +29,11 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         preemptionPolicy: corev1.PreemptionPolicy = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "scheduling.k8s.io/v1",
-                "kind": "PriorityClass",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="scheduling.k8s.io/v1",
+            kind="PriorityClass",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__value = value
         self.__globalDefault = globalDefault

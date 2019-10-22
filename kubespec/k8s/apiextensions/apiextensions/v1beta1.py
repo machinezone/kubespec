@@ -42,7 +42,7 @@ class ConversionRequest(types.Object):
         desiredAPIVersion: str = "",
         objects: List["runtime.RawExtension"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__uid = uid
         self.__desiredAPIVersion = desiredAPIVersion
         self.__objects = objects if objects is not None else []
@@ -87,7 +87,7 @@ class ConversionResponse(types.Object):
         convertedObjects: List["runtime.RawExtension"] = None,
         result: "metav1.Status" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__uid = uid
         self.__convertedObjects = (
             convertedObjects if convertedObjects is not None else []
@@ -137,7 +137,7 @@ class ConversionReview(base.TypedObject):
         self, request: ConversionRequest = None, response: ConversionResponse = None
     ):
         super().__init__(
-            **{"apiVersion": "apiextensions.k8s.io/v1beta1", "kind": "ConversionReview"}
+            apiVersion="apiextensions.k8s.io/v1beta1", kind="ConversionReview"
         )
         self.__request = request
         self.__response = response
@@ -177,7 +177,7 @@ class CustomResourceColumnDefinition(types.Object):
         priority: int = None,
         jSONPath: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__type = type
         self.__format = format
@@ -249,7 +249,7 @@ class ServiceReference(types.Object):
     def __init__(
         self, namespace: str = "", name: str = "", path: str = None, port: int = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__path = path
@@ -302,7 +302,7 @@ class WebhookClientConfig(types.Object):
     def __init__(
         self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__service = service
         self.__caBundle = caBundle if caBundle is not None else b""
@@ -375,7 +375,7 @@ class CustomResourceConversion(types.Object):
         webhookClientConfig: WebhookClientConfig = None,
         conversionReviewVersions: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__strategy = strategy
         self.__webhookClientConfig = webhookClientConfig
         self.__conversionReviewVersions = (
@@ -438,7 +438,7 @@ class CustomResourceDefinitionNames(types.Object):
         listKind: str = None,
         categories: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__plural = plural
         self.__singular = singular
         self.__shortNames = shortNames if shortNames is not None else []
@@ -516,7 +516,7 @@ class CustomResourceSubresourceScale(types.Object):
         statusReplicasPath: str = "",
         labelSelectorPath: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__specReplicasPath = specReplicasPath
         self.__statusReplicasPath = statusReplicasPath
         self.__labelSelectorPath = labelSelectorPath
@@ -582,7 +582,7 @@ class CustomResourceSubresources(types.Object):
         status: CustomResourceSubresourceStatus = None,
         scale: CustomResourceSubresourceScale = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__status = status
         self.__scale = scale
 
@@ -616,7 +616,7 @@ class ExternalDocumentation(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, description: str = None, url: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__description = description
         self.__url = url
 
@@ -646,7 +646,7 @@ class JSON(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, raw: bytes = None):
-        super().__init__(**{})
+        super().__init__()
         self.__raw = raw if raw is not None else b""
 
     @typechecked
@@ -710,7 +710,7 @@ class JSONSchemaProps(types.Object):
         xKubernetesListMapKeys: List[str] = None,
         xKubernetesListType: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__id = id
         self.__schema = schema
         self.__ref = ref
@@ -1134,7 +1134,7 @@ class CustomResourceValidation(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, openAPIV3Schema: JSONSchemaProps = None):
-        super().__init__(**{})
+        super().__init__()
         self.__openAPIV3Schema = openAPIV3Schema
 
     @typechecked
@@ -1164,7 +1164,7 @@ class CustomResourceDefinitionVersion(types.Object):
         subresources: CustomResourceSubresources = None,
         additionalPrinterColumns: Dict[str, CustomResourceColumnDefinition] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__served = served
         self.__storage = storage
@@ -1258,7 +1258,7 @@ class CustomResourceDefinitionSpec(types.Object):
         additionalPrinterColumns: Dict[str, CustomResourceColumnDefinition] = None,
         conversion: CustomResourceConversion = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__group = group
         self.__names = names if names is not None else CustomResourceDefinitionNames()
         self.__scope = scope
@@ -1383,13 +1383,11 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
         spec: CustomResourceDefinitionSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "apiextensions.k8s.io/v1beta1",
-                "kind": "CustomResourceDefinition",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="apiextensions.k8s.io/v1beta1",
+            kind="CustomResourceDefinition",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else CustomResourceDefinitionSpec()
 

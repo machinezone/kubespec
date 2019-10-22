@@ -28,7 +28,7 @@ class EndpointConditions(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, ready: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__ready = ready
 
     @typechecked
@@ -60,7 +60,7 @@ class Endpoint(types.Object):
         targetRef: "corev1.ObjectReference" = None,
         topology: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__addresses = addresses if addresses is not None else []
         self.__conditions = (
             conditions if conditions is not None else EndpointConditions()
@@ -142,7 +142,7 @@ class EndpointPort(types.Object):
     def __init__(
         self, name: str = None, protocol: corev1.Protocol = None, port: int = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__protocol = protocol if protocol is not None else corev1.Protocol["TCP"]
         self.__port = port
@@ -206,14 +206,12 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         ports: List[EndpointPort] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "discovery.k8s.io/v1alpha1",
-                "kind": "EndpointSlice",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="discovery.k8s.io/v1alpha1",
+            kind="EndpointSlice",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__addressType = (
             addressType if addressType is not None else AddressType["IP"]

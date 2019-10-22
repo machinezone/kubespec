@@ -27,12 +27,10 @@ class SecretTemplateSpec(base.NamespacedMetadataObject):
         type: corev1.SecretType = None,
     ):
         super().__init__(
-            **{
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__type = type
 
@@ -60,7 +58,7 @@ class SealedSecretSpec(types.Object):
         data: bytes = None,
         encryptedData: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__template = template if template is not None else SecretTemplateSpec()
         self.__data = data if data is not None else b""
         self.__encryptedData = encryptedData if encryptedData is not None else {}
@@ -108,14 +106,12 @@ class SealedSecret(base.TypedObject, base.NamespacedMetadataObject):
         spec: SealedSecretSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "bitnami.com/v1alpha1",
-                "kind": "SealedSecret",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="bitnami.com/v1alpha1",
+            kind="SealedSecret",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else SealedSecretSpec()
 

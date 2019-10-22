@@ -62,7 +62,7 @@ class CrossVersionObjectReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__kind = kind
         self.__name = name
         self.__apiVersion = apiVersion
@@ -100,7 +100,7 @@ class MetricIdentifier(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", selector: "metav1.LabelSelector" = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__selector = selector
 
@@ -138,7 +138,7 @@ class MetricTarget(types.Object):
         averageValue: "resource.Quantity" = None,
         averageUtilization: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__value = value
         self.__averageValue = averageValue
@@ -192,7 +192,7 @@ class ExternalMetricSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, metric: MetricIdentifier = None, target: MetricTarget = None):
-        super().__init__(**{})
+        super().__init__()
         self.__metric = metric if metric is not None else MetricIdentifier()
         self.__target = target if target is not None else MetricTarget()
 
@@ -227,7 +227,7 @@ class ObjectMetricSource(types.Object):
         target: MetricTarget = None,
         metric: MetricIdentifier = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__describedObject = (
             describedObject
             if describedObject is not None
@@ -270,7 +270,7 @@ class PodsMetricSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, metric: MetricIdentifier = None, target: MetricTarget = None):
-        super().__init__(**{})
+        super().__init__()
         self.__metric = metric if metric is not None else MetricIdentifier()
         self.__target = target if target is not None else MetricTarget()
 
@@ -305,7 +305,7 @@ class ResourceMetricSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: corev1.ResourceName = None, target: MetricTarget = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__target = target if target is not None else MetricTarget()
 
@@ -342,7 +342,7 @@ class MetricSpec(types.Object):
         resource: ResourceMetricSource = None,
         external: ExternalMetricSource = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__object = object
         self.__pods = pods
@@ -417,7 +417,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
         maxReplicas: int = 0,
         metrics: List[MetricSpec] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__scaleTargetRef = (
             scaleTargetRef
             if scaleTargetRef is not None
@@ -491,14 +491,12 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         spec: HorizontalPodAutoscalerSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "autoscaling/v2beta2",
-                "kind": "HorizontalPodAutoscaler",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="autoscaling/v2beta2",
+            kind="HorizontalPodAutoscaler",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else HorizontalPodAutoscalerSpec()
 

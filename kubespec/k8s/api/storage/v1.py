@@ -51,13 +51,11 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         allowedTopologies: List["corev1.TopologySelectorTerm"] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1",
-                "kind": "StorageClass",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1",
+            kind="StorageClass",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__provisioner = provisioner
         self.__parameters = parameters if parameters is not None else {}
@@ -167,7 +165,7 @@ class VolumeAttachmentSource(types.Object):
         persistentVolumeName: str = None,
         inlineVolumeSpec: "corev1.PersistentVolumeSpec" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__persistentVolumeName = persistentVolumeName
         self.__inlineVolumeSpec = inlineVolumeSpec
 
@@ -212,7 +210,7 @@ class VolumeAttachmentSpec(types.Object):
         source: VolumeAttachmentSource = None,
         nodeName: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__attacher = attacher
         self.__source = source if source is not None else VolumeAttachmentSource()
         self.__nodeName = nodeName
@@ -260,13 +258,11 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         spec: VolumeAttachmentSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1",
-                "kind": "VolumeAttachment",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1",
+            kind="VolumeAttachment",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else VolumeAttachmentSpec()
 

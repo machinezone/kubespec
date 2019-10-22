@@ -20,7 +20,7 @@ class AdmissionPluginConfiguration(types.Object):
     def __init__(
         self, name: str = "", path: str = "", configuration: "runtime.Unknown" = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__path = path
         self.__configuration = configuration
@@ -61,10 +61,7 @@ class AdmissionConfiguration(base.TypedObject):
     @typechecked
     def __init__(self, plugins: Dict[str, AdmissionPluginConfiguration] = None):
         super().__init__(
-            **{
-                "apiVersion": "apiserver.k8s.io/v1alpha1",
-                "kind": "AdmissionConfiguration",
-            }
+            apiVersion="apiserver.k8s.io/v1alpha1", kind="AdmissionConfiguration"
         )
         self.__plugins = plugins if plugins is not None else {}
 
@@ -91,7 +88,7 @@ class HTTPConnectConfig(types.Object):
         clientKey: str = None,
         clientCert: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__caBundle = caBundle
         self.__clientKey = clientKey
@@ -149,7 +146,7 @@ class Connection(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, type: str = "", httpConnect: HTTPConnectConfig = None):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__httpConnect = httpConnect
 
@@ -182,7 +179,7 @@ class EgressSelection(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", connection: Connection = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__connection = connection if connection is not None else Connection()
 
@@ -213,10 +210,7 @@ class EgressSelectorConfiguration(base.TypedObject):
     @typechecked
     def __init__(self, egressSelections: Dict[str, EgressSelection] = None):
         super().__init__(
-            **{
-                "apiVersion": "apiserver.k8s.io/v1alpha1",
-                "kind": "EgressSelectorConfiguration",
-            }
+            apiVersion="apiserver.k8s.io/v1alpha1", kind="EgressSelectorConfiguration"
         )
         self.__egressSelections = (
             egressSelections if egressSelections is not None else {}

@@ -19,7 +19,7 @@ class Overhead(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, podFixed: Dict[corev1.ResourceName, "resource.Quantity"] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__podFixed = podFixed if podFixed is not None else {}
 
     @typechecked
@@ -50,7 +50,7 @@ class Scheduling(types.Object):
         nodeSelector: Dict[str, str] = None,
         tolerations: List["corev1.Toleration"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
         self.__tolerations = tolerations if tolerations is not None else []
 
@@ -103,13 +103,11 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         scheduling: Scheduling = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "node.k8s.io/v1beta1",
-                "kind": "RuntimeClass",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="node.k8s.io/v1beta1",
+            kind="RuntimeClass",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__handler = handler
         self.__overhead = overhead

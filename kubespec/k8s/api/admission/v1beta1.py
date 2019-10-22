@@ -54,7 +54,7 @@ class AdmissionRequest(types.Object):
         dryRun: bool = None,
         options: "runtime.RawExtension" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__uid = uid
         self.__kind = kind if kind is not None else metav1.GroupVersionKind()
         self.__resource = (
@@ -240,7 +240,7 @@ class AdmissionResponse(types.Object):
         patchType: PatchType = None,
         auditAnnotations: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__uid = uid
         self.__allowed = allowed
         self.__status = status
@@ -314,9 +314,7 @@ class AdmissionReview(base.TypedObject):
     def __init__(
         self, request: AdmissionRequest = None, response: AdmissionResponse = None
     ):
-        super().__init__(
-            **{"apiVersion": "admission.k8s.io/v1beta1", "kind": "AdmissionReview"}
-        )
+        super().__init__(apiVersion="admission.k8s.io/v1beta1", kind="AdmissionReview")
         self.__request = request
         self.__response = response
 

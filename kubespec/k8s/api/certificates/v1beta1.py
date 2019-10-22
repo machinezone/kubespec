@@ -60,7 +60,7 @@ class CertificateSigningRequestSpec(types.Object):
         groups: List[str] = None,
         extra: Dict[str, List[str]] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__request = request if request is not None else b""
         self.__usages = usages if usages is not None else []
         self.__username = username
@@ -140,13 +140,11 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
         spec: CertificateSigningRequestSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "certificates.k8s.io/v1beta1",
-                "kind": "CertificateSigningRequest",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="certificates.k8s.io/v1beta1",
+            kind="CertificateSigningRequest",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else CertificateSigningRequestSpec()
 

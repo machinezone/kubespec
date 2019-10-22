@@ -26,7 +26,7 @@ class PodPresetSpec(types.Object):
         volumes: Dict[str, "corev1.Volume"] = None,
         volumeMounts: Dict[str, "corev1.VolumeMount"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__selector = selector if selector is not None else metav1.LabelSelector()
         self.__env = env if env is not None else {}
         self.__envFrom = envFrom if envFrom is not None else []
@@ -95,14 +95,12 @@ class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
         spec: PodPresetSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "settings.k8s.io/v1alpha1",
-                "kind": "PodPreset",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="settings.k8s.io/v1alpha1",
+            kind="PodPreset",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodPresetSpec()
 

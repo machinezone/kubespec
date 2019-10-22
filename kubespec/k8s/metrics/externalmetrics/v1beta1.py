@@ -28,10 +28,7 @@ class ExternalMetricValue(base.TypedObject):
         value: "resource.Quantity" = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "external.metrics.k8s.io/v1beta1",
-                "kind": "ExternalMetricValue",
-            }
+            apiVersion="external.metrics.k8s.io/v1beta1", kind="ExternalMetricValue"
         )
         self.__metricName = metricName
         self.__metricLabels = metricLabels if metricLabels is not None else {}

@@ -603,7 +603,7 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
         partition: int = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeID = volumeID
         self.__fsType = fsType
         self.__partition = partition
@@ -667,7 +667,7 @@ class NodeSelectorRequirement(types.Object):
         operator: NodeSelectorOperator = None,
         values: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__operator = operator
         self.__values = values if values is not None else []
@@ -716,7 +716,7 @@ class NodeSelectorTerm(types.Object):
         matchExpressions: List[NodeSelectorRequirement] = None,
         matchFields: List[NodeSelectorRequirement] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__matchExpressions = (
             matchExpressions if matchExpressions is not None else []
         )
@@ -755,7 +755,7 @@ class NodeSelector(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, nodeSelectorTerms: List[NodeSelectorTerm] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__nodeSelectorTerms = (
             nodeSelectorTerms if nodeSelectorTerms is not None else []
         )
@@ -779,7 +779,7 @@ class PreferredSchedulingTerm(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, weight: int = 0, preference: NodeSelectorTerm = None):
-        super().__init__(**{})
+        super().__init__()
         self.__weight = weight
         self.__preference = preference if preference is not None else NodeSelectorTerm()
 
@@ -814,7 +814,7 @@ class NodeAffinity(types.Object):
             PreferredSchedulingTerm
         ] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__requiredDuringSchedulingIgnoredDuringExecution = (
             requiredDuringSchedulingIgnoredDuringExecution
         )
@@ -891,7 +891,7 @@ class PodAffinityTerm(types.Object):
         namespaces: List[str] = None,
         topologyKey: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__labelSelector = labelSelector
         self.__namespaces = namespaces if namespaces is not None else []
         self.__topologyKey = topologyKey
@@ -935,7 +935,7 @@ class WeightedPodAffinityTerm(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, weight: int = 0, podAffinityTerm: PodAffinityTerm = None):
-        super().__init__(**{})
+        super().__init__()
         self.__weight = weight
         self.__podAffinityTerm = (
             podAffinityTerm if podAffinityTerm is not None else PodAffinityTerm()
@@ -973,7 +973,7 @@ class PodAffinity(types.Object):
             WeightedPodAffinityTerm
         ] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__requiredDuringSchedulingIgnoredDuringExecution = (
             requiredDuringSchedulingIgnoredDuringExecution
             if requiredDuringSchedulingIgnoredDuringExecution is not None
@@ -1052,7 +1052,7 @@ class PodAntiAffinity(types.Object):
             WeightedPodAffinityTerm
         ] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__requiredDuringSchedulingIgnoredDuringExecution = (
             requiredDuringSchedulingIgnoredDuringExecution
             if requiredDuringSchedulingIgnoredDuringExecution is not None
@@ -1130,7 +1130,7 @@ class Affinity(types.Object):
         podAffinity: PodAffinity = None,
         podAntiAffinity: PodAntiAffinity = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__nodeAffinity = nodeAffinity
         self.__podAffinity = podAffinity
         self.__podAntiAffinity = podAntiAffinity
@@ -1178,7 +1178,7 @@ class AzureDiskVolumeSource(types.Object):
         readOnly: bool = None,
         kind: AzureDataDiskKind = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__diskName = diskName
         self.__diskURI = diskURI
         self.__cachingMode = (
@@ -1256,7 +1256,7 @@ class AzureFilePersistentVolumeSource(types.Object):
         readOnly: bool = None,
         secretNamespace: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__secretName = secretName
         self.__shareName = shareName
         self.__readOnly = readOnly
@@ -1306,7 +1306,7 @@ class AzureFileVolumeSource(types.Object):
     def __init__(
         self, secretName: str = "", shareName: str = "", readOnly: bool = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__secretName = secretName
         self.__shareName = shareName
         self.__readOnly = readOnly
@@ -1354,7 +1354,7 @@ class ObjectReference(types.Object):
         resourceVersion: str = None,
         fieldPath: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__kind = kind
         self.__namespace = namespace
         self.__name = name
@@ -1451,14 +1451,12 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
         target: ObjectReference = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Binding",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Binding",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__target = target if target is not None else ObjectReference()
 
@@ -1481,7 +1479,7 @@ class SecretReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, namespace: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__namespace = namespace
 
@@ -1523,7 +1521,7 @@ class CSIPersistentVolumeSource(types.Object):
         nodePublishSecretRef: SecretReference = None,
         controllerExpandSecretRef: SecretReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
         self.__volumeHandle = volumeHandle
         self.__readOnly = readOnly
@@ -1651,7 +1649,7 @@ class LocalObjectReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
 
     @typechecked
@@ -1682,7 +1680,7 @@ class CSIVolumeSource(types.Object):
         volumeAttributes: Dict[str, str] = None,
         nodePublishSecretRef: LocalObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
         self.__readOnly = readOnly
         self.__fsType = fsType
@@ -1752,7 +1750,7 @@ class Capabilities(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, add: List[Capability] = None, drop: List[Capability] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__add = add if add is not None else []
         self.__drop = drop if drop is not None else []
 
@@ -1792,7 +1790,7 @@ class CephFSPersistentVolumeSource(types.Object):
         secretRef: SecretReference = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__monitors = monitors if monitors is not None else []
         self.__path = path
         self.__user = user
@@ -1873,7 +1871,7 @@ class CephFSVolumeSource(types.Object):
         secretRef: LocalObjectReference = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__monitors = monitors if monitors is not None else []
         self.__path = path
         self.__user = user
@@ -1954,7 +1952,7 @@ class CinderPersistentVolumeSource(types.Object):
         readOnly: bool = None,
         secretRef: SecretReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeID = volumeID
         self.__fsType = fsType
         self.__readOnly = readOnly
@@ -2018,7 +2016,7 @@ class CinderVolumeSource(types.Object):
         readOnly: bool = None,
         secretRef: LocalObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeID = volumeID
         self.__fsType = fsType
         self.__readOnly = readOnly
@@ -2073,7 +2071,7 @@ class ClientIPConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, timeoutSeconds: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__timeoutSeconds = timeoutSeconds
 
     @typechecked
@@ -2103,7 +2101,7 @@ class ComponentCondition(types.Object):
         message: str = None,
         error: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__status = status
         self.__message = message
@@ -2161,13 +2159,11 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
         conditions: List[ComponentCondition] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "ComponentStatus",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="ComponentStatus",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__conditions = conditions if conditions is not None else []
 
@@ -2199,14 +2195,12 @@ class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
         binaryData: Dict[str, bytes] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "ConfigMap",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="ConfigMap",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__data = data if data is not None else {}
         self.__binaryData = binaryData if binaryData is not None else {}
@@ -2254,7 +2248,7 @@ class ConfigMapEnvSource(types.Object):
     def __init__(
         self, localObjectReference: LocalObjectReference = None, optional: bool = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2293,7 +2287,7 @@ class ConfigMapKeySelector(types.Object):
         key: str = "",
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2342,7 +2336,7 @@ class ConfigMapNodeConfigSource(types.Object):
         resourceVersion: str = None,
         kubeletConfigKey: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__uid = uid
@@ -2402,7 +2396,7 @@ class KeyToPath(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, key: str = "", path: str = "", mode: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__path = path
         self.__mode = mode
@@ -2457,7 +2451,7 @@ class ConfigMapProjection(types.Object):
         items: List[KeyToPath] = None,
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2516,7 +2510,7 @@ class ConfigMapVolumeSource(types.Object):
         defaultMode: int = None,
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2584,7 +2578,7 @@ class ContainerPort(types.Object):
         protocol: Protocol = Protocol["TCP"],
         hostIP: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__hostPort = hostPort
         self.__containerPort = containerPort
@@ -2654,7 +2648,7 @@ class SecretEnvSource(types.Object):
     def __init__(
         self, localObjectReference: LocalObjectReference = None, optional: bool = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2693,7 +2687,7 @@ class EnvFromSource(types.Object):
         configMapRef: ConfigMapEnvSource = None,
         secretRef: SecretEnvSource = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__prefix = prefix
         self.__configMapRef = configMapRef
         self.__secretRef = secretRef
@@ -2733,7 +2727,7 @@ class ObjectFieldSelector(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, apiVersion: str = "v1", fieldPath: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__apiVersion = apiVersion
         self.__fieldPath = fieldPath
 
@@ -2768,7 +2762,7 @@ class ResourceFieldSelector(types.Object):
         resource: str = "",
         divisor: "resource.Quantity" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__containerName = containerName
         self.__resource = resource
         self.__divisor = divisor if divisor is not None else resource.Quantity()
@@ -2811,7 +2805,7 @@ class SecretKeySelector(types.Object):
         key: str = "",
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -2859,7 +2853,7 @@ class EnvVarSource(types.Object):
         configMapKeyRef: ConfigMapKeySelector = None,
         secretKeyRef: SecretKeySelector = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__fieldRef = fieldRef
         self.__resourceFieldRef = resourceFieldRef
         self.__configMapKeyRef = configMapKeyRef
@@ -2914,7 +2908,7 @@ class EnvVar(types.Object):
     def __init__(
         self, name: str = "", value: str = None, valueFrom: EnvVarSource = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__value = value
         self.__valueFrom = valueFrom
@@ -2960,7 +2954,7 @@ class ExecAction(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, command: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__command = command if command is not None else []
 
     @typechecked
@@ -2986,7 +2980,7 @@ class HTTPHeader(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", value: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__value = value
 
@@ -3022,7 +3016,7 @@ class HTTPGetAction(types.Object):
         scheme: URIScheme = URIScheme["HTTP"],
         httpHeaders: Dict[str, HTTPHeader] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__port = port if port is not None else 0
         self.__host = host
@@ -3083,7 +3077,7 @@ class TCPSocketAction(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, port: Union[int, str] = None, host: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__port = port if port is not None else 0
         self.__host = host
 
@@ -3121,7 +3115,7 @@ class Handler(types.Object):
         httpGet: HTTPGetAction = None,
         tcpSocket: TCPSocketAction = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__exec_ = exec_
         self.__httpGet = httpGet
         self.__tcpSocket = tcpSocket
@@ -3166,7 +3160,7 @@ class Lifecycle(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, postStart: Handler = None, preStop: Handler = None):
-        super().__init__(**{})
+        super().__init__()
         self.__postStart = postStart
         self.__preStop = preStop
 
@@ -3218,7 +3212,7 @@ class Probe(types.Object):
         successThreshold: int = 1,
         failureThreshold: int = 3,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__handler = handler if handler is not None else Handler()
         self.__initialDelaySeconds = initialDelaySeconds
         self.__timeoutSeconds = timeoutSeconds
@@ -3294,7 +3288,7 @@ class ResourceRequirements(types.Object):
         limits: Dict[ResourceName, "resource.Quantity"] = None,
         requests: Dict[ResourceName, "resource.Quantity"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__limits = limits if limits is not None else {}
         self.__requests = requests if requests is not None else {}
 
@@ -3333,7 +3327,7 @@ class SELinuxOptions(types.Object):
     def __init__(
         self, user: str = None, role: str = None, type: str = None, level: str = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__user = user
         self.__role = role
         self.__type = type
@@ -3387,7 +3381,7 @@ class WindowsSecurityContextOptions(types.Object):
         gmsaCredentialSpec: str = None,
         runAsUserName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__gmsaCredentialSpecName = gmsaCredentialSpecName
         self.__gmsaCredentialSpec = gmsaCredentialSpec
         self.__runAsUserName = runAsUserName
@@ -3449,7 +3443,7 @@ class SecurityContext(types.Object):
         allowPrivilegeEscalation: bool = None,
         procMount: ProcMountType = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__capabilities = capabilities
         self.__privileged = privileged
         self.__seLinuxOptions = seLinuxOptions
@@ -3582,7 +3576,7 @@ class VolumeDevice(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", devicePath: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__devicePath = devicePath
 
@@ -3619,7 +3613,7 @@ class VolumeMount(types.Object):
         mountPropagation: MountPropagationMode = None,
         subPathExpr: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__readOnly = readOnly
         self.__mountPath = mountPath
@@ -3720,7 +3714,7 @@ class Container(types.Object):
         stdinOnce: bool = None,
         tty: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__image = image
         self.__command = command if command is not None else []
@@ -4023,7 +4017,7 @@ class DownwardAPIVolumeFile(types.Object):
         resourceFieldRef: ResourceFieldSelector = None,
         mode: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__fieldRef = fieldRef
         self.__resourceFieldRef = resourceFieldRef
@@ -4079,7 +4073,7 @@ class DownwardAPIProjection(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, items: List[DownwardAPIVolumeFile] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__items = items if items is not None else []
 
     @typechecked
@@ -4104,7 +4098,7 @@ class DownwardAPIVolumeSource(types.Object):
     def __init__(
         self, items: List[DownwardAPIVolumeFile] = None, defaultMode: int = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__items = items if items is not None else []
         self.__defaultMode = defaultMode if defaultMode is not None else 420
 
@@ -4142,7 +4136,7 @@ class EmptyDirVolumeSource(types.Object):
     def __init__(
         self, medium: StorageMedium = None, sizeLimit: "resource.Quantity" = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__medium = medium
         self.__sizeLimit = sizeLimit
 
@@ -4187,7 +4181,7 @@ class EndpointAddress(types.Object):
         nodeName: str = None,
         targetRef: ObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ip = ip
         self.__hostname = hostname
         self.__nodeName = nodeName
@@ -4240,7 +4234,7 @@ class EndpointPort(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, port: int = 0, protocol: Protocol = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__port = port
         self.__protocol = protocol
@@ -4298,7 +4292,7 @@ class EndpointSubset(types.Object):
         notReadyAddresses: List[EndpointAddress] = None,
         ports: Dict[str, EndpointPort] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__addresses = addresses if addresses is not None else []
         self.__notReadyAddresses = (
             notReadyAddresses if notReadyAddresses is not None else []
@@ -4364,14 +4358,12 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
         subsets: List[EndpointSubset] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Endpoints",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Endpoints",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__subsets = subsets if subsets is not None else []
 
@@ -4427,7 +4419,7 @@ class EphemeralContainerCommon(types.Object):
         stdinOnce: bool = None,
         tty: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__image = image
         self.__command = command if command is not None else []
@@ -4707,7 +4699,7 @@ class EphemeralContainer(types.Object):
         ephemeralContainerCommon: EphemeralContainerCommon = None,
         targetContainerName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ephemeralContainerCommon = (
             ephemeralContainerCommon
             if ephemeralContainerCommon is not None
@@ -4759,14 +4751,12 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
         ephemeralContainers: List[EphemeralContainer] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "EphemeralContainers",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="EphemeralContainers",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__ephemeralContainers = (
             ephemeralContainers if ephemeralContainers is not None else []
@@ -4793,7 +4783,7 @@ class EventSeries(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, count: int = None, lastObservedTime: "base.MicroTime" = None):
-        super().__init__(**{})
+        super().__init__()
         self.__count = count
         self.__lastObservedTime = lastObservedTime
 
@@ -4823,7 +4813,7 @@ class EventSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, component: str = None, host: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__component = component
         self.__host = host
 
@@ -4875,14 +4865,12 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         reportingInstance: str = "",
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Event",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Event",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__involvedObject = (
             involvedObject if involvedObject is not None else ObjectReference()
@@ -5029,7 +5017,7 @@ class FCVolumeSource(types.Object):
         readOnly: bool = None,
         wwids: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__targetWWNs = targetWWNs if targetWWNs is not None else []
         self.__lun = lun
         self.__fsType = fsType
@@ -5100,7 +5088,7 @@ class FlexPersistentVolumeSource(types.Object):
         readOnly: bool = None,
         options: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
         self.__fsType = fsType
         self.__secretRef = secretRef
@@ -5172,7 +5160,7 @@ class FlexVolumeSource(types.Object):
         readOnly: bool = None,
         options: Dict[str, str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__driver = driver
         self.__fsType = fsType
         self.__secretRef = secretRef
@@ -5238,7 +5226,7 @@ class FlockerVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, datasetName: str = None, datasetUUID: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__datasetName = datasetName
         self.__datasetUUID = datasetUUID
 
@@ -5281,7 +5269,7 @@ class GCEPersistentDiskVolumeSource(types.Object):
         partition: int = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__pdName = pdName
         self.__fsType = fsType
         self.__partition = partition
@@ -5347,7 +5335,7 @@ class GlusterfsPersistentVolumeSource(types.Object):
         readOnly: bool = None,
         endpointsNamespace: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__endpoints = endpoints
         self.__path = path
         self.__readOnly = readOnly
@@ -5401,7 +5389,7 @@ class GlusterfsVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, endpoints: str = "", path: str = "", readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__endpoints = endpoints
         self.__path = path
         self.__readOnly = readOnly
@@ -5444,7 +5432,7 @@ class HostAlias(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, ip: str = None, hostnames: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__ip = ip
         self.__hostnames = hostnames if hostnames is not None else []
 
@@ -5476,7 +5464,7 @@ class HostPathVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, path: str = "", type: HostPathType = None):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__type = type
 
@@ -5525,7 +5513,7 @@ class ISCSIPersistentVolumeSource(types.Object):
         secretRef: SecretReference = None,
         initiatorName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__targetPortal = targetPortal
         self.__iqn = iqn
         self.__lun = lun
@@ -5659,7 +5647,7 @@ class ISCSIVolumeSource(types.Object):
         secretRef: LocalObjectReference = None,
         initiatorName: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__targetPortal = targetPortal
         self.__iqn = iqn
         self.__lun = lun
@@ -5786,7 +5774,7 @@ class LimitRangeItem(types.Object):
         defaultRequest: Dict[ResourceName, "resource.Quantity"] = None,
         maxLimitRequestRatio: Dict[ResourceName, "resource.Quantity"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__type = type
         self.__max = max if max is not None else {}
         self.__min = min if min is not None else {}
@@ -5865,7 +5853,7 @@ class LimitRangeSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, limits: List[LimitRangeItem] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__limits = limits if limits is not None else []
 
     @typechecked
@@ -5894,14 +5882,12 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
         spec: LimitRangeSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "LimitRange",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="LimitRange",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else LimitRangeSpec()
 
@@ -5924,7 +5910,7 @@ class LocalVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, path: str = "", fsType: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__path = path
         self.__fsType = fsType
 
@@ -5959,7 +5945,7 @@ class NFSVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, server: str = "", path: str = "", readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__server = server
         self.__path = path
         self.__readOnly = readOnly
@@ -6002,7 +5988,7 @@ class NamespaceSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, finalizers: List[FinalizerName] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__finalizers = finalizers if finalizers is not None else []
 
     @typechecked
@@ -6033,13 +6019,11 @@ class Namespace(base.TypedObject, base.MetadataObject):
         spec: NamespaceSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Namespace",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Namespace",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else NamespaceSpec()
 
@@ -6062,7 +6046,7 @@ class NodeConfigSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, configMap: ConfigMapNodeConfigSource = None):
-        super().__init__(**{})
+        super().__init__()
         self.__configMap = configMap
 
     @typechecked
@@ -6091,7 +6075,7 @@ class Taint(types.Object):
         effect: TaintEffect = None,
         timeAdded: "base.Time" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__value = value
         self.__effect = effect
@@ -6149,7 +6133,7 @@ class NodeSpec(types.Object):
         taints: List[Taint] = None,
         configSource: NodeConfigSource = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__podCIDR = podCIDR
         self.__podCIDRs = podCIDRs if podCIDRs is not None else []
         self.__providerID = providerID
@@ -6228,13 +6212,11 @@ class Node(base.TypedObject, base.MetadataObject):
         spec: NodeSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Node",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Node",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else NodeSpec()
 
@@ -6257,7 +6239,7 @@ class NodeProxyOptions(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
-        super().__init__(**{"apiVersion": "v1", "kind": "NodeProxyOptions"})
+        super().__init__(apiVersion="v1", kind="NodeProxyOptions")
         self.__path = path
 
     @typechecked
@@ -6279,7 +6261,7 @@ class PhotonPersistentDiskVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, pdID: str = "", fsType: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__pdID = pdID
         self.__fsType = fsType
 
@@ -6311,7 +6293,7 @@ class PortworxVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, volumeID: str = "", fsType: str = None, readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeID = volumeID
         self.__fsType = fsType
         self.__readOnly = readOnly
@@ -6362,7 +6344,7 @@ class QuobyteVolumeSource(types.Object):
         group: str = None,
         tenant: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__registry = registry
         self.__volume = volume
         self.__readOnly = readOnly
@@ -6444,7 +6426,7 @@ class RBDPersistentVolumeSource(types.Object):
         secretRef: SecretReference = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__monitors = monitors if monitors is not None else []
         self.__image = image
         self.__fsType = fsType
@@ -6556,7 +6538,7 @@ class ScaleIOPersistentVolumeSource(types.Object):
         fsType: str = "xfs",
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__gateway = gateway
         self.__system = system
         self.__secretRef = secretRef
@@ -6670,7 +6652,7 @@ class StorageOSPersistentVolumeSource(types.Object):
         readOnly: bool = None,
         secretRef: ObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeName = volumeName
         self.__volumeNamespace = volumeNamespace
         self.__fsType = fsType
@@ -6744,7 +6726,7 @@ class VsphereVirtualDiskVolumeSource(types.Object):
         storagePolicyName: str = None,
         storagePolicyID: str = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumePath = volumePath
         self.__fsType = fsType
         self.__storagePolicyName = storagePolicyName
@@ -6819,7 +6801,7 @@ class PersistentVolumeSource(types.Object):
         storageos: StorageOSPersistentVolumeSource = None,
         csi: CSIPersistentVolumeSource = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__gcePersistentDisk = gcePersistentDisk
         self.__awsElasticBlockStore = awsElasticBlockStore
         self.__hostPath = hostPath
@@ -7060,7 +7042,7 @@ class VolumeNodeAffinity(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, required: NodeSelector = None):
-        super().__init__(**{})
+        super().__init__()
         self.__required = required
 
     @typechecked
@@ -7095,7 +7077,7 @@ class PersistentVolumeSpec(types.Object):
         volumeMode: PersistentVolumeMode = None,
         nodeAffinity: VolumeNodeAffinity = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__capacity = capacity if capacity is not None else {}
         self.__persistentVolumeSource = (
             persistentVolumeSource
@@ -7228,13 +7210,11 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
         spec: PersistentVolumeSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "PersistentVolume",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="PersistentVolume",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PersistentVolumeSpec()
 
@@ -7259,7 +7239,7 @@ class TypedLocalObjectReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, apiGroup: str = None, kind: str = "", name: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__apiGroup = apiGroup
         self.__kind = kind
         self.__name = name
@@ -7308,7 +7288,7 @@ class PersistentVolumeClaimSpec(types.Object):
         volumeMode: PersistentVolumeMode = None,
         dataSource: TypedLocalObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__accessModes = accessModes if accessModes is not None else []
         self.__selector = selector
         self.__resources = (
@@ -7409,14 +7389,12 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
         spec: PersistentVolumeClaimSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "PersistentVolumeClaim",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="PersistentVolumeClaim",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PersistentVolumeClaimSpec()
 
@@ -7442,7 +7420,7 @@ class PersistentVolumeClaimVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, claimName: str = "", readOnly: bool = None):
-        super().__init__(**{})
+        super().__init__()
         self.__claimName = claimName
         self.__readOnly = readOnly
 
@@ -7474,7 +7452,7 @@ class PodDNSConfigOption(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, value: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__value = value
 
@@ -7510,7 +7488,7 @@ class PodDNSConfig(types.Object):
         searches: List[str] = None,
         options: Dict[str, PodDNSConfigOption] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__nameservers = nameservers if nameservers is not None else []
         self.__searches = searches if searches is not None else []
         self.__options = options if options is not None else {}
@@ -7557,7 +7535,7 @@ class PodReadinessGate(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, conditionType: PodConditionType = None):
-        super().__init__(**{})
+        super().__init__()
         self.__conditionType = conditionType
 
     @typechecked
@@ -7578,7 +7556,7 @@ class Sysctl(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", value: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__value = value
 
@@ -7619,7 +7597,7 @@ class PodSecurityContext(types.Object):
         fsGroup: int = None,
         sysctls: Dict[str, Sysctl] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__seLinuxOptions = seLinuxOptions
         self.__windowsOptions = windowsOptions
         self.__runAsUser = runAsUser
@@ -7746,7 +7724,7 @@ class Toleration(types.Object):
         effect: TaintEffect = None,
         tolerationSeconds: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__operator = operator
         self.__value = value
@@ -7819,7 +7797,7 @@ class TopologySpreadConstraint(types.Object):
         whenUnsatisfiable: UnsatisfiableConstraintAction = None,
         labelSelector: "metav1.LabelSelector" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__maxSkew = maxSkew
         self.__topologyKey = topologyKey
         self.__whenUnsatisfiable = whenUnsatisfiable
@@ -7914,7 +7892,7 @@ class SecretProjection(types.Object):
         items: List[KeyToPath] = None,
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__localObjectReference = (
             localObjectReference
             if localObjectReference is not None
@@ -7967,7 +7945,7 @@ class ServiceAccountTokenProjection(types.Object):
     def __init__(
         self, audience: str = None, expirationSeconds: int = None, path: str = ""
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__audience = audience
         self.__expirationSeconds = (
             expirationSeconds if expirationSeconds is not None else 3600
@@ -8023,7 +8001,7 @@ class VolumeProjection(types.Object):
         configMap: ConfigMapProjection = None,
         serviceAccountToken: ServiceAccountTokenProjection = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__secret = secret
         self.__downwardAPI = downwardAPI
         self.__configMap = configMap
@@ -8076,7 +8054,7 @@ class ProjectedVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, sources: List[VolumeProjection] = None, defaultMode: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__sources = sources if sources is not None else []
         self.__defaultMode = defaultMode if defaultMode is not None else 420
 
@@ -8121,7 +8099,7 @@ class RBDVolumeSource(types.Object):
         secretRef: LocalObjectReference = None,
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__monitors = monitors if monitors is not None else []
         self.__image = image
         self.__fsType = fsType
@@ -8233,7 +8211,7 @@ class ScaleIOVolumeSource(types.Object):
         fsType: str = "xfs",
         readOnly: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__gateway = gateway
         self.__system = system
         self.__secretRef = secretRef
@@ -8350,7 +8328,7 @@ class SecretVolumeSource(types.Object):
         defaultMode: int = None,
         optional: bool = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__secretName = secretName
         self.__items = items if items is not None else []
         self.__defaultMode = defaultMode if defaultMode is not None else 420
@@ -8417,7 +8395,7 @@ class StorageOSVolumeSource(types.Object):
         readOnly: bool = None,
         secretRef: LocalObjectReference = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumeName = volumeName
         self.__volumeNamespace = volumeNamespace
         self.__fsType = fsType
@@ -8515,7 +8493,7 @@ class VolumeSource(types.Object):
         storageos: StorageOSVolumeSource = None,
         csi: CSIVolumeSource = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__hostPath = hostPath
         self.__emptyDir = emptyDir
         self.__gcePersistentDisk = gcePersistentDisk
@@ -8811,7 +8789,7 @@ class Volume(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", volumeSource: VolumeSource = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__volumeSource = (
             volumeSource if volumeSource is not None else VolumeSource()
@@ -8881,7 +8859,7 @@ class PodSpec(types.Object):
         overhead: Dict[ResourceName, "resource.Quantity"] = None,
         topologySpreadConstraints: List[TopologySpreadConstraint] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__volumes = volumes if volumes is not None else {}
         self.__initContainers = initContainers if initContainers is not None else {}
         self.__containers = containers if containers is not None else {}
@@ -9325,14 +9303,12 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
         spec: PodSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Pod",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Pod",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodSpec()
 
@@ -9365,7 +9341,7 @@ class PodAttachOptions(base.TypedObject):
         tty: bool = None,
         container: str = None,
     ):
-        super().__init__(**{"apiVersion": "v1", "kind": "PodAttachOptions"})
+        super().__init__(apiVersion="v1", kind="PodAttachOptions")
         self.__stdin = stdin
         self.__stdout = stdout
         self.__stderr = stderr
@@ -9441,7 +9417,7 @@ class PodExecOptions(base.TypedObject):
         container: str = None,
         command: List[str] = None,
     ):
-        super().__init__(**{"apiVersion": "v1", "kind": "PodExecOptions"})
+        super().__init__(apiVersion="v1", kind="PodExecOptions")
         self.__stdin = stdin
         self.__stdout = stdout
         self.__stderr = stderr
@@ -9522,7 +9498,7 @@ class PodLogOptions(base.TypedObject):
         tailLines: int = None,
         limitBytes: int = None,
     ):
-        super().__init__(**{"apiVersion": "v1", "kind": "PodLogOptions"})
+        super().__init__(apiVersion="v1", kind="PodLogOptions")
         self.__container = container
         self.__follow = follow
         self.__previous = previous
@@ -9622,7 +9598,7 @@ class PodPortForwardOptions(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self, ports: List[int] = None):
-        super().__init__(**{"apiVersion": "v1", "kind": "PodPortForwardOptions"})
+        super().__init__(apiVersion="v1", kind="PodPortForwardOptions")
         self.__ports = ports if ports is not None else []
 
     @typechecked
@@ -9645,7 +9621,7 @@ class PodProxyOptions(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
-        super().__init__(**{"apiVersion": "v1", "kind": "PodProxyOptions"})
+        super().__init__(apiVersion="v1", kind="PodProxyOptions")
         self.__path = path
 
     @typechecked
@@ -9674,14 +9650,12 @@ class PodStatusResult(base.TypedObject, base.NamespacedMetadataObject):
         annotations: Dict[str, str] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "PodStatusResult",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="PodStatusResult",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
 
     @typechecked
@@ -9703,12 +9677,10 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
         spec: PodSpec = None,
     ):
         super().__init__(
-            **{
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else PodSpec()
 
@@ -9739,14 +9711,12 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
         template: PodTemplateSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "PodTemplate",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="PodTemplate",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__template = template if template is not None else PodTemplateSpec()
 
@@ -9778,14 +9748,12 @@ class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
         data: bytes = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "RangeAllocation",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="RangeAllocation",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__range = range
         self.__data = data if data is not None else b""
@@ -9821,7 +9789,7 @@ class ReplicationControllerSpec(types.Object):
         selector: Dict[str, str] = None,
         template: PodTemplateSpec = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__minReadySeconds = minReadySeconds
         self.__selector = selector if selector is not None else {}
@@ -9889,14 +9857,12 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
         spec: ReplicationControllerSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "ReplicationController",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="ReplicationController",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ReplicationControllerSpec()
 
@@ -9925,7 +9891,7 @@ class ScopedResourceSelectorRequirement(types.Object):
         operator: ScopeSelectorOperator = None,
         values: List[str] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__scopeName = scopeName
         self.__operator = operator
         self.__values = values if values is not None else []
@@ -9970,7 +9936,7 @@ class ScopeSelector(types.Object):
     def __init__(
         self, matchExpressions: List[ScopedResourceSelectorRequirement] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__matchExpressions = (
             matchExpressions if matchExpressions is not None else []
         )
@@ -10003,7 +9969,7 @@ class ResourceQuotaSpec(types.Object):
         scopes: List[ResourceQuotaScope] = None,
         scopeSelector: ScopeSelector = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__hard = hard if hard is not None else {}
         self.__scopes = scopes if scopes is not None else []
         self.__scopeSelector = scopeSelector
@@ -10055,14 +10021,12 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
         spec: ResourceQuotaSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "ResourceQuota",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="ResourceQuota",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ResourceQuotaSpec()
 
@@ -10096,14 +10060,12 @@ class Secret(base.TypedObject, base.NamespacedMetadataObject):
         type: SecretType = SecretType["Opaque"],
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Secret",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Secret",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__data = data if data is not None else {}
         self.__stringData = stringData if stringData is not None else {}
@@ -10150,7 +10112,7 @@ class SerializedReference(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self, reference: ObjectReference = None):
-        super().__init__(**{"apiVersion": "v1", "kind": "SerializedReference"})
+        super().__init__(apiVersion="v1", kind="SerializedReference")
         self.__reference = reference if reference is not None else ObjectReference()
 
     @typechecked
@@ -10178,7 +10140,7 @@ class ServicePort(types.Object):
         targetPort: Union[int, str] = None,
         nodePort: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__protocol = protocol
         self.__port = port
@@ -10250,7 +10212,7 @@ class SessionAffinityConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, clientIP: ClientIPConfig = None):
-        super().__init__(**{})
+        super().__init__()
         self.__clientIP = clientIP
 
     @typechecked
@@ -10288,7 +10250,7 @@ class ServiceSpec(types.Object):
         sessionAffinityConfig: SessionAffinityConfig = None,
         ipFamily: IPFamily = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__ports = ports if ports is not None else {}
         self.__selector = selector if selector is not None else {}
         self.__clusterIP = clusterIP
@@ -10517,14 +10479,12 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
         spec: ServiceSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "Service",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="Service",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ServiceSpec()
 
@@ -10560,14 +10520,12 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
         automountServiceAccountToken: bool = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "v1",
-                "kind": "ServiceAccount",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="v1",
+            kind="ServiceAccount",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__secrets = secrets if secrets is not None else {}
         self.__imagePullSecrets = (
@@ -10621,7 +10579,7 @@ class ServiceProxyOptions(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
-        super().__init__(**{"apiVersion": "v1", "kind": "ServiceProxyOptions"})
+        super().__init__(apiVersion="v1", kind="ServiceProxyOptions")
         self.__path = path
 
     @typechecked
@@ -10648,7 +10606,7 @@ class TopologySelectorLabelRequirement(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, key: str = "", values: List[str] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__key = key
         self.__values = values if values is not None else []
 
@@ -10684,7 +10642,7 @@ class TopologySelectorTerm(types.Object):
     def __init__(
         self, matchLabelExpressions: List[TopologySelectorLabelRequirement] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__matchLabelExpressions = (
             matchLabelExpressions if matchLabelExpressions is not None else []
         )

@@ -18,7 +18,7 @@ class Key(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", secret: str = ""):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__secret = secret
 
@@ -47,7 +47,7 @@ class AESConfiguration(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, keys: Dict[str, Key] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__keys = keys if keys is not None else {}
 
     @typechecked
@@ -80,7 +80,7 @@ class KMSConfiguration(types.Object):
         endpoint: str = "",
         timeout: "base.Duration" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__cachesize = cachesize
         self.__endpoint = endpoint
@@ -127,7 +127,7 @@ class SecretboxConfiguration(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, keys: Dict[str, Key] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__keys = keys if keys is not None else {}
 
     @typechecked
@@ -156,7 +156,7 @@ class ProviderConfiguration(types.Object):
         identity: IdentityConfiguration = None,
         kms: KMSConfiguration = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__aesgcm = aesgcm
         self.__aescbc = aescbc
         self.__secretbox = secretbox
@@ -216,7 +216,7 @@ class ResourceConfiguration(types.Object):
     def __init__(
         self, resources: List[str] = None, providers: List[ProviderConfiguration] = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__resources = resources if resources is not None else []
         self.__providers = providers if providers is not None else []
 
@@ -250,7 +250,7 @@ class EncryptionConfiguration(types.Object):
         typeMeta: "metav1.TypeMeta" = None,
         resources: List[ResourceConfiguration] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__typeMeta = typeMeta if typeMeta is not None else metav1.TypeMeta()
         self.__resources = resources if resources is not None else []
 

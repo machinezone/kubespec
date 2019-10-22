@@ -54,7 +54,7 @@ class Policy(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, level: Level = None, stages: List[Stage] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__level = level
         self.__stages = stages if stages is not None else []
 
@@ -87,7 +87,7 @@ class ServiceReference(types.Object):
     def __init__(
         self, namespace: str = "", name: str = "", path: str = None, port: int = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__path = path
@@ -141,7 +141,7 @@ class WebhookClientConfig(types.Object):
     def __init__(
         self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__url = url
         self.__service = service
         self.__caBundle = caBundle if caBundle is not None else b""
@@ -209,7 +209,7 @@ class WebhookThrottleConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, qps: int = None, burst: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__qps = qps if qps is not None else 10
         self.__burst = burst if burst is not None else 15
 
@@ -246,7 +246,7 @@ class Webhook(types.Object):
         throttle: WebhookThrottleConfig = None,
         clientConfig: WebhookClientConfig = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__throttle = throttle if throttle is not None else WebhookThrottleConfig()
         self.__clientConfig = (
             clientConfig if clientConfig is not None else WebhookClientConfig()
@@ -279,7 +279,7 @@ class AuditSinkSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, policy: Policy = None, webhook: Webhook = None):
-        super().__init__(**{})
+        super().__init__()
         self.__policy = policy if policy is not None else Policy()
         self.__webhook = webhook if webhook is not None else Webhook()
 
@@ -317,13 +317,11 @@ class AuditSink(base.TypedObject, base.MetadataObject):
         spec: AuditSinkSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "auditregistration.k8s.io/v1alpha1",
-                "kind": "AuditSink",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="auditregistration.k8s.io/v1alpha1",
+            kind="AuditSink",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else AuditSinkSpec()
 

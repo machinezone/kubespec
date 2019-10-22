@@ -19,7 +19,7 @@ class EventSeries(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, count: int = 0, lastObservedTime: "base.MicroTime" = None):
-        super().__init__(**{})
+        super().__init__()
         self.__count = count
         self.__lastObservedTime = lastObservedTime
 
@@ -65,14 +65,12 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         type: str = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "events.k8s.io/v1beta1",
-                "kind": "Event",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="events.k8s.io/v1beta1",
+            kind="Event",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__eventTime = eventTime
         self.__series = series

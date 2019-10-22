@@ -24,7 +24,7 @@ class ContainerMetrics(types.Object):
         name: str = "",
         usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__usage = usage if usage is not None else {}
 
@@ -62,13 +62,11 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "metrics.k8s.io/v1alpha1",
-                "kind": "NodeMetrics",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="metrics.k8s.io/v1alpha1",
+            kind="NodeMetrics",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__timestamp = timestamp
         self.__window = window if window is not None else metav1.Duration()
@@ -116,14 +114,12 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         containers: Dict[str, ContainerMetrics] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "metrics.k8s.io/v1alpha1",
-                "kind": "PodMetrics",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="metrics.k8s.io/v1alpha1",
+            kind="PodMetrics",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__timestamp = timestamp
         self.__window = window if window is not None else metav1.Duration()

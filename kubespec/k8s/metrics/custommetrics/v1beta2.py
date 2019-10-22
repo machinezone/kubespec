@@ -20,7 +20,7 @@ class MetricIdentifier(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", selector: "metav1.LabelSelector" = None):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__selector = selector
 
@@ -53,10 +53,7 @@ class MetricListOptions(base.TypedObject):
     @typechecked
     def __init__(self, labelSelector: str = None, metricLabelSelector: str = None):
         super().__init__(
-            **{
-                "apiVersion": "custom.metrics.k8s.io/v1beta2",
-                "kind": "MetricListOptions",
-            }
+            apiVersion="custom.metrics.k8s.io/v1beta2", kind="MetricListOptions"
         )
         self.__labelSelector = labelSelector
         self.__metricLabelSelector = metricLabelSelector
@@ -96,9 +93,7 @@ class MetricValue(base.TypedObject):
         windowSeconds: int = None,
         value: "resource.Quantity" = None,
     ):
-        super().__init__(
-            **{"apiVersion": "custom.metrics.k8s.io/v1beta2", "kind": "MetricValue"}
-        )
+        super().__init__(apiVersion="custom.metrics.k8s.io/v1beta2", kind="MetricValue")
         self.__describedObject = (
             describedObject if describedObject is not None else corev1.ObjectReference()
         )

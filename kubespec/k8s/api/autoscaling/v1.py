@@ -17,7 +17,7 @@ class CrossVersionObjectReference(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
-        super().__init__(**{})
+        super().__init__()
         self.__kind = kind
         self.__name = name
         self.__apiVersion = apiVersion
@@ -61,7 +61,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
         maxReplicas: int = 0,
         targetCPUUtilizationPercentage: int = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__scaleTargetRef = (
             scaleTargetRef
             if scaleTargetRef is not None
@@ -130,14 +130,12 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         spec: HorizontalPodAutoscalerSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "autoscaling/v1",
-                "kind": "HorizontalPodAutoscaler",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="autoscaling/v1",
+            kind="HorizontalPodAutoscaler",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else HorizontalPodAutoscalerSpec()
 
@@ -159,7 +157,7 @@ class ScaleSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__replicas = replicas
 
     @typechecked
@@ -189,14 +187,12 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         spec: ScaleSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "autoscaling/v1",
-                "kind": "Scale",
-                **({"namespace": namespace} if namespace is not None else {}),
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="autoscaling/v1",
+            kind="Scale",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else ScaleSpec()
 

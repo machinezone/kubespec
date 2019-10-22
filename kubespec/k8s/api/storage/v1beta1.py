@@ -65,7 +65,7 @@ class CSIDriverSpec(types.Object):
         podInfoOnMount: bool = None,
         volumeLifecycleModes: List[VolumeLifecycleMode] = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__attachRequired = attachRequired if attachRequired is not None else True
         self.__podInfoOnMount = podInfoOnMount
         self.__volumeLifecycleModes = (
@@ -168,13 +168,11 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
         spec: CSIDriverSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1beta1",
-                "kind": "CSIDriver",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1beta1",
+            kind="CSIDriver",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else CSIDriverSpec()
 
@@ -196,7 +194,7 @@ class VolumeNodeResources(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, count: int = None):
-        super().__init__(**{})
+        super().__init__()
         self.__count = count
 
     @typechecked
@@ -227,7 +225,7 @@ class CSINodeDriver(types.Object):
         topologyKeys: List[str] = None,
         allocatable: VolumeNodeResources = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__name = name
         self.__nodeID = nodeID
         self.__topologyKeys = topologyKeys if topologyKeys is not None else []
@@ -292,7 +290,7 @@ class CSINodeSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(self, drivers: Dict[str, CSINodeDriver] = None):
-        super().__init__(**{})
+        super().__init__()
         self.__drivers = drivers if drivers is not None else {}
 
     @typechecked
@@ -329,13 +327,11 @@ class CSINode(base.TypedObject, base.MetadataObject):
         spec: CSINodeSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1beta1",
-                "kind": "CSINode",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1beta1",
+            kind="CSINode",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else CSINodeSpec()
 
@@ -374,13 +370,11 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         allowedTopologies: List["corev1.TopologySelectorTerm"] = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1beta1",
-                "kind": "StorageClass",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1beta1",
+            kind="StorageClass",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__provisioner = provisioner
         self.__parameters = parameters if parameters is not None else {}
@@ -490,7 +484,7 @@ class VolumeAttachmentSource(types.Object):
         persistentVolumeName: str = None,
         inlineVolumeSpec: "corev1.PersistentVolumeSpec" = None,
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__persistentVolumeName = persistentVolumeName
         self.__inlineVolumeSpec = inlineVolumeSpec
 
@@ -535,7 +529,7 @@ class VolumeAttachmentSpec(types.Object):
         source: VolumeAttachmentSource = None,
         nodeName: str = "",
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__attacher = attacher
         self.__source = source if source is not None else VolumeAttachmentSource()
         self.__nodeName = nodeName
@@ -583,13 +577,11 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         spec: VolumeAttachmentSpec = None,
     ):
         super().__init__(
-            **{
-                "apiVersion": "storage.k8s.io/v1beta1",
-                "kind": "VolumeAttachment",
-                **({"name": name} if name is not None else {}),
-                **({"labels": labels} if labels is not None else {}),
-                **({"annotations": annotations} if annotations is not None else {}),
-            }
+            apiVersion="storage.k8s.io/v1beta1",
+            kind="VolumeAttachment",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__spec = spec if spec is not None else VolumeAttachmentSpec()
 

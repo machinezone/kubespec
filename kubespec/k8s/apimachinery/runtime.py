@@ -68,7 +68,7 @@ class Unknown(base.TypedObject):
     def __init__(
         self, raw: bytes = None, contentEncoding: str = "", contentType: str = ""
     ):
-        super().__init__(**{})
+        super().__init__()
         self.__raw = raw if raw is not None else b""
         self.__contentEncoding = contentEncoding
         self.__contentType = contentType
