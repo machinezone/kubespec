@@ -45,10 +45,13 @@ KeyUsage = base.Enum(
 )
 
 
-# This information is immutable after the request is created. Only the Request
-# and Usages fields can be set on creation, other fields are derived by
-# Kubernetes and cannot be modified by users.
 class CertificateSigningRequestSpec(types.Object):
+    """
+    This information is immutable after the request is created. Only the Request
+    and Usages fields can be set on creation, other fields are derived by
+    Kubernetes and cannot be modified by users.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -140,8 +143,11 @@ class CertificateSigningRequestSpec(types.Object):
         return self.__extra
 
 
-# Describes a certificate signing request
 class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
+    """
+    Describes a certificate signing request
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -95,9 +95,12 @@ SideEffectClass = base.Enum(
 )
 
 
-# Rule is a tuple of APIGroups, APIVersion, and Resources.It is recommended
-# to make sure that all the tuple expansions are valid.
 class Rule(types.Object):
+    """
+    Rule is a tuple of APIGroups, APIVersion, and Resources.It is recommended
+    to make sure that all the tuple expansions are valid.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -184,9 +187,12 @@ class Rule(types.Object):
         return self.__scope
 
 
-# RuleWithOperations is a tuple of Operations and Resources. It is recommended to make
-# sure that all the tuple expansions are valid.
 class RuleWithOperations(types.Object):
+    """
+    RuleWithOperations is a tuple of Operations and Resources. It is recommended to make
+    sure that all the tuple expansions are valid.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, operations: List[OperationType] = None, rule: Rule = None):
@@ -223,8 +229,11 @@ class RuleWithOperations(types.Object):
         return self.__rule
 
 
-# ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    """
+    ServiceReference holds a reference to Service.legacy.k8s.io
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -285,9 +294,12 @@ class ServiceReference(types.Object):
         return self.__port
 
 
-# WebhookClientConfig contains the information to make a TLS
-# connection with the webhook
 class WebhookClientConfig(types.Object):
+    """
+    WebhookClientConfig contains the information to make a TLS
+    connection with the webhook
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -362,8 +374,11 @@ class WebhookClientConfig(types.Object):
         return self.__caBundle
 
 
-# MutatingWebhook describes an admission webhook and the resources and operations it applies to.
 class MutatingWebhook(types.Object):
+    """
+    MutatingWebhook describes an admission webhook and the resources and operations it applies to.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -633,9 +648,12 @@ class MutatingWebhook(types.Object):
         return self.__reinvocationPolicy
 
 
-# MutatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and may change the object.
-# Deprecated in v1.16, planned for removal in v1.19. Use admissionregistration.k8s.io/v1 MutatingWebhookConfiguration instead.
 class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
+    """
+    MutatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and may change the object.
+    Deprecated in v1.16, planned for removal in v1.19. Use admissionregistration.k8s.io/v1 MutatingWebhookConfiguration instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -670,8 +688,11 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         return self.__webhooks
 
 
-# ValidatingWebhook describes an admission webhook and the resources and operations it applies to.
 class ValidatingWebhook(types.Object):
+    """
+    ValidatingWebhook describes an admission webhook and the resources and operations it applies to.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -909,9 +930,12 @@ class ValidatingWebhook(types.Object):
         return self.__admissionReviewVersions
 
 
-# ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it.
-# Deprecated in v1.16, planned for removal in v1.19. Use admissionregistration.k8s.io/v1 ValidatingWebhookConfiguration instead.
 class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
+    """
+    ValidatingWebhookConfiguration describes the configuration of and admission webhook that accept or reject and object without changing it.
+    Deprecated in v1.16, planned for removal in v1.19. Use admissionregistration.k8s.io/v1 ValidatingWebhookConfiguration instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

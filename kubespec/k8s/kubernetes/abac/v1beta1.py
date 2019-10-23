@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# PolicySpec contains the attributes for a policy rule
 class PolicySpec(types.Object):
+    """
+    PolicySpec contains the attributes for a policy rule
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -120,8 +123,11 @@ class PolicySpec(types.Object):
         return self.__nonResourcePath
 
 
-# Policy contains a single ABAC policy rule
 class Policy(base.TypedObject):
+    """
+    Policy contains a single ABAC policy rule
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, spec: PolicySpec = None):

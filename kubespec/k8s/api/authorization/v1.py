@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
 class NonResourceAttributes(types.Object):
+    """
+    NonResourceAttributes includes the authorization attributes available for non-resource requests to the Authorizer interface
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, verb: str = None):
@@ -47,8 +50,11 @@ class NonResourceAttributes(types.Object):
         return self.__verb
 
 
-# ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface
 class ResourceAttributes(types.Object):
+    """
+    ResourceAttributes includes the authorization attributes available for resource requests to the Authorizer interface
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -149,9 +155,12 @@ class ResourceAttributes(types.Object):
         return self.__name
 
 
-# SubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
-# and NonResourceAuthorizationAttributes must be set
 class SubjectAccessReviewSpec(types.Object):
+    """
+    SubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
+    and NonResourceAuthorizationAttributes must be set
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -245,10 +254,13 @@ class SubjectAccessReviewSpec(types.Object):
         return self.__uid
 
 
-# LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace.
-# Having a namespace scoped resource makes it much easier to grant namespace scoped policy that includes permissions
-# checking.
 class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    LocalSubjectAccessReview checks whether or not a user or group can perform an action in a given namespace.
+    Having a namespace scoped resource makes it much easier to grant namespace scoped policy that includes permissions
+    checking.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -285,9 +297,12 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
-# and NonResourceAuthorizationAttributes must be set
 class SelfSubjectAccessReviewSpec(types.Object):
+    """
+    SelfSubjectAccessReviewSpec is a description of the access request.  Exactly one of ResourceAuthorizationAttributes
+    and NonResourceAuthorizationAttributes must be set
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -331,10 +346,13 @@ class SelfSubjectAccessReviewSpec(types.Object):
         return self.__nonResourceAttributes
 
 
-# SelfSubjectAccessReview checks whether or the current user can perform an action.  Not filling in a
-# spec.namespace means "in all namespaces".  Self is a special case, because users should always be able
-# to check whether they can perform an action
 class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
+    """
+    SelfSubjectAccessReview checks whether or the current user can perform an action.  Not filling in a
+    spec.namespace means "in all namespaces".  Self is a special case, because users should always be able
+    to check whether they can perform an action
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -391,13 +409,16 @@ class SelfSubjectRulesReviewSpec(types.Object):
         return self.__namespace
 
 
-# SelfSubjectRulesReview enumerates the set of actions the current user can perform within a namespace.
-# The returned list of actions may be incomplete depending on the server's authorization mode,
-# and any errors experienced during the evaluation. SelfSubjectRulesReview should be used by UIs to show/hide actions,
-# or to quickly let an end user reason about their permissions. It should NOT Be used by external systems to
-# drive authorization decisions as this raises confused deputy, cache lifetime/revocation, and correctness concerns.
-# SubjectAccessReview, and LocalAccessReview are the correct way to defer authorization decisions to the API server.
 class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
+    """
+    SelfSubjectRulesReview enumerates the set of actions the current user can perform within a namespace.
+    The returned list of actions may be incomplete depending on the server's authorization mode,
+    and any errors experienced during the evaluation. SelfSubjectRulesReview should be used by UIs to show/hide actions,
+    or to quickly let an end user reason about their permissions. It should NOT Be used by external systems to
+    drive authorization decisions as this raises confused deputy, cache lifetime/revocation, and correctness concerns.
+    SubjectAccessReview, and LocalAccessReview are the correct way to defer authorization decisions to the API server.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -431,8 +452,11 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# SubjectAccessReview checks whether or not a user or group can perform an action.
 class SubjectAccessReview(base.TypedObject, base.MetadataObject):
+    """
+    SubjectAccessReview checks whether or not a user or group can perform an action.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

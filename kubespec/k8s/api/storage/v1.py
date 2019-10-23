@@ -29,12 +29,15 @@ VolumeBindingMode = base.Enum(
 )
 
 
-# StorageClass describes the parameters for a class of storage for
-# which PersistentVolumes can be dynamically provisioned.
-#
-# StorageClasses are non-namespaced; the name of the storage class
-# according to etcd is in ObjectMeta.Name.
 class StorageClass(base.TypedObject, base.MetadataObject):
+    """
+    StorageClass describes the parameters for a class of storage for
+    which PersistentVolumes can be dynamically provisioned.
+    
+    StorageClasses are non-namespaced; the name of the storage class
+    according to etcd is in ObjectMeta.Name.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -167,11 +170,14 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         return self.__allowedTopologies
 
 
-# VolumeAttachmentSource represents a volume that should be attached.
-# Right now only PersistenVolumes can be attached via external attacher,
-# in future we may allow also inline volumes in pods.
-# Exactly one member can be set.
 class VolumeAttachmentSource(types.Object):
+    """
+    VolumeAttachmentSource represents a volume that should be attached.
+    Right now only PersistenVolumes can be attached via external attacher,
+    in future we may allow also inline volumes in pods.
+    Exactly one member can be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -218,8 +224,11 @@ class VolumeAttachmentSource(types.Object):
         return self.__inlineVolumeSpec
 
 
-# VolumeAttachmentSpec is the specification of a VolumeAttachment request.
 class VolumeAttachmentSpec(types.Object):
+    """
+    VolumeAttachmentSpec is the specification of a VolumeAttachment request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -267,11 +276,14 @@ class VolumeAttachmentSpec(types.Object):
         return self.__nodeName
 
 
-# VolumeAttachment captures the intent to attach or detach the specified volume
-# to/from the specified node.
-#
-# VolumeAttachment objects are non-namespaced.
 class VolumeAttachment(base.TypedObject, base.MetadataObject):
+    """
+    VolumeAttachment captures the intent to attach or detach the specified volume
+    to/from the specified node.
+    
+    VolumeAttachment objects are non-namespaced.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

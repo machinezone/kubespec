@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# ImageReviewContainerSpec is a description of a container within the pod creation request.
 class ImageReviewContainerSpec(types.Object):
+    """
+    ImageReviewContainerSpec is a description of a container within the pod creation request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, image: str = None):
@@ -36,8 +39,11 @@ class ImageReviewContainerSpec(types.Object):
         return self.__image
 
 
-# ImageReviewSpec is a description of the pod creation request.
 class ImageReviewSpec(types.Object):
+    """
+    ImageReviewSpec is a description of the pod creation request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -89,8 +95,11 @@ class ImageReviewSpec(types.Object):
         return self.__namespace
 
 
-# ImageReview checks if the set of images in a pod are allowed.
 class ImageReview(base.TypedObject, base.MetadataObject):
+    """
+    ImageReview checks if the set of images in a pod are allowed.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

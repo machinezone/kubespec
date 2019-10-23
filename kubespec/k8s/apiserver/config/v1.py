@@ -13,8 +13,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# Key contains name and secret of the provided key for a transformer.
 class Key(types.Object):
+    """
+    Key contains name and secret of the provided key for a transformer.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", secret: str = ""):
@@ -46,8 +49,11 @@ class Key(types.Object):
         return self.__secret
 
 
-# AESConfiguration contains the API configuration for an AES transformer.
 class AESConfiguration(types.Object):
+    """
+    AESConfiguration contains the API configuration for an AES transformer.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, keys: Dict[str, Key] = None):
@@ -70,13 +76,19 @@ class AESConfiguration(types.Object):
         return self.__keys
 
 
-# IdentityConfiguration is an empty struct to allow identity transformer in provider configuration.
 class IdentityConfiguration(types.Object):
+    """
+    IdentityConfiguration is an empty struct to allow identity transformer in provider configuration.
+    """
+
     pass  # FIXME
 
 
-# KMSConfiguration contains the name, cache size and path to configuration file for a KMS based envelope transformer.
 class KMSConfiguration(types.Object):
+    """
+    KMSConfiguration contains the name, cache size and path to configuration file for a KMS based envelope transformer.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -136,8 +148,11 @@ class KMSConfiguration(types.Object):
         return self.__timeout
 
 
-# SecretboxConfiguration contains the API configuration for an Secretbox transformer.
 class SecretboxConfiguration(types.Object):
+    """
+    SecretboxConfiguration contains the API configuration for an Secretbox transformer.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, keys: Dict[str, Key] = None):
@@ -160,8 +175,11 @@ class SecretboxConfiguration(types.Object):
         return self.__keys
 
 
-# ProviderConfiguration stores the provided configuration for an encryption provider.
 class ProviderConfiguration(types.Object):
+    """
+    ProviderConfiguration stores the provided configuration for an encryption provider.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -235,8 +253,11 @@ class ProviderConfiguration(types.Object):
         return self.__kms
 
 
-# ResourceConfiguration stores per resource configuration.
 class ResourceConfiguration(types.Object):
+    """
+    ResourceConfiguration stores per resource configuration.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -271,8 +292,11 @@ class ResourceConfiguration(types.Object):
         return self.__providers
 
 
-# EncryptionConfiguration stores the complete configuration for encryption providers.
 class EncryptionConfiguration(types.Object):
+    """
+    EncryptionConfiguration stores the complete configuration for encryption providers.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

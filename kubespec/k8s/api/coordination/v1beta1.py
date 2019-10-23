@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# LeaseSpec is a specification of a Lease.
 class LeaseSpec(types.Object):
+    """
+    LeaseSpec is a specification of a Lease.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -91,8 +94,11 @@ class LeaseSpec(types.Object):
         return self.__leaseTransitions
 
 
-# Lease defines a lease concept.
 class Lease(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Lease defines a lease concept.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

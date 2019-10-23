@@ -14,8 +14,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# JobSpec describes how the job execution will look like.
 class JobSpec(types.Object):
+    """
+    JobSpec describes how the job execution will look like.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -155,8 +158,11 @@ class JobSpec(types.Object):
         return self.__ttlSecondsAfterFinished
 
 
-# Job represents the configuration of a single job.
 class Job(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Job represents the configuration of a single job.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

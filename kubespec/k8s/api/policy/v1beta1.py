@@ -127,8 +127,11 @@ SupplementalGroupsStrategyType = base.Enum(
 )
 
 
-# AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
 class AllowedCSIDriver(types.Object):
+    """
+    AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = ""):
@@ -150,8 +153,11 @@ class AllowedCSIDriver(types.Object):
         return self.__name
 
 
-# AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
 class AllowedFlexVolume(types.Object):
+    """
+    AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, driver: str = ""):
@@ -173,9 +179,12 @@ class AllowedFlexVolume(types.Object):
         return self.__driver
 
 
-# AllowedHostPath defines the host volume conditions that will be enabled by a policy
-# for pods to use. It requires the path prefix to be defined.
 class AllowedHostPath(types.Object):
+    """
+    AllowedHostPath defines the host volume conditions that will be enabled by a policy
+    for pods to use. It requires the path prefix to be defined.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, pathPrefix: str = None, readOnly: bool = None):
@@ -215,10 +224,13 @@ class AllowedHostPath(types.Object):
         return self.__readOnly
 
 
-# Eviction evicts a pod from its node subject to certain policies and safety constraints.
-# This is a subresource of Pod.  A request to cause such an eviction is
-# created by POSTing to .../pods/<pod name>/evictions.
 class Eviction(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Eviction evicts a pod from its node subject to certain policies and safety constraints.
+    This is a subresource of Pod.  A request to cause such an eviction is
+    created by POSTing to .../pods/<pod name>/evictions.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -255,8 +267,11 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
         return self.__deleteOptions
 
 
-# IDRange provides a min/max of an allowed range of IDs.
 class IDRange(types.Object):
+    """
+    IDRange provides a min/max of an allowed range of IDs.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
@@ -288,8 +303,11 @@ class IDRange(types.Object):
         return self.__max
 
 
-# FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
 class FSGroupStrategyOptions(types.Object):
+    """
+    FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
@@ -324,9 +342,12 @@ class FSGroupStrategyOptions(types.Object):
         return self.__ranges
 
 
-# HostPortRange defines a range of host ports that will be enabled by a policy
-# for pods to use.  It requires both the start and end to be defined.
 class HostPortRange(types.Object):
+    """
+    HostPortRange defines a range of host ports that will be enabled by a policy
+    for pods to use.  It requires both the start and end to be defined.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
@@ -358,8 +379,11 @@ class HostPortRange(types.Object):
         return self.__max
 
 
-# PodDisruptionBudgetSpec is a description of a PodDisruptionBudget.
 class PodDisruptionBudgetSpec(types.Object):
+    """
+    PodDisruptionBudgetSpec is a description of a PodDisruptionBudget.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -416,8 +440,11 @@ class PodDisruptionBudgetSpec(types.Object):
         return self.__maxUnavailable
 
 
-# PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
 class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodDisruptionBudget is an object to define the max disruption that can be caused to a collection of pods
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -453,8 +480,11 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
 class RunAsGroupStrategyOptions(types.Object):
+    """
+    RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
@@ -488,8 +518,11 @@ class RunAsGroupStrategyOptions(types.Object):
         return self.__ranges
 
 
-# RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
 class RunAsUserStrategyOptions(types.Object):
+    """
+    RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
@@ -523,9 +556,12 @@ class RunAsUserStrategyOptions(types.Object):
         return self.__ranges
 
 
-# RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
-# for a pod.
 class RuntimeClassStrategyOptions(types.Object):
+    """
+    RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
+    for a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -568,8 +604,11 @@ class RuntimeClassStrategyOptions(types.Object):
         return self.__defaultRuntimeClassName
 
 
-# SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
 class SELinuxStrategyOptions(types.Object):
+    """
+    SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -607,8 +646,11 @@ class SELinuxStrategyOptions(types.Object):
         return self.__seLinuxOptions
 
 
-# SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
 class SupplementalGroupsStrategyOptions(types.Object):
+    """
+    SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -645,8 +687,11 @@ class SupplementalGroupsStrategyOptions(types.Object):
         return self.__ranges
 
 
-# PodSecurityPolicySpec defines the policy enforced.
 class PodSecurityPolicySpec(types.Object):
+    """
+    PodSecurityPolicySpec defines the policy enforced.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1037,9 +1082,12 @@ class PodSecurityPolicySpec(types.Object):
         return self.__runtimeClass
 
 
-# PodSecurityPolicy governs the ability to make requests that affect the Security Context
-# that will be applied to a pod and container.
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
+    """
+    PodSecurityPolicy governs the ability to make requests that affect the Security Context
+    that will be applied to a pod and container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

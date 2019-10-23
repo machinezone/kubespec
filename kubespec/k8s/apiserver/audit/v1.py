@@ -52,8 +52,11 @@ Stage = base.Enum(
 )
 
 
-# ObjectReference contains enough information to let you inspect or modify the referred object.
 class ObjectReference(types.Object):
+    """
+    ObjectReference contains enough information to let you inspect or modify the referred object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -146,8 +149,11 @@ class ObjectReference(types.Object):
         return self.__subresource
 
 
-# Event captures all the information that can be included in an API audit log.
 class Event(base.TypedObject):
+    """
+    Event captures all the information that can be included in an API audit log.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -364,8 +370,11 @@ class Event(base.TypedObject):
         return self.__annotations
 
 
-# GroupResources represents resource kinds in an API group.
 class GroupResources(types.Object):
+    """
+    GroupResources represents resource kinds in an API group.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -430,9 +439,12 @@ class GroupResources(types.Object):
         return self.__resourceNames
 
 
-# PolicyRule maps requests based off metadata to an audit Level.
-# Requests must match the rules of every field (an intersection of rules).
 class PolicyRule(types.Object):
+    """
+    PolicyRule maps requests based off metadata to an audit Level.
+    Requests must match the rules of every field (an intersection of rules).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -553,9 +565,12 @@ class PolicyRule(types.Object):
         return self.__omitStages
 
 
-# Policy defines the configuration of audit logging, and the rules for how different request
-# categories are logged.
 class Policy(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Policy defines the configuration of audit logging, and the rules for how different request
+    categories are logged.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

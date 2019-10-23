@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# IngressBackend describes all endpoints for a given service and port.
 class IngressBackend(types.Object):
+    """
+    IngressBackend describes all endpoints for a given service and port.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
@@ -45,9 +48,12 @@ class IngressBackend(types.Object):
         return self.__servicePort
 
 
-# HTTPIngressPath associates a path regex with a backend. Incoming urls matching
-# the path are forwarded to the backend.
 class HTTPIngressPath(types.Object):
+    """
+    HTTPIngressPath associates a path regex with a backend. Incoming urls matching
+    the path are forwarded to the backend.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, backend: IngressBackend = None):
@@ -87,12 +93,15 @@ class HTTPIngressPath(types.Object):
         return self.__backend
 
 
-# HTTPIngressRuleValue is a list of http selectors pointing to backends.
-# In the example: http://<host>/<path>?<searchpart> -> backend where
-# where parts of the url correspond to RFC 3986, this resource will be used
-# to match against everything after the last '/' and before the first '?'
-# or '#'.
 class HTTPIngressRuleValue(types.Object):
+    """
+    HTTPIngressRuleValue is a list of http selectors pointing to backends.
+    In the example: http://<host>/<path>?<searchpart> -> backend where
+    where parts of the url correspond to RFC 3986, this resource will be used
+    to match against everything after the last '/' and before the first '?'
+    or '#'.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, paths: List[HTTPIngressPath] = None):
@@ -114,11 +123,14 @@ class HTTPIngressRuleValue(types.Object):
         return self.__paths
 
 
-# IngressRuleValue represents a rule to apply against incoming requests. If the
-# rule is satisfied, the request is routed to the specified backend. Currently
-# mixing different types of rules in a single Ingress is disallowed, so exactly
-# one of the following must be set.
 class IngressRuleValue(types.Object):
+    """
+    IngressRuleValue represents a rule to apply against incoming requests. If the
+    rule is satisfied, the request is routed to the specified backend. Currently
+    mixing different types of rules in a single Ingress is disallowed, so exactly
+    one of the following must be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, http: HTTPIngressRuleValue = None):
@@ -138,10 +150,13 @@ class IngressRuleValue(types.Object):
         return self.__http
 
 
-# IngressRule represents the rules mapping the paths under a specified host to
-# the related backend services. Incoming requests are first evaluated for a host
-# match, then routed to the backend associated with the matching IngressRuleValue.
 class IngressRule(types.Object):
+    """
+    IngressRule represents the rules mapping the paths under a specified host to
+    the related backend services. Incoming requests are first evaluated for a host
+    match, then routed to the backend associated with the matching IngressRuleValue.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
@@ -191,8 +206,11 @@ class IngressRule(types.Object):
         return self.__ingressRuleValue
 
 
-# IngressTLS describes the transport layer security associated with an Ingress.
 class IngressTLS(types.Object):
+    """
+    IngressTLS describes the transport layer security associated with an Ingress.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, hosts: List[str] = None, secretName: str = None):
@@ -233,8 +251,11 @@ class IngressTLS(types.Object):
         return self.__secretName
 
 
-# IngressSpec describes the Ingress the user wishes to exist.
 class IngressSpec(types.Object):
+    """
+    IngressSpec describes the Ingress the user wishes to exist.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -292,11 +313,14 @@ class IngressSpec(types.Object):
         return self.__rules
 
 
-# Ingress is a collection of rules that allow inbound connections to reach the
-# endpoints defined by a backend. An Ingress can be configured to give services
-# externally-reachable urls, load balance traffic, terminate SSL, offer name
-# based virtual hosting etc.
 class Ingress(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Ingress is a collection of rules that allow inbound connections to reach the
+    endpoints defined by a backend. An Ingress can be configured to give services
+    externally-reachable urls, load balance traffic, terminate SSL, offer name
+    based virtual hosting etc.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

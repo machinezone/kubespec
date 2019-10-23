@@ -13,8 +13,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# AggregationRule describes how to locate ClusterRoles to aggregate into the ClusterRole
 class AggregationRule(types.Object):
+    """
+    AggregationRule describes how to locate ClusterRoles to aggregate into the ClusterRole
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, clusterRoleSelectors: List["metav1.LabelSelector"] = None):
@@ -44,9 +47,12 @@ class AggregationRule(types.Object):
         return self.__clusterRoleSelectors
 
 
-# PolicyRule holds information that describes a policy rule, but does not contain information
-# about who the rule applies to or which namespace the rule applies to.
 class PolicyRule(types.Object):
+    """
+    PolicyRule holds information that describes a policy rule, but does not contain information
+    about who the rule applies to or which namespace the rule applies to.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -122,8 +128,11 @@ class PolicyRule(types.Object):
         return self.__nonResourceURLs
 
 
-# ClusterRole is a cluster level, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding or ClusterRoleBinding.
 class ClusterRole(base.TypedObject, base.MetadataObject):
+    """
+    ClusterRole is a cluster level, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding or ClusterRoleBinding.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -171,8 +180,11 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         return self.__aggregationRule
 
 
-# RoleRef contains information that points to the role being used
 class RoleRef(types.Object):
+    """
+    RoleRef contains information that points to the role being used
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -219,9 +231,12 @@ class RoleRef(types.Object):
         return self.__name
 
 
-# Subject contains a reference to the object or user identities a role binding applies to.  This can either hold a direct API object reference,
-# or a value for non-objects such as user and group names.
 class Subject(types.Object):
+    """
+    Subject contains a reference to the object or user identities a role binding applies to.  This can either hold a direct API object reference,
+    or a value for non-objects such as user and group names.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -285,9 +300,12 @@ class Subject(types.Object):
         return self.__namespace
 
 
-# ClusterRoleBinding references a ClusterRole, but not contain it.  It can reference a ClusterRole in the global namespace,
-# and adds who information via Subject.
 class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
+    """
+    ClusterRoleBinding references a ClusterRole, but not contain it.  It can reference a ClusterRole in the global namespace,
+    and adds who information via Subject.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -334,8 +352,11 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         return self.__roleRef
 
 
-# Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding.
 class Role(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -371,10 +392,13 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         return self.__rules
 
 
-# RoleBinding references a role, but does not contain it.  It can reference a Role in the same namespace or a ClusterRole in the global namespace.
-# It adds who information via Subjects and namespace information by which namespace it exists in.  RoleBindings in a given
-# namespace only have effect in that namespace.
 class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    RoleBinding references a role, but does not contain it.  It can reference a Role in the same namespace or a ClusterRole in the global namespace.
+    It adds who information via Subjects and namespace information by which namespace it exists in.  RoleBindings in a given
+    namespace only have effect in that namespace.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

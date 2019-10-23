@@ -14,8 +14,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# Overhead structure represents the resource overhead associated with running a pod.
 class Overhead(types.Object):
+    """
+    Overhead structure represents the resource overhead associated with running a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, podFixed: Dict[corev1.ResourceName, "resource.Quantity"] = None):
@@ -42,9 +45,12 @@ class Overhead(types.Object):
         return self.__podFixed
 
 
-# Scheduling specifies the scheduling constraints for nodes supporting a
-# RuntimeClass.
 class Scheduling(types.Object):
+    """
+    Scheduling specifies the scheduling constraints for nodes supporting a
+    RuntimeClass.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -89,11 +95,14 @@ class Scheduling(types.Object):
         return self.__tolerations
 
 
-# RuntimeClassSpec is a specification of a RuntimeClass. It contains parameters
-# that are required to describe the RuntimeClass to the Container Runtime
-# Interface (CRI) implementation, as well as any other components that need to
-# understand how the pod will be run. The RuntimeClassSpec is immutable.
 class RuntimeClassSpec(types.Object):
+    """
+    RuntimeClassSpec is a specification of a RuntimeClass. It contains parameters
+    that are required to describe the RuntimeClass to the Container Runtime
+    Interface (CRI) implementation, as well as any other components that need to
+    understand how the pod will be run. The RuntimeClassSpec is immutable.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -157,14 +166,17 @@ class RuntimeClassSpec(types.Object):
         return self.__scheduling
 
 
-# RuntimeClass defines a class of container runtime supported in the cluster.
-# The RuntimeClass is used to determine which container runtime is used to run
-# all containers in a pod. RuntimeClasses are (currently) manually defined by a
-# user or cluster provisioner, and referenced in the PodSpec. The Kubelet is
-# responsible for resolving the RuntimeClassName reference before running the
-# pod.  For more details, see
-# https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
 class RuntimeClass(base.TypedObject, base.MetadataObject):
+    """
+    RuntimeClass defines a class of container runtime supported in the cluster.
+    The RuntimeClass is used to determine which container runtime is used to run
+    all containers in a pod. RuntimeClasses are (currently) manually defined by a
+    user or cluster provisioner, and referenced in the PodSpec. The Kubelet is
+    responsible for resolving the RuntimeClassName reference before running the
+    pod.  For more details, see
+    https://git.k8s.io/enhancements/keps/sig-node/runtime-class.md
+    """
+
     @context.scoped
     @typechecked
     def __init__(

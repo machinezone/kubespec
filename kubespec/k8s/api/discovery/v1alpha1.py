@@ -23,8 +23,11 @@ AddressType = base.Enum(
 )
 
 
-# EndpointConditions represents the current condition of an endpoint.
 class EndpointConditions(types.Object):
+    """
+    EndpointConditions represents the current condition of an endpoint.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, ready: bool = None):
@@ -50,8 +53,11 @@ class EndpointConditions(types.Object):
         return self.__ready
 
 
-# Endpoint represents a single logical "backend" implementing a service.
 class Endpoint(types.Object):
+    """
+    Endpoint represents a single logical "backend" implementing a service.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -147,8 +153,11 @@ class Endpoint(types.Object):
         return self.__topology
 
 
-# EndpointPort represents a Port used by an EndpointSlice
 class EndpointPort(types.Object):
+    """
+    EndpointPort represents a Port used by an EndpointSlice
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -207,10 +216,13 @@ class EndpointPort(types.Object):
         return self.__port
 
 
-# EndpointSlice represents a subset of the endpoints that implement a service.
-# For a given service there may be multiple EndpointSlice objects, selected by
-# labels, which must be joined to produce the full set of endpoints.
 class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    EndpointSlice represents a subset of the endpoints that implement a service.
+    For a given service there may be multiple EndpointSlice objects, selected by
+    labels, which must be joined to produce the full set of endpoints.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

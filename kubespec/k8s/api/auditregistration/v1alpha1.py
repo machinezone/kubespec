@@ -49,8 +49,11 @@ Stage = base.Enum(
 )
 
 
-# Policy defines the configuration of how audit events are logged
 class Policy(types.Object):
+    """
+    Policy defines the configuration of how audit events are logged
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, level: Level = None, stages: List[Stage] = None):
@@ -84,8 +87,11 @@ class Policy(types.Object):
         return self.__stages
 
 
-# ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    """
+    ServiceReference holds a reference to Service.legacy.k8s.io
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -146,8 +152,11 @@ class ServiceReference(types.Object):
         return self.__port
 
 
-# WebhookClientConfig contains the information to make a connection with the webhook
 class WebhookClientConfig(types.Object):
+    """
+    WebhookClientConfig contains the information to make a connection with the webhook
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -222,8 +231,11 @@ class WebhookClientConfig(types.Object):
         return self.__caBundle
 
 
-# WebhookThrottleConfig holds the configuration for throttling events
 class WebhookThrottleConfig(types.Object):
+    """
+    WebhookThrottleConfig holds the configuration for throttling events
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, qps: int = None, burst: int = None):
@@ -259,8 +271,11 @@ class WebhookThrottleConfig(types.Object):
         return self.__burst
 
 
-# Webhook holds the configuration of the webhook
 class Webhook(types.Object):
+    """
+    Webhook holds the configuration of the webhook
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -300,8 +315,11 @@ class Webhook(types.Object):
         return self.__clientConfig
 
 
-# AuditSinkSpec holds the spec for the audit sink
 class AuditSinkSpec(types.Object):
+    """
+    AuditSinkSpec holds the spec for the audit sink
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, policy: Policy = None, webhook: Webhook = None):
@@ -335,8 +353,11 @@ class AuditSinkSpec(types.Object):
         return self.__webhook
 
 
-# AuditSink represents a cluster level audit sink
 class AuditSink(base.TypedObject, base.MetadataObject):
+    """
+    AuditSink represents a cluster level audit sink
+    """
+
     @context.scoped
     @typechecked
     def __init__(

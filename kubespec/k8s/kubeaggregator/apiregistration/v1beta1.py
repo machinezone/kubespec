@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    """
+    ServiceReference holds a reference to Service.legacy.k8s.io
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, namespace: str = None, name: str = None, port: int = None):
@@ -60,9 +63,12 @@ class ServiceReference(types.Object):
         return self.__port
 
 
-# APIServiceSpec contains information for locating and communicating with a server.
-# Only https is supported, though you are able to disable certificate verification.
 class APIServiceSpec(types.Object):
+    """
+    APIServiceSpec contains information for locating and communicating with a server.
+    Only https is supported, though you are able to disable certificate verification.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -176,9 +182,12 @@ class APIServiceSpec(types.Object):
         return self.__versionPriority
 
 
-# APIService represents a server for a particular GroupVersion.
-# Name must be "version.group".
 class APIService(base.TypedObject, base.MetadataObject):
+    """
+    APIService represents a server for a particular GroupVersion.
+    Name must be "version.group".
+    """
+
     @context.scoped
     @typechecked
     def __init__(

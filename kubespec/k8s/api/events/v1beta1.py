@@ -13,9 +13,12 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# EventSeries contain information on series of events, i.e. thing that was/is happening
-# continuously for some time.
 class EventSeries(types.Object):
+    """
+    EventSeries contain information on series of events, i.e. thing that was/is happening
+    continuously for some time.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, count: int = 0, lastObservedTime: "base.MicroTime" = None):
@@ -47,8 +50,11 @@ class EventSeries(types.Object):
         return self.__lastObservedTime
 
 
-# Event is a report of an event somewhere in the cluster. It generally denotes some state change in the system.
 class Event(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Event is a report of an event somewhere in the cluster. It generally denotes some state change in the system.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -75,18 +75,21 @@ StatefulSetUpdateStrategyType = base.Enum(
 )
 
 
-# DEPRECATED - This group version of ControllerRevision is deprecated by apps/v1/ControllerRevision. See the
-# release notes for more information.
-# ControllerRevision implements an immutable snapshot of state data. Clients
-# are responsible for serializing and deserializing the objects that contain
-# their internal state.
-# Once a ControllerRevision has been successfully created, it can not be updated.
-# The API Server will fail validation of all requests that attempt to mutate
-# the Data field. ControllerRevisions may, however, be deleted. Note that, due to its use by both
-# the DaemonSet and StatefulSet controllers for update and rollback, this object is beta. However,
-# it may be subject to name and representation changes in future releases, and clients should not
-# depend on its stability. It is primarily for internal use by controllers.
 class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of ControllerRevision is deprecated by apps/v1/ControllerRevision. See the
+    release notes for more information.
+    ControllerRevision implements an immutable snapshot of state data. Clients
+    are responsible for serializing and deserializing the objects that contain
+    their internal state.
+    Once a ControllerRevision has been successfully created, it can not be updated.
+    The API Server will fail validation of all requests that attempt to mutate
+    the Data field. ControllerRevisions may, however, be deleted. Note that, due to its use by both
+    the DaemonSet and StatefulSet controllers for update and rollback, this object is beta. However,
+    it may be subject to name and representation changes in future releases, and clients should not
+    depend on its stability. It is primarily for internal use by controllers.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -133,8 +136,11 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         return self.__revision
 
 
-# Spec to control the desired behavior of daemon set rolling update.
 class RollingUpdateDaemonSet(types.Object):
+    """
+    Spec to control the desired behavior of daemon set rolling update.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, maxUnavailable: Union[int, str] = None):
@@ -170,8 +176,11 @@ class RollingUpdateDaemonSet(types.Object):
         return self.__maxUnavailable
 
 
-# DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet.
 class DaemonSetUpdateStrategy(types.Object):
+    """
+    DaemonSetUpdateStrategy is a struct used to control the update strategy for a DaemonSet.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -217,8 +226,11 @@ class DaemonSetUpdateStrategy(types.Object):
         return self.__rollingUpdate
 
 
-# DaemonSetSpec is the specification of a daemon set.
 class DaemonSetSpec(types.Object):
+    """
+    DaemonSetSpec is the specification of a daemon set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -305,10 +317,13 @@ class DaemonSetSpec(types.Object):
         return self.__revisionHistoryLimit
 
 
-# DEPRECATED - This group version of DaemonSet is deprecated by apps/v1/DaemonSet. See the release notes for
-# more information.
-# DaemonSet represents the configuration of a daemon set.
 class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of DaemonSet is deprecated by apps/v1/DaemonSet. See the release notes for
+    more information.
+    DaemonSet represents the configuration of a daemon set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -345,8 +360,11 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Spec to control the desired behavior of rolling update.
 class RollingUpdateDeployment(types.Object):
+    """
+    Spec to control the desired behavior of rolling update.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -401,8 +419,11 @@ class RollingUpdateDeployment(types.Object):
         return self.__maxSurge
 
 
-# DeploymentStrategy describes how to replace existing pods with new ones.
 class DeploymentStrategy(types.Object):
+    """
+    DeploymentStrategy describes how to replace existing pods with new ones.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -446,8 +467,11 @@ class DeploymentStrategy(types.Object):
         return self.__rollingUpdate
 
 
-# DeploymentSpec is the specification of the desired behavior of the Deployment.
 class DeploymentSpec(types.Object):
+    """
+    DeploymentSpec is the specification of the desired behavior of the Deployment.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -569,10 +593,13 @@ class DeploymentSpec(types.Object):
         return self.__progressDeadlineSeconds
 
 
-# DEPRECATED - This group version of Deployment is deprecated by apps/v1/Deployment. See the release notes for
-# more information.
-# Deployment enables declarative updates for Pods and ReplicaSets.
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of Deployment is deprecated by apps/v1/Deployment. See the release notes for
+    more information.
+    Deployment enables declarative updates for Pods and ReplicaSets.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -608,8 +635,11 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# ReplicaSetSpec is the specification of a ReplicaSet.
 class ReplicaSetSpec(types.Object):
+    """
+    ReplicaSetSpec is the specification of a ReplicaSet.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -679,10 +709,13 @@ class ReplicaSetSpec(types.Object):
         return self.__template
 
 
-# DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1/ReplicaSet. See the release notes for
-# more information.
-# ReplicaSet ensures that a specified number of pod replicas are running at any given time.
 class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1/ReplicaSet. See the release notes for
+    more information.
+    ReplicaSet ensures that a specified number of pod replicas are running at any given time.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -719,8 +752,11 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.
 class RollingUpdateStatefulSetStrategy(types.Object):
+    """
+    RollingUpdateStatefulSetStrategy is used to communicate parameter for RollingUpdateStatefulSetStrategyType.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, partition: int = None):
@@ -745,8 +781,11 @@ class RollingUpdateStatefulSetStrategy(types.Object):
         return self.__partition
 
 
-# ScaleSpec describes the attributes of a scale subresource
 class ScaleSpec(types.Object):
+    """
+    ScaleSpec describes the attributes of a scale subresource
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
@@ -769,8 +808,11 @@ class ScaleSpec(types.Object):
         return self.__replicas
 
 
-# Scale represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Scale represents a scaling request for a resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -806,10 +848,13 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# StatefulSetUpdateStrategy indicates the strategy that the StatefulSet
-# controller will use to perform updates. It includes any additional parameters
-# necessary to perform the update for the indicated strategy.
 class StatefulSetUpdateStrategy(types.Object):
+    """
+    StatefulSetUpdateStrategy indicates the strategy that the StatefulSet
+    controller will use to perform updates. It includes any additional parameters
+    necessary to perform the update for the indicated strategy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -856,8 +901,11 @@ class StatefulSetUpdateStrategy(types.Object):
         return self.__rollingUpdate
 
 
-# A StatefulSetSpec is the specification of a StatefulSet.
 class StatefulSetSpec(types.Object):
+    """
+    A StatefulSetSpec is the specification of a StatefulSet.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1014,15 +1062,18 @@ class StatefulSetSpec(types.Object):
         return self.__revisionHistoryLimit
 
 
-# DEPRECATED - This group version of StatefulSet is deprecated by apps/v1/StatefulSet. See the release notes for
-# more information.
-# StatefulSet represents a set of pods with consistent identities.
-# Identities are defined as:
-#  - Network: A single stable DNS and hostname.
-#  - Storage: As many VolumeClaims as requested.
-# The StatefulSet guarantees that a given network identity will always
-# map to the same storage identity.
 class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of StatefulSet is deprecated by apps/v1/StatefulSet. See the release notes for
+    more information.
+    StatefulSet represents a set of pods with consistent identities.
+    Identities are defined as:
+     - Network: A single stable DNS and hostname.
+     - Storage: As many VolumeClaims as requested.
+    The StatefulSet guarantees that a given network identity will always
+    map to the same storage identity.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

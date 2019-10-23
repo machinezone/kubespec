@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# TokenReviewSpec is a description of the token authentication request.
 class TokenReviewSpec(types.Object):
+    """
+    TokenReviewSpec is a description of the token authentication request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, token: str = None, audiences: List[str] = None):
@@ -51,10 +54,13 @@ class TokenReviewSpec(types.Object):
         return self.__audiences
 
 
-# TokenReview attempts to authenticate a token to a known user.
-# Note: TokenReview requests may be cached by the webhook token authenticator
-# plugin in the kube-apiserver.
 class TokenReview(base.TypedObject, base.MetadataObject):
+    """
+    TokenReview attempts to authenticate a token to a known user.
+    Note: TokenReview requests may be cached by the webhook token authenticator
+    plugin in the kube-apiserver.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -55,8 +55,11 @@ VolumeLifecycleMode = base.Enum(
 )
 
 
-# CSIDriverSpec is the specification of a CSIDriver.
 class CSIDriverSpec(types.Object):
+    """
+    CSIDriverSpec is the specification of a CSIDriver.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -155,15 +158,18 @@ class CSIDriverSpec(types.Object):
         return self.__volumeLifecycleModes
 
 
-# CSIDriver captures information about a Container Storage Interface (CSI)
-# volume driver deployed on the cluster.
-# CSI drivers do not need to create the CSIDriver object directly. Instead they may use the
-# cluster-driver-registrar sidecar container. When deployed with a CSI driver it automatically
-# creates a CSIDriver object representing the driver.
-# Kubernetes attach detach controller uses this object to determine whether attach is required.
-# Kubelet uses this object to determine whether pod information needs to be passed on mount.
-# CSIDriver objects are non-namespaced.
 class CSIDriver(base.TypedObject, base.MetadataObject):
+    """
+    CSIDriver captures information about a Container Storage Interface (CSI)
+    volume driver deployed on the cluster.
+    CSI drivers do not need to create the CSIDriver object directly. Instead they may use the
+    cluster-driver-registrar sidecar container. When deployed with a CSI driver it automatically
+    creates a CSIDriver object representing the driver.
+    Kubernetes attach detach controller uses this object to determine whether attach is required.
+    Kubelet uses this object to determine whether pod information needs to be passed on mount.
+    CSIDriver objects are non-namespaced.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -197,8 +203,11 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# VolumeNodeResources is a set of resource limits for scheduling of volumes.
 class VolumeNodeResources(types.Object):
+    """
+    VolumeNodeResources is a set of resource limits for scheduling of volumes.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, count: int = None):
@@ -224,8 +233,11 @@ class VolumeNodeResources(types.Object):
         return self.__count
 
 
-# CSINodeDriver holds information about the specification of one CSI driver installed on a node
 class CSINodeDriver(types.Object):
+    """
+    CSINodeDriver holds information about the specification of one CSI driver installed on a node
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -303,8 +315,11 @@ class CSINodeDriver(types.Object):
         return self.__allocatable
 
 
-# CSINodeSpec holds information about the specification of all CSI drivers installed on a node
 class CSINodeSpec(types.Object):
+    """
+    CSINodeSpec holds information about the specification of all CSI drivers installed on a node
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, drivers: Dict[str, CSINodeDriver] = None):
@@ -327,16 +342,19 @@ class CSINodeSpec(types.Object):
         return self.__drivers
 
 
-# CSINode holds information about all CSI drivers installed on a node.
-# CSI drivers do not need to create the CSINode object directly. As long as
-# they use the node-driver-registrar sidecar container, the kubelet will
-# automatically populate the CSINode object for the CSI driver as part of
-# kubelet plugin registration.
-# CSINode has the same name as a node. If the object is missing, it means either
-# there are no CSI Drivers available on the node, or the Kubelet version is low
-# enough that it doesn't create this object.
-# CSINode has an OwnerReference that points to the corresponding node object.
 class CSINode(base.TypedObject, base.MetadataObject):
+    """
+    CSINode holds information about all CSI drivers installed on a node.
+    CSI drivers do not need to create the CSINode object directly. As long as
+    they use the node-driver-registrar sidecar container, the kubelet will
+    automatically populate the CSINode object for the CSI driver as part of
+    kubelet plugin registration.
+    CSINode has the same name as a node. If the object is missing, it means either
+    there are no CSI Drivers available on the node, or the Kubelet version is low
+    enough that it doesn't create this object.
+    CSINode has an OwnerReference that points to the corresponding node object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -370,12 +388,15 @@ class CSINode(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# StorageClass describes the parameters for a class of storage for
-# which PersistentVolumes can be dynamically provisioned.
-#
-# StorageClasses are non-namespaced; the name of the storage class
-# according to etcd is in ObjectMeta.Name.
 class StorageClass(base.TypedObject, base.MetadataObject):
+    """
+    StorageClass describes the parameters for a class of storage for
+    which PersistentVolumes can be dynamically provisioned.
+    
+    StorageClasses are non-namespaced; the name of the storage class
+    according to etcd is in ObjectMeta.Name.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -508,11 +529,14 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         return self.__allowedTopologies
 
 
-# VolumeAttachmentSource represents a volume that should be attached.
-# Right now only PersistenVolumes can be attached via external attacher,
-# in future we may allow also inline volumes in pods.
-# Exactly one member can be set.
 class VolumeAttachmentSource(types.Object):
+    """
+    VolumeAttachmentSource represents a volume that should be attached.
+    Right now only PersistenVolumes can be attached via external attacher,
+    in future we may allow also inline volumes in pods.
+    Exactly one member can be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -559,8 +583,11 @@ class VolumeAttachmentSource(types.Object):
         return self.__inlineVolumeSpec
 
 
-# VolumeAttachmentSpec is the specification of a VolumeAttachment request.
 class VolumeAttachmentSpec(types.Object):
+    """
+    VolumeAttachmentSpec is the specification of a VolumeAttachment request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -608,11 +635,14 @@ class VolumeAttachmentSpec(types.Object):
         return self.__nodeName
 
 
-# VolumeAttachment captures the intent to attach or detach the specified volume
-# to/from the specified node.
-#
-# VolumeAttachment objects are non-namespaced.
 class VolumeAttachment(base.TypedObject, base.MetadataObject):
+    """
+    VolumeAttachment captures the intent to attach or detach the specified volume
+    to/from the specified node.
+    
+    VolumeAttachment objects are non-namespaced.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

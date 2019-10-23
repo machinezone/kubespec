@@ -14,8 +14,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# PodPresetSpec is a description of a pod preset.
 class PodPresetSpec(types.Object):
+    """
+    PodPresetSpec is a description of a pod preset.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -91,9 +94,12 @@ class PodPresetSpec(types.Object):
         return self.__volumeMounts
 
 
-# PodPreset is a policy resource that defines additional runtime
-# requirements for a Pod.
 class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodPreset is a policy resource that defines additional runtime
+    requirements for a Pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

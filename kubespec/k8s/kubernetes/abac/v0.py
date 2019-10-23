@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# Policy contains a single ABAC policy rule
 class Policy(base.TypedObject):
+    """
+    Policy contains a single ABAC policy rule
+    """
+
     @context.scoped
     @typechecked
     def __init__(

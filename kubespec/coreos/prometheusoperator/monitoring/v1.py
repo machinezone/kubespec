@@ -14,9 +14,12 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# BasicAuth allow an endpoint to authenticate over basic authentication
-# More info: https://prometheus.io/docs/operating/configuration/#endpoints
 class BasicAuth(types.Object):
+    """
+    BasicAuth allow an endpoint to authenticate over basic authentication
+    More info: https://prometheus.io/docs/operating/configuration/#endpoints
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -56,8 +59,11 @@ class BasicAuth(types.Object):
         return self.__password
 
 
-# TLSConfig specifies TLS configuration parameters.
 class TLSConfig(types.Object):
+    """
+    TLSConfig specifies TLS configuration parameters.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -131,9 +137,12 @@ class TLSConfig(types.Object):
         return self.__insecureSkipVerify
 
 
-# APIServerConfig defines a host and auth methods to access apiserver.
-# More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config
 class APIServerConfig(types.Object):
+    """
+    APIServerConfig defines a host and auth methods to access apiserver.
+    More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#kubernetes_sd_config
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -207,9 +216,12 @@ class APIServerConfig(types.Object):
         return self.__tlsConfig
 
 
-# AlertmanagerEndpoints defines a selection of a single Endpoints object
-# containing alertmanager IPs to fire alerts against.
 class AlertmanagerEndpoints(types.Object):
+    """
+    AlertmanagerEndpoints defines a selection of a single Endpoints object
+    containing alertmanager IPs to fire alerts against.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -305,8 +317,11 @@ class AlertmanagerEndpoints(types.Object):
         return self.__bearerTokenFile
 
 
-# AlertingSpec defines parameters for alerting configuration of Prometheus servers.
 class AlertingSpec(types.Object):
+    """
+    AlertingSpec defines parameters for alerting configuration of Prometheus servers.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, alertmanagers: Dict[str, AlertmanagerEndpoints] = None):
@@ -328,9 +343,12 @@ class AlertingSpec(types.Object):
         return self.__alertmanagers
 
 
-# StorageSpec defines the configured storage for a group Prometheus servers.
-# If neither `emptyDir` nor `volumeClaimTemplate` is specified, then by default an [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) will be used.
 class StorageSpec(types.Object):
+    """
+    StorageSpec defines the configured storage for a group Prometheus servers.
+    If neither `emptyDir` nor `volumeClaimTemplate` is specified, then by default an [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) will be used.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -376,9 +394,12 @@ class StorageSpec(types.Object):
         return self.__volumeClaimTemplate
 
 
-# AlertmanagerSpec is a specification of the desired behavior of the Alertmanager cluster. More info:
-# https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
 class AlertmanagerSpec(types.Object):
+    """
+    AlertmanagerSpec is a specification of the desired behavior of the Alertmanager cluster. More info:
+    https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -816,9 +837,12 @@ class AlertmanagerSpec(types.Object):
         return self.__portName
 
 
-# Alertmanager describes an Alertmanager cluster.
-# +genclient
 class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Alertmanager describes an Alertmanager cluster.
+    +genclient
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -855,10 +879,13 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion.
-# It defines `<metric_relabel_configs>`-section of Prometheus configuration.
-# More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
 class RelabelConfig(types.Object):
+    """
+    RelabelConfig allows dynamic rewriting of the label set, being applied to samples before ingestion.
+    It defines `<metric_relabel_configs>`-section of Prometheus configuration.
+    More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -960,8 +987,11 @@ class RelabelConfig(types.Object):
         return self.__action
 
 
-# Endpoint defines a scrapeable endpoint serving Prometheus metrics.
 class Endpoint(types.Object):
+    """
+    Endpoint defines a scrapeable endpoint serving Prometheus metrics.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1149,9 +1179,12 @@ class Endpoint(types.Object):
         return self.__proxyUrl
 
 
-# NamespaceSelector is a selector for selecting either all namespaces or a
-# list of namespaces.
 class NamespaceSelector(types.Object):
+    """
+    NamespaceSelector is a selector for selecting either all namespaces or a
+    list of namespaces.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, any: bool = None, matchNames: List[str] = None):
@@ -1186,8 +1219,11 @@ class NamespaceSelector(types.Object):
         return self.__matchNames
 
 
-# PodMetricsEndpoint defines a scrapeable endpoint of a Kubernetes Pod serving Prometheus metrics.
 class PodMetricsEndpoint(types.Object):
+    """
+    PodMetricsEndpoint defines a scrapeable endpoint of a Kubernetes Pod serving Prometheus metrics.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1338,8 +1374,11 @@ class PodMetricsEndpoint(types.Object):
         return self.__proxyUrl
 
 
-# PodMonitorSpec contains specification parameters for a PodMonitor.
 class PodMonitorSpec(types.Object):
+    """
+    PodMonitorSpec contains specification parameters for a PodMonitor.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1426,9 +1465,12 @@ class PodMonitorSpec(types.Object):
         return self.__sampleLimit
 
 
-# PodMonitor defines monitoring for a set of pods.
-# +genclient
 class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodMonitor defines monitoring for a set of pods.
+    +genclient
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1464,8 +1506,11 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# QuerySpec defines the query command line flags when starting Prometheus.
 class QuerySpec(types.Object):
+    """
+    QuerySpec defines the query command line flags when starting Prometheus.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1527,8 +1572,11 @@ class QuerySpec(types.Object):
         return self.__timeout
 
 
-# RemoteReadSpec defines the remote_read configuration for prometheus.
 class RemoteReadSpec(types.Object):
+    """
+    RemoteReadSpec defines the remote_read configuration for prometheus.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1653,9 +1701,12 @@ class RemoteReadSpec(types.Object):
         return self.__proxyUrl
 
 
-# QueueConfig allows the tuning of remote_write queue_config parameters. This object
-# is referenced in the RemoteWriteSpec object.
 class QueueConfig(types.Object):
+    """
+    QueueConfig allows the tuning of remote_write queue_config parameters. This object
+    is referenced in the RemoteWriteSpec object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1765,8 +1816,11 @@ class QueueConfig(types.Object):
         return self.__maxBackoff
 
 
-# RemoteWriteSpec defines the remote_write configuration for prometheus.
 class RemoteWriteSpec(types.Object):
+    """
+    RemoteWriteSpec defines the remote_write configuration for prometheus.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1891,8 +1945,11 @@ class RemoteWriteSpec(types.Object):
         return self.__queueConfig
 
 
-# /--rules.alert.*/ command-line arguments
 class RulesAlert(types.Object):
+    """
+    /--rules.alert.*/ command-line arguments
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1943,8 +2000,11 @@ class RulesAlert(types.Object):
         return self.__resendDelay
 
 
-# /--rules.*/ command-line arguments
 class Rules(types.Object):
+    """
+    /--rules.*/ command-line arguments
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, alert: RulesAlert = None):
@@ -1963,8 +2023,11 @@ class Rules(types.Object):
         return self.__alert
 
 
-# ThanosSpec defines parameters for a Prometheus server within a Thanos deployment.
 class ThanosSpec(types.Object):
+    """
+    ThanosSpec defines parameters for a Prometheus server within a Thanos deployment.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2074,9 +2137,12 @@ class ThanosSpec(types.Object):
         return self.__objectStorageConfig
 
 
-# PrometheusSpec is a specification of the desired behavior of the Prometheus cluster. More info:
-# https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
 class PrometheusSpec(types.Object):
+    """
+    PrometheusSpec is a specification of the desired behavior of the Prometheus cluster. More info:
+    https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2864,9 +2930,12 @@ class PrometheusSpec(types.Object):
         return self.__portName
 
 
-# Prometheus defines a Prometheus deployment.
-# +genclient
 class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Prometheus defines a Prometheus deployment.
+    +genclient
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2903,8 +2972,11 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Rule describes an alerting or recording rule.
 class Rule(types.Object):
+    """
+    Rule describes an alerting or recording rule.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2971,8 +3043,11 @@ class Rule(types.Object):
         return self.__annotations
 
 
-# RuleGroup is a list of sequentially evaluated recording and alerting rules.
 class RuleGroup(types.Object):
+    """
+    RuleGroup is a list of sequentially evaluated recording and alerting rules.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", interval: str = None, rules: List[Rule] = None):
@@ -3006,8 +3081,11 @@ class RuleGroup(types.Object):
         return self.__rules
 
 
-# PrometheusRuleSpec contains specification parameters for a Rule.
 class PrometheusRuleSpec(types.Object):
+    """
+    PrometheusRuleSpec contains specification parameters for a Rule.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, groups: Dict[str, RuleGroup] = None):
@@ -3030,9 +3108,12 @@ class PrometheusRuleSpec(types.Object):
         return self.__groups
 
 
-# PrometheusRule defines alerting rules for a Prometheus instance
-# +genclient
 class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PrometheusRule defines alerting rules for a Prometheus instance
+    +genclient
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3068,8 +3149,11 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# ServiceMonitorSpec contains specification parameters for a ServiceMonitor.
 class ServiceMonitorSpec(types.Object):
+    """
+    ServiceMonitorSpec contains specification parameters for a ServiceMonitor.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3166,9 +3250,12 @@ class ServiceMonitorSpec(types.Object):
         return self.__sampleLimit
 
 
-# ServiceMonitor defines monitoring for a set of services.
-# +genclient
 class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ServiceMonitor defines monitoring for a set of services.
+    +genclient
+    """
+
     @context.scoped
     @typechecked
     def __init__(

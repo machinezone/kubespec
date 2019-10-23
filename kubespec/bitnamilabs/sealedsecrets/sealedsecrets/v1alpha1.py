@@ -13,9 +13,12 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# SecretTemplateSpec describes the structure a Secret should have
-# when created from a template
 class SecretTemplateSpec(base.NamespacedMetadataObject):
+    """
+    SecretTemplateSpec describes the structure a Secret should have
+    when created from a template
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -50,8 +53,11 @@ class SecretTemplateSpec(base.NamespacedMetadataObject):
         return self.__type
 
 
-# SealedSecretSpec is the specification of a SealedSecret
 class SealedSecretSpec(types.Object):
+    """
+    SealedSecretSpec is the specification of a SealedSecret
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -97,10 +103,13 @@ class SealedSecretSpec(types.Object):
         return self.__encryptedData
 
 
-# SealedSecret is the K8s representation of a "sealed Secret" - a
-# regular k8s Secret that has been sealed (encrypted) using the
-# controller's key.
 class SealedSecret(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    SealedSecret is the K8s representation of a "sealed Secret" - a
+    regular k8s Secret that has been sealed (encrypted) using the
+    controller's key.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

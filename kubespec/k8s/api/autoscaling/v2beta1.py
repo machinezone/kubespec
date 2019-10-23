@@ -42,8 +42,11 @@ MetricSourceType = base.Enum(
 )
 
 
-# CrossVersionObjectReference contains enough information to let you identify the referred resource.
 class CrossVersionObjectReference(types.Object):
+    """
+    CrossVersionObjectReference contains enough information to let you identify the referred resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
@@ -86,11 +89,14 @@ class CrossVersionObjectReference(types.Object):
         return self.__apiVersion
 
 
-# ExternalMetricSource indicates how to scale on a metric not associated with
-# any Kubernetes object (for example length of queue in cloud
-# messaging service, or QPS from loadbalancer running outside of cluster).
-# Exactly one "target" type should be set.
 class ExternalMetricSource(types.Object):
+    """
+    ExternalMetricSource indicates how to scale on a metric not associated with
+    any Kubernetes object (for example length of queue in cloud
+    messaging service, or QPS from loadbalancer running outside of cluster).
+    Exactly one "target" type should be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -156,9 +162,12 @@ class ExternalMetricSource(types.Object):
         return self.__targetAverageValue
 
 
-# ObjectMetricSource indicates how to scale on a metric describing a
-# kubernetes object (for example, hits-per-second on an Ingress object).
 class ObjectMetricSource(types.Object):
+    """
+    ObjectMetricSource indicates how to scale on a metric describing a
+    kubernetes object (for example, hits-per-second on an Ingress object).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -234,11 +243,14 @@ class ObjectMetricSource(types.Object):
         return self.__averageValue
 
 
-# PodsMetricSource indicates how to scale on a metric describing each pod in
-# the current scale target (for example, transactions-processed-per-second).
-# The values will be averaged together before being compared to the target
-# value.
 class PodsMetricSource(types.Object):
+    """
+    PodsMetricSource indicates how to scale on a metric describing each pod in
+    the current scale target (for example, transactions-processed-per-second).
+    The values will be averaged together before being compared to the target
+    value.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -293,14 +305,17 @@ class PodsMetricSource(types.Object):
         return self.__selector
 
 
-# ResourceMetricSource indicates how to scale on a resource metric known to
-# Kubernetes, as specified in requests and limits, describing each pod in the
-# current scale target (e.g. CPU or memory).  The values will be averaged
-# together before being compared to the target.  Such metrics are built in to
-# Kubernetes, and have special scaling options on top of those available to
-# normal per-pod metrics using the "pods" source.  Only one "target" type
-# should be set.
 class ResourceMetricSource(types.Object):
+    """
+    ResourceMetricSource indicates how to scale on a resource metric known to
+    Kubernetes, as specified in requests and limits, describing each pod in the
+    current scale target (e.g. CPU or memory).  The values will be averaged
+    together before being compared to the target.  Such metrics are built in to
+    Kubernetes, and have special scaling options on top of those available to
+    normal per-pod metrics using the "pods" source.  Only one "target" type
+    should be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -355,9 +370,12 @@ class ResourceMetricSource(types.Object):
         return self.__targetAverageValue
 
 
-# MetricSpec specifies how to scale based on a single metric
-# (only `type` and one other matching field should be set at once).
 class MetricSpec(types.Object):
+    """
+    MetricSpec specifies how to scale based on a single metric
+    (only `type` and one other matching field should be set at once).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -442,8 +460,11 @@ class MetricSpec(types.Object):
         return self.__external
 
 
-# HorizontalPodAutoscalerSpec describes the desired functionality of the HorizontalPodAutoscaler.
 class HorizontalPodAutoscalerSpec(types.Object):
+    """
+    HorizontalPodAutoscalerSpec describes the desired functionality of the HorizontalPodAutoscaler.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -519,10 +540,13 @@ class HorizontalPodAutoscalerSpec(types.Object):
         return self.__metrics
 
 
-# HorizontalPodAutoscaler is the configuration for a horizontal pod
-# autoscaler, which automatically manages the replica count of any resource
-# implementing the scale subresource based on the metrics specified.
 class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    HorizontalPodAutoscaler is the configuration for a horizontal pod
+    autoscaler, which automatically manages the replica count of any resource
+    implementing the scale subresource based on the metrics specified.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

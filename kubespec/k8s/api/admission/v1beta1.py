@@ -32,8 +32,11 @@ PatchType = base.Enum(
 )
 
 
-# AdmissionRequest describes the admission.Attributes for the admission request.
 class AdmissionRequest(types.Object):
+    """
+    AdmissionRequest describes the admission.Attributes for the admission request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -257,8 +260,11 @@ class AdmissionRequest(types.Object):
         return self.__options
 
 
-# AdmissionResponse describes an admission response.
 class AdmissionResponse(types.Object):
+    """
+    AdmissionResponse describes an admission response.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -349,8 +355,11 @@ class AdmissionResponse(types.Object):
         return self.__auditAnnotations
 
 
-# AdmissionReview describes an admission review request/response.
 class AdmissionReview(base.TypedObject):
+    """
+    AdmissionReview describes an admission review request/response.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

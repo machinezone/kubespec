@@ -15,8 +15,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# ContainerMetrics sets resource usage metrics of a container.
 class ContainerMetrics(types.Object):
+    """
+    ContainerMetrics sets resource usage metrics of a container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -52,8 +55,11 @@ class ContainerMetrics(types.Object):
         return self.__usage
 
 
-# NodeMetrics sets resource usage metrics of a node.
 class NodeMetrics(base.TypedObject, base.MetadataObject):
+    """
+    NodeMetrics sets resource usage metrics of a node.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -107,8 +113,11 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         return self.__usage
 
 
-# PodMetrics sets resource usage metrics of a pod.
 class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodMetrics sets resource usage metrics of a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -587,13 +587,16 @@ UnsatisfiableConstraintAction = base.Enum(
 )
 
 
-# Represents a Persistent Disk resource in AWS.
-#
-# An AWS EBS disk must exist before mounting to a container. The disk
-# must also be in the same AWS zone as the kubelet. An AWS EBS disk
-# can only be mounted as read/write once. AWS EBS volumes support
-# ownership management and SELinux relabeling.
 class AWSElasticBlockStoreVolumeSource(types.Object):
+    """
+    Represents a Persistent Disk resource in AWS.
+    
+    An AWS EBS disk must exist before mounting to a container. The disk
+    must also be in the same AWS zone as the kubelet. An AWS EBS disk
+    can only be mounted as read/write once. AWS EBS volumes support
+    ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -664,9 +667,12 @@ class AWSElasticBlockStoreVolumeSource(types.Object):
         return self.__readOnly
 
 
-# A node selector requirement is a selector that contains values, a key, and an operator
-# that relates the key and values.
 class NodeSelectorRequirement(types.Object):
+    """
+    A node selector requirement is a selector that contains values, a key, and an operator
+    that relates the key and values.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -719,10 +725,13 @@ class NodeSelectorRequirement(types.Object):
         return self.__values
 
 
-# A null or empty node selector term matches no objects. The requirements of
-# them are ANDed.
-# The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
 class NodeSelectorTerm(types.Object):
+    """
+    A null or empty node selector term matches no objects. The requirements of
+    them are ANDed.
+    The TopologySelectorTerm type implements a subset of the NodeSelectorTerm.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -766,10 +775,13 @@ class NodeSelectorTerm(types.Object):
         return self.__matchFields
 
 
-# A node selector represents the union of the results of one or more label queries
-# over a set of nodes; that is, it represents the OR of the selectors represented
-# by the node selector terms.
 class NodeSelector(types.Object):
+    """
+    A node selector represents the union of the results of one or more label queries
+    over a set of nodes; that is, it represents the OR of the selectors represented
+    by the node selector terms.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, nodeSelectorTerms: List[NodeSelectorTerm] = None):
@@ -793,9 +805,12 @@ class NodeSelector(types.Object):
         return self.__nodeSelectorTerms
 
 
-# An empty preferred scheduling term matches all objects with implicit weight 0
-# (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
 class PreferredSchedulingTerm(types.Object):
+    """
+    An empty preferred scheduling term matches all objects with implicit weight 0
+    (i.e. it's a no-op). A null preferred scheduling term matches no objects (i.e. is also a no-op).
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, weight: int = 0, preference: NodeSelectorTerm = None):
@@ -827,8 +842,11 @@ class PreferredSchedulingTerm(types.Object):
         return self.__preference
 
 
-# Node affinity is a group of node affinity scheduling rules.
 class NodeAffinity(types.Object):
+    """
+    Node affinity is a group of node affinity scheduling rules.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -904,13 +922,16 @@ class NodeAffinity(types.Object):
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
-# Defines a set of pods (namely those matching the labelSelector
-# relative to the given namespace(s)) that this pod should be
-# co-located (affinity) or not co-located (anti-affinity) with,
-# where co-located is defined as running on a node whose value of
-# the label with key <topologyKey> matches that of any node on which
-# a pod of the set of pods is running
 class PodAffinityTerm(types.Object):
+    """
+    Defines a set of pods (namely those matching the labelSelector
+    relative to the given namespace(s)) that this pod should be
+    co-located (affinity) or not co-located (anti-affinity) with,
+    where co-located is defined as running on a node whose value of
+    the label with key <topologyKey> matches that of any node on which
+    a pod of the set of pods is running
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -964,8 +985,11 @@ class PodAffinityTerm(types.Object):
         return self.__topologyKey
 
 
-# The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
 class WeightedPodAffinityTerm(types.Object):
+    """
+    The weights of all of the matched WeightedPodAffinityTerm fields are added per-node to find the most preferred node(s)
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, weight: int = 0, podAffinityTerm: PodAffinityTerm = None):
@@ -1000,8 +1024,11 @@ class WeightedPodAffinityTerm(types.Object):
         return self.__podAffinityTerm
 
 
-# Pod affinity is a group of inter pod affinity scheduling rules.
 class PodAffinity(types.Object):
+    """
+    Pod affinity is a group of inter pod affinity scheduling rules.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1083,8 +1110,11 @@ class PodAffinity(types.Object):
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
-# Pod anti affinity is a group of inter pod anti affinity scheduling rules.
 class PodAntiAffinity(types.Object):
+    """
+    Pod anti affinity is a group of inter pod anti affinity scheduling rules.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1166,8 +1196,11 @@ class PodAntiAffinity(types.Object):
         return self.__preferredDuringSchedulingIgnoredDuringExecution
 
 
-# Affinity is a group of affinity scheduling rules.
 class Affinity(types.Object):
+    """
+    Affinity is a group of affinity scheduling rules.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1217,8 +1250,11 @@ class Affinity(types.Object):
         return self.__podAntiAffinity
 
 
-# AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
 class AzureDiskVolumeSource(types.Object):
+    """
+    AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1309,8 +1345,11 @@ class AzureDiskVolumeSource(types.Object):
         return self.__kind
 
 
-# AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
 class AzureFilePersistentVolumeSource(types.Object):
+    """
+    AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1371,8 +1410,11 @@ class AzureFilePersistentVolumeSource(types.Object):
         return self.__secretNamespace
 
 
-# AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
 class AzureFileVolumeSource(types.Object):
+    """
+    AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1418,8 +1460,11 @@ class AzureFileVolumeSource(types.Object):
         return self.__readOnly
 
 
-# ObjectReference contains enough information to let you inspect or modify the referred object.
 class ObjectReference(types.Object):
+    """
+    ObjectReference contains enough information to let you inspect or modify the referred object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1529,9 +1574,12 @@ class ObjectReference(types.Object):
         return self.__fieldPath
 
 
-# Binding ties one object to another; for example, a pod is bound to a node by a scheduler.
-# Deprecated in 1.7, please use the bindings subresource of pods instead.
 class Binding(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Binding ties one object to another; for example, a pod is bound to a node by a scheduler.
+    Deprecated in 1.7, please use the bindings subresource of pods instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1567,9 +1615,12 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
         return self.__target
 
 
-# SecretReference represents a Secret Reference. It has enough information to retrieve secret
-# in any namespace
 class SecretReference(types.Object):
+    """
+    SecretReference represents a Secret Reference. It has enough information to retrieve secret
+    in any namespace
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, namespace: str = None):
@@ -1603,8 +1654,11 @@ class SecretReference(types.Object):
         return self.__namespace
 
 
-# Represents storage that is managed by an external CSI volume driver (Beta feature)
 class CSIPersistentVolumeSource(types.Object):
+    """
+    Represents storage that is managed by an external CSI volume driver (Beta feature)
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1759,9 +1813,12 @@ class CSIPersistentVolumeSource(types.Object):
         return self.__controllerExpandSecretRef
 
 
-# LocalObjectReference contains enough information to let you locate the
-# referenced object inside the same namespace.
 class LocalObjectReference(types.Object):
+    """
+    LocalObjectReference contains enough information to let you locate the
+    referenced object inside the same namespace.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = None):
@@ -1786,8 +1843,11 @@ class LocalObjectReference(types.Object):
         return self.__name
 
 
-# Represents a source location of a volume to mount, managed by an external CSI driver
 class CSIVolumeSource(types.Object):
+    """
+    Represents a source location of a volume to mount, managed by an external CSI driver
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1873,8 +1933,11 @@ class CSIVolumeSource(types.Object):
         return self.__nodePublishSecretRef
 
 
-# Adds and removes POSIX capabilities from running containers.
 class Capabilities(types.Object):
+    """
+    Adds and removes POSIX capabilities from running containers.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, add: List[Capability] = None, drop: List[Capability] = None):
@@ -1908,9 +1971,12 @@ class Capabilities(types.Object):
         return self.__drop
 
 
-# Represents a Ceph Filesystem mount that lasts the lifetime of a pod
-# Cephfs volumes do not support ownership management or SELinux relabeling.
 class CephFSPersistentVolumeSource(types.Object):
+    """
+    Represents a Ceph Filesystem mount that lasts the lifetime of a pod
+    Cephfs volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2001,9 +2067,12 @@ class CephFSPersistentVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Represents a Ceph Filesystem mount that lasts the lifetime of a pod
-# Cephfs volumes do not support ownership management or SELinux relabeling.
 class CephFSVolumeSource(types.Object):
+    """
+    Represents a Ceph Filesystem mount that lasts the lifetime of a pod
+    Cephfs volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2094,11 +2163,14 @@ class CephFSVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Represents a cinder volume resource in Openstack.
-# A Cinder volume must exist before mounting to a container.
-# The volume must also be in the same region as the kubelet.
-# Cinder volumes support ownership management and SELinux relabeling.
 class CinderPersistentVolumeSource(types.Object):
+    """
+    Represents a cinder volume resource in Openstack.
+    A Cinder volume must exist before mounting to a container.
+    The volume must also be in the same region as the kubelet.
+    Cinder volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2166,11 +2238,14 @@ class CinderPersistentVolumeSource(types.Object):
         return self.__secretRef
 
 
-# Represents a cinder volume resource in Openstack.
-# A Cinder volume must exist before mounting to a container.
-# The volume must also be in the same region as the kubelet.
-# Cinder volumes support ownership management and SELinux relabeling.
 class CinderVolumeSource(types.Object):
+    """
+    Represents a cinder volume resource in Openstack.
+    A Cinder volume must exist before mounting to a container.
+    The volume must also be in the same region as the kubelet.
+    Cinder volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2238,8 +2313,11 @@ class CinderVolumeSource(types.Object):
         return self.__secretRef
 
 
-# ClientIPConfig represents the configurations of Client IP based session affinity.
 class ClientIPConfig(types.Object):
+    """
+    ClientIPConfig represents the configurations of Client IP based session affinity.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, timeoutSeconds: int = None):
@@ -2264,8 +2342,11 @@ class ClientIPConfig(types.Object):
         return self.__timeoutSeconds
 
 
-# Information about the condition of a component.
 class ComponentCondition(types.Object):
+    """
+    Information about the condition of a component.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2329,8 +2410,11 @@ class ComponentCondition(types.Object):
         return self.__error
 
 
-# ComponentStatus (and ComponentStatusList) holds the cluster validation info.
 class ComponentStatus(base.TypedObject, base.MetadataObject):
+    """
+    ComponentStatus (and ComponentStatusList) holds the cluster validation info.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2365,8 +2449,11 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
         return self.__conditions
 
 
-# ConfigMap holds configuration data for pods to consume.
 class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ConfigMap holds configuration data for pods to consume.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2425,12 +2512,15 @@ class ConfigMap(base.TypedObject, base.NamespacedMetadataObject):
         return self.__binaryData
 
 
-# ConfigMapEnvSource selects a ConfigMap to populate the environment
-# variables with.
-#
-# The contents of the target ConfigMap's Data field will represent the
-# key-value pairs as environment variables.
 class ConfigMapEnvSource(types.Object):
+    """
+    ConfigMapEnvSource selects a ConfigMap to populate the environment
+    variables with.
+    
+    The contents of the target ConfigMap's Data field will represent the
+    key-value pairs as environment variables.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2469,8 +2559,11 @@ class ConfigMapEnvSource(types.Object):
         return self.__optional
 
 
-# Selects a key from a ConfigMap.
 class ConfigMapKeySelector(types.Object):
+    """
+    Selects a key from a ConfigMap.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2522,8 +2615,11 @@ class ConfigMapKeySelector(types.Object):
         return self.__optional
 
 
-# ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node.
 class ConfigMapNodeConfigSource(types.Object):
+    """
+    ConfigMapNodeConfigSource contains the information to reference a ConfigMap as a config source for the Node.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2599,8 +2695,11 @@ class ConfigMapNodeConfigSource(types.Object):
         return self.__kubeletConfigKey
 
 
-# Maps a string key to a path within a volume.
 class KeyToPath(types.Object):
+    """
+    Maps a string key to a path within a volume.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, key: str = "", path: str = "", mode: int = None):
@@ -2649,14 +2748,17 @@ class KeyToPath(types.Object):
         return self.__mode
 
 
-# Adapts a ConfigMap into a projected volume.
-#
-# The contents of the target ConfigMap's Data field will be presented in a
-# projected volume as files using the keys in the Data field as the file names,
-# unless the items element is populated with specific mappings of keys to paths.
-# Note that this is identical to a configmap volume source without the default
-# mode.
 class ConfigMapProjection(types.Object):
+    """
+    Adapts a ConfigMap into a projected volume.
+    
+    The contents of the target ConfigMap's Data field will be presented in a
+    projected volume as files using the keys in the Data field as the file names,
+    unless the items element is populated with specific mappings of keys to paths.
+    Note that this is identical to a configmap volume source without the default
+    mode.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2712,13 +2814,16 @@ class ConfigMapProjection(types.Object):
         return self.__optional
 
 
-# Adapts a ConfigMap into a volume.
-#
-# The contents of the target ConfigMap's Data field will be presented in a
-# volume as files using the keys in the Data field as the file names, unless
-# the items element is populated with specific mappings of keys to paths.
-# ConfigMap volumes support ownership management and SELinux relabeling.
 class ConfigMapVolumeSource(types.Object):
+    """
+    Adapts a ConfigMap into a volume.
+    
+    The contents of the target ConfigMap's Data field will be presented in a
+    volume as files using the keys in the Data field as the file names, unless
+    the items element is populated with specific mappings of keys to paths.
+    ConfigMap volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2790,8 +2895,11 @@ class ConfigMapVolumeSource(types.Object):
         return self.__optional
 
 
-# ContainerPort represents a network port in a single container.
 class ContainerPort(types.Object):
+    """
+    ContainerPort represents a network port in a single container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2871,12 +2979,15 @@ class ContainerPort(types.Object):
         return self.__hostIP
 
 
-# SecretEnvSource selects a Secret to populate the environment
-# variables with.
-#
-# The contents of the target Secret's Data field will represent the
-# key-value pairs as environment variables.
 class SecretEnvSource(types.Object):
+    """
+    SecretEnvSource selects a Secret to populate the environment
+    variables with.
+    
+    The contents of the target Secret's Data field will represent the
+    key-value pairs as environment variables.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2915,8 +3026,11 @@ class SecretEnvSource(types.Object):
         return self.__optional
 
 
-# EnvFromSource represents the source of a set of ConfigMaps
 class EnvFromSource(types.Object):
+    """
+    EnvFromSource represents the source of a set of ConfigMaps
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2966,8 +3080,11 @@ class EnvFromSource(types.Object):
         return self.__secretRef
 
 
-# ObjectFieldSelector selects an APIVersioned field of an object.
 class ObjectFieldSelector(types.Object):
+    """
+    ObjectFieldSelector selects an APIVersioned field of an object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, apiVersion: str = "v1", fieldPath: str = ""):
@@ -3000,8 +3117,11 @@ class ObjectFieldSelector(types.Object):
         return self.__fieldPath
 
 
-# ResourceFieldSelector represents container resources (cpu, memory) and their output format
 class ResourceFieldSelector(types.Object):
+    """
+    ResourceFieldSelector represents container resources (cpu, memory) and their output format
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3049,8 +3169,11 @@ class ResourceFieldSelector(types.Object):
         return self.__divisor
 
 
-# SecretKeySelector selects a key of a Secret.
 class SecretKeySelector(types.Object):
+    """
+    SecretKeySelector selects a key of a Secret.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3102,8 +3225,11 @@ class SecretKeySelector(types.Object):
         return self.__optional
 
 
-# EnvVarSource represents a source for the value of an EnvVar.
 class EnvVarSource(types.Object):
+    """
+    EnvVarSource represents a source for the value of an EnvVar.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3169,8 +3295,11 @@ class EnvVarSource(types.Object):
         return self.__secretKeyRef
 
 
-# EnvVar represents an environment variable present in a Container.
 class EnvVar(types.Object):
+    """
+    EnvVar represents an environment variable present in a Container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3223,8 +3352,11 @@ class EnvVar(types.Object):
         return self.__valueFrom
 
 
-# ExecAction describes a "run in container" action.
 class ExecAction(types.Object):
+    """
+    ExecAction describes a "run in container" action.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, command: List[str] = None):
@@ -3251,8 +3383,11 @@ class ExecAction(types.Object):
         return self.__command
 
 
-# HTTPHeader describes a custom header to be used in HTTP probes
 class HTTPHeader(types.Object):
+    """
+    HTTPHeader describes a custom header to be used in HTTP probes
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", value: str = ""):
@@ -3284,8 +3419,11 @@ class HTTPHeader(types.Object):
         return self.__value
 
 
-# HTTPGetAction describes an action based on HTTP Get requests.
 class HTTPGetAction(types.Object):
+    """
+    HTTPGetAction describes an action based on HTTP Get requests.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3362,8 +3500,11 @@ class HTTPGetAction(types.Object):
         return self.__httpHeaders
 
 
-# TCPSocketAction describes an action based on opening a socket
 class TCPSocketAction(types.Object):
+    """
+    TCPSocketAction describes an action based on opening a socket
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, port: Union[int, str] = None, host: str = None):
@@ -3398,9 +3539,12 @@ class TCPSocketAction(types.Object):
         return self.__host
 
 
-# Handler defines a specific action that should be taken
-# TODO: pass structured data to these actions, and document that data here.
 class Handler(types.Object):
+    """
+    Handler defines a specific action that should be taken
+    TODO: pass structured data to these actions, and document that data here.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3453,10 +3597,13 @@ class Handler(types.Object):
         return self.__tcpSocket
 
 
-# Lifecycle describes actions that the management system should take in response to container lifecycle
-# events. For the PostStart and PreStop lifecycle handlers, management of the container blocks
-# until the action is complete, unless the container process fails, in which case the handler is aborted.
 class Lifecycle(types.Object):
+    """
+    Lifecycle describes actions that the management system should take in response to container lifecycle
+    events. For the PostStart and PreStop lifecycle handlers, management of the container blocks
+    until the action is complete, unless the container process fails, in which case the handler is aborted.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, postStart: Handler = None, preStop: Handler = None):
@@ -3502,9 +3649,12 @@ class Lifecycle(types.Object):
         return self.__preStop
 
 
-# Probe describes a health check to be performed against a container to determine whether it is
-# alive or ready to receive traffic.
 class Probe(types.Object):
+    """
+    Probe describes a health check to be performed against a container to determine whether it is
+    alive or ready to receive traffic.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3595,8 +3745,11 @@ class Probe(types.Object):
         return self.__failureThreshold
 
 
-# ResourceRequirements describes the compute resource requirements.
 class ResourceRequirements(types.Object):
+    """
+    ResourceRequirements describes the compute resource requirements.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3640,8 +3793,11 @@ class ResourceRequirements(types.Object):
         return self.__requests
 
 
-# SELinuxOptions are the labels to be applied to the container
 class SELinuxOptions(types.Object):
+    """
+    SELinuxOptions are the labels to be applied to the container
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3699,8 +3855,11 @@ class SELinuxOptions(types.Object):
         return self.__level
 
 
-# WindowsSecurityContextOptions contain Windows-specific options and credentials.
 class WindowsSecurityContextOptions(types.Object):
+    """
+    WindowsSecurityContextOptions contain Windows-specific options and credentials.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3758,10 +3917,13 @@ class WindowsSecurityContextOptions(types.Object):
         return self.__runAsUserName
 
 
-# SecurityContext holds security configuration that will be applied to a container.
-# Some fields are present in both SecurityContext and PodSecurityContext.  When both
-# are set, the values in SecurityContext take precedence.
 class SecurityContext(types.Object):
+    """
+    SecurityContext holds security configuration that will be applied to a container.
+    Some fields are present in both SecurityContext and PodSecurityContext.  When both
+    are set, the values in SecurityContext take precedence.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -3925,8 +4087,11 @@ class SecurityContext(types.Object):
         return self.__procMount
 
 
-# volumeDevice describes a mapping of a raw block device within a container.
 class VolumeDevice(types.Object):
+    """
+    volumeDevice describes a mapping of a raw block device within a container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", devicePath: str = ""):
@@ -3958,8 +4123,11 @@ class VolumeDevice(types.Object):
         return self.__devicePath
 
 
-# VolumeMount describes a mounting of a Volume within a container.
 class VolumeMount(types.Object):
+    """
+    VolumeMount describes a mounting of a Volume within a container.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4053,8 +4221,11 @@ class VolumeMount(types.Object):
         return self.__subPathExpr
 
 
-# A single application container that you want to run within a pod.
 class Container(types.Object):
+    """
+    A single application container that you want to run within a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4420,8 +4591,11 @@ class Container(types.Object):
         return self.__tty
 
 
-# DownwardAPIVolumeFile represents information to create the file containing the pod field
 class DownwardAPIVolumeFile(types.Object):
+    """
+    DownwardAPIVolumeFile represents information to create the file containing the pod field
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4488,10 +4662,13 @@ class DownwardAPIVolumeFile(types.Object):
         return self.__mode
 
 
-# Represents downward API info for projecting into a projected volume.
-# Note that this is identical to a downwardAPI volume source without the default
-# mode.
 class DownwardAPIProjection(types.Object):
+    """
+    Represents downward API info for projecting into a projected volume.
+    Note that this is identical to a downwardAPI volume source without the default
+    mode.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, items: List[DownwardAPIVolumeFile] = None):
@@ -4514,9 +4691,12 @@ class DownwardAPIProjection(types.Object):
         return self.__items
 
 
-# DownwardAPIVolumeSource represents a volume containing downward API info.
-# Downward API volumes support ownership management and SELinux relabeling.
 class DownwardAPIVolumeSource(types.Object):
+    """
+    DownwardAPIVolumeSource represents a volume containing downward API info.
+    Downward API volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4556,9 +4736,12 @@ class DownwardAPIVolumeSource(types.Object):
         return self.__defaultMode
 
 
-# Represents an empty directory for a pod.
-# Empty directory volumes support ownership management and SELinux relabeling.
 class EmptyDirVolumeSource(types.Object):
+    """
+    Represents an empty directory for a pod.
+    Empty directory volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4602,8 +4785,11 @@ class EmptyDirVolumeSource(types.Object):
         return self.__sizeLimit
 
 
-# EndpointAddress is a tuple that describes single IP address.
 class EndpointAddress(types.Object):
+    """
+    EndpointAddress is a tuple that describes single IP address.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4669,8 +4855,11 @@ class EndpointAddress(types.Object):
         return self.__targetRef
 
 
-# EndpointPort is a tuple that describes a single port.
 class EndpointPort(types.Object):
+    """
+    EndpointPort is a tuple that describes a single port.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, port: int = 0, protocol: Protocol = None):
@@ -4719,17 +4908,20 @@ class EndpointPort(types.Object):
         return self.__protocol
 
 
-# EndpointSubset is a group of addresses with a common set of ports. The
-# expanded set of endpoints is the Cartesian product of Addresses x Ports.
-# For example, given:
-#   {
-#     Addresses: [{"ip": "10.10.1.1"}, {"ip": "10.10.2.2"}],
-#     Ports:     [{"name": "a", "port": 8675}, {"name": "b", "port": 309}]
-#   }
-# The resulting set of endpoints can be viewed as:
-#     a: [ 10.10.1.1:8675, 10.10.2.2:8675 ],
-#     b: [ 10.10.1.1:309, 10.10.2.2:309 ]
 class EndpointSubset(types.Object):
+    """
+    EndpointSubset is a group of addresses with a common set of ports. The
+    expanded set of endpoints is the Cartesian product of Addresses x Ports.
+    For example, given:
+      {
+        Addresses: [{"ip": "10.10.1.1"}, {"ip": "10.10.2.2"}],
+        Ports:     [{"name": "a", "port": 8675}, {"name": "b", "port": 309}]
+      }
+    The resulting set of endpoints can be viewed as:
+        a: [ 10.10.1.1:8675, 10.10.2.2:8675 ],
+        b: [ 10.10.1.1:309, 10.10.2.2:309 ]
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4786,19 +4978,22 @@ class EndpointSubset(types.Object):
         return self.__ports
 
 
-# Endpoints is a collection of endpoints that implement the actual service. Example:
-#   Name: "mysvc",
-#   Subsets: [
-#     {
-#       Addresses: [{"ip": "10.10.1.1"}, {"ip": "10.10.2.2"}],
-#       Ports: [{"name": "a", "port": 8675}, {"name": "b", "port": 309}]
-#     },
-#     {
-#       Addresses: [{"ip": "10.10.3.3"}],
-#       Ports: [{"name": "a", "port": 93}, {"name": "b", "port": 76}]
-#     },
-#  ]
 class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Endpoints is a collection of endpoints that implement the actual service. Example:
+      Name: "mysvc",
+      Subsets: [
+        {
+          Addresses: [{"ip": "10.10.1.1"}, {"ip": "10.10.2.2"}],
+          Ports: [{"name": "a", "port": 8675}, {"name": "b", "port": 309}]
+        },
+        {
+          Addresses: [{"ip": "10.10.3.3"}],
+          Ports: [{"name": "a", "port": 93}, {"name": "b", "port": 76}]
+        },
+     ]
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -4841,11 +5036,14 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
         return self.__subsets
 
 
-# EphemeralContainerCommon is a copy of all fields in Container to be inlined in
-# EphemeralContainer. This separate type allows easy conversion from EphemeralContainer
-# to Container and allows separate documentation for the fields of EphemeralContainer.
-# When a new field is added to Container it must be added here as well.
 class EphemeralContainerCommon(types.Object):
+    """
+    EphemeralContainerCommon is a copy of all fields in Container to be inlined in
+    EphemeralContainer. This separate type allows easy conversion from EphemeralContainer
+    to Container and allows separate documentation for the fields of EphemeralContainer.
+    When a new field is added to Container it must be added here as well.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5180,16 +5378,19 @@ class EphemeralContainerCommon(types.Object):
         return self.__tty
 
 
-# An EphemeralContainer is a container that may be added temporarily to an existing pod for
-# user-initiated activities such as debugging. Ephemeral containers have no resource or
-# scheduling guarantees, and they will not be restarted when they exit or when a pod is
-# removed or restarted. If an ephemeral container causes a pod to exceed its resource
-# allocation, the pod may be evicted.
-# Ephemeral containers may not be added by directly updating the pod spec. They must be added
-# via the pod's ephemeralcontainers subresource, and they will appear in the pod spec
-# once added.
-# This is an alpha feature enabled by the EphemeralContainers feature flag.
 class EphemeralContainer(types.Object):
+    """
+    An EphemeralContainer is a container that may be added temporarily to an existing pod for
+    user-initiated activities such as debugging. Ephemeral containers have no resource or
+    scheduling guarantees, and they will not be restarted when they exit or when a pod is
+    removed or restarted. If an ephemeral container causes a pod to exceed its resource
+    allocation, the pod may be evicted.
+    Ephemeral containers may not be added by directly updating the pod spec. They must be added
+    via the pod's ephemeralcontainers subresource, and they will appear in the pod spec
+    once added.
+    This is an alpha feature enabled by the EphemeralContainers feature flag.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5240,8 +5441,11 @@ class EphemeralContainer(types.Object):
         return self.__targetContainerName
 
 
-# A list of ephemeral containers used with the Pod ephemeralcontainers subresource.
 class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    A list of ephemeral containers used with the Pod ephemeralcontainers subresource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5281,9 +5485,12 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
         return self.__ephemeralContainers
 
 
-# EventSeries contain information on series of events, i.e. thing that was/is happening
-# continuously for some time.
 class EventSeries(types.Object):
+    """
+    EventSeries contain information on series of events, i.e. thing that was/is happening
+    continuously for some time.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, count: int = None, lastObservedTime: "base.MicroTime" = None):
@@ -5316,8 +5523,11 @@ class EventSeries(types.Object):
         return self.__lastObservedTime
 
 
-# EventSource contains information for an event.
 class EventSource(types.Object):
+    """
+    EventSource contains information for an event.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, component: str = None, host: str = None):
@@ -5351,8 +5561,11 @@ class EventSource(types.Object):
         return self.__host
 
 
-# Event is a report of an event somewhere in the cluster.
 class Event(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Event is a report of an event somewhere in the cluster.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5543,10 +5756,13 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         return self.__reportingInstance
 
 
-# Represents a Fibre Channel volume.
-# Fibre Channel volumes can only be mounted as read/write once.
-# Fibre Channel volumes support ownership management and SELinux relabeling.
 class FCVolumeSource(types.Object):
+    """
+    Represents a Fibre Channel volume.
+    Fibre Channel volumes can only be mounted as read/write once.
+    Fibre Channel volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5625,9 +5841,12 @@ class FCVolumeSource(types.Object):
         return self.__wwids
 
 
-# FlexPersistentVolumeSource represents a generic persistent volume resource that is
-# provisioned/attached using an exec based plugin.
 class FlexPersistentVolumeSource(types.Object):
+    """
+    FlexPersistentVolumeSource represents a generic persistent volume resource that is
+    provisioned/attached using an exec based plugin.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5707,9 +5926,12 @@ class FlexPersistentVolumeSource(types.Object):
         return self.__options
 
 
-# FlexVolume represents a generic volume resource that is
-# provisioned/attached using an exec based plugin.
 class FlexVolumeSource(types.Object):
+    """
+    FlexVolume represents a generic volume resource that is
+    provisioned/attached using an exec based plugin.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5789,10 +6011,13 @@ class FlexVolumeSource(types.Object):
         return self.__options
 
 
-# Represents a Flocker volume mounted by the Flocker agent.
-# One and only one of datasetName and datasetUUID should be set.
-# Flocker volumes do not support ownership management or SELinux relabeling.
 class FlockerVolumeSource(types.Object):
+    """
+    Represents a Flocker volume mounted by the Flocker agent.
+    One and only one of datasetName and datasetUUID should be set.
+    Flocker volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, datasetName: str = None, datasetUUID: str = None):
@@ -5827,13 +6052,16 @@ class FlockerVolumeSource(types.Object):
         return self.__datasetUUID
 
 
-# Represents a Persistent Disk resource in Google Compute Engine.
-#
-# A GCE PD must exist before mounting to a container. The disk must
-# also be in the same GCE project and zone as the kubelet. A GCE PD
-# can only be mounted as read/write once or read-only many times. GCE
-# PDs support ownership management and SELinux relabeling.
 class GCEPersistentDiskVolumeSource(types.Object):
+    """
+    Represents a Persistent Disk resource in Google Compute Engine.
+    
+    A GCE PD must exist before mounting to a container. The disk must
+    also be in the same GCE project and zone as the kubelet. A GCE PD
+    can only be mounted as read/write once or read-only many times. GCE
+    PDs support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5905,9 +6133,12 @@ class GCEPersistentDiskVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Represents a Glusterfs mount that lasts the lifetime of a pod.
-# Glusterfs volumes do not support ownership management or SELinux relabeling.
 class GlusterfsPersistentVolumeSource(types.Object):
+    """
+    Represents a Glusterfs mount that lasts the lifetime of a pod.
+    Glusterfs volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -5973,9 +6204,12 @@ class GlusterfsPersistentVolumeSource(types.Object):
         return self.__endpointsNamespace
 
 
-# Represents a Glusterfs mount that lasts the lifetime of a pod.
-# Glusterfs volumes do not support ownership management or SELinux relabeling.
 class GlusterfsVolumeSource(types.Object):
+    """
+    Represents a Glusterfs mount that lasts the lifetime of a pod.
+    Glusterfs volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, endpoints: str = "", path: str = "", readOnly: bool = None):
@@ -6022,9 +6256,12 @@ class GlusterfsVolumeSource(types.Object):
         return self.__readOnly
 
 
-# HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the
-# pod's hosts file.
 class HostAlias(types.Object):
+    """
+    HostAlias holds the mapping between IP and hostnames that will be injected as an entry in the
+    pod's hosts file.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, ip: str = None, hostnames: List[str] = None):
@@ -6058,9 +6295,12 @@ class HostAlias(types.Object):
         return self.__hostnames
 
 
-# Represents a host path mapped into a pod.
-# Host path volumes do not support ownership management or SELinux relabeling.
 class HostPathVolumeSource(types.Object):
+    """
+    Represents a host path mapped into a pod.
+    Host path volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = "", type: HostPathType = None):
@@ -6097,10 +6337,13 @@ class HostPathVolumeSource(types.Object):
         return self.__type
 
 
-# ISCSIPersistentVolumeSource represents an ISCSI disk.
-# ISCSI volumes can only be mounted as read/write once.
-# ISCSI volumes support ownership management and SELinux relabeling.
 class ISCSIPersistentVolumeSource(types.Object):
+    """
+    ISCSIPersistentVolumeSource represents an ISCSI disk.
+    ISCSI volumes can only be mounted as read/write once.
+    ISCSI volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6253,10 +6496,13 @@ class ISCSIPersistentVolumeSource(types.Object):
         return self.__initiatorName
 
 
-# Represents an ISCSI disk.
-# ISCSI volumes can only be mounted as read/write once.
-# ISCSI volumes support ownership management and SELinux relabeling.
 class ISCSIVolumeSource(types.Object):
+    """
+    Represents an ISCSI disk.
+    ISCSI volumes can only be mounted as read/write once.
+    ISCSI volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6409,8 +6655,11 @@ class ISCSIVolumeSource(types.Object):
         return self.__initiatorName
 
 
-# LimitRangeItem defines a min/max usage limit for any resource that matches on kind.
 class LimitRangeItem(types.Object):
+    """
+    LimitRangeItem defines a min/max usage limit for any resource that matches on kind.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6508,8 +6757,11 @@ class LimitRangeItem(types.Object):
         return self.__maxLimitRequestRatio
 
 
-# LimitRangeSpec defines a min/max usage limit for resources that match on kind.
 class LimitRangeSpec(types.Object):
+    """
+    LimitRangeSpec defines a min/max usage limit for resources that match on kind.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, limits: List[LimitRangeItem] = None):
@@ -6531,8 +6783,11 @@ class LimitRangeSpec(types.Object):
         return self.__limits
 
 
-# LimitRange sets resource usage limits for each kind of resource in a Namespace.
 class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    LimitRange sets resource usage limits for each kind of resource in a Namespace.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6569,8 +6824,11 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Local represents directly-attached storage with node affinity (Beta feature)
 class LocalVolumeSource(types.Object):
+    """
+    Local represents directly-attached storage with node affinity (Beta feature)
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = "", fsType: str = None):
@@ -6607,9 +6865,12 @@ class LocalVolumeSource(types.Object):
         return self.__fsType
 
 
-# Represents an NFS mount that lasts the lifetime of a pod.
-# NFS volumes do not support ownership management or SELinux relabeling.
 class NFSVolumeSource(types.Object):
+    """
+    Represents an NFS mount that lasts the lifetime of a pod.
+    NFS volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, server: str = "", path: str = "", readOnly: bool = None):
@@ -6657,8 +6918,11 @@ class NFSVolumeSource(types.Object):
         return self.__readOnly
 
 
-# NamespaceSpec describes the attributes on a Namespace.
 class NamespaceSpec(types.Object):
+    """
+    NamespaceSpec describes the attributes on a Namespace.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, finalizers: List[FinalizerName] = None):
@@ -6682,9 +6946,12 @@ class NamespaceSpec(types.Object):
         return self.__finalizers
 
 
-# Namespace provides a scope for Names.
-# Use of multiple namespaces is optional.
 class Namespace(base.TypedObject, base.MetadataObject):
+    """
+    Namespace provides a scope for Names.
+    Use of multiple namespaces is optional.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6719,8 +6986,11 @@ class Namespace(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil.
 class NodeConfigSource(types.Object):
+    """
+    NodeConfigSource specifies a source of node configuration. Exactly one subfield (excluding metadata) must be non-nil.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, configMap: ConfigMapNodeConfigSource = None):
@@ -6743,9 +7013,12 @@ class NodeConfigSource(types.Object):
         return self.__configMap
 
 
-# The node this Taint is attached to has the "effect" on
-# any pod that does not tolerate the Taint.
 class Taint(types.Object):
+    """
+    The node this Taint is attached to has the "effect" on
+    any pod that does not tolerate the Taint.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6808,8 +7081,11 @@ class Taint(types.Object):
         return self.__timeAdded
 
 
-# NodeSpec describes the attributes that a node is created with.
 class NodeSpec(types.Object):
+    """
+    NodeSpec describes the attributes that a node is created with.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6899,9 +7175,12 @@ class NodeSpec(types.Object):
         return self.__configSource
 
 
-# Node is a worker node in Kubernetes.
-# Each node will have a unique identifier in the cache (i.e. in etcd).
 class Node(base.TypedObject, base.MetadataObject):
+    """
+    Node is a worker node in Kubernetes.
+    Each node will have a unique identifier in the cache (i.e. in etcd).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -6936,8 +7215,11 @@ class Node(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# NodeProxyOptions is the query options to a Node's proxy call.
 class NodeProxyOptions(base.TypedObject):
+    """
+    NodeProxyOptions is the query options to a Node's proxy call.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
@@ -6960,8 +7242,11 @@ class NodeProxyOptions(base.TypedObject):
         return self.__path
 
 
-# Represents a Photon Controller persistent disk resource.
 class PhotonPersistentDiskVolumeSource(types.Object):
+    """
+    Represents a Photon Controller persistent disk resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, pdID: str = "", fsType: str = None):
@@ -6996,8 +7281,11 @@ class PhotonPersistentDiskVolumeSource(types.Object):
         return self.__fsType
 
 
-# PortworxVolumeSource represents a Portworx volume resource.
 class PortworxVolumeSource(types.Object):
+    """
+    PortworxVolumeSource represents a Portworx volume resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, volumeID: str = "", fsType: str = None, readOnly: bool = None):
@@ -7044,9 +7332,12 @@ class PortworxVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Represents a Quobyte mount that lasts the lifetime of a pod.
-# Quobyte volumes do not support ownership management or SELinux relabeling.
 class QuobyteVolumeSource(types.Object):
+    """
+    Represents a Quobyte mount that lasts the lifetime of a pod.
+    Quobyte volumes do not support ownership management or SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7136,9 +7427,12 @@ class QuobyteVolumeSource(types.Object):
         return self.__tenant
 
 
-# Represents a Rados Block Device mount that lasts the lifetime of a pod.
-# RBD volumes support ownership management and SELinux relabeling.
 class RBDPersistentVolumeSource(types.Object):
+    """
+    Represents a Rados Block Device mount that lasts the lifetime of a pod.
+    RBD volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7263,8 +7557,11 @@ class RBDPersistentVolumeSource(types.Object):
         return self.__readOnly
 
 
-# ScaleIOPersistentVolumeSource represents a persistent ScaleIO volume
 class ScaleIOPersistentVolumeSource(types.Object):
+    """
+    ScaleIOPersistentVolumeSource represents a persistent ScaleIO volume
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7402,8 +7699,11 @@ class ScaleIOPersistentVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Represents a StorageOS persistent volume resource.
 class StorageOSPersistentVolumeSource(types.Object):
+    """
+    Represents a StorageOS persistent volume resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7487,8 +7787,11 @@ class StorageOSPersistentVolumeSource(types.Object):
         return self.__secretRef
 
 
-# Represents a vSphere volume resource.
 class VsphereVirtualDiskVolumeSource(types.Object):
+    """
+    Represents a vSphere volume resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7551,9 +7854,12 @@ class VsphereVirtualDiskVolumeSource(types.Object):
         return self.__storagePolicyID
 
 
-# PersistentVolumeSource is similar to VolumeSource but meant for the
-# administrator who creates PVs. Exactly one of its members must be set.
 class PersistentVolumeSource(types.Object):
+    """
+    PersistentVolumeSource is similar to VolumeSource but meant for the
+    administrator who creates PVs. Exactly one of its members must be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -7861,8 +8167,11 @@ class PersistentVolumeSource(types.Object):
         return self.__csi
 
 
-# VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from.
 class VolumeNodeAffinity(types.Object):
+    """
+    VolumeNodeAffinity defines constraints that limit what nodes this volume can be accessed from.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, required: NodeSelector = None):
@@ -7885,8 +8194,11 @@ class VolumeNodeAffinity(types.Object):
         return self.__required
 
 
-# PersistentVolumeSpec is the specification of a persistent volume.
 class PersistentVolumeSpec(types.Object):
+    """
+    PersistentVolumeSpec is the specification of a persistent volume.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8040,10 +8352,13 @@ class PersistentVolumeSpec(types.Object):
         return self.__nodeAffinity
 
 
-# PersistentVolume (PV) is a storage resource provisioned by an administrator.
-# It is analogous to a node.
-# More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes
 class PersistentVolume(base.TypedObject, base.MetadataObject):
+    """
+    PersistentVolume (PV) is a storage resource provisioned by an administrator.
+    It is analogous to a node.
+    More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8079,9 +8394,12 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# TypedLocalObjectReference contains enough information to let you locate the
-# typed referenced object inside the same namespace.
 class TypedLocalObjectReference(types.Object):
+    """
+    TypedLocalObjectReference contains enough information to let you locate the
+    typed referenced object inside the same namespace.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, apiGroup: str = None, kind: str = "", name: str = ""):
@@ -8125,9 +8443,12 @@ class TypedLocalObjectReference(types.Object):
         return self.__name
 
 
-# PersistentVolumeClaimSpec describes the common attributes of storage devices
-# and allows a Source for provider-specific attributes
 class PersistentVolumeClaimSpec(types.Object):
+    """
+    PersistentVolumeClaimSpec describes the common attributes of storage devices
+    and allows a Source for provider-specific attributes
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8242,8 +8563,11 @@ class PersistentVolumeClaimSpec(types.Object):
         return self.__dataSource
 
 
-# PersistentVolumeClaim is a user's request for and claim to a persistent volume
 class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PersistentVolumeClaim is a user's request for and claim to a persistent volume
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8280,11 +8604,14 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
-# This volume finds the bound PV and mounts that volume for the pod. A
-# PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
-# type of volume that is owned by someone else (the system).
 class PersistentVolumeClaimVolumeSource(types.Object):
+    """
+    PersistentVolumeClaimVolumeSource references the user's PVC in the same namespace.
+    This volume finds the bound PV and mounts that volume for the pod. A
+    PersistentVolumeClaimVolumeSource is, essentially, a wrapper around another
+    type of volume that is owned by someone else (the system).
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, claimName: str = "", readOnly: bool = None):
@@ -8319,8 +8646,11 @@ class PersistentVolumeClaimVolumeSource(types.Object):
         return self.__readOnly
 
 
-# PodDNSConfigOption defines DNS resolver options of a pod.
 class PodDNSConfigOption(types.Object):
+    """
+    PodDNSConfigOption defines DNS resolver options of a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = None, value: str = None):
@@ -8351,9 +8681,12 @@ class PodDNSConfigOption(types.Object):
         return self.__value
 
 
-# PodDNSConfig defines the DNS parameters of a pod in addition to
-# those generated from DNSPolicy.
 class PodDNSConfig(types.Object):
+    """
+    PodDNSConfig defines the DNS parameters of a pod in addition to
+    those generated from DNSPolicy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8410,8 +8743,11 @@ class PodDNSConfig(types.Object):
         return self.__options
 
 
-# PodReadinessGate contains the reference to a pod condition
 class PodReadinessGate(types.Object):
+    """
+    PodReadinessGate contains the reference to a pod condition
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, conditionType: PodConditionType = None):
@@ -8433,8 +8769,11 @@ class PodReadinessGate(types.Object):
         return self.__conditionType
 
 
-# Sysctl defines a kernel parameter to be set
 class Sysctl(types.Object):
+    """
+    Sysctl defines a kernel parameter to be set
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", value: str = ""):
@@ -8466,10 +8805,13 @@ class Sysctl(types.Object):
         return self.__value
 
 
-# PodSecurityContext holds pod-level security attributes and common container settings.
-# Some fields are also present in container.securityContext.  Field values of
-# container.securityContext take precedence over field values of PodSecurityContext.
 class PodSecurityContext(types.Object):
+    """
+    PodSecurityContext holds pod-level security attributes and common container settings.
+    Some fields are also present in container.securityContext.  Field values of
+    container.securityContext take precedence over field values of PodSecurityContext.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8613,9 +8955,12 @@ class PodSecurityContext(types.Object):
         return self.__sysctls
 
 
-# The pod this Toleration is attached to tolerates any taint that matches
-# the triple <key,value,effect> using the matching operator <operator>.
 class Toleration(types.Object):
+    """
+    The pod this Toleration is attached to tolerates any taint that matches
+    the triple <key,value,effect> using the matching operator <operator>.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8698,8 +9043,11 @@ class Toleration(types.Object):
         return self.__tolerationSeconds
 
 
-# TopologySpreadConstraint specifies how to spread matching pods among the given topology.
 class TopologySpreadConstraint(types.Object):
+    """
+    TopologySpreadConstraint specifies how to spread matching pods among the given topology.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8797,13 +9145,16 @@ class TopologySpreadConstraint(types.Object):
         return self.__labelSelector
 
 
-# Adapts a secret into a projected volume.
-#
-# The contents of the target Secret's Data field will be presented in a
-# projected volume as files using the keys in the Data field as the file names.
-# Note that this is identical to a secret volume source without the default
-# mode.
 class SecretProjection(types.Object):
+    """
+    Adapts a secret into a projected volume.
+    
+    The contents of the target Secret's Data field will be presented in a
+    projected volume as files using the keys in the Data field as the file names.
+    Note that this is identical to a secret volume source without the default
+    mode.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8859,11 +9210,14 @@ class SecretProjection(types.Object):
         return self.__optional
 
 
-# ServiceAccountTokenProjection represents a projected service account token
-# volume. This projection can be used to insert a service account token into
-# the pods runtime filesystem for use against APIs (Kubernetes API Server or
-# otherwise).
 class ServiceAccountTokenProjection(types.Object):
+    """
+    ServiceAccountTokenProjection represents a projected service account token
+    volume. This projection can be used to insert a service account token into
+    the pods runtime filesystem for use against APIs (Kubernetes API Server or
+    otherwise).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8920,8 +9274,11 @@ class ServiceAccountTokenProjection(types.Object):
         return self.__path
 
 
-# Projection that may be projected along with other supported volume types
 class VolumeProjection(types.Object):
+    """
+    Projection that may be projected along with other supported volume types
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -8987,8 +9344,11 @@ class VolumeProjection(types.Object):
         return self.__serviceAccountToken
 
 
-# Represents a projected volume source
 class ProjectedVolumeSource(types.Object):
+    """
+    Represents a projected volume source
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, sources: List[VolumeProjection] = None, defaultMode: int = None):
@@ -9025,9 +9385,12 @@ class ProjectedVolumeSource(types.Object):
         return self.__defaultMode
 
 
-# Represents a Rados Block Device mount that lasts the lifetime of a pod.
-# RBD volumes support ownership management and SELinux relabeling.
 class RBDVolumeSource(types.Object):
+    """
+    Represents a Rados Block Device mount that lasts the lifetime of a pod.
+    RBD volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -9152,8 +9515,11 @@ class RBDVolumeSource(types.Object):
         return self.__readOnly
 
 
-# ScaleIOVolumeSource represents a persistent ScaleIO volume
 class ScaleIOVolumeSource(types.Object):
+    """
+    ScaleIOVolumeSource represents a persistent ScaleIO volume
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -9291,12 +9657,15 @@ class ScaleIOVolumeSource(types.Object):
         return self.__readOnly
 
 
-# Adapts a Secret into a volume.
-#
-# The contents of the target Secret's Data field will be presented in a volume
-# as files using the keys in the Data field as the file names.
-# Secret volumes support ownership management and SELinux relabeling.
 class SecretVolumeSource(types.Object):
+    """
+    Adapts a Secret into a volume.
+    
+    The contents of the target Secret's Data field will be presented in a volume
+    as files using the keys in the Data field as the file names.
+    Secret volumes support ownership management and SELinux relabeling.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -9369,8 +9738,11 @@ class SecretVolumeSource(types.Object):
         return self.__optional
 
 
-# Represents a StorageOS persistent volume resource.
 class StorageOSVolumeSource(types.Object):
+    """
+    Represents a StorageOS persistent volume resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -9454,9 +9826,12 @@ class StorageOSVolumeSource(types.Object):
         return self.__secretRef
 
 
-# Represents the source of a volume to mount.
-# Only one of its members may be specified.
 class VolumeSource(types.Object):
+    """
+    Represents the source of a volume to mount.
+    Only one of its members may be specified.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -9834,8 +10209,11 @@ class VolumeSource(types.Object):
         return self.__csi
 
 
-# Volume represents a named volume in a pod that may be accessed by any container in the pod.
 class Volume(types.Object):
+    """
+    Volume represents a named volume in a pod that may be accessed by any container in the pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", volumeSource: VolumeSource = None):
@@ -9873,8 +10251,11 @@ class Volume(types.Object):
         return self.__volumeSource
 
 
-# PodSpec is a description of a pod.
 class PodSpec(types.Object):
+    """
+    PodSpec is a description of a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10409,9 +10790,12 @@ class PodSpec(types.Object):
         return self.__topologySpreadConstraints
 
 
-# Pod is a collection of containers that can run on a host. This resource is created
-# by clients and scheduled onto hosts.
 class Pod(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Pod is a collection of containers that can run on a host. This resource is created
+    by clients and scheduled onto hosts.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10448,11 +10832,14 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# PodAttachOptions is the query options to a Pod's remote attach call.
-# ---
-# TODO: merge w/ PodExecOptions below for stdin, stdout, etc
-# and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
 class PodAttachOptions(base.TypedObject):
+    """
+    PodAttachOptions is the query options to a Pod's remote attach call.
+    ---
+    TODO: merge w/ PodExecOptions below for stdin, stdout, etc
+    and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10533,11 +10920,14 @@ class PodAttachOptions(base.TypedObject):
         return self.__container
 
 
-# PodExecOptions is the query options to a Pod's remote exec call.
-# ---
-# TODO: This is largely identical to PodAttachOptions above, make sure they stay in sync and see about merging
-# and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
 class PodExecOptions(base.TypedObject):
+    """
+    PodExecOptions is the query options to a Pod's remote exec call.
+    ---
+    TODO: This is largely identical to PodAttachOptions above, make sure they stay in sync and see about merging
+    and also when we cut V2, we should export a "StreamOptions" or somesuch that contains Stdin, Stdout, Stder and TTY
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10627,8 +11017,11 @@ class PodExecOptions(base.TypedObject):
         return self.__command
 
 
-# PodLogOptions is the query options for a Pod's logs REST call.
 class PodLogOptions(base.TypedObject):
+    """
+    PodLogOptions is the query options for a Pod's logs REST call.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10748,13 +11141,16 @@ class PodLogOptions(base.TypedObject):
         return self.__limitBytes
 
 
-# PodPortForwardOptions is the query options to a Pod's port forward call
-# when using WebSockets.
-# The `port` query parameter must specify the port or
-# ports (comma separated) to forward over.
-# Port forwarding over SPDY does not use these options. It requires the port
-# to be passed in the `port` header as part of request.
 class PodPortForwardOptions(base.TypedObject):
+    """
+    PodPortForwardOptions is the query options to a Pod's port forward call
+    when using WebSockets.
+    The `port` query parameter must specify the port or
+    ports (comma separated) to forward over.
+    Port forwarding over SPDY does not use these options. It requires the port
+    to be passed in the `port` header as part of request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, ports: List[int] = None):
@@ -10778,8 +11174,11 @@ class PodPortForwardOptions(base.TypedObject):
         return self.__ports
 
 
-# PodProxyOptions is the query options to a Pod's proxy call.
 class PodProxyOptions(base.TypedObject):
+    """
+    PodProxyOptions is the query options to a Pod's proxy call.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
@@ -10802,8 +11201,11 @@ class PodProxyOptions(base.TypedObject):
         return self.__path
 
 
-# PodStatusResult is a wrapper for PodStatus returned by kubelet that can be encode/decoded
 class PodStatusResult(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodStatusResult is a wrapper for PodStatus returned by kubelet that can be encode/decoded
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10828,8 +11230,11 @@ class PodStatusResult(base.TypedObject, base.NamespacedMetadataObject):
         return v
 
 
-# PodTemplateSpec describes the data a pod should have when created from a template
 class PodTemplateSpec(base.NamespacedMetadataObject):
+    """
+    PodTemplateSpec describes the data a pod should have when created from a template
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10864,8 +11269,11 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
         return self.__spec
 
 
-# PodTemplate describes a template for creating copies of a predefined pod.
 class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    PodTemplate describes a template for creating copies of a predefined pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10902,8 +11310,11 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
         return self.__template
 
 
-# RangeAllocation is not a public type.
 class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    RangeAllocation is not a public type.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -10950,8 +11361,11 @@ class RangeAllocation(base.TypedObject, base.NamespacedMetadataObject):
         return self.__data
 
 
-# ReplicationControllerSpec is the specification of a replication controller.
 class ReplicationControllerSpec(types.Object):
+    """
+    ReplicationControllerSpec is the specification of a replication controller.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11024,8 +11438,11 @@ class ReplicationControllerSpec(types.Object):
         return self.__template
 
 
-# ReplicationController represents the configuration of a replication controller.
 class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ReplicationController represents the configuration of a replication controller.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11062,9 +11479,12 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator
-# that relates the scope name and values.
 class ScopedResourceSelectorRequirement(types.Object):
+    """
+    A scoped-resource selector requirement is a selector that contains values, a scope name, and an operator
+    that relates the scope name and values.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11116,9 +11536,12 @@ class ScopedResourceSelectorRequirement(types.Object):
         return self.__values
 
 
-# A scope selector represents the AND of the selectors represented
-# by the scoped-resource selector requirements.
 class ScopeSelector(types.Object):
+    """
+    A scope selector represents the AND of the selectors represented
+    by the scoped-resource selector requirements.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11149,8 +11572,11 @@ class ScopeSelector(types.Object):
         return self.__matchExpressions
 
 
-# ResourceQuotaSpec defines the desired hard limits to enforce for Quota.
 class ResourceQuotaSpec(types.Object):
+    """
+    ResourceQuotaSpec defines the desired hard limits to enforce for Quota.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11204,8 +11630,11 @@ class ResourceQuotaSpec(types.Object):
         return self.__scopeSelector
 
 
-# ResourceQuota sets aggregate quota restrictions enforced per namespace
 class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ResourceQuota sets aggregate quota restrictions enforced per namespace
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11242,9 +11671,12 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Secret holds secret data of a certain type. The total bytes of the values in
-# the Data field must be less than MaxSecretSize bytes.
 class Secret(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Secret holds secret data of a certain type. The total bytes of the values in
+    the Data field must be less than MaxSecretSize bytes.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11311,8 +11743,11 @@ class Secret(base.TypedObject, base.NamespacedMetadataObject):
         return self.__type
 
 
-# SerializedReference is a reference to serialized object.
 class SerializedReference(base.TypedObject):
+    """
+    SerializedReference is a reference to serialized object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, reference: ObjectReference = None):
@@ -11334,8 +11769,11 @@ class SerializedReference(base.TypedObject):
         return self.__reference
 
 
-# ServicePort contains information on service's port.
 class ServicePort(types.Object):
+    """
+    ServicePort contains information on service's port.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11423,8 +11861,11 @@ class ServicePort(types.Object):
         return self.__nodePort
 
 
-# SessionAffinityConfig represents the configurations of session affinity.
 class SessionAffinityConfig(types.Object):
+    """
+    SessionAffinityConfig represents the configurations of session affinity.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, clientIP: ClientIPConfig = None):
@@ -11447,8 +11888,11 @@ class SessionAffinityConfig(types.Object):
         return self.__clientIP
 
 
-# ServiceSpec describes the attributes that a user creates on a service.
 class ServiceSpec(types.Object):
+    """
+    ServiceSpec describes the attributes that a user creates on a service.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11710,10 +12154,13 @@ class ServiceSpec(types.Object):
         return self.__ipFamily
 
 
-# Service is a named abstraction of software service (for example, mysql) consisting of local port
-# (for example 3306) that the proxy listens on, and the selector that determines which pods
-# will answer requests sent through the proxy.
 class Service(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Service is a named abstraction of software service (for example, mysql) consisting of local port
+    (for example 3306) that the proxy listens on, and the selector that determines which pods
+    will answer requests sent through the proxy.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11750,11 +12197,14 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# ServiceAccount binds together:
-# * a name, understood by users, and perhaps by peripheral systems, for an identity
-# * a principal that can be authenticated and authorized
-# * a set of secrets
 class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ServiceAccount binds together:
+    * a name, understood by users, and perhaps by peripheral systems, for an identity
+    * a principal that can be authenticated and authorized
+    * a set of secrets
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -11828,8 +12278,11 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
         return self.__automountServiceAccountToken
 
 
-# ServiceProxyOptions is the query options to a Service's proxy call.
 class ServiceProxyOptions(base.TypedObject):
+    """
+    ServiceProxyOptions is the query options to a Service's proxy call.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None):
@@ -11856,9 +12309,12 @@ class ServiceProxyOptions(base.TypedObject):
         return self.__path
 
 
-# A topology selector requirement is a selector that matches given label.
-# This is an alpha feature and may change in the future.
 class TopologySelectorLabelRequirement(types.Object):
+    """
+    A topology selector requirement is a selector that matches given label.
+    This is an alpha feature and may change in the future.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, key: str = "", values: List[str] = None):
@@ -11891,12 +12347,15 @@ class TopologySelectorLabelRequirement(types.Object):
         return self.__values
 
 
-# A topology selector term represents the result of label queries.
-# A null or empty topology selector term matches no objects.
-# The requirements of them are ANDed.
-# It provides a subset of functionality as NodeSelectorTerm.
-# This is an alpha feature and may change in the future.
 class TopologySelectorTerm(types.Object):
+    """
+    A topology selector term represents the result of label queries.
+    A null or empty topology selector term matches no objects.
+    The requirements of them are ANDed.
+    It provides a subset of functionality as NodeSelectorTerm.
+    This is an alpha feature and may change in the future.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

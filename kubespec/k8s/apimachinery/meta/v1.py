@@ -207,8 +207,11 @@ StatusReason = base.Enum(
 )
 
 
-# Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out.
 class Preconditions(types.Object):
+    """
+    Preconditions must be fulfilled before an operation (update, delete, etc.) is carried out.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, uid: str = None, resourceVersion: str = None):
@@ -242,10 +245,13 @@ class Preconditions(types.Object):
         return self.__resourceVersion
 
 
-# TypeMeta describes an individual object in an API response or request
-# with strings representing the type of the object and its API schema version.
-# Structures that are versioned or persisted should inline TypeMeta.
 class TypeMeta(types.Object):
+    """
+    TypeMeta describes an individual object in an API response or request
+    with strings representing the type of the object and its API schema version.
+    Structures that are versioned or persisted should inline TypeMeta.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, kind: str = None, apiVersion: str = None):
@@ -286,8 +292,11 @@ class TypeMeta(types.Object):
         return self.__apiVersion
 
 
-# DeleteOptions may be provided when deleting an API object.
 class DeleteOptions(base.TypedObject):
+    """
+    DeleteOptions may be provided when deleting an API object.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -366,9 +375,12 @@ class DeleteOptions(base.TypedObject):
         return self.__dryRun
 
 
-# GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
-# to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
 class GroupVersionKind(types.Object):
+    """
+    GroupVersionKind unambiguously identifies a kind.  It doesn't anonymously include GroupVersion
+    to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, group: str = "", version: str = "", kind: str = ""):
@@ -401,9 +413,12 @@ class GroupVersionKind(types.Object):
         return self.__kind
 
 
-# GroupVersionResource unambiguously identifies a resource.  It doesn't anonymously include GroupVersion
-# to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
 class GroupVersionResource(types.Object):
+    """
+    GroupVersionResource unambiguously identifies a resource.  It doesn't anonymously include GroupVersion
+    to avoid automatic coersion.  It doesn't use a GroupVersion to avoid custom marshalling
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, group: str = "", version: str = "", resource: str = ""):
@@ -436,9 +451,12 @@ class GroupVersionResource(types.Object):
         return self.__resource
 
 
-# A label selector requirement is a selector that contains values, a key, and an operator that
-# relates the key and values.
 class LabelSelectorRequirement(types.Object):
+    """
+    A label selector requirement is a selector that contains values, a key, and an operator that
+    relates the key and values.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -490,10 +508,13 @@ class LabelSelectorRequirement(types.Object):
         return self.__values
 
 
-# A label selector is a label query over a set of resources. The result of matchLabels and
-# matchExpressions are ANDed. An empty label selector matches all objects. A null
-# label selector matches no objects.
 class LabelSelector(types.Object):
+    """
+    A label selector is a label query over a set of resources. The result of matchLabels and
+    matchExpressions are ANDed. An empty label selector matches all objects. A null
+    label selector matches no objects.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -539,9 +560,12 @@ class LabelSelector(types.Object):
         return self.__matchExpressions
 
 
-# ListMeta describes metadata that synthetic resources must have, including lists and
-# various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
 class ListMeta(types.Object):
+    """
+    ListMeta describes metadata that synthetic resources must have, including lists and
+    various status objects. A resource may have only one of {ObjectMeta, ListMeta}.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, continue_: str = None, remainingItemCount: int = None):
@@ -589,9 +613,12 @@ class ListMeta(types.Object):
         return self.__remainingItemCount
 
 
-# ObjectMeta is metadata that all persisted resources must have, which includes all objects
-# users must create.
 class ObjectMeta(types.Object):
+    """
+    ObjectMeta is metadata that all persisted resources must have, which includes all objects
+    users must create.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -671,9 +698,12 @@ class ObjectMeta(types.Object):
         return self.__annotations
 
 
-# StatusCause provides more information about an api.Status failure, including
-# cases when multiple errors are encountered.
 class StatusCause(types.Object):
+    """
+    StatusCause provides more information about an api.Status failure, including
+    cases when multiple errors are encountered.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -730,13 +760,16 @@ class StatusCause(types.Object):
         return self.__field
 
 
-# StatusDetails is a set of additional properties that MAY be set by the
-# server to provide additional information about a response. The Reason
-# field of a Status object defines what attributes will be set. Clients
-# must ignore fields that do not match the defined type of each attribute,
-# and should assume that any attribute may be empty, invalid, or under
-# defined.
 class StatusDetails(types.Object):
+    """
+    StatusDetails is a set of additional properties that MAY be set by the
+    server to provide additional information about a response. The Reason
+    field of a Status object defines what attributes will be set. Clients
+    must ignore fields that do not match the defined type of each attribute,
+    and should assume that any attribute may be empty, invalid, or under
+    defined.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -830,8 +863,11 @@ class StatusDetails(types.Object):
         return self.__retryAfterSeconds
 
 
-# Status is a return value for calls that don't return other objects.
 class Status(base.TypedObject):
+    """
+    Status is a return value for calls that don't return other objects.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

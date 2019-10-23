@@ -27,10 +27,13 @@ PolicyType = base.Enum(
 )
 
 
-# IPBlock describes a particular CIDR (Ex. "192.168.1.1/24") that is allowed to the pods
-# matched by a NetworkPolicySpec's podSelector. The except entry describes CIDRs that should
-# not be included within this rule.
 class IPBlock(types.Object):
+    """
+    IPBlock describes a particular CIDR (Ex. "192.168.1.1/24") that is allowed to the pods
+    matched by a NetworkPolicySpec's podSelector. The except entry describes CIDRs that should
+    not be included within this rule.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, cidr: str = "", except_: List[str] = None):
@@ -66,9 +69,12 @@ class IPBlock(types.Object):
         return self.__except_
 
 
-# NetworkPolicyPeer describes a peer to allow traffic from. Only certain combinations of
-# fields are allowed
 class NetworkPolicyPeer(types.Object):
+    """
+    NetworkPolicyPeer describes a peer to allow traffic from. Only certain combinations of
+    fields are allowed
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -131,8 +137,11 @@ class NetworkPolicyPeer(types.Object):
         return self.__ipBlock
 
 
-# NetworkPolicyPort describes a port to allow traffic on
 class NetworkPolicyPort(types.Object):
+    """
+    NetworkPolicyPort describes a port to allow traffic on
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
@@ -168,10 +177,13 @@ class NetworkPolicyPort(types.Object):
         return self.__port
 
 
-# NetworkPolicyEgressRule describes a particular set of traffic that is allowed out of pods
-# matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to.
-# This type is beta-level in 1.8
 class NetworkPolicyEgressRule(types.Object):
+    """
+    NetworkPolicyEgressRule describes a particular set of traffic that is allowed out of pods
+    matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to.
+    This type is beta-level in 1.8
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -215,9 +227,12 @@ class NetworkPolicyEgressRule(types.Object):
         return self.__to
 
 
-# NetworkPolicyIngressRule describes a particular set of traffic that is allowed to the pods
-# matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and from.
 class NetworkPolicyIngressRule(types.Object):
+    """
+    NetworkPolicyIngressRule describes a particular set of traffic that is allowed to the pods
+    matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and from.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -263,8 +278,11 @@ class NetworkPolicyIngressRule(types.Object):
         return self.__from_
 
 
-# NetworkPolicySpec provides the specification of a NetworkPolicy
 class NetworkPolicySpec(types.Object):
+    """
+    NetworkPolicySpec provides the specification of a NetworkPolicy
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -353,8 +371,11 @@ class NetworkPolicySpec(types.Object):
         return self.__policyTypes
 
 
-# NetworkPolicy describes what network traffic is allowed for a set of Pods
 class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    NetworkPolicy describes what network traffic is allowed for a set of Pods
+    """
+
     @context.scoped
     @typechecked
     def __init__(

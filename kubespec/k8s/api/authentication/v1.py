@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# BoundObjectReference is a reference to an object that a token is bound to.
 class BoundObjectReference(types.Object):
+    """
+    BoundObjectReference is a reference to an object that a token is bound to.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -75,8 +78,11 @@ class BoundObjectReference(types.Object):
         return self.__uid
 
 
-# TokenRequestSpec contains client provided parameters of a token request.
 class TokenRequestSpec(types.Object):
+    """
+    TokenRequestSpec contains client provided parameters of a token request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -136,8 +142,11 @@ class TokenRequestSpec(types.Object):
         return self.__boundObjectRef
 
 
-# TokenRequest requests a token for a given service account.
 class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    TokenRequest requests a token for a given service account.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -170,8 +179,11 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# TokenReviewSpec is a description of the token authentication request.
 class TokenReviewSpec(types.Object):
+    """
+    TokenReviewSpec is a description of the token authentication request.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, token: str = None, audiences: List[str] = None):
@@ -209,10 +221,13 @@ class TokenReviewSpec(types.Object):
         return self.__audiences
 
 
-# TokenReview attempts to authenticate a token to a known user.
-# Note: TokenReview requests may be cached by the webhook token authenticator
-# plugin in the kube-apiserver.
 class TokenReview(base.TypedObject, base.MetadataObject):
+    """
+    TokenReview attempts to authenticate a token to a known user.
+    Note: TokenReview requests may be cached by the webhook token authenticator
+    plugin in the kube-apiserver.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -246,9 +261,12 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# UserInfo holds the information about the user needed to implement the
-# user.Info interface.
 class UserInfo(types.Object):
+    """
+    UserInfo holds the information about the user needed to implement the
+    user.Info interface.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

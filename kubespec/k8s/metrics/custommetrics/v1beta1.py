@@ -15,8 +15,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# MetricListOptions is used to select metrics by their label selectors
 class MetricListOptions(base.TypedObject):
+    """
+    MetricListOptions is used to select metrics by their label selectors
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, labelSelector: str = None, metricLabelSelector: str = None):
@@ -53,8 +56,11 @@ class MetricListOptions(base.TypedObject):
         return self.__metricLabelSelector
 
 
-# MetricValue is a metric value for some object
 class MetricValue(base.TypedObject):
+    """
+    MetricValue is a metric value for some object
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -13,8 +13,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# AdmissionPluginConfiguration provides the configuration for a single plug-in.
 class AdmissionPluginConfiguration(types.Object):
+    """
+    AdmissionPluginConfiguration provides the configuration for a single plug-in.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -61,8 +64,11 @@ class AdmissionPluginConfiguration(types.Object):
         return self.__configuration
 
 
-# AdmissionConfiguration provides versioned configuration for admission controllers.
 class AdmissionConfiguration(base.TypedObject):
+    """
+    AdmissionConfiguration provides versioned configuration for admission controllers.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, plugins: Dict[str, AdmissionPluginConfiguration] = None):
@@ -157,8 +163,11 @@ class HTTPConnectConfig(types.Object):
         return self.__clientCert
 
 
-# Connection provides the configuration for a single egress selection client.
 class Connection(types.Object):
+    """
+    Connection provides the configuration for a single egress selection client.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, type: str = "", httpConnect: HTTPConnectConfig = None):
@@ -194,8 +203,11 @@ class Connection(types.Object):
         return self.__httpConnect
 
 
-# EgressSelection provides the configuration for a single egress selection client.
 class EgressSelection(types.Object):
+    """
+    EgressSelection provides the configuration for a single egress selection client.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = "", connection: Connection = None):
@@ -228,8 +240,11 @@ class EgressSelection(types.Object):
         return self.__connection
 
 
-# EgressSelectorConfiguration provides versioned configuration for egress selector clients.
 class EgressSelectorConfiguration(base.TypedObject):
+    """
+    EgressSelectorConfiguration provides versioned configuration for egress selector clients.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, egressSelections: Dict[str, EgressSelection] = None):

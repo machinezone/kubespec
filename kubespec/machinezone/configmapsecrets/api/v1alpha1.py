@@ -13,8 +13,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# ConfigMapTemplate is a ConfigMap template.
 class ConfigMapTemplate(base.NamespacedMetadataObject):
+    """
+    ConfigMapTemplate is a ConfigMap template.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -69,8 +72,11 @@ class ConfigMapTemplate(base.NamespacedMetadataObject):
         return self.__binaryData
 
 
-# TemplateVariable is a template variable.
 class TemplateVariable(types.Object):
+    """
+    TemplateVariable is a template variable.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -138,8 +144,11 @@ class TemplateVariable(types.Object):
         return self.__configMapValue
 
 
-# ConfigMapSecretSpec defines the desired state of a ConfigMapSecret.
 class ConfigMapSecretSpec(types.Object):
+    """
+    ConfigMapSecretSpec defines the desired state of a ConfigMapSecret.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -181,8 +190,11 @@ class ConfigMapSecretSpec(types.Object):
         return self.__vars
 
 
-# ConfigMapSecret holds configuration data with embedded secrets.
 class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ConfigMapSecret holds configuration data with embedded secrets.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

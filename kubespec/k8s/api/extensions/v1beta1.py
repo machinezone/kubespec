@@ -168,8 +168,11 @@ SupplementalGroupsStrategyType = base.Enum(
 )
 
 
-# AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
 class AllowedCSIDriver(types.Object):
+    """
+    AllowedCSIDriver represents a single inline CSI Driver that is allowed to be used.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, name: str = ""):
@@ -191,9 +194,12 @@ class AllowedCSIDriver(types.Object):
         return self.__name
 
 
-# AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
-# Deprecated: use AllowedFlexVolume from policy API Group instead.
 class AllowedFlexVolume(types.Object):
+    """
+    AllowedFlexVolume represents a single Flexvolume that is allowed to be used.
+    Deprecated: use AllowedFlexVolume from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, driver: str = ""):
@@ -215,10 +221,13 @@ class AllowedFlexVolume(types.Object):
         return self.__driver
 
 
-# AllowedHostPath defines the host volume conditions that will be enabled by a policy
-# for pods to use. It requires the path prefix to be defined.
-# Deprecated: use AllowedHostPath from policy API Group instead.
 class AllowedHostPath(types.Object):
+    """
+    AllowedHostPath defines the host volume conditions that will be enabled by a policy
+    for pods to use. It requires the path prefix to be defined.
+    Deprecated: use AllowedHostPath from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, pathPrefix: str = None, readOnly: bool = None):
@@ -258,8 +267,11 @@ class AllowedHostPath(types.Object):
         return self.__readOnly
 
 
-# Spec to control the desired behavior of daemon set rolling update.
 class RollingUpdateDaemonSet(types.Object):
+    """
+    Spec to control the desired behavior of daemon set rolling update.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, maxUnavailable: Union[int, str] = None):
@@ -338,8 +350,11 @@ class DaemonSetUpdateStrategy(types.Object):
         return self.__rollingUpdate
 
 
-# DaemonSetSpec is the specification of a daemon set.
 class DaemonSetSpec(types.Object):
+    """
+    DaemonSetSpec is the specification of a daemon set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -427,10 +442,13 @@ class DaemonSetSpec(types.Object):
         return self.__revisionHistoryLimit
 
 
-# DEPRECATED - This group version of DaemonSet is deprecated by apps/v1beta2/DaemonSet. See the release notes for
-# more information.
-# DaemonSet represents the configuration of a daemon set.
 class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of DaemonSet is deprecated by apps/v1beta2/DaemonSet. See the release notes for
+    more information.
+    DaemonSet represents the configuration of a daemon set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -467,8 +485,11 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Spec to control the desired behavior of rolling update.
 class RollingUpdateDeployment(types.Object):
+    """
+    Spec to control the desired behavior of rolling update.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -523,8 +544,11 @@ class RollingUpdateDeployment(types.Object):
         return self.__maxSurge
 
 
-# DeploymentStrategy describes how to replace existing pods with new ones.
 class DeploymentStrategy(types.Object):
+    """
+    DeploymentStrategy describes how to replace existing pods with new ones.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -568,8 +592,11 @@ class DeploymentStrategy(types.Object):
         return self.__rollingUpdate
 
 
-# DeploymentSpec is the specification of the desired behavior of the Deployment.
 class DeploymentSpec(types.Object):
+    """
+    DeploymentSpec is the specification of the desired behavior of the Deployment.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -696,10 +723,13 @@ class DeploymentSpec(types.Object):
         return self.__progressDeadlineSeconds
 
 
-# DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
-# more information.
-# Deployment enables declarative updates for Pods and ReplicaSets.
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of Deployment is deprecated by apps/v1beta2/Deployment. See the release notes for
+    more information.
+    Deployment enables declarative updates for Pods and ReplicaSets.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -735,8 +765,11 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# DEPRECATED.
 class RollbackConfig(types.Object):
+    """
+    DEPRECATED.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, revision: int = None):
@@ -759,9 +792,12 @@ class RollbackConfig(types.Object):
         return self.__revision
 
 
-# DEPRECATED.
-# DeploymentRollback stores the information required to rollback a deployment.
 class DeploymentRollback(base.TypedObject):
+    """
+    DEPRECATED.
+    DeploymentRollback stores the information required to rollback a deployment.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -811,9 +847,12 @@ class DeploymentRollback(base.TypedObject):
         return self.__rollbackTo
 
 
-# IDRange provides a min/max of an allowed range of IDs.
-# Deprecated: use IDRange from policy API Group instead.
 class IDRange(types.Object):
+    """
+    IDRange provides a min/max of an allowed range of IDs.
+    Deprecated: use IDRange from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
@@ -845,9 +884,12 @@ class IDRange(types.Object):
         return self.__max
 
 
-# FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
-# Deprecated: use FSGroupStrategyOptions from policy API Group instead.
 class FSGroupStrategyOptions(types.Object):
+    """
+    FSGroupStrategyOptions defines the strategy type and options used to create the strategy.
+    Deprecated: use FSGroupStrategyOptions from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
@@ -882,8 +924,11 @@ class FSGroupStrategyOptions(types.Object):
         return self.__ranges
 
 
-# IngressBackend describes all endpoints for a given service and port.
 class IngressBackend(types.Object):
+    """
+    IngressBackend describes all endpoints for a given service and port.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
@@ -915,9 +960,12 @@ class IngressBackend(types.Object):
         return self.__servicePort
 
 
-# HTTPIngressPath associates a path regex with a backend. Incoming urls matching
-# the path are forwarded to the backend.
 class HTTPIngressPath(types.Object):
+    """
+    HTTPIngressPath associates a path regex with a backend. Incoming urls matching
+    the path are forwarded to the backend.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, path: str = None, backend: IngressBackend = None):
@@ -957,12 +1005,15 @@ class HTTPIngressPath(types.Object):
         return self.__backend
 
 
-# HTTPIngressRuleValue is a list of http selectors pointing to backends.
-# In the example: http://<host>/<path>?<searchpart> -> backend where
-# where parts of the url correspond to RFC 3986, this resource will be used
-# to match against everything after the last '/' and before the first '?'
-# or '#'.
 class HTTPIngressRuleValue(types.Object):
+    """
+    HTTPIngressRuleValue is a list of http selectors pointing to backends.
+    In the example: http://<host>/<path>?<searchpart> -> backend where
+    where parts of the url correspond to RFC 3986, this resource will be used
+    to match against everything after the last '/' and before the first '?'
+    or '#'.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, paths: List[HTTPIngressPath] = None):
@@ -984,10 +1035,13 @@ class HTTPIngressRuleValue(types.Object):
         return self.__paths
 
 
-# HostPortRange defines a range of host ports that will be enabled by a policy
-# for pods to use.  It requires both the start and end to be defined.
-# Deprecated: use HostPortRange from policy API Group instead.
 class HostPortRange(types.Object):
+    """
+    HostPortRange defines a range of host ports that will be enabled by a policy
+    for pods to use.  It requires both the start and end to be defined.
+    Deprecated: use HostPortRange from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, min: int = 0, max: int = 0):
@@ -1019,11 +1073,14 @@ class HostPortRange(types.Object):
         return self.__max
 
 
-# DEPRECATED 1.9 - This group version of IPBlock is deprecated by networking/v1/IPBlock.
-# IPBlock describes a particular CIDR (Ex. "192.168.1.1/24") that is allowed to the pods
-# matched by a NetworkPolicySpec's podSelector. The except entry describes CIDRs that should
-# not be included within this rule.
 class IPBlock(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of IPBlock is deprecated by networking/v1/IPBlock.
+    IPBlock describes a particular CIDR (Ex. "192.168.1.1/24") that is allowed to the pods
+    matched by a NetworkPolicySpec's podSelector. The except entry describes CIDRs that should
+    not be included within this rule.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, cidr: str = "", except_: List[str] = None):
@@ -1059,11 +1116,14 @@ class IPBlock(types.Object):
         return self.__except_
 
 
-# IngressRuleValue represents a rule to apply against incoming requests. If the
-# rule is satisfied, the request is routed to the specified backend. Currently
-# mixing different types of rules in a single Ingress is disallowed, so exactly
-# one of the following must be set.
 class IngressRuleValue(types.Object):
+    """
+    IngressRuleValue represents a rule to apply against incoming requests. If the
+    rule is satisfied, the request is routed to the specified backend. Currently
+    mixing different types of rules in a single Ingress is disallowed, so exactly
+    one of the following must be set.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, http: HTTPIngressRuleValue = None):
@@ -1083,10 +1143,13 @@ class IngressRuleValue(types.Object):
         return self.__http
 
 
-# IngressRule represents the rules mapping the paths under a specified host to
-# the related backend services. Incoming requests are first evaluated for a host
-# match, then routed to the backend associated with the matching IngressRuleValue.
 class IngressRule(types.Object):
+    """
+    IngressRule represents the rules mapping the paths under a specified host to
+    the related backend services. Incoming requests are first evaluated for a host
+    match, then routed to the backend associated with the matching IngressRuleValue.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
@@ -1136,8 +1199,11 @@ class IngressRule(types.Object):
         return self.__ingressRuleValue
 
 
-# IngressTLS describes the transport layer security associated with an Ingress.
 class IngressTLS(types.Object):
+    """
+    IngressTLS describes the transport layer security associated with an Ingress.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, hosts: List[str] = None, secretName: str = None):
@@ -1178,8 +1244,11 @@ class IngressTLS(types.Object):
         return self.__secretName
 
 
-# IngressSpec describes the Ingress the user wishes to exist.
 class IngressSpec(types.Object):
+    """
+    IngressSpec describes the Ingress the user wishes to exist.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1237,12 +1306,15 @@ class IngressSpec(types.Object):
         return self.__rules
 
 
-# Ingress is a collection of rules that allow inbound connections to reach the
-# endpoints defined by a backend. An Ingress can be configured to give services
-# externally-reachable urls, load balance traffic, terminate SSL, offer name
-# based virtual hosting etc.
-# DEPRECATED - This group version of Ingress is deprecated by networking.k8s.io/v1beta1 Ingress. See the release notes for more information.
 class Ingress(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Ingress is a collection of rules that allow inbound connections to reach the
+    endpoints defined by a backend. An Ingress can be configured to give services
+    externally-reachable urls, load balance traffic, terminate SSL, offer name
+    based virtual hosting etc.
+    DEPRECATED - This group version of Ingress is deprecated by networking.k8s.io/v1beta1 Ingress. See the release notes for more information.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1279,8 +1351,11 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicyPeer is deprecated by networking/v1/NetworkPolicyPeer.
 class NetworkPolicyPeer(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicyPeer is deprecated by networking/v1/NetworkPolicyPeer.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1343,8 +1418,11 @@ class NetworkPolicyPeer(types.Object):
         return self.__ipBlock
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicyPort is deprecated by networking/v1/NetworkPolicyPort.
 class NetworkPolicyPort(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicyPort is deprecated by networking/v1/NetworkPolicyPort.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
@@ -1383,11 +1461,14 @@ class NetworkPolicyPort(types.Object):
         return self.__port
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicyEgressRule is deprecated by networking/v1/NetworkPolicyEgressRule.
-# NetworkPolicyEgressRule describes a particular set of traffic that is allowed out of pods
-# matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to.
-# This type is beta-level in 1.8
 class NetworkPolicyEgressRule(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicyEgressRule is deprecated by networking/v1/NetworkPolicyEgressRule.
+    NetworkPolicyEgressRule describes a particular set of traffic that is allowed out of pods
+    matched by a NetworkPolicySpec's podSelector. The traffic must match both ports and to.
+    This type is beta-level in 1.8
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1431,9 +1512,12 @@ class NetworkPolicyEgressRule(types.Object):
         return self.__to
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicyIngressRule is deprecated by networking/v1/NetworkPolicyIngressRule.
-# This NetworkPolicyIngressRule matches traffic if and only if the traffic matches both ports AND from.
 class NetworkPolicyIngressRule(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicyIngressRule is deprecated by networking/v1/NetworkPolicyIngressRule.
+    This NetworkPolicyIngressRule matches traffic if and only if the traffic matches both ports AND from.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1479,8 +1563,11 @@ class NetworkPolicyIngressRule(types.Object):
         return self.__from_
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicySpec is deprecated by networking/v1/NetworkPolicySpec.
 class NetworkPolicySpec(types.Object):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicySpec is deprecated by networking/v1/NetworkPolicySpec.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1568,9 +1655,12 @@ class NetworkPolicySpec(types.Object):
         return self.__policyTypes
 
 
-# DEPRECATED 1.9 - This group version of NetworkPolicy is deprecated by networking/v1/NetworkPolicy.
-# NetworkPolicy describes what network traffic is allowed for a set of Pods
 class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED 1.9 - This group version of NetworkPolicy is deprecated by networking/v1/NetworkPolicy.
+    NetworkPolicy describes what network traffic is allowed for a set of Pods
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1606,9 +1696,12 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
-# Deprecated: use RunAsGroupStrategyOptions from policy API Group instead.
 class RunAsGroupStrategyOptions(types.Object):
+    """
+    RunAsGroupStrategyOptions defines the strategy type and any options used to create the strategy.
+    Deprecated: use RunAsGroupStrategyOptions from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
@@ -1642,9 +1735,12 @@ class RunAsGroupStrategyOptions(types.Object):
         return self.__ranges
 
 
-# RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
-# Deprecated: use RunAsUserStrategyOptions from policy API Group instead.
 class RunAsUserStrategyOptions(types.Object):
+    """
+    RunAsUserStrategyOptions defines the strategy type and any options used to create the strategy.
+    Deprecated: use RunAsUserStrategyOptions from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
@@ -1678,9 +1774,12 @@ class RunAsUserStrategyOptions(types.Object):
         return self.__ranges
 
 
-# RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
-# for a pod.
 class RuntimeClassStrategyOptions(types.Object):
+    """
+    RuntimeClassStrategyOptions define the strategy that will dictate the allowable RuntimeClasses
+    for a pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1723,9 +1822,12 @@ class RuntimeClassStrategyOptions(types.Object):
         return self.__defaultRuntimeClassName
 
 
-# SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
-# Deprecated: use SELinuxStrategyOptions from policy API Group instead.
 class SELinuxStrategyOptions(types.Object):
+    """
+    SELinuxStrategyOptions defines the strategy type and any options used to create the strategy.
+    Deprecated: use SELinuxStrategyOptions from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1763,9 +1865,12 @@ class SELinuxStrategyOptions(types.Object):
         return self.__seLinuxOptions
 
 
-# SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
-# Deprecated: use SupplementalGroupsStrategyOptions from policy API Group instead.
 class SupplementalGroupsStrategyOptions(types.Object):
+    """
+    SupplementalGroupsStrategyOptions defines the strategy type and options used to create the strategy.
+    Deprecated: use SupplementalGroupsStrategyOptions from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1802,9 +1907,12 @@ class SupplementalGroupsStrategyOptions(types.Object):
         return self.__ranges
 
 
-# PodSecurityPolicySpec defines the policy enforced.
-# Deprecated: use PodSecurityPolicySpec from policy API Group instead.
 class PodSecurityPolicySpec(types.Object):
+    """
+    PodSecurityPolicySpec defines the policy enforced.
+    Deprecated: use PodSecurityPolicySpec from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2194,10 +2302,13 @@ class PodSecurityPolicySpec(types.Object):
         return self.__runtimeClass
 
 
-# PodSecurityPolicy governs the ability to make requests that affect the Security Context
-# that will be applied to a pod and container.
-# Deprecated: use PodSecurityPolicy from policy API Group instead.
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
+    """
+    PodSecurityPolicy governs the ability to make requests that affect the Security Context
+    that will be applied to a pod and container.
+    Deprecated: use PodSecurityPolicy from policy API Group instead.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2231,8 +2342,11 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-# ReplicaSetSpec is the specification of a ReplicaSet.
 class ReplicaSetSpec(types.Object):
+    """
+    ReplicaSetSpec is the specification of a ReplicaSet.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2303,10 +2417,13 @@ class ReplicaSetSpec(types.Object):
         return self.__template
 
 
-# DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1beta2/ReplicaSet. See the release notes for
-# more information.
-# ReplicaSet ensures that a specified number of pod replicas are running at any given time.
 class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    DEPRECATED - This group version of ReplicaSet is deprecated by apps/v1beta2/ReplicaSet. See the release notes for
+    more information.
+    ReplicaSet ensures that a specified number of pod replicas are running at any given time.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -2343,8 +2460,11 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# Dummy definition
 class ReplicationControllerDummy(base.TypedObject):
+    """
+    Dummy definition
+    """
+
     @context.scoped
     @typechecked
     def __init__(self):
@@ -2358,8 +2478,11 @@ class ReplicationControllerDummy(base.TypedObject):
         return v
 
 
-# describes the attributes of a scale subresource
 class ScaleSpec(types.Object):
+    """
+    describes the attributes of a scale subresource
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
@@ -2382,8 +2505,11 @@ class ScaleSpec(types.Object):
         return self.__replicas
 
 
-# represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    represents a scaling request for a resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

@@ -12,8 +12,11 @@ from kubespec import types
 from typeguard import check_type, typechecked
 
 
-# CrossVersionObjectReference contains enough information to let you identify the referred resource.
 class CrossVersionObjectReference(types.Object):
+    """
+    CrossVersionObjectReference contains enough information to let you identify the referred resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
@@ -56,8 +59,11 @@ class CrossVersionObjectReference(types.Object):
         return self.__apiVersion
 
 
-# specification of a horizontal pod autoscaler.
 class HorizontalPodAutoscalerSpec(types.Object):
+    """
+    specification of a horizontal pod autoscaler.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -131,8 +137,11 @@ class HorizontalPodAutoscalerSpec(types.Object):
         return self.__targetCPUUtilizationPercentage
 
 
-# configuration of a horizontal pod autoscaler.
 class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    configuration of a horizontal pod autoscaler.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -168,8 +177,11 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# ScaleSpec describes the attributes of a scale subresource.
 class ScaleSpec(types.Object):
+    """
+    ScaleSpec describes the attributes of a scale subresource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, replicas: int = None):
@@ -192,8 +204,11 @@ class ScaleSpec(types.Object):
         return self.__replicas
 
 
-# Scale represents a scaling request for a resource.
 class Scale(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    Scale represents a scaling request for a resource.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

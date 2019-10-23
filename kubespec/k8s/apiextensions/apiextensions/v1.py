@@ -32,8 +32,11 @@ ResourceScope = base.Enum(
 )
 
 
-# ConversionRequest describes the conversion request parameters.
 class ConversionRequest(types.Object):
+    """
+    ConversionRequest describes the conversion request parameters.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -83,8 +86,11 @@ class ConversionRequest(types.Object):
         return self.__objects
 
 
-# ConversionResponse describes a conversion response.
 class ConversionResponse(types.Object):
+    """
+    ConversionResponse describes a conversion response.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -141,8 +147,11 @@ class ConversionResponse(types.Object):
         return self.__result
 
 
-# ConversionReview describes a conversion request/response.
 class ConversionReview(base.TypedObject):
+    """
+    ConversionReview describes a conversion request/response.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -178,8 +187,11 @@ class ConversionReview(base.TypedObject):
         return self.__response
 
 
-# CustomResourceColumnDefinition specifies a column for server side printing.
 class CustomResourceColumnDefinition(types.Object):
+    """
+    CustomResourceColumnDefinition specifies a column for server side printing.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -268,8 +280,11 @@ class CustomResourceColumnDefinition(types.Object):
         return self.__jsonPath
 
 
-# ServiceReference holds a reference to Service.legacy.k8s.io
 class ServiceReference(types.Object):
+    """
+    ServiceReference holds a reference to Service.legacy.k8s.io
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -329,8 +344,11 @@ class ServiceReference(types.Object):
         return self.__port
 
 
-# WebhookClientConfig contains the information to make a TLS connection with the webhook.
 class WebhookClientConfig(types.Object):
+    """
+    WebhookClientConfig contains the information to make a TLS connection with the webhook.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -405,8 +423,11 @@ class WebhookClientConfig(types.Object):
         return self.__caBundle
 
 
-# WebhookConversion describes how to call a conversion webhook
 class WebhookConversion(types.Object):
+    """
+    WebhookConversion describes how to call a conversion webhook
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -450,8 +471,11 @@ class WebhookConversion(types.Object):
         return self.__conversionReviewVersions
 
 
-# CustomResourceConversion describes how to convert different versions of a CR.
 class CustomResourceConversion(types.Object):
+    """
+    CustomResourceConversion describes how to convert different versions of a CR.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -491,8 +515,11 @@ class CustomResourceConversion(types.Object):
         return self.__webhook
 
 
-# CustomResourceDefinitionNames indicates the names to serve this CustomResourceDefinition
 class CustomResourceDefinitionNames(types.Object):
+    """
+    CustomResourceDefinitionNames indicates the names to serve this CustomResourceDefinition
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -584,8 +611,11 @@ class CustomResourceDefinitionNames(types.Object):
         return self.__categories
 
 
-# CustomResourceSubresourceScale defines how to serve the scale subresource for CustomResources.
 class CustomResourceSubresourceScale(types.Object):
+    """
+    CustomResourceSubresourceScale defines how to serve the scale subresource for CustomResources.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -648,17 +678,23 @@ class CustomResourceSubresourceScale(types.Object):
         return self.__labelSelectorPath
 
 
-# CustomResourceSubresourceStatus defines how to serve the status subresource for CustomResources.
-# Status is represented by the `.status` JSON path inside of a CustomResource. When set,
-# * exposes a /status subresource for the custom resource
-# * PUT requests to the /status subresource take a custom resource object, and ignore changes to anything except the status stanza
-# * PUT/POST/PATCH requests to the custom resource ignore changes to the status stanza
 class CustomResourceSubresourceStatus(types.Object):
+    """
+    CustomResourceSubresourceStatus defines how to serve the status subresource for CustomResources.
+    Status is represented by the `.status` JSON path inside of a CustomResource. When set,
+    * exposes a /status subresource for the custom resource
+    * PUT requests to the /status subresource take a custom resource object, and ignore changes to anything except the status stanza
+    * PUT/POST/PATCH requests to the custom resource ignore changes to the status stanza
+    """
+
     pass  # FIXME
 
 
-# CustomResourceSubresources defines the status and scale subresources for CustomResources.
 class CustomResourceSubresources(types.Object):
+    """
+    CustomResourceSubresources defines the status and scale subresources for CustomResources.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -699,8 +735,11 @@ class CustomResourceSubresources(types.Object):
         return self.__scale
 
 
-# ExternalDocumentation allows referencing an external resource for extended documentation.
 class ExternalDocumentation(types.Object):
+    """
+    ExternalDocumentation allows referencing an external resource for extended documentation.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, description: str = None, url: str = None):
@@ -728,9 +767,12 @@ class ExternalDocumentation(types.Object):
         return self.__url
 
 
-# JSON represents any valid JSON value.
-# These types are supported: bool, int64, float64, string, []interface{}, map[string]interface{} and nil.
 class JSON(types.Object):
+    """
+    JSON represents any valid JSON value.
+    These types are supported: bool, int64, float64, string, []interface{}, map[string]interface{} and nil.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, raw: bytes = None):
@@ -749,8 +791,11 @@ class JSON(types.Object):
         return self.__raw
 
 
-# JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/).
 class JSONSchemaProps(types.Object):
+    """
+    JSONSchemaProps is a JSON-Schema following Specification Draft 4 (http://json-schema.org/).
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1229,8 +1274,11 @@ class JSONSchemaProps(types.Object):
         return self.__xKubernetesListType
 
 
-# CustomResourceValidation is a list of validation methods for CustomResources.
 class CustomResourceValidation(types.Object):
+    """
+    CustomResourceValidation is a list of validation methods for CustomResources.
+    """
+
     @context.scoped
     @typechecked
     def __init__(self, openAPIV3Schema: JSONSchemaProps = None):
@@ -1253,8 +1301,11 @@ class CustomResourceValidation(types.Object):
         return self.__openAPIV3Schema
 
 
-# CustomResourceDefinitionVersion describes a version for CRD.
 class CustomResourceDefinitionVersion(types.Object):
+    """
+    CustomResourceDefinitionVersion describes a version for CRD.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1351,8 +1402,11 @@ class CustomResourceDefinitionVersion(types.Object):
         return self.__additionalPrinterColumns
 
 
-# CustomResourceDefinitionSpec describes how a user wants their resource to appear
 class CustomResourceDefinitionSpec(types.Object):
+    """
+    CustomResourceDefinitionSpec describes how a user wants their resource to appear
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -1450,9 +1504,12 @@ class CustomResourceDefinitionSpec(types.Object):
         return self.__preserveUnknownFields
 
 
-# CustomResourceDefinition represents a resource that should be exposed on the API server.  Its name MUST be in the format
-# <.spec.name>.<.spec.group>.
 class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
+    """
+    CustomResourceDefinition represents a resource that should be exposed on the API server.  Its name MUST be in the format
+    <.spec.name>.<.spec.group>.
+    """
+
     @context.scoped
     @typechecked
     def __init__(

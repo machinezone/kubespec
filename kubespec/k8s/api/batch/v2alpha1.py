@@ -31,8 +31,11 @@ ConcurrencyPolicy = base.Enum(
 )
 
 
-# JobTemplateSpec describes the data a Job should have when created from a template
 class JobTemplateSpec(base.NamespacedMetadataObject):
+    """
+    JobTemplateSpec describes the data a Job should have when created from a template
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -67,8 +70,11 @@ class JobTemplateSpec(base.NamespacedMetadataObject):
         return self.__spec
 
 
-# CronJobSpec describes how the job execution will look like and when it will actually run.
 class CronJobSpec(types.Object):
+    """
+    CronJobSpec describes how the job execution will look like and when it will actually run.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -176,8 +182,11 @@ class CronJobSpec(types.Object):
         return self.__failedJobsHistoryLimit
 
 
-# CronJob represents the configuration of a single cron job.
 class CronJob(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    CronJob represents the configuration of a single cron job.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
@@ -214,8 +223,11 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         return self.__spec
 
 
-# JobTemplate describes a template for creating copies of a predefined pod.
 class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    JobTemplate describes a template for creating copies of a predefined pod.
+    """
+
     @context.scoped
     @typechecked
     def __init__(
