@@ -64,7 +64,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         eventTime: "base.MicroTime" = None,
-        series: EventSeries = None,
+        series: "EventSeries" = None,
         reportingController: str = None,
         reportingInstance: str = None,
         action: str = None,
@@ -102,7 +102,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         check_type("eventTime", eventTime, "base.MicroTime")
         v["eventTime"] = eventTime
         series = self.series()
-        check_type("series", series, Optional[EventSeries])
+        check_type("series", series, Optional["EventSeries"])
         if series is not None:  # omit empty
             v["series"] = series
         reportingController = self.reportingController()
@@ -144,7 +144,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__eventTime
 
-    def series(self) -> Optional[EventSeries]:
+    def series(self) -> Optional["EventSeries"]:
         """
         Data about the Event series this event represents or nil if it's a singleton Event.
         """

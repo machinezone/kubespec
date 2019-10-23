@@ -56,7 +56,7 @@ class AESConfiguration(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, keys: Dict[str, Key] = None):
+    def __init__(self, keys: Dict[str, "Key"] = None):
         super().__init__()
         self.__keys = keys if keys is not None else {}
 
@@ -64,11 +64,11 @@ class AESConfiguration(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         keys = self.keys()
-        check_type("keys", keys, Dict[str, Key])
+        check_type("keys", keys, Dict[str, "Key"])
         v["keys"] = keys.values()  # named list
         return v
 
-    def keys(self) -> Dict[str, Key]:
+    def keys(self) -> Dict[str, "Key"]:
         """
         keys is a list of keys to be used for creating the AES transformer.
         Each key has to be 32 bytes long for AES-CBC and 16, 24 or 32 bytes for AES-GCM.
@@ -155,7 +155,7 @@ class SecretboxConfiguration(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, keys: Dict[str, Key] = None):
+    def __init__(self, keys: Dict[str, "Key"] = None):
         super().__init__()
         self.__keys = keys if keys is not None else {}
 
@@ -163,11 +163,11 @@ class SecretboxConfiguration(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         keys = self.keys()
-        check_type("keys", keys, Dict[str, Key])
+        check_type("keys", keys, Dict[str, "Key"])
         v["keys"] = keys.values()  # named list
         return v
 
-    def keys(self) -> Dict[str, Key]:
+    def keys(self) -> Dict[str, "Key"]:
         """
         keys is a list of keys to be used for creating the Secretbox transformer.
         Each key has to be 32 bytes long.
@@ -184,11 +184,11 @@ class ProviderConfiguration(types.Object):
     @typechecked
     def __init__(
         self,
-        aesgcm: AESConfiguration = None,
-        aescbc: AESConfiguration = None,
-        secretbox: SecretboxConfiguration = None,
-        identity: IdentityConfiguration = None,
-        kms: KMSConfiguration = None,
+        aesgcm: "AESConfiguration" = None,
+        aescbc: "AESConfiguration" = None,
+        secretbox: "SecretboxConfiguration" = None,
+        identity: "IdentityConfiguration" = None,
+        kms: "KMSConfiguration" = None,
     ):
         super().__init__()
         self.__aesgcm = aesgcm
@@ -201,52 +201,52 @@ class ProviderConfiguration(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         aesgcm = self.aesgcm()
-        check_type("aesgcm", aesgcm, Optional[AESConfiguration])
+        check_type("aesgcm", aesgcm, Optional["AESConfiguration"])
         if aesgcm is not None:  # omit empty
             v["aesgcm"] = aesgcm
         aescbc = self.aescbc()
-        check_type("aescbc", aescbc, Optional[AESConfiguration])
+        check_type("aescbc", aescbc, Optional["AESConfiguration"])
         if aescbc is not None:  # omit empty
             v["aescbc"] = aescbc
         secretbox = self.secretbox()
-        check_type("secretbox", secretbox, Optional[SecretboxConfiguration])
+        check_type("secretbox", secretbox, Optional["SecretboxConfiguration"])
         if secretbox is not None:  # omit empty
             v["secretbox"] = secretbox
         identity = self.identity()
-        check_type("identity", identity, Optional[IdentityConfiguration])
+        check_type("identity", identity, Optional["IdentityConfiguration"])
         if identity is not None:  # omit empty
             v["identity"] = identity
         kms = self.kms()
-        check_type("kms", kms, Optional[KMSConfiguration])
+        check_type("kms", kms, Optional["KMSConfiguration"])
         if kms is not None:  # omit empty
             v["kms"] = kms
         return v
 
-    def aesgcm(self) -> Optional[AESConfiguration]:
+    def aesgcm(self) -> Optional["AESConfiguration"]:
         """
         aesgcm is the configuration for the AES-GCM transformer.
         """
         return self.__aesgcm
 
-    def aescbc(self) -> Optional[AESConfiguration]:
+    def aescbc(self) -> Optional["AESConfiguration"]:
         """
         aescbc is the configuration for the AES-CBC transformer.
         """
         return self.__aescbc
 
-    def secretbox(self) -> Optional[SecretboxConfiguration]:
+    def secretbox(self) -> Optional["SecretboxConfiguration"]:
         """
         secretbox is the configuration for the Secretbox based transformer.
         """
         return self.__secretbox
 
-    def identity(self) -> Optional[IdentityConfiguration]:
+    def identity(self) -> Optional["IdentityConfiguration"]:
         """
         identity is the (empty) configuration for the identity transformer.
         """
         return self.__identity
 
-    def kms(self) -> Optional[KMSConfiguration]:
+    def kms(self) -> Optional["KMSConfiguration"]:
         """
         kms contains the name, cache size and path to configuration file for a KMS based envelope transformer.
         """
@@ -261,7 +261,9 @@ class ResourceConfiguration(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, resources: List[str] = None, providers: List[ProviderConfiguration] = None
+        self,
+        resources: List[str] = None,
+        providers: List["ProviderConfiguration"] = None,
     ):
         super().__init__()
         self.__resources = resources if resources is not None else []
@@ -274,7 +276,7 @@ class ResourceConfiguration(types.Object):
         check_type("resources", resources, List[str])
         v["resources"] = resources
         providers = self.providers()
-        check_type("providers", providers, List[ProviderConfiguration])
+        check_type("providers", providers, List["ProviderConfiguration"])
         v["providers"] = providers
         return v
 
@@ -284,7 +286,7 @@ class ResourceConfiguration(types.Object):
         """
         return self.__resources
 
-    def providers(self) -> List[ProviderConfiguration]:
+    def providers(self) -> List["ProviderConfiguration"]:
         """
         providers is a list of transformers to be used for reading and writing the resources to disk.
         eg: aesgcm, aescbc, secretbox, identity.
@@ -302,7 +304,7 @@ class EncryptionConfiguration(types.Object):
     def __init__(
         self,
         typeMeta: "metav1.TypeMeta" = None,
-        resources: List[ResourceConfiguration] = None,
+        resources: List["ResourceConfiguration"] = None,
     ):
         super().__init__()
         self.__typeMeta = typeMeta if typeMeta is not None else metav1.TypeMeta()
@@ -315,14 +317,14 @@ class EncryptionConfiguration(types.Object):
         check_type("typeMeta", typeMeta, "metav1.TypeMeta")
         v["TypeMeta"] = typeMeta
         resources = self.resources()
-        check_type("resources", resources, List[ResourceConfiguration])
+        check_type("resources", resources, List["ResourceConfiguration"])
         v["resources"] = resources
         return v
 
     def typeMeta(self) -> "metav1.TypeMeta":
         return self.__typeMeta
 
-    def resources(self) -> List[ResourceConfiguration]:
+    def resources(self) -> List["ResourceConfiguration"]:
         """
         resources is a list containing resources, and their corresponding encryption providers.
         """

@@ -73,7 +73,7 @@ class APIServiceSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        service: ServiceReference = None,
+        service: "ServiceReference" = None,
         group: str = None,
         version: str = None,
         insecureSkipTLSVerify: bool = None,
@@ -94,7 +94,7 @@ class APIServiceSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         service = self.service()
-        check_type("service", service, Optional[ServiceReference])
+        check_type("service", service, Optional["ServiceReference"])
         v["service"] = service
         group = self.group()
         check_type("group", group, Optional[str])
@@ -120,7 +120,7 @@ class APIServiceSpec(types.Object):
         v["versionPriority"] = versionPriority
         return v
 
-    def service(self) -> Optional[ServiceReference]:
+    def service(self) -> Optional["ServiceReference"]:
         """
         Service is a reference to the service for this API server.  It must communicate
         on port 443
@@ -195,7 +195,7 @@ class APIService(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: APIServiceSpec = None,
+        spec: "APIServiceSpec" = None,
     ):
         super().__init__(
             apiVersion="apiregistration.k8s.io/v1",
@@ -210,11 +210,11 @@ class APIService(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[APIServiceSpec])
+        check_type("spec", spec, Optional["APIServiceSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[APIServiceSpec]:
+    def spec(self) -> Optional["APIServiceSpec"]:
         """
         Spec contains information for locating and communicating with a server
         """

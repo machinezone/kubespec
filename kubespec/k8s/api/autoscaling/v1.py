@@ -68,7 +68,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        scaleTargetRef: CrossVersionObjectReference = None,
+        scaleTargetRef: "CrossVersionObjectReference" = None,
         minReplicas: int = None,
         maxReplicas: int = 0,
         targetCPUUtilizationPercentage: int = None,
@@ -87,7 +87,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         scaleTargetRef = self.scaleTargetRef()
-        check_type("scaleTargetRef", scaleTargetRef, CrossVersionObjectReference)
+        check_type("scaleTargetRef", scaleTargetRef, "CrossVersionObjectReference")
         v["scaleTargetRef"] = scaleTargetRef
         minReplicas = self.minReplicas()
         check_type("minReplicas", minReplicas, Optional[int])
@@ -106,7 +106,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
             v["targetCPUUtilizationPercentage"] = targetCPUUtilizationPercentage
         return v
 
-    def scaleTargetRef(self) -> CrossVersionObjectReference:
+    def scaleTargetRef(self) -> "CrossVersionObjectReference":
         """
         reference to scaled resource; horizontal pod autoscaler will learn the current resource consumption
         and will set the desired number of pods by using its Scale subresource.
@@ -150,7 +150,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: HorizontalPodAutoscalerSpec = None,
+        spec: "HorizontalPodAutoscalerSpec" = None,
     ):
         super().__init__(
             apiVersion="autoscaling/v1",
@@ -166,11 +166,11 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[HorizontalPodAutoscalerSpec])
+        check_type("spec", spec, Optional["HorizontalPodAutoscalerSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+    def spec(self) -> Optional["HorizontalPodAutoscalerSpec"]:
         """
         behaviour of autoscaler. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
         """
@@ -217,7 +217,7 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ScaleSpec = None,
+        spec: "ScaleSpec" = None,
     ):
         super().__init__(
             apiVersion="autoscaling/v1",
@@ -233,11 +233,11 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ScaleSpec])
+        check_type("spec", spec, Optional["ScaleSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ScaleSpec]:
+    def spec(self) -> Optional["ScaleSpec"]:
         """
         defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
         """

@@ -736,8 +736,8 @@ class NodeSelectorTerm(types.Object):
     @typechecked
     def __init__(
         self,
-        matchExpressions: List[NodeSelectorRequirement] = None,
-        matchFields: List[NodeSelectorRequirement] = None,
+        matchExpressions: List["NodeSelectorRequirement"] = None,
+        matchFields: List["NodeSelectorRequirement"] = None,
     ):
         super().__init__()
         self.__matchExpressions = (
@@ -752,23 +752,25 @@ class NodeSelectorTerm(types.Object):
         check_type(
             "matchExpressions",
             matchExpressions,
-            Optional[List[NodeSelectorRequirement]],
+            Optional[List["NodeSelectorRequirement"]],
         )
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
         matchFields = self.matchFields()
-        check_type("matchFields", matchFields, Optional[List[NodeSelectorRequirement]])
+        check_type(
+            "matchFields", matchFields, Optional[List["NodeSelectorRequirement"]]
+        )
         if matchFields:  # omit empty
             v["matchFields"] = matchFields
         return v
 
-    def matchExpressions(self) -> Optional[List[NodeSelectorRequirement]]:
+    def matchExpressions(self) -> Optional[List["NodeSelectorRequirement"]]:
         """
         A list of node selector requirements by node's labels.
         """
         return self.__matchExpressions
 
-    def matchFields(self) -> Optional[List[NodeSelectorRequirement]]:
+    def matchFields(self) -> Optional[List["NodeSelectorRequirement"]]:
         """
         A list of node selector requirements by node's fields.
         """
@@ -784,7 +786,7 @@ class NodeSelector(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, nodeSelectorTerms: List[NodeSelectorTerm] = None):
+    def __init__(self, nodeSelectorTerms: List["NodeSelectorTerm"] = None):
         super().__init__()
         self.__nodeSelectorTerms = (
             nodeSelectorTerms if nodeSelectorTerms is not None else []
@@ -794,11 +796,11 @@ class NodeSelector(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         nodeSelectorTerms = self.nodeSelectorTerms()
-        check_type("nodeSelectorTerms", nodeSelectorTerms, List[NodeSelectorTerm])
+        check_type("nodeSelectorTerms", nodeSelectorTerms, List["NodeSelectorTerm"])
         v["nodeSelectorTerms"] = nodeSelectorTerms
         return v
 
-    def nodeSelectorTerms(self) -> List[NodeSelectorTerm]:
+    def nodeSelectorTerms(self) -> List["NodeSelectorTerm"]:
         """
         Required. A list of node selector terms. The terms are ORed.
         """
@@ -813,7 +815,7 @@ class PreferredSchedulingTerm(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, weight: int = 0, preference: NodeSelectorTerm = None):
+    def __init__(self, weight: int = 0, preference: "NodeSelectorTerm" = None):
         super().__init__()
         self.__weight = weight
         self.__preference = preference if preference is not None else NodeSelectorTerm()
@@ -825,7 +827,7 @@ class PreferredSchedulingTerm(types.Object):
         check_type("weight", weight, int)
         v["weight"] = weight
         preference = self.preference()
-        check_type("preference", preference, NodeSelectorTerm)
+        check_type("preference", preference, "NodeSelectorTerm")
         v["preference"] = preference
         return v
 
@@ -835,7 +837,7 @@ class PreferredSchedulingTerm(types.Object):
         """
         return self.__weight
 
-    def preference(self) -> NodeSelectorTerm:
+    def preference(self) -> "NodeSelectorTerm":
         """
         A node selector term, associated with the corresponding weight.
         """
@@ -851,9 +853,9 @@ class NodeAffinity(types.Object):
     @typechecked
     def __init__(
         self,
-        requiredDuringSchedulingIgnoredDuringExecution: NodeSelector = None,
+        requiredDuringSchedulingIgnoredDuringExecution: "NodeSelector" = None,
         preferredDuringSchedulingIgnoredDuringExecution: List[
-            PreferredSchedulingTerm
+            "PreferredSchedulingTerm"
         ] = None,
     ):
         super().__init__()
@@ -875,7 +877,7 @@ class NodeAffinity(types.Object):
         check_type(
             "requiredDuringSchedulingIgnoredDuringExecution",
             requiredDuringSchedulingIgnoredDuringExecution,
-            Optional[NodeSelector],
+            Optional["NodeSelector"],
         )
         if requiredDuringSchedulingIgnoredDuringExecution is not None:  # omit empty
             v[
@@ -887,7 +889,7 @@ class NodeAffinity(types.Object):
         check_type(
             "preferredDuringSchedulingIgnoredDuringExecution",
             preferredDuringSchedulingIgnoredDuringExecution,
-            Optional[List[PreferredSchedulingTerm]],
+            Optional[List["PreferredSchedulingTerm"]],
         )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
             v[
@@ -895,7 +897,9 @@ class NodeAffinity(types.Object):
             ] = preferredDuringSchedulingIgnoredDuringExecution
         return v
 
-    def requiredDuringSchedulingIgnoredDuringExecution(self) -> Optional[NodeSelector]:
+    def requiredDuringSchedulingIgnoredDuringExecution(
+        self
+    ) -> Optional["NodeSelector"]:
         """
         If the affinity requirements specified by this field are not met at
         scheduling time, the pod will not be scheduled onto the node.
@@ -907,7 +911,7 @@ class NodeAffinity(types.Object):
 
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
-    ) -> Optional[List[PreferredSchedulingTerm]]:
+    ) -> Optional[List["PreferredSchedulingTerm"]]:
         """
         The scheduler will prefer to schedule pods to nodes that satisfy
         the affinity expressions specified by this field, but it may choose
@@ -992,7 +996,7 @@ class WeightedPodAffinityTerm(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, weight: int = 0, podAffinityTerm: PodAffinityTerm = None):
+    def __init__(self, weight: int = 0, podAffinityTerm: "PodAffinityTerm" = None):
         super().__init__()
         self.__weight = weight
         self.__podAffinityTerm = (
@@ -1006,7 +1010,7 @@ class WeightedPodAffinityTerm(types.Object):
         check_type("weight", weight, int)
         v["weight"] = weight
         podAffinityTerm = self.podAffinityTerm()
-        check_type("podAffinityTerm", podAffinityTerm, PodAffinityTerm)
+        check_type("podAffinityTerm", podAffinityTerm, "PodAffinityTerm")
         v["podAffinityTerm"] = podAffinityTerm
         return v
 
@@ -1017,7 +1021,7 @@ class WeightedPodAffinityTerm(types.Object):
         """
         return self.__weight
 
-    def podAffinityTerm(self) -> PodAffinityTerm:
+    def podAffinityTerm(self) -> "PodAffinityTerm":
         """
         Required. A pod affinity term, associated with the corresponding weight.
         """
@@ -1033,9 +1037,9 @@ class PodAffinity(types.Object):
     @typechecked
     def __init__(
         self,
-        requiredDuringSchedulingIgnoredDuringExecution: List[PodAffinityTerm] = None,
+        requiredDuringSchedulingIgnoredDuringExecution: List["PodAffinityTerm"] = None,
         preferredDuringSchedulingIgnoredDuringExecution: List[
-            WeightedPodAffinityTerm
+            "WeightedPodAffinityTerm"
         ] = None,
     ):
         super().__init__()
@@ -1059,7 +1063,7 @@ class PodAffinity(types.Object):
         check_type(
             "requiredDuringSchedulingIgnoredDuringExecution",
             requiredDuringSchedulingIgnoredDuringExecution,
-            Optional[List[PodAffinityTerm]],
+            Optional[List["PodAffinityTerm"]],
         )
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
             v[
@@ -1071,7 +1075,7 @@ class PodAffinity(types.Object):
         check_type(
             "preferredDuringSchedulingIgnoredDuringExecution",
             preferredDuringSchedulingIgnoredDuringExecution,
-            Optional[List[WeightedPodAffinityTerm]],
+            Optional[List["WeightedPodAffinityTerm"]],
         )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
             v[
@@ -1081,7 +1085,7 @@ class PodAffinity(types.Object):
 
     def requiredDuringSchedulingIgnoredDuringExecution(
         self
-    ) -> Optional[List[PodAffinityTerm]]:
+    ) -> Optional[List["PodAffinityTerm"]]:
         """
         If the affinity requirements specified by this field are not met at
         scheduling time, the pod will not be scheduled onto the node.
@@ -1095,7 +1099,7 @@ class PodAffinity(types.Object):
 
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
-    ) -> Optional[List[WeightedPodAffinityTerm]]:
+    ) -> Optional[List["WeightedPodAffinityTerm"]]:
         """
         The scheduler will prefer to schedule pods to nodes that satisfy
         the affinity expressions specified by this field, but it may choose
@@ -1119,9 +1123,9 @@ class PodAntiAffinity(types.Object):
     @typechecked
     def __init__(
         self,
-        requiredDuringSchedulingIgnoredDuringExecution: List[PodAffinityTerm] = None,
+        requiredDuringSchedulingIgnoredDuringExecution: List["PodAffinityTerm"] = None,
         preferredDuringSchedulingIgnoredDuringExecution: List[
-            WeightedPodAffinityTerm
+            "WeightedPodAffinityTerm"
         ] = None,
     ):
         super().__init__()
@@ -1145,7 +1149,7 @@ class PodAntiAffinity(types.Object):
         check_type(
             "requiredDuringSchedulingIgnoredDuringExecution",
             requiredDuringSchedulingIgnoredDuringExecution,
-            Optional[List[PodAffinityTerm]],
+            Optional[List["PodAffinityTerm"]],
         )
         if requiredDuringSchedulingIgnoredDuringExecution:  # omit empty
             v[
@@ -1157,7 +1161,7 @@ class PodAntiAffinity(types.Object):
         check_type(
             "preferredDuringSchedulingIgnoredDuringExecution",
             preferredDuringSchedulingIgnoredDuringExecution,
-            Optional[List[WeightedPodAffinityTerm]],
+            Optional[List["WeightedPodAffinityTerm"]],
         )
         if preferredDuringSchedulingIgnoredDuringExecution:  # omit empty
             v[
@@ -1167,7 +1171,7 @@ class PodAntiAffinity(types.Object):
 
     def requiredDuringSchedulingIgnoredDuringExecution(
         self
-    ) -> Optional[List[PodAffinityTerm]]:
+    ) -> Optional[List["PodAffinityTerm"]]:
         """
         If the anti-affinity requirements specified by this field are not met at
         scheduling time, the pod will not be scheduled onto the node.
@@ -1181,7 +1185,7 @@ class PodAntiAffinity(types.Object):
 
     def preferredDuringSchedulingIgnoredDuringExecution(
         self
-    ) -> Optional[List[WeightedPodAffinityTerm]]:
+    ) -> Optional[List["WeightedPodAffinityTerm"]]:
         """
         The scheduler will prefer to schedule pods to nodes that satisfy
         the anti-affinity expressions specified by this field, but it may choose
@@ -1205,9 +1209,9 @@ class Affinity(types.Object):
     @typechecked
     def __init__(
         self,
-        nodeAffinity: NodeAffinity = None,
-        podAffinity: PodAffinity = None,
-        podAntiAffinity: PodAntiAffinity = None,
+        nodeAffinity: "NodeAffinity" = None,
+        podAffinity: "PodAffinity" = None,
+        podAntiAffinity: "PodAntiAffinity" = None,
     ):
         super().__init__()
         self.__nodeAffinity = nodeAffinity
@@ -1218,32 +1222,32 @@ class Affinity(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         nodeAffinity = self.nodeAffinity()
-        check_type("nodeAffinity", nodeAffinity, Optional[NodeAffinity])
+        check_type("nodeAffinity", nodeAffinity, Optional["NodeAffinity"])
         if nodeAffinity is not None:  # omit empty
             v["nodeAffinity"] = nodeAffinity
         podAffinity = self.podAffinity()
-        check_type("podAffinity", podAffinity, Optional[PodAffinity])
+        check_type("podAffinity", podAffinity, Optional["PodAffinity"])
         if podAffinity is not None:  # omit empty
             v["podAffinity"] = podAffinity
         podAntiAffinity = self.podAntiAffinity()
-        check_type("podAntiAffinity", podAntiAffinity, Optional[PodAntiAffinity])
+        check_type("podAntiAffinity", podAntiAffinity, Optional["PodAntiAffinity"])
         if podAntiAffinity is not None:  # omit empty
             v["podAntiAffinity"] = podAntiAffinity
         return v
 
-    def nodeAffinity(self) -> Optional[NodeAffinity]:
+    def nodeAffinity(self) -> Optional["NodeAffinity"]:
         """
         Describes node affinity scheduling rules for the pod.
         """
         return self.__nodeAffinity
 
-    def podAffinity(self) -> Optional[PodAffinity]:
+    def podAffinity(self) -> Optional["PodAffinity"]:
         """
         Describes pod affinity scheduling rules (e.g. co-locate this pod in the same node, zone, etc. as some other pod(s)).
         """
         return self.__podAffinity
 
-    def podAntiAffinity(self) -> Optional[PodAntiAffinity]:
+    def podAntiAffinity(self) -> Optional["PodAntiAffinity"]:
         """
         Describes pod anti-affinity scheduling rules (e.g. avoid putting this pod in the same node, zone, etc. as some other pod(s)).
         """
@@ -1588,7 +1592,7 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        target: ObjectReference = None,
+        target: "ObjectReference" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -1604,11 +1608,11 @@ class Binding(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         target = self.target()
-        check_type("target", target, ObjectReference)
+        check_type("target", target, "ObjectReference")
         v["target"] = target
         return v
 
-    def target(self) -> ObjectReference:
+    def target(self) -> "ObjectReference":
         """
         The target object that you want to bind to the standard object.
         """
@@ -1668,10 +1672,10 @@ class CSIPersistentVolumeSource(types.Object):
         readOnly: bool = None,
         fsType: str = None,
         volumeAttributes: Dict[str, str] = None,
-        controllerPublishSecretRef: SecretReference = None,
-        nodeStageSecretRef: SecretReference = None,
-        nodePublishSecretRef: SecretReference = None,
-        controllerExpandSecretRef: SecretReference = None,
+        controllerPublishSecretRef: "SecretReference" = None,
+        nodeStageSecretRef: "SecretReference" = None,
+        nodePublishSecretRef: "SecretReference" = None,
+        controllerExpandSecretRef: "SecretReference" = None,
     ):
         super().__init__()
         self.__driver = driver
@@ -1711,17 +1715,19 @@ class CSIPersistentVolumeSource(types.Object):
         check_type(
             "controllerPublishSecretRef",
             controllerPublishSecretRef,
-            Optional[SecretReference],
+            Optional["SecretReference"],
         )
         if controllerPublishSecretRef is not None:  # omit empty
             v["controllerPublishSecretRef"] = controllerPublishSecretRef
         nodeStageSecretRef = self.nodeStageSecretRef()
-        check_type("nodeStageSecretRef", nodeStageSecretRef, Optional[SecretReference])
+        check_type(
+            "nodeStageSecretRef", nodeStageSecretRef, Optional["SecretReference"]
+        )
         if nodeStageSecretRef is not None:  # omit empty
             v["nodeStageSecretRef"] = nodeStageSecretRef
         nodePublishSecretRef = self.nodePublishSecretRef()
         check_type(
-            "nodePublishSecretRef", nodePublishSecretRef, Optional[SecretReference]
+            "nodePublishSecretRef", nodePublishSecretRef, Optional["SecretReference"]
         )
         if nodePublishSecretRef is not None:  # omit empty
             v["nodePublishSecretRef"] = nodePublishSecretRef
@@ -1729,7 +1735,7 @@ class CSIPersistentVolumeSource(types.Object):
         check_type(
             "controllerExpandSecretRef",
             controllerExpandSecretRef,
-            Optional[SecretReference],
+            Optional["SecretReference"],
         )
         if controllerExpandSecretRef is not None:  # omit empty
             v["controllerExpandSecretRef"] = controllerExpandSecretRef
@@ -1771,7 +1777,7 @@ class CSIPersistentVolumeSource(types.Object):
         """
         return self.__volumeAttributes
 
-    def controllerPublishSecretRef(self) -> Optional[SecretReference]:
+    def controllerPublishSecretRef(self) -> Optional["SecretReference"]:
         """
         ControllerPublishSecretRef is a reference to the secret object containing
         sensitive information to pass to the CSI driver to complete the CSI
@@ -1781,7 +1787,7 @@ class CSIPersistentVolumeSource(types.Object):
         """
         return self.__controllerPublishSecretRef
 
-    def nodeStageSecretRef(self) -> Optional[SecretReference]:
+    def nodeStageSecretRef(self) -> Optional["SecretReference"]:
         """
         NodeStageSecretRef is a reference to the secret object containing sensitive
         information to pass to the CSI driver to complete the CSI NodeStageVolume
@@ -1791,7 +1797,7 @@ class CSIPersistentVolumeSource(types.Object):
         """
         return self.__nodeStageSecretRef
 
-    def nodePublishSecretRef(self) -> Optional[SecretReference]:
+    def nodePublishSecretRef(self) -> Optional["SecretReference"]:
         """
         NodePublishSecretRef is a reference to the secret object containing
         sensitive information to pass to the CSI driver to complete the CSI
@@ -1801,7 +1807,7 @@ class CSIPersistentVolumeSource(types.Object):
         """
         return self.__nodePublishSecretRef
 
-    def controllerExpandSecretRef(self) -> Optional[SecretReference]:
+    def controllerExpandSecretRef(self) -> Optional["SecretReference"]:
         """
         ControllerExpandSecretRef is a reference to the secret object containing
         sensitive information to pass to the CSI driver to complete the CSI
@@ -1856,7 +1862,7 @@ class CSIVolumeSource(types.Object):
         readOnly: bool = None,
         fsType: str = None,
         volumeAttributes: Dict[str, str] = None,
-        nodePublishSecretRef: LocalObjectReference = None,
+        nodePublishSecretRef: "LocalObjectReference" = None,
     ):
         super().__init__()
         self.__driver = driver
@@ -1887,7 +1893,9 @@ class CSIVolumeSource(types.Object):
             v["volumeAttributes"] = volumeAttributes
         nodePublishSecretRef = self.nodePublishSecretRef()
         check_type(
-            "nodePublishSecretRef", nodePublishSecretRef, Optional[LocalObjectReference]
+            "nodePublishSecretRef",
+            nodePublishSecretRef,
+            Optional["LocalObjectReference"],
         )
         if nodePublishSecretRef is not None:  # omit empty
             v["nodePublishSecretRef"] = nodePublishSecretRef
@@ -1922,7 +1930,7 @@ class CSIVolumeSource(types.Object):
         """
         return self.__volumeAttributes
 
-    def nodePublishSecretRef(self) -> Optional[LocalObjectReference]:
+    def nodePublishSecretRef(self) -> Optional["LocalObjectReference"]:
         """
         NodePublishSecretRef is a reference to the secret object containing
         sensitive information to pass to the CSI driver to complete the CSI
@@ -1985,7 +1993,7 @@ class CephFSPersistentVolumeSource(types.Object):
         path: str = None,
         user: str = None,
         secretFile: str = None,
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
         readOnly: bool = None,
     ):
         super().__init__()
@@ -2015,7 +2023,7 @@ class CephFSPersistentVolumeSource(types.Object):
         if secretFile:  # omit empty
             v["secretFile"] = secretFile
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -2051,7 +2059,7 @@ class CephFSPersistentVolumeSource(types.Object):
         """
         return self.__secretFile
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         Optional: SecretRef is reference to the authentication secret for User, default is empty.
         More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
@@ -2081,7 +2089,7 @@ class CephFSVolumeSource(types.Object):
         path: str = None,
         user: str = None,
         secretFile: str = None,
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
         readOnly: bool = None,
     ):
         super().__init__()
@@ -2111,7 +2119,7 @@ class CephFSVolumeSource(types.Object):
         if secretFile:  # omit empty
             v["secretFile"] = secretFile
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -2147,7 +2155,7 @@ class CephFSVolumeSource(types.Object):
         """
         return self.__secretFile
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         Optional: SecretRef is reference to the authentication secret for User, default is empty.
         More info: https://examples.k8s.io/volumes/cephfs/README.md#how-to-use-it
@@ -2178,7 +2186,7 @@ class CinderPersistentVolumeSource(types.Object):
         volumeID: str = "",
         fsType: str = None,
         readOnly: bool = None,
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
     ):
         super().__init__()
         self.__volumeID = volumeID
@@ -2201,7 +2209,7 @@ class CinderPersistentVolumeSource(types.Object):
         if readOnly:  # omit empty
             v["readOnly"] = readOnly
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         return v
@@ -2230,7 +2238,7 @@ class CinderPersistentVolumeSource(types.Object):
         """
         return self.__readOnly
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         Optional: points to a secret object containing parameters used to connect
         to OpenStack.
@@ -2253,7 +2261,7 @@ class CinderVolumeSource(types.Object):
         volumeID: str = "",
         fsType: str = None,
         readOnly: bool = None,
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
     ):
         super().__init__()
         self.__volumeID = volumeID
@@ -2276,7 +2284,7 @@ class CinderVolumeSource(types.Object):
         if readOnly:  # omit empty
             v["readOnly"] = readOnly
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         return v
@@ -2305,7 +2313,7 @@ class CinderVolumeSource(types.Object):
         """
         return self.__readOnly
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         Optional: points to a secret object containing parameters used to connect
         to OpenStack.
@@ -2422,7 +2430,7 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        conditions: List[ComponentCondition] = None,
+        conditions: List["ComponentCondition"] = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -2437,12 +2445,12 @@ class ComponentStatus(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         conditions = self.conditions()
-        check_type("conditions", conditions, Optional[List[ComponentCondition]])
+        check_type("conditions", conditions, Optional[List["ComponentCondition"]])
         if conditions:  # omit empty
             v["conditions"] = conditions
         return v
 
-    def conditions(self) -> Optional[List[ComponentCondition]]:
+    def conditions(self) -> Optional[List["ComponentCondition"]]:
         """
         List of component conditions observed
         """
@@ -2524,7 +2532,7 @@ class ConfigMapEnvSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, localObjectReference: LocalObjectReference = None, optional: bool = None
+        self, localObjectReference: "LocalObjectReference" = None, optional: bool = None
     ):
         super().__init__()
         self.__localObjectReference = (
@@ -2538,7 +2546,7 @@ class ConfigMapEnvSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         optional = self.optional()
         check_type("optional", optional, Optional[bool])
@@ -2546,7 +2554,7 @@ class ConfigMapEnvSource(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         """
         The ConfigMap to select from.
         """
@@ -2568,7 +2576,7 @@ class ConfigMapKeySelector(types.Object):
     @typechecked
     def __init__(
         self,
-        localObjectReference: LocalObjectReference = None,
+        localObjectReference: "LocalObjectReference" = None,
         key: str = "",
         optional: bool = None,
     ):
@@ -2585,7 +2593,7 @@ class ConfigMapKeySelector(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         key = self.key()
         check_type("key", key, str)
@@ -2596,7 +2604,7 @@ class ConfigMapKeySelector(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         """
         The ConfigMap to select from.
         """
@@ -2763,8 +2771,8 @@ class ConfigMapProjection(types.Object):
     @typechecked
     def __init__(
         self,
-        localObjectReference: LocalObjectReference = None,
-        items: List[KeyToPath] = None,
+        localObjectReference: "LocalObjectReference" = None,
+        items: List["KeyToPath"] = None,
         optional: bool = None,
     ):
         super().__init__()
@@ -2780,10 +2788,10 @@ class ConfigMapProjection(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         items = self.items()
-        check_type("items", items, Optional[List[KeyToPath]])
+        check_type("items", items, Optional[List["KeyToPath"]])
         if items:  # omit empty
             v["items"] = items
         optional = self.optional()
@@ -2792,10 +2800,10 @@ class ConfigMapProjection(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         return self.__localObjectReference
 
-    def items(self) -> Optional[List[KeyToPath]]:
+    def items(self) -> Optional[List["KeyToPath"]]:
         """
         If unspecified, each key-value pair in the Data field of the referenced
         ConfigMap will be projected into the volume as a file whose name is the
@@ -2828,8 +2836,8 @@ class ConfigMapVolumeSource(types.Object):
     @typechecked
     def __init__(
         self,
-        localObjectReference: LocalObjectReference = None,
-        items: List[KeyToPath] = None,
+        localObjectReference: "LocalObjectReference" = None,
+        items: List["KeyToPath"] = None,
         defaultMode: int = None,
         optional: bool = None,
     ):
@@ -2847,10 +2855,10 @@ class ConfigMapVolumeSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         items = self.items()
-        check_type("items", items, Optional[List[KeyToPath]])
+        check_type("items", items, Optional[List["KeyToPath"]])
         if items:  # omit empty
             v["items"] = items
         defaultMode = self.defaultMode()
@@ -2863,10 +2871,10 @@ class ConfigMapVolumeSource(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         return self.__localObjectReference
 
-    def items(self) -> Optional[List[KeyToPath]]:
+    def items(self) -> Optional[List["KeyToPath"]]:
         """
         If unspecified, each key-value pair in the Data field of the referenced
         ConfigMap will be projected into the volume as a file whose name is the
@@ -2991,7 +2999,7 @@ class SecretEnvSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, localObjectReference: LocalObjectReference = None, optional: bool = None
+        self, localObjectReference: "LocalObjectReference" = None, optional: bool = None
     ):
         super().__init__()
         self.__localObjectReference = (
@@ -3005,7 +3013,7 @@ class SecretEnvSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         optional = self.optional()
         check_type("optional", optional, Optional[bool])
@@ -3013,7 +3021,7 @@ class SecretEnvSource(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         """
         The Secret to select from.
         """
@@ -3036,8 +3044,8 @@ class EnvFromSource(types.Object):
     def __init__(
         self,
         prefix: str = None,
-        configMapRef: ConfigMapEnvSource = None,
-        secretRef: SecretEnvSource = None,
+        configMapRef: "ConfigMapEnvSource" = None,
+        secretRef: "SecretEnvSource" = None,
     ):
         super().__init__()
         self.__prefix = prefix
@@ -3052,11 +3060,11 @@ class EnvFromSource(types.Object):
         if prefix:  # omit empty
             v["prefix"] = prefix
         configMapRef = self.configMapRef()
-        check_type("configMapRef", configMapRef, Optional[ConfigMapEnvSource])
+        check_type("configMapRef", configMapRef, Optional["ConfigMapEnvSource"])
         if configMapRef is not None:  # omit empty
             v["configMapRef"] = configMapRef
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretEnvSource])
+        check_type("secretRef", secretRef, Optional["SecretEnvSource"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         return v
@@ -3067,13 +3075,13 @@ class EnvFromSource(types.Object):
         """
         return self.__prefix
 
-    def configMapRef(self) -> Optional[ConfigMapEnvSource]:
+    def configMapRef(self) -> Optional["ConfigMapEnvSource"]:
         """
         The ConfigMap to select from
         """
         return self.__configMapRef
 
-    def secretRef(self) -> Optional[SecretEnvSource]:
+    def secretRef(self) -> Optional["SecretEnvSource"]:
         """
         The Secret to select from
         """
@@ -3178,7 +3186,7 @@ class SecretKeySelector(types.Object):
     @typechecked
     def __init__(
         self,
-        localObjectReference: LocalObjectReference = None,
+        localObjectReference: "LocalObjectReference" = None,
         key: str = "",
         optional: bool = None,
     ):
@@ -3195,7 +3203,7 @@ class SecretKeySelector(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         key = self.key()
         check_type("key", key, str)
@@ -3206,7 +3214,7 @@ class SecretKeySelector(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         """
         The name of the secret in the pod's namespace to select from.
         """
@@ -3234,10 +3242,10 @@ class EnvVarSource(types.Object):
     @typechecked
     def __init__(
         self,
-        fieldRef: ObjectFieldSelector = None,
-        resourceFieldRef: ResourceFieldSelector = None,
-        configMapKeyRef: ConfigMapKeySelector = None,
-        secretKeyRef: SecretKeySelector = None,
+        fieldRef: "ObjectFieldSelector" = None,
+        resourceFieldRef: "ResourceFieldSelector" = None,
+        configMapKeyRef: "ConfigMapKeySelector" = None,
+        secretKeyRef: "SecretKeySelector" = None,
     ):
         super().__init__()
         self.__fieldRef = fieldRef
@@ -3249,46 +3257,46 @@ class EnvVarSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         fieldRef = self.fieldRef()
-        check_type("fieldRef", fieldRef, Optional[ObjectFieldSelector])
+        check_type("fieldRef", fieldRef, Optional["ObjectFieldSelector"])
         if fieldRef is not None:  # omit empty
             v["fieldRef"] = fieldRef
         resourceFieldRef = self.resourceFieldRef()
         check_type(
-            "resourceFieldRef", resourceFieldRef, Optional[ResourceFieldSelector]
+            "resourceFieldRef", resourceFieldRef, Optional["ResourceFieldSelector"]
         )
         if resourceFieldRef is not None:  # omit empty
             v["resourceFieldRef"] = resourceFieldRef
         configMapKeyRef = self.configMapKeyRef()
-        check_type("configMapKeyRef", configMapKeyRef, Optional[ConfigMapKeySelector])
+        check_type("configMapKeyRef", configMapKeyRef, Optional["ConfigMapKeySelector"])
         if configMapKeyRef is not None:  # omit empty
             v["configMapKeyRef"] = configMapKeyRef
         secretKeyRef = self.secretKeyRef()
-        check_type("secretKeyRef", secretKeyRef, Optional[SecretKeySelector])
+        check_type("secretKeyRef", secretKeyRef, Optional["SecretKeySelector"])
         if secretKeyRef is not None:  # omit empty
             v["secretKeyRef"] = secretKeyRef
         return v
 
-    def fieldRef(self) -> Optional[ObjectFieldSelector]:
+    def fieldRef(self) -> Optional["ObjectFieldSelector"]:
         """
         Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations,
         spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
         """
         return self.__fieldRef
 
-    def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
+    def resourceFieldRef(self) -> Optional["ResourceFieldSelector"]:
         """
         Selects a resource of the container: only resources limits and requests
         (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
         """
         return self.__resourceFieldRef
 
-    def configMapKeyRef(self) -> Optional[ConfigMapKeySelector]:
+    def configMapKeyRef(self) -> Optional["ConfigMapKeySelector"]:
         """
         Selects a key of a ConfigMap.
         """
         return self.__configMapKeyRef
 
-    def secretKeyRef(self) -> Optional[SecretKeySelector]:
+    def secretKeyRef(self) -> Optional["SecretKeySelector"]:
         """
         Selects a key of a secret in the pod's namespace
         """
@@ -3303,7 +3311,7 @@ class EnvVar(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, name: str = "", value: str = None, valueFrom: EnvVarSource = None
+        self, name: str = "", value: str = None, valueFrom: "EnvVarSource" = None
     ):
         super().__init__()
         self.__name = name
@@ -3321,7 +3329,7 @@ class EnvVar(types.Object):
         if value:  # omit empty
             v["value"] = value
         valueFrom = self.valueFrom()
-        check_type("valueFrom", valueFrom, Optional[EnvVarSource])
+        check_type("valueFrom", valueFrom, Optional["EnvVarSource"])
         if valueFrom is not None:  # omit empty
             v["valueFrom"] = valueFrom
         return v
@@ -3345,7 +3353,7 @@ class EnvVar(types.Object):
         """
         return self.__value
 
-    def valueFrom(self) -> Optional[EnvVarSource]:
+    def valueFrom(self) -> Optional["EnvVarSource"]:
         """
         Source for the environment variable's value. Cannot be used if value is not empty.
         """
@@ -3432,7 +3440,7 @@ class HTTPGetAction(types.Object):
         port: Union[int, str] = None,
         host: str = None,
         scheme: URIScheme = URIScheme["HTTP"],
-        httpHeaders: Dict[str, HTTPHeader] = None,
+        httpHeaders: Dict[str, "HTTPHeader"] = None,
     ):
         super().__init__()
         self.__path = path
@@ -3460,7 +3468,7 @@ class HTTPGetAction(types.Object):
         if scheme:  # omit empty
             v["scheme"] = scheme
         httpHeaders = self.httpHeaders()
-        check_type("httpHeaders", httpHeaders, Optional[Dict[str, HTTPHeader]])
+        check_type("httpHeaders", httpHeaders, Optional[Dict[str, "HTTPHeader"]])
         if httpHeaders:  # omit empty
             v["httpHeaders"] = httpHeaders.values()  # named list
         return v
@@ -3493,7 +3501,7 @@ class HTTPGetAction(types.Object):
         """
         return self.__scheme
 
-    def httpHeaders(self) -> Optional[Dict[str, HTTPHeader]]:
+    def httpHeaders(self) -> Optional[Dict[str, "HTTPHeader"]]:
         """
         Custom headers to set in the request. HTTP allows repeated headers.
         """
@@ -3549,9 +3557,9 @@ class Handler(types.Object):
     @typechecked
     def __init__(
         self,
-        exec_: ExecAction = None,
-        httpGet: HTTPGetAction = None,
-        tcpSocket: TCPSocketAction = None,
+        exec_: "ExecAction" = None,
+        httpGet: "HTTPGetAction" = None,
+        tcpSocket: "TCPSocketAction" = None,
     ):
         super().__init__()
         self.__exec_ = exec_
@@ -3562,33 +3570,33 @@ class Handler(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         exec_ = self.exec_()
-        check_type("exec_", exec_, Optional[ExecAction])
+        check_type("exec_", exec_, Optional["ExecAction"])
         if exec_ is not None:  # omit empty
             v["exec"] = exec_
         httpGet = self.httpGet()
-        check_type("httpGet", httpGet, Optional[HTTPGetAction])
+        check_type("httpGet", httpGet, Optional["HTTPGetAction"])
         if httpGet is not None:  # omit empty
             v["httpGet"] = httpGet
         tcpSocket = self.tcpSocket()
-        check_type("tcpSocket", tcpSocket, Optional[TCPSocketAction])
+        check_type("tcpSocket", tcpSocket, Optional["TCPSocketAction"])
         if tcpSocket is not None:  # omit empty
             v["tcpSocket"] = tcpSocket
         return v
 
-    def exec_(self) -> Optional[ExecAction]:
+    def exec_(self) -> Optional["ExecAction"]:
         """
         One and only one of the following should be specified.
         Exec specifies the action to take.
         """
         return self.__exec_
 
-    def httpGet(self) -> Optional[HTTPGetAction]:
+    def httpGet(self) -> Optional["HTTPGetAction"]:
         """
         HTTPGet specifies the http request to perform.
         """
         return self.__httpGet
 
-    def tcpSocket(self) -> Optional[TCPSocketAction]:
+    def tcpSocket(self) -> Optional["TCPSocketAction"]:
         """
         TCPSocket specifies an action involving a TCP port.
         TCP hooks not yet supported
@@ -3606,7 +3614,7 @@ class Lifecycle(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, postStart: Handler = None, preStop: Handler = None):
+    def __init__(self, postStart: "Handler" = None, preStop: "Handler" = None):
         super().__init__()
         self.__postStart = postStart
         self.__preStop = preStop
@@ -3615,16 +3623,16 @@ class Lifecycle(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         postStart = self.postStart()
-        check_type("postStart", postStart, Optional[Handler])
+        check_type("postStart", postStart, Optional["Handler"])
         if postStart is not None:  # omit empty
             v["postStart"] = postStart
         preStop = self.preStop()
-        check_type("preStop", preStop, Optional[Handler])
+        check_type("preStop", preStop, Optional["Handler"])
         if preStop is not None:  # omit empty
             v["preStop"] = preStop
         return v
 
-    def postStart(self) -> Optional[Handler]:
+    def postStart(self) -> Optional["Handler"]:
         """
         PostStart is called immediately after a container is created. If the handler fails,
         the container is terminated and restarted according to its restart policy.
@@ -3633,7 +3641,7 @@ class Lifecycle(types.Object):
         """
         return self.__postStart
 
-    def preStop(self) -> Optional[Handler]:
+    def preStop(self) -> Optional["Handler"]:
         """
         PreStop is called immediately before a container is terminated due to an
         API request or management event such as liveness/startup probe failure,
@@ -3659,7 +3667,7 @@ class Probe(types.Object):
     @typechecked
     def __init__(
         self,
-        handler: Handler = None,
+        handler: "Handler" = None,
         initialDelaySeconds: int = None,
         timeoutSeconds: int = 1,
         periodSeconds: int = 10,
@@ -3678,7 +3686,7 @@ class Probe(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         handler = self.handler()
-        check_type("handler", handler, Handler)
+        check_type("handler", handler, "Handler")
         v.update(handler._root())  # inline
         initialDelaySeconds = self.initialDelaySeconds()
         check_type("initialDelaySeconds", initialDelaySeconds, Optional[int])
@@ -3702,7 +3710,7 @@ class Probe(types.Object):
             v["failureThreshold"] = failureThreshold
         return v
 
-    def handler(self) -> Handler:
+    def handler(self) -> "Handler":
         """
         The action taken to determine the health of a container
         """
@@ -3928,10 +3936,10 @@ class SecurityContext(types.Object):
     @typechecked
     def __init__(
         self,
-        capabilities: Capabilities = None,
+        capabilities: "Capabilities" = None,
         privileged: bool = None,
-        seLinuxOptions: SELinuxOptions = None,
-        windowsOptions: WindowsSecurityContextOptions = None,
+        seLinuxOptions: "SELinuxOptions" = None,
+        windowsOptions: "WindowsSecurityContextOptions" = None,
         runAsUser: int = None,
         runAsGroup: int = None,
         runAsNonRoot: bool = None,
@@ -3955,7 +3963,7 @@ class SecurityContext(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         capabilities = self.capabilities()
-        check_type("capabilities", capabilities, Optional[Capabilities])
+        check_type("capabilities", capabilities, Optional["Capabilities"])
         if capabilities is not None:  # omit empty
             v["capabilities"] = capabilities
         privileged = self.privileged()
@@ -3963,12 +3971,12 @@ class SecurityContext(types.Object):
         if privileged is not None:  # omit empty
             v["privileged"] = privileged
         seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional[SELinuxOptions])
+        check_type("seLinuxOptions", seLinuxOptions, Optional["SELinuxOptions"])
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
         windowsOptions = self.windowsOptions()
         check_type(
-            "windowsOptions", windowsOptions, Optional[WindowsSecurityContextOptions]
+            "windowsOptions", windowsOptions, Optional["WindowsSecurityContextOptions"]
         )
         if windowsOptions is not None:  # omit empty
             v["windowsOptions"] = windowsOptions
@@ -3998,7 +4006,7 @@ class SecurityContext(types.Object):
             v["procMount"] = procMount
         return v
 
-    def capabilities(self) -> Optional[Capabilities]:
+    def capabilities(self) -> Optional["Capabilities"]:
         """
         The capabilities to add/drop when running containers.
         Defaults to the default set of capabilities granted by the container runtime.
@@ -4013,7 +4021,7 @@ class SecurityContext(types.Object):
         """
         return self.__privileged
 
-    def seLinuxOptions(self) -> Optional[SELinuxOptions]:
+    def seLinuxOptions(self) -> Optional["SELinuxOptions"]:
         """
         The SELinux context to be applied to the container.
         If unspecified, the container runtime will allocate a random SELinux context for each
@@ -4022,7 +4030,7 @@ class SecurityContext(types.Object):
         """
         return self.__seLinuxOptions
 
-    def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
+    def windowsOptions(self) -> Optional["WindowsSecurityContextOptions"]:
         """
         The Windows specific settings applied to all containers.
         If unspecified, the options from the PodSecurityContext will be used.
@@ -4235,22 +4243,22 @@ class Container(types.Object):
         command: List[str] = None,
         args: List[str] = None,
         workingDir: str = None,
-        ports: Dict[str, ContainerPort] = None,
-        envFrom: List[EnvFromSource] = None,
-        env: Dict[str, EnvVar] = None,
-        resources: ResourceRequirements = None,
-        volumeMounts: Dict[str, VolumeMount] = None,
-        volumeDevices: Dict[str, VolumeDevice] = None,
-        livenessProbe: Probe = None,
-        readinessProbe: Probe = None,
-        startupProbe: Probe = None,
-        lifecycle: Lifecycle = None,
+        ports: Dict[str, "ContainerPort"] = None,
+        envFrom: List["EnvFromSource"] = None,
+        env: Dict[str, "EnvVar"] = None,
+        resources: "ResourceRequirements" = None,
+        volumeMounts: Dict[str, "VolumeMount"] = None,
+        volumeDevices: Dict[str, "VolumeDevice"] = None,
+        livenessProbe: "Probe" = None,
+        readinessProbe: "Probe" = None,
+        startupProbe: "Probe" = None,
+        lifecycle: "Lifecycle" = None,
         terminationMessagePath: str = "/dev/termination-log",
         terminationMessagePolicy: TerminationMessagePolicy = TerminationMessagePolicy[
             "File"
         ],
         imagePullPolicy: PullPolicy = PullPolicy["IfNotPresent"],
-        securityContext: SecurityContext = None,
+        securityContext: "SecurityContext" = None,
         stdin: bool = None,
         stdinOnce: bool = None,
         tty: bool = None,
@@ -4304,42 +4312,42 @@ class Container(types.Object):
         if workingDir:  # omit empty
             v["workingDir"] = workingDir
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, ContainerPort]])
+        check_type("ports", ports, Optional[Dict[str, "ContainerPort"]])
         if ports:  # omit empty
             v["ports"] = ports.values()  # named list
         envFrom = self.envFrom()
-        check_type("envFrom", envFrom, Optional[List[EnvFromSource]])
+        check_type("envFrom", envFrom, Optional[List["EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         env = self.env()
-        check_type("env", env, Optional[Dict[str, EnvVar]])
+        check_type("env", env, Optional[Dict[str, "EnvVar"]])
         if env:  # omit empty
             v["env"] = env.values()  # named list
         resources = self.resources()
-        check_type("resources", resources, Optional[ResourceRequirements])
+        check_type("resources", resources, Optional["ResourceRequirements"])
         v["resources"] = resources
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[Dict[str, VolumeMount]])
+        check_type("volumeMounts", volumeMounts, Optional[Dict[str, "VolumeMount"]])
         if volumeMounts:  # omit empty
             v["volumeMounts"] = volumeMounts.values()  # named list
         volumeDevices = self.volumeDevices()
-        check_type("volumeDevices", volumeDevices, Optional[Dict[str, VolumeDevice]])
+        check_type("volumeDevices", volumeDevices, Optional[Dict[str, "VolumeDevice"]])
         if volumeDevices:  # omit empty
             v["volumeDevices"] = volumeDevices.values()  # named list
         livenessProbe = self.livenessProbe()
-        check_type("livenessProbe", livenessProbe, Optional[Probe])
+        check_type("livenessProbe", livenessProbe, Optional["Probe"])
         if livenessProbe is not None:  # omit empty
             v["livenessProbe"] = livenessProbe
         readinessProbe = self.readinessProbe()
-        check_type("readinessProbe", readinessProbe, Optional[Probe])
+        check_type("readinessProbe", readinessProbe, Optional["Probe"])
         if readinessProbe is not None:  # omit empty
             v["readinessProbe"] = readinessProbe
         startupProbe = self.startupProbe()
-        check_type("startupProbe", startupProbe, Optional[Probe])
+        check_type("startupProbe", startupProbe, Optional["Probe"])
         if startupProbe is not None:  # omit empty
             v["startupProbe"] = startupProbe
         lifecycle = self.lifecycle()
-        check_type("lifecycle", lifecycle, Optional[Lifecycle])
+        check_type("lifecycle", lifecycle, Optional["Lifecycle"])
         if lifecycle is not None:  # omit empty
             v["lifecycle"] = lifecycle
         terminationMessagePath = self.terminationMessagePath()
@@ -4359,7 +4367,7 @@ class Container(types.Object):
         if imagePullPolicy:  # omit empty
             v["imagePullPolicy"] = imagePullPolicy
         securityContext = self.securityContext()
-        check_type("securityContext", securityContext, Optional[SecurityContext])
+        check_type("securityContext", securityContext, Optional["SecurityContext"])
         if securityContext is not None:  # omit empty
             v["securityContext"] = securityContext
         stdin = self.stdin()
@@ -4428,7 +4436,7 @@ class Container(types.Object):
         """
         return self.__workingDir
 
-    def ports(self) -> Optional[Dict[str, ContainerPort]]:
+    def ports(self) -> Optional[Dict[str, "ContainerPort"]]:
         """
         List of ports to expose from the container. Exposing a port here gives
         the system additional information about the network connections a
@@ -4443,7 +4451,7 @@ class Container(types.Object):
         """
         return self.__ports
 
-    def envFrom(self) -> Optional[List[EnvFromSource]]:
+    def envFrom(self) -> Optional[List["EnvFromSource"]]:
         """
         List of sources to populate environment variables in the container.
         The keys defined within a source must be a C_IDENTIFIER. All invalid keys
@@ -4454,14 +4462,14 @@ class Container(types.Object):
         """
         return self.__envFrom
 
-    def env(self) -> Optional[Dict[str, EnvVar]]:
+    def env(self) -> Optional[Dict[str, "EnvVar"]]:
         """
         List of environment variables to set in the container.
         Cannot be updated.
         """
         return self.__env
 
-    def resources(self) -> Optional[ResourceRequirements]:
+    def resources(self) -> Optional["ResourceRequirements"]:
         """
         Compute Resources required by this container.
         Cannot be updated.
@@ -4469,21 +4477,21 @@ class Container(types.Object):
         """
         return self.__resources
 
-    def volumeMounts(self) -> Optional[Dict[str, VolumeMount]]:
+    def volumeMounts(self) -> Optional[Dict[str, "VolumeMount"]]:
         """
         Pod volumes to mount into the container's filesystem.
         Cannot be updated.
         """
         return self.__volumeMounts
 
-    def volumeDevices(self) -> Optional[Dict[str, VolumeDevice]]:
+    def volumeDevices(self) -> Optional[Dict[str, "VolumeDevice"]]:
         """
         volumeDevices is the list of block devices to be used by the container.
         This is a beta feature.
         """
         return self.__volumeDevices
 
-    def livenessProbe(self) -> Optional[Probe]:
+    def livenessProbe(self) -> Optional["Probe"]:
         """
         Periodic probe of container liveness.
         Container will be restarted if the probe fails.
@@ -4492,7 +4500,7 @@ class Container(types.Object):
         """
         return self.__livenessProbe
 
-    def readinessProbe(self) -> Optional[Probe]:
+    def readinessProbe(self) -> Optional["Probe"]:
         """
         Periodic probe of container service readiness.
         Container will be removed from service endpoints if the probe fails.
@@ -4501,7 +4509,7 @@ class Container(types.Object):
         """
         return self.__readinessProbe
 
-    def startupProbe(self) -> Optional[Probe]:
+    def startupProbe(self) -> Optional["Probe"]:
         """
         StartupProbe indicates that the Pod has successfully initialized.
         If specified, no other probes are executed until this completes successfully.
@@ -4514,7 +4522,7 @@ class Container(types.Object):
         """
         return self.__startupProbe
 
-    def lifecycle(self) -> Optional[Lifecycle]:
+    def lifecycle(self) -> Optional["Lifecycle"]:
         """
         Actions that the management system should take in response to container lifecycle events.
         Cannot be updated.
@@ -4555,7 +4563,7 @@ class Container(types.Object):
         """
         return self.__imagePullPolicy
 
-    def securityContext(self) -> Optional[SecurityContext]:
+    def securityContext(self) -> Optional["SecurityContext"]:
         """
         Security options the pod should run with.
         More info: https://kubernetes.io/docs/concepts/policy/security-context/
@@ -4601,8 +4609,8 @@ class DownwardAPIVolumeFile(types.Object):
     def __init__(
         self,
         path: str = "",
-        fieldRef: ObjectFieldSelector = None,
-        resourceFieldRef: ResourceFieldSelector = None,
+        fieldRef: "ObjectFieldSelector" = None,
+        resourceFieldRef: "ResourceFieldSelector" = None,
         mode: int = None,
     ):
         super().__init__()
@@ -4618,12 +4626,12 @@ class DownwardAPIVolumeFile(types.Object):
         check_type("path", path, str)
         v["path"] = path
         fieldRef = self.fieldRef()
-        check_type("fieldRef", fieldRef, Optional[ObjectFieldSelector])
+        check_type("fieldRef", fieldRef, Optional["ObjectFieldSelector"])
         if fieldRef is not None:  # omit empty
             v["fieldRef"] = fieldRef
         resourceFieldRef = self.resourceFieldRef()
         check_type(
-            "resourceFieldRef", resourceFieldRef, Optional[ResourceFieldSelector]
+            "resourceFieldRef", resourceFieldRef, Optional["ResourceFieldSelector"]
         )
         if resourceFieldRef is not None:  # omit empty
             v["resourceFieldRef"] = resourceFieldRef
@@ -4639,13 +4647,13 @@ class DownwardAPIVolumeFile(types.Object):
         """
         return self.__path
 
-    def fieldRef(self) -> Optional[ObjectFieldSelector]:
+    def fieldRef(self) -> Optional["ObjectFieldSelector"]:
         """
         Required: Selects a field of the pod: only annotations, labels, name and namespace are supported.
         """
         return self.__fieldRef
 
-    def resourceFieldRef(self) -> Optional[ResourceFieldSelector]:
+    def resourceFieldRef(self) -> Optional["ResourceFieldSelector"]:
         """
         Selects a resource of the container: only resources limits and requests
         (limits.cpu, limits.memory, requests.cpu and requests.memory) are currently supported.
@@ -4671,7 +4679,7 @@ class DownwardAPIProjection(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, items: List[DownwardAPIVolumeFile] = None):
+    def __init__(self, items: List["DownwardAPIVolumeFile"] = None):
         super().__init__()
         self.__items = items if items is not None else []
 
@@ -4679,12 +4687,12 @@ class DownwardAPIProjection(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         items = self.items()
-        check_type("items", items, Optional[List[DownwardAPIVolumeFile]])
+        check_type("items", items, Optional[List["DownwardAPIVolumeFile"]])
         if items:  # omit empty
             v["items"] = items
         return v
 
-    def items(self) -> Optional[List[DownwardAPIVolumeFile]]:
+    def items(self) -> Optional[List["DownwardAPIVolumeFile"]]:
         """
         Items is a list of DownwardAPIVolume file
         """
@@ -4700,7 +4708,7 @@ class DownwardAPIVolumeSource(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, items: List[DownwardAPIVolumeFile] = None, defaultMode: int = None
+        self, items: List["DownwardAPIVolumeFile"] = None, defaultMode: int = None
     ):
         super().__init__()
         self.__items = items if items is not None else []
@@ -4710,7 +4718,7 @@ class DownwardAPIVolumeSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         items = self.items()
-        check_type("items", items, Optional[List[DownwardAPIVolumeFile]])
+        check_type("items", items, Optional[List["DownwardAPIVolumeFile"]])
         if items:  # omit empty
             v["items"] = items
         defaultMode = self.defaultMode()
@@ -4719,7 +4727,7 @@ class DownwardAPIVolumeSource(types.Object):
             v["defaultMode"] = defaultMode
         return v
 
-    def items(self) -> Optional[List[DownwardAPIVolumeFile]]:
+    def items(self) -> Optional[List["DownwardAPIVolumeFile"]]:
         """
         Items is a list of downward API volume file
         """
@@ -4797,7 +4805,7 @@ class EndpointAddress(types.Object):
         ip: str = "",
         hostname: str = None,
         nodeName: str = None,
-        targetRef: ObjectReference = None,
+        targetRef: "ObjectReference" = None,
     ):
         super().__init__()
         self.__ip = ip
@@ -4820,7 +4828,7 @@ class EndpointAddress(types.Object):
         if nodeName is not None:  # omit empty
             v["nodeName"] = nodeName
         targetRef = self.targetRef()
-        check_type("targetRef", targetRef, Optional[ObjectReference])
+        check_type("targetRef", targetRef, Optional["ObjectReference"])
         if targetRef is not None:  # omit empty
             v["targetRef"] = targetRef
         return v
@@ -4848,7 +4856,7 @@ class EndpointAddress(types.Object):
         """
         return self.__nodeName
 
-    def targetRef(self) -> Optional[ObjectReference]:
+    def targetRef(self) -> Optional["ObjectReference"]:
         """
         Reference to object providing the endpoint.
         """
@@ -4926,9 +4934,9 @@ class EndpointSubset(types.Object):
     @typechecked
     def __init__(
         self,
-        addresses: List[EndpointAddress] = None,
-        notReadyAddresses: List[EndpointAddress] = None,
-        ports: Dict[str, EndpointPort] = None,
+        addresses: List["EndpointAddress"] = None,
+        notReadyAddresses: List["EndpointAddress"] = None,
+        ports: Dict[str, "EndpointPort"] = None,
     ):
         super().__init__()
         self.__addresses = addresses if addresses is not None else []
@@ -4941,29 +4949,29 @@ class EndpointSubset(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         addresses = self.addresses()
-        check_type("addresses", addresses, Optional[List[EndpointAddress]])
+        check_type("addresses", addresses, Optional[List["EndpointAddress"]])
         if addresses:  # omit empty
             v["addresses"] = addresses
         notReadyAddresses = self.notReadyAddresses()
         check_type(
-            "notReadyAddresses", notReadyAddresses, Optional[List[EndpointAddress]]
+            "notReadyAddresses", notReadyAddresses, Optional[List["EndpointAddress"]]
         )
         if notReadyAddresses:  # omit empty
             v["notReadyAddresses"] = notReadyAddresses
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, EndpointPort]])
+        check_type("ports", ports, Optional[Dict[str, "EndpointPort"]])
         if ports:  # omit empty
             v["ports"] = ports.values()  # named list
         return v
 
-    def addresses(self) -> Optional[List[EndpointAddress]]:
+    def addresses(self) -> Optional[List["EndpointAddress"]]:
         """
         IP addresses which offer the related ports that are marked as ready. These endpoints
         should be considered safe for load balancers and clients to utilize.
         """
         return self.__addresses
 
-    def notReadyAddresses(self) -> Optional[List[EndpointAddress]]:
+    def notReadyAddresses(self) -> Optional[List["EndpointAddress"]]:
         """
         IP addresses which offer the related ports but are not currently marked as ready
         because they have not yet finished starting, have recently failed a readiness check,
@@ -4971,7 +4979,7 @@ class EndpointSubset(types.Object):
         """
         return self.__notReadyAddresses
 
-    def ports(self) -> Optional[Dict[str, EndpointPort]]:
+    def ports(self) -> Optional[Dict[str, "EndpointPort"]]:
         """
         Port numbers available on the related IP addresses.
         """
@@ -5002,7 +5010,7 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        subsets: List[EndpointSubset] = None,
+        subsets: List["EndpointSubset"] = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -5018,12 +5026,12 @@ class Endpoints(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         subsets = self.subsets()
-        check_type("subsets", subsets, Optional[List[EndpointSubset]])
+        check_type("subsets", subsets, Optional[List["EndpointSubset"]])
         if subsets:  # omit empty
             v["subsets"] = subsets
         return v
 
-    def subsets(self) -> Optional[List[EndpointSubset]]:
+    def subsets(self) -> Optional[List["EndpointSubset"]]:
         """
         The set of all endpoints is the union of all subsets. Addresses are placed into
         subsets according to the IPs they share. A single address with multiple ports,
@@ -5053,20 +5061,20 @@ class EphemeralContainerCommon(types.Object):
         command: List[str] = None,
         args: List[str] = None,
         workingDir: str = None,
-        ports: Dict[str, ContainerPort] = None,
-        envFrom: List[EnvFromSource] = None,
-        env: Dict[str, EnvVar] = None,
-        resources: ResourceRequirements = None,
-        volumeMounts: Dict[str, VolumeMount] = None,
-        volumeDevices: Dict[str, VolumeDevice] = None,
-        livenessProbe: Probe = None,
-        readinessProbe: Probe = None,
-        startupProbe: Probe = None,
-        lifecycle: Lifecycle = None,
+        ports: Dict[str, "ContainerPort"] = None,
+        envFrom: List["EnvFromSource"] = None,
+        env: Dict[str, "EnvVar"] = None,
+        resources: "ResourceRequirements" = None,
+        volumeMounts: Dict[str, "VolumeMount"] = None,
+        volumeDevices: Dict[str, "VolumeDevice"] = None,
+        livenessProbe: "Probe" = None,
+        readinessProbe: "Probe" = None,
+        startupProbe: "Probe" = None,
+        lifecycle: "Lifecycle" = None,
         terminationMessagePath: str = None,
         terminationMessagePolicy: TerminationMessagePolicy = None,
         imagePullPolicy: PullPolicy = None,
-        securityContext: SecurityContext = None,
+        securityContext: "SecurityContext" = None,
         stdin: bool = None,
         stdinOnce: bool = None,
         tty: bool = None,
@@ -5120,42 +5128,42 @@ class EphemeralContainerCommon(types.Object):
         if workingDir:  # omit empty
             v["workingDir"] = workingDir
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, ContainerPort]])
+        check_type("ports", ports, Optional[Dict[str, "ContainerPort"]])
         if ports:  # omit empty
             v["ports"] = ports.values()  # named list
         envFrom = self.envFrom()
-        check_type("envFrom", envFrom, Optional[List[EnvFromSource]])
+        check_type("envFrom", envFrom, Optional[List["EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         env = self.env()
-        check_type("env", env, Optional[Dict[str, EnvVar]])
+        check_type("env", env, Optional[Dict[str, "EnvVar"]])
         if env:  # omit empty
             v["env"] = env.values()  # named list
         resources = self.resources()
-        check_type("resources", resources, Optional[ResourceRequirements])
+        check_type("resources", resources, Optional["ResourceRequirements"])
         v["resources"] = resources
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[Dict[str, VolumeMount]])
+        check_type("volumeMounts", volumeMounts, Optional[Dict[str, "VolumeMount"]])
         if volumeMounts:  # omit empty
             v["volumeMounts"] = volumeMounts.values()  # named list
         volumeDevices = self.volumeDevices()
-        check_type("volumeDevices", volumeDevices, Optional[Dict[str, VolumeDevice]])
+        check_type("volumeDevices", volumeDevices, Optional[Dict[str, "VolumeDevice"]])
         if volumeDevices:  # omit empty
             v["volumeDevices"] = volumeDevices.values()  # named list
         livenessProbe = self.livenessProbe()
-        check_type("livenessProbe", livenessProbe, Optional[Probe])
+        check_type("livenessProbe", livenessProbe, Optional["Probe"])
         if livenessProbe is not None:  # omit empty
             v["livenessProbe"] = livenessProbe
         readinessProbe = self.readinessProbe()
-        check_type("readinessProbe", readinessProbe, Optional[Probe])
+        check_type("readinessProbe", readinessProbe, Optional["Probe"])
         if readinessProbe is not None:  # omit empty
             v["readinessProbe"] = readinessProbe
         startupProbe = self.startupProbe()
-        check_type("startupProbe", startupProbe, Optional[Probe])
+        check_type("startupProbe", startupProbe, Optional["Probe"])
         if startupProbe is not None:  # omit empty
             v["startupProbe"] = startupProbe
         lifecycle = self.lifecycle()
-        check_type("lifecycle", lifecycle, Optional[Lifecycle])
+        check_type("lifecycle", lifecycle, Optional["Lifecycle"])
         if lifecycle is not None:  # omit empty
             v["lifecycle"] = lifecycle
         terminationMessagePath = self.terminationMessagePath()
@@ -5175,7 +5183,7 @@ class EphemeralContainerCommon(types.Object):
         if imagePullPolicy:  # omit empty
             v["imagePullPolicy"] = imagePullPolicy
         securityContext = self.securityContext()
-        check_type("securityContext", securityContext, Optional[SecurityContext])
+        check_type("securityContext", securityContext, Optional["SecurityContext"])
         if securityContext is not None:  # omit empty
             v["securityContext"] = securityContext
         stdin = self.stdin()
@@ -5241,13 +5249,13 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__workingDir
 
-    def ports(self) -> Optional[Dict[str, ContainerPort]]:
+    def ports(self) -> Optional[Dict[str, "ContainerPort"]]:
         """
         Ports are not allowed for ephemeral containers.
         """
         return self.__ports
 
-    def envFrom(self) -> Optional[List[EnvFromSource]]:
+    def envFrom(self) -> Optional[List["EnvFromSource"]]:
         """
         List of sources to populate environment variables in the container.
         The keys defined within a source must be a C_IDENTIFIER. All invalid keys
@@ -5258,53 +5266,53 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__envFrom
 
-    def env(self) -> Optional[Dict[str, EnvVar]]:
+    def env(self) -> Optional[Dict[str, "EnvVar"]]:
         """
         List of environment variables to set in the container.
         Cannot be updated.
         """
         return self.__env
 
-    def resources(self) -> Optional[ResourceRequirements]:
+    def resources(self) -> Optional["ResourceRequirements"]:
         """
         Resources are not allowed for ephemeral containers. Ephemeral containers use spare resources
         already allocated to the pod.
         """
         return self.__resources
 
-    def volumeMounts(self) -> Optional[Dict[str, VolumeMount]]:
+    def volumeMounts(self) -> Optional[Dict[str, "VolumeMount"]]:
         """
         Pod volumes to mount into the container's filesystem.
         Cannot be updated.
         """
         return self.__volumeMounts
 
-    def volumeDevices(self) -> Optional[Dict[str, VolumeDevice]]:
+    def volumeDevices(self) -> Optional[Dict[str, "VolumeDevice"]]:
         """
         volumeDevices is the list of block devices to be used by the container.
         This is a beta feature.
         """
         return self.__volumeDevices
 
-    def livenessProbe(self) -> Optional[Probe]:
+    def livenessProbe(self) -> Optional["Probe"]:
         """
         Probes are not allowed for ephemeral containers.
         """
         return self.__livenessProbe
 
-    def readinessProbe(self) -> Optional[Probe]:
+    def readinessProbe(self) -> Optional["Probe"]:
         """
         Probes are not allowed for ephemeral containers.
         """
         return self.__readinessProbe
 
-    def startupProbe(self) -> Optional[Probe]:
+    def startupProbe(self) -> Optional["Probe"]:
         """
         Probes are not allowed for ephemeral containers.
         """
         return self.__startupProbe
 
-    def lifecycle(self) -> Optional[Lifecycle]:
+    def lifecycle(self) -> Optional["Lifecycle"]:
         """
         Lifecycle is not allowed for ephemeral containers.
         """
@@ -5344,7 +5352,7 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__imagePullPolicy
 
-    def securityContext(self) -> Optional[SecurityContext]:
+    def securityContext(self) -> Optional["SecurityContext"]:
         """
         SecurityContext is not allowed for ephemeral containers.
         """
@@ -5395,7 +5403,7 @@ class EphemeralContainer(types.Object):
     @typechecked
     def __init__(
         self,
-        ephemeralContainerCommon: EphemeralContainerCommon = None,
+        ephemeralContainerCommon: "EphemeralContainerCommon" = None,
         targetContainerName: str = None,
     ):
         super().__init__()
@@ -5413,7 +5421,7 @@ class EphemeralContainer(types.Object):
         check_type(
             "ephemeralContainerCommon",
             ephemeralContainerCommon,
-            EphemeralContainerCommon,
+            "EphemeralContainerCommon",
         )
         v.update(ephemeralContainerCommon._root())  # inline
         targetContainerName = self.targetContainerName()
@@ -5422,7 +5430,7 @@ class EphemeralContainer(types.Object):
             v["targetContainerName"] = targetContainerName
         return v
 
-    def ephemeralContainerCommon(self) -> EphemeralContainerCommon:
+    def ephemeralContainerCommon(self) -> "EphemeralContainerCommon":
         """
         Ephemeral containers have all of the fields of Container, plus additional fields
         specific to ephemeral containers. Fields in common with Container are in the
@@ -5454,7 +5462,7 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        ephemeralContainers: List[EphemeralContainer] = None,
+        ephemeralContainers: List["EphemeralContainer"] = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -5472,11 +5480,13 @@ class EphemeralContainers(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ephemeralContainers = self.ephemeralContainers()
-        check_type("ephemeralContainers", ephemeralContainers, List[EphemeralContainer])
+        check_type(
+            "ephemeralContainers", ephemeralContainers, List["EphemeralContainer"]
+        )
         v["ephemeralContainers"] = ephemeralContainers
         return v
 
-    def ephemeralContainers(self) -> List[EphemeralContainer]:
+    def ephemeralContainers(self) -> List["EphemeralContainer"]:
         """
         A list of ephemeral containers associated with this pod. New ephemeral containers
         may be appended to this list, but existing ephemeral containers may not be removed
@@ -5574,18 +5584,18 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        involvedObject: ObjectReference = None,
+        involvedObject: "ObjectReference" = None,
         reason: str = None,
         message: str = None,
-        source: EventSource = None,
+        source: "EventSource" = None,
         firstTimestamp: "base.Time" = None,
         lastTimestamp: "base.Time" = None,
         count: int = None,
         type: str = None,
         eventTime: "base.MicroTime" = None,
-        series: EventSeries = None,
+        series: "EventSeries" = None,
         action: str = None,
-        related: ObjectReference = None,
+        related: "ObjectReference" = None,
         reportingComponent: str = "",
         reportingInstance: str = "",
     ):
@@ -5618,7 +5628,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         involvedObject = self.involvedObject()
-        check_type("involvedObject", involvedObject, ObjectReference)
+        check_type("involvedObject", involvedObject, "ObjectReference")
         v["involvedObject"] = involvedObject
         reason = self.reason()
         check_type("reason", reason, Optional[str])
@@ -5629,7 +5639,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         if message:  # omit empty
             v["message"] = message
         source = self.source()
-        check_type("source", source, Optional[EventSource])
+        check_type("source", source, Optional["EventSource"])
         v["source"] = source
         firstTimestamp = self.firstTimestamp()
         check_type("firstTimestamp", firstTimestamp, Optional["base.Time"])
@@ -5649,7 +5659,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         check_type("eventTime", eventTime, Optional["base.MicroTime"])
         v["eventTime"] = eventTime
         series = self.series()
-        check_type("series", series, Optional[EventSeries])
+        check_type("series", series, Optional["EventSeries"])
         if series is not None:  # omit empty
             v["series"] = series
         action = self.action()
@@ -5657,7 +5667,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         if action:  # omit empty
             v["action"] = action
         related = self.related()
-        check_type("related", related, Optional[ObjectReference])
+        check_type("related", related, Optional["ObjectReference"])
         if related is not None:  # omit empty
             v["related"] = related
         reportingComponent = self.reportingComponent()
@@ -5668,7 +5678,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         v["reportingInstance"] = reportingInstance
         return v
 
-    def involvedObject(self) -> ObjectReference:
+    def involvedObject(self) -> "ObjectReference":
         """
         The object that this event is about.
         """
@@ -5689,7 +5699,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__message
 
-    def source(self) -> Optional[EventSource]:
+    def source(self) -> Optional["EventSource"]:
         """
         The component reporting this event. Should be a short machine understandable string.
         """
@@ -5725,7 +5735,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__eventTime
 
-    def series(self) -> Optional[EventSeries]:
+    def series(self) -> Optional["EventSeries"]:
         """
         Data about the Event series this event represents or nil if it's a singleton Event.
         """
@@ -5737,7 +5747,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__action
 
-    def related(self) -> Optional[ObjectReference]:
+    def related(self) -> Optional["ObjectReference"]:
         """
         Optional secondary object for more complex actions.
         """
@@ -5853,7 +5863,7 @@ class FlexPersistentVolumeSource(types.Object):
         self,
         driver: str = "",
         fsType: str = None,
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
         readOnly: bool = None,
         options: Dict[str, str] = None,
     ):
@@ -5875,7 +5885,7 @@ class FlexPersistentVolumeSource(types.Object):
         if fsType:  # omit empty
             v["fsType"] = fsType
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -5902,7 +5912,7 @@ class FlexPersistentVolumeSource(types.Object):
         """
         return self.__fsType
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         Optional: SecretRef is reference to the secret object containing
         sensitive information to pass to the plugin scripts. This may be
@@ -5938,7 +5948,7 @@ class FlexVolumeSource(types.Object):
         self,
         driver: str = "",
         fsType: str = None,
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
         readOnly: bool = None,
         options: Dict[str, str] = None,
     ):
@@ -5960,7 +5970,7 @@ class FlexVolumeSource(types.Object):
         if fsType:  # omit empty
             v["fsType"] = fsType
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -5987,7 +5997,7 @@ class FlexVolumeSource(types.Object):
         """
         return self.__fsType
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         Optional: SecretRef is reference to the secret object containing
         sensitive information to pass to the plugin scripts. This may be
@@ -6357,7 +6367,7 @@ class ISCSIPersistentVolumeSource(types.Object):
         portals: List[str] = None,
         chapAuthDiscovery: bool = None,
         chapAuthSession: bool = None,
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
         initiatorName: str = None,
     ):
         super().__init__()
@@ -6410,7 +6420,7 @@ class ISCSIPersistentVolumeSource(types.Object):
         if chapAuthSession:  # omit empty
             v["chapAuthSession"] = chapAuthSession
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         initiatorName = self.initiatorName()
@@ -6481,7 +6491,7 @@ class ISCSIPersistentVolumeSource(types.Object):
         """
         return self.__chapAuthSession
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         CHAP Secret for iSCSI target and initiator authentication
         """
@@ -6516,7 +6526,7 @@ class ISCSIVolumeSource(types.Object):
         portals: List[str] = None,
         chapAuthDiscovery: bool = None,
         chapAuthSession: bool = None,
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
         initiatorName: str = None,
     ):
         super().__init__()
@@ -6569,7 +6579,7 @@ class ISCSIVolumeSource(types.Object):
         if chapAuthSession:  # omit empty
             v["chapAuthSession"] = chapAuthSession
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         initiatorName = self.initiatorName()
@@ -6640,7 +6650,7 @@ class ISCSIVolumeSource(types.Object):
         """
         return self.__chapAuthSession
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         CHAP Secret for iSCSI target and initiator authentication
         """
@@ -6764,7 +6774,7 @@ class LimitRangeSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, limits: List[LimitRangeItem] = None):
+    def __init__(self, limits: List["LimitRangeItem"] = None):
         super().__init__()
         self.__limits = limits if limits is not None else []
 
@@ -6772,11 +6782,11 @@ class LimitRangeSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         limits = self.limits()
-        check_type("limits", limits, List[LimitRangeItem])
+        check_type("limits", limits, List["LimitRangeItem"])
         v["limits"] = limits
         return v
 
-    def limits(self) -> List[LimitRangeItem]:
+    def limits(self) -> List["LimitRangeItem"]:
         """
         Limits is the list of LimitRangeItem objects that are enforced.
         """
@@ -6796,7 +6806,7 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: LimitRangeSpec = None,
+        spec: "LimitRangeSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -6812,11 +6822,11 @@ class LimitRange(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[LimitRangeSpec])
+        check_type("spec", spec, Optional["LimitRangeSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[LimitRangeSpec]:
+    def spec(self) -> Optional["LimitRangeSpec"]:
         """
         Spec defines the limits enforced.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -6959,7 +6969,7 @@ class Namespace(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: NamespaceSpec = None,
+        spec: "NamespaceSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -6974,11 +6984,11 @@ class Namespace(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[NamespaceSpec])
+        check_type("spec", spec, Optional["NamespaceSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[NamespaceSpec]:
+    def spec(self) -> Optional["NamespaceSpec"]:
         """
         Spec defines the behavior of the Namespace.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -6993,7 +7003,7 @@ class NodeConfigSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, configMap: ConfigMapNodeConfigSource = None):
+    def __init__(self, configMap: "ConfigMapNodeConfigSource" = None):
         super().__init__()
         self.__configMap = configMap
 
@@ -7001,12 +7011,12 @@ class NodeConfigSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         configMap = self.configMap()
-        check_type("configMap", configMap, Optional[ConfigMapNodeConfigSource])
+        check_type("configMap", configMap, Optional["ConfigMapNodeConfigSource"])
         if configMap is not None:  # omit empty
             v["configMap"] = configMap
         return v
 
-    def configMap(self) -> Optional[ConfigMapNodeConfigSource]:
+    def configMap(self) -> Optional["ConfigMapNodeConfigSource"]:
         """
         ConfigMap is a reference to a Node's ConfigMap
         """
@@ -7094,8 +7104,8 @@ class NodeSpec(types.Object):
         podCIDRs: List[str] = None,
         providerID: str = None,
         unschedulable: bool = None,
-        taints: List[Taint] = None,
-        configSource: NodeConfigSource = None,
+        taints: List["Taint"] = None,
+        configSource: "NodeConfigSource" = None,
     ):
         super().__init__()
         self.__podCIDR = podCIDR
@@ -7125,11 +7135,11 @@ class NodeSpec(types.Object):
         if unschedulable:  # omit empty
             v["unschedulable"] = unschedulable
         taints = self.taints()
-        check_type("taints", taints, Optional[List[Taint]])
+        check_type("taints", taints, Optional[List["Taint"]])
         if taints:  # omit empty
             v["taints"] = taints
         configSource = self.configSource()
-        check_type("configSource", configSource, Optional[NodeConfigSource])
+        check_type("configSource", configSource, Optional["NodeConfigSource"])
         if configSource is not None:  # omit empty
             v["configSource"] = configSource
         return v
@@ -7161,13 +7171,13 @@ class NodeSpec(types.Object):
         """
         return self.__unschedulable
 
-    def taints(self) -> Optional[List[Taint]]:
+    def taints(self) -> Optional[List["Taint"]]:
         """
         If specified, the node's taints.
         """
         return self.__taints
 
-    def configSource(self) -> Optional[NodeConfigSource]:
+    def configSource(self) -> Optional["NodeConfigSource"]:
         """
         If specified, the source to get node configuration from
         The DynamicKubeletConfig feature gate must be enabled for the Kubelet to use this field
@@ -7188,7 +7198,7 @@ class Node(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: NodeSpec = None,
+        spec: "NodeSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -7203,11 +7213,11 @@ class Node(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[NodeSpec])
+        check_type("spec", spec, Optional["NodeSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[NodeSpec]:
+    def spec(self) -> Optional["NodeSpec"]:
         """
         Spec defines the behavior of a node.
         https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -7443,7 +7453,7 @@ class RBDPersistentVolumeSource(types.Object):
         pool: str = "rbd",
         user: str = "admin",
         keyring: str = "/etc/ceph/keyring",
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
         readOnly: bool = None,
     ):
         super().__init__()
@@ -7482,7 +7492,7 @@ class RBDPersistentVolumeSource(types.Object):
         if keyring:  # omit empty
             v["keyring"] = keyring
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -7539,7 +7549,7 @@ class RBDPersistentVolumeSource(types.Object):
         """
         return self.__keyring
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         SecretRef is name of the authentication secret for RBDUser. If provided
         overrides keyring.
@@ -7568,7 +7578,7 @@ class ScaleIOPersistentVolumeSource(types.Object):
         self,
         gateway: str = "",
         system: str = "",
-        secretRef: SecretReference = None,
+        secretRef: "SecretReference" = None,
         sslEnabled: bool = None,
         protectionDomain: str = None,
         storagePool: str = None,
@@ -7599,7 +7609,7 @@ class ScaleIOPersistentVolumeSource(types.Object):
         check_type("system", system, str)
         v["system"] = system
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[SecretReference])
+        check_type("secretRef", secretRef, Optional["SecretReference"])
         v["secretRef"] = secretRef
         sslEnabled = self.sslEnabled()
         check_type("sslEnabled", sslEnabled, Optional[bool])
@@ -7643,7 +7653,7 @@ class ScaleIOPersistentVolumeSource(types.Object):
         """
         return self.__system
 
-    def secretRef(self) -> Optional[SecretReference]:
+    def secretRef(self) -> Optional["SecretReference"]:
         """
         SecretRef references to the secret for ScaleIO user and other
         sensitive information. If this is not provided, Login operation will fail.
@@ -7712,7 +7722,7 @@ class StorageOSPersistentVolumeSource(types.Object):
         volumeNamespace: str = None,
         fsType: str = None,
         readOnly: bool = None,
-        secretRef: ObjectReference = None,
+        secretRef: "ObjectReference" = None,
     ):
         super().__init__()
         self.__volumeName = volumeName
@@ -7741,7 +7751,7 @@ class StorageOSPersistentVolumeSource(types.Object):
         if readOnly:  # omit empty
             v["readOnly"] = readOnly
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[ObjectReference])
+        check_type("secretRef", secretRef, Optional["ObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         return v
@@ -7779,7 +7789,7 @@ class StorageOSPersistentVolumeSource(types.Object):
         """
         return self.__readOnly
 
-    def secretRef(self) -> Optional[ObjectReference]:
+    def secretRef(self) -> Optional["ObjectReference"]:
         """
         SecretRef specifies the secret to use for obtaining the StorageOS API
         credentials.  If not specified, default values will be attempted.
@@ -7864,28 +7874,28 @@ class PersistentVolumeSource(types.Object):
     @typechecked
     def __init__(
         self,
-        gcePersistentDisk: GCEPersistentDiskVolumeSource = None,
-        awsElasticBlockStore: AWSElasticBlockStoreVolumeSource = None,
-        hostPath: HostPathVolumeSource = None,
-        glusterfs: GlusterfsPersistentVolumeSource = None,
-        nfs: NFSVolumeSource = None,
-        rbd: RBDPersistentVolumeSource = None,
-        iscsi: ISCSIPersistentVolumeSource = None,
-        cinder: CinderPersistentVolumeSource = None,
-        cephfs: CephFSPersistentVolumeSource = None,
-        fc: FCVolumeSource = None,
-        flocker: FlockerVolumeSource = None,
-        flexVolume: FlexPersistentVolumeSource = None,
-        azureFile: AzureFilePersistentVolumeSource = None,
-        vsphereVolume: VsphereVirtualDiskVolumeSource = None,
-        quobyte: QuobyteVolumeSource = None,
-        azureDisk: AzureDiskVolumeSource = None,
-        photonPersistentDisk: PhotonPersistentDiskVolumeSource = None,
-        portworxVolume: PortworxVolumeSource = None,
-        scaleIO: ScaleIOPersistentVolumeSource = None,
-        local: LocalVolumeSource = None,
-        storageos: StorageOSPersistentVolumeSource = None,
-        csi: CSIPersistentVolumeSource = None,
+        gcePersistentDisk: "GCEPersistentDiskVolumeSource" = None,
+        awsElasticBlockStore: "AWSElasticBlockStoreVolumeSource" = None,
+        hostPath: "HostPathVolumeSource" = None,
+        glusterfs: "GlusterfsPersistentVolumeSource" = None,
+        nfs: "NFSVolumeSource" = None,
+        rbd: "RBDPersistentVolumeSource" = None,
+        iscsi: "ISCSIPersistentVolumeSource" = None,
+        cinder: "CinderPersistentVolumeSource" = None,
+        cephfs: "CephFSPersistentVolumeSource" = None,
+        fc: "FCVolumeSource" = None,
+        flocker: "FlockerVolumeSource" = None,
+        flexVolume: "FlexPersistentVolumeSource" = None,
+        azureFile: "AzureFilePersistentVolumeSource" = None,
+        vsphereVolume: "VsphereVirtualDiskVolumeSource" = None,
+        quobyte: "QuobyteVolumeSource" = None,
+        azureDisk: "AzureDiskVolumeSource" = None,
+        photonPersistentDisk: "PhotonPersistentDiskVolumeSource" = None,
+        portworxVolume: "PortworxVolumeSource" = None,
+        scaleIO: "ScaleIOPersistentVolumeSource" = None,
+        local: "LocalVolumeSource" = None,
+        storageos: "StorageOSPersistentVolumeSource" = None,
+        csi: "CSIPersistentVolumeSource" = None,
     ):
         super().__init__()
         self.__gcePersistentDisk = gcePersistentDisk
@@ -7918,7 +7928,7 @@ class PersistentVolumeSource(types.Object):
         check_type(
             "gcePersistentDisk",
             gcePersistentDisk,
-            Optional[GCEPersistentDiskVolumeSource],
+            Optional["GCEPersistentDiskVolumeSource"],
         )
         if gcePersistentDisk is not None:  # omit empty
             v["gcePersistentDisk"] = gcePersistentDisk
@@ -7926,99 +7936,99 @@ class PersistentVolumeSource(types.Object):
         check_type(
             "awsElasticBlockStore",
             awsElasticBlockStore,
-            Optional[AWSElasticBlockStoreVolumeSource],
+            Optional["AWSElasticBlockStoreVolumeSource"],
         )
         if awsElasticBlockStore is not None:  # omit empty
             v["awsElasticBlockStore"] = awsElasticBlockStore
         hostPath = self.hostPath()
-        check_type("hostPath", hostPath, Optional[HostPathVolumeSource])
+        check_type("hostPath", hostPath, Optional["HostPathVolumeSource"])
         if hostPath is not None:  # omit empty
             v["hostPath"] = hostPath
         glusterfs = self.glusterfs()
-        check_type("glusterfs", glusterfs, Optional[GlusterfsPersistentVolumeSource])
+        check_type("glusterfs", glusterfs, Optional["GlusterfsPersistentVolumeSource"])
         if glusterfs is not None:  # omit empty
             v["glusterfs"] = glusterfs
         nfs = self.nfs()
-        check_type("nfs", nfs, Optional[NFSVolumeSource])
+        check_type("nfs", nfs, Optional["NFSVolumeSource"])
         if nfs is not None:  # omit empty
             v["nfs"] = nfs
         rbd = self.rbd()
-        check_type("rbd", rbd, Optional[RBDPersistentVolumeSource])
+        check_type("rbd", rbd, Optional["RBDPersistentVolumeSource"])
         if rbd is not None:  # omit empty
             v["rbd"] = rbd
         iscsi = self.iscsi()
-        check_type("iscsi", iscsi, Optional[ISCSIPersistentVolumeSource])
+        check_type("iscsi", iscsi, Optional["ISCSIPersistentVolumeSource"])
         if iscsi is not None:  # omit empty
             v["iscsi"] = iscsi
         cinder = self.cinder()
-        check_type("cinder", cinder, Optional[CinderPersistentVolumeSource])
+        check_type("cinder", cinder, Optional["CinderPersistentVolumeSource"])
         if cinder is not None:  # omit empty
             v["cinder"] = cinder
         cephfs = self.cephfs()
-        check_type("cephfs", cephfs, Optional[CephFSPersistentVolumeSource])
+        check_type("cephfs", cephfs, Optional["CephFSPersistentVolumeSource"])
         if cephfs is not None:  # omit empty
             v["cephfs"] = cephfs
         fc = self.fc()
-        check_type("fc", fc, Optional[FCVolumeSource])
+        check_type("fc", fc, Optional["FCVolumeSource"])
         if fc is not None:  # omit empty
             v["fc"] = fc
         flocker = self.flocker()
-        check_type("flocker", flocker, Optional[FlockerVolumeSource])
+        check_type("flocker", flocker, Optional["FlockerVolumeSource"])
         if flocker is not None:  # omit empty
             v["flocker"] = flocker
         flexVolume = self.flexVolume()
-        check_type("flexVolume", flexVolume, Optional[FlexPersistentVolumeSource])
+        check_type("flexVolume", flexVolume, Optional["FlexPersistentVolumeSource"])
         if flexVolume is not None:  # omit empty
             v["flexVolume"] = flexVolume
         azureFile = self.azureFile()
-        check_type("azureFile", azureFile, Optional[AzureFilePersistentVolumeSource])
+        check_type("azureFile", azureFile, Optional["AzureFilePersistentVolumeSource"])
         if azureFile is not None:  # omit empty
             v["azureFile"] = azureFile
         vsphereVolume = self.vsphereVolume()
         check_type(
-            "vsphereVolume", vsphereVolume, Optional[VsphereVirtualDiskVolumeSource]
+            "vsphereVolume", vsphereVolume, Optional["VsphereVirtualDiskVolumeSource"]
         )
         if vsphereVolume is not None:  # omit empty
             v["vsphereVolume"] = vsphereVolume
         quobyte = self.quobyte()
-        check_type("quobyte", quobyte, Optional[QuobyteVolumeSource])
+        check_type("quobyte", quobyte, Optional["QuobyteVolumeSource"])
         if quobyte is not None:  # omit empty
             v["quobyte"] = quobyte
         azureDisk = self.azureDisk()
-        check_type("azureDisk", azureDisk, Optional[AzureDiskVolumeSource])
+        check_type("azureDisk", azureDisk, Optional["AzureDiskVolumeSource"])
         if azureDisk is not None:  # omit empty
             v["azureDisk"] = azureDisk
         photonPersistentDisk = self.photonPersistentDisk()
         check_type(
             "photonPersistentDisk",
             photonPersistentDisk,
-            Optional[PhotonPersistentDiskVolumeSource],
+            Optional["PhotonPersistentDiskVolumeSource"],
         )
         if photonPersistentDisk is not None:  # omit empty
             v["photonPersistentDisk"] = photonPersistentDisk
         portworxVolume = self.portworxVolume()
-        check_type("portworxVolume", portworxVolume, Optional[PortworxVolumeSource])
+        check_type("portworxVolume", portworxVolume, Optional["PortworxVolumeSource"])
         if portworxVolume is not None:  # omit empty
             v["portworxVolume"] = portworxVolume
         scaleIO = self.scaleIO()
-        check_type("scaleIO", scaleIO, Optional[ScaleIOPersistentVolumeSource])
+        check_type("scaleIO", scaleIO, Optional["ScaleIOPersistentVolumeSource"])
         if scaleIO is not None:  # omit empty
             v["scaleIO"] = scaleIO
         local = self.local()
-        check_type("local", local, Optional[LocalVolumeSource])
+        check_type("local", local, Optional["LocalVolumeSource"])
         if local is not None:  # omit empty
             v["local"] = local
         storageos = self.storageos()
-        check_type("storageos", storageos, Optional[StorageOSPersistentVolumeSource])
+        check_type("storageos", storageos, Optional["StorageOSPersistentVolumeSource"])
         if storageos is not None:  # omit empty
             v["storageos"] = storageos
         csi = self.csi()
-        check_type("csi", csi, Optional[CSIPersistentVolumeSource])
+        check_type("csi", csi, Optional["CSIPersistentVolumeSource"])
         if csi is not None:  # omit empty
             v["csi"] = csi
         return v
 
-    def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
+    def gcePersistentDisk(self) -> Optional["GCEPersistentDiskVolumeSource"]:
         """
         GCEPersistentDisk represents a GCE Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod. Provisioned by an admin.
@@ -8026,7 +8036,7 @@ class PersistentVolumeSource(types.Object):
         """
         return self.__gcePersistentDisk
 
-    def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
+    def awsElasticBlockStore(self) -> Optional["AWSElasticBlockStoreVolumeSource"]:
         """
         AWSElasticBlockStore represents an AWS Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod.
@@ -8034,7 +8044,7 @@ class PersistentVolumeSource(types.Object):
         """
         return self.__awsElasticBlockStore
 
-    def hostPath(self) -> Optional[HostPathVolumeSource]:
+    def hostPath(self) -> Optional["HostPathVolumeSource"]:
         """
         HostPath represents a directory on the host.
         Provisioned by a developer or tester.
@@ -8044,7 +8054,7 @@ class PersistentVolumeSource(types.Object):
         """
         return self.__hostPath
 
-    def glusterfs(self) -> Optional[GlusterfsPersistentVolumeSource]:
+    def glusterfs(self) -> Optional["GlusterfsPersistentVolumeSource"]:
         """
         Glusterfs represents a Glusterfs volume that is attached to a host and
         exposed to the pod. Provisioned by an admin.
@@ -8052,115 +8062,115 @@ class PersistentVolumeSource(types.Object):
         """
         return self.__glusterfs
 
-    def nfs(self) -> Optional[NFSVolumeSource]:
+    def nfs(self) -> Optional["NFSVolumeSource"]:
         """
         NFS represents an NFS mount on the host. Provisioned by an admin.
         More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
         """
         return self.__nfs
 
-    def rbd(self) -> Optional[RBDPersistentVolumeSource]:
+    def rbd(self) -> Optional["RBDPersistentVolumeSource"]:
         """
         RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
         More info: https://examples.k8s.io/volumes/rbd/README.md
         """
         return self.__rbd
 
-    def iscsi(self) -> Optional[ISCSIPersistentVolumeSource]:
+    def iscsi(self) -> Optional["ISCSIPersistentVolumeSource"]:
         """
         ISCSI represents an ISCSI Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod. Provisioned by an admin.
         """
         return self.__iscsi
 
-    def cinder(self) -> Optional[CinderPersistentVolumeSource]:
+    def cinder(self) -> Optional["CinderPersistentVolumeSource"]:
         """
         Cinder represents a cinder volume attached and mounted on kubelets host machine.
         More info: https://examples.k8s.io/mysql-cinder-pd/README.md
         """
         return self.__cinder
 
-    def cephfs(self) -> Optional[CephFSPersistentVolumeSource]:
+    def cephfs(self) -> Optional["CephFSPersistentVolumeSource"]:
         """
         CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
         """
         return self.__cephfs
 
-    def fc(self) -> Optional[FCVolumeSource]:
+    def fc(self) -> Optional["FCVolumeSource"]:
         """
         FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
         """
         return self.__fc
 
-    def flocker(self) -> Optional[FlockerVolumeSource]:
+    def flocker(self) -> Optional["FlockerVolumeSource"]:
         """
         Flocker represents a Flocker volume attached to a kubelet's host machine and exposed to the pod for its usage. This depends on the Flocker control service being running
         """
         return self.__flocker
 
-    def flexVolume(self) -> Optional[FlexPersistentVolumeSource]:
+    def flexVolume(self) -> Optional["FlexPersistentVolumeSource"]:
         """
         FlexVolume represents a generic volume resource that is
         provisioned/attached using an exec based plugin.
         """
         return self.__flexVolume
 
-    def azureFile(self) -> Optional[AzureFilePersistentVolumeSource]:
+    def azureFile(self) -> Optional["AzureFilePersistentVolumeSource"]:
         """
         AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
         """
         return self.__azureFile
 
-    def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
+    def vsphereVolume(self) -> Optional["VsphereVirtualDiskVolumeSource"]:
         """
         VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
         """
         return self.__vsphereVolume
 
-    def quobyte(self) -> Optional[QuobyteVolumeSource]:
+    def quobyte(self) -> Optional["QuobyteVolumeSource"]:
         """
         Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
         """
         return self.__quobyte
 
-    def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
+    def azureDisk(self) -> Optional["AzureDiskVolumeSource"]:
         """
         AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
         """
         return self.__azureDisk
 
-    def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
+    def photonPersistentDisk(self) -> Optional["PhotonPersistentDiskVolumeSource"]:
         """
         PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
         """
         return self.__photonPersistentDisk
 
-    def portworxVolume(self) -> Optional[PortworxVolumeSource]:
+    def portworxVolume(self) -> Optional["PortworxVolumeSource"]:
         """
         PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
         """
         return self.__portworxVolume
 
-    def scaleIO(self) -> Optional[ScaleIOPersistentVolumeSource]:
+    def scaleIO(self) -> Optional["ScaleIOPersistentVolumeSource"]:
         """
         ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
         """
         return self.__scaleIO
 
-    def local(self) -> Optional[LocalVolumeSource]:
+    def local(self) -> Optional["LocalVolumeSource"]:
         """
         Local represents directly-attached storage with node affinity
         """
         return self.__local
 
-    def storageos(self) -> Optional[StorageOSPersistentVolumeSource]:
+    def storageos(self) -> Optional["StorageOSPersistentVolumeSource"]:
         """
         StorageOS represents a StorageOS volume that is attached to the kubelet's host machine and mounted into the pod
         More info: https://examples.k8s.io/volumes/storageos/README.md
         """
         return self.__storageos
 
-    def csi(self) -> Optional[CSIPersistentVolumeSource]:
+    def csi(self) -> Optional["CSIPersistentVolumeSource"]:
         """
         CSI represents storage that is handled by an external CSI driver (Beta feature).
         """
@@ -8174,7 +8184,7 @@ class VolumeNodeAffinity(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, required: NodeSelector = None):
+    def __init__(self, required: "NodeSelector" = None):
         super().__init__()
         self.__required = required
 
@@ -8182,12 +8192,12 @@ class VolumeNodeAffinity(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         required = self.required()
-        check_type("required", required, Optional[NodeSelector])
+        check_type("required", required, Optional["NodeSelector"])
         if required is not None:  # omit empty
             v["required"] = required
         return v
 
-    def required(self) -> Optional[NodeSelector]:
+    def required(self) -> Optional["NodeSelector"]:
         """
         Required specifies hard node constraints that must be met.
         """
@@ -8204,16 +8214,16 @@ class PersistentVolumeSpec(types.Object):
     def __init__(
         self,
         capacity: Dict[ResourceName, "resource.Quantity"] = None,
-        persistentVolumeSource: PersistentVolumeSource = None,
+        persistentVolumeSource: "PersistentVolumeSource" = None,
         accessModes: List[PersistentVolumeAccessMode] = None,
-        claimRef: ObjectReference = None,
+        claimRef: "ObjectReference" = None,
         persistentVolumeReclaimPolicy: PersistentVolumeReclaimPolicy = PersistentVolumeReclaimPolicy[
             "Retain"
         ],
         storageClassName: str = None,
         mountOptions: List[str] = None,
         volumeMode: PersistentVolumeMode = None,
-        nodeAffinity: VolumeNodeAffinity = None,
+        nodeAffinity: "VolumeNodeAffinity" = None,
     ):
         super().__init__()
         self.__capacity = capacity if capacity is not None else {}
@@ -8243,7 +8253,7 @@ class PersistentVolumeSpec(types.Object):
             v["capacity"] = capacity
         persistentVolumeSource = self.persistentVolumeSource()
         check_type(
-            "persistentVolumeSource", persistentVolumeSource, PersistentVolumeSource
+            "persistentVolumeSource", persistentVolumeSource, "PersistentVolumeSource"
         )
         v.update(persistentVolumeSource._root())  # inline
         accessModes = self.accessModes()
@@ -8253,7 +8263,7 @@ class PersistentVolumeSpec(types.Object):
         if accessModes:  # omit empty
             v["accessModes"] = accessModes
         claimRef = self.claimRef()
-        check_type("claimRef", claimRef, Optional[ObjectReference])
+        check_type("claimRef", claimRef, Optional["ObjectReference"])
         if claimRef is not None:  # omit empty
             v["claimRef"] = claimRef
         persistentVolumeReclaimPolicy = self.persistentVolumeReclaimPolicy()
@@ -8277,7 +8287,7 @@ class PersistentVolumeSpec(types.Object):
         if volumeMode is not None:  # omit empty
             v["volumeMode"] = volumeMode
         nodeAffinity = self.nodeAffinity()
-        check_type("nodeAffinity", nodeAffinity, Optional[VolumeNodeAffinity])
+        check_type("nodeAffinity", nodeAffinity, Optional["VolumeNodeAffinity"])
         if nodeAffinity is not None:  # omit empty
             v["nodeAffinity"] = nodeAffinity
         return v
@@ -8289,7 +8299,7 @@ class PersistentVolumeSpec(types.Object):
         """
         return self.__capacity
 
-    def persistentVolumeSource(self) -> PersistentVolumeSource:
+    def persistentVolumeSource(self) -> "PersistentVolumeSource":
         """
         The actual volume backing the persistent volume.
         """
@@ -8302,7 +8312,7 @@ class PersistentVolumeSpec(types.Object):
         """
         return self.__accessModes
 
-    def claimRef(self) -> Optional[ObjectReference]:
+    def claimRef(self) -> Optional["ObjectReference"]:
         """
         ClaimRef is part of a bi-directional binding between PersistentVolume and PersistentVolumeClaim.
         Expected to be non-nil when bound.
@@ -8344,7 +8354,7 @@ class PersistentVolumeSpec(types.Object):
         """
         return self.__volumeMode
 
-    def nodeAffinity(self) -> Optional[VolumeNodeAffinity]:
+    def nodeAffinity(self) -> Optional["VolumeNodeAffinity"]:
         """
         NodeAffinity defines constraints that limit what nodes this volume can be accessed from.
         This field influences the scheduling of pods that use this volume.
@@ -8366,7 +8376,7 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PersistentVolumeSpec = None,
+        spec: "PersistentVolumeSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -8381,11 +8391,11 @@ class PersistentVolume(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PersistentVolumeSpec])
+        check_type("spec", spec, Optional["PersistentVolumeSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PersistentVolumeSpec]:
+    def spec(self) -> Optional["PersistentVolumeSpec"]:
         """
         Spec defines a specification of a persistent volume owned by the cluster.
         Provisioned by an administrator.
@@ -8455,11 +8465,11 @@ class PersistentVolumeClaimSpec(types.Object):
         self,
         accessModes: List[PersistentVolumeAccessMode] = None,
         selector: "metav1.LabelSelector" = None,
-        resources: ResourceRequirements = None,
+        resources: "ResourceRequirements" = None,
         volumeName: str = None,
         storageClassName: str = None,
         volumeMode: PersistentVolumeMode = None,
-        dataSource: TypedLocalObjectReference = None,
+        dataSource: "TypedLocalObjectReference" = None,
     ):
         super().__init__()
         self.__accessModes = accessModes if accessModes is not None else []
@@ -8488,7 +8498,7 @@ class PersistentVolumeClaimSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         resources = self.resources()
-        check_type("resources", resources, Optional[ResourceRequirements])
+        check_type("resources", resources, Optional["ResourceRequirements"])
         v["resources"] = resources
         volumeName = self.volumeName()
         check_type("volumeName", volumeName, Optional[str])
@@ -8503,7 +8513,7 @@ class PersistentVolumeClaimSpec(types.Object):
         if volumeMode is not None:  # omit empty
             v["volumeMode"] = volumeMode
         dataSource = self.dataSource()
-        check_type("dataSource", dataSource, Optional[TypedLocalObjectReference])
+        check_type("dataSource", dataSource, Optional["TypedLocalObjectReference"])
         if dataSource is not None:  # omit empty
             v["dataSource"] = dataSource
         return v
@@ -8521,7 +8531,7 @@ class PersistentVolumeClaimSpec(types.Object):
         """
         return self.__selector
 
-    def resources(self) -> Optional[ResourceRequirements]:
+    def resources(self) -> Optional["ResourceRequirements"]:
         """
         Resources represents the minimum resources the volume should have.
         More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#resources
@@ -8549,7 +8559,7 @@ class PersistentVolumeClaimSpec(types.Object):
         """
         return self.__volumeMode
 
-    def dataSource(self) -> Optional[TypedLocalObjectReference]:
+    def dataSource(self) -> Optional["TypedLocalObjectReference"]:
         """
         This field requires the VolumeSnapshotDataSource alpha feature gate to be
         enabled and currently VolumeSnapshot is the only supported data source.
@@ -8576,7 +8586,7 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PersistentVolumeClaimSpec = None,
+        spec: "PersistentVolumeClaimSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -8592,11 +8602,11 @@ class PersistentVolumeClaim(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PersistentVolumeClaimSpec])
+        check_type("spec", spec, Optional["PersistentVolumeClaimSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PersistentVolumeClaimSpec]:
+    def spec(self) -> Optional["PersistentVolumeClaimSpec"]:
         """
         Spec defines the desired characteristics of a volume requested by a pod author.
         More info: https://kubernetes.io/docs/concepts/storage/persistent-volumes#persistentvolumeclaims
@@ -8693,7 +8703,7 @@ class PodDNSConfig(types.Object):
         self,
         nameservers: List[str] = None,
         searches: List[str] = None,
-        options: Dict[str, PodDNSConfigOption] = None,
+        options: Dict[str, "PodDNSConfigOption"] = None,
     ):
         super().__init__()
         self.__nameservers = nameservers if nameservers is not None else []
@@ -8712,7 +8722,7 @@ class PodDNSConfig(types.Object):
         if searches:  # omit empty
             v["searches"] = searches
         options = self.options()
-        check_type("options", options, Optional[Dict[str, PodDNSConfigOption]])
+        check_type("options", options, Optional[Dict[str, "PodDNSConfigOption"]])
         if options:  # omit empty
             v["options"] = options.values()  # named list
         return v
@@ -8733,7 +8743,7 @@ class PodDNSConfig(types.Object):
         """
         return self.__searches
 
-    def options(self) -> Optional[Dict[str, PodDNSConfigOption]]:
+    def options(self) -> Optional[Dict[str, "PodDNSConfigOption"]]:
         """
         A list of DNS resolver options.
         This will be merged with the base options generated from DNSPolicy.
@@ -8816,14 +8826,14 @@ class PodSecurityContext(types.Object):
     @typechecked
     def __init__(
         self,
-        seLinuxOptions: SELinuxOptions = None,
-        windowsOptions: WindowsSecurityContextOptions = None,
+        seLinuxOptions: "SELinuxOptions" = None,
+        windowsOptions: "WindowsSecurityContextOptions" = None,
         runAsUser: int = None,
         runAsGroup: int = None,
         runAsNonRoot: bool = None,
         supplementalGroups: List[int] = None,
         fsGroup: int = None,
-        sysctls: Dict[str, Sysctl] = None,
+        sysctls: Dict[str, "Sysctl"] = None,
     ):
         super().__init__()
         self.__seLinuxOptions = seLinuxOptions
@@ -8841,12 +8851,12 @@ class PodSecurityContext(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional[SELinuxOptions])
+        check_type("seLinuxOptions", seLinuxOptions, Optional["SELinuxOptions"])
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
         windowsOptions = self.windowsOptions()
         check_type(
-            "windowsOptions", windowsOptions, Optional[WindowsSecurityContextOptions]
+            "windowsOptions", windowsOptions, Optional["WindowsSecurityContextOptions"]
         )
         if windowsOptions is not None:  # omit empty
             v["windowsOptions"] = windowsOptions
@@ -8871,12 +8881,12 @@ class PodSecurityContext(types.Object):
         if fsGroup is not None:  # omit empty
             v["fsGroup"] = fsGroup
         sysctls = self.sysctls()
-        check_type("sysctls", sysctls, Optional[Dict[str, Sysctl]])
+        check_type("sysctls", sysctls, Optional[Dict[str, "Sysctl"]])
         if sysctls:  # omit empty
             v["sysctls"] = sysctls.values()  # named list
         return v
 
-    def seLinuxOptions(self) -> Optional[SELinuxOptions]:
+    def seLinuxOptions(self) -> Optional["SELinuxOptions"]:
         """
         The SELinux context to be applied to all containers.
         If unspecified, the container runtime will allocate a random SELinux context for each
@@ -8886,7 +8896,7 @@ class PodSecurityContext(types.Object):
         """
         return self.__seLinuxOptions
 
-    def windowsOptions(self) -> Optional[WindowsSecurityContextOptions]:
+    def windowsOptions(self) -> Optional["WindowsSecurityContextOptions"]:
         """
         The Windows specific settings applied to all containers.
         If unspecified, the options within a container's SecurityContext will be used.
@@ -8947,7 +8957,7 @@ class PodSecurityContext(types.Object):
         """
         return self.__fsGroup
 
-    def sysctls(self) -> Optional[Dict[str, Sysctl]]:
+    def sysctls(self) -> Optional[Dict[str, "Sysctl"]]:
         """
         Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
         sysctls (by the container runtime) might fail to launch.
@@ -9159,8 +9169,8 @@ class SecretProjection(types.Object):
     @typechecked
     def __init__(
         self,
-        localObjectReference: LocalObjectReference = None,
-        items: List[KeyToPath] = None,
+        localObjectReference: "LocalObjectReference" = None,
+        items: List["KeyToPath"] = None,
         optional: bool = None,
     ):
         super().__init__()
@@ -9176,10 +9186,10 @@ class SecretProjection(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         localObjectReference = self.localObjectReference()
-        check_type("localObjectReference", localObjectReference, LocalObjectReference)
+        check_type("localObjectReference", localObjectReference, "LocalObjectReference")
         v.update(localObjectReference._root())  # inline
         items = self.items()
-        check_type("items", items, Optional[List[KeyToPath]])
+        check_type("items", items, Optional[List["KeyToPath"]])
         if items:  # omit empty
             v["items"] = items
         optional = self.optional()
@@ -9188,10 +9198,10 @@ class SecretProjection(types.Object):
             v["optional"] = optional
         return v
 
-    def localObjectReference(self) -> LocalObjectReference:
+    def localObjectReference(self) -> "LocalObjectReference":
         return self.__localObjectReference
 
-    def items(self) -> Optional[List[KeyToPath]]:
+    def items(self) -> Optional[List["KeyToPath"]]:
         """
         If unspecified, each key-value pair in the Data field of the referenced
         Secret will be projected into the volume as a file whose name is the
@@ -9283,10 +9293,10 @@ class VolumeProjection(types.Object):
     @typechecked
     def __init__(
         self,
-        secret: SecretProjection = None,
-        downwardAPI: DownwardAPIProjection = None,
-        configMap: ConfigMapProjection = None,
-        serviceAccountToken: ServiceAccountTokenProjection = None,
+        secret: "SecretProjection" = None,
+        downwardAPI: "DownwardAPIProjection" = None,
+        configMap: "ConfigMapProjection" = None,
+        serviceAccountToken: "ServiceAccountTokenProjection" = None,
     ):
         super().__init__()
         self.__secret = secret
@@ -9298,46 +9308,46 @@ class VolumeProjection(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         secret = self.secret()
-        check_type("secret", secret, Optional[SecretProjection])
+        check_type("secret", secret, Optional["SecretProjection"])
         if secret is not None:  # omit empty
             v["secret"] = secret
         downwardAPI = self.downwardAPI()
-        check_type("downwardAPI", downwardAPI, Optional[DownwardAPIProjection])
+        check_type("downwardAPI", downwardAPI, Optional["DownwardAPIProjection"])
         if downwardAPI is not None:  # omit empty
             v["downwardAPI"] = downwardAPI
         configMap = self.configMap()
-        check_type("configMap", configMap, Optional[ConfigMapProjection])
+        check_type("configMap", configMap, Optional["ConfigMapProjection"])
         if configMap is not None:  # omit empty
             v["configMap"] = configMap
         serviceAccountToken = self.serviceAccountToken()
         check_type(
             "serviceAccountToken",
             serviceAccountToken,
-            Optional[ServiceAccountTokenProjection],
+            Optional["ServiceAccountTokenProjection"],
         )
         if serviceAccountToken is not None:  # omit empty
             v["serviceAccountToken"] = serviceAccountToken
         return v
 
-    def secret(self) -> Optional[SecretProjection]:
+    def secret(self) -> Optional["SecretProjection"]:
         """
         information about the secret data to project
         """
         return self.__secret
 
-    def downwardAPI(self) -> Optional[DownwardAPIProjection]:
+    def downwardAPI(self) -> Optional["DownwardAPIProjection"]:
         """
         information about the downwardAPI data to project
         """
         return self.__downwardAPI
 
-    def configMap(self) -> Optional[ConfigMapProjection]:
+    def configMap(self) -> Optional["ConfigMapProjection"]:
         """
         information about the configMap data to project
         """
         return self.__configMap
 
-    def serviceAccountToken(self) -> Optional[ServiceAccountTokenProjection]:
+    def serviceAccountToken(self) -> Optional["ServiceAccountTokenProjection"]:
         """
         information about the serviceAccountToken data to project
         """
@@ -9351,7 +9361,9 @@ class ProjectedVolumeSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, sources: List[VolumeProjection] = None, defaultMode: int = None):
+    def __init__(
+        self, sources: List["VolumeProjection"] = None, defaultMode: int = None
+    ):
         super().__init__()
         self.__sources = sources if sources is not None else []
         self.__defaultMode = defaultMode if defaultMode is not None else 420
@@ -9360,7 +9372,7 @@ class ProjectedVolumeSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         sources = self.sources()
-        check_type("sources", sources, List[VolumeProjection])
+        check_type("sources", sources, List["VolumeProjection"])
         v["sources"] = sources
         defaultMode = self.defaultMode()
         check_type("defaultMode", defaultMode, Optional[int])
@@ -9368,7 +9380,7 @@ class ProjectedVolumeSource(types.Object):
             v["defaultMode"] = defaultMode
         return v
 
-    def sources(self) -> List[VolumeProjection]:
+    def sources(self) -> List["VolumeProjection"]:
         """
         list of volume projections
         """
@@ -9401,7 +9413,7 @@ class RBDVolumeSource(types.Object):
         pool: str = "rbd",
         user: str = "admin",
         keyring: str = "/etc/ceph/keyring",
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
         readOnly: bool = None,
     ):
         super().__init__()
@@ -9440,7 +9452,7 @@ class RBDVolumeSource(types.Object):
         if keyring:  # omit empty
             v["keyring"] = keyring
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         readOnly = self.readOnly()
@@ -9497,7 +9509,7 @@ class RBDVolumeSource(types.Object):
         """
         return self.__keyring
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         SecretRef is name of the authentication secret for RBDUser. If provided
         overrides keyring.
@@ -9526,7 +9538,7 @@ class ScaleIOVolumeSource(types.Object):
         self,
         gateway: str = "",
         system: str = "",
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
         sslEnabled: bool = None,
         protectionDomain: str = None,
         storagePool: str = None,
@@ -9557,7 +9569,7 @@ class ScaleIOVolumeSource(types.Object):
         check_type("system", system, str)
         v["system"] = system
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         v["secretRef"] = secretRef
         sslEnabled = self.sslEnabled()
         check_type("sslEnabled", sslEnabled, Optional[bool])
@@ -9601,7 +9613,7 @@ class ScaleIOVolumeSource(types.Object):
         """
         return self.__system
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         SecretRef references to the secret for ScaleIO user and other
         sensitive information. If this is not provided, Login operation will fail.
@@ -9671,7 +9683,7 @@ class SecretVolumeSource(types.Object):
     def __init__(
         self,
         secretName: str = None,
-        items: List[KeyToPath] = None,
+        items: List["KeyToPath"] = None,
         defaultMode: int = None,
         optional: bool = None,
     ):
@@ -9689,7 +9701,7 @@ class SecretVolumeSource(types.Object):
         if secretName:  # omit empty
             v["secretName"] = secretName
         items = self.items()
-        check_type("items", items, Optional[List[KeyToPath]])
+        check_type("items", items, Optional[List["KeyToPath"]])
         if items:  # omit empty
             v["items"] = items
         defaultMode = self.defaultMode()
@@ -9709,7 +9721,7 @@ class SecretVolumeSource(types.Object):
         """
         return self.__secretName
 
-    def items(self) -> Optional[List[KeyToPath]]:
+    def items(self) -> Optional[List["KeyToPath"]]:
         """
         If unspecified, each key-value pair in the Data field of the referenced
         Secret will be projected into the volume as a file whose name is the
@@ -9751,7 +9763,7 @@ class StorageOSVolumeSource(types.Object):
         volumeNamespace: str = None,
         fsType: str = None,
         readOnly: bool = None,
-        secretRef: LocalObjectReference = None,
+        secretRef: "LocalObjectReference" = None,
     ):
         super().__init__()
         self.__volumeName = volumeName
@@ -9780,7 +9792,7 @@ class StorageOSVolumeSource(types.Object):
         if readOnly:  # omit empty
             v["readOnly"] = readOnly
         secretRef = self.secretRef()
-        check_type("secretRef", secretRef, Optional[LocalObjectReference])
+        check_type("secretRef", secretRef, Optional["LocalObjectReference"])
         if secretRef is not None:  # omit empty
             v["secretRef"] = secretRef
         return v
@@ -9818,7 +9830,7 @@ class StorageOSVolumeSource(types.Object):
         """
         return self.__readOnly
 
-    def secretRef(self) -> Optional[LocalObjectReference]:
+    def secretRef(self) -> Optional["LocalObjectReference"]:
         """
         SecretRef specifies the secret to use for obtaining the StorageOS API
         credentials.  If not specified, default values will be attempted.
@@ -9836,33 +9848,33 @@ class VolumeSource(types.Object):
     @typechecked
     def __init__(
         self,
-        hostPath: HostPathVolumeSource = None,
-        emptyDir: EmptyDirVolumeSource = None,
-        gcePersistentDisk: GCEPersistentDiskVolumeSource = None,
-        awsElasticBlockStore: AWSElasticBlockStoreVolumeSource = None,
-        secret: SecretVolumeSource = None,
-        nfs: NFSVolumeSource = None,
-        iscsi: ISCSIVolumeSource = None,
-        glusterfs: GlusterfsVolumeSource = None,
-        persistentVolumeClaim: PersistentVolumeClaimVolumeSource = None,
-        rbd: RBDVolumeSource = None,
-        flexVolume: FlexVolumeSource = None,
-        cinder: CinderVolumeSource = None,
-        cephfs: CephFSVolumeSource = None,
-        flocker: FlockerVolumeSource = None,
-        downwardAPI: DownwardAPIVolumeSource = None,
-        fc: FCVolumeSource = None,
-        azureFile: AzureFileVolumeSource = None,
-        configMap: ConfigMapVolumeSource = None,
-        vsphereVolume: VsphereVirtualDiskVolumeSource = None,
-        quobyte: QuobyteVolumeSource = None,
-        azureDisk: AzureDiskVolumeSource = None,
-        photonPersistentDisk: PhotonPersistentDiskVolumeSource = None,
-        projected: ProjectedVolumeSource = None,
-        portworxVolume: PortworxVolumeSource = None,
-        scaleIO: ScaleIOVolumeSource = None,
-        storageos: StorageOSVolumeSource = None,
-        csi: CSIVolumeSource = None,
+        hostPath: "HostPathVolumeSource" = None,
+        emptyDir: "EmptyDirVolumeSource" = None,
+        gcePersistentDisk: "GCEPersistentDiskVolumeSource" = None,
+        awsElasticBlockStore: "AWSElasticBlockStoreVolumeSource" = None,
+        secret: "SecretVolumeSource" = None,
+        nfs: "NFSVolumeSource" = None,
+        iscsi: "ISCSIVolumeSource" = None,
+        glusterfs: "GlusterfsVolumeSource" = None,
+        persistentVolumeClaim: "PersistentVolumeClaimVolumeSource" = None,
+        rbd: "RBDVolumeSource" = None,
+        flexVolume: "FlexVolumeSource" = None,
+        cinder: "CinderVolumeSource" = None,
+        cephfs: "CephFSVolumeSource" = None,
+        flocker: "FlockerVolumeSource" = None,
+        downwardAPI: "DownwardAPIVolumeSource" = None,
+        fc: "FCVolumeSource" = None,
+        azureFile: "AzureFileVolumeSource" = None,
+        configMap: "ConfigMapVolumeSource" = None,
+        vsphereVolume: "VsphereVirtualDiskVolumeSource" = None,
+        quobyte: "QuobyteVolumeSource" = None,
+        azureDisk: "AzureDiskVolumeSource" = None,
+        photonPersistentDisk: "PhotonPersistentDiskVolumeSource" = None,
+        projected: "ProjectedVolumeSource" = None,
+        portworxVolume: "PortworxVolumeSource" = None,
+        scaleIO: "ScaleIOVolumeSource" = None,
+        storageos: "StorageOSVolumeSource" = None,
+        csi: "CSIVolumeSource" = None,
     ):
         super().__init__()
         self.__hostPath = hostPath
@@ -9897,18 +9909,18 @@ class VolumeSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         hostPath = self.hostPath()
-        check_type("hostPath", hostPath, Optional[HostPathVolumeSource])
+        check_type("hostPath", hostPath, Optional["HostPathVolumeSource"])
         if hostPath is not None:  # omit empty
             v["hostPath"] = hostPath
         emptyDir = self.emptyDir()
-        check_type("emptyDir", emptyDir, Optional[EmptyDirVolumeSource])
+        check_type("emptyDir", emptyDir, Optional["EmptyDirVolumeSource"])
         if emptyDir is not None:  # omit empty
             v["emptyDir"] = emptyDir
         gcePersistentDisk = self.gcePersistentDisk()
         check_type(
             "gcePersistentDisk",
             gcePersistentDisk,
-            Optional[GCEPersistentDiskVolumeSource],
+            Optional["GCEPersistentDiskVolumeSource"],
         )
         if gcePersistentDisk is not None:  # omit empty
             v["gcePersistentDisk"] = gcePersistentDisk
@@ -9916,115 +9928,115 @@ class VolumeSource(types.Object):
         check_type(
             "awsElasticBlockStore",
             awsElasticBlockStore,
-            Optional[AWSElasticBlockStoreVolumeSource],
+            Optional["AWSElasticBlockStoreVolumeSource"],
         )
         if awsElasticBlockStore is not None:  # omit empty
             v["awsElasticBlockStore"] = awsElasticBlockStore
         secret = self.secret()
-        check_type("secret", secret, Optional[SecretVolumeSource])
+        check_type("secret", secret, Optional["SecretVolumeSource"])
         if secret is not None:  # omit empty
             v["secret"] = secret
         nfs = self.nfs()
-        check_type("nfs", nfs, Optional[NFSVolumeSource])
+        check_type("nfs", nfs, Optional["NFSVolumeSource"])
         if nfs is not None:  # omit empty
             v["nfs"] = nfs
         iscsi = self.iscsi()
-        check_type("iscsi", iscsi, Optional[ISCSIVolumeSource])
+        check_type("iscsi", iscsi, Optional["ISCSIVolumeSource"])
         if iscsi is not None:  # omit empty
             v["iscsi"] = iscsi
         glusterfs = self.glusterfs()
-        check_type("glusterfs", glusterfs, Optional[GlusterfsVolumeSource])
+        check_type("glusterfs", glusterfs, Optional["GlusterfsVolumeSource"])
         if glusterfs is not None:  # omit empty
             v["glusterfs"] = glusterfs
         persistentVolumeClaim = self.persistentVolumeClaim()
         check_type(
             "persistentVolumeClaim",
             persistentVolumeClaim,
-            Optional[PersistentVolumeClaimVolumeSource],
+            Optional["PersistentVolumeClaimVolumeSource"],
         )
         if persistentVolumeClaim is not None:  # omit empty
             v["persistentVolumeClaim"] = persistentVolumeClaim
         rbd = self.rbd()
-        check_type("rbd", rbd, Optional[RBDVolumeSource])
+        check_type("rbd", rbd, Optional["RBDVolumeSource"])
         if rbd is not None:  # omit empty
             v["rbd"] = rbd
         flexVolume = self.flexVolume()
-        check_type("flexVolume", flexVolume, Optional[FlexVolumeSource])
+        check_type("flexVolume", flexVolume, Optional["FlexVolumeSource"])
         if flexVolume is not None:  # omit empty
             v["flexVolume"] = flexVolume
         cinder = self.cinder()
-        check_type("cinder", cinder, Optional[CinderVolumeSource])
+        check_type("cinder", cinder, Optional["CinderVolumeSource"])
         if cinder is not None:  # omit empty
             v["cinder"] = cinder
         cephfs = self.cephfs()
-        check_type("cephfs", cephfs, Optional[CephFSVolumeSource])
+        check_type("cephfs", cephfs, Optional["CephFSVolumeSource"])
         if cephfs is not None:  # omit empty
             v["cephfs"] = cephfs
         flocker = self.flocker()
-        check_type("flocker", flocker, Optional[FlockerVolumeSource])
+        check_type("flocker", flocker, Optional["FlockerVolumeSource"])
         if flocker is not None:  # omit empty
             v["flocker"] = flocker
         downwardAPI = self.downwardAPI()
-        check_type("downwardAPI", downwardAPI, Optional[DownwardAPIVolumeSource])
+        check_type("downwardAPI", downwardAPI, Optional["DownwardAPIVolumeSource"])
         if downwardAPI is not None:  # omit empty
             v["downwardAPI"] = downwardAPI
         fc = self.fc()
-        check_type("fc", fc, Optional[FCVolumeSource])
+        check_type("fc", fc, Optional["FCVolumeSource"])
         if fc is not None:  # omit empty
             v["fc"] = fc
         azureFile = self.azureFile()
-        check_type("azureFile", azureFile, Optional[AzureFileVolumeSource])
+        check_type("azureFile", azureFile, Optional["AzureFileVolumeSource"])
         if azureFile is not None:  # omit empty
             v["azureFile"] = azureFile
         configMap = self.configMap()
-        check_type("configMap", configMap, Optional[ConfigMapVolumeSource])
+        check_type("configMap", configMap, Optional["ConfigMapVolumeSource"])
         if configMap is not None:  # omit empty
             v["configMap"] = configMap
         vsphereVolume = self.vsphereVolume()
         check_type(
-            "vsphereVolume", vsphereVolume, Optional[VsphereVirtualDiskVolumeSource]
+            "vsphereVolume", vsphereVolume, Optional["VsphereVirtualDiskVolumeSource"]
         )
         if vsphereVolume is not None:  # omit empty
             v["vsphereVolume"] = vsphereVolume
         quobyte = self.quobyte()
-        check_type("quobyte", quobyte, Optional[QuobyteVolumeSource])
+        check_type("quobyte", quobyte, Optional["QuobyteVolumeSource"])
         if quobyte is not None:  # omit empty
             v["quobyte"] = quobyte
         azureDisk = self.azureDisk()
-        check_type("azureDisk", azureDisk, Optional[AzureDiskVolumeSource])
+        check_type("azureDisk", azureDisk, Optional["AzureDiskVolumeSource"])
         if azureDisk is not None:  # omit empty
             v["azureDisk"] = azureDisk
         photonPersistentDisk = self.photonPersistentDisk()
         check_type(
             "photonPersistentDisk",
             photonPersistentDisk,
-            Optional[PhotonPersistentDiskVolumeSource],
+            Optional["PhotonPersistentDiskVolumeSource"],
         )
         if photonPersistentDisk is not None:  # omit empty
             v["photonPersistentDisk"] = photonPersistentDisk
         projected = self.projected()
-        check_type("projected", projected, Optional[ProjectedVolumeSource])
+        check_type("projected", projected, Optional["ProjectedVolumeSource"])
         if projected is not None:  # omit empty
             v["projected"] = projected
         portworxVolume = self.portworxVolume()
-        check_type("portworxVolume", portworxVolume, Optional[PortworxVolumeSource])
+        check_type("portworxVolume", portworxVolume, Optional["PortworxVolumeSource"])
         if portworxVolume is not None:  # omit empty
             v["portworxVolume"] = portworxVolume
         scaleIO = self.scaleIO()
-        check_type("scaleIO", scaleIO, Optional[ScaleIOVolumeSource])
+        check_type("scaleIO", scaleIO, Optional["ScaleIOVolumeSource"])
         if scaleIO is not None:  # omit empty
             v["scaleIO"] = scaleIO
         storageos = self.storageos()
-        check_type("storageos", storageos, Optional[StorageOSVolumeSource])
+        check_type("storageos", storageos, Optional["StorageOSVolumeSource"])
         if storageos is not None:  # omit empty
             v["storageos"] = storageos
         csi = self.csi()
-        check_type("csi", csi, Optional[CSIVolumeSource])
+        check_type("csi", csi, Optional["CSIVolumeSource"])
         if csi is not None:  # omit empty
             v["csi"] = csi
         return v
 
-    def hostPath(self) -> Optional[HostPathVolumeSource]:
+    def hostPath(self) -> Optional["HostPathVolumeSource"]:
         """
         HostPath represents a pre-existing file or directory on the host
         machine that is directly exposed to the container. This is generally
@@ -10037,14 +10049,14 @@ class VolumeSource(types.Object):
         """
         return self.__hostPath
 
-    def emptyDir(self) -> Optional[EmptyDirVolumeSource]:
+    def emptyDir(self) -> Optional["EmptyDirVolumeSource"]:
         """
         EmptyDir represents a temporary directory that shares a pod's lifetime.
         More info: https://kubernetes.io/docs/concepts/storage/volumes#emptydir
         """
         return self.__emptyDir
 
-    def gcePersistentDisk(self) -> Optional[GCEPersistentDiskVolumeSource]:
+    def gcePersistentDisk(self) -> Optional["GCEPersistentDiskVolumeSource"]:
         """
         GCEPersistentDisk represents a GCE Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod.
@@ -10052,7 +10064,7 @@ class VolumeSource(types.Object):
         """
         return self.__gcePersistentDisk
 
-    def awsElasticBlockStore(self) -> Optional[AWSElasticBlockStoreVolumeSource]:
+    def awsElasticBlockStore(self) -> Optional["AWSElasticBlockStoreVolumeSource"]:
         """
         AWSElasticBlockStore represents an AWS Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod.
@@ -10060,21 +10072,21 @@ class VolumeSource(types.Object):
         """
         return self.__awsElasticBlockStore
 
-    def secret(self) -> Optional[SecretVolumeSource]:
+    def secret(self) -> Optional["SecretVolumeSource"]:
         """
         Secret represents a secret that should populate this volume.
         More info: https://kubernetes.io/docs/concepts/storage/volumes#secret
         """
         return self.__secret
 
-    def nfs(self) -> Optional[NFSVolumeSource]:
+    def nfs(self) -> Optional["NFSVolumeSource"]:
         """
         NFS represents an NFS mount on the host that shares a pod's lifetime
         More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs
         """
         return self.__nfs
 
-    def iscsi(self) -> Optional[ISCSIVolumeSource]:
+    def iscsi(self) -> Optional["ISCSIVolumeSource"]:
         """
         ISCSI represents an ISCSI Disk resource that is attached to a
         kubelet's host machine and then exposed to the pod.
@@ -10082,14 +10094,14 @@ class VolumeSource(types.Object):
         """
         return self.__iscsi
 
-    def glusterfs(self) -> Optional[GlusterfsVolumeSource]:
+    def glusterfs(self) -> Optional["GlusterfsVolumeSource"]:
         """
         Glusterfs represents a Glusterfs mount on the host that shares a pod's lifetime.
         More info: https://examples.k8s.io/volumes/glusterfs/README.md
         """
         return self.__glusterfs
 
-    def persistentVolumeClaim(self) -> Optional[PersistentVolumeClaimVolumeSource]:
+    def persistentVolumeClaim(self) -> Optional["PersistentVolumeClaimVolumeSource"]:
         """
         PersistentVolumeClaimVolumeSource represents a reference to a
         PersistentVolumeClaim in the same namespace.
@@ -10097,112 +10109,112 @@ class VolumeSource(types.Object):
         """
         return self.__persistentVolumeClaim
 
-    def rbd(self) -> Optional[RBDVolumeSource]:
+    def rbd(self) -> Optional["RBDVolumeSource"]:
         """
         RBD represents a Rados Block Device mount on the host that shares a pod's lifetime.
         More info: https://examples.k8s.io/volumes/rbd/README.md
         """
         return self.__rbd
 
-    def flexVolume(self) -> Optional[FlexVolumeSource]:
+    def flexVolume(self) -> Optional["FlexVolumeSource"]:
         """
         FlexVolume represents a generic volume resource that is
         provisioned/attached using an exec based plugin.
         """
         return self.__flexVolume
 
-    def cinder(self) -> Optional[CinderVolumeSource]:
+    def cinder(self) -> Optional["CinderVolumeSource"]:
         """
         Cinder represents a cinder volume attached and mounted on kubelets host machine.
         More info: https://examples.k8s.io/mysql-cinder-pd/README.md
         """
         return self.__cinder
 
-    def cephfs(self) -> Optional[CephFSVolumeSource]:
+    def cephfs(self) -> Optional["CephFSVolumeSource"]:
         """
         CephFS represents a Ceph FS mount on the host that shares a pod's lifetime
         """
         return self.__cephfs
 
-    def flocker(self) -> Optional[FlockerVolumeSource]:
+    def flocker(self) -> Optional["FlockerVolumeSource"]:
         """
         Flocker represents a Flocker volume attached to a kubelet's host machine. This depends on the Flocker control service being running
         """
         return self.__flocker
 
-    def downwardAPI(self) -> Optional[DownwardAPIVolumeSource]:
+    def downwardAPI(self) -> Optional["DownwardAPIVolumeSource"]:
         """
         DownwardAPI represents downward API about the pod that should populate this volume
         """
         return self.__downwardAPI
 
-    def fc(self) -> Optional[FCVolumeSource]:
+    def fc(self) -> Optional["FCVolumeSource"]:
         """
         FC represents a Fibre Channel resource that is attached to a kubelet's host machine and then exposed to the pod.
         """
         return self.__fc
 
-    def azureFile(self) -> Optional[AzureFileVolumeSource]:
+    def azureFile(self) -> Optional["AzureFileVolumeSource"]:
         """
         AzureFile represents an Azure File Service mount on the host and bind mount to the pod.
         """
         return self.__azureFile
 
-    def configMap(self) -> Optional[ConfigMapVolumeSource]:
+    def configMap(self) -> Optional["ConfigMapVolumeSource"]:
         """
         ConfigMap represents a configMap that should populate this volume
         """
         return self.__configMap
 
-    def vsphereVolume(self) -> Optional[VsphereVirtualDiskVolumeSource]:
+    def vsphereVolume(self) -> Optional["VsphereVirtualDiskVolumeSource"]:
         """
         VsphereVolume represents a vSphere volume attached and mounted on kubelets host machine
         """
         return self.__vsphereVolume
 
-    def quobyte(self) -> Optional[QuobyteVolumeSource]:
+    def quobyte(self) -> Optional["QuobyteVolumeSource"]:
         """
         Quobyte represents a Quobyte mount on the host that shares a pod's lifetime
         """
         return self.__quobyte
 
-    def azureDisk(self) -> Optional[AzureDiskVolumeSource]:
+    def azureDisk(self) -> Optional["AzureDiskVolumeSource"]:
         """
         AzureDisk represents an Azure Data Disk mount on the host and bind mount to the pod.
         """
         return self.__azureDisk
 
-    def photonPersistentDisk(self) -> Optional[PhotonPersistentDiskVolumeSource]:
+    def photonPersistentDisk(self) -> Optional["PhotonPersistentDiskVolumeSource"]:
         """
         PhotonPersistentDisk represents a PhotonController persistent disk attached and mounted on kubelets host machine
         """
         return self.__photonPersistentDisk
 
-    def projected(self) -> Optional[ProjectedVolumeSource]:
+    def projected(self) -> Optional["ProjectedVolumeSource"]:
         """
         Items for all in one resources secrets, configmaps, and downward API
         """
         return self.__projected
 
-    def portworxVolume(self) -> Optional[PortworxVolumeSource]:
+    def portworxVolume(self) -> Optional["PortworxVolumeSource"]:
         """
         PortworxVolume represents a portworx volume attached and mounted on kubelets host machine
         """
         return self.__portworxVolume
 
-    def scaleIO(self) -> Optional[ScaleIOVolumeSource]:
+    def scaleIO(self) -> Optional["ScaleIOVolumeSource"]:
         """
         ScaleIO represents a ScaleIO persistent volume attached and mounted on Kubernetes nodes.
         """
         return self.__scaleIO
 
-    def storageos(self) -> Optional[StorageOSVolumeSource]:
+    def storageos(self) -> Optional["StorageOSVolumeSource"]:
         """
         StorageOS represents a StorageOS volume attached and mounted on Kubernetes nodes.
         """
         return self.__storageos
 
-    def csi(self) -> Optional[CSIVolumeSource]:
+    def csi(self) -> Optional["CSIVolumeSource"]:
         """
         CSI (Container Storage Interface) represents storage that is handled by an external CSI driver (Alpha feature).
         """
@@ -10216,7 +10228,7 @@ class Volume(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, name: str = "", volumeSource: VolumeSource = None):
+    def __init__(self, name: str = "", volumeSource: "VolumeSource" = None):
         super().__init__()
         self.__name = name
         self.__volumeSource = (
@@ -10230,7 +10242,7 @@ class Volume(types.Object):
         check_type("name", name, str)
         v["name"] = name
         volumeSource = self.volumeSource()
-        check_type("volumeSource", volumeSource, VolumeSource)
+        check_type("volumeSource", volumeSource, "VolumeSource")
         v.update(volumeSource._root())  # inline
         return v
 
@@ -10242,7 +10254,7 @@ class Volume(types.Object):
         """
         return self.__name
 
-    def volumeSource(self) -> VolumeSource:
+    def volumeSource(self) -> "VolumeSource":
         """
         VolumeSource represents the location and type of the mounted volume.
         If not specified, the Volume is implied to be an EmptyDir.
@@ -10260,10 +10272,10 @@ class PodSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        volumes: Dict[str, Volume] = None,
-        initContainers: Dict[str, Container] = None,
-        containers: Dict[str, Container] = None,
-        ephemeralContainers: List[EphemeralContainer] = None,
+        volumes: Dict[str, "Volume"] = None,
+        initContainers: Dict[str, "Container"] = None,
+        containers: Dict[str, "Container"] = None,
+        ephemeralContainers: List["EphemeralContainer"] = None,
         restartPolicy: RestartPolicy = RestartPolicy["Always"],
         terminationGracePeriodSeconds: int = None,
         activeDeadlineSeconds: int = None,
@@ -10276,23 +10288,23 @@ class PodSpec(types.Object):
         hostPID: bool = None,
         hostIPC: bool = None,
         shareProcessNamespace: bool = None,
-        securityContext: PodSecurityContext = None,
-        imagePullSecrets: Dict[str, LocalObjectReference] = None,
+        securityContext: "PodSecurityContext" = None,
+        imagePullSecrets: Dict[str, "LocalObjectReference"] = None,
         hostname: str = None,
         subdomain: str = None,
-        affinity: Affinity = None,
+        affinity: "Affinity" = None,
         schedulerName: str = "default-scheduler",
-        tolerations: List[Toleration] = None,
-        hostAliases: List[HostAlias] = None,
+        tolerations: List["Toleration"] = None,
+        hostAliases: List["HostAlias"] = None,
         priorityClassName: str = None,
         priority: int = None,
-        dnsConfig: PodDNSConfig = None,
-        readinessGates: List[PodReadinessGate] = None,
+        dnsConfig: "PodDNSConfig" = None,
+        readinessGates: List["PodReadinessGate"] = None,
         runtimeClassName: str = None,
         enableServiceLinks: bool = None,
         preemptionPolicy: PreemptionPolicy = None,
         overhead: Dict[ResourceName, "resource.Quantity"] = None,
-        topologySpreadConstraints: List[TopologySpreadConstraint] = None,
+        topologySpreadConstraints: List["TopologySpreadConstraint"] = None,
     ):
         super().__init__()
         self.__volumes = volumes if volumes is not None else {}
@@ -10343,21 +10355,21 @@ class PodSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[Dict[str, Volume]])
+        check_type("volumes", volumes, Optional[Dict[str, "Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes.values()  # named list
         initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[Dict[str, Container]])
+        check_type("initContainers", initContainers, Optional[Dict[str, "Container"]])
         if initContainers:  # omit empty
             v["initContainers"] = initContainers.values()  # named list
         containers = self.containers()
-        check_type("containers", containers, Dict[str, Container])
+        check_type("containers", containers, Dict[str, "Container"])
         v["containers"] = containers.values()  # named list
         ephemeralContainers = self.ephemeralContainers()
         check_type(
             "ephemeralContainers",
             ephemeralContainers,
-            Optional[List[EphemeralContainer]],
+            Optional[List["EphemeralContainer"]],
         )
         if ephemeralContainers:  # omit empty
             v["ephemeralContainers"] = ephemeralContainers
@@ -10416,14 +10428,14 @@ class PodSpec(types.Object):
         if shareProcessNamespace is not None:  # omit empty
             v["shareProcessNamespace"] = shareProcessNamespace
         securityContext = self.securityContext()
-        check_type("securityContext", securityContext, Optional[PodSecurityContext])
+        check_type("securityContext", securityContext, Optional["PodSecurityContext"])
         if securityContext is not None:  # omit empty
             v["securityContext"] = securityContext
         imagePullSecrets = self.imagePullSecrets()
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[Dict[str, LocalObjectReference]],
+            Optional[Dict[str, "LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
             v["imagePullSecrets"] = imagePullSecrets.values()  # named list
@@ -10436,7 +10448,7 @@ class PodSpec(types.Object):
         if subdomain:  # omit empty
             v["subdomain"] = subdomain
         affinity = self.affinity()
-        check_type("affinity", affinity, Optional[Affinity])
+        check_type("affinity", affinity, Optional["Affinity"])
         if affinity is not None:  # omit empty
             v["affinity"] = affinity
         schedulerName = self.schedulerName()
@@ -10444,11 +10456,11 @@ class PodSpec(types.Object):
         if schedulerName:  # omit empty
             v["schedulerName"] = schedulerName
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List[Toleration]])
+        check_type("tolerations", tolerations, Optional[List["Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         hostAliases = self.hostAliases()
-        check_type("hostAliases", hostAliases, Optional[List[HostAlias]])
+        check_type("hostAliases", hostAliases, Optional[List["HostAlias"]])
         if hostAliases:  # omit empty
             v["hostAliases"] = hostAliases
         priorityClassName = self.priorityClassName()
@@ -10460,11 +10472,11 @@ class PodSpec(types.Object):
         if priority is not None:  # omit empty
             v["priority"] = priority
         dnsConfig = self.dnsConfig()
-        check_type("dnsConfig", dnsConfig, Optional[PodDNSConfig])
+        check_type("dnsConfig", dnsConfig, Optional["PodDNSConfig"])
         if dnsConfig is not None:  # omit empty
             v["dnsConfig"] = dnsConfig
         readinessGates = self.readinessGates()
-        check_type("readinessGates", readinessGates, Optional[List[PodReadinessGate]])
+        check_type("readinessGates", readinessGates, Optional[List["PodReadinessGate"]])
         if readinessGates:  # omit empty
             v["readinessGates"] = readinessGates
         runtimeClassName = self.runtimeClassName()
@@ -10489,20 +10501,20 @@ class PodSpec(types.Object):
         check_type(
             "topologySpreadConstraints",
             topologySpreadConstraints,
-            Optional[List[TopologySpreadConstraint]],
+            Optional[List["TopologySpreadConstraint"]],
         )
         if topologySpreadConstraints:  # omit empty
             v["topologySpreadConstraints"] = topologySpreadConstraints
         return v
 
-    def volumes(self) -> Optional[Dict[str, Volume]]:
+    def volumes(self) -> Optional[Dict[str, "Volume"]]:
         """
         List of volumes that can be mounted by containers belonging to the pod.
         More info: https://kubernetes.io/docs/concepts/storage/volumes
         """
         return self.__volumes
 
-    def initContainers(self) -> Optional[Dict[str, Container]]:
+    def initContainers(self) -> Optional[Dict[str, "Container"]]:
         """
         List of initialization containers belonging to the pod.
         Init containers are executed in order prior to containers being started. If any
@@ -10520,7 +10532,7 @@ class PodSpec(types.Object):
         """
         return self.__initContainers
 
-    def containers(self) -> Dict[str, Container]:
+    def containers(self) -> Dict[str, "Container"]:
         """
         List of containers belonging to the pod.
         Containers cannot currently be added or removed.
@@ -10529,7 +10541,7 @@ class PodSpec(types.Object):
         """
         return self.__containers
 
-    def ephemeralContainers(self) -> Optional[List[EphemeralContainer]]:
+    def ephemeralContainers(self) -> Optional[List["EphemeralContainer"]]:
         """
         List of ephemeral containers run in this pod. Ephemeral containers may be run in an existing
         pod to perform user-initiated actions such as debugging. This list cannot be specified when
@@ -10641,14 +10653,14 @@ class PodSpec(types.Object):
         """
         return self.__shareProcessNamespace
 
-    def securityContext(self) -> Optional[PodSecurityContext]:
+    def securityContext(self) -> Optional["PodSecurityContext"]:
         """
         SecurityContext holds pod-level security attributes and common container settings.
         Optional: Defaults to empty.  See type description for default values of each field.
         """
         return self.__securityContext
 
-    def imagePullSecrets(self) -> Optional[Dict[str, LocalObjectReference]]:
+    def imagePullSecrets(self) -> Optional[Dict[str, "LocalObjectReference"]]:
         """
         ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
         If specified, these secrets will be passed to individual puller implementations for them to use. For example,
@@ -10671,7 +10683,7 @@ class PodSpec(types.Object):
         """
         return self.__subdomain
 
-    def affinity(self) -> Optional[Affinity]:
+    def affinity(self) -> Optional["Affinity"]:
         """
         If specified, the pod's scheduling constraints
         """
@@ -10684,13 +10696,13 @@ class PodSpec(types.Object):
         """
         return self.__schedulerName
 
-    def tolerations(self) -> Optional[List[Toleration]]:
+    def tolerations(self) -> Optional[List["Toleration"]]:
         """
         If specified, the pod's tolerations.
         """
         return self.__tolerations
 
-    def hostAliases(self) -> Optional[List[HostAlias]]:
+    def hostAliases(self) -> Optional[List["HostAlias"]]:
         """
         HostAliases is an optional list of hosts and IPs that will be injected into the pod's hosts
         file if specified. This is only valid for non-hostNetwork pods.
@@ -10718,7 +10730,7 @@ class PodSpec(types.Object):
         """
         return self.__priority
 
-    def dnsConfig(self) -> Optional[PodDNSConfig]:
+    def dnsConfig(self) -> Optional["PodDNSConfig"]:
         """
         Specifies the DNS parameters of a pod.
         Parameters specified here will be merged to the generated DNS
@@ -10726,7 +10738,7 @@ class PodSpec(types.Object):
         """
         return self.__dnsConfig
 
-    def readinessGates(self) -> Optional[List[PodReadinessGate]]:
+    def readinessGates(self) -> Optional[List["PodReadinessGate"]]:
         """
         If specified, all readiness gates will be evaluated for pod readiness.
         A pod is ready when all its containers are ready AND
@@ -10776,7 +10788,7 @@ class PodSpec(types.Object):
         """
         return self.__overhead
 
-    def topologySpreadConstraints(self) -> Optional[List[TopologySpreadConstraint]]:
+    def topologySpreadConstraints(self) -> Optional[List["TopologySpreadConstraint"]]:
         """
         TopologySpreadConstraints describes how a group of pods ought to spread across topology
         domains. Scheduler will schedule pods in a way which abides by the constraints.
@@ -10804,7 +10816,7 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodSpec = None,
+        spec: "PodSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -10820,11 +10832,11 @@ class Pod(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodSpec])
+        check_type("spec", spec, Optional["PodSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodSpec]:
+    def spec(self) -> Optional["PodSpec"]:
         """
         Specification of the desired behavior of the pod.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -11243,7 +11255,7 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodSpec = None,
+        spec: "PodSpec" = None,
     ):
         super().__init__(
             **({"namespace": namespace} if namespace is not None else {}),
@@ -11257,11 +11269,11 @@ class PodTemplateSpec(base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodSpec])
+        check_type("spec", spec, Optional["PodSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodSpec]:
+    def spec(self) -> Optional["PodSpec"]:
         """
         Specification of the desired behavior of the pod.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -11282,7 +11294,7 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        template: PodTemplateSpec = None,
+        template: "PodTemplateSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -11298,11 +11310,11 @@ class PodTemplate(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, Optional[PodTemplateSpec])
+        check_type("template", template, Optional["PodTemplateSpec"])
         v["template"] = template
         return v
 
-    def template(self) -> Optional[PodTemplateSpec]:
+    def template(self) -> Optional["PodTemplateSpec"]:
         """
         Template defines the pods that will be created from this pod template.
         https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -11373,7 +11385,7 @@ class ReplicationControllerSpec(types.Object):
         replicas: int = None,
         minReadySeconds: int = None,
         selector: Dict[str, str] = None,
-        template: PodTemplateSpec = None,
+        template: "PodTemplateSpec" = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
@@ -11397,7 +11409,7 @@ class ReplicationControllerSpec(types.Object):
         if selector:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, Optional[PodTemplateSpec])
+        check_type("template", template, Optional["PodTemplateSpec"])
         if template is not None:  # omit empty
             v["template"] = template
         return v
@@ -11429,7 +11441,7 @@ class ReplicationControllerSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> Optional[PodTemplateSpec]:
+    def template(self) -> Optional["PodTemplateSpec"]:
         """
         Template is the object that describes the pod that will be created if
         insufficient replicas are detected. This takes precedence over a TemplateRef.
@@ -11451,7 +11463,7 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ReplicationControllerSpec = None,
+        spec: "ReplicationControllerSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -11467,11 +11479,11 @@ class ReplicationController(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ReplicationControllerSpec])
+        check_type("spec", spec, Optional["ReplicationControllerSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ReplicationControllerSpec]:
+    def spec(self) -> Optional["ReplicationControllerSpec"]:
         """
         Spec defines the specification of the desired behavior of the replication controller.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -11545,7 +11557,7 @@ class ScopeSelector(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, matchExpressions: List[ScopedResourceSelectorRequirement] = None
+        self, matchExpressions: List["ScopedResourceSelectorRequirement"] = None
     ):
         super().__init__()
         self.__matchExpressions = (
@@ -11559,13 +11571,13 @@ class ScopeSelector(types.Object):
         check_type(
             "matchExpressions",
             matchExpressions,
-            Optional[List[ScopedResourceSelectorRequirement]],
+            Optional[List["ScopedResourceSelectorRequirement"]],
         )
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
         return v
 
-    def matchExpressions(self) -> Optional[List[ScopedResourceSelectorRequirement]]:
+    def matchExpressions(self) -> Optional[List["ScopedResourceSelectorRequirement"]]:
         """
         A list of scope selector requirements by scope of the resources.
         """
@@ -11583,7 +11595,7 @@ class ResourceQuotaSpec(types.Object):
         self,
         hard: Dict[ResourceName, "resource.Quantity"] = None,
         scopes: List[ResourceQuotaScope] = None,
-        scopeSelector: ScopeSelector = None,
+        scopeSelector: "ScopeSelector" = None,
     ):
         super().__init__()
         self.__hard = hard if hard is not None else {}
@@ -11602,7 +11614,7 @@ class ResourceQuotaSpec(types.Object):
         if scopes:  # omit empty
             v["scopes"] = scopes
         scopeSelector = self.scopeSelector()
-        check_type("scopeSelector", scopeSelector, Optional[ScopeSelector])
+        check_type("scopeSelector", scopeSelector, Optional["ScopeSelector"])
         if scopeSelector is not None:  # omit empty
             v["scopeSelector"] = scopeSelector
         return v
@@ -11621,7 +11633,7 @@ class ResourceQuotaSpec(types.Object):
         """
         return self.__scopes
 
-    def scopeSelector(self) -> Optional[ScopeSelector]:
+    def scopeSelector(self) -> Optional["ScopeSelector"]:
         """
         scopeSelector is also a collection of filters like scopes that must match each object tracked by a quota
         but expressed using ScopeSelectorOperator in combination with possible values.
@@ -11643,7 +11655,7 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ResourceQuotaSpec = None,
+        spec: "ResourceQuotaSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -11659,11 +11671,11 @@ class ResourceQuota(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ResourceQuotaSpec])
+        check_type("spec", spec, Optional["ResourceQuotaSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ResourceQuotaSpec]:
+    def spec(self) -> Optional["ResourceQuotaSpec"]:
         """
         Spec defines the desired quota.
         https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -11750,7 +11762,7 @@ class SerializedReference(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, reference: ObjectReference = None):
+    def __init__(self, reference: "ObjectReference" = None):
         super().__init__(apiVersion="v1", kind="SerializedReference")
         self.__reference = reference if reference is not None else ObjectReference()
 
@@ -11758,11 +11770,11 @@ class SerializedReference(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         reference = self.reference()
-        check_type("reference", reference, Optional[ObjectReference])
+        check_type("reference", reference, Optional["ObjectReference"])
         v["reference"] = reference
         return v
 
-    def reference(self) -> Optional[ObjectReference]:
+    def reference(self) -> Optional["ObjectReference"]:
         """
         The reference to an object in the system.
         """
@@ -11868,7 +11880,7 @@ class SessionAffinityConfig(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, clientIP: ClientIPConfig = None):
+    def __init__(self, clientIP: "ClientIPConfig" = None):
         super().__init__()
         self.__clientIP = clientIP
 
@@ -11876,12 +11888,12 @@ class SessionAffinityConfig(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         clientIP = self.clientIP()
-        check_type("clientIP", clientIP, Optional[ClientIPConfig])
+        check_type("clientIP", clientIP, Optional["ClientIPConfig"])
         if clientIP is not None:  # omit empty
             v["clientIP"] = clientIP
         return v
 
-    def clientIP(self) -> Optional[ClientIPConfig]:
+    def clientIP(self) -> Optional["ClientIPConfig"]:
         """
         clientIP contains the configurations of Client IP based session affinity.
         """
@@ -11897,7 +11909,7 @@ class ServiceSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        ports: Dict[str, ServicePort] = None,
+        ports: Dict[str, "ServicePort"] = None,
         selector: Dict[str, str] = None,
         clusterIP: str = None,
         type: ServiceType = ServiceType["ClusterIP"],
@@ -11909,7 +11921,7 @@ class ServiceSpec(types.Object):
         externalTrafficPolicy: ServiceExternalTrafficPolicyType = None,
         healthCheckNodePort: int = None,
         publishNotReadyAddresses: bool = None,
-        sessionAffinityConfig: SessionAffinityConfig = None,
+        sessionAffinityConfig: "SessionAffinityConfig" = None,
         ipFamily: IPFamily = None,
     ):
         super().__init__()
@@ -11934,7 +11946,7 @@ class ServiceSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, ServicePort]])
+        check_type("ports", ports, Optional[Dict[str, "ServicePort"]])
         if ports:  # omit empty
             v["ports"] = ports.values()  # named list
         selector = self.selector()
@@ -11991,7 +12003,7 @@ class ServiceSpec(types.Object):
         check_type(
             "sessionAffinityConfig",
             sessionAffinityConfig,
-            Optional[SessionAffinityConfig],
+            Optional["SessionAffinityConfig"],
         )
         if sessionAffinityConfig is not None:  # omit empty
             v["sessionAffinityConfig"] = sessionAffinityConfig
@@ -12001,7 +12013,7 @@ class ServiceSpec(types.Object):
             v["ipFamily"] = ipFamily
         return v
 
-    def ports(self) -> Optional[Dict[str, ServicePort]]:
+    def ports(self) -> Optional[Dict[str, "ServicePort"]]:
         """
         The list of ports that are exposed by this service.
         More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
@@ -12135,7 +12147,7 @@ class ServiceSpec(types.Object):
         """
         return self.__publishNotReadyAddresses
 
-    def sessionAffinityConfig(self) -> Optional[SessionAffinityConfig]:
+    def sessionAffinityConfig(self) -> Optional["SessionAffinityConfig"]:
         """
         sessionAffinityConfig contains the configurations of session affinity.
         """
@@ -12169,7 +12181,7 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ServiceSpec = None,
+        spec: "ServiceSpec" = None,
     ):
         super().__init__(
             apiVersion="v1",
@@ -12185,11 +12197,11 @@ class Service(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ServiceSpec])
+        check_type("spec", spec, Optional["ServiceSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ServiceSpec]:
+    def spec(self) -> Optional["ServiceSpec"]:
         """
         Spec defines the behavior of a service.
         https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -12213,8 +12225,8 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        secrets: Dict[str, ObjectReference] = None,
-        imagePullSecrets: Dict[str, LocalObjectReference] = None,
+        secrets: Dict[str, "ObjectReference"] = None,
+        imagePullSecrets: Dict[str, "LocalObjectReference"] = None,
         automountServiceAccountToken: bool = None,
     ):
         super().__init__(
@@ -12235,14 +12247,14 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         secrets = self.secrets()
-        check_type("secrets", secrets, Optional[Dict[str, ObjectReference]])
+        check_type("secrets", secrets, Optional[Dict[str, "ObjectReference"]])
         if secrets:  # omit empty
             v["secrets"] = secrets.values()  # named list
         imagePullSecrets = self.imagePullSecrets()
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[Dict[str, LocalObjectReference]],
+            Optional[Dict[str, "LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
             v["imagePullSecrets"] = imagePullSecrets.values()  # named list
@@ -12254,14 +12266,14 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
             v["automountServiceAccountToken"] = automountServiceAccountToken
         return v
 
-    def secrets(self) -> Optional[Dict[str, ObjectReference]]:
+    def secrets(self) -> Optional[Dict[str, "ObjectReference"]]:
         """
         Secrets is the list of secrets allowed to be used by pods running using this ServiceAccount.
         More info: https://kubernetes.io/docs/concepts/configuration/secret
         """
         return self.__secrets
 
-    def imagePullSecrets(self) -> Optional[Dict[str, LocalObjectReference]]:
+    def imagePullSecrets(self) -> Optional[Dict[str, "LocalObjectReference"]]:
         """
         ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
         in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets
@@ -12359,7 +12371,7 @@ class TopologySelectorTerm(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, matchLabelExpressions: List[TopologySelectorLabelRequirement] = None
+        self, matchLabelExpressions: List["TopologySelectorLabelRequirement"] = None
     ):
         super().__init__()
         self.__matchLabelExpressions = (
@@ -12373,13 +12385,15 @@ class TopologySelectorTerm(types.Object):
         check_type(
             "matchLabelExpressions",
             matchLabelExpressions,
-            Optional[List[TopologySelectorLabelRequirement]],
+            Optional[List["TopologySelectorLabelRequirement"]],
         )
         if matchLabelExpressions:  # omit empty
             v["matchLabelExpressions"] = matchLabelExpressions
         return v
 
-    def matchLabelExpressions(self) -> Optional[List[TopologySelectorLabelRequirement]]:
+    def matchLabelExpressions(
+        self
+    ) -> Optional[List["TopologySelectorLabelRequirement"]]:
         """
         A list of topology selector requirements by labels.
         """

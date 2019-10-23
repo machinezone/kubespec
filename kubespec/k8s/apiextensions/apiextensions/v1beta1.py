@@ -155,7 +155,7 @@ class ConversionReview(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(
-        self, request: ConversionRequest = None, response: ConversionResponse = None
+        self, request: "ConversionRequest" = None, response: "ConversionResponse" = None
     ):
         super().__init__(
             apiVersion="apiextensions.k8s.io/v1beta1", kind="ConversionReview"
@@ -167,22 +167,22 @@ class ConversionReview(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         request = self.request()
-        check_type("request", request, Optional[ConversionRequest])
+        check_type("request", request, Optional["ConversionRequest"])
         if request is not None:  # omit empty
             v["request"] = request
         response = self.response()
-        check_type("response", response, Optional[ConversionResponse])
+        check_type("response", response, Optional["ConversionResponse"])
         if response is not None:  # omit empty
             v["response"] = response
         return v
 
-    def request(self) -> Optional[ConversionRequest]:
+    def request(self) -> Optional["ConversionRequest"]:
         """
         request describes the attributes for the conversion request.
         """
         return self.__request
 
-    def response(self) -> Optional[ConversionResponse]:
+    def response(self) -> Optional["ConversionResponse"]:
         """
         response describes the attributes for the conversion response.
         """
@@ -354,7 +354,10 @@ class WebhookClientConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
+        self,
+        url: str = None,
+        service: "ServiceReference" = None,
+        caBundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
@@ -369,7 +372,7 @@ class WebhookClientConfig(types.Object):
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
-        check_type("service", service, Optional[ServiceReference])
+        check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
@@ -408,7 +411,7 @@ class WebhookClientConfig(types.Object):
         """
         return self.__url
 
-    def service(self) -> Optional[ServiceReference]:
+    def service(self) -> Optional["ServiceReference"]:
         """
         service is a reference to the service for this webhook. Either
         service or url must be specified.
@@ -435,7 +438,7 @@ class CustomResourceConversion(types.Object):
     def __init__(
         self,
         strategy: ConversionStrategyType = ConversionStrategyType["None"],
-        webhookClientConfig: WebhookClientConfig = None,
+        webhookClientConfig: "WebhookClientConfig" = None,
         conversionReviewVersions: List[str] = None,
     ):
         super().__init__()
@@ -453,7 +456,7 @@ class CustomResourceConversion(types.Object):
         v["strategy"] = strategy
         webhookClientConfig = self.webhookClientConfig()
         check_type(
-            "webhookClientConfig", webhookClientConfig, Optional[WebhookClientConfig]
+            "webhookClientConfig", webhookClientConfig, Optional["WebhookClientConfig"]
         )
         if webhookClientConfig is not None:  # omit empty
             v["webhookClientConfig"] = webhookClientConfig
@@ -474,7 +477,7 @@ class CustomResourceConversion(types.Object):
         """
         return self.__strategy
 
-    def webhookClientConfig(self) -> Optional[WebhookClientConfig]:
+    def webhookClientConfig(self) -> Optional["WebhookClientConfig"]:
         """
         webhookClientConfig is the instructions for how to call the webhook if strategy is `Webhook`.
         Required when `strategy` is set to `Webhook`.
@@ -678,8 +681,8 @@ class CustomResourceSubresources(types.Object):
     @typechecked
     def __init__(
         self,
-        status: CustomResourceSubresourceStatus = None,
-        scale: CustomResourceSubresourceScale = None,
+        status: "CustomResourceSubresourceStatus" = None,
+        scale: "CustomResourceSubresourceScale" = None,
     ):
         super().__init__()
         self.__status = status
@@ -689,16 +692,16 @@ class CustomResourceSubresources(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         status = self.status()
-        check_type("status", status, Optional[CustomResourceSubresourceStatus])
+        check_type("status", status, Optional["CustomResourceSubresourceStatus"])
         if status is not None:  # omit empty
             v["status"] = status
         scale = self.scale()
-        check_type("scale", scale, Optional[CustomResourceSubresourceScale])
+        check_type("scale", scale, Optional["CustomResourceSubresourceScale"])
         if scale is not None:  # omit empty
             v["scale"] = scale
         return v
 
-    def status(self) -> Optional[CustomResourceSubresourceStatus]:
+    def status(self) -> Optional["CustomResourceSubresourceStatus"]:
         """
         status indicates the custom resource should serve a `/status` subresource.
         When enabled:
@@ -707,7 +710,7 @@ class CustomResourceSubresources(types.Object):
         """
         return self.__status
 
-    def scale(self) -> Optional[CustomResourceSubresourceScale]:
+    def scale(self) -> Optional["CustomResourceSubresourceScale"]:
         """
         scale indicates the custom resource should serve a `/scale` subresource that returns an `autoscaling/v1` Scale object.
         """
@@ -786,7 +789,7 @@ class JSONSchemaProps(types.Object):
         type: str = None,
         format: str = None,
         title: str = None,
-        default: JSON = None,
+        default: "JSON" = None,
         maximum: float = None,
         exclusiveMaximum: bool = None,
         minimum: float = None,
@@ -798,23 +801,23 @@ class JSONSchemaProps(types.Object):
         minItems: int = None,
         uniqueItems: bool = None,
         multipleOf: float = None,
-        enum: List[JSON] = None,
+        enum: List["JSON"] = None,
         maxProperties: int = None,
         minProperties: int = None,
         required: List[str] = None,
-        items: Union[JSONSchemaProps, List[JSONSchemaProps]] = None,
-        allOf: List[JSONSchemaProps] = None,
-        oneOf: List[JSONSchemaProps] = None,
-        anyOf: List[JSONSchemaProps] = None,
-        not_: JSONSchemaProps = None,
-        properties: Dict[str, JSONSchemaProps] = None,
-        additionalProperties: Union[JSONSchemaProps, bool] = None,
-        patternProperties: Dict[str, JSONSchemaProps] = None,
-        dependencies: Dict[str, Union[JSONSchemaProps, List[str]]] = None,
-        additionalItems: Union[JSONSchemaProps, bool] = None,
-        definitions: Dict[str, JSONSchemaProps] = None,
-        externalDocs: ExternalDocumentation = None,
-        example: JSON = None,
+        items: Union["JSONSchemaProps", List["JSONSchemaProps"]] = None,
+        allOf: List["JSONSchemaProps"] = None,
+        oneOf: List["JSONSchemaProps"] = None,
+        anyOf: List["JSONSchemaProps"] = None,
+        not_: "JSONSchemaProps" = None,
+        properties: Dict[str, "JSONSchemaProps"] = None,
+        additionalProperties: Union["JSONSchemaProps", bool] = None,
+        patternProperties: Dict[str, "JSONSchemaProps"] = None,
+        dependencies: Dict[str, Union["JSONSchemaProps", List[str]]] = None,
+        additionalItems: Union["JSONSchemaProps", bool] = None,
+        definitions: Dict[str, "JSONSchemaProps"] = None,
+        externalDocs: "ExternalDocumentation" = None,
+        example: "JSON" = None,
         nullable: bool = None,
         xKubernetesPreserveUnknownFields: bool = None,
         xKubernetesEmbeddedResource: bool = None,
@@ -902,7 +905,7 @@ class JSONSchemaProps(types.Object):
         if title:  # omit empty
             v["title"] = title
         default = self.default()
-        check_type("default", default, Optional[JSON])
+        check_type("default", default, Optional["JSON"])
         if default is not None:  # omit empty
             v["default"] = default
         maximum = self.maximum()
@@ -950,7 +953,7 @@ class JSONSchemaProps(types.Object):
         if multipleOf is not None:  # omit empty
             v["multipleOf"] = multipleOf
         enum = self.enum()
-        check_type("enum", enum, Optional[List[JSON]])
+        check_type("enum", enum, Optional[List["JSON"]])
         if enum:  # omit empty
             v["enum"] = enum
         maxProperties = self.maxProperties()
@@ -967,41 +970,43 @@ class JSONSchemaProps(types.Object):
             v["required"] = required
         items = self.items()
         check_type(
-            "items", items, Optional[Union[JSONSchemaProps, List[JSONSchemaProps]]]
+            "items", items, Optional[Union["JSONSchemaProps", List["JSONSchemaProps"]]]
         )
         if items is not None:  # omit empty
             v["items"] = items
         allOf = self.allOf()
-        check_type("allOf", allOf, Optional[List[JSONSchemaProps]])
+        check_type("allOf", allOf, Optional[List["JSONSchemaProps"]])
         if allOf:  # omit empty
             v["allOf"] = allOf
         oneOf = self.oneOf()
-        check_type("oneOf", oneOf, Optional[List[JSONSchemaProps]])
+        check_type("oneOf", oneOf, Optional[List["JSONSchemaProps"]])
         if oneOf:  # omit empty
             v["oneOf"] = oneOf
         anyOf = self.anyOf()
-        check_type("anyOf", anyOf, Optional[List[JSONSchemaProps]])
+        check_type("anyOf", anyOf, Optional[List["JSONSchemaProps"]])
         if anyOf:  # omit empty
             v["anyOf"] = anyOf
         not_ = self.not_()
-        check_type("not_", not_, Optional[JSONSchemaProps])
+        check_type("not_", not_, Optional["JSONSchemaProps"])
         if not_ is not None:  # omit empty
             v["not"] = not_
         properties = self.properties()
-        check_type("properties", properties, Optional[Dict[str, JSONSchemaProps]])
+        check_type("properties", properties, Optional[Dict[str, "JSONSchemaProps"]])
         if properties:  # omit empty
             v["properties"] = properties
         additionalProperties = self.additionalProperties()
         check_type(
             "additionalProperties",
             additionalProperties,
-            Optional[Union[JSONSchemaProps, bool]],
+            Optional[Union["JSONSchemaProps", bool]],
         )
         if additionalProperties is not None:  # omit empty
             v["additionalProperties"] = additionalProperties
         patternProperties = self.patternProperties()
         check_type(
-            "patternProperties", patternProperties, Optional[Dict[str, JSONSchemaProps]]
+            "patternProperties",
+            patternProperties,
+            Optional[Dict[str, "JSONSchemaProps"]],
         )
         if patternProperties:  # omit empty
             v["patternProperties"] = patternProperties
@@ -1009,26 +1014,26 @@ class JSONSchemaProps(types.Object):
         check_type(
             "dependencies",
             dependencies,
-            Optional[Dict[str, Union[JSONSchemaProps, List[str]]]],
+            Optional[Dict[str, Union["JSONSchemaProps", List[str]]]],
         )
         if dependencies:  # omit empty
             v["dependencies"] = dependencies
         additionalItems = self.additionalItems()
         check_type(
-            "additionalItems", additionalItems, Optional[Union[JSONSchemaProps, bool]]
+            "additionalItems", additionalItems, Optional[Union["JSONSchemaProps", bool]]
         )
         if additionalItems is not None:  # omit empty
             v["additionalItems"] = additionalItems
         definitions = self.definitions()
-        check_type("definitions", definitions, Optional[Dict[str, JSONSchemaProps]])
+        check_type("definitions", definitions, Optional[Dict[str, "JSONSchemaProps"]])
         if definitions:  # omit empty
             v["definitions"] = definitions
         externalDocs = self.externalDocs()
-        check_type("externalDocs", externalDocs, Optional[ExternalDocumentation])
+        check_type("externalDocs", externalDocs, Optional["ExternalDocumentation"])
         if externalDocs is not None:  # omit empty
             v["externalDocs"] = externalDocs
         example = self.example()
-        check_type("example", example, Optional[JSON])
+        check_type("example", example, Optional["JSON"])
         if example is not None:  # omit empty
             v["example"] = example
         nullable = self.nullable()
@@ -1086,7 +1091,7 @@ class JSONSchemaProps(types.Object):
     def title(self) -> Optional[str]:
         return self.__title
 
-    def default(self) -> Optional[JSON]:
+    def default(self) -> Optional["JSON"]:
         """
         default is a default value for undefined object fields.
         Defaulting is a beta feature under the CustomResourceDefaulting feature gate.
@@ -1127,7 +1132,7 @@ class JSONSchemaProps(types.Object):
     def multipleOf(self) -> Optional[float]:
         return self.__multipleOf
 
-    def enum(self) -> Optional[List[JSON]]:
+    def enum(self) -> Optional[List["JSON"]]:
         return self.__enum
 
     def maxProperties(self) -> Optional[int]:
@@ -1139,43 +1144,43 @@ class JSONSchemaProps(types.Object):
     def required(self) -> Optional[List[str]]:
         return self.__required
 
-    def items(self) -> Optional[Union[JSONSchemaProps, List[JSONSchemaProps]]]:
+    def items(self) -> Optional[Union["JSONSchemaProps", List["JSONSchemaProps"]]]:
         return self.__items
 
-    def allOf(self) -> Optional[List[JSONSchemaProps]]:
+    def allOf(self) -> Optional[List["JSONSchemaProps"]]:
         return self.__allOf
 
-    def oneOf(self) -> Optional[List[JSONSchemaProps]]:
+    def oneOf(self) -> Optional[List["JSONSchemaProps"]]:
         return self.__oneOf
 
-    def anyOf(self) -> Optional[List[JSONSchemaProps]]:
+    def anyOf(self) -> Optional[List["JSONSchemaProps"]]:
         return self.__anyOf
 
-    def not_(self) -> Optional[JSONSchemaProps]:
+    def not_(self) -> Optional["JSONSchemaProps"]:
         return self.__not_
 
-    def properties(self) -> Optional[Dict[str, JSONSchemaProps]]:
+    def properties(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
         return self.__properties
 
-    def additionalProperties(self) -> Optional[Union[JSONSchemaProps, bool]]:
+    def additionalProperties(self) -> Optional[Union["JSONSchemaProps", bool]]:
         return self.__additionalProperties
 
-    def patternProperties(self) -> Optional[Dict[str, JSONSchemaProps]]:
+    def patternProperties(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
         return self.__patternProperties
 
-    def dependencies(self) -> Optional[Dict[str, Union[JSONSchemaProps, List[str]]]]:
+    def dependencies(self) -> Optional[Dict[str, Union["JSONSchemaProps", List[str]]]]:
         return self.__dependencies
 
-    def additionalItems(self) -> Optional[Union[JSONSchemaProps, bool]]:
+    def additionalItems(self) -> Optional[Union["JSONSchemaProps", bool]]:
         return self.__additionalItems
 
-    def definitions(self) -> Optional[Dict[str, JSONSchemaProps]]:
+    def definitions(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
         return self.__definitions
 
-    def externalDocs(self) -> Optional[ExternalDocumentation]:
+    def externalDocs(self) -> Optional["ExternalDocumentation"]:
         return self.__externalDocs
 
-    def example(self) -> Optional[JSON]:
+    def example(self) -> Optional["JSON"]:
         return self.__example
 
     def nullable(self) -> Optional[bool]:
@@ -1260,7 +1265,7 @@ class CustomResourceValidation(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, openAPIV3Schema: JSONSchemaProps = None):
+    def __init__(self, openAPIV3Schema: "JSONSchemaProps" = None):
         super().__init__()
         self.__openAPIV3Schema = openAPIV3Schema
 
@@ -1268,12 +1273,12 @@ class CustomResourceValidation(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         openAPIV3Schema = self.openAPIV3Schema()
-        check_type("openAPIV3Schema", openAPIV3Schema, Optional[JSONSchemaProps])
+        check_type("openAPIV3Schema", openAPIV3Schema, Optional["JSONSchemaProps"])
         if openAPIV3Schema is not None:  # omit empty
             v["openAPIV3Schema"] = openAPIV3Schema
         return v
 
-    def openAPIV3Schema(self) -> Optional[JSONSchemaProps]:
+    def openAPIV3Schema(self) -> Optional["JSONSchemaProps"]:
         """
         openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.
         """
@@ -1292,9 +1297,9 @@ class CustomResourceDefinitionVersion(types.Object):
         name: str = "",
         served: bool = False,
         storage: bool = False,
-        schema: CustomResourceValidation = None,
-        subresources: CustomResourceSubresources = None,
-        additionalPrinterColumns: Dict[str, CustomResourceColumnDefinition] = None,
+        schema: "CustomResourceValidation" = None,
+        subresources: "CustomResourceSubresources" = None,
+        additionalPrinterColumns: Dict[str, "CustomResourceColumnDefinition"] = None,
     ):
         super().__init__()
         self.__name = name
@@ -1319,18 +1324,18 @@ class CustomResourceDefinitionVersion(types.Object):
         check_type("storage", storage, bool)
         v["storage"] = storage
         schema = self.schema()
-        check_type("schema", schema, Optional[CustomResourceValidation])
+        check_type("schema", schema, Optional["CustomResourceValidation"])
         if schema is not None:  # omit empty
             v["schema"] = schema
         subresources = self.subresources()
-        check_type("subresources", subresources, Optional[CustomResourceSubresources])
+        check_type("subresources", subresources, Optional["CustomResourceSubresources"])
         if subresources is not None:  # omit empty
             v["subresources"] = subresources
         additionalPrinterColumns = self.additionalPrinterColumns()
         check_type(
             "additionalPrinterColumns",
             additionalPrinterColumns,
-            Optional[Dict[str, CustomResourceColumnDefinition]],
+            Optional[Dict[str, "CustomResourceColumnDefinition"]],
         )
         if additionalPrinterColumns:  # omit empty
             v[
@@ -1358,7 +1363,7 @@ class CustomResourceDefinitionVersion(types.Object):
         """
         return self.__storage
 
-    def schema(self) -> Optional[CustomResourceValidation]:
+    def schema(self) -> Optional["CustomResourceValidation"]:
         """
         schema describes the schema used for validation and pruning of this version of the custom resource.
         Top-level and per-version schemas are mutually exclusive.
@@ -1366,7 +1371,7 @@ class CustomResourceDefinitionVersion(types.Object):
         """
         return self.__schema
 
-    def subresources(self) -> Optional[CustomResourceSubresources]:
+    def subresources(self) -> Optional["CustomResourceSubresources"]:
         """
         subresources specify what subresources this version of the defined custom resource have.
         Top-level and per-version subresources are mutually exclusive.
@@ -1376,7 +1381,7 @@ class CustomResourceDefinitionVersion(types.Object):
 
     def additionalPrinterColumns(
         self
-    ) -> Optional[Dict[str, CustomResourceColumnDefinition]]:
+    ) -> Optional[Dict[str, "CustomResourceColumnDefinition"]]:
         """
         additionalPrinterColumns specifies additional columns returned in Table output.
         See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
@@ -1397,13 +1402,13 @@ class CustomResourceDefinitionSpec(types.Object):
     def __init__(
         self,
         group: str = "",
-        names: CustomResourceDefinitionNames = None,
+        names: "CustomResourceDefinitionNames" = None,
         scope: ResourceScope = ResourceScope["NamespaceScoped"],
-        validation: CustomResourceValidation = None,
-        subresources: CustomResourceSubresources = None,
-        versions: Dict[str, CustomResourceDefinitionVersion] = None,
-        additionalPrinterColumns: Dict[str, CustomResourceColumnDefinition] = None,
-        conversion: CustomResourceConversion = None,
+        validation: "CustomResourceValidation" = None,
+        subresources: "CustomResourceSubresources" = None,
+        versions: Dict[str, "CustomResourceDefinitionVersion"] = None,
+        additionalPrinterColumns: Dict[str, "CustomResourceColumnDefinition"] = None,
+        conversion: "CustomResourceConversion" = None,
     ):
         super().__init__()
         self.__group = group
@@ -1426,22 +1431,22 @@ class CustomResourceDefinitionSpec(types.Object):
         check_type("group", group, str)
         v["group"] = group
         names = self.names()
-        check_type("names", names, CustomResourceDefinitionNames)
+        check_type("names", names, "CustomResourceDefinitionNames")
         v["names"] = names
         scope = self.scope()
         check_type("scope", scope, ResourceScope)
         v["scope"] = scope
         validation = self.validation()
-        check_type("validation", validation, Optional[CustomResourceValidation])
+        check_type("validation", validation, Optional["CustomResourceValidation"])
         if validation is not None:  # omit empty
             v["validation"] = validation
         subresources = self.subresources()
-        check_type("subresources", subresources, Optional[CustomResourceSubresources])
+        check_type("subresources", subresources, Optional["CustomResourceSubresources"])
         if subresources is not None:  # omit empty
             v["subresources"] = subresources
         versions = self.versions()
         check_type(
-            "versions", versions, Optional[Dict[str, CustomResourceDefinitionVersion]]
+            "versions", versions, Optional[Dict[str, "CustomResourceDefinitionVersion"]]
         )
         if versions:  # omit empty
             v["versions"] = versions.values()  # named list
@@ -1449,14 +1454,14 @@ class CustomResourceDefinitionSpec(types.Object):
         check_type(
             "additionalPrinterColumns",
             additionalPrinterColumns,
-            Optional[Dict[str, CustomResourceColumnDefinition]],
+            Optional[Dict[str, "CustomResourceColumnDefinition"]],
         )
         if additionalPrinterColumns:  # omit empty
             v[
                 "additionalPrinterColumns"
             ] = additionalPrinterColumns.values()  # named list
         conversion = self.conversion()
-        check_type("conversion", conversion, Optional[CustomResourceConversion])
+        check_type("conversion", conversion, Optional["CustomResourceConversion"])
         if conversion is not None:  # omit empty
             v["conversion"] = conversion
         return v
@@ -1469,7 +1474,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__group
 
-    def names(self) -> CustomResourceDefinitionNames:
+    def names(self) -> "CustomResourceDefinitionNames":
         """
         names specify the resource and kind names for the custom resource.
         """
@@ -1482,7 +1487,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__scope
 
-    def validation(self) -> Optional[CustomResourceValidation]:
+    def validation(self) -> Optional["CustomResourceValidation"]:
         """
         validation describes the schema used for validation and pruning of the custom resource.
         If present, this validation schema is used to validate all versions.
@@ -1490,7 +1495,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__validation
 
-    def subresources(self) -> Optional[CustomResourceSubresources]:
+    def subresources(self) -> Optional["CustomResourceSubresources"]:
         """
         subresources specify what subresources the defined custom resource has.
         If present, this field configures subresources for all versions.
@@ -1498,7 +1503,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__subresources
 
-    def versions(self) -> Optional[Dict[str, CustomResourceDefinitionVersion]]:
+    def versions(self) -> Optional[Dict[str, "CustomResourceDefinitionVersion"]]:
         """
         versions is the list of all API versions of the defined custom resource.
         Optional if `version` is specified.
@@ -1515,7 +1520,7 @@ class CustomResourceDefinitionSpec(types.Object):
 
     def additionalPrinterColumns(
         self
-    ) -> Optional[Dict[str, CustomResourceColumnDefinition]]:
+    ) -> Optional[Dict[str, "CustomResourceColumnDefinition"]]:
         """
         additionalPrinterColumns specifies additional columns returned in Table output.
         See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
@@ -1525,7 +1530,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__additionalPrinterColumns
 
-    def conversion(self) -> Optional[CustomResourceConversion]:
+    def conversion(self) -> Optional["CustomResourceConversion"]:
         """
         conversion defines conversion settings for the CRD.
         """
@@ -1546,7 +1551,7 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: CustomResourceDefinitionSpec = None,
+        spec: "CustomResourceDefinitionSpec" = None,
     ):
         super().__init__(
             apiVersion="apiextensions.k8s.io/v1beta1",
@@ -1561,11 +1566,11 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, CustomResourceDefinitionSpec)
+        check_type("spec", spec, "CustomResourceDefinitionSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> CustomResourceDefinitionSpec:
+    def spec(self) -> "CustomResourceDefinitionSpec":
         """
         spec describes how the user wants the resources to appear
         """

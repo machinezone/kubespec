@@ -363,7 +363,7 @@ class AdmissionReview(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(
-        self, request: AdmissionRequest = None, response: AdmissionResponse = None
+        self, request: "AdmissionRequest" = None, response: "AdmissionResponse" = None
     ):
         super().__init__(apiVersion="admission.k8s.io/v1", kind="AdmissionReview")
         self.__request = request
@@ -373,22 +373,22 @@ class AdmissionReview(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         request = self.request()
-        check_type("request", request, Optional[AdmissionRequest])
+        check_type("request", request, Optional["AdmissionRequest"])
         if request is not None:  # omit empty
             v["request"] = request
         response = self.response()
-        check_type("response", response, Optional[AdmissionResponse])
+        check_type("response", response, Optional["AdmissionResponse"])
         if response is not None:  # omit empty
             v["response"] = response
         return v
 
-    def request(self) -> Optional[AdmissionRequest]:
+    def request(self) -> Optional["AdmissionRequest"]:
         """
         Request describes the attributes for the admission request.
         """
         return self.__request
 
-    def response(self) -> Optional[AdmissionResponse]:
+    def response(self) -> Optional["AdmissionResponse"]:
         """
         Response describes the attributes for the admission response.
         """

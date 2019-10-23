@@ -195,7 +195,7 @@ class RuleWithOperations(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, operations: List[OperationType] = None, rule: Rule = None):
+    def __init__(self, operations: List[OperationType] = None, rule: "Rule" = None):
         super().__init__()
         self.__operations = operations if operations is not None else []
         self.__rule = rule if rule is not None else Rule()
@@ -208,7 +208,7 @@ class RuleWithOperations(types.Object):
         if operations:  # omit empty
             v["operations"] = operations
         rule = self.rule()
-        check_type("rule", rule, Rule)
+        check_type("rule", rule, "Rule")
         v.update(rule._root())  # inline
         return v
 
@@ -221,7 +221,7 @@ class RuleWithOperations(types.Object):
         """
         return self.__operations
 
-    def rule(self) -> Rule:
+    def rule(self) -> "Rule":
         """
         Rule is embedded, it describes other criteria of the rule, like
         APIGroups, APIVersions, Resources, etc.
@@ -303,7 +303,10 @@ class WebhookClientConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
+        self,
+        url: str = None,
+        service: "ServiceReference" = None,
+        caBundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
@@ -318,7 +321,7 @@ class WebhookClientConfig(types.Object):
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
-        check_type("service", service, Optional[ServiceReference])
+        check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
@@ -357,7 +360,7 @@ class WebhookClientConfig(types.Object):
         """
         return self.__url
 
-    def service(self) -> Optional[ServiceReference]:
+    def service(self) -> Optional["ServiceReference"]:
         """
         `service` is a reference to the service for this webhook. Either
         `service` or `url` must be specified.
@@ -384,8 +387,8 @@ class MutatingWebhook(types.Object):
     def __init__(
         self,
         name: str = "",
-        clientConfig: WebhookClientConfig = None,
-        rules: List[RuleWithOperations] = None,
+        clientConfig: "WebhookClientConfig" = None,
+        rules: List["RuleWithOperations"] = None,
         failurePolicy: FailurePolicyType = None,
         matchPolicy: MatchPolicyType = None,
         namespaceSelector: "metav1.LabelSelector" = None,
@@ -429,10 +432,10 @@ class MutatingWebhook(types.Object):
         check_type("name", name, str)
         v["name"] = name
         clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        check_type("clientConfig", clientConfig, "WebhookClientConfig")
         v["clientConfig"] = clientConfig
         rules = self.rules()
-        check_type("rules", rules, Optional[List[RuleWithOperations]])
+        check_type("rules", rules, Optional[List["RuleWithOperations"]])
         if rules:  # omit empty
             v["rules"] = rules
         failurePolicy = self.failurePolicy()
@@ -485,14 +488,14 @@ class MutatingWebhook(types.Object):
         """
         return self.__name
 
-    def clientConfig(self) -> WebhookClientConfig:
+    def clientConfig(self) -> "WebhookClientConfig":
         """
         ClientConfig defines how to communicate with the hook.
         Required
         """
         return self.__clientConfig
 
-    def rules(self) -> Optional[List[RuleWithOperations]]:
+    def rules(self) -> Optional[List["RuleWithOperations"]]:
         """
         Rules describes what operations on what resources/subresources the webhook cares about.
         The webhook cares about an operation if it matches _any_ Rule.
@@ -661,7 +664,7 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        webhooks: Dict[str, MutatingWebhook] = None,
+        webhooks: Dict[str, "MutatingWebhook"] = None,
     ):
         super().__init__(
             apiVersion="admissionregistration.k8s.io/v1beta1",
@@ -676,12 +679,12 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
-        check_type("webhooks", webhooks, Optional[Dict[str, MutatingWebhook]])
+        check_type("webhooks", webhooks, Optional[Dict[str, "MutatingWebhook"]])
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list
         return v
 
-    def webhooks(self) -> Optional[Dict[str, MutatingWebhook]]:
+    def webhooks(self) -> Optional[Dict[str, "MutatingWebhook"]]:
         """
         Webhooks is a list of webhooks and the affected resources and operations.
         """
@@ -698,8 +701,8 @@ class ValidatingWebhook(types.Object):
     def __init__(
         self,
         name: str = "",
-        clientConfig: WebhookClientConfig = None,
-        rules: List[RuleWithOperations] = None,
+        clientConfig: "WebhookClientConfig" = None,
+        rules: List["RuleWithOperations"] = None,
         failurePolicy: FailurePolicyType = None,
         matchPolicy: MatchPolicyType = None,
         namespaceSelector: "metav1.LabelSelector" = None,
@@ -737,10 +740,10 @@ class ValidatingWebhook(types.Object):
         check_type("name", name, str)
         v["name"] = name
         clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        check_type("clientConfig", clientConfig, "WebhookClientConfig")
         v["clientConfig"] = clientConfig
         rules = self.rules()
-        check_type("rules", rules, Optional[List[RuleWithOperations]])
+        check_type("rules", rules, Optional[List["RuleWithOperations"]])
         if rules:  # omit empty
             v["rules"] = rules
         failurePolicy = self.failurePolicy()
@@ -787,14 +790,14 @@ class ValidatingWebhook(types.Object):
         """
         return self.__name
 
-    def clientConfig(self) -> WebhookClientConfig:
+    def clientConfig(self) -> "WebhookClientConfig":
         """
         ClientConfig defines how to communicate with the hook.
         Required
         """
         return self.__clientConfig
 
-    def rules(self) -> Optional[List[RuleWithOperations]]:
+    def rules(self) -> Optional[List["RuleWithOperations"]]:
         """
         Rules describes what operations on what resources/subresources the webhook cares about.
         The webhook cares about an operation if it matches _any_ Rule.
@@ -943,7 +946,7 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        webhooks: Dict[str, ValidatingWebhook] = None,
+        webhooks: Dict[str, "ValidatingWebhook"] = None,
     ):
         super().__init__(
             apiVersion="admissionregistration.k8s.io/v1beta1",
@@ -958,12 +961,12 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
-        check_type("webhooks", webhooks, Optional[Dict[str, ValidatingWebhook]])
+        check_type("webhooks", webhooks, Optional[Dict[str, "ValidatingWebhook"]])
         if webhooks:  # omit empty
             v["webhooks"] = webhooks.values()  # named list
         return v
 
-    def webhooks(self) -> Optional[Dict[str, ValidatingWebhook]]:
+    def webhooks(self) -> Optional[Dict[str, "ValidatingWebhook"]]:
         """
         Webhooks is a list of webhooks and the affected resources and operations.
         """

@@ -68,7 +68,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: TokenReviewSpec = None,
+        spec: "TokenReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authentication.k8s.io/v1beta1",
@@ -83,11 +83,11 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, TokenReviewSpec)
+        check_type("spec", spec, "TokenReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> TokenReviewSpec:
+    def spec(self) -> "TokenReviewSpec":
         """
         Spec holds information about the request being evaluated
         """

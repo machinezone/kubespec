@@ -130,7 +130,7 @@ class Policy(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, spec: PolicySpec = None):
+    def __init__(self, spec: "PolicySpec" = None):
         super().__init__(
             apiVersion="abac.authorization.kubernetes.io/v1beta1", kind="Policy"
         )
@@ -140,11 +140,11 @@ class Policy(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, PolicySpec)
+        check_type("spec", spec, "PolicySpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> PolicySpec:
+    def spec(self) -> "PolicySpec":
         """
         Spec describes the policy rule
         """

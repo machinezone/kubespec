@@ -148,10 +148,10 @@ class APIServerConfig(types.Object):
     def __init__(
         self,
         host: str = "",
-        basicAuth: BasicAuth = None,
+        basicAuth: "BasicAuth" = None,
         bearerToken: str = None,
         bearerTokenFile: str = None,
-        tlsConfig: TLSConfig = None,
+        tlsConfig: "TLSConfig" = None,
     ):
         super().__init__()
         self.__host = host
@@ -167,7 +167,7 @@ class APIServerConfig(types.Object):
         check_type("host", host, str)
         v["host"] = host
         basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional[BasicAuth])
+        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
         if basicAuth is not None:  # omit empty
             v["basicAuth"] = basicAuth
         bearerToken = self.bearerToken()
@@ -179,7 +179,7 @@ class APIServerConfig(types.Object):
         if bearerTokenFile:  # omit empty
             v["bearerTokenFile"] = bearerTokenFile
         tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional[TLSConfig])
+        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
         if tlsConfig is not None:  # omit empty
             v["tlsConfig"] = tlsConfig
         return v
@@ -191,7 +191,7 @@ class APIServerConfig(types.Object):
         """
         return self.__host
 
-    def basicAuth(self) -> Optional[BasicAuth]:
+    def basicAuth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth allow an endpoint to authenticate over basic authentication
         """
@@ -209,7 +209,7 @@ class APIServerConfig(types.Object):
         """
         return self.__bearerTokenFile
 
-    def tlsConfig(self) -> Optional[TLSConfig]:
+    def tlsConfig(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for accessing apiserver.
         """
@@ -231,7 +231,7 @@ class AlertmanagerEndpoints(types.Object):
         port: Union[int, str] = None,
         scheme: str = None,
         pathPrefix: str = None,
-        tlsConfig: TLSConfig = None,
+        tlsConfig: "TLSConfig" = None,
         bearerTokenFile: str = None,
     ):
         super().__init__()
@@ -264,7 +264,7 @@ class AlertmanagerEndpoints(types.Object):
         if pathPrefix:  # omit empty
             v["pathPrefix"] = pathPrefix
         tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional[TLSConfig])
+        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
         if tlsConfig is not None:  # omit empty
             v["tlsConfig"] = tlsConfig
         bearerTokenFile = self.bearerTokenFile()
@@ -303,7 +303,7 @@ class AlertmanagerEndpoints(types.Object):
         """
         return self.__pathPrefix
 
-    def tlsConfig(self) -> Optional[TLSConfig]:
+    def tlsConfig(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for alertmanager connection.
         """
@@ -324,7 +324,7 @@ class AlertingSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, alertmanagers: Dict[str, AlertmanagerEndpoints] = None):
+    def __init__(self, alertmanagers: Dict[str, "AlertmanagerEndpoints"] = None):
         super().__init__()
         self.__alertmanagers = alertmanagers if alertmanagers is not None else {}
 
@@ -332,11 +332,11 @@ class AlertingSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         alertmanagers = self.alertmanagers()
-        check_type("alertmanagers", alertmanagers, Dict[str, AlertmanagerEndpoints])
+        check_type("alertmanagers", alertmanagers, Dict[str, "AlertmanagerEndpoints"])
         v["alertmanagers"] = alertmanagers.values()  # named list
         return v
 
-    def alertmanagers(self) -> Dict[str, AlertmanagerEndpoints]:
+    def alertmanagers(self) -> Dict[str, "AlertmanagerEndpoints"]:
         """
         AlertmanagerEndpoints Prometheus should fire alerts against.
         """
@@ -417,7 +417,7 @@ class AlertmanagerSpec(types.Object):
         logFormat: str = None,
         replicas: int = None,
         retention: str = None,
-        storage: StorageSpec = None,
+        storage: "StorageSpec" = None,
         volumes: Dict[str, "corev1.Volume"] = None,
         volumeMounts: Dict[str, "corev1.VolumeMount"] = None,
         externalUrl: str = None,
@@ -533,7 +533,7 @@ class AlertmanagerSpec(types.Object):
         if retention:  # omit empty
             v["retention"] = retention
         storage = self.storage()
-        check_type("storage", storage, Optional[StorageSpec])
+        check_type("storage", storage, Optional["StorageSpec"])
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
@@ -706,7 +706,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__retention
 
-    def storage(self) -> Optional[StorageSpec]:
+    def storage(self) -> Optional["StorageSpec"]:
         """
         Storage is the definition of how storage will be used by the Alertmanager
         instances.
@@ -851,7 +851,7 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: AlertmanagerSpec = None,
+        spec: "AlertmanagerSpec" = None,
     ):
         super().__init__(
             apiVersion="monitoring.coreos.com/v1",
@@ -867,11 +867,11 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, AlertmanagerSpec)
+        check_type("spec", spec, "AlertmanagerSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> AlertmanagerSpec:
+    def spec(self) -> "AlertmanagerSpec":
         """
         Specification of the desired behavior of the Alertmanager cluster. More info:
         https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
@@ -1003,12 +1003,12 @@ class Endpoint(types.Object):
         params: Dict[str, List[str]] = None,
         interval: str = None,
         scrapeTimeout: str = None,
-        tlsConfig: TLSConfig = None,
+        tlsConfig: "TLSConfig" = None,
         bearerTokenFile: str = None,
         honorLabels: bool = None,
-        basicAuth: BasicAuth = None,
-        metricRelabelings: List[RelabelConfig] = None,
-        relabelings: List[RelabelConfig] = None,
+        basicAuth: "BasicAuth" = None,
+        metricRelabelings: List["RelabelConfig"] = None,
+        relabelings: List["RelabelConfig"] = None,
         proxyUrl: str = None,
     ):
         super().__init__()
@@ -1061,7 +1061,7 @@ class Endpoint(types.Object):
         if scrapeTimeout:  # omit empty
             v["scrapeTimeout"] = scrapeTimeout
         tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional[TLSConfig])
+        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
         if tlsConfig is not None:  # omit empty
             v["tlsConfig"] = tlsConfig
         bearerTokenFile = self.bearerTokenFile()
@@ -1073,17 +1073,17 @@ class Endpoint(types.Object):
         if honorLabels:  # omit empty
             v["honorLabels"] = honorLabels
         basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional[BasicAuth])
+        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
         if basicAuth is not None:  # omit empty
             v["basicAuth"] = basicAuth
         metricRelabelings = self.metricRelabelings()
         check_type(
-            "metricRelabelings", metricRelabelings, Optional[List[RelabelConfig]]
+            "metricRelabelings", metricRelabelings, Optional[List["RelabelConfig"]]
         )
         if metricRelabelings:  # omit empty
             v["metricRelabelings"] = metricRelabelings
         relabelings = self.relabelings()
-        check_type("relabelings", relabelings, Optional[List[RelabelConfig]])
+        check_type("relabelings", relabelings, Optional[List["RelabelConfig"]])
         if relabelings:  # omit empty
             v["relabelings"] = relabelings
         proxyUrl = self.proxyUrl()
@@ -1134,7 +1134,7 @@ class Endpoint(types.Object):
         """
         return self.__scrapeTimeout
 
-    def tlsConfig(self) -> Optional[TLSConfig]:
+    def tlsConfig(self) -> Optional["TLSConfig"]:
         """
         TLS configuration to use when scraping the endpoint
         """
@@ -1152,20 +1152,20 @@ class Endpoint(types.Object):
         """
         return self.__honorLabels
 
-    def basicAuth(self) -> Optional[BasicAuth]:
+    def basicAuth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth allow an endpoint to authenticate over basic authentication
         More info: https://prometheus.io/docs/operating/configuration/#endpoints
         """
         return self.__basicAuth
 
-    def metricRelabelings(self) -> Optional[List[RelabelConfig]]:
+    def metricRelabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         MetricRelabelConfigs to apply to samples before ingestion.
         """
         return self.__metricRelabelings
 
-    def relabelings(self) -> Optional[List[RelabelConfig]]:
+    def relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         RelabelConfigs to apply to samples before scraping.
         More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
@@ -1236,8 +1236,8 @@ class PodMetricsEndpoint(types.Object):
         interval: str = None,
         scrapeTimeout: str = None,
         honorLabels: bool = None,
-        metricRelabelings: List[RelabelConfig] = None,
-        relabelings: List[RelabelConfig] = None,
+        metricRelabelings: List["RelabelConfig"] = None,
+        relabelings: List["RelabelConfig"] = None,
         proxyUrl: str = None,
     ):
         super().__init__()
@@ -1292,12 +1292,12 @@ class PodMetricsEndpoint(types.Object):
             v["honorLabels"] = honorLabels
         metricRelabelings = self.metricRelabelings()
         check_type(
-            "metricRelabelings", metricRelabelings, Optional[List[RelabelConfig]]
+            "metricRelabelings", metricRelabelings, Optional[List["RelabelConfig"]]
         )
         if metricRelabelings:  # omit empty
             v["metricRelabelings"] = metricRelabelings
         relabelings = self.relabelings()
-        check_type("relabelings", relabelings, Optional[List[RelabelConfig]])
+        check_type("relabelings", relabelings, Optional[List["RelabelConfig"]])
         if relabelings:  # omit empty
             v["relabelings"] = relabelings
         proxyUrl = self.proxyUrl()
@@ -1354,13 +1354,13 @@ class PodMetricsEndpoint(types.Object):
         """
         return self.__honorLabels
 
-    def metricRelabelings(self) -> Optional[List[RelabelConfig]]:
+    def metricRelabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         MetricRelabelConfigs to apply to samples before ingestion.
         """
         return self.__metricRelabelings
 
-    def relabelings(self) -> Optional[List[RelabelConfig]]:
+    def relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         RelabelConfigs to apply to samples before ingestion.
         More info: https://prometheus.io/docs/prometheus/latest/configuration/configuration/#relabel_config
@@ -1385,9 +1385,9 @@ class PodMonitorSpec(types.Object):
         self,
         jobLabel: str = None,
         podTargetLabels: List[str] = None,
-        podMetricsEndpoints: List[PodMetricsEndpoint] = None,
+        podMetricsEndpoints: List["PodMetricsEndpoint"] = None,
         selector: "metav1.LabelSelector" = None,
-        namespaceSelector: NamespaceSelector = None,
+        namespaceSelector: "NamespaceSelector" = None,
         sampleLimit: int = None,
     ):
         super().__init__()
@@ -1414,13 +1414,17 @@ class PodMonitorSpec(types.Object):
         if podTargetLabels:  # omit empty
             v["podTargetLabels"] = podTargetLabels
         podMetricsEndpoints = self.podMetricsEndpoints()
-        check_type("podMetricsEndpoints", podMetricsEndpoints, List[PodMetricsEndpoint])
+        check_type(
+            "podMetricsEndpoints", podMetricsEndpoints, List["PodMetricsEndpoint"]
+        )
         v["podMetricsEndpoints"] = podMetricsEndpoints
         selector = self.selector()
         check_type("selector", selector, "metav1.LabelSelector")
         v["selector"] = selector
         namespaceSelector = self.namespaceSelector()
-        check_type("namespaceSelector", namespaceSelector, Optional[NamespaceSelector])
+        check_type(
+            "namespaceSelector", namespaceSelector, Optional["NamespaceSelector"]
+        )
         v["namespaceSelector"] = namespaceSelector
         sampleLimit = self.sampleLimit()
         check_type("sampleLimit", sampleLimit, Optional[int])
@@ -1440,7 +1444,7 @@ class PodMonitorSpec(types.Object):
         """
         return self.__podTargetLabels
 
-    def podMetricsEndpoints(self) -> List[PodMetricsEndpoint]:
+    def podMetricsEndpoints(self) -> List["PodMetricsEndpoint"]:
         """
         A list of endpoints allowed as part of this PodMonitor.
         """
@@ -1452,7 +1456,7 @@ class PodMonitorSpec(types.Object):
         """
         return self.__selector
 
-    def namespaceSelector(self) -> Optional[NamespaceSelector]:
+    def namespaceSelector(self) -> Optional["NamespaceSelector"]:
         """
         Selector to select which namespaces the Endpoints objects are discovered from.
         """
@@ -1479,7 +1483,7 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodMonitorSpec = None,
+        spec: "PodMonitorSpec" = None,
     ):
         super().__init__(
             apiVersion="monitoring.coreos.com/v1",
@@ -1495,11 +1499,11 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, PodMonitorSpec)
+        check_type("spec", spec, "PodMonitorSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> PodMonitorSpec:
+    def spec(self) -> "PodMonitorSpec":
         """
         Specification of desired Pod selection for target discovery by Prometheus.
         """
@@ -1585,10 +1589,10 @@ class RemoteReadSpec(types.Object):
         requiredMatchers: Dict[str, str] = None,
         remoteTimeout: str = None,
         readRecent: bool = None,
-        basicAuth: BasicAuth = None,
+        basicAuth: "BasicAuth" = None,
         bearerToken: str = None,
         bearerTokenFile: str = None,
-        tlsConfig: TLSConfig = None,
+        tlsConfig: "TLSConfig" = None,
         proxyUrl: str = None,
     ):
         super().__init__()
@@ -1623,7 +1627,7 @@ class RemoteReadSpec(types.Object):
         if readRecent:  # omit empty
             v["readRecent"] = readRecent
         basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional[BasicAuth])
+        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
         if basicAuth is not None:  # omit empty
             v["basicAuth"] = basicAuth
         bearerToken = self.bearerToken()
@@ -1635,7 +1639,7 @@ class RemoteReadSpec(types.Object):
         if bearerTokenFile:  # omit empty
             v["bearerTokenFile"] = bearerTokenFile
         tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional[TLSConfig])
+        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
         if tlsConfig is not None:  # omit empty
             v["tlsConfig"] = tlsConfig
         proxyUrl = self.proxyUrl()
@@ -1670,7 +1674,7 @@ class RemoteReadSpec(types.Object):
         """
         return self.__readRecent
 
-    def basicAuth(self) -> Optional[BasicAuth]:
+    def basicAuth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth for the URL.
         """
@@ -1688,7 +1692,7 @@ class RemoteReadSpec(types.Object):
         """
         return self.__bearerTokenFile
 
-    def tlsConfig(self) -> Optional[TLSConfig]:
+    def tlsConfig(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for remote read.
         """
@@ -1827,13 +1831,13 @@ class RemoteWriteSpec(types.Object):
         self,
         url: str = "",
         remoteTimeout: str = None,
-        writeRelabelConfigs: List[RelabelConfig] = None,
-        basicAuth: BasicAuth = None,
+        writeRelabelConfigs: List["RelabelConfig"] = None,
+        basicAuth: "BasicAuth" = None,
         bearerToken: str = None,
         bearerTokenFile: str = None,
-        tlsConfig: TLSConfig = None,
+        tlsConfig: "TLSConfig" = None,
         proxyUrl: str = None,
-        queueConfig: QueueConfig = None,
+        queueConfig: "QueueConfig" = None,
     ):
         super().__init__()
         self.__url = url
@@ -1860,12 +1864,12 @@ class RemoteWriteSpec(types.Object):
             v["remoteTimeout"] = remoteTimeout
         writeRelabelConfigs = self.writeRelabelConfigs()
         check_type(
-            "writeRelabelConfigs", writeRelabelConfigs, Optional[List[RelabelConfig]]
+            "writeRelabelConfigs", writeRelabelConfigs, Optional[List["RelabelConfig"]]
         )
         if writeRelabelConfigs:  # omit empty
             v["writeRelabelConfigs"] = writeRelabelConfigs
         basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional[BasicAuth])
+        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
         if basicAuth is not None:  # omit empty
             v["basicAuth"] = basicAuth
         bearerToken = self.bearerToken()
@@ -1877,7 +1881,7 @@ class RemoteWriteSpec(types.Object):
         if bearerTokenFile:  # omit empty
             v["bearerTokenFile"] = bearerTokenFile
         tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional[TLSConfig])
+        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
         if tlsConfig is not None:  # omit empty
             v["tlsConfig"] = tlsConfig
         proxyUrl = self.proxyUrl()
@@ -1885,7 +1889,7 @@ class RemoteWriteSpec(types.Object):
         if proxyUrl:  # omit empty
             v["proxyUrl"] = proxyUrl
         queueConfig = self.queueConfig()
-        check_type("queueConfig", queueConfig, Optional[QueueConfig])
+        check_type("queueConfig", queueConfig, Optional["QueueConfig"])
         if queueConfig is not None:  # omit empty
             v["queueConfig"] = queueConfig
         return v
@@ -1902,13 +1906,13 @@ class RemoteWriteSpec(types.Object):
         """
         return self.__remoteTimeout
 
-    def writeRelabelConfigs(self) -> Optional[List[RelabelConfig]]:
+    def writeRelabelConfigs(self) -> Optional[List["RelabelConfig"]]:
         """
         The list of remote write relabel configurations.
         """
         return self.__writeRelabelConfigs
 
-    def basicAuth(self) -> Optional[BasicAuth]:
+    def basicAuth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth for the URL.
         """
@@ -1926,7 +1930,7 @@ class RemoteWriteSpec(types.Object):
         """
         return self.__bearerTokenFile
 
-    def tlsConfig(self) -> Optional[TLSConfig]:
+    def tlsConfig(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for remote write.
         """
@@ -1938,7 +1942,7 @@ class RemoteWriteSpec(types.Object):
         """
         return self.__proxyUrl
 
-    def queueConfig(self) -> Optional[QueueConfig]:
+    def queueConfig(self) -> Optional["QueueConfig"]:
         """
         QueueConfig allows tuning of the remote write queue parameters.
         """
@@ -2007,7 +2011,7 @@ class Rules(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, alert: RulesAlert = None):
+    def __init__(self, alert: "RulesAlert" = None):
         super().__init__()
         self.__alert = alert if alert is not None else RulesAlert()
 
@@ -2015,11 +2019,11 @@ class Rules(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         alert = self.alert()
-        check_type("alert", alert, Optional[RulesAlert])
+        check_type("alert", alert, Optional["RulesAlert"])
         v["alert"] = alert
         return v
 
-    def alert(self) -> Optional[RulesAlert]:
+    def alert(self) -> Optional["RulesAlert"]:
         return self.__alert
 
 
@@ -2169,17 +2173,17 @@ class PrometheusSpec(types.Object):
         logFormat: str = None,
         scrapeInterval: str = None,
         evaluationInterval: str = None,
-        rules: Rules = None,
+        rules: "Rules" = None,
         externalLabels: Dict[str, str] = None,
         enableAdminAPI: bool = None,
         externalUrl: str = None,
         routePrefix: str = None,
-        query: QuerySpec = None,
-        storage: StorageSpec = None,
+        query: "QuerySpec" = None,
+        storage: "StorageSpec" = None,
         volumes: Dict[str, "corev1.Volume"] = None,
         ruleSelector: "metav1.LabelSelector" = None,
         ruleNamespaceSelector: "metav1.LabelSelector" = None,
-        alerting: AlertingSpec = None,
+        alerting: "AlertingSpec" = None,
         resources: "corev1.ResourceRequirements" = None,
         nodeSelector: Dict[str, str] = None,
         serviceAccountName: str = None,
@@ -2187,8 +2191,8 @@ class PrometheusSpec(types.Object):
         configMaps: List[str] = None,
         affinity: "corev1.Affinity" = None,
         tolerations: List["corev1.Toleration"] = None,
-        remoteWrite: List[RemoteWriteSpec] = None,
-        remoteRead: List[RemoteReadSpec] = None,
+        remoteWrite: List["RemoteWriteSpec"] = None,
+        remoteRead: List["RemoteReadSpec"] = None,
         securityContext: "corev1.PodSecurityContext" = None,
         listenLocal: bool = None,
         containers: Dict[str, "corev1.Container"] = None,
@@ -2196,8 +2200,8 @@ class PrometheusSpec(types.Object):
         additionalScrapeConfigs: "corev1.SecretKeySelector" = None,
         additionalAlertRelabelConfigs: "corev1.SecretKeySelector" = None,
         additionalAlertManagerConfigs: "corev1.SecretKeySelector" = None,
-        apiserverConfig: APIServerConfig = None,
-        thanos: ThanosSpec = None,
+        apiserverConfig: "APIServerConfig" = None,
+        thanos: "ThanosSpec" = None,
         priorityClassName: str = None,
         portName: str = None,
     ):
@@ -2372,7 +2376,7 @@ class PrometheusSpec(types.Object):
         if evaluationInterval:  # omit empty
             v["evaluationInterval"] = evaluationInterval
         rules = self.rules()
-        check_type("rules", rules, Optional[Rules])
+        check_type("rules", rules, Optional["Rules"])
         v["rules"] = rules
         externalLabels = self.externalLabels()
         check_type("externalLabels", externalLabels, Optional[Dict[str, str]])
@@ -2391,11 +2395,11 @@ class PrometheusSpec(types.Object):
         if routePrefix:  # omit empty
             v["routePrefix"] = routePrefix
         query = self.query()
-        check_type("query", query, Optional[QuerySpec])
+        check_type("query", query, Optional["QuerySpec"])
         if query is not None:  # omit empty
             v["query"] = query
         storage = self.storage()
-        check_type("storage", storage, Optional[StorageSpec])
+        check_type("storage", storage, Optional["StorageSpec"])
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
@@ -2415,7 +2419,7 @@ class PrometheusSpec(types.Object):
         if ruleNamespaceSelector is not None:  # omit empty
             v["ruleNamespaceSelector"] = ruleNamespaceSelector
         alerting = self.alerting()
-        check_type("alerting", alerting, Optional[AlertingSpec])
+        check_type("alerting", alerting, Optional["AlertingSpec"])
         if alerting is not None:  # omit empty
             v["alerting"] = alerting
         resources = self.resources()
@@ -2446,11 +2450,11 @@ class PrometheusSpec(types.Object):
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         remoteWrite = self.remoteWrite()
-        check_type("remoteWrite", remoteWrite, Optional[List[RemoteWriteSpec]])
+        check_type("remoteWrite", remoteWrite, Optional[List["RemoteWriteSpec"]])
         if remoteWrite:  # omit empty
             v["remoteWrite"] = remoteWrite
         remoteRead = self.remoteRead()
-        check_type("remoteRead", remoteRead, Optional[List[RemoteReadSpec]])
+        check_type("remoteRead", remoteRead, Optional[List["RemoteReadSpec"]])
         if remoteRead:  # omit empty
             v["remoteRead"] = remoteRead
         securityContext = self.securityContext()
@@ -2498,11 +2502,11 @@ class PrometheusSpec(types.Object):
         if additionalAlertManagerConfigs is not None:  # omit empty
             v["additionalAlertManagerConfigs"] = additionalAlertManagerConfigs
         apiserverConfig = self.apiserverConfig()
-        check_type("apiserverConfig", apiserverConfig, Optional[APIServerConfig])
+        check_type("apiserverConfig", apiserverConfig, Optional["APIServerConfig"])
         if apiserverConfig is not None:  # omit empty
             v["apiserverConfig"] = apiserverConfig
         thanos = self.thanos()
-        check_type("thanos", thanos, Optional[ThanosSpec])
+        check_type("thanos", thanos, Optional["ThanosSpec"])
         if thanos is not None:  # omit empty
             v["thanos"] = thanos
         priorityClassName = self.priorityClassName()
@@ -2666,7 +2670,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__evaluationInterval
 
-    def rules(self) -> Optional[Rules]:
+    def rules(self) -> Optional["Rules"]:
         """
         /--rules.*/ command-line arguments.
         """
@@ -2707,13 +2711,13 @@ class PrometheusSpec(types.Object):
         """
         return self.__routePrefix
 
-    def query(self) -> Optional[QuerySpec]:
+    def query(self) -> Optional["QuerySpec"]:
         """
         QuerySpec defines the query command line flags when starting Prometheus.
         """
         return self.__query
 
-    def storage(self) -> Optional[StorageSpec]:
+    def storage(self) -> Optional["StorageSpec"]:
         """
         Storage spec to specify how storage shall be used.
         """
@@ -2743,7 +2747,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__ruleNamespaceSelector
 
-    def alerting(self) -> Optional[AlertingSpec]:
+    def alerting(self) -> Optional["AlertingSpec"]:
         """
         Define details regarding alerting.
         """
@@ -2796,13 +2800,13 @@ class PrometheusSpec(types.Object):
         """
         return self.__tolerations
 
-    def remoteWrite(self) -> Optional[List[RemoteWriteSpec]]:
+    def remoteWrite(self) -> Optional[List["RemoteWriteSpec"]]:
         """
         If specified, the remote_write spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
         """
         return self.__remoteWrite
 
-    def remoteRead(self) -> Optional[List[RemoteReadSpec]]:
+    def remoteRead(self) -> Optional[List["RemoteReadSpec"]]:
         """
         If specified, the remote_read spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
         """
@@ -2894,7 +2898,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__additionalAlertManagerConfigs
 
-    def apiserverConfig(self) -> Optional[APIServerConfig]:
+    def apiserverConfig(self) -> Optional["APIServerConfig"]:
         """
         APIServerConfig allows specifying a host and auth methods to access apiserver.
         If left empty, Prometheus is assumed to run inside of the cluster
@@ -2903,7 +2907,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__apiserverConfig
 
-    def thanos(self) -> Optional[ThanosSpec]:
+    def thanos(self) -> Optional["ThanosSpec"]:
         """
         Thanos configuration allows configuring various aspects of a Prometheus
         server in a Thanos environment.
@@ -2944,7 +2948,7 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PrometheusSpec = None,
+        spec: "PrometheusSpec" = None,
     ):
         super().__init__(
             apiVersion="monitoring.coreos.com/v1",
@@ -2960,11 +2964,11 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, PrometheusSpec)
+        check_type("spec", spec, "PrometheusSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> PrometheusSpec:
+    def spec(self) -> "PrometheusSpec":
         """
         Specification of the desired behavior of the Prometheus cluster. More info:
         https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
@@ -3050,7 +3054,9 @@ class RuleGroup(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, name: str = "", interval: str = None, rules: List[Rule] = None):
+    def __init__(
+        self, name: str = "", interval: str = None, rules: List["Rule"] = None
+    ):
         super().__init__()
         self.__name = name
         self.__interval = interval
@@ -3067,7 +3073,7 @@ class RuleGroup(types.Object):
         if interval:  # omit empty
             v["interval"] = interval
         rules = self.rules()
-        check_type("rules", rules, List[Rule])
+        check_type("rules", rules, List["Rule"])
         v["rules"] = rules
         return v
 
@@ -3077,7 +3083,7 @@ class RuleGroup(types.Object):
     def interval(self) -> Optional[str]:
         return self.__interval
 
-    def rules(self) -> List[Rule]:
+    def rules(self) -> List["Rule"]:
         return self.__rules
 
 
@@ -3088,7 +3094,7 @@ class PrometheusRuleSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, groups: Dict[str, RuleGroup] = None):
+    def __init__(self, groups: Dict[str, "RuleGroup"] = None):
         super().__init__()
         self.__groups = groups if groups is not None else {}
 
@@ -3096,12 +3102,12 @@ class PrometheusRuleSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         groups = self.groups()
-        check_type("groups", groups, Optional[Dict[str, RuleGroup]])
+        check_type("groups", groups, Optional[Dict[str, "RuleGroup"]])
         if groups:  # omit empty
             v["groups"] = groups.values()  # named list
         return v
 
-    def groups(self) -> Optional[Dict[str, RuleGroup]]:
+    def groups(self) -> Optional[Dict[str, "RuleGroup"]]:
         """
         Content of Prometheus rule file
         """
@@ -3122,7 +3128,7 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PrometheusRuleSpec = None,
+        spec: "PrometheusRuleSpec" = None,
     ):
         super().__init__(
             apiVersion="monitoring.coreos.com/v1",
@@ -3138,11 +3144,11 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, PrometheusRuleSpec)
+        check_type("spec", spec, "PrometheusRuleSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> PrometheusRuleSpec:
+    def spec(self) -> "PrometheusRuleSpec":
         """
         Specification of desired alerting rule definitions for Prometheus.
         """
@@ -3161,9 +3167,9 @@ class ServiceMonitorSpec(types.Object):
         jobLabel: str = None,
         targetLabels: List[str] = None,
         podTargetLabels: List[str] = None,
-        endpoints: List[Endpoint] = None,
+        endpoints: List["Endpoint"] = None,
         selector: "metav1.LabelSelector" = None,
-        namespaceSelector: NamespaceSelector = None,
+        namespaceSelector: "NamespaceSelector" = None,
         sampleLimit: int = None,
     ):
         super().__init__()
@@ -3193,13 +3199,15 @@ class ServiceMonitorSpec(types.Object):
         if podTargetLabels:  # omit empty
             v["podTargetLabels"] = podTargetLabels
         endpoints = self.endpoints()
-        check_type("endpoints", endpoints, List[Endpoint])
+        check_type("endpoints", endpoints, List["Endpoint"])
         v["endpoints"] = endpoints
         selector = self.selector()
         check_type("selector", selector, "metav1.LabelSelector")
         v["selector"] = selector
         namespaceSelector = self.namespaceSelector()
-        check_type("namespaceSelector", namespaceSelector, Optional[NamespaceSelector])
+        check_type(
+            "namespaceSelector", namespaceSelector, Optional["NamespaceSelector"]
+        )
         v["namespaceSelector"] = namespaceSelector
         sampleLimit = self.sampleLimit()
         check_type("sampleLimit", sampleLimit, Optional[int])
@@ -3225,7 +3233,7 @@ class ServiceMonitorSpec(types.Object):
         """
         return self.__podTargetLabels
 
-    def endpoints(self) -> List[Endpoint]:
+    def endpoints(self) -> List["Endpoint"]:
         """
         A list of endpoints allowed as part of this ServiceMonitor.
         """
@@ -3237,7 +3245,7 @@ class ServiceMonitorSpec(types.Object):
         """
         return self.__selector
 
-    def namespaceSelector(self) -> Optional[NamespaceSelector]:
+    def namespaceSelector(self) -> Optional["NamespaceSelector"]:
         """
         Selector to select which namespaces the Endpoints objects are discovered from.
         """
@@ -3264,7 +3272,7 @@ class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ServiceMonitorSpec = None,
+        spec: "ServiceMonitorSpec" = None,
     ):
         super().__init__(
             apiVersion="monitoring.coreos.com/v1",
@@ -3280,11 +3288,11 @@ class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, ServiceMonitorSpec)
+        check_type("spec", spec, "ServiceMonitorSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> ServiceMonitorSpec:
+    def spec(self) -> "ServiceMonitorSpec":
         """
         Specification of desired Service selection for target discrovery by
         Prometheus.

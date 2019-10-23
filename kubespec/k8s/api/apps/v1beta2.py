@@ -188,7 +188,7 @@ class DaemonSetUpdateStrategy(types.Object):
         type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType[
             "RollingUpdate"
         ],
-        rollingUpdate: RollingUpdateDaemonSet = None,
+        rollingUpdate: "RollingUpdateDaemonSet" = None,
     ):
         super().__init__()
         self.__type = type
@@ -204,7 +204,7 @@ class DaemonSetUpdateStrategy(types.Object):
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional[RollingUpdateDaemonSet])
+        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDaemonSet"])
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
@@ -215,7 +215,7 @@ class DaemonSetUpdateStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
+    def rollingUpdate(self) -> Optional["RollingUpdateDaemonSet"]:
         """
         Rolling update config params. Present only if type = "RollingUpdate".
         ---
@@ -237,7 +237,7 @@ class DaemonSetSpec(types.Object):
         self,
         selector: "metav1.LabelSelector" = None,
         template: "corev1.PodTemplateSpec" = None,
-        updateStrategy: DaemonSetUpdateStrategy = None,
+        updateStrategy: "DaemonSetUpdateStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
     ):
@@ -262,7 +262,9 @@ class DaemonSetSpec(types.Object):
         check_type("template", template, "corev1.PodTemplateSpec")
         v["template"] = template
         updateStrategy = self.updateStrategy()
-        check_type("updateStrategy", updateStrategy, Optional[DaemonSetUpdateStrategy])
+        check_type(
+            "updateStrategy", updateStrategy, Optional["DaemonSetUpdateStrategy"]
+        )
         v["updateStrategy"] = updateStrategy
         minReadySeconds = self.minReadySeconds()
         check_type("minReadySeconds", minReadySeconds, Optional[int])
@@ -293,7 +295,7 @@ class DaemonSetSpec(types.Object):
         """
         return self.__template
 
-    def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+    def updateStrategy(self) -> Optional["DaemonSetUpdateStrategy"]:
         """
         An update strategy to replace existing DaemonSet pods with new pods.
         """
@@ -332,7 +334,7 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: DaemonSetSpec = None,
+        spec: "DaemonSetSpec" = None,
     ):
         super().__init__(
             apiVersion="apps/v1beta2",
@@ -348,11 +350,11 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[DaemonSetSpec])
+        check_type("spec", spec, Optional["DaemonSetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[DaemonSetSpec]:
+    def spec(self) -> Optional["DaemonSetSpec"]:
         """
         The desired behavior of this daemon set.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -429,7 +431,7 @@ class DeploymentStrategy(types.Object):
     def __init__(
         self,
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
-        rollingUpdate: RollingUpdateDeployment = None,
+        rollingUpdate: "RollingUpdateDeployment" = None,
     ):
         super().__init__()
         self.__type = type
@@ -445,7 +447,7 @@ class DeploymentStrategy(types.Object):
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional[RollingUpdateDeployment])
+        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDeployment"])
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
@@ -456,7 +458,7 @@ class DeploymentStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
+    def rollingUpdate(self) -> Optional["RollingUpdateDeployment"]:
         """
         Rolling update config params. Present only if DeploymentStrategyType =
         RollingUpdate.
@@ -479,7 +481,7 @@ class DeploymentSpec(types.Object):
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
         template: "corev1.PodTemplateSpec" = None,
-        strategy: DeploymentStrategy = None,
+        strategy: "DeploymentStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
         paused: bool = None,
@@ -513,7 +515,7 @@ class DeploymentSpec(types.Object):
         check_type("template", template, "corev1.PodTemplateSpec")
         v["template"] = template
         strategy = self.strategy()
-        check_type("strategy", strategy, Optional[DeploymentStrategy])
+        check_type("strategy", strategy, Optional["DeploymentStrategy"])
         v["strategy"] = strategy
         minReadySeconds = self.minReadySeconds()
         check_type("minReadySeconds", minReadySeconds, Optional[int])
@@ -554,7 +556,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__template
 
-    def strategy(self) -> Optional[DeploymentStrategy]:
+    def strategy(self) -> Optional["DeploymentStrategy"]:
         """
         The deployment strategy to use to replace existing pods with new ones.
         """
@@ -608,7 +610,7 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: DeploymentSpec = None,
+        spec: "DeploymentSpec" = None,
     ):
         super().__init__(
             apiVersion="apps/v1beta2",
@@ -624,11 +626,11 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[DeploymentSpec])
+        check_type("spec", spec, Optional["DeploymentSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[DeploymentSpec]:
+    def spec(self) -> Optional["DeploymentSpec"]:
         """
         Specification of the desired behavior of the Deployment.
         """
@@ -724,7 +726,7 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ReplicaSetSpec = None,
+        spec: "ReplicaSetSpec" = None,
     ):
         super().__init__(
             apiVersion="apps/v1beta2",
@@ -740,11 +742,11 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ReplicaSetSpec])
+        check_type("spec", spec, Optional["ReplicaSetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ReplicaSetSpec]:
+    def spec(self) -> Optional["ReplicaSetSpec"]:
         """
         Spec defines the specification of the desired behavior of the ReplicaSet.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -821,7 +823,7 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ScaleSpec = None,
+        spec: "ScaleSpec" = None,
     ):
         super().__init__(
             apiVersion="apps/v1beta2",
@@ -837,11 +839,11 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ScaleSpec])
+        check_type("spec", spec, Optional["ScaleSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ScaleSpec]:
+    def spec(self) -> Optional["ScaleSpec"]:
         """
         defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
         """
@@ -862,7 +864,7 @@ class StatefulSetUpdateStrategy(types.Object):
         type: StatefulSetUpdateStrategyType = StatefulSetUpdateStrategyType[
             "RollingUpdate"
         ],
-        rollingUpdate: RollingUpdateStatefulSetStrategy = None,
+        rollingUpdate: "RollingUpdateStatefulSetStrategy" = None,
     ):
         super().__init__()
         self.__type = type
@@ -881,7 +883,7 @@ class StatefulSetUpdateStrategy(types.Object):
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
         check_type(
-            "rollingUpdate", rollingUpdate, Optional[RollingUpdateStatefulSetStrategy]
+            "rollingUpdate", rollingUpdate, Optional["RollingUpdateStatefulSetStrategy"]
         )
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
@@ -894,7 +896,7 @@ class StatefulSetUpdateStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional[RollingUpdateStatefulSetStrategy]:
+    def rollingUpdate(self) -> Optional["RollingUpdateStatefulSetStrategy"]:
         """
         RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
         """
@@ -918,7 +920,7 @@ class StatefulSetSpec(types.Object):
         podManagementPolicy: PodManagementPolicyType = PodManagementPolicyType[
             "OrderedReady"
         ],
-        updateStrategy: StatefulSetUpdateStrategy = None,
+        updateStrategy: "StatefulSetUpdateStrategy" = None,
         revisionHistoryLimit: int = None,
     ):
         super().__init__()
@@ -973,7 +975,7 @@ class StatefulSetSpec(types.Object):
             v["podManagementPolicy"] = podManagementPolicy
         updateStrategy = self.updateStrategy()
         check_type(
-            "updateStrategy", updateStrategy, Optional[StatefulSetUpdateStrategy]
+            "updateStrategy", updateStrategy, Optional["StatefulSetUpdateStrategy"]
         )
         v["updateStrategy"] = updateStrategy
         revisionHistoryLimit = self.revisionHistoryLimit()
@@ -1044,7 +1046,7 @@ class StatefulSetSpec(types.Object):
         """
         return self.__podManagementPolicy
 
-    def updateStrategy(self) -> Optional[StatefulSetUpdateStrategy]:
+    def updateStrategy(self) -> Optional["StatefulSetUpdateStrategy"]:
         """
         updateStrategy indicates the StatefulSetUpdateStrategy that will be
         employed to update Pods in the StatefulSet when a revision is made to
@@ -1082,7 +1084,7 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: StatefulSetSpec = None,
+        spec: "StatefulSetSpec" = None,
     ):
         super().__init__(
             apiVersion="apps/v1beta2",
@@ -1098,11 +1100,11 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[StatefulSetSpec])
+        check_type("spec", spec, Optional["StatefulSetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[StatefulSetSpec]:
+    def spec(self) -> Optional["StatefulSetSpec"]:
         """
         Spec defines the desired identities of pods in this set.
         """

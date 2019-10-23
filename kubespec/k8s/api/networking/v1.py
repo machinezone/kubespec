@@ -81,7 +81,7 @@ class NetworkPolicyPeer(types.Object):
         self,
         podSelector: "metav1.LabelSelector" = None,
         namespaceSelector: "metav1.LabelSelector" = None,
-        ipBlock: IPBlock = None,
+        ipBlock: "IPBlock" = None,
     ):
         super().__init__()
         self.__podSelector = podSelector
@@ -102,7 +102,7 @@ class NetworkPolicyPeer(types.Object):
         if namespaceSelector is not None:  # omit empty
             v["namespaceSelector"] = namespaceSelector
         ipBlock = self.ipBlock()
-        check_type("ipBlock", ipBlock, Optional[IPBlock])
+        check_type("ipBlock", ipBlock, Optional["IPBlock"])
         if ipBlock is not None:  # omit empty
             v["ipBlock"] = ipBlock
         return v
@@ -129,7 +129,7 @@ class NetworkPolicyPeer(types.Object):
         """
         return self.__namespaceSelector
 
-    def ipBlock(self) -> Optional[IPBlock]:
+    def ipBlock(self) -> Optional["IPBlock"]:
         """
         IPBlock defines policy on a particular IPBlock. If this field is set then
         neither of the other fields can be.
@@ -187,7 +187,9 @@ class NetworkPolicyEgressRule(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, ports: List[NetworkPolicyPort] = None, to: List[NetworkPolicyPeer] = None
+        self,
+        ports: List["NetworkPolicyPort"] = None,
+        to: List["NetworkPolicyPeer"] = None,
     ):
         super().__init__()
         self.__ports = ports if ports is not None else []
@@ -197,16 +199,16 @@ class NetworkPolicyEgressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
+        check_type("ports", ports, Optional[List["NetworkPolicyPort"]])
         if ports:  # omit empty
             v["ports"] = ports
         to = self.to()
-        check_type("to", to, Optional[List[NetworkPolicyPeer]])
+        check_type("to", to, Optional[List["NetworkPolicyPeer"]])
         if to:  # omit empty
             v["to"] = to
         return v
 
-    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+    def ports(self) -> Optional[List["NetworkPolicyPort"]]:
         """
         List of destination ports for outgoing traffic.
         Each item in this list is combined using a logical OR. If this field is
@@ -216,7 +218,7 @@ class NetworkPolicyEgressRule(types.Object):
         """
         return self.__ports
 
-    def to(self) -> Optional[List[NetworkPolicyPeer]]:
+    def to(self) -> Optional[List["NetworkPolicyPeer"]]:
         """
         List of destinations for outgoing traffic of pods selected for this rule.
         Items in this list are combined using a logical OR operation. If this field is
@@ -237,8 +239,8 @@ class NetworkPolicyIngressRule(types.Object):
     @typechecked
     def __init__(
         self,
-        ports: List[NetworkPolicyPort] = None,
-        from_: List[NetworkPolicyPeer] = None,
+        ports: List["NetworkPolicyPort"] = None,
+        from_: List["NetworkPolicyPeer"] = None,
     ):
         super().__init__()
         self.__ports = ports if ports is not None else []
@@ -248,16 +250,16 @@ class NetworkPolicyIngressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
+        check_type("ports", ports, Optional[List["NetworkPolicyPort"]])
         if ports:  # omit empty
             v["ports"] = ports
         from_ = self.from_()
-        check_type("from_", from_, Optional[List[NetworkPolicyPeer]])
+        check_type("from_", from_, Optional[List["NetworkPolicyPeer"]])
         if from_:  # omit empty
             v["from"] = from_
         return v
 
-    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+    def ports(self) -> Optional[List["NetworkPolicyPort"]]:
         """
         List of ports which should be made accessible on the pods selected for this
         rule. Each item in this list is combined using a logical OR. If this field is
@@ -267,7 +269,7 @@ class NetworkPolicyIngressRule(types.Object):
         """
         return self.__ports
 
-    def from_(self) -> Optional[List[NetworkPolicyPeer]]:
+    def from_(self) -> Optional[List["NetworkPolicyPeer"]]:
         """
         List of sources which should be able to access the pods selected for this rule.
         Items in this list are combined using a logical OR operation. If this field is
@@ -288,8 +290,8 @@ class NetworkPolicySpec(types.Object):
     def __init__(
         self,
         podSelector: "metav1.LabelSelector" = None,
-        ingress: List[NetworkPolicyIngressRule] = None,
-        egress: List[NetworkPolicyEgressRule] = None,
+        ingress: List["NetworkPolicyIngressRule"] = None,
+        egress: List["NetworkPolicyEgressRule"] = None,
         policyTypes: List[PolicyType] = None,
     ):
         super().__init__()
@@ -307,11 +309,11 @@ class NetworkPolicySpec(types.Object):
         check_type("podSelector", podSelector, "metav1.LabelSelector")
         v["podSelector"] = podSelector
         ingress = self.ingress()
-        check_type("ingress", ingress, Optional[List[NetworkPolicyIngressRule]])
+        check_type("ingress", ingress, Optional[List["NetworkPolicyIngressRule"]])
         if ingress:  # omit empty
             v["ingress"] = ingress
         egress = self.egress()
-        check_type("egress", egress, Optional[List[NetworkPolicyEgressRule]])
+        check_type("egress", egress, Optional[List["NetworkPolicyEgressRule"]])
         if egress:  # omit empty
             v["egress"] = egress
         policyTypes = self.policyTypes()
@@ -331,7 +333,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__podSelector
 
-    def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
+    def ingress(self) -> Optional[List["NetworkPolicyIngressRule"]]:
         """
         List of ingress rules to be applied to the selected pods. Traffic is allowed to
         a pod if there are no NetworkPolicies selecting the pod
@@ -343,7 +345,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__ingress
 
-    def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
+    def egress(self) -> Optional[List["NetworkPolicyEgressRule"]]:
         """
         List of egress rules to be applied to the selected pods. Outgoing traffic is
         allowed if there are no NetworkPolicies selecting the pod (and cluster policy
@@ -384,7 +386,7 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: NetworkPolicySpec = None,
+        spec: "NetworkPolicySpec" = None,
     ):
         super().__init__(
             apiVersion="networking.k8s.io/v1",
@@ -400,11 +402,11 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[NetworkPolicySpec])
+        check_type("spec", spec, Optional["NetworkPolicySpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[NetworkPolicySpec]:
+    def spec(self) -> Optional["NetworkPolicySpec"]:
         """
         Specification of the desired behavior for this NetworkPolicy.
         """

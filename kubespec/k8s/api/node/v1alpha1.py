@@ -108,8 +108,8 @@ class RuntimeClassSpec(types.Object):
     def __init__(
         self,
         runtimeHandler: str = "",
-        overhead: Overhead = None,
-        scheduling: Scheduling = None,
+        overhead: "Overhead" = None,
+        scheduling: "Scheduling" = None,
     ):
         super().__init__()
         self.__runtimeHandler = runtimeHandler
@@ -123,11 +123,11 @@ class RuntimeClassSpec(types.Object):
         check_type("runtimeHandler", runtimeHandler, str)
         v["runtimeHandler"] = runtimeHandler
         overhead = self.overhead()
-        check_type("overhead", overhead, Optional[Overhead])
+        check_type("overhead", overhead, Optional["Overhead"])
         if overhead is not None:  # omit empty
             v["overhead"] = overhead
         scheduling = self.scheduling()
-        check_type("scheduling", scheduling, Optional[Scheduling])
+        check_type("scheduling", scheduling, Optional["Scheduling"])
         if scheduling is not None:  # omit empty
             v["scheduling"] = scheduling
         return v
@@ -147,7 +147,7 @@ class RuntimeClassSpec(types.Object):
         """
         return self.__runtimeHandler
 
-    def overhead(self) -> Optional[Overhead]:
+    def overhead(self) -> Optional["Overhead"]:
         """
         Overhead represents the resource overhead associated with running a pod for a
         given RuntimeClass. For more details, see
@@ -156,7 +156,7 @@ class RuntimeClassSpec(types.Object):
         """
         return self.__overhead
 
-    def scheduling(self) -> Optional[Scheduling]:
+    def scheduling(self) -> Optional["Scheduling"]:
         """
         Scheduling holds the scheduling constraints to ensure that pods running
         with this RuntimeClass are scheduled to nodes that support it.
@@ -184,7 +184,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: RuntimeClassSpec = None,
+        spec: "RuntimeClassSpec" = None,
     ):
         super().__init__(
             apiVersion="node.k8s.io/v1alpha1",
@@ -199,11 +199,11 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, RuntimeClassSpec)
+        check_type("spec", spec, "RuntimeClassSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> RuntimeClassSpec:
+    def spec(self) -> "RuntimeClassSpec":
         """
         Specification of the RuntimeClass
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

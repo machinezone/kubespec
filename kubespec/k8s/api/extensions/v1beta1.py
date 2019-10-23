@@ -313,7 +313,7 @@ class DaemonSetUpdateStrategy(types.Object):
     def __init__(
         self,
         type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType["OnDelete"],
-        rollingUpdate: RollingUpdateDaemonSet = None,
+        rollingUpdate: "RollingUpdateDaemonSet" = None,
     ):
         super().__init__()
         self.__type = type
@@ -327,7 +327,7 @@ class DaemonSetUpdateStrategy(types.Object):
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional[RollingUpdateDaemonSet])
+        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDaemonSet"])
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
@@ -339,7 +339,7 @@ class DaemonSetUpdateStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional[RollingUpdateDaemonSet]:
+    def rollingUpdate(self) -> Optional["RollingUpdateDaemonSet"]:
         """
         Rolling update config params. Present only if type = "RollingUpdate".
         ---
@@ -361,7 +361,7 @@ class DaemonSetSpec(types.Object):
         self,
         selector: "metav1.LabelSelector" = None,
         template: "corev1.PodTemplateSpec" = None,
-        updateStrategy: DaemonSetUpdateStrategy = None,
+        updateStrategy: "DaemonSetUpdateStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
     ):
@@ -387,7 +387,9 @@ class DaemonSetSpec(types.Object):
         check_type("template", template, "corev1.PodTemplateSpec")
         v["template"] = template
         updateStrategy = self.updateStrategy()
-        check_type("updateStrategy", updateStrategy, Optional[DaemonSetUpdateStrategy])
+        check_type(
+            "updateStrategy", updateStrategy, Optional["DaemonSetUpdateStrategy"]
+        )
         v["updateStrategy"] = updateStrategy
         minReadySeconds = self.minReadySeconds()
         check_type("minReadySeconds", minReadySeconds, Optional[int])
@@ -418,7 +420,7 @@ class DaemonSetSpec(types.Object):
         """
         return self.__template
 
-    def updateStrategy(self) -> Optional[DaemonSetUpdateStrategy]:
+    def updateStrategy(self) -> Optional["DaemonSetUpdateStrategy"]:
         """
         An update strategy to replace existing DaemonSet pods with new pods.
         """
@@ -457,7 +459,7 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: DaemonSetSpec = None,
+        spec: "DaemonSetSpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -473,11 +475,11 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[DaemonSetSpec])
+        check_type("spec", spec, Optional["DaemonSetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[DaemonSetSpec]:
+    def spec(self) -> Optional["DaemonSetSpec"]:
         """
         The desired behavior of this daemon set.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -554,7 +556,7 @@ class DeploymentStrategy(types.Object):
     def __init__(
         self,
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
-        rollingUpdate: RollingUpdateDeployment = None,
+        rollingUpdate: "RollingUpdateDeployment" = None,
     ):
         super().__init__()
         self.__type = type
@@ -570,7 +572,7 @@ class DeploymentStrategy(types.Object):
         if type:  # omit empty
             v["type"] = type
         rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional[RollingUpdateDeployment])
+        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDeployment"])
         if rollingUpdate is not None:  # omit empty
             v["rollingUpdate"] = rollingUpdate
         return v
@@ -581,7 +583,7 @@ class DeploymentStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional[RollingUpdateDeployment]:
+    def rollingUpdate(self) -> Optional["RollingUpdateDeployment"]:
         """
         Rolling update config params. Present only if DeploymentStrategyType =
         RollingUpdate.
@@ -604,7 +606,7 @@ class DeploymentSpec(types.Object):
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
         template: "corev1.PodTemplateSpec" = None,
-        strategy: DeploymentStrategy = None,
+        strategy: "DeploymentStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
         paused: bool = None,
@@ -641,7 +643,7 @@ class DeploymentSpec(types.Object):
         check_type("template", template, "corev1.PodTemplateSpec")
         v["template"] = template
         strategy = self.strategy()
-        check_type("strategy", strategy, Optional[DeploymentStrategy])
+        check_type("strategy", strategy, Optional["DeploymentStrategy"])
         v["strategy"] = strategy
         minReadySeconds = self.minReadySeconds()
         check_type("minReadySeconds", minReadySeconds, Optional[int])
@@ -681,7 +683,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__template
 
-    def strategy(self) -> Optional[DeploymentStrategy]:
+    def strategy(self) -> Optional["DeploymentStrategy"]:
         """
         The deployment strategy to use to replace existing pods with new ones.
         """
@@ -738,7 +740,7 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: DeploymentSpec = None,
+        spec: "DeploymentSpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -754,11 +756,11 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[DeploymentSpec])
+        check_type("spec", spec, Optional["DeploymentSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[DeploymentSpec]:
+    def spec(self) -> Optional["DeploymentSpec"]:
         """
         Specification of the desired behavior of the Deployment.
         """
@@ -804,7 +806,7 @@ class DeploymentRollback(base.TypedObject):
         self,
         name: str = "",
         updatedAnnotations: Dict[str, str] = None,
-        rollbackTo: RollbackConfig = None,
+        rollbackTo: "RollbackConfig" = None,
     ):
         super().__init__(apiVersion="extensions/v1beta1", kind="DeploymentRollback")
         self.__name = name
@@ -824,7 +826,7 @@ class DeploymentRollback(base.TypedObject):
         if updatedAnnotations:  # omit empty
             v["updatedAnnotations"] = updatedAnnotations
         rollbackTo = self.rollbackTo()
-        check_type("rollbackTo", rollbackTo, RollbackConfig)
+        check_type("rollbackTo", rollbackTo, "RollbackConfig")
         v["rollbackTo"] = rollbackTo
         return v
 
@@ -840,7 +842,7 @@ class DeploymentRollback(base.TypedObject):
         """
         return self.__updatedAnnotations
 
-    def rollbackTo(self) -> RollbackConfig:
+    def rollbackTo(self) -> "RollbackConfig":
         """
         The config of this deployment rollback.
         """
@@ -892,7 +894,9 @@ class FSGroupStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
+    def __init__(
+        self, rule: FSGroupStrategyType = None, ranges: List["IDRange"] = None
+    ):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -905,7 +909,7 @@ class FSGroupStrategyOptions(types.Object):
         if rule:  # omit empty
             v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -916,7 +920,7 @@ class FSGroupStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of fs groups.  If you would like to force a single
         fs group then supply a single range with the same start and end. Required for MustRunAs.
@@ -968,7 +972,7 @@ class HTTPIngressPath(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, path: str = None, backend: IngressBackend = None):
+    def __init__(self, path: str = None, backend: "IngressBackend" = None):
         super().__init__()
         self.__path = path
         self.__backend = backend if backend is not None else IngressBackend()
@@ -981,7 +985,7 @@ class HTTPIngressPath(types.Object):
         if path:  # omit empty
             v["path"] = path
         backend = self.backend()
-        check_type("backend", backend, IngressBackend)
+        check_type("backend", backend, "IngressBackend")
         v["backend"] = backend
         return v
 
@@ -997,7 +1001,7 @@ class HTTPIngressPath(types.Object):
         """
         return self.__path
 
-    def backend(self) -> IngressBackend:
+    def backend(self) -> "IngressBackend":
         """
         Backend defines the referenced service endpoint to which the traffic
         will be forwarded to.
@@ -1016,7 +1020,7 @@ class HTTPIngressRuleValue(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, paths: List[HTTPIngressPath] = None):
+    def __init__(self, paths: List["HTTPIngressPath"] = None):
         super().__init__()
         self.__paths = paths if paths is not None else []
 
@@ -1024,11 +1028,11 @@ class HTTPIngressRuleValue(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         paths = self.paths()
-        check_type("paths", paths, List[HTTPIngressPath])
+        check_type("paths", paths, List["HTTPIngressPath"])
         v["paths"] = paths
         return v
 
-    def paths(self) -> List[HTTPIngressPath]:
+    def paths(self) -> List["HTTPIngressPath"]:
         """
         A collection of paths that map requests to backends.
         """
@@ -1126,7 +1130,7 @@ class IngressRuleValue(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, http: HTTPIngressRuleValue = None):
+    def __init__(self, http: "HTTPIngressRuleValue" = None):
         super().__init__()
         self.__http = http
 
@@ -1134,12 +1138,12 @@ class IngressRuleValue(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         http = self.http()
-        check_type("http", http, Optional[HTTPIngressRuleValue])
+        check_type("http", http, Optional["HTTPIngressRuleValue"])
         if http is not None:  # omit empty
             v["http"] = http
         return v
 
-    def http(self) -> Optional[HTTPIngressRuleValue]:
+    def http(self) -> Optional["HTTPIngressRuleValue"]:
         return self.__http
 
 
@@ -1152,7 +1156,7 @@ class IngressRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
+    def __init__(self, host: str = None, ingressRuleValue: "IngressRuleValue" = None):
         super().__init__()
         self.__host = host
         self.__ingressRuleValue = (
@@ -1167,7 +1171,7 @@ class IngressRule(types.Object):
         if host:  # omit empty
             v["host"] = host
         ingressRuleValue = self.ingressRuleValue()
-        check_type("ingressRuleValue", ingressRuleValue, Optional[IngressRuleValue])
+        check_type("ingressRuleValue", ingressRuleValue, Optional["IngressRuleValue"])
         v.update(ingressRuleValue._root())  # inline
         return v
 
@@ -1188,7 +1192,7 @@ class IngressRule(types.Object):
         """
         return self.__host
 
-    def ingressRuleValue(self) -> Optional[IngressRuleValue]:
+    def ingressRuleValue(self) -> Optional["IngressRuleValue"]:
         """
         IngressRuleValue represents a rule to route requests for this IngressRule.
         If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -1253,9 +1257,9 @@ class IngressSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        backend: IngressBackend = None,
-        tls: List[IngressTLS] = None,
-        rules: List[IngressRule] = None,
+        backend: "IngressBackend" = None,
+        tls: List["IngressTLS"] = None,
+        rules: List["IngressRule"] = None,
     ):
         super().__init__()
         self.__backend = backend
@@ -1266,20 +1270,20 @@ class IngressSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         backend = self.backend()
-        check_type("backend", backend, Optional[IngressBackend])
+        check_type("backend", backend, Optional["IngressBackend"])
         if backend is not None:  # omit empty
             v["backend"] = backend
         tls = self.tls()
-        check_type("tls", tls, Optional[List[IngressTLS]])
+        check_type("tls", tls, Optional[List["IngressTLS"]])
         if tls:  # omit empty
             v["tls"] = tls
         rules = self.rules()
-        check_type("rules", rules, Optional[List[IngressRule]])
+        check_type("rules", rules, Optional[List["IngressRule"]])
         if rules:  # omit empty
             v["rules"] = rules
         return v
 
-    def backend(self) -> Optional[IngressBackend]:
+    def backend(self) -> Optional["IngressBackend"]:
         """
         A default backend capable of servicing requests that don't match any
         rule. At least one of 'backend' or 'rules' must be specified. This field
@@ -1288,7 +1292,7 @@ class IngressSpec(types.Object):
         """
         return self.__backend
 
-    def tls(self) -> Optional[List[IngressTLS]]:
+    def tls(self) -> Optional[List["IngressTLS"]]:
         """
         TLS configuration. Currently the Ingress only supports a single TLS
         port, 443. If multiple members of this list specify different hosts, they
@@ -1298,7 +1302,7 @@ class IngressSpec(types.Object):
         """
         return self.__tls
 
-    def rules(self) -> Optional[List[IngressRule]]:
+    def rules(self) -> Optional[List["IngressRule"]]:
         """
         A list of host rules used to configure the Ingress. If unspecified, or
         no rule matches, all traffic is sent to the default backend.
@@ -1323,7 +1327,7 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: IngressSpec = None,
+        spec: "IngressSpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -1339,11 +1343,11 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[IngressSpec])
+        check_type("spec", spec, Optional["IngressSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[IngressSpec]:
+    def spec(self) -> Optional["IngressSpec"]:
         """
         Spec is the desired state of the Ingress.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -1362,7 +1366,7 @@ class NetworkPolicyPeer(types.Object):
         self,
         podSelector: "metav1.LabelSelector" = None,
         namespaceSelector: "metav1.LabelSelector" = None,
-        ipBlock: IPBlock = None,
+        ipBlock: "IPBlock" = None,
     ):
         super().__init__()
         self.__podSelector = podSelector
@@ -1383,7 +1387,7 @@ class NetworkPolicyPeer(types.Object):
         if namespaceSelector is not None:  # omit empty
             v["namespaceSelector"] = namespaceSelector
         ipBlock = self.ipBlock()
-        check_type("ipBlock", ipBlock, Optional[IPBlock])
+        check_type("ipBlock", ipBlock, Optional["IPBlock"])
         if ipBlock is not None:  # omit empty
             v["ipBlock"] = ipBlock
         return v
@@ -1410,7 +1414,7 @@ class NetworkPolicyPeer(types.Object):
         """
         return self.__namespaceSelector
 
-    def ipBlock(self) -> Optional[IPBlock]:
+    def ipBlock(self) -> Optional["IPBlock"]:
         """
         IPBlock defines policy on a particular IPBlock. If this field is set then
         neither of the other fields can be.
@@ -1472,7 +1476,9 @@ class NetworkPolicyEgressRule(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, ports: List[NetworkPolicyPort] = None, to: List[NetworkPolicyPeer] = None
+        self,
+        ports: List["NetworkPolicyPort"] = None,
+        to: List["NetworkPolicyPeer"] = None,
     ):
         super().__init__()
         self.__ports = ports if ports is not None else []
@@ -1482,16 +1488,16 @@ class NetworkPolicyEgressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
+        check_type("ports", ports, Optional[List["NetworkPolicyPort"]])
         if ports:  # omit empty
             v["ports"] = ports
         to = self.to()
-        check_type("to", to, Optional[List[NetworkPolicyPeer]])
+        check_type("to", to, Optional[List["NetworkPolicyPeer"]])
         if to:  # omit empty
             v["to"] = to
         return v
 
-    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+    def ports(self) -> Optional[List["NetworkPolicyPort"]]:
         """
         List of destination ports for outgoing traffic.
         Each item in this list is combined using a logical OR. If this field is
@@ -1501,7 +1507,7 @@ class NetworkPolicyEgressRule(types.Object):
         """
         return self.__ports
 
-    def to(self) -> Optional[List[NetworkPolicyPeer]]:
+    def to(self) -> Optional[List["NetworkPolicyPeer"]]:
         """
         List of destinations for outgoing traffic of pods selected for this rule.
         Items in this list are combined using a logical OR operation. If this field is
@@ -1522,8 +1528,8 @@ class NetworkPolicyIngressRule(types.Object):
     @typechecked
     def __init__(
         self,
-        ports: List[NetworkPolicyPort] = None,
-        from_: List[NetworkPolicyPeer] = None,
+        ports: List["NetworkPolicyPort"] = None,
+        from_: List["NetworkPolicyPeer"] = None,
     ):
         super().__init__()
         self.__ports = ports if ports is not None else []
@@ -1533,16 +1539,16 @@ class NetworkPolicyIngressRule(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[List[NetworkPolicyPort]])
+        check_type("ports", ports, Optional[List["NetworkPolicyPort"]])
         if ports:  # omit empty
             v["ports"] = ports
         from_ = self.from_()
-        check_type("from_", from_, Optional[List[NetworkPolicyPeer]])
+        check_type("from_", from_, Optional[List["NetworkPolicyPeer"]])
         if from_:  # omit empty
             v["from"] = from_
         return v
 
-    def ports(self) -> Optional[List[NetworkPolicyPort]]:
+    def ports(self) -> Optional[List["NetworkPolicyPort"]]:
         """
         List of ports which should be made accessible on the pods selected for this rule.
         Each item in this list is combined using a logical OR.
@@ -1552,7 +1558,7 @@ class NetworkPolicyIngressRule(types.Object):
         """
         return self.__ports
 
-    def from_(self) -> Optional[List[NetworkPolicyPeer]]:
+    def from_(self) -> Optional[List["NetworkPolicyPeer"]]:
         """
         List of sources which should be able to access the pods selected for this rule.
         Items in this list are combined using a logical OR operation.
@@ -1573,8 +1579,8 @@ class NetworkPolicySpec(types.Object):
     def __init__(
         self,
         podSelector: "metav1.LabelSelector" = None,
-        ingress: List[NetworkPolicyIngressRule] = None,
-        egress: List[NetworkPolicyEgressRule] = None,
+        ingress: List["NetworkPolicyIngressRule"] = None,
+        egress: List["NetworkPolicyEgressRule"] = None,
         policyTypes: List[PolicyType] = None,
     ):
         super().__init__()
@@ -1592,11 +1598,11 @@ class NetworkPolicySpec(types.Object):
         check_type("podSelector", podSelector, "metav1.LabelSelector")
         v["podSelector"] = podSelector
         ingress = self.ingress()
-        check_type("ingress", ingress, Optional[List[NetworkPolicyIngressRule]])
+        check_type("ingress", ingress, Optional[List["NetworkPolicyIngressRule"]])
         if ingress:  # omit empty
             v["ingress"] = ingress
         egress = self.egress()
-        check_type("egress", egress, Optional[List[NetworkPolicyEgressRule]])
+        check_type("egress", egress, Optional[List["NetworkPolicyEgressRule"]])
         if egress:  # omit empty
             v["egress"] = egress
         policyTypes = self.policyTypes()
@@ -1615,7 +1621,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__podSelector
 
-    def ingress(self) -> Optional[List[NetworkPolicyIngressRule]]:
+    def ingress(self) -> Optional[List["NetworkPolicyIngressRule"]]:
         """
         List of ingress rules to be applied to the selected pods.
         Traffic is allowed to a pod if there are no NetworkPolicies selecting the pod
@@ -1627,7 +1633,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__ingress
 
-    def egress(self) -> Optional[List[NetworkPolicyEgressRule]]:
+    def egress(self) -> Optional[List["NetworkPolicyEgressRule"]]:
         """
         List of egress rules to be applied to the selected pods. Outgoing traffic is
         allowed if there are no NetworkPolicies selecting the pod (and cluster policy
@@ -1669,7 +1675,7 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: NetworkPolicySpec = None,
+        spec: "NetworkPolicySpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -1685,11 +1691,11 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[NetworkPolicySpec])
+        check_type("spec", spec, Optional["NetworkPolicySpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[NetworkPolicySpec]:
+    def spec(self) -> Optional["NetworkPolicySpec"]:
         """
         Specification of the desired behavior for this NetworkPolicy.
         """
@@ -1704,7 +1710,7 @@ class RunAsGroupStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
+    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List["IDRange"] = None):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -1716,7 +1722,7 @@ class RunAsGroupStrategyOptions(types.Object):
         check_type("rule", rule, RunAsGroupStrategy)
         v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -1727,7 +1733,7 @@ class RunAsGroupStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
         then supply a single range with the same start and end. Required for MustRunAs.
@@ -1743,7 +1749,7 @@ class RunAsUserStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
+    def __init__(self, rule: RunAsUserStrategy = None, ranges: List["IDRange"] = None):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -1755,7 +1761,7 @@ class RunAsUserStrategyOptions(types.Object):
         check_type("rule", rule, RunAsUserStrategy)
         v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -1766,7 +1772,7 @@ class RunAsUserStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
         then supply a single range with the same start and end. Required for MustRunAs.
@@ -1874,7 +1880,9 @@ class SupplementalGroupsStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
+        self,
+        rule: SupplementalGroupsStrategyType = None,
+        ranges: List["IDRange"] = None,
     ):
         super().__init__()
         self.__rule = rule
@@ -1888,7 +1896,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
         if rule:  # omit empty
             v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -1899,7 +1907,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of supplemental groups.  If you would like to force a single
         supplemental group then supply a single range with the same start and end. Required for MustRunAs.
@@ -1923,24 +1931,24 @@ class PodSecurityPolicySpec(types.Object):
         allowedCapabilities: List[corev1.Capability] = None,
         volumes: List[FSType] = None,
         hostNetwork: bool = None,
-        hostPorts: List[HostPortRange] = None,
+        hostPorts: List["HostPortRange"] = None,
         hostPID: bool = None,
         hostIPC: bool = None,
-        seLinux: SELinuxStrategyOptions = None,
-        runAsUser: RunAsUserStrategyOptions = None,
-        runAsGroup: RunAsGroupStrategyOptions = None,
-        supplementalGroups: SupplementalGroupsStrategyOptions = None,
-        fsGroup: FSGroupStrategyOptions = None,
+        seLinux: "SELinuxStrategyOptions" = None,
+        runAsUser: "RunAsUserStrategyOptions" = None,
+        runAsGroup: "RunAsGroupStrategyOptions" = None,
+        supplementalGroups: "SupplementalGroupsStrategyOptions" = None,
+        fsGroup: "FSGroupStrategyOptions" = None,
         readOnlyRootFilesystem: bool = None,
         defaultAllowPrivilegeEscalation: bool = None,
         allowPrivilegeEscalation: bool = None,
-        allowedHostPaths: List[AllowedHostPath] = None,
-        allowedFlexVolumes: List[AllowedFlexVolume] = None,
-        allowedCSIDrivers: Dict[str, AllowedCSIDriver] = None,
+        allowedHostPaths: List["AllowedHostPath"] = None,
+        allowedFlexVolumes: List["AllowedFlexVolume"] = None,
+        allowedCSIDrivers: Dict[str, "AllowedCSIDriver"] = None,
         allowedUnsafeSysctls: List[str] = None,
         forbiddenSysctls: List[str] = None,
         allowedProcMountTypes: List[corev1.ProcMountType] = None,
-        runtimeClass: RuntimeClassStrategyOptions = None,
+        runtimeClass: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
         self.__privileged = privileged
@@ -2034,7 +2042,7 @@ class PodSecurityPolicySpec(types.Object):
         if hostNetwork:  # omit empty
             v["hostNetwork"] = hostNetwork
         hostPorts = self.hostPorts()
-        check_type("hostPorts", hostPorts, Optional[List[HostPortRange]])
+        check_type("hostPorts", hostPorts, Optional[List["HostPortRange"]])
         if hostPorts:  # omit empty
             v["hostPorts"] = hostPorts
         hostPID = self.hostPID()
@@ -2046,22 +2054,24 @@ class PodSecurityPolicySpec(types.Object):
         if hostIPC:  # omit empty
             v["hostIPC"] = hostIPC
         seLinux = self.seLinux()
-        check_type("seLinux", seLinux, SELinuxStrategyOptions)
+        check_type("seLinux", seLinux, "SELinuxStrategyOptions")
         v["seLinux"] = seLinux
         runAsUser = self.runAsUser()
-        check_type("runAsUser", runAsUser, RunAsUserStrategyOptions)
+        check_type("runAsUser", runAsUser, "RunAsUserStrategyOptions")
         v["runAsUser"] = runAsUser
         runAsGroup = self.runAsGroup()
-        check_type("runAsGroup", runAsGroup, Optional[RunAsGroupStrategyOptions])
+        check_type("runAsGroup", runAsGroup, Optional["RunAsGroupStrategyOptions"])
         if runAsGroup is not None:  # omit empty
             v["runAsGroup"] = runAsGroup
         supplementalGroups = self.supplementalGroups()
         check_type(
-            "supplementalGroups", supplementalGroups, SupplementalGroupsStrategyOptions
+            "supplementalGroups",
+            supplementalGroups,
+            "SupplementalGroupsStrategyOptions",
         )
         v["supplementalGroups"] = supplementalGroups
         fsGroup = self.fsGroup()
-        check_type("fsGroup", fsGroup, FSGroupStrategyOptions)
+        check_type("fsGroup", fsGroup, "FSGroupStrategyOptions")
         v["fsGroup"] = fsGroup
         readOnlyRootFilesystem = self.readOnlyRootFilesystem()
         check_type("readOnlyRootFilesystem", readOnlyRootFilesystem, Optional[bool])
@@ -2081,13 +2091,15 @@ class PodSecurityPolicySpec(types.Object):
             v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
         allowedHostPaths = self.allowedHostPaths()
         check_type(
-            "allowedHostPaths", allowedHostPaths, Optional[List[AllowedHostPath]]
+            "allowedHostPaths", allowedHostPaths, Optional[List["AllowedHostPath"]]
         )
         if allowedHostPaths:  # omit empty
             v["allowedHostPaths"] = allowedHostPaths
         allowedFlexVolumes = self.allowedFlexVolumes()
         check_type(
-            "allowedFlexVolumes", allowedFlexVolumes, Optional[List[AllowedFlexVolume]]
+            "allowedFlexVolumes",
+            allowedFlexVolumes,
+            Optional[List["AllowedFlexVolume"]],
         )
         if allowedFlexVolumes:  # omit empty
             v["allowedFlexVolumes"] = allowedFlexVolumes
@@ -2095,7 +2107,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "allowedCSIDrivers",
             allowedCSIDrivers,
-            Optional[Dict[str, AllowedCSIDriver]],
+            Optional[Dict[str, "AllowedCSIDriver"]],
         )
         if allowedCSIDrivers:  # omit empty
             v["allowedCSIDrivers"] = allowedCSIDrivers.values()  # named list
@@ -2116,7 +2128,9 @@ class PodSecurityPolicySpec(types.Object):
         if allowedProcMountTypes:  # omit empty
             v["allowedProcMountTypes"] = allowedProcMountTypes
         runtimeClass = self.runtimeClass()
-        check_type("runtimeClass", runtimeClass, Optional[RuntimeClassStrategyOptions])
+        check_type(
+            "runtimeClass", runtimeClass, Optional["RuntimeClassStrategyOptions"]
+        )
         if runtimeClass is not None:  # omit empty
             v["runtimeClass"] = runtimeClass
         return v
@@ -2164,7 +2178,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__hostNetwork
 
-    def hostPorts(self) -> Optional[List[HostPortRange]]:
+    def hostPorts(self) -> Optional[List["HostPortRange"]]:
         """
         hostPorts determines which host port ranges are allowed to be exposed.
         """
@@ -2182,19 +2196,19 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__hostIPC
 
-    def seLinux(self) -> SELinuxStrategyOptions:
+    def seLinux(self) -> "SELinuxStrategyOptions":
         """
         seLinux is the strategy that will dictate the allowable labels that may be set.
         """
         return self.__seLinux
 
-    def runAsUser(self) -> RunAsUserStrategyOptions:
+    def runAsUser(self) -> "RunAsUserStrategyOptions":
         """
         runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
         """
         return self.__runAsUser
 
-    def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
+    def runAsGroup(self) -> Optional["RunAsGroupStrategyOptions"]:
         """
         RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
         If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
@@ -2202,13 +2216,13 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__runAsGroup
 
-    def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
+    def supplementalGroups(self) -> "SupplementalGroupsStrategyOptions":
         """
         supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
         """
         return self.__supplementalGroups
 
-    def fsGroup(self) -> FSGroupStrategyOptions:
+    def fsGroup(self) -> "FSGroupStrategyOptions":
         """
         fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
         """
@@ -2238,14 +2252,14 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowPrivilegeEscalation
 
-    def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+    def allowedHostPaths(self) -> Optional[List["AllowedHostPath"]]:
         """
         allowedHostPaths is a white list of allowed host paths. Empty indicates
         that all host paths may be used.
         """
         return self.__allowedHostPaths
 
-    def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+    def allowedFlexVolumes(self) -> Optional[List["AllowedFlexVolume"]]:
         """
         allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
         Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
@@ -2253,7 +2267,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowedFlexVolumes
 
-    def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+    def allowedCSIDrivers(self) -> Optional[Dict[str, "AllowedCSIDriver"]]:
         """
         AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
         An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
@@ -2293,7 +2307,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowedProcMountTypes
 
-    def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
+    def runtimeClass(self) -> Optional["RuntimeClassStrategyOptions"]:
         """
         runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
         If this field is omitted, the pod's runtimeClassName field is unrestricted.
@@ -2316,7 +2330,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodSecurityPolicySpec = None,
+        spec: "PodSecurityPolicySpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -2331,11 +2345,11 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodSecurityPolicySpec])
+        check_type("spec", spec, Optional["PodSecurityPolicySpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodSecurityPolicySpec]:
+    def spec(self) -> Optional["PodSecurityPolicySpec"]:
         """
         spec defines the policy enforced.
         """
@@ -2432,7 +2446,7 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ReplicaSetSpec = None,
+        spec: "ReplicaSetSpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -2448,11 +2462,11 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ReplicaSetSpec])
+        check_type("spec", spec, Optional["ReplicaSetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ReplicaSetSpec]:
+    def spec(self) -> Optional["ReplicaSetSpec"]:
         """
         Spec defines the specification of the desired behavior of the ReplicaSet.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -2518,7 +2532,7 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ScaleSpec = None,
+        spec: "ScaleSpec" = None,
     ):
         super().__init__(
             apiVersion="extensions/v1beta1",
@@ -2534,11 +2548,11 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ScaleSpec])
+        check_type("spec", spec, Optional["ScaleSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ScaleSpec]:
+    def spec(self) -> Optional["ScaleSpec"]:
         """
         defines the behavior of the scale. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.
         """

@@ -234,7 +234,7 @@ class VolumeAttachmentSpec(types.Object):
     def __init__(
         self,
         attacher: str = "",
-        source: VolumeAttachmentSource = None,
+        source: "VolumeAttachmentSource" = None,
         nodeName: str = "",
     ):
         super().__init__()
@@ -249,7 +249,7 @@ class VolumeAttachmentSpec(types.Object):
         check_type("attacher", attacher, str)
         v["attacher"] = attacher
         source = self.source()
-        check_type("source", source, VolumeAttachmentSource)
+        check_type("source", source, "VolumeAttachmentSource")
         v["source"] = source
         nodeName = self.nodeName()
         check_type("nodeName", nodeName, str)
@@ -263,7 +263,7 @@ class VolumeAttachmentSpec(types.Object):
         """
         return self.__attacher
 
-    def source(self) -> VolumeAttachmentSource:
+    def source(self) -> "VolumeAttachmentSource":
         """
         Source represents the volume that should be attached.
         """
@@ -291,7 +291,7 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: VolumeAttachmentSpec = None,
+        spec: "VolumeAttachmentSpec" = None,
     ):
         super().__init__(
             apiVersion="storage.k8s.io/v1",
@@ -306,11 +306,11 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, VolumeAttachmentSpec)
+        check_type("spec", spec, "VolumeAttachmentSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> VolumeAttachmentSpec:
+    def spec(self) -> "VolumeAttachmentSpec":
         """
         Specification of the desired attach/detach volume behavior.
         Populated by the Kubernetes system.

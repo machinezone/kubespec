@@ -221,7 +221,9 @@ class ExternalMetricSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, metric: MetricIdentifier = None, target: MetricTarget = None):
+    def __init__(
+        self, metric: "MetricIdentifier" = None, target: "MetricTarget" = None
+    ):
         super().__init__()
         self.__metric = metric if metric is not None else MetricIdentifier()
         self.__target = target if target is not None else MetricTarget()
@@ -230,20 +232,20 @@ class ExternalMetricSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         metric = self.metric()
-        check_type("metric", metric, MetricIdentifier)
+        check_type("metric", metric, "MetricIdentifier")
         v["metric"] = metric
         target = self.target()
-        check_type("target", target, MetricTarget)
+        check_type("target", target, "MetricTarget")
         v["target"] = target
         return v
 
-    def metric(self) -> MetricIdentifier:
+    def metric(self) -> "MetricIdentifier":
         """
         metric identifies the target metric by name and selector
         """
         return self.__metric
 
-    def target(self) -> MetricTarget:
+    def target(self) -> "MetricTarget":
         """
         target specifies the target value for the given metric
         """
@@ -260,9 +262,9 @@ class ObjectMetricSource(types.Object):
     @typechecked
     def __init__(
         self,
-        describedObject: CrossVersionObjectReference = None,
-        target: MetricTarget = None,
-        metric: MetricIdentifier = None,
+        describedObject: "CrossVersionObjectReference" = None,
+        target: "MetricTarget" = None,
+        metric: "MetricIdentifier" = None,
     ):
         super().__init__()
         self.__describedObject = (
@@ -277,26 +279,26 @@ class ObjectMetricSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         describedObject = self.describedObject()
-        check_type("describedObject", describedObject, CrossVersionObjectReference)
+        check_type("describedObject", describedObject, "CrossVersionObjectReference")
         v["describedObject"] = describedObject
         target = self.target()
-        check_type("target", target, MetricTarget)
+        check_type("target", target, "MetricTarget")
         v["target"] = target
         metric = self.metric()
-        check_type("metric", metric, MetricIdentifier)
+        check_type("metric", metric, "MetricIdentifier")
         v["metric"] = metric
         return v
 
-    def describedObject(self) -> CrossVersionObjectReference:
+    def describedObject(self) -> "CrossVersionObjectReference":
         return self.__describedObject
 
-    def target(self) -> MetricTarget:
+    def target(self) -> "MetricTarget":
         """
         target specifies the target value for the given metric
         """
         return self.__target
 
-    def metric(self) -> MetricIdentifier:
+    def metric(self) -> "MetricIdentifier":
         """
         metric identifies the target metric by name and selector
         """
@@ -313,7 +315,9 @@ class PodsMetricSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, metric: MetricIdentifier = None, target: MetricTarget = None):
+    def __init__(
+        self, metric: "MetricIdentifier" = None, target: "MetricTarget" = None
+    ):
         super().__init__()
         self.__metric = metric if metric is not None else MetricIdentifier()
         self.__target = target if target is not None else MetricTarget()
@@ -322,20 +326,20 @@ class PodsMetricSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         metric = self.metric()
-        check_type("metric", metric, MetricIdentifier)
+        check_type("metric", metric, "MetricIdentifier")
         v["metric"] = metric
         target = self.target()
-        check_type("target", target, MetricTarget)
+        check_type("target", target, "MetricTarget")
         v["target"] = target
         return v
 
-    def metric(self) -> MetricIdentifier:
+    def metric(self) -> "MetricIdentifier":
         """
         metric identifies the target metric by name and selector
         """
         return self.__metric
 
-    def target(self) -> MetricTarget:
+    def target(self) -> "MetricTarget":
         """
         target specifies the target value for the given metric
         """
@@ -355,7 +359,7 @@ class ResourceMetricSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, name: corev1.ResourceName = None, target: MetricTarget = None):
+    def __init__(self, name: corev1.ResourceName = None, target: "MetricTarget" = None):
         super().__init__()
         self.__name = name
         self.__target = target if target is not None else MetricTarget()
@@ -367,7 +371,7 @@ class ResourceMetricSource(types.Object):
         check_type("name", name, corev1.ResourceName)
         v["name"] = name
         target = self.target()
-        check_type("target", target, MetricTarget)
+        check_type("target", target, "MetricTarget")
         v["target"] = target
         return v
 
@@ -377,7 +381,7 @@ class ResourceMetricSource(types.Object):
         """
         return self.__name
 
-    def target(self) -> MetricTarget:
+    def target(self) -> "MetricTarget":
         """
         target specifies the target value for the given metric
         """
@@ -395,10 +399,10 @@ class MetricSpec(types.Object):
     def __init__(
         self,
         type: MetricSourceType = None,
-        object: ObjectMetricSource = None,
-        pods: PodsMetricSource = None,
-        resource: ResourceMetricSource = None,
-        external: ExternalMetricSource = None,
+        object: "ObjectMetricSource" = None,
+        pods: "PodsMetricSource" = None,
+        resource: "ResourceMetricSource" = None,
+        external: "ExternalMetricSource" = None,
     ):
         super().__init__()
         self.__type = type
@@ -414,19 +418,19 @@ class MetricSpec(types.Object):
         check_type("type", type, MetricSourceType)
         v["type"] = type
         object = self.object()
-        check_type("object", object, Optional[ObjectMetricSource])
+        check_type("object", object, Optional["ObjectMetricSource"])
         if object is not None:  # omit empty
             v["object"] = object
         pods = self.pods()
-        check_type("pods", pods, Optional[PodsMetricSource])
+        check_type("pods", pods, Optional["PodsMetricSource"])
         if pods is not None:  # omit empty
             v["pods"] = pods
         resource = self.resource()
-        check_type("resource", resource, Optional[ResourceMetricSource])
+        check_type("resource", resource, Optional["ResourceMetricSource"])
         if resource is not None:  # omit empty
             v["resource"] = resource
         external = self.external()
-        check_type("external", external, Optional[ExternalMetricSource])
+        check_type("external", external, Optional["ExternalMetricSource"])
         if external is not None:  # omit empty
             v["external"] = external
         return v
@@ -438,14 +442,14 @@ class MetricSpec(types.Object):
         """
         return self.__type
 
-    def object(self) -> Optional[ObjectMetricSource]:
+    def object(self) -> Optional["ObjectMetricSource"]:
         """
         object refers to a metric describing a single kubernetes object
         (for example, hits-per-second on an Ingress object).
         """
         return self.__object
 
-    def pods(self) -> Optional[PodsMetricSource]:
+    def pods(self) -> Optional["PodsMetricSource"]:
         """
         pods refers to a metric describing each pod in the current scale target
         (for example, transactions-processed-per-second).  The values will be
@@ -453,7 +457,7 @@ class MetricSpec(types.Object):
         """
         return self.__pods
 
-    def resource(self) -> Optional[ResourceMetricSource]:
+    def resource(self) -> Optional["ResourceMetricSource"]:
         """
         resource refers to a resource metric (such as those specified in
         requests and limits) known to Kubernetes describing each pod in the
@@ -463,7 +467,7 @@ class MetricSpec(types.Object):
         """
         return self.__resource
 
-    def external(self) -> Optional[ExternalMetricSource]:
+    def external(self) -> Optional["ExternalMetricSource"]:
         """
         external refers to a global metric that is not associated
         with any Kubernetes object. It allows autoscaling based on information
@@ -483,10 +487,10 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        scaleTargetRef: CrossVersionObjectReference = None,
+        scaleTargetRef: "CrossVersionObjectReference" = None,
         minReplicas: int = None,
         maxReplicas: int = 0,
-        metrics: List[MetricSpec] = None,
+        metrics: List["MetricSpec"] = None,
     ):
         super().__init__()
         self.__scaleTargetRef = (
@@ -502,7 +506,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         scaleTargetRef = self.scaleTargetRef()
-        check_type("scaleTargetRef", scaleTargetRef, CrossVersionObjectReference)
+        check_type("scaleTargetRef", scaleTargetRef, "CrossVersionObjectReference")
         v["scaleTargetRef"] = scaleTargetRef
         minReplicas = self.minReplicas()
         check_type("minReplicas", minReplicas, Optional[int])
@@ -512,12 +516,12 @@ class HorizontalPodAutoscalerSpec(types.Object):
         check_type("maxReplicas", maxReplicas, int)
         v["maxReplicas"] = maxReplicas
         metrics = self.metrics()
-        check_type("metrics", metrics, Optional[List[MetricSpec]])
+        check_type("metrics", metrics, Optional[List["MetricSpec"]])
         if metrics:  # omit empty
             v["metrics"] = metrics
         return v
 
-    def scaleTargetRef(self) -> CrossVersionObjectReference:
+    def scaleTargetRef(self) -> "CrossVersionObjectReference":
         """
         scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
         should be collected, as well as to actually change the replica count.
@@ -541,7 +545,7 @@ class HorizontalPodAutoscalerSpec(types.Object):
         """
         return self.__maxReplicas
 
-    def metrics(self) -> Optional[List[MetricSpec]]:
+    def metrics(self) -> Optional[List["MetricSpec"]]:
         """
         metrics contains the specifications for which to use to calculate the
         desired replica count (the maximum replica count across all metrics will
@@ -570,7 +574,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: HorizontalPodAutoscalerSpec = None,
+        spec: "HorizontalPodAutoscalerSpec" = None,
     ):
         super().__init__(
             apiVersion="autoscaling/v2beta2",
@@ -586,11 +590,11 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[HorizontalPodAutoscalerSpec])
+        check_type("spec", spec, Optional["HorizontalPodAutoscalerSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[HorizontalPodAutoscalerSpec]:
+    def spec(self) -> Optional["HorizontalPodAutoscalerSpec"]:
         """
         spec is the specification for the behaviour of the autoscaler.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status.

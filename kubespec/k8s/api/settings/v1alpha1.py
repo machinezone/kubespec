@@ -108,7 +108,7 @@ class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodPresetSpec = None,
+        spec: "PodPresetSpec" = None,
     ):
         super().__init__(
             apiVersion="settings.k8s.io/v1alpha1",
@@ -124,9 +124,9 @@ class PodPreset(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodPresetSpec])
+        check_type("spec", spec, Optional["PodPresetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodPresetSpec]:
+    def spec(self) -> Optional["PodPresetSpec"]:
         return self.__spec

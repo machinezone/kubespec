@@ -56,7 +56,7 @@ class HTTPIngressPath(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, path: str = None, backend: IngressBackend = None):
+    def __init__(self, path: str = None, backend: "IngressBackend" = None):
         super().__init__()
         self.__path = path
         self.__backend = backend if backend is not None else IngressBackend()
@@ -69,7 +69,7 @@ class HTTPIngressPath(types.Object):
         if path:  # omit empty
             v["path"] = path
         backend = self.backend()
-        check_type("backend", backend, IngressBackend)
+        check_type("backend", backend, "IngressBackend")
         v["backend"] = backend
         return v
 
@@ -85,7 +85,7 @@ class HTTPIngressPath(types.Object):
         """
         return self.__path
 
-    def backend(self) -> IngressBackend:
+    def backend(self) -> "IngressBackend":
         """
         Backend defines the referenced service endpoint to which the traffic
         will be forwarded to.
@@ -104,7 +104,7 @@ class HTTPIngressRuleValue(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, paths: List[HTTPIngressPath] = None):
+    def __init__(self, paths: List["HTTPIngressPath"] = None):
         super().__init__()
         self.__paths = paths if paths is not None else []
 
@@ -112,11 +112,11 @@ class HTTPIngressRuleValue(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         paths = self.paths()
-        check_type("paths", paths, List[HTTPIngressPath])
+        check_type("paths", paths, List["HTTPIngressPath"])
         v["paths"] = paths
         return v
 
-    def paths(self) -> List[HTTPIngressPath]:
+    def paths(self) -> List["HTTPIngressPath"]:
         """
         A collection of paths that map requests to backends.
         """
@@ -133,7 +133,7 @@ class IngressRuleValue(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, http: HTTPIngressRuleValue = None):
+    def __init__(self, http: "HTTPIngressRuleValue" = None):
         super().__init__()
         self.__http = http
 
@@ -141,12 +141,12 @@ class IngressRuleValue(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         http = self.http()
-        check_type("http", http, Optional[HTTPIngressRuleValue])
+        check_type("http", http, Optional["HTTPIngressRuleValue"])
         if http is not None:  # omit empty
             v["http"] = http
         return v
 
-    def http(self) -> Optional[HTTPIngressRuleValue]:
+    def http(self) -> Optional["HTTPIngressRuleValue"]:
         return self.__http
 
 
@@ -159,7 +159,7 @@ class IngressRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, host: str = None, ingressRuleValue: IngressRuleValue = None):
+    def __init__(self, host: str = None, ingressRuleValue: "IngressRuleValue" = None):
         super().__init__()
         self.__host = host
         self.__ingressRuleValue = (
@@ -174,7 +174,7 @@ class IngressRule(types.Object):
         if host:  # omit empty
             v["host"] = host
         ingressRuleValue = self.ingressRuleValue()
-        check_type("ingressRuleValue", ingressRuleValue, Optional[IngressRuleValue])
+        check_type("ingressRuleValue", ingressRuleValue, Optional["IngressRuleValue"])
         v.update(ingressRuleValue._root())  # inline
         return v
 
@@ -195,7 +195,7 @@ class IngressRule(types.Object):
         """
         return self.__host
 
-    def ingressRuleValue(self) -> Optional[IngressRuleValue]:
+    def ingressRuleValue(self) -> Optional["IngressRuleValue"]:
         """
         IngressRuleValue represents a rule to route requests for this IngressRule.
         If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -260,9 +260,9 @@ class IngressSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        backend: IngressBackend = None,
-        tls: List[IngressTLS] = None,
-        rules: List[IngressRule] = None,
+        backend: "IngressBackend" = None,
+        tls: List["IngressTLS"] = None,
+        rules: List["IngressRule"] = None,
     ):
         super().__init__()
         self.__backend = backend
@@ -273,20 +273,20 @@ class IngressSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         backend = self.backend()
-        check_type("backend", backend, Optional[IngressBackend])
+        check_type("backend", backend, Optional["IngressBackend"])
         if backend is not None:  # omit empty
             v["backend"] = backend
         tls = self.tls()
-        check_type("tls", tls, Optional[List[IngressTLS]])
+        check_type("tls", tls, Optional[List["IngressTLS"]])
         if tls:  # omit empty
             v["tls"] = tls
         rules = self.rules()
-        check_type("rules", rules, Optional[List[IngressRule]])
+        check_type("rules", rules, Optional[List["IngressRule"]])
         if rules:  # omit empty
             v["rules"] = rules
         return v
 
-    def backend(self) -> Optional[IngressBackend]:
+    def backend(self) -> Optional["IngressBackend"]:
         """
         A default backend capable of servicing requests that don't match any
         rule. At least one of 'backend' or 'rules' must be specified. This field
@@ -295,7 +295,7 @@ class IngressSpec(types.Object):
         """
         return self.__backend
 
-    def tls(self) -> Optional[List[IngressTLS]]:
+    def tls(self) -> Optional[List["IngressTLS"]]:
         """
         TLS configuration. Currently the Ingress only supports a single TLS
         port, 443. If multiple members of this list specify different hosts, they
@@ -305,7 +305,7 @@ class IngressSpec(types.Object):
         """
         return self.__tls
 
-    def rules(self) -> Optional[List[IngressRule]]:
+    def rules(self) -> Optional[List["IngressRule"]]:
         """
         A list of host rules used to configure the Ingress. If unspecified, or
         no rule matches, all traffic is sent to the default backend.
@@ -329,7 +329,7 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: IngressSpec = None,
+        spec: "IngressSpec" = None,
     ):
         super().__init__(
             apiVersion="networking.k8s.io/v1beta1",
@@ -345,11 +345,11 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[IngressSpec])
+        check_type("spec", spec, Optional["IngressSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[IngressSpec]:
+    def spec(self) -> Optional["IngressSpec"]:
         """
         Spec is the desired state of the Ingress.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

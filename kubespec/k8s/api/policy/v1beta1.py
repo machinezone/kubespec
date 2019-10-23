@@ -310,7 +310,9 @@ class FSGroupStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: FSGroupStrategyType = None, ranges: List[IDRange] = None):
+    def __init__(
+        self, rule: FSGroupStrategyType = None, ranges: List["IDRange"] = None
+    ):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -323,7 +325,7 @@ class FSGroupStrategyOptions(types.Object):
         if rule:  # omit empty
             v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -334,7 +336,7 @@ class FSGroupStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of fs groups.  If you would like to force a single
         fs group then supply a single range with the same start and end. Required for MustRunAs.
@@ -453,7 +455,7 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodDisruptionBudgetSpec = None,
+        spec: "PodDisruptionBudgetSpec" = None,
     ):
         super().__init__(
             apiVersion="policy/v1beta1",
@@ -469,11 +471,11 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodDisruptionBudgetSpec])
+        check_type("spec", spec, Optional["PodDisruptionBudgetSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodDisruptionBudgetSpec]:
+    def spec(self) -> Optional["PodDisruptionBudgetSpec"]:
         """
         Specification of the desired behavior of the PodDisruptionBudget.
         """
@@ -487,7 +489,7 @@ class RunAsGroupStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List[IDRange] = None):
+    def __init__(self, rule: RunAsGroupStrategy = None, ranges: List["IDRange"] = None):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -499,7 +501,7 @@ class RunAsGroupStrategyOptions(types.Object):
         check_type("rule", rule, RunAsGroupStrategy)
         v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -510,7 +512,7 @@ class RunAsGroupStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of gids that may be used. If you would like to force a single gid
         then supply a single range with the same start and end. Required for MustRunAs.
@@ -525,7 +527,7 @@ class RunAsUserStrategyOptions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, rule: RunAsUserStrategy = None, ranges: List[IDRange] = None):
+    def __init__(self, rule: RunAsUserStrategy = None, ranges: List["IDRange"] = None):
         super().__init__()
         self.__rule = rule
         self.__ranges = ranges if ranges is not None else []
@@ -537,7 +539,7 @@ class RunAsUserStrategyOptions(types.Object):
         check_type("rule", rule, RunAsUserStrategy)
         v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -548,7 +550,7 @@ class RunAsUserStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of uids that may be used. If you would like to force a single uid
         then supply a single range with the same start and end. Required for MustRunAs.
@@ -654,7 +656,9 @@ class SupplementalGroupsStrategyOptions(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, rule: SupplementalGroupsStrategyType = None, ranges: List[IDRange] = None
+        self,
+        rule: SupplementalGroupsStrategyType = None,
+        ranges: List["IDRange"] = None,
     ):
         super().__init__()
         self.__rule = rule
@@ -668,7 +672,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
         if rule:  # omit empty
             v["rule"] = rule
         ranges = self.ranges()
-        check_type("ranges", ranges, Optional[List[IDRange]])
+        check_type("ranges", ranges, Optional[List["IDRange"]])
         if ranges:  # omit empty
             v["ranges"] = ranges
         return v
@@ -679,7 +683,7 @@ class SupplementalGroupsStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def ranges(self) -> Optional[List[IDRange]]:
+    def ranges(self) -> Optional[List["IDRange"]]:
         """
         ranges are the allowed ranges of supplemental groups.  If you would like to force a single
         supplemental group then supply a single range with the same start and end. Required for MustRunAs.
@@ -702,24 +706,24 @@ class PodSecurityPolicySpec(types.Object):
         allowedCapabilities: List[corev1.Capability] = None,
         volumes: List[FSType] = None,
         hostNetwork: bool = None,
-        hostPorts: List[HostPortRange] = None,
+        hostPorts: List["HostPortRange"] = None,
         hostPID: bool = None,
         hostIPC: bool = None,
-        seLinux: SELinuxStrategyOptions = None,
-        runAsUser: RunAsUserStrategyOptions = None,
-        runAsGroup: RunAsGroupStrategyOptions = None,
-        supplementalGroups: SupplementalGroupsStrategyOptions = None,
-        fsGroup: FSGroupStrategyOptions = None,
+        seLinux: "SELinuxStrategyOptions" = None,
+        runAsUser: "RunAsUserStrategyOptions" = None,
+        runAsGroup: "RunAsGroupStrategyOptions" = None,
+        supplementalGroups: "SupplementalGroupsStrategyOptions" = None,
+        fsGroup: "FSGroupStrategyOptions" = None,
         readOnlyRootFilesystem: bool = None,
         defaultAllowPrivilegeEscalation: bool = None,
         allowPrivilegeEscalation: bool = None,
-        allowedHostPaths: List[AllowedHostPath] = None,
-        allowedFlexVolumes: List[AllowedFlexVolume] = None,
-        allowedCSIDrivers: Dict[str, AllowedCSIDriver] = None,
+        allowedHostPaths: List["AllowedHostPath"] = None,
+        allowedFlexVolumes: List["AllowedFlexVolume"] = None,
+        allowedCSIDrivers: Dict[str, "AllowedCSIDriver"] = None,
         allowedUnsafeSysctls: List[str] = None,
         forbiddenSysctls: List[str] = None,
         allowedProcMountTypes: List[corev1.ProcMountType] = None,
-        runtimeClass: RuntimeClassStrategyOptions = None,
+        runtimeClass: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
         self.__privileged = privileged
@@ -813,7 +817,7 @@ class PodSecurityPolicySpec(types.Object):
         if hostNetwork:  # omit empty
             v["hostNetwork"] = hostNetwork
         hostPorts = self.hostPorts()
-        check_type("hostPorts", hostPorts, Optional[List[HostPortRange]])
+        check_type("hostPorts", hostPorts, Optional[List["HostPortRange"]])
         if hostPorts:  # omit empty
             v["hostPorts"] = hostPorts
         hostPID = self.hostPID()
@@ -825,22 +829,24 @@ class PodSecurityPolicySpec(types.Object):
         if hostIPC:  # omit empty
             v["hostIPC"] = hostIPC
         seLinux = self.seLinux()
-        check_type("seLinux", seLinux, SELinuxStrategyOptions)
+        check_type("seLinux", seLinux, "SELinuxStrategyOptions")
         v["seLinux"] = seLinux
         runAsUser = self.runAsUser()
-        check_type("runAsUser", runAsUser, RunAsUserStrategyOptions)
+        check_type("runAsUser", runAsUser, "RunAsUserStrategyOptions")
         v["runAsUser"] = runAsUser
         runAsGroup = self.runAsGroup()
-        check_type("runAsGroup", runAsGroup, Optional[RunAsGroupStrategyOptions])
+        check_type("runAsGroup", runAsGroup, Optional["RunAsGroupStrategyOptions"])
         if runAsGroup is not None:  # omit empty
             v["runAsGroup"] = runAsGroup
         supplementalGroups = self.supplementalGroups()
         check_type(
-            "supplementalGroups", supplementalGroups, SupplementalGroupsStrategyOptions
+            "supplementalGroups",
+            supplementalGroups,
+            "SupplementalGroupsStrategyOptions",
         )
         v["supplementalGroups"] = supplementalGroups
         fsGroup = self.fsGroup()
-        check_type("fsGroup", fsGroup, FSGroupStrategyOptions)
+        check_type("fsGroup", fsGroup, "FSGroupStrategyOptions")
         v["fsGroup"] = fsGroup
         readOnlyRootFilesystem = self.readOnlyRootFilesystem()
         check_type("readOnlyRootFilesystem", readOnlyRootFilesystem, Optional[bool])
@@ -860,13 +866,15 @@ class PodSecurityPolicySpec(types.Object):
             v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
         allowedHostPaths = self.allowedHostPaths()
         check_type(
-            "allowedHostPaths", allowedHostPaths, Optional[List[AllowedHostPath]]
+            "allowedHostPaths", allowedHostPaths, Optional[List["AllowedHostPath"]]
         )
         if allowedHostPaths:  # omit empty
             v["allowedHostPaths"] = allowedHostPaths
         allowedFlexVolumes = self.allowedFlexVolumes()
         check_type(
-            "allowedFlexVolumes", allowedFlexVolumes, Optional[List[AllowedFlexVolume]]
+            "allowedFlexVolumes",
+            allowedFlexVolumes,
+            Optional[List["AllowedFlexVolume"]],
         )
         if allowedFlexVolumes:  # omit empty
             v["allowedFlexVolumes"] = allowedFlexVolumes
@@ -874,7 +882,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "allowedCSIDrivers",
             allowedCSIDrivers,
-            Optional[Dict[str, AllowedCSIDriver]],
+            Optional[Dict[str, "AllowedCSIDriver"]],
         )
         if allowedCSIDrivers:  # omit empty
             v["allowedCSIDrivers"] = allowedCSIDrivers.values()  # named list
@@ -895,7 +903,9 @@ class PodSecurityPolicySpec(types.Object):
         if allowedProcMountTypes:  # omit empty
             v["allowedProcMountTypes"] = allowedProcMountTypes
         runtimeClass = self.runtimeClass()
-        check_type("runtimeClass", runtimeClass, Optional[RuntimeClassStrategyOptions])
+        check_type(
+            "runtimeClass", runtimeClass, Optional["RuntimeClassStrategyOptions"]
+        )
         if runtimeClass is not None:  # omit empty
             v["runtimeClass"] = runtimeClass
         return v
@@ -943,7 +953,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__hostNetwork
 
-    def hostPorts(self) -> Optional[List[HostPortRange]]:
+    def hostPorts(self) -> Optional[List["HostPortRange"]]:
         """
         hostPorts determines which host port ranges are allowed to be exposed.
         """
@@ -961,19 +971,19 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__hostIPC
 
-    def seLinux(self) -> SELinuxStrategyOptions:
+    def seLinux(self) -> "SELinuxStrategyOptions":
         """
         seLinux is the strategy that will dictate the allowable labels that may be set.
         """
         return self.__seLinux
 
-    def runAsUser(self) -> RunAsUserStrategyOptions:
+    def runAsUser(self) -> "RunAsUserStrategyOptions":
         """
         runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
         """
         return self.__runAsUser
 
-    def runAsGroup(self) -> Optional[RunAsGroupStrategyOptions]:
+    def runAsGroup(self) -> Optional["RunAsGroupStrategyOptions"]:
         """
         RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
         If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
@@ -981,13 +991,13 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__runAsGroup
 
-    def supplementalGroups(self) -> SupplementalGroupsStrategyOptions:
+    def supplementalGroups(self) -> "SupplementalGroupsStrategyOptions":
         """
         supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
         """
         return self.__supplementalGroups
 
-    def fsGroup(self) -> FSGroupStrategyOptions:
+    def fsGroup(self) -> "FSGroupStrategyOptions":
         """
         fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
         """
@@ -1017,14 +1027,14 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowPrivilegeEscalation
 
-    def allowedHostPaths(self) -> Optional[List[AllowedHostPath]]:
+    def allowedHostPaths(self) -> Optional[List["AllowedHostPath"]]:
         """
         allowedHostPaths is a white list of allowed host paths. Empty indicates
         that all host paths may be used.
         """
         return self.__allowedHostPaths
 
-    def allowedFlexVolumes(self) -> Optional[List[AllowedFlexVolume]]:
+    def allowedFlexVolumes(self) -> Optional[List["AllowedFlexVolume"]]:
         """
         allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
         Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
@@ -1032,7 +1042,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowedFlexVolumes
 
-    def allowedCSIDrivers(self) -> Optional[Dict[str, AllowedCSIDriver]]:
+    def allowedCSIDrivers(self) -> Optional[Dict[str, "AllowedCSIDriver"]]:
         """
         AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
         An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
@@ -1073,7 +1083,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowedProcMountTypes
 
-    def runtimeClass(self) -> Optional[RuntimeClassStrategyOptions]:
+    def runtimeClass(self) -> Optional["RuntimeClassStrategyOptions"]:
         """
         runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
         If this field is omitted, the pod's runtimeClassName field is unrestricted.
@@ -1095,7 +1105,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: PodSecurityPolicySpec = None,
+        spec: "PodSecurityPolicySpec" = None,
     ):
         super().__init__(
             apiVersion="policy/v1beta1",
@@ -1110,11 +1120,11 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[PodSecurityPolicySpec])
+        check_type("spec", spec, Optional["PodSecurityPolicySpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[PodSecurityPolicySpec]:
+    def spec(self) -> Optional["PodSecurityPolicySpec"]:
         """
         spec defines the policy enforced.
         """

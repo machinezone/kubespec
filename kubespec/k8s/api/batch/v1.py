@@ -171,7 +171,7 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: JobSpec = None,
+        spec: "JobSpec" = None,
     ):
         super().__init__(
             apiVersion="batch/v1",
@@ -187,11 +187,11 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[JobSpec])
+        check_type("spec", spec, Optional["JobSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[JobSpec]:
+    def spec(self) -> Optional["JobSpec"]:
         """
         Specification of the desired behavior of a job.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

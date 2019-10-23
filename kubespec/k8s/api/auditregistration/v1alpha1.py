@@ -160,7 +160,10 @@ class WebhookClientConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, url: str = None, service: ServiceReference = None, caBundle: bytes = None
+        self,
+        url: str = None,
+        service: "ServiceReference" = None,
+        caBundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
@@ -175,7 +178,7 @@ class WebhookClientConfig(types.Object):
         if url is not None:  # omit empty
             v["url"] = url
         service = self.service()
-        check_type("service", service, Optional[ServiceReference])
+        check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
         caBundle = self.caBundle()
@@ -214,7 +217,7 @@ class WebhookClientConfig(types.Object):
         """
         return self.__url
 
-    def service(self) -> Optional[ServiceReference]:
+    def service(self) -> Optional["ServiceReference"]:
         """
         `service` is a reference to the service for this webhook. Either
         `service` or `url` must be specified.
@@ -280,8 +283,8 @@ class Webhook(types.Object):
     @typechecked
     def __init__(
         self,
-        throttle: WebhookThrottleConfig = None,
-        clientConfig: WebhookClientConfig = None,
+        throttle: "WebhookThrottleConfig" = None,
+        clientConfig: "WebhookClientConfig" = None,
     ):
         super().__init__()
         self.__throttle = throttle if throttle is not None else WebhookThrottleConfig()
@@ -293,21 +296,21 @@ class Webhook(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         throttle = self.throttle()
-        check_type("throttle", throttle, Optional[WebhookThrottleConfig])
+        check_type("throttle", throttle, Optional["WebhookThrottleConfig"])
         if throttle is not None:  # omit empty
             v["throttle"] = throttle
         clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, WebhookClientConfig)
+        check_type("clientConfig", clientConfig, "WebhookClientConfig")
         v["clientConfig"] = clientConfig
         return v
 
-    def throttle(self) -> Optional[WebhookThrottleConfig]:
+    def throttle(self) -> Optional["WebhookThrottleConfig"]:
         """
         Throttle holds the options for throttling the webhook
         """
         return self.__throttle
 
-    def clientConfig(self) -> WebhookClientConfig:
+    def clientConfig(self) -> "WebhookClientConfig":
         """
         ClientConfig holds the connection parameters for the webhook
         required
@@ -322,7 +325,7 @@ class AuditSinkSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, policy: Policy = None, webhook: Webhook = None):
+    def __init__(self, policy: "Policy" = None, webhook: "Webhook" = None):
         super().__init__()
         self.__policy = policy if policy is not None else Policy()
         self.__webhook = webhook if webhook is not None else Webhook()
@@ -331,21 +334,21 @@ class AuditSinkSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         policy = self.policy()
-        check_type("policy", policy, Policy)
+        check_type("policy", policy, "Policy")
         v["policy"] = policy
         webhook = self.webhook()
-        check_type("webhook", webhook, Webhook)
+        check_type("webhook", webhook, "Webhook")
         v["webhook"] = webhook
         return v
 
-    def policy(self) -> Policy:
+    def policy(self) -> "Policy":
         """
         Policy defines the policy for selecting which events should be sent to the webhook
         required
         """
         return self.__policy
 
-    def webhook(self) -> Webhook:
+    def webhook(self) -> "Webhook":
         """
         Webhook to send events
         required
@@ -365,7 +368,7 @@ class AuditSink(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: AuditSinkSpec = None,
+        spec: "AuditSinkSpec" = None,
     ):
         super().__init__(
             apiVersion="auditregistration.k8s.io/v1alpha1",
@@ -380,11 +383,11 @@ class AuditSink(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[AuditSinkSpec])
+        check_type("spec", spec, Optional["AuditSinkSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[AuditSinkSpec]:
+    def spec(self) -> Optional["AuditSinkSpec"]:
         """
         Spec defines the audit configuration spec
         """

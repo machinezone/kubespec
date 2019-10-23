@@ -114,8 +114,8 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         handler: str = "",
-        overhead: Overhead = None,
-        scheduling: Scheduling = None,
+        overhead: "Overhead" = None,
+        scheduling: "Scheduling" = None,
     ):
         super().__init__(
             apiVersion="node.k8s.io/v1beta1",
@@ -135,11 +135,11 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         check_type("handler", handler, str)
         v["handler"] = handler
         overhead = self.overhead()
-        check_type("overhead", overhead, Optional[Overhead])
+        check_type("overhead", overhead, Optional["Overhead"])
         if overhead is not None:  # omit empty
             v["overhead"] = overhead
         scheduling = self.scheduling()
-        check_type("scheduling", scheduling, Optional[Scheduling])
+        check_type("scheduling", scheduling, Optional["Scheduling"])
         if scheduling is not None:  # omit empty
             v["scheduling"] = scheduling
         return v
@@ -159,7 +159,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         """
         return self.__handler
 
-    def overhead(self) -> Optional[Overhead]:
+    def overhead(self) -> Optional["Overhead"]:
         """
         Overhead represents the resource overhead associated with running a pod for a
         given RuntimeClass. For more details, see
@@ -168,7 +168,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         """
         return self.__overhead
 
-    def scheduling(self) -> Optional[Scheduling]:
+    def scheduling(self) -> Optional["Scheduling"]:
         """
         Scheduling holds the scheduling constraints to ensure that pods running
         with this RuntimeClass are scheduled to nodes that support it.

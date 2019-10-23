@@ -89,7 +89,7 @@ class TokenRequestSpec(types.Object):
         self,
         audiences: List[str] = None,
         expirationSeconds: int = None,
-        boundObjectRef: BoundObjectReference = None,
+        boundObjectRef: "BoundObjectReference" = None,
     ):
         super().__init__()
         self.__audiences = audiences if audiences is not None else []
@@ -108,7 +108,7 @@ class TokenRequestSpec(types.Object):
         check_type("expirationSeconds", expirationSeconds, Optional[int])
         v["expirationSeconds"] = expirationSeconds
         boundObjectRef = self.boundObjectRef()
-        check_type("boundObjectRef", boundObjectRef, Optional[BoundObjectReference])
+        check_type("boundObjectRef", boundObjectRef, Optional["BoundObjectReference"])
         v["boundObjectRef"] = boundObjectRef
         return v
 
@@ -131,7 +131,7 @@ class TokenRequestSpec(types.Object):
         """
         return self.__expirationSeconds
 
-    def boundObjectRef(self) -> Optional[BoundObjectReference]:
+    def boundObjectRef(self) -> Optional["BoundObjectReference"]:
         """
         BoundObjectRef is a reference to an object that the token will be bound to.
         The token will only be valid for as long as the bound object exists.
@@ -155,7 +155,7 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: TokenRequestSpec = None,
+        spec: "TokenRequestSpec" = None,
     ):
         super().__init__(
             apiVersion="authentication.k8s.io/v1",
@@ -171,11 +171,11 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, TokenRequestSpec)
+        check_type("spec", spec, "TokenRequestSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> TokenRequestSpec:
+    def spec(self) -> "TokenRequestSpec":
         return self.__spec
 
 
@@ -235,7 +235,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: TokenReviewSpec = None,
+        spec: "TokenReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authentication.k8s.io/v1",
@@ -250,11 +250,11 @@ class TokenReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, TokenReviewSpec)
+        check_type("spec", spec, "TokenReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> TokenReviewSpec:
+    def spec(self) -> "TokenReviewSpec":
         """
         Spec holds information about the request being evaluated
         """

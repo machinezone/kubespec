@@ -83,7 +83,7 @@ class CronJobSpec(types.Object):
         startingDeadlineSeconds: int = None,
         concurrencyPolicy: ConcurrencyPolicy = ConcurrencyPolicy["Allow"],
         suspend: bool = None,
-        jobTemplate: JobTemplateSpec = None,
+        jobTemplate: "JobTemplateSpec" = None,
         successfulJobsHistoryLimit: int = None,
         failedJobsHistoryLimit: int = None,
     ):
@@ -117,7 +117,7 @@ class CronJobSpec(types.Object):
         if suspend is not None:  # omit empty
             v["suspend"] = suspend
         jobTemplate = self.jobTemplate()
-        check_type("jobTemplate", jobTemplate, JobTemplateSpec)
+        check_type("jobTemplate", jobTemplate, "JobTemplateSpec")
         v["jobTemplate"] = jobTemplate
         successfulJobsHistoryLimit = self.successfulJobsHistoryLimit()
         check_type(
@@ -161,7 +161,7 @@ class CronJobSpec(types.Object):
         """
         return self.__suspend
 
-    def jobTemplate(self) -> JobTemplateSpec:
+    def jobTemplate(self) -> "JobTemplateSpec":
         """
         Specifies the job that will be created when executing a CronJob.
         """
@@ -195,7 +195,7 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: CronJobSpec = None,
+        spec: "CronJobSpec" = None,
     ):
         super().__init__(
             apiVersion="batch/v2alpha1",
@@ -211,11 +211,11 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[CronJobSpec])
+        check_type("spec", spec, Optional["CronJobSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[CronJobSpec]:
+    def spec(self) -> Optional["CronJobSpec"]:
         """
         Specification of the desired behavior of a cron job, including the schedule.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
@@ -236,7 +236,7 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        template: JobTemplateSpec = None,
+        template: "JobTemplateSpec" = None,
     ):
         super().__init__(
             apiVersion="batch/v2alpha1",
@@ -252,11 +252,11 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, Optional[JobTemplateSpec])
+        check_type("template", template, Optional["JobTemplateSpec"])
         v["template"] = template
         return v
 
-    def template(self) -> Optional[JobTemplateSpec]:
+    def template(self) -> Optional["JobTemplateSpec"]:
         """
         Defines jobs that will be created from this template.
         https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

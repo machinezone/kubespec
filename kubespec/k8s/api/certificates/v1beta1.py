@@ -155,7 +155,7 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: CertificateSigningRequestSpec = None,
+        spec: "CertificateSigningRequestSpec" = None,
     ):
         super().__init__(
             apiVersion="certificates.k8s.io/v1beta1",
@@ -170,11 +170,11 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[CertificateSigningRequestSpec])
+        check_type("spec", spec, Optional["CertificateSigningRequestSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[CertificateSigningRequestSpec]:
+    def spec(self) -> Optional["CertificateSigningRequestSpec"]:
         """
         The certificate request itself and any additional information.
         """

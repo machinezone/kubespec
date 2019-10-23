@@ -128,7 +128,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         annotations: Dict[str, str] = None,
         timestamp: "base.Time" = None,
         window: "base.Duration" = None,
-        containers: Dict[str, ContainerMetrics] = None,
+        containers: Dict[str, "ContainerMetrics"] = None,
     ):
         super().__init__(
             apiVersion="metrics.k8s.io/v1beta1",
@@ -152,7 +152,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         check_type("window", window, "base.Duration")
         v["window"] = window
         containers = self.containers()
-        check_type("containers", containers, Dict[str, ContainerMetrics])
+        check_type("containers", containers, Dict[str, "ContainerMetrics"])
         v["containers"] = containers.values()  # named list
         return v
 
@@ -166,7 +166,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
     def window(self) -> "base.Duration":
         return self.__window
 
-    def containers(self) -> Dict[str, ContainerMetrics]:
+    def containers(self) -> Dict[str, "ContainerMetrics"]:
         """
         Metrics for all containers are collected within the same time window.
         """

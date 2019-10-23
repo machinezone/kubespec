@@ -71,7 +71,7 @@ class AdmissionConfiguration(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, plugins: Dict[str, AdmissionPluginConfiguration] = None):
+    def __init__(self, plugins: Dict[str, "AdmissionPluginConfiguration"] = None):
         super().__init__(
             apiVersion="apiserver.k8s.io/v1alpha1", kind="AdmissionConfiguration"
         )
@@ -81,11 +81,11 @@ class AdmissionConfiguration(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         plugins = self.plugins()
-        check_type("plugins", plugins, Dict[str, AdmissionPluginConfiguration])
+        check_type("plugins", plugins, Dict[str, "AdmissionPluginConfiguration"])
         v["plugins"] = plugins.values()  # named list
         return v
 
-    def plugins(self) -> Dict[str, AdmissionPluginConfiguration]:
+    def plugins(self) -> Dict[str, "AdmissionPluginConfiguration"]:
         """
         Plugins allows specifying a configuration per admission control plugin.
         """
@@ -170,7 +170,7 @@ class Connection(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, type: str = "", httpConnect: HTTPConnectConfig = None):
+    def __init__(self, type: str = "", httpConnect: "HTTPConnectConfig" = None):
         super().__init__()
         self.__type = type
         self.__httpConnect = httpConnect
@@ -182,7 +182,7 @@ class Connection(types.Object):
         check_type("type", type, str)
         v["type"] = type
         httpConnect = self.httpConnect()
-        check_type("httpConnect", httpConnect, Optional[HTTPConnectConfig])
+        check_type("httpConnect", httpConnect, Optional["HTTPConnectConfig"])
         if httpConnect is not None:  # omit empty
             v["httpConnect"] = httpConnect
         return v
@@ -194,7 +194,7 @@ class Connection(types.Object):
         """
         return self.__type
 
-    def httpConnect(self) -> Optional[HTTPConnectConfig]:
+    def httpConnect(self) -> Optional["HTTPConnectConfig"]:
         """
         httpConnect is the config needed to use http-connect to the konnectivity server.
         Absence when the type is "http-connect" will cause an error
@@ -210,7 +210,7 @@ class EgressSelection(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, name: str = "", connection: Connection = None):
+    def __init__(self, name: str = "", connection: "Connection" = None):
         super().__init__()
         self.__name = name
         self.__connection = connection if connection is not None else Connection()
@@ -222,7 +222,7 @@ class EgressSelection(types.Object):
         check_type("name", name, str)
         v["name"] = name
         connection = self.connection()
-        check_type("connection", connection, Connection)
+        check_type("connection", connection, "Connection")
         v["connection"] = connection
         return v
 
@@ -233,7 +233,7 @@ class EgressSelection(types.Object):
         """
         return self.__name
 
-    def connection(self) -> Connection:
+    def connection(self) -> "Connection":
         """
         connection is the exact information used to configure the egress selection
         """
@@ -247,7 +247,7 @@ class EgressSelectorConfiguration(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, egressSelections: Dict[str, EgressSelection] = None):
+    def __init__(self, egressSelections: Dict[str, "EgressSelection"] = None):
         super().__init__(
             apiVersion="apiserver.k8s.io/v1alpha1", kind="EgressSelectorConfiguration"
         )
@@ -259,11 +259,11 @@ class EgressSelectorConfiguration(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         egressSelections = self.egressSelections()
-        check_type("egressSelections", egressSelections, Dict[str, EgressSelection])
+        check_type("egressSelections", egressSelections, Dict[str, "EgressSelection"])
         v["egressSelections"] = egressSelections.values()  # named list
         return v
 
-    def egressSelections(self) -> Dict[str, EgressSelection]:
+    def egressSelections(self) -> Dict[str, "EgressSelection"]:
         """
         connectionServices contains a list of egress selection client configurations
         """

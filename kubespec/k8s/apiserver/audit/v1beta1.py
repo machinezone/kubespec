@@ -167,7 +167,7 @@ class Event(base.TypedObject):
         impersonatedUser: "authenticationv1.UserInfo" = None,
         sourceIPs: List[str] = None,
         userAgent: str = None,
-        objectRef: ObjectReference = None,
+        objectRef: "ObjectReference" = None,
         responseStatus: "metav1.Status" = None,
         requestObject: "runtime.Unknown" = None,
         responseObject: "runtime.Unknown" = None,
@@ -229,7 +229,7 @@ class Event(base.TypedObject):
         if userAgent:  # omit empty
             v["userAgent"] = userAgent
         objectRef = self.objectRef()
-        check_type("objectRef", objectRef, Optional[ObjectReference])
+        check_type("objectRef", objectRef, Optional["ObjectReference"])
         if objectRef is not None:  # omit empty
             v["objectRef"] = objectRef
         responseStatus = self.responseStatus()
@@ -314,7 +314,7 @@ class Event(base.TypedObject):
         """
         return self.__userAgent
 
-    def objectRef(self) -> Optional[ObjectReference]:
+    def objectRef(self) -> Optional["ObjectReference"]:
         """
         Object reference this request is targeted at.
         Does not apply for List-type requests, or non-resource requests.
@@ -453,7 +453,7 @@ class PolicyRule(types.Object):
         users: List[str] = None,
         userGroups: List[str] = None,
         verbs: List[str] = None,
-        resources: List[GroupResources] = None,
+        resources: List["GroupResources"] = None,
         namespaces: List[str] = None,
         nonResourceURLs: List[str] = None,
         omitStages: List[Stage] = None,
@@ -487,7 +487,7 @@ class PolicyRule(types.Object):
         if verbs:  # omit empty
             v["verbs"] = verbs
         resources = self.resources()
-        check_type("resources", resources, Optional[List[GroupResources]])
+        check_type("resources", resources, Optional[List["GroupResources"]])
         if resources:  # omit empty
             v["resources"] = resources
         namespaces = self.namespaces()
@@ -532,7 +532,7 @@ class PolicyRule(types.Object):
         """
         return self.__verbs
 
-    def resources(self) -> Optional[List[GroupResources]]:
+    def resources(self) -> Optional[List["GroupResources"]]:
         """
         Resources that this rule matches. An empty list implies all kinds in all API groups.
         """
@@ -579,7 +579,7 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        rules: List[PolicyRule] = None,
+        rules: List["PolicyRule"] = None,
         omitStages: List[Stage] = None,
     ):
         super().__init__(
@@ -597,7 +597,7 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         rules = self.rules()
-        check_type("rules", rules, List[PolicyRule])
+        check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
         omitStages = self.omitStages()
         check_type("omitStages", omitStages, Optional[List[Stage]])
@@ -605,7 +605,7 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
             v["omitStages"] = omitStages
         return v
 
-    def rules(self) -> List[PolicyRule]:
+    def rules(self) -> List["PolicyRule"]:
         """
         Rules specify the audit Level a request should be recorded at.
         A request may match multiple rules, in which case the FIRST matching rule is used.

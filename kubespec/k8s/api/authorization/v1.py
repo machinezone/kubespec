@@ -165,8 +165,8 @@ class SubjectAccessReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        resourceAttributes: ResourceAttributes = None,
-        nonResourceAttributes: NonResourceAttributes = None,
+        resourceAttributes: "ResourceAttributes" = None,
+        nonResourceAttributes: "NonResourceAttributes" = None,
         user: str = None,
         groups: List[str] = None,
         extra: Dict[str, List[str]] = None,
@@ -185,7 +185,7 @@ class SubjectAccessReviewSpec(types.Object):
         v = super()._root()
         resourceAttributes = self.resourceAttributes()
         check_type(
-            "resourceAttributes", resourceAttributes, Optional[ResourceAttributes]
+            "resourceAttributes", resourceAttributes, Optional["ResourceAttributes"]
         )
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
@@ -193,7 +193,7 @@ class SubjectAccessReviewSpec(types.Object):
         check_type(
             "nonResourceAttributes",
             nonResourceAttributes,
-            Optional[NonResourceAttributes],
+            Optional["NonResourceAttributes"],
         )
         if nonResourceAttributes is not None:  # omit empty
             v["nonResourceAttributes"] = nonResourceAttributes
@@ -215,13 +215,13 @@ class SubjectAccessReviewSpec(types.Object):
             v["uid"] = uid
         return v
 
-    def resourceAttributes(self) -> Optional[ResourceAttributes]:
+    def resourceAttributes(self) -> Optional["ResourceAttributes"]:
         """
         ResourceAuthorizationAttributes describes information for a resource access request
         """
         return self.__resourceAttributes
 
-    def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
+    def nonResourceAttributes(self) -> Optional["NonResourceAttributes"]:
         """
         NonResourceAttributes describes information for a non-resource access request
         """
@@ -269,7 +269,7 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: SubjectAccessReviewSpec = None,
+        spec: "SubjectAccessReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authorization.k8s.io/v1",
@@ -285,11 +285,11 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, SubjectAccessReviewSpec)
+        check_type("spec", spec, "SubjectAccessReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> SubjectAccessReviewSpec:
+    def spec(self) -> "SubjectAccessReviewSpec":
         """
         Spec holds information about the request being evaluated.  spec.namespace must be equal to the namespace
         you made the request against.  If empty, it is defaulted.
@@ -307,8 +307,8 @@ class SelfSubjectAccessReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        resourceAttributes: ResourceAttributes = None,
-        nonResourceAttributes: NonResourceAttributes = None,
+        resourceAttributes: "ResourceAttributes" = None,
+        nonResourceAttributes: "NonResourceAttributes" = None,
     ):
         super().__init__()
         self.__resourceAttributes = resourceAttributes
@@ -319,7 +319,7 @@ class SelfSubjectAccessReviewSpec(types.Object):
         v = super()._root()
         resourceAttributes = self.resourceAttributes()
         check_type(
-            "resourceAttributes", resourceAttributes, Optional[ResourceAttributes]
+            "resourceAttributes", resourceAttributes, Optional["ResourceAttributes"]
         )
         if resourceAttributes is not None:  # omit empty
             v["resourceAttributes"] = resourceAttributes
@@ -327,19 +327,19 @@ class SelfSubjectAccessReviewSpec(types.Object):
         check_type(
             "nonResourceAttributes",
             nonResourceAttributes,
-            Optional[NonResourceAttributes],
+            Optional["NonResourceAttributes"],
         )
         if nonResourceAttributes is not None:  # omit empty
             v["nonResourceAttributes"] = nonResourceAttributes
         return v
 
-    def resourceAttributes(self) -> Optional[ResourceAttributes]:
+    def resourceAttributes(self) -> Optional["ResourceAttributes"]:
         """
         ResourceAuthorizationAttributes describes information for a resource access request
         """
         return self.__resourceAttributes
 
-    def nonResourceAttributes(self) -> Optional[NonResourceAttributes]:
+    def nonResourceAttributes(self) -> Optional["NonResourceAttributes"]:
         """
         NonResourceAttributes describes information for a non-resource access request
         """
@@ -360,7 +360,7 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: SelfSubjectAccessReviewSpec = None,
+        spec: "SelfSubjectAccessReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authorization.k8s.io/v1",
@@ -375,11 +375,11 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, SelfSubjectAccessReviewSpec)
+        check_type("spec", spec, "SelfSubjectAccessReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> SelfSubjectAccessReviewSpec:
+    def spec(self) -> "SelfSubjectAccessReviewSpec":
         """
         Spec holds information about the request being evaluated.  user and groups must be empty
         """
@@ -426,7 +426,7 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: SelfSubjectRulesReviewSpec = None,
+        spec: "SelfSubjectRulesReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authorization.k8s.io/v1",
@@ -441,11 +441,11 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, SelfSubjectRulesReviewSpec)
+        check_type("spec", spec, "SelfSubjectRulesReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> SelfSubjectRulesReviewSpec:
+    def spec(self) -> "SelfSubjectRulesReviewSpec":
         """
         Spec holds information about the request being evaluated.
         """
@@ -464,7 +464,7 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: SubjectAccessReviewSpec = None,
+        spec: "SubjectAccessReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="authorization.k8s.io/v1",
@@ -479,11 +479,11 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, SubjectAccessReviewSpec)
+        check_type("spec", spec, "SubjectAccessReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> SubjectAccessReviewSpec:
+    def spec(self) -> "SubjectAccessReviewSpec":
         """
         Spec holds information about the request being evaluated
         """

@@ -177,7 +177,7 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: CSIDriverSpec = None,
+        spec: "CSIDriverSpec" = None,
     ):
         super().__init__(
             apiVersion="storage.k8s.io/v1beta1",
@@ -192,11 +192,11 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, CSIDriverSpec)
+        check_type("spec", spec, "CSIDriverSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> CSIDriverSpec:
+    def spec(self) -> "CSIDriverSpec":
         """
         Specification of the CSI Driver.
         """
@@ -245,7 +245,7 @@ class CSINodeDriver(types.Object):
         name: str = "",
         nodeID: str = "",
         topologyKeys: List[str] = None,
-        allocatable: VolumeNodeResources = None,
+        allocatable: "VolumeNodeResources" = None,
     ):
         super().__init__()
         self.__name = name
@@ -266,7 +266,7 @@ class CSINodeDriver(types.Object):
         check_type("topologyKeys", topologyKeys, List[str])
         v["topologyKeys"] = topologyKeys
         allocatable = self.allocatable()
-        check_type("allocatable", allocatable, Optional[VolumeNodeResources])
+        check_type("allocatable", allocatable, Optional["VolumeNodeResources"])
         if allocatable is not None:  # omit empty
             v["allocatable"] = allocatable
         return v
@@ -308,7 +308,7 @@ class CSINodeDriver(types.Object):
         """
         return self.__topologyKeys
 
-    def allocatable(self) -> Optional[VolumeNodeResources]:
+    def allocatable(self) -> Optional["VolumeNodeResources"]:
         """
         allocatable represents the volume resources of a node that are available for scheduling.
         """
@@ -322,7 +322,7 @@ class CSINodeSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, drivers: Dict[str, CSINodeDriver] = None):
+    def __init__(self, drivers: Dict[str, "CSINodeDriver"] = None):
         super().__init__()
         self.__drivers = drivers if drivers is not None else {}
 
@@ -330,11 +330,11 @@ class CSINodeSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         drivers = self.drivers()
-        check_type("drivers", drivers, Dict[str, CSINodeDriver])
+        check_type("drivers", drivers, Dict[str, "CSINodeDriver"])
         v["drivers"] = drivers.values()  # named list
         return v
 
-    def drivers(self) -> Dict[str, CSINodeDriver]:
+    def drivers(self) -> Dict[str, "CSINodeDriver"]:
         """
         drivers is a list of information of all CSI Drivers existing on a node.
         If all drivers in the list are uninstalled, this can become empty.
@@ -362,7 +362,7 @@ class CSINode(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: CSINodeSpec = None,
+        spec: "CSINodeSpec" = None,
     ):
         super().__init__(
             apiVersion="storage.k8s.io/v1beta1",
@@ -377,11 +377,11 @@ class CSINode(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, CSINodeSpec)
+        check_type("spec", spec, "CSINodeSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> CSINodeSpec:
+    def spec(self) -> "CSINodeSpec":
         """
         spec is the specification of CSINode
         """
@@ -593,7 +593,7 @@ class VolumeAttachmentSpec(types.Object):
     def __init__(
         self,
         attacher: str = "",
-        source: VolumeAttachmentSource = None,
+        source: "VolumeAttachmentSource" = None,
         nodeName: str = "",
     ):
         super().__init__()
@@ -608,7 +608,7 @@ class VolumeAttachmentSpec(types.Object):
         check_type("attacher", attacher, str)
         v["attacher"] = attacher
         source = self.source()
-        check_type("source", source, VolumeAttachmentSource)
+        check_type("source", source, "VolumeAttachmentSource")
         v["source"] = source
         nodeName = self.nodeName()
         check_type("nodeName", nodeName, str)
@@ -622,7 +622,7 @@ class VolumeAttachmentSpec(types.Object):
         """
         return self.__attacher
 
-    def source(self) -> VolumeAttachmentSource:
+    def source(self) -> "VolumeAttachmentSource":
         """
         Source represents the volume that should be attached.
         """
@@ -650,7 +650,7 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: VolumeAttachmentSpec = None,
+        spec: "VolumeAttachmentSpec" = None,
     ):
         super().__init__(
             apiVersion="storage.k8s.io/v1beta1",
@@ -665,11 +665,11 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, VolumeAttachmentSpec)
+        check_type("spec", spec, "VolumeAttachmentSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> VolumeAttachmentSpec:
+    def spec(self) -> "VolumeAttachmentSpec":
         """
         Specification of the desired attach/detach volume behavior.
         Populated by the Kubernetes system.

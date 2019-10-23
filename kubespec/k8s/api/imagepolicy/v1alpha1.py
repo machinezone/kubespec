@@ -48,7 +48,7 @@ class ImageReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        containers: List[ImageReviewContainerSpec] = None,
+        containers: List["ImageReviewContainerSpec"] = None,
         annotations: Dict[str, str] = None,
         namespace: str = None,
     ):
@@ -61,7 +61,7 @@ class ImageReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         containers = self.containers()
-        check_type("containers", containers, Optional[List[ImageReviewContainerSpec]])
+        check_type("containers", containers, Optional[List["ImageReviewContainerSpec"]])
         if containers:  # omit empty
             v["containers"] = containers
         annotations = self.annotations()
@@ -74,7 +74,7 @@ class ImageReviewSpec(types.Object):
             v["namespace"] = namespace
         return v
 
-    def containers(self) -> Optional[List[ImageReviewContainerSpec]]:
+    def containers(self) -> Optional[List["ImageReviewContainerSpec"]]:
         """
         Containers is a list of a subset of the information in each container of the Pod being created.
         """
@@ -107,7 +107,7 @@ class ImageReview(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ImageReviewSpec = None,
+        spec: "ImageReviewSpec" = None,
     ):
         super().__init__(
             apiVersion="imagepolicy.k8s.io/v1alpha1",
@@ -122,11 +122,11 @@ class ImageReview(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, ImageReviewSpec)
+        check_type("spec", spec, "ImageReviewSpec")
         v["spec"] = spec
         return v
 
-    def spec(self) -> ImageReviewSpec:
+    def spec(self) -> "ImageReviewSpec":
         """
         Spec holds information about the pod being evaluated
         """

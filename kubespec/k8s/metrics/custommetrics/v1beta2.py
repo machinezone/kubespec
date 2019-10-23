@@ -105,7 +105,7 @@ class MetricValue(base.TypedObject):
     def __init__(
         self,
         describedObject: "corev1.ObjectReference" = None,
-        metric: MetricIdentifier = None,
+        metric: "MetricIdentifier" = None,
         timestamp: "base.Time" = None,
         windowSeconds: int = None,
         value: "resource.Quantity" = None,
@@ -126,7 +126,7 @@ class MetricValue(base.TypedObject):
         check_type("describedObject", describedObject, "corev1.ObjectReference")
         v["describedObject"] = describedObject
         metric = self.metric()
-        check_type("metric", metric, MetricIdentifier)
+        check_type("metric", metric, "MetricIdentifier")
         v["metric"] = metric
         timestamp = self.timestamp()
         check_type("timestamp", timestamp, "base.Time")
@@ -146,7 +146,7 @@ class MetricValue(base.TypedObject):
         """
         return self.__describedObject
 
-    def metric(self) -> MetricIdentifier:
+    def metric(self) -> "MetricIdentifier":
         return self.__metric
 
     def timestamp(self) -> "base.Time":

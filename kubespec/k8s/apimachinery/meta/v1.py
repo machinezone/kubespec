@@ -302,7 +302,7 @@ class DeleteOptions(base.TypedObject):
     def __init__(
         self,
         gracePeriodSeconds: int = None,
-        preconditions: Preconditions = None,
+        preconditions: "Preconditions" = None,
         propagationPolicy: DeletionPropagation = None,
         dryRun: List[str] = None,
     ):
@@ -320,7 +320,7 @@ class DeleteOptions(base.TypedObject):
         if gracePeriodSeconds is not None:  # omit empty
             v["gracePeriodSeconds"] = gracePeriodSeconds
         preconditions = self.preconditions()
-        check_type("preconditions", preconditions, Optional[Preconditions])
+        check_type("preconditions", preconditions, Optional["Preconditions"])
         if preconditions is not None:  # omit empty
             v["preconditions"] = preconditions
         propagationPolicy = self.propagationPolicy()
@@ -344,7 +344,7 @@ class DeleteOptions(base.TypedObject):
         """
         return self.__gracePeriodSeconds
 
-    def preconditions(self) -> Optional[Preconditions]:
+    def preconditions(self) -> Optional["Preconditions"]:
         """
         Must be fulfilled before a deletion is carried out. If not possible, a 409 Conflict status will be
         returned.
@@ -520,7 +520,7 @@ class LabelSelector(types.Object):
     def __init__(
         self,
         matchLabels: Dict[str, str] = None,
-        matchExpressions: List[LabelSelectorRequirement] = None,
+        matchExpressions: List["LabelSelectorRequirement"] = None,
     ):
         super().__init__()
         self.__matchLabels = matchLabels if matchLabels is not None else {}
@@ -539,7 +539,7 @@ class LabelSelector(types.Object):
         check_type(
             "matchExpressions",
             matchExpressions,
-            Optional[List[LabelSelectorRequirement]],
+            Optional[List["LabelSelectorRequirement"]],
         )
         if matchExpressions:  # omit empty
             v["matchExpressions"] = matchExpressions
@@ -553,7 +553,7 @@ class LabelSelector(types.Object):
         """
         return self.__matchLabels
 
-    def matchExpressions(self) -> Optional[List[LabelSelectorRequirement]]:
+    def matchExpressions(self) -> Optional[List["LabelSelectorRequirement"]]:
         """
         matchExpressions is a list of label selector requirements. The requirements are ANDed.
         """
@@ -778,7 +778,7 @@ class StatusDetails(types.Object):
         group: str = None,
         kind: str = None,
         uid: str = None,
-        causes: List[StatusCause] = None,
+        causes: List["StatusCause"] = None,
         retryAfterSeconds: int = None,
     ):
         super().__init__()
@@ -809,7 +809,7 @@ class StatusDetails(types.Object):
         if uid:  # omit empty
             v["uid"] = uid
         causes = self.causes()
-        check_type("causes", causes, Optional[List[StatusCause]])
+        check_type("causes", causes, Optional[List["StatusCause"]])
         if causes:  # omit empty
             v["causes"] = causes
         retryAfterSeconds = self.retryAfterSeconds()
@@ -847,7 +847,7 @@ class StatusDetails(types.Object):
         """
         return self.__uid
 
-    def causes(self) -> Optional[List[StatusCause]]:
+    def causes(self) -> Optional[List["StatusCause"]]:
         """
         The Causes array includes more details associated with the StatusReason
         failure. Not all StatusReasons may provide detailed causes.
@@ -872,11 +872,11 @@ class Status(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        metadata: ListMeta = None,
+        metadata: "ListMeta" = None,
         status: str = None,
         message: str = None,
         reason: StatusReason = None,
-        details: StatusDetails = None,
+        details: "StatusDetails" = None,
         code: int = None,
     ):
         super().__init__()
@@ -891,7 +891,7 @@ class Status(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         metadata = self.metadata()
-        check_type("metadata", metadata, Optional[ListMeta])
+        check_type("metadata", metadata, Optional["ListMeta"])
         v["metadata"] = metadata
         status = self.status()
         check_type("status", status, Optional[str])
@@ -906,7 +906,7 @@ class Status(base.TypedObject):
         if reason:  # omit empty
             v["reason"] = reason
         details = self.details()
-        check_type("details", details, Optional[StatusDetails])
+        check_type("details", details, Optional["StatusDetails"])
         if details is not None:  # omit empty
             v["details"] = details
         code = self.code()
@@ -915,7 +915,7 @@ class Status(base.TypedObject):
             v["code"] = code
         return v
 
-    def metadata(self) -> Optional[ListMeta]:
+    def metadata(self) -> Optional["ListMeta"]:
         """
         Standard list metadata.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
@@ -945,7 +945,7 @@ class Status(base.TypedObject):
         """
         return self.__reason
 
-    def details(self) -> Optional[StatusDetails]:
+    def details(self) -> Optional["StatusDetails"]:
         """
         Extended data associated with the reason.  Each reason may define its
         own extended details. This field is optional and the data returned

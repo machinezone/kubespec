@@ -107,7 +107,7 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: LeaseSpec = None,
+        spec: "LeaseSpec" = None,
     ):
         super().__init__(
             apiVersion="coordination.k8s.io/v1beta1",
@@ -123,11 +123,11 @@ class Lease(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[LeaseSpec])
+        check_type("spec", spec, Optional["LeaseSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[LeaseSpec]:
+    def spec(self) -> Optional["LeaseSpec"]:
         """
         Specification of the Lease.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status

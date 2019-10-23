@@ -63,7 +63,7 @@ class Endpoint(types.Object):
     def __init__(
         self,
         addresses: List[str] = None,
-        conditions: EndpointConditions = None,
+        conditions: "EndpointConditions" = None,
         hostname: str = None,
         targetRef: "corev1.ObjectReference" = None,
         topology: Dict[str, str] = None,
@@ -84,7 +84,7 @@ class Endpoint(types.Object):
         check_type("addresses", addresses, List[str])
         v["addresses"] = addresses
         conditions = self.conditions()
-        check_type("conditions", conditions, Optional[EndpointConditions])
+        check_type("conditions", conditions, Optional["EndpointConditions"])
         v["conditions"] = conditions
         hostname = self.hostname()
         check_type("hostname", hostname, Optional[str])
@@ -112,7 +112,7 @@ class Endpoint(types.Object):
         """
         return self.__addresses
 
-    def conditions(self) -> Optional[EndpointConditions]:
+    def conditions(self) -> Optional["EndpointConditions"]:
         """
         conditions contains information about the current status of the endpoint.
         """
@@ -232,8 +232,8 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         addressType: AddressType = None,
-        endpoints: List[Endpoint] = None,
-        ports: List[EndpointPort] = None,
+        endpoints: List["Endpoint"] = None,
+        ports: List["EndpointPort"] = None,
     ):
         super().__init__(
             apiVersion="discovery.k8s.io/v1alpha1",
@@ -256,10 +256,10 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         check_type("addressType", addressType, Optional[AddressType])
         v["addressType"] = addressType
         endpoints = self.endpoints()
-        check_type("endpoints", endpoints, List[Endpoint])
+        check_type("endpoints", endpoints, List["Endpoint"])
         v["endpoints"] = endpoints
         ports = self.ports()
-        check_type("ports", ports, List[EndpointPort])
+        check_type("ports", ports, List["EndpointPort"])
         v["ports"] = ports
         return v
 
@@ -271,7 +271,7 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__addressType
 
-    def endpoints(self) -> List[Endpoint]:
+    def endpoints(self) -> List["Endpoint"]:
         """
         endpoints is a list of unique endpoints in this slice. Each slice may
         include a maximum of 1000 endpoints.
@@ -279,7 +279,7 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__endpoints
 
-    def ports(self) -> List[EndpointPort]:
+    def ports(self) -> List["EndpointPort"]:
         """
         ports specifies the list of network ports exposed by each endpoint in
         this slice. Each port must have a unique name. When ports is empty, it

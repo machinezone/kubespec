@@ -140,8 +140,8 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        rules: List[PolicyRule] = None,
-        aggregationRule: AggregationRule = None,
+        rules: List["PolicyRule"] = None,
+        aggregationRule: "AggregationRule" = None,
     ):
         super().__init__(
             apiVersion="rbac.authorization.k8s.io/v1",
@@ -157,21 +157,21 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         rules = self.rules()
-        check_type("rules", rules, List[PolicyRule])
+        check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
         aggregationRule = self.aggregationRule()
-        check_type("aggregationRule", aggregationRule, Optional[AggregationRule])
+        check_type("aggregationRule", aggregationRule, Optional["AggregationRule"])
         if aggregationRule is not None:  # omit empty
             v["aggregationRule"] = aggregationRule
         return v
 
-    def rules(self) -> List[PolicyRule]:
+    def rules(self) -> List["PolicyRule"]:
         """
         Rules holds all the PolicyRules for this ClusterRole
         """
         return self.__rules
 
-    def aggregationRule(self) -> Optional[AggregationRule]:
+    def aggregationRule(self) -> Optional["AggregationRule"]:
         """
         AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
         If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
@@ -313,8 +313,8 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        subjects: Dict[str, Subject] = None,
-        roleRef: RoleRef = None,
+        subjects: Dict[str, "Subject"] = None,
+        roleRef: "RoleRef" = None,
     ):
         super().__init__(
             apiVersion="rbac.authorization.k8s.io/v1",
@@ -330,21 +330,21 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         subjects = self.subjects()
-        check_type("subjects", subjects, Optional[Dict[str, Subject]])
+        check_type("subjects", subjects, Optional[Dict[str, "Subject"]])
         if subjects:  # omit empty
             v["subjects"] = subjects.values()  # named list
         roleRef = self.roleRef()
-        check_type("roleRef", roleRef, RoleRef)
+        check_type("roleRef", roleRef, "RoleRef")
         v["roleRef"] = roleRef
         return v
 
-    def subjects(self) -> Optional[Dict[str, Subject]]:
+    def subjects(self) -> Optional[Dict[str, "Subject"]]:
         """
         Subjects holds references to the objects the role applies to.
         """
         return self.__subjects
 
-    def roleRef(self) -> RoleRef:
+    def roleRef(self) -> "RoleRef":
         """
         RoleRef can only reference a ClusterRole in the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.
@@ -365,7 +365,7 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        rules: List[PolicyRule] = None,
+        rules: List["PolicyRule"] = None,
     ):
         super().__init__(
             apiVersion="rbac.authorization.k8s.io/v1",
@@ -381,11 +381,11 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         rules = self.rules()
-        check_type("rules", rules, List[PolicyRule])
+        check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
         return v
 
-    def rules(self) -> List[PolicyRule]:
+    def rules(self) -> List["PolicyRule"]:
         """
         Rules holds all the PolicyRules for this Role
         """
@@ -407,8 +407,8 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        subjects: Dict[str, Subject] = None,
-        roleRef: RoleRef = None,
+        subjects: Dict[str, "Subject"] = None,
+        roleRef: "RoleRef" = None,
     ):
         super().__init__(
             apiVersion="rbac.authorization.k8s.io/v1",
@@ -425,21 +425,21 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         subjects = self.subjects()
-        check_type("subjects", subjects, Optional[Dict[str, Subject]])
+        check_type("subjects", subjects, Optional[Dict[str, "Subject"]])
         if subjects:  # omit empty
             v["subjects"] = subjects.values()  # named list
         roleRef = self.roleRef()
-        check_type("roleRef", roleRef, RoleRef)
+        check_type("roleRef", roleRef, "RoleRef")
         v["roleRef"] = roleRef
         return v
 
-    def subjects(self) -> Optional[Dict[str, Subject]]:
+    def subjects(self) -> Optional[Dict[str, "Subject"]]:
         """
         Subjects holds references to the objects the role applies to.
         """
         return self.__subjects
 
-    def roleRef(self) -> RoleRef:
+    def roleRef(self) -> "RoleRef":
         """
         RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.

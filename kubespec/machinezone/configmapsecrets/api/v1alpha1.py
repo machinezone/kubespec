@@ -153,8 +153,8 @@ class ConfigMapSecretSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        template: ConfigMapTemplate = None,
-        vars: Dict[str, TemplateVariable] = None,
+        template: "ConfigMapTemplate" = None,
+        vars: Dict[str, "TemplateVariable"] = None,
     ):
         super().__init__()
         self.__template = template if template is not None else ConfigMapTemplate()
@@ -164,15 +164,15 @@ class ConfigMapSecretSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, Optional[ConfigMapTemplate])
+        check_type("template", template, Optional["ConfigMapTemplate"])
         v["template"] = template
         vars = self.vars()
-        check_type("vars", vars, Optional[Dict[str, TemplateVariable]])
+        check_type("vars", vars, Optional[Dict[str, "TemplateVariable"]])
         if vars:  # omit empty
             v["vars"] = vars.values()  # named list
         return v
 
-    def template(self) -> Optional[ConfigMapTemplate]:
+    def template(self) -> Optional["ConfigMapTemplate"]:
         """
         Template that describes the config that will be rendered.
         Variable references $(VAR_NAME) in template data are expanded using the
@@ -183,7 +183,7 @@ class ConfigMapSecretSpec(types.Object):
         """
         return self.__template
 
-    def vars(self) -> Optional[Dict[str, TemplateVariable]]:
+    def vars(self) -> Optional[Dict[str, "TemplateVariable"]]:
         """
         List of template variables.
         """
@@ -203,7 +203,7 @@ class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        spec: ConfigMapSecretSpec = None,
+        spec: "ConfigMapSecretSpec" = None,
     ):
         super().__init__(
             apiVersion="secrets.k8s.mz.com/v1alpha1",
@@ -219,11 +219,11 @@ class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         spec = self.spec()
-        check_type("spec", spec, Optional[ConfigMapSecretSpec])
+        check_type("spec", spec, Optional["ConfigMapSecretSpec"])
         v["spec"] = spec
         return v
 
-    def spec(self) -> Optional[ConfigMapSecretSpec]:
+    def spec(self) -> Optional["ConfigMapSecretSpec"]:
         """
         Desired state of the ConfigMapSecret.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
