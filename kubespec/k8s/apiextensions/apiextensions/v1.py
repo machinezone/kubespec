@@ -1418,7 +1418,7 @@ class CustomResourceDefinitionSpec(types.Object):
         self,
         group: str = "",
         names: "CustomResourceDefinitionNames" = None,
-        scope: ResourceScope = None,
+        scope: ResourceScope = ResourceScope["NamespaceScoped"],
         versions: Dict[str, "CustomResourceDefinitionVersion"] = None,
         conversion: "CustomResourceConversion" = None,
         preserveUnknownFields: bool = None,
