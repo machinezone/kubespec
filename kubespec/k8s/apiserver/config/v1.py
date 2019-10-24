@@ -56,19 +56,19 @@ class AESConfiguration(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, keys: Dict[str, "Key"] = None):
+    def __init__(self, keys: List["Key"] = None):
         super().__init__()
-        self.__keys = keys if keys is not None else {}
+        self.__keys = keys if keys is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         keys = self.keys()
-        check_type("keys", keys, Dict[str, "Key"])
-        v["keys"] = keys.values()  # named list
+        check_type("keys", keys, List["Key"])
+        v["keys"] = keys
         return v
 
-    def keys(self) -> Dict[str, "Key"]:
+    def keys(self) -> List["Key"]:
         """
         keys is a list of keys to be used for creating the AES transformer.
         Each key has to be 32 bytes long for AES-CBC and 16, 24 or 32 bytes for AES-GCM.
@@ -155,19 +155,19 @@ class SecretboxConfiguration(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, keys: Dict[str, "Key"] = None):
+    def __init__(self, keys: List["Key"] = None):
         super().__init__()
-        self.__keys = keys if keys is not None else {}
+        self.__keys = keys if keys is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         keys = self.keys()
-        check_type("keys", keys, Dict[str, "Key"])
-        v["keys"] = keys.values()  # named list
+        check_type("keys", keys, List["Key"])
+        v["keys"] = keys
         return v
 
-    def keys(self) -> Dict[str, "Key"]:
+    def keys(self) -> List["Key"]:
         """
         keys is a list of keys to be used for creating the Secretbox transformer.
         Each key has to be 32 bytes long.

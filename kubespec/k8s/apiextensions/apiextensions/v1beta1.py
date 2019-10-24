@@ -1299,7 +1299,7 @@ class CustomResourceDefinitionVersion(types.Object):
         storage: bool = False,
         schema: "CustomResourceValidation" = None,
         subresources: "CustomResourceSubresources" = None,
-        additionalPrinterColumns: Dict[str, "CustomResourceColumnDefinition"] = None,
+        additionalPrinterColumns: List["CustomResourceColumnDefinition"] = None,
     ):
         super().__init__()
         self.__name = name
@@ -1308,7 +1308,7 @@ class CustomResourceDefinitionVersion(types.Object):
         self.__schema = schema
         self.__subresources = subresources
         self.__additionalPrinterColumns = (
-            additionalPrinterColumns if additionalPrinterColumns is not None else {}
+            additionalPrinterColumns if additionalPrinterColumns is not None else []
         )
 
     @typechecked
@@ -1335,12 +1335,10 @@ class CustomResourceDefinitionVersion(types.Object):
         check_type(
             "additionalPrinterColumns",
             additionalPrinterColumns,
-            Optional[Dict[str, "CustomResourceColumnDefinition"]],
+            Optional[List["CustomResourceColumnDefinition"]],
         )
         if additionalPrinterColumns:  # omit empty
-            v[
-                "additionalPrinterColumns"
-            ] = additionalPrinterColumns.values()  # named list
+            v["additionalPrinterColumns"] = additionalPrinterColumns
         return v
 
     def name(self) -> str:
@@ -1381,7 +1379,7 @@ class CustomResourceDefinitionVersion(types.Object):
 
     def additionalPrinterColumns(
         self
-    ) -> Optional[Dict[str, "CustomResourceColumnDefinition"]]:
+    ) -> Optional[List["CustomResourceColumnDefinition"]]:
         """
         additionalPrinterColumns specifies additional columns returned in Table output.
         See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
@@ -1406,8 +1404,8 @@ class CustomResourceDefinitionSpec(types.Object):
         scope: ResourceScope = ResourceScope["NamespaceScoped"],
         validation: "CustomResourceValidation" = None,
         subresources: "CustomResourceSubresources" = None,
-        versions: Dict[str, "CustomResourceDefinitionVersion"] = None,
-        additionalPrinterColumns: Dict[str, "CustomResourceColumnDefinition"] = None,
+        versions: List["CustomResourceDefinitionVersion"] = None,
+        additionalPrinterColumns: List["CustomResourceColumnDefinition"] = None,
         conversion: "CustomResourceConversion" = None,
     ):
         super().__init__()
@@ -1416,9 +1414,9 @@ class CustomResourceDefinitionSpec(types.Object):
         self.__scope = scope
         self.__validation = validation
         self.__subresources = subresources
-        self.__versions = versions if versions is not None else {}
+        self.__versions = versions if versions is not None else []
         self.__additionalPrinterColumns = (
-            additionalPrinterColumns if additionalPrinterColumns is not None else {}
+            additionalPrinterColumns if additionalPrinterColumns is not None else []
         )
         self.__conversion = (
             conversion if conversion is not None else CustomResourceConversion()
@@ -1446,20 +1444,18 @@ class CustomResourceDefinitionSpec(types.Object):
             v["subresources"] = subresources
         versions = self.versions()
         check_type(
-            "versions", versions, Optional[Dict[str, "CustomResourceDefinitionVersion"]]
+            "versions", versions, Optional[List["CustomResourceDefinitionVersion"]]
         )
         if versions:  # omit empty
-            v["versions"] = versions.values()  # named list
+            v["versions"] = versions
         additionalPrinterColumns = self.additionalPrinterColumns()
         check_type(
             "additionalPrinterColumns",
             additionalPrinterColumns,
-            Optional[Dict[str, "CustomResourceColumnDefinition"]],
+            Optional[List["CustomResourceColumnDefinition"]],
         )
         if additionalPrinterColumns:  # omit empty
-            v[
-                "additionalPrinterColumns"
-            ] = additionalPrinterColumns.values()  # named list
+            v["additionalPrinterColumns"] = additionalPrinterColumns
         conversion = self.conversion()
         check_type("conversion", conversion, Optional["CustomResourceConversion"])
         if conversion is not None:  # omit empty
@@ -1503,7 +1499,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__subresources
 
-    def versions(self) -> Optional[Dict[str, "CustomResourceDefinitionVersion"]]:
+    def versions(self) -> Optional[List["CustomResourceDefinitionVersion"]]:
         """
         versions is the list of all API versions of the defined custom resource.
         Optional if `version` is specified.
@@ -1520,7 +1516,7 @@ class CustomResourceDefinitionSpec(types.Object):
 
     def additionalPrinterColumns(
         self
-    ) -> Optional[Dict[str, "CustomResourceColumnDefinition"]]:
+    ) -> Optional[List["CustomResourceColumnDefinition"]]:
         """
         additionalPrinterColumns specifies additional columns returned in Table output.
         See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.

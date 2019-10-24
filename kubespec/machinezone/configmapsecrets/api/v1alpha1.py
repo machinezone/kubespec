@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
@@ -154,11 +154,11 @@ class ConfigMapSecretSpec(types.Object):
     def __init__(
         self,
         template: "ConfigMapTemplate" = None,
-        vars: Dict[str, "TemplateVariable"] = None,
+        vars: List["TemplateVariable"] = None,
     ):
         super().__init__()
         self.__template = template if template is not None else ConfigMapTemplate()
-        self.__vars = vars if vars is not None else {}
+        self.__vars = vars if vars is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -167,9 +167,9 @@ class ConfigMapSecretSpec(types.Object):
         check_type("template", template, Optional["ConfigMapTemplate"])
         v["template"] = template
         vars = self.vars()
-        check_type("vars", vars, Optional[Dict[str, "TemplateVariable"]])
+        check_type("vars", vars, Optional[List["TemplateVariable"]])
         if vars:  # omit empty
-            v["vars"] = vars.values()  # named list
+            v["vars"] = vars
         return v
 
     def template(self) -> Optional["ConfigMapTemplate"]:
@@ -183,7 +183,7 @@ class ConfigMapSecretSpec(types.Object):
         """
         return self.__template
 
-    def vars(self) -> Optional[Dict[str, "TemplateVariable"]]:
+    def vars(self) -> Optional[List["TemplateVariable"]]:
         """
         List of template variables.
         """

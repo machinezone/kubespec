@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from kubespec.k8s import base
 from kubespec.k8s.api.core import v1 as corev1
@@ -128,7 +128,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         annotations: Dict[str, str] = None,
         timestamp: "base.Time" = None,
         window: "base.Duration" = None,
-        containers: Dict[str, "ContainerMetrics"] = None,
+        containers: List["ContainerMetrics"] = None,
     ):
         super().__init__(
             apiVersion="metrics.k8s.io/v1alpha1",
@@ -140,7 +140,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         )
         self.__timestamp = timestamp
         self.__window = window if window is not None else metav1.Duration()
-        self.__containers = containers if containers is not None else {}
+        self.__containers = containers if containers is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -152,8 +152,8 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         check_type("window", window, "base.Duration")
         v["window"] = window
         containers = self.containers()
-        check_type("containers", containers, Dict[str, "ContainerMetrics"])
-        v["containers"] = containers.values()  # named list
+        check_type("containers", containers, List["ContainerMetrics"])
+        v["containers"] = containers
         return v
 
     def timestamp(self) -> "base.Time":
@@ -166,7 +166,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
     def window(self) -> "base.Duration":
         return self.__window
 
-    def containers(self) -> Dict[str, "ContainerMetrics"]:
+    def containers(self) -> List["ContainerMetrics"]:
         """
         Metrics for all containers are collected within the same time window.
         """

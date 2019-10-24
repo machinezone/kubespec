@@ -4,7 +4,7 @@
 # Use of this source code is governed by a BSD-style
 # license that can be found in the LICENSE file.
 
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
 
 from kubespec.k8s import base
 from kubespec.k8s.apimachinery import runtime
@@ -71,21 +71,21 @@ class AdmissionConfiguration(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, plugins: Dict[str, "AdmissionPluginConfiguration"] = None):
+    def __init__(self, plugins: List["AdmissionPluginConfiguration"] = None):
         super().__init__(
             apiVersion="apiserver.k8s.io/v1alpha1", kind="AdmissionConfiguration"
         )
-        self.__plugins = plugins if plugins is not None else {}
+        self.__plugins = plugins if plugins is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         plugins = self.plugins()
-        check_type("plugins", plugins, Dict[str, "AdmissionPluginConfiguration"])
-        v["plugins"] = plugins.values()  # named list
+        check_type("plugins", plugins, List["AdmissionPluginConfiguration"])
+        v["plugins"] = plugins
         return v
 
-    def plugins(self) -> Dict[str, "AdmissionPluginConfiguration"]:
+    def plugins(self) -> List["AdmissionPluginConfiguration"]:
         """
         Plugins allows specifying a configuration per admission control plugin.
         """
@@ -247,23 +247,23 @@ class EgressSelectorConfiguration(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, egressSelections: Dict[str, "EgressSelection"] = None):
+    def __init__(self, egressSelections: List["EgressSelection"] = None):
         super().__init__(
             apiVersion="apiserver.k8s.io/v1alpha1", kind="EgressSelectorConfiguration"
         )
         self.__egressSelections = (
-            egressSelections if egressSelections is not None else {}
+            egressSelections if egressSelections is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         egressSelections = self.egressSelections()
-        check_type("egressSelections", egressSelections, Dict[str, "EgressSelection"])
-        v["egressSelections"] = egressSelections.values()  # named list
+        check_type("egressSelections", egressSelections, List["EgressSelection"])
+        v["egressSelections"] = egressSelections
         return v
 
-    def egressSelections(self) -> Dict[str, "EgressSelection"]:
+    def egressSelections(self) -> List["EgressSelection"]:
         """
         connectionServices contains a list of egress selection client configurations
         """

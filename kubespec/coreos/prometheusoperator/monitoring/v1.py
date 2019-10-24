@@ -324,19 +324,19 @@ class AlertingSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, alertmanagers: Dict[str, "AlertmanagerEndpoints"] = None):
+    def __init__(self, alertmanagers: List["AlertmanagerEndpoints"] = None):
         super().__init__()
-        self.__alertmanagers = alertmanagers if alertmanagers is not None else {}
+        self.__alertmanagers = alertmanagers if alertmanagers is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         alertmanagers = self.alertmanagers()
-        check_type("alertmanagers", alertmanagers, Dict[str, "AlertmanagerEndpoints"])
-        v["alertmanagers"] = alertmanagers.values()  # named list
+        check_type("alertmanagers", alertmanagers, List["AlertmanagerEndpoints"])
+        v["alertmanagers"] = alertmanagers
         return v
 
-    def alertmanagers(self) -> Dict[str, "AlertmanagerEndpoints"]:
+    def alertmanagers(self) -> List["AlertmanagerEndpoints"]:
         """
         AlertmanagerEndpoints Prometheus should fire alerts against.
         """
@@ -410,7 +410,7 @@ class AlertmanagerSpec(types.Object):
         tag: str = None,
         sha: str = None,
         baseImage: str = None,
-        imagePullSecrets: Dict[str, "corev1.LocalObjectReference"] = None,
+        imagePullSecrets: List["corev1.LocalObjectReference"] = None,
         secrets: List[str] = None,
         configMaps: List[str] = None,
         logLevel: str = None,
@@ -418,8 +418,8 @@ class AlertmanagerSpec(types.Object):
         replicas: int = None,
         retention: str = None,
         storage: "StorageSpec" = None,
-        volumes: Dict[str, "corev1.Volume"] = None,
-        volumeMounts: Dict[str, "corev1.VolumeMount"] = None,
+        volumes: List["corev1.Volume"] = None,
+        volumeMounts: List["corev1.VolumeMount"] = None,
         externalUrl: str = None,
         routePrefix: str = None,
         paused: bool = None,
@@ -430,8 +430,8 @@ class AlertmanagerSpec(types.Object):
         securityContext: "corev1.PodSecurityContext" = None,
         serviceAccountName: str = None,
         listenLocal: bool = None,
-        containers: Dict[str, "corev1.Container"] = None,
-        initContainers: Dict[str, "corev1.Container"] = None,
+        containers: List["corev1.Container"] = None,
+        initContainers: List["corev1.Container"] = None,
         priorityClassName: str = None,
         additionalPeers: List[str] = None,
         portName: str = None,
@@ -444,7 +444,7 @@ class AlertmanagerSpec(types.Object):
         self.__sha = sha
         self.__baseImage = baseImage
         self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else {}
+            imagePullSecrets if imagePullSecrets is not None else []
         )
         self.__secrets = secrets if secrets is not None else []
         self.__configMaps = configMaps if configMaps is not None else []
@@ -453,8 +453,8 @@ class AlertmanagerSpec(types.Object):
         self.__replicas = replicas
         self.__retention = retention
         self.__storage = storage
-        self.__volumes = volumes if volumes is not None else {}
-        self.__volumeMounts = volumeMounts if volumeMounts is not None else {}
+        self.__volumes = volumes if volumes is not None else []
+        self.__volumeMounts = volumeMounts if volumeMounts is not None else []
         self.__externalUrl = externalUrl
         self.__routePrefix = routePrefix
         self.__paused = paused
@@ -467,8 +467,8 @@ class AlertmanagerSpec(types.Object):
         self.__securityContext = securityContext
         self.__serviceAccountName = serviceAccountName
         self.__listenLocal = listenLocal
-        self.__containers = containers if containers is not None else {}
-        self.__initContainers = initContainers if initContainers is not None else {}
+        self.__containers = containers if containers is not None else []
+        self.__initContainers = initContainers if initContainers is not None else []
         self.__priorityClassName = priorityClassName
         self.__additionalPeers = additionalPeers if additionalPeers is not None else []
         self.__portName = portName
@@ -504,10 +504,10 @@ class AlertmanagerSpec(types.Object):
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[Dict[str, "corev1.LocalObjectReference"]],
+            Optional[List["corev1.LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets
         secrets = self.secrets()
         check_type("secrets", secrets, Optional[List[str]])
         if secrets:  # omit empty
@@ -537,15 +537,13 @@ class AlertmanagerSpec(types.Object):
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[Dict[str, "corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
         if volumes:  # omit empty
-            v["volumes"] = volumes.values()  # named list
+            v["volumes"] = volumes
         volumeMounts = self.volumeMounts()
-        check_type(
-            "volumeMounts", volumeMounts, Optional[Dict[str, "corev1.VolumeMount"]]
-        )
+        check_type("volumeMounts", volumeMounts, Optional[List["corev1.VolumeMount"]])
         if volumeMounts:  # omit empty
-            v["volumeMounts"] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts
         externalUrl = self.externalUrl()
         check_type("externalUrl", externalUrl, Optional[str])
         if externalUrl:  # omit empty
@@ -588,15 +586,13 @@ class AlertmanagerSpec(types.Object):
         if listenLocal:  # omit empty
             v["listenLocal"] = listenLocal
         containers = self.containers()
-        check_type("containers", containers, Optional[Dict[str, "corev1.Container"]])
+        check_type("containers", containers, Optional[List["corev1.Container"]])
         if containers:  # omit empty
-            v["containers"] = containers.values()  # named list
+            v["containers"] = containers
         initContainers = self.initContainers()
-        check_type(
-            "initContainers", initContainers, Optional[Dict[str, "corev1.Container"]]
-        )
+        check_type("initContainers", initContainers, Optional[List["corev1.Container"]])
         if initContainers:  # omit empty
-            v["initContainers"] = initContainers.values()  # named list
+            v["initContainers"] = initContainers
         priorityClassName = self.priorityClassName()
         check_type("priorityClassName", priorityClassName, Optional[str])
         if priorityClassName:  # omit empty
@@ -655,7 +651,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__baseImage
 
-    def imagePullSecrets(self) -> Optional[Dict[str, "corev1.LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["corev1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
@@ -713,7 +709,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__storage
 
-    def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+    def volumes(self) -> Optional[List["corev1.Volume"]]:
         """
         Volumes allows configuration of additional volumes on the output StatefulSet definition.
         Volumes specified will be appended to other volumes that are generated as a result of
@@ -721,7 +717,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__volumes
 
-    def volumeMounts(self) -> Optional[Dict[str, "corev1.VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["corev1.VolumeMount"]]:
         """
         VolumeMounts allows configuration of additional VolumeMounts on the output StatefulSet definition.
         VolumeMounts specified will be appended to other VolumeMounts in the alertmanager container,
@@ -799,14 +795,14 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__listenLocal
 
-    def containers(self) -> Optional[Dict[str, "corev1.Container"]]:
+    def containers(self) -> Optional[List["corev1.Container"]]:
         """
         Containers allows injecting additional containers. This is meant to
         allow adding an authentication proxy to an Alertmanager pod.
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[Dict[str, "corev1.Container"]]:
+    def initContainers(self) -> Optional[List["corev1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Alertmanager configuration from external sources. Any
@@ -2162,7 +2158,7 @@ class PrometheusSpec(types.Object):
         paused: bool = None,
         image: str = None,
         baseImage: str = None,
-        imagePullSecrets: Dict[str, "corev1.LocalObjectReference"] = None,
+        imagePullSecrets: List["corev1.LocalObjectReference"] = None,
         replicas: int = None,
         replicaExternalLabelName: str = None,
         prometheusExternalLabelName: str = None,
@@ -2180,7 +2176,7 @@ class PrometheusSpec(types.Object):
         routePrefix: str = None,
         query: "QuerySpec" = None,
         storage: "StorageSpec" = None,
-        volumes: Dict[str, "corev1.Volume"] = None,
+        volumes: List["corev1.Volume"] = None,
         ruleSelector: "metav1.LabelSelector" = None,
         ruleNamespaceSelector: "metav1.LabelSelector" = None,
         alerting: "AlertingSpec" = None,
@@ -2195,8 +2191,8 @@ class PrometheusSpec(types.Object):
         remoteRead: List["RemoteReadSpec"] = None,
         securityContext: "corev1.PodSecurityContext" = None,
         listenLocal: bool = None,
-        containers: Dict[str, "corev1.Container"] = None,
-        initContainers: Dict[str, "corev1.Container"] = None,
+        containers: List["corev1.Container"] = None,
+        initContainers: List["corev1.Container"] = None,
         additionalScrapeConfigs: "corev1.SecretKeySelector" = None,
         additionalAlertRelabelConfigs: "corev1.SecretKeySelector" = None,
         additionalAlertManagerConfigs: "corev1.SecretKeySelector" = None,
@@ -2218,7 +2214,7 @@ class PrometheusSpec(types.Object):
         self.__image = image
         self.__baseImage = baseImage
         self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else {}
+            imagePullSecrets if imagePullSecrets is not None else []
         )
         self.__replicas = replicas
         self.__replicaExternalLabelName = replicaExternalLabelName
@@ -2237,7 +2233,7 @@ class PrometheusSpec(types.Object):
         self.__routePrefix = routePrefix
         self.__query = query
         self.__storage = storage
-        self.__volumes = volumes if volumes is not None else {}
+        self.__volumes = volumes if volumes is not None else []
         self.__ruleSelector = ruleSelector
         self.__ruleNamespaceSelector = ruleNamespaceSelector
         self.__alerting = alerting
@@ -2254,8 +2250,8 @@ class PrometheusSpec(types.Object):
         self.__remoteRead = remoteRead if remoteRead is not None else []
         self.__securityContext = securityContext
         self.__listenLocal = listenLocal
-        self.__containers = containers if containers is not None else {}
-        self.__initContainers = initContainers if initContainers is not None else {}
+        self.__containers = containers if containers is not None else []
+        self.__initContainers = initContainers if initContainers is not None else []
         self.__additionalScrapeConfigs = additionalScrapeConfigs
         self.__additionalAlertRelabelConfigs = additionalAlertRelabelConfigs
         self.__additionalAlertManagerConfigs = additionalAlertManagerConfigs
@@ -2329,10 +2325,10 @@ class PrometheusSpec(types.Object):
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[Dict[str, "corev1.LocalObjectReference"]],
+            Optional[List["corev1.LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets
         replicas = self.replicas()
         check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
@@ -2403,9 +2399,9 @@ class PrometheusSpec(types.Object):
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[Dict[str, "corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
         if volumes:  # omit empty
-            v["volumes"] = volumes.values()  # named list
+            v["volumes"] = volumes
         ruleSelector = self.ruleSelector()
         check_type("ruleSelector", ruleSelector, Optional["metav1.LabelSelector"])
         if ruleSelector is not None:  # omit empty
@@ -2468,15 +2464,13 @@ class PrometheusSpec(types.Object):
         if listenLocal:  # omit empty
             v["listenLocal"] = listenLocal
         containers = self.containers()
-        check_type("containers", containers, Optional[Dict[str, "corev1.Container"]])
+        check_type("containers", containers, Optional[List["corev1.Container"]])
         if containers:  # omit empty
-            v["containers"] = containers.values()  # named list
+            v["containers"] = containers
         initContainers = self.initContainers()
-        check_type(
-            "initContainers", initContainers, Optional[Dict[str, "corev1.Container"]]
-        )
+        check_type("initContainers", initContainers, Optional[List["corev1.Container"]])
         if initContainers:  # omit empty
-            v["initContainers"] = initContainers.values()  # named list
+            v["initContainers"] = initContainers
         additionalScrapeConfigs = self.additionalScrapeConfigs()
         check_type(
             "additionalScrapeConfigs",
@@ -2596,7 +2590,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__baseImage
 
-    def imagePullSecrets(self) -> Optional[Dict[str, "corev1.LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["corev1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
@@ -2723,7 +2717,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__storage
 
-    def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+    def volumes(self) -> Optional[List["corev1.Volume"]]:
         """
         Volumes allows configuration of additional volumes on the output StatefulSet definition. Volumes specified will
         be appended to other volumes that are generated as a result of StorageSpec objects.
@@ -2826,7 +2820,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__listenLocal
 
-    def containers(self) -> Optional[Dict[str, "corev1.Container"]]:
+    def containers(self) -> Optional[List["corev1.Container"]]:
         """
         Containers allows injecting additional containers or modifying operator generated
         containers. This can be used to allow adding an authentication proxy to a Prometheus pod or
@@ -2839,7 +2833,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[Dict[str, "corev1.Container"]]:
+    def initContainers(self) -> Optional[List["corev1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Prometheus configuration from external sources. Any errors
@@ -3094,20 +3088,20 @@ class PrometheusRuleSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, groups: Dict[str, "RuleGroup"] = None):
+    def __init__(self, groups: List["RuleGroup"] = None):
         super().__init__()
-        self.__groups = groups if groups is not None else {}
+        self.__groups = groups if groups is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         groups = self.groups()
-        check_type("groups", groups, Optional[Dict[str, "RuleGroup"]])
+        check_type("groups", groups, Optional[List["RuleGroup"]])
         if groups:  # omit empty
-            v["groups"] = groups.values()  # named list
+            v["groups"] = groups
         return v
 
-    def groups(self) -> Optional[Dict[str, "RuleGroup"]]:
+    def groups(self) -> Optional[List["RuleGroup"]]:
         """
         Content of Prometheus rule file
         """

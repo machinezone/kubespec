@@ -24,17 +24,17 @@ class PodPresetSpec(types.Object):
     def __init__(
         self,
         selector: "metav1.LabelSelector" = None,
-        env: Dict[str, "corev1.EnvVar"] = None,
+        env: List["corev1.EnvVar"] = None,
         envFrom: List["corev1.EnvFromSource"] = None,
-        volumes: Dict[str, "corev1.Volume"] = None,
-        volumeMounts: Dict[str, "corev1.VolumeMount"] = None,
+        volumes: List["corev1.Volume"] = None,
+        volumeMounts: List["corev1.VolumeMount"] = None,
     ):
         super().__init__()
         self.__selector = selector if selector is not None else metav1.LabelSelector()
-        self.__env = env if env is not None else {}
+        self.__env = env if env is not None else []
         self.__envFrom = envFrom if envFrom is not None else []
-        self.__volumes = volumes if volumes is not None else {}
-        self.__volumeMounts = volumeMounts if volumeMounts is not None else {}
+        self.__volumes = volumes if volumes is not None else []
+        self.__volumeMounts = volumeMounts if volumeMounts is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -43,23 +43,21 @@ class PodPresetSpec(types.Object):
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         v["selector"] = selector
         env = self.env()
-        check_type("env", env, Optional[Dict[str, "corev1.EnvVar"]])
+        check_type("env", env, Optional[List["corev1.EnvVar"]])
         if env:  # omit empty
-            v["env"] = env.values()  # named list
+            v["env"] = env
         envFrom = self.envFrom()
         check_type("envFrom", envFrom, Optional[List["corev1.EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[Dict[str, "corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
         if volumes:  # omit empty
-            v["volumes"] = volumes.values()  # named list
+            v["volumes"] = volumes
         volumeMounts = self.volumeMounts()
-        check_type(
-            "volumeMounts", volumeMounts, Optional[Dict[str, "corev1.VolumeMount"]]
-        )
+        check_type("volumeMounts", volumeMounts, Optional[List["corev1.VolumeMount"]])
         if volumeMounts:  # omit empty
-            v["volumeMounts"] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts
         return v
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
@@ -69,7 +67,7 @@ class PodPresetSpec(types.Object):
         """
         return self.__selector
 
-    def env(self) -> Optional[Dict[str, "corev1.EnvVar"]]:
+    def env(self) -> Optional[List["corev1.EnvVar"]]:
         """
         Env defines the collection of EnvVar to inject into containers.
         """
@@ -81,13 +79,13 @@ class PodPresetSpec(types.Object):
         """
         return self.__envFrom
 
-    def volumes(self) -> Optional[Dict[str, "corev1.Volume"]]:
+    def volumes(self) -> Optional[List["corev1.Volume"]]:
         """
         Volumes defines the collection of Volume to inject into the pod.
         """
         return self.__volumes
 
-    def volumeMounts(self) -> Optional[Dict[str, "corev1.VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["corev1.VolumeMount"]]:
         """
         VolumeMounts defines the collection of VolumeMount to inject into containers.
         """

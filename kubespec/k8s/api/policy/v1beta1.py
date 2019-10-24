@@ -719,7 +719,7 @@ class PodSecurityPolicySpec(types.Object):
         allowPrivilegeEscalation: bool = None,
         allowedHostPaths: List["AllowedHostPath"] = None,
         allowedFlexVolumes: List["AllowedFlexVolume"] = None,
-        allowedCSIDrivers: Dict[str, "AllowedCSIDriver"] = None,
+        allowedCSIDrivers: List["AllowedCSIDriver"] = None,
         allowedUnsafeSysctls: List[str] = None,
         forbiddenSysctls: List[str] = None,
         allowedProcMountTypes: List[corev1.ProcMountType] = None,
@@ -764,7 +764,7 @@ class PodSecurityPolicySpec(types.Object):
             allowedFlexVolumes if allowedFlexVolumes is not None else []
         )
         self.__allowedCSIDrivers = (
-            allowedCSIDrivers if allowedCSIDrivers is not None else {}
+            allowedCSIDrivers if allowedCSIDrivers is not None else []
         )
         self.__allowedUnsafeSysctls = (
             allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
@@ -880,12 +880,10 @@ class PodSecurityPolicySpec(types.Object):
             v["allowedFlexVolumes"] = allowedFlexVolumes
         allowedCSIDrivers = self.allowedCSIDrivers()
         check_type(
-            "allowedCSIDrivers",
-            allowedCSIDrivers,
-            Optional[Dict[str, "AllowedCSIDriver"]],
+            "allowedCSIDrivers", allowedCSIDrivers, Optional[List["AllowedCSIDriver"]]
         )
         if allowedCSIDrivers:  # omit empty
-            v["allowedCSIDrivers"] = allowedCSIDrivers.values()  # named list
+            v["allowedCSIDrivers"] = allowedCSIDrivers
         allowedUnsafeSysctls = self.allowedUnsafeSysctls()
         check_type("allowedUnsafeSysctls", allowedUnsafeSysctls, Optional[List[str]])
         if allowedUnsafeSysctls:  # omit empty
@@ -1042,7 +1040,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__allowedFlexVolumes
 
-    def allowedCSIDrivers(self) -> Optional[Dict[str, "AllowedCSIDriver"]]:
+    def allowedCSIDrivers(self) -> Optional[List["AllowedCSIDriver"]]:
         """
         AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
         An empty value indicates that any CSI driver can be used for inline ephemeral volumes.

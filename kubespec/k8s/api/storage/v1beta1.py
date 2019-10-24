@@ -322,19 +322,19 @@ class CSINodeSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, drivers: Dict[str, "CSINodeDriver"] = None):
+    def __init__(self, drivers: List["CSINodeDriver"] = None):
         super().__init__()
-        self.__drivers = drivers if drivers is not None else {}
+        self.__drivers = drivers if drivers is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         drivers = self.drivers()
-        check_type("drivers", drivers, Dict[str, "CSINodeDriver"])
-        v["drivers"] = drivers.values()  # named list
+        check_type("drivers", drivers, List["CSINodeDriver"])
+        v["drivers"] = drivers
         return v
 
-    def drivers(self) -> Dict[str, "CSINodeDriver"]:
+    def drivers(self) -> List["CSINodeDriver"]:
         """
         drivers is a list of information of all CSI Drivers existing on a node.
         If all drivers in the list are uninstalled, this can become empty.

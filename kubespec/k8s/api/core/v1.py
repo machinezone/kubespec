@@ -3440,14 +3440,14 @@ class HTTPGetAction(types.Object):
         port: Union[int, str] = None,
         host: str = None,
         scheme: URIScheme = URIScheme["HTTP"],
-        httpHeaders: Dict[str, "HTTPHeader"] = None,
+        httpHeaders: List["HTTPHeader"] = None,
     ):
         super().__init__()
         self.__path = path
         self.__port = port if port is not None else 0
         self.__host = host
         self.__scheme = scheme
-        self.__httpHeaders = httpHeaders if httpHeaders is not None else {}
+        self.__httpHeaders = httpHeaders if httpHeaders is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -3468,9 +3468,9 @@ class HTTPGetAction(types.Object):
         if scheme:  # omit empty
             v["scheme"] = scheme
         httpHeaders = self.httpHeaders()
-        check_type("httpHeaders", httpHeaders, Optional[Dict[str, "HTTPHeader"]])
+        check_type("httpHeaders", httpHeaders, Optional[List["HTTPHeader"]])
         if httpHeaders:  # omit empty
-            v["httpHeaders"] = httpHeaders.values()  # named list
+            v["httpHeaders"] = httpHeaders
         return v
 
     def path(self) -> Optional[str]:
@@ -3501,7 +3501,7 @@ class HTTPGetAction(types.Object):
         """
         return self.__scheme
 
-    def httpHeaders(self) -> Optional[Dict[str, "HTTPHeader"]]:
+    def httpHeaders(self) -> Optional[List["HTTPHeader"]]:
         """
         Custom headers to set in the request. HTTP allows repeated headers.
         """
@@ -4243,12 +4243,12 @@ class Container(types.Object):
         command: List[str] = None,
         args: List[str] = None,
         workingDir: str = None,
-        ports: Dict[str, "ContainerPort"] = None,
+        ports: List["ContainerPort"] = None,
         envFrom: List["EnvFromSource"] = None,
-        env: Dict[str, "EnvVar"] = None,
+        env: List["EnvVar"] = None,
         resources: "ResourceRequirements" = None,
-        volumeMounts: Dict[str, "VolumeMount"] = None,
-        volumeDevices: Dict[str, "VolumeDevice"] = None,
+        volumeMounts: List["VolumeMount"] = None,
+        volumeDevices: List["VolumeDevice"] = None,
         livenessProbe: "Probe" = None,
         readinessProbe: "Probe" = None,
         startupProbe: "Probe" = None,
@@ -4269,14 +4269,14 @@ class Container(types.Object):
         self.__command = command if command is not None else []
         self.__args = args if args is not None else []
         self.__workingDir = workingDir
-        self.__ports = ports if ports is not None else {}
+        self.__ports = ports if ports is not None else []
         self.__envFrom = envFrom if envFrom is not None else []
-        self.__env = env if env is not None else {}
+        self.__env = env if env is not None else []
         self.__resources = (
             resources if resources is not None else ResourceRequirements()
         )
-        self.__volumeMounts = volumeMounts if volumeMounts is not None else {}
-        self.__volumeDevices = volumeDevices if volumeDevices is not None else {}
+        self.__volumeMounts = volumeMounts if volumeMounts is not None else []
+        self.__volumeDevices = volumeDevices if volumeDevices is not None else []
         self.__livenessProbe = livenessProbe
         self.__readinessProbe = readinessProbe
         self.__startupProbe = startupProbe
@@ -4312,28 +4312,28 @@ class Container(types.Object):
         if workingDir:  # omit empty
             v["workingDir"] = workingDir
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, "ContainerPort"]])
+        check_type("ports", ports, Optional[List["ContainerPort"]])
         if ports:  # omit empty
-            v["ports"] = ports.values()  # named list
+            v["ports"] = ports
         envFrom = self.envFrom()
         check_type("envFrom", envFrom, Optional[List["EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         env = self.env()
-        check_type("env", env, Optional[Dict[str, "EnvVar"]])
+        check_type("env", env, Optional[List["EnvVar"]])
         if env:  # omit empty
-            v["env"] = env.values()  # named list
+            v["env"] = env
         resources = self.resources()
         check_type("resources", resources, Optional["ResourceRequirements"])
         v["resources"] = resources
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[Dict[str, "VolumeMount"]])
+        check_type("volumeMounts", volumeMounts, Optional[List["VolumeMount"]])
         if volumeMounts:  # omit empty
-            v["volumeMounts"] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts
         volumeDevices = self.volumeDevices()
-        check_type("volumeDevices", volumeDevices, Optional[Dict[str, "VolumeDevice"]])
+        check_type("volumeDevices", volumeDevices, Optional[List["VolumeDevice"]])
         if volumeDevices:  # omit empty
-            v["volumeDevices"] = volumeDevices.values()  # named list
+            v["volumeDevices"] = volumeDevices
         livenessProbe = self.livenessProbe()
         check_type("livenessProbe", livenessProbe, Optional["Probe"])
         if livenessProbe is not None:  # omit empty
@@ -4436,7 +4436,7 @@ class Container(types.Object):
         """
         return self.__workingDir
 
-    def ports(self) -> Optional[Dict[str, "ContainerPort"]]:
+    def ports(self) -> Optional[List["ContainerPort"]]:
         """
         List of ports to expose from the container. Exposing a port here gives
         the system additional information about the network connections a
@@ -4462,7 +4462,7 @@ class Container(types.Object):
         """
         return self.__envFrom
 
-    def env(self) -> Optional[Dict[str, "EnvVar"]]:
+    def env(self) -> Optional[List["EnvVar"]]:
         """
         List of environment variables to set in the container.
         Cannot be updated.
@@ -4477,14 +4477,14 @@ class Container(types.Object):
         """
         return self.__resources
 
-    def volumeMounts(self) -> Optional[Dict[str, "VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["VolumeMount"]]:
         """
         Pod volumes to mount into the container's filesystem.
         Cannot be updated.
         """
         return self.__volumeMounts
 
-    def volumeDevices(self) -> Optional[Dict[str, "VolumeDevice"]]:
+    def volumeDevices(self) -> Optional[List["VolumeDevice"]]:
         """
         volumeDevices is the list of block devices to be used by the container.
         This is a beta feature.
@@ -4936,14 +4936,14 @@ class EndpointSubset(types.Object):
         self,
         addresses: List["EndpointAddress"] = None,
         notReadyAddresses: List["EndpointAddress"] = None,
-        ports: Dict[str, "EndpointPort"] = None,
+        ports: List["EndpointPort"] = None,
     ):
         super().__init__()
         self.__addresses = addresses if addresses is not None else []
         self.__notReadyAddresses = (
             notReadyAddresses if notReadyAddresses is not None else []
         )
-        self.__ports = ports if ports is not None else {}
+        self.__ports = ports if ports is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -4959,9 +4959,9 @@ class EndpointSubset(types.Object):
         if notReadyAddresses:  # omit empty
             v["notReadyAddresses"] = notReadyAddresses
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, "EndpointPort"]])
+        check_type("ports", ports, Optional[List["EndpointPort"]])
         if ports:  # omit empty
-            v["ports"] = ports.values()  # named list
+            v["ports"] = ports
         return v
 
     def addresses(self) -> Optional[List["EndpointAddress"]]:
@@ -4979,7 +4979,7 @@ class EndpointSubset(types.Object):
         """
         return self.__notReadyAddresses
 
-    def ports(self) -> Optional[Dict[str, "EndpointPort"]]:
+    def ports(self) -> Optional[List["EndpointPort"]]:
         """
         Port numbers available on the related IP addresses.
         """
@@ -5061,12 +5061,12 @@ class EphemeralContainerCommon(types.Object):
         command: List[str] = None,
         args: List[str] = None,
         workingDir: str = None,
-        ports: Dict[str, "ContainerPort"] = None,
+        ports: List["ContainerPort"] = None,
         envFrom: List["EnvFromSource"] = None,
-        env: Dict[str, "EnvVar"] = None,
+        env: List["EnvVar"] = None,
         resources: "ResourceRequirements" = None,
-        volumeMounts: Dict[str, "VolumeMount"] = None,
-        volumeDevices: Dict[str, "VolumeDevice"] = None,
+        volumeMounts: List["VolumeMount"] = None,
+        volumeDevices: List["VolumeDevice"] = None,
         livenessProbe: "Probe" = None,
         readinessProbe: "Probe" = None,
         startupProbe: "Probe" = None,
@@ -5085,14 +5085,14 @@ class EphemeralContainerCommon(types.Object):
         self.__command = command if command is not None else []
         self.__args = args if args is not None else []
         self.__workingDir = workingDir
-        self.__ports = ports if ports is not None else {}
+        self.__ports = ports if ports is not None else []
         self.__envFrom = envFrom if envFrom is not None else []
-        self.__env = env if env is not None else {}
+        self.__env = env if env is not None else []
         self.__resources = (
             resources if resources is not None else ResourceRequirements()
         )
-        self.__volumeMounts = volumeMounts if volumeMounts is not None else {}
-        self.__volumeDevices = volumeDevices if volumeDevices is not None else {}
+        self.__volumeMounts = volumeMounts if volumeMounts is not None else []
+        self.__volumeDevices = volumeDevices if volumeDevices is not None else []
         self.__livenessProbe = livenessProbe
         self.__readinessProbe = readinessProbe
         self.__startupProbe = startupProbe
@@ -5128,28 +5128,28 @@ class EphemeralContainerCommon(types.Object):
         if workingDir:  # omit empty
             v["workingDir"] = workingDir
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, "ContainerPort"]])
+        check_type("ports", ports, Optional[List["ContainerPort"]])
         if ports:  # omit empty
-            v["ports"] = ports.values()  # named list
+            v["ports"] = ports
         envFrom = self.envFrom()
         check_type("envFrom", envFrom, Optional[List["EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         env = self.env()
-        check_type("env", env, Optional[Dict[str, "EnvVar"]])
+        check_type("env", env, Optional[List["EnvVar"]])
         if env:  # omit empty
-            v["env"] = env.values()  # named list
+            v["env"] = env
         resources = self.resources()
         check_type("resources", resources, Optional["ResourceRequirements"])
         v["resources"] = resources
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[Dict[str, "VolumeMount"]])
+        check_type("volumeMounts", volumeMounts, Optional[List["VolumeMount"]])
         if volumeMounts:  # omit empty
-            v["volumeMounts"] = volumeMounts.values()  # named list
+            v["volumeMounts"] = volumeMounts
         volumeDevices = self.volumeDevices()
-        check_type("volumeDevices", volumeDevices, Optional[Dict[str, "VolumeDevice"]])
+        check_type("volumeDevices", volumeDevices, Optional[List["VolumeDevice"]])
         if volumeDevices:  # omit empty
-            v["volumeDevices"] = volumeDevices.values()  # named list
+            v["volumeDevices"] = volumeDevices
         livenessProbe = self.livenessProbe()
         check_type("livenessProbe", livenessProbe, Optional["Probe"])
         if livenessProbe is not None:  # omit empty
@@ -5249,7 +5249,7 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__workingDir
 
-    def ports(self) -> Optional[Dict[str, "ContainerPort"]]:
+    def ports(self) -> Optional[List["ContainerPort"]]:
         """
         Ports are not allowed for ephemeral containers.
         """
@@ -5266,7 +5266,7 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__envFrom
 
-    def env(self) -> Optional[Dict[str, "EnvVar"]]:
+    def env(self) -> Optional[List["EnvVar"]]:
         """
         List of environment variables to set in the container.
         Cannot be updated.
@@ -5280,14 +5280,14 @@ class EphemeralContainerCommon(types.Object):
         """
         return self.__resources
 
-    def volumeMounts(self) -> Optional[Dict[str, "VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["VolumeMount"]]:
         """
         Pod volumes to mount into the container's filesystem.
         Cannot be updated.
         """
         return self.__volumeMounts
 
-    def volumeDevices(self) -> Optional[Dict[str, "VolumeDevice"]]:
+    def volumeDevices(self) -> Optional[List["VolumeDevice"]]:
         """
         volumeDevices is the list of block devices to be used by the container.
         This is a beta feature.
@@ -8703,12 +8703,12 @@ class PodDNSConfig(types.Object):
         self,
         nameservers: List[str] = None,
         searches: List[str] = None,
-        options: Dict[str, "PodDNSConfigOption"] = None,
+        options: List["PodDNSConfigOption"] = None,
     ):
         super().__init__()
         self.__nameservers = nameservers if nameservers is not None else []
         self.__searches = searches if searches is not None else []
-        self.__options = options if options is not None else {}
+        self.__options = options if options is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -8722,9 +8722,9 @@ class PodDNSConfig(types.Object):
         if searches:  # omit empty
             v["searches"] = searches
         options = self.options()
-        check_type("options", options, Optional[Dict[str, "PodDNSConfigOption"]])
+        check_type("options", options, Optional[List["PodDNSConfigOption"]])
         if options:  # omit empty
-            v["options"] = options.values()  # named list
+            v["options"] = options
         return v
 
     def nameservers(self) -> Optional[List[str]]:
@@ -8743,7 +8743,7 @@ class PodDNSConfig(types.Object):
         """
         return self.__searches
 
-    def options(self) -> Optional[Dict[str, "PodDNSConfigOption"]]:
+    def options(self) -> Optional[List["PodDNSConfigOption"]]:
         """
         A list of DNS resolver options.
         This will be merged with the base options generated from DNSPolicy.
@@ -8833,7 +8833,7 @@ class PodSecurityContext(types.Object):
         runAsNonRoot: bool = None,
         supplementalGroups: List[int] = None,
         fsGroup: int = None,
-        sysctls: Dict[str, "Sysctl"] = None,
+        sysctls: List["Sysctl"] = None,
     ):
         super().__init__()
         self.__seLinuxOptions = seLinuxOptions
@@ -8845,7 +8845,7 @@ class PodSecurityContext(types.Object):
             supplementalGroups if supplementalGroups is not None else []
         )
         self.__fsGroup = fsGroup
-        self.__sysctls = sysctls if sysctls is not None else {}
+        self.__sysctls = sysctls if sysctls is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -8881,9 +8881,9 @@ class PodSecurityContext(types.Object):
         if fsGroup is not None:  # omit empty
             v["fsGroup"] = fsGroup
         sysctls = self.sysctls()
-        check_type("sysctls", sysctls, Optional[Dict[str, "Sysctl"]])
+        check_type("sysctls", sysctls, Optional[List["Sysctl"]])
         if sysctls:  # omit empty
-            v["sysctls"] = sysctls.values()  # named list
+            v["sysctls"] = sysctls
         return v
 
     def seLinuxOptions(self) -> Optional["SELinuxOptions"]:
@@ -8957,7 +8957,7 @@ class PodSecurityContext(types.Object):
         """
         return self.__fsGroup
 
-    def sysctls(self) -> Optional[Dict[str, "Sysctl"]]:
+    def sysctls(self) -> Optional[List["Sysctl"]]:
         """
         Sysctls hold a list of namespaced sysctls used for the pod. Pods with unsupported
         sysctls (by the container runtime) might fail to launch.
@@ -10272,9 +10272,9 @@ class PodSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        volumes: Dict[str, "Volume"] = None,
-        initContainers: Dict[str, "Container"] = None,
-        containers: Dict[str, "Container"] = None,
+        volumes: List["Volume"] = None,
+        initContainers: List["Container"] = None,
+        containers: List["Container"] = None,
         ephemeralContainers: List["EphemeralContainer"] = None,
         restartPolicy: RestartPolicy = RestartPolicy["Always"],
         terminationGracePeriodSeconds: int = None,
@@ -10289,7 +10289,7 @@ class PodSpec(types.Object):
         hostIPC: bool = None,
         shareProcessNamespace: bool = None,
         securityContext: "PodSecurityContext" = None,
-        imagePullSecrets: Dict[str, "LocalObjectReference"] = None,
+        imagePullSecrets: List["LocalObjectReference"] = None,
         hostname: str = None,
         subdomain: str = None,
         affinity: "Affinity" = None,
@@ -10307,9 +10307,9 @@ class PodSpec(types.Object):
         topologySpreadConstraints: List["TopologySpreadConstraint"] = None,
     ):
         super().__init__()
-        self.__volumes = volumes if volumes is not None else {}
-        self.__initContainers = initContainers if initContainers is not None else {}
-        self.__containers = containers if containers is not None else {}
+        self.__volumes = volumes if volumes is not None else []
+        self.__initContainers = initContainers if initContainers is not None else []
+        self.__containers = containers if containers is not None else []
         self.__ephemeralContainers = (
             ephemeralContainers if ephemeralContainers is not None else []
         )
@@ -10331,7 +10331,7 @@ class PodSpec(types.Object):
         self.__shareProcessNamespace = shareProcessNamespace
         self.__securityContext = securityContext
         self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else {}
+            imagePullSecrets if imagePullSecrets is not None else []
         )
         self.__hostname = hostname
         self.__subdomain = subdomain
@@ -10355,16 +10355,16 @@ class PodSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[Dict[str, "Volume"]])
+        check_type("volumes", volumes, Optional[List["Volume"]])
         if volumes:  # omit empty
-            v["volumes"] = volumes.values()  # named list
+            v["volumes"] = volumes
         initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[Dict[str, "Container"]])
+        check_type("initContainers", initContainers, Optional[List["Container"]])
         if initContainers:  # omit empty
-            v["initContainers"] = initContainers.values()  # named list
+            v["initContainers"] = initContainers
         containers = self.containers()
-        check_type("containers", containers, Dict[str, "Container"])
-        v["containers"] = containers.values()  # named list
+        check_type("containers", containers, List["Container"])
+        v["containers"] = containers
         ephemeralContainers = self.ephemeralContainers()
         check_type(
             "ephemeralContainers",
@@ -10433,12 +10433,10 @@ class PodSpec(types.Object):
             v["securityContext"] = securityContext
         imagePullSecrets = self.imagePullSecrets()
         check_type(
-            "imagePullSecrets",
-            imagePullSecrets,
-            Optional[Dict[str, "LocalObjectReference"]],
+            "imagePullSecrets", imagePullSecrets, Optional[List["LocalObjectReference"]]
         )
         if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets
         hostname = self.hostname()
         check_type("hostname", hostname, Optional[str])
         if hostname:  # omit empty
@@ -10507,14 +10505,14 @@ class PodSpec(types.Object):
             v["topologySpreadConstraints"] = topologySpreadConstraints
         return v
 
-    def volumes(self) -> Optional[Dict[str, "Volume"]]:
+    def volumes(self) -> Optional[List["Volume"]]:
         """
         List of volumes that can be mounted by containers belonging to the pod.
         More info: https://kubernetes.io/docs/concepts/storage/volumes
         """
         return self.__volumes
 
-    def initContainers(self) -> Optional[Dict[str, "Container"]]:
+    def initContainers(self) -> Optional[List["Container"]]:
         """
         List of initialization containers belonging to the pod.
         Init containers are executed in order prior to containers being started. If any
@@ -10532,7 +10530,7 @@ class PodSpec(types.Object):
         """
         return self.__initContainers
 
-    def containers(self) -> Dict[str, "Container"]:
+    def containers(self) -> List["Container"]:
         """
         List of containers belonging to the pod.
         Containers cannot currently be added or removed.
@@ -10660,7 +10658,7 @@ class PodSpec(types.Object):
         """
         return self.__securityContext
 
-    def imagePullSecrets(self) -> Optional[Dict[str, "LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["LocalObjectReference"]]:
         """
         ImagePullSecrets is an optional list of references to secrets in the same namespace to use for pulling any of the images used by this PodSpec.
         If specified, these secrets will be passed to individual puller implementations for them to use. For example,
@@ -11909,7 +11907,7 @@ class ServiceSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        ports: Dict[str, "ServicePort"] = None,
+        ports: List["ServicePort"] = None,
         selector: Dict[str, str] = None,
         clusterIP: str = None,
         type: ServiceType = ServiceType["ClusterIP"],
@@ -11925,7 +11923,7 @@ class ServiceSpec(types.Object):
         ipFamily: IPFamily = None,
     ):
         super().__init__()
-        self.__ports = ports if ports is not None else {}
+        self.__ports = ports if ports is not None else []
         self.__selector = selector if selector is not None else {}
         self.__clusterIP = clusterIP
         self.__type = type
@@ -11946,9 +11944,9 @@ class ServiceSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         ports = self.ports()
-        check_type("ports", ports, Optional[Dict[str, "ServicePort"]])
+        check_type("ports", ports, Optional[List["ServicePort"]])
         if ports:  # omit empty
-            v["ports"] = ports.values()  # named list
+            v["ports"] = ports
         selector = self.selector()
         check_type("selector", selector, Optional[Dict[str, str]])
         if selector:  # omit empty
@@ -12013,7 +12011,7 @@ class ServiceSpec(types.Object):
             v["ipFamily"] = ipFamily
         return v
 
-    def ports(self) -> Optional[Dict[str, "ServicePort"]]:
+    def ports(self) -> Optional[List["ServicePort"]]:
         """
         The list of ports that are exposed by this service.
         More info: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
@@ -12225,8 +12223,8 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        secrets: Dict[str, "ObjectReference"] = None,
-        imagePullSecrets: Dict[str, "LocalObjectReference"] = None,
+        secrets: List["ObjectReference"] = None,
+        imagePullSecrets: List["LocalObjectReference"] = None,
         automountServiceAccountToken: bool = None,
     ):
         super().__init__(
@@ -12237,9 +12235,9 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__secrets = secrets if secrets is not None else {}
+        self.__secrets = secrets if secrets is not None else []
         self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else {}
+            imagePullSecrets if imagePullSecrets is not None else []
         )
         self.__automountServiceAccountToken = automountServiceAccountToken
 
@@ -12247,17 +12245,15 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         secrets = self.secrets()
-        check_type("secrets", secrets, Optional[Dict[str, "ObjectReference"]])
+        check_type("secrets", secrets, Optional[List["ObjectReference"]])
         if secrets:  # omit empty
-            v["secrets"] = secrets.values()  # named list
+            v["secrets"] = secrets
         imagePullSecrets = self.imagePullSecrets()
         check_type(
-            "imagePullSecrets",
-            imagePullSecrets,
-            Optional[Dict[str, "LocalObjectReference"]],
+            "imagePullSecrets", imagePullSecrets, Optional[List["LocalObjectReference"]]
         )
         if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets.values()  # named list
+            v["imagePullSecrets"] = imagePullSecrets
         automountServiceAccountToken = self.automountServiceAccountToken()
         check_type(
             "automountServiceAccountToken", automountServiceAccountToken, Optional[bool]
@@ -12266,14 +12262,14 @@ class ServiceAccount(base.TypedObject, base.NamespacedMetadataObject):
             v["automountServiceAccountToken"] = automountServiceAccountToken
         return v
 
-    def secrets(self) -> Optional[Dict[str, "ObjectReference"]]:
+    def secrets(self) -> Optional[List["ObjectReference"]]:
         """
         Secrets is the list of secrets allowed to be used by pods running using this ServiceAccount.
         More info: https://kubernetes.io/docs/concepts/configuration/secret
         """
         return self.__secrets
 
-    def imagePullSecrets(self) -> Optional[Dict[str, "LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["LocalObjectReference"]]:
         """
         ImagePullSecrets is a list of references to secrets in the same namespace to use for pulling any images
         in pods that reference this ServiceAccount. ImagePullSecrets are distinct from Secrets because Secrets

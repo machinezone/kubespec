@@ -313,7 +313,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        subjects: Dict[str, "Subject"] = None,
+        subjects: List["Subject"] = None,
         roleRef: "RoleRef" = None,
     ):
         super().__init__(
@@ -323,22 +323,22 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__subjects = subjects if subjects is not None else {}
+        self.__subjects = subjects if subjects is not None else []
         self.__roleRef = roleRef if roleRef is not None else RoleRef()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         subjects = self.subjects()
-        check_type("subjects", subjects, Optional[Dict[str, "Subject"]])
+        check_type("subjects", subjects, Optional[List["Subject"]])
         if subjects:  # omit empty
-            v["subjects"] = subjects.values()  # named list
+            v["subjects"] = subjects
         roleRef = self.roleRef()
         check_type("roleRef", roleRef, "RoleRef")
         v["roleRef"] = roleRef
         return v
 
-    def subjects(self) -> Optional[Dict[str, "Subject"]]:
+    def subjects(self) -> Optional[List["Subject"]]:
         """
         Subjects holds references to the objects the role applies to.
         """
@@ -407,7 +407,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        subjects: Dict[str, "Subject"] = None,
+        subjects: List["Subject"] = None,
         roleRef: "RoleRef" = None,
     ):
         super().__init__(
@@ -418,22 +418,22 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__subjects = subjects if subjects is not None else {}
+        self.__subjects = subjects if subjects is not None else []
         self.__roleRef = roleRef if roleRef is not None else RoleRef()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         subjects = self.subjects()
-        check_type("subjects", subjects, Optional[Dict[str, "Subject"]])
+        check_type("subjects", subjects, Optional[List["Subject"]])
         if subjects:  # omit empty
-            v["subjects"] = subjects.values()  # named list
+            v["subjects"] = subjects
         roleRef = self.roleRef()
         check_type("roleRef", roleRef, "RoleRef")
         v["roleRef"] = roleRef
         return v
 
-    def subjects(self) -> Optional[Dict[str, "Subject"]]:
+    def subjects(self) -> Optional[List["Subject"]]:
         """
         Subjects holds references to the objects the role applies to.
         """

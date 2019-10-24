@@ -656,7 +656,7 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        webhooks: Dict[str, "MutatingWebhook"] = None,
+        webhooks: List["MutatingWebhook"] = None,
     ):
         super().__init__(
             apiVersion="admissionregistration.k8s.io/v1",
@@ -665,18 +665,18 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__webhooks = webhooks if webhooks is not None else {}
+        self.__webhooks = webhooks if webhooks is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
-        check_type("webhooks", webhooks, Optional[Dict[str, "MutatingWebhook"]])
+        check_type("webhooks", webhooks, Optional[List["MutatingWebhook"]])
         if webhooks:  # omit empty
-            v["webhooks"] = webhooks.values()  # named list
+            v["webhooks"] = webhooks
         return v
 
-    def webhooks(self) -> Optional[Dict[str, "MutatingWebhook"]]:
+    def webhooks(self) -> Optional[List["MutatingWebhook"]]:
         """
         Webhooks is a list of webhooks and the affected resources and operations.
         """
@@ -930,7 +930,7 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        webhooks: Dict[str, "ValidatingWebhook"] = None,
+        webhooks: List["ValidatingWebhook"] = None,
     ):
         super().__init__(
             apiVersion="admissionregistration.k8s.io/v1",
@@ -939,18 +939,18 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__webhooks = webhooks if webhooks is not None else {}
+        self.__webhooks = webhooks if webhooks is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         webhooks = self.webhooks()
-        check_type("webhooks", webhooks, Optional[Dict[str, "ValidatingWebhook"]])
+        check_type("webhooks", webhooks, Optional[List["ValidatingWebhook"]])
         if webhooks:  # omit empty
-            v["webhooks"] = webhooks.values()  # named list
+            v["webhooks"] = webhooks
         return v
 
-    def webhooks(self) -> Optional[Dict[str, "ValidatingWebhook"]]:
+    def webhooks(self) -> Optional[List["ValidatingWebhook"]]:
         """
         Webhooks is a list of webhooks and the affected resources and operations.
         """
