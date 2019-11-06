@@ -5,7 +5,6 @@
 import contextvars
 import functools
 import inspect
-from typing import Any, Dict
 
 import typeguard
 
@@ -13,14 +12,9 @@ import typeguard
 _current_scope = contextvars.ContextVar("kubespec.context")
 
 
-def currentscope() -> Dict[str, Any]:
-    return _current_scope.get({}).copy()
-
-
 def scoped(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-
         scope = _current_scope.get(None)
         if scope:
             sig = inspect.signature(func, follow_wrapped=True)
@@ -42,7 +36,6 @@ def scoped(func):
                         except TypeError:
                             continue
                     kwargs[val.name] = scope[val.name]
-
         return func(*args, **kwargs)
 
     return wrapper
