@@ -48,15 +48,59 @@ class BasicAuth(types.Object):
 
     def username(self) -> Optional["corev1.SecretKeySelector"]:
         """
-        The secret that contains the username for authenticate
+        The secret in the service monitor namespace that contains the username
+        for authentication.
         """
         return self.__username
 
     def password(self) -> Optional["corev1.SecretKeySelector"]:
         """
-        The secret that contains the password for authenticate
+        The secret in the service monitor namespace that contains the password
+        for authentication.
         """
         return self.__password
+
+
+class SecretOrConfigMap(types.Object):
+    """
+    SecretOrConfigMap allows to specify data as a Secret or ConfigMap. Fields are mutually exclusive.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        secret: "corev1.SecretKeySelector" = None,
+        configMap: "corev1.ConfigMapKeySelector" = None,
+    ):
+        super().__init__()
+        self.__secret = secret
+        self.__configMap = configMap
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        secret = self.secret()
+        check_type("secret", secret, Optional["corev1.SecretKeySelector"])
+        if secret is not None:  # omit empty
+            v["secret"] = secret
+        configMap = self.configMap()
+        check_type("configMap", configMap, Optional["corev1.ConfigMapKeySelector"])
+        if configMap is not None:  # omit empty
+            v["configMap"] = configMap
+        return v
+
+    def secret(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        Secret containing data to use for the targets.
+        """
+        return self.__secret
+
+    def configMap(self) -> Optional["corev1.ConfigMapKeySelector"]:
+        """
+        ConfigMap containing data to use for the targets.
+        """
+        return self.__configMap
 
 
 class TLSConfig(types.Object):
@@ -69,15 +113,21 @@ class TLSConfig(types.Object):
     def __init__(
         self,
         caFile: str = None,
+        ca: "SecretOrConfigMap" = None,
         certFile: str = None,
+        cert: "SecretOrConfigMap" = None,
         keyFile: str = None,
+        keySecret: "corev1.SecretKeySelector" = None,
         serverName: str = None,
         insecureSkipVerify: bool = None,
     ):
         super().__init__()
         self.__caFile = caFile
+        self.__ca = ca if ca is not None else SecretOrConfigMap()
         self.__certFile = certFile
+        self.__cert = cert if cert is not None else SecretOrConfigMap()
         self.__keyFile = keyFile
+        self.__keySecret = keySecret
         self.__serverName = serverName
         self.__insecureSkipVerify = insecureSkipVerify
 
@@ -88,14 +138,24 @@ class TLSConfig(types.Object):
         check_type("caFile", caFile, Optional[str])
         if caFile:  # omit empty
             v["caFile"] = caFile
+        ca = self.ca()
+        check_type("ca", ca, Optional["SecretOrConfigMap"])
+        v["ca"] = ca
         certFile = self.certFile()
         check_type("certFile", certFile, Optional[str])
         if certFile:  # omit empty
             v["certFile"] = certFile
+        cert = self.cert()
+        check_type("cert", cert, Optional["SecretOrConfigMap"])
+        v["cert"] = cert
         keyFile = self.keyFile()
         check_type("keyFile", keyFile, Optional[str])
         if keyFile:  # omit empty
             v["keyFile"] = keyFile
+        keySecret = self.keySecret()
+        check_type("keySecret", keySecret, Optional["corev1.SecretKeySelector"])
+        if keySecret is not None:  # omit empty
+            v["keySecret"] = keySecret
         serverName = self.serverName()
         check_type("serverName", serverName, Optional[str])
         if serverName:  # omit empty
@@ -108,21 +168,39 @@ class TLSConfig(types.Object):
 
     def caFile(self) -> Optional[str]:
         """
-        The CA cert to use for the targets.
+        Path to the CA cert in the Prometheus container to use for the targets.
         """
         return self.__caFile
 
+    def ca(self) -> Optional["SecretOrConfigMap"]:
+        """
+        Stuct containing the CA cert to use for the targets.
+        """
+        return self.__ca
+
     def certFile(self) -> Optional[str]:
         """
-        The client cert file for the targets.
+        Path to the client cert file in the Prometheus container for the targets.
         """
         return self.__certFile
 
+    def cert(self) -> Optional["SecretOrConfigMap"]:
+        """
+        Struct containing the client cert file for the targets.
+        """
+        return self.__cert
+
     def keyFile(self) -> Optional[str]:
         """
-        The client key file for the targets.
+        Path to the client key file in the Prometheus container for the targets.
         """
         return self.__keyFile
+
+    def keySecret(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        Secret containing the client key file for the targets.
+        """
+        return self.__keySecret
 
     def serverName(self) -> Optional[str]:
         """
@@ -397,7 +475,7 @@ class StorageSpec(types.Object):
 class AlertmanagerSpec(types.Object):
     """
     AlertmanagerSpec is a specification of the desired behavior of the Alertmanager cluster. More info:
-    https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+    https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
     """
 
     @context.scoped
@@ -413,6 +491,7 @@ class AlertmanagerSpec(types.Object):
         imagePullSecrets: List["corev1.LocalObjectReference"] = None,
         secrets: List[str] = None,
         configMaps: List[str] = None,
+        configSecret: str = None,
         logLevel: str = None,
         logFormat: str = None,
         replicas: int = None,
@@ -448,6 +527,7 @@ class AlertmanagerSpec(types.Object):
         )
         self.__secrets = secrets if secrets is not None else []
         self.__configMaps = configMaps if configMaps is not None else []
+        self.__configSecret = configSecret
         self.__logLevel = logLevel
         self.__logFormat = logFormat
         self.__replicas = replicas
@@ -516,6 +596,10 @@ class AlertmanagerSpec(types.Object):
         check_type("configMaps", configMaps, Optional[List[str]])
         if configMaps:  # omit empty
             v["configMaps"] = configMaps
+        configSecret = self.configSecret()
+        check_type("configSecret", configSecret, Optional[str])
+        if configSecret:  # omit empty
+            v["configSecret"] = configSecret
         logLevel = self.logLevel()
         check_type("logLevel", logLevel, Optional[str])
         if logLevel:  # omit empty
@@ -610,7 +694,7 @@ class AlertmanagerSpec(types.Object):
     def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
         """
         Standard object’s metadata. More info:
-        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+        https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
         Metadata Labels and Annotations gets propagated to the prometheus pods.
         """
         return self.__podMetadata
@@ -674,6 +758,15 @@ class AlertmanagerSpec(types.Object):
         The ConfigMaps are mounted into /etc/alertmanager/configmaps/<configmap-name>.
         """
         return self.__configMaps
+
+    def configSecret(self) -> Optional[str]:
+        """
+        ConfigSecret is the name of a Kubernetes Secret in the same namespace as the
+        Alertmanager object, which contains configuration for this Alertmanager
+        instance. Defaults to 'alertmanager-<alertmanager-name>'
+        The secret is mounted into /etc/alertmanager/config.
+        """
+        return self.__configSecret
 
     def logLevel(self) -> Optional[str]:
         """
@@ -870,9 +963,40 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
     def spec(self) -> "AlertmanagerSpec":
         """
         Specification of the desired behavior of the Alertmanager cluster. More info:
-        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+        https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
         """
         return self.__spec
+
+
+class ArbitraryFSAccessThroughSMsConfig(types.Object):
+    """
+    ArbitraryFSAccessThroughSMsConfig enables users to configure, whether
+    a service monitor selected by the Prometheus instance is allowed to use
+    arbitrary files on the file system of the Prometheus container. This is the case
+    when e.g. a service monitor specifies a BearerTokenFile in an endpoint. A
+    malicious user could create a service monitor selecting arbitrary secret files
+    in the Prometheus container. Those secrets would then be sent with a scrape
+    request by Prometheus to a malicious target. Denying the above would prevent the
+    attack, users can instead use the BearerTokenSecret field.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, deny: bool = None):
+        super().__init__()
+        self.__deny = deny
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        deny = self.deny()
+        check_type("deny", deny, Optional[bool])
+        if deny:  # omit empty
+            v["deny"] = deny
+        return v
+
+    def deny(self) -> Optional[bool]:
+        return self.__deny
 
 
 class RelabelConfig(types.Object):
@@ -1001,7 +1125,9 @@ class Endpoint(types.Object):
         scrapeTimeout: str = None,
         tlsConfig: "TLSConfig" = None,
         bearerTokenFile: str = None,
+        bearerTokenSecret: "corev1.SecretKeySelector" = None,
         honorLabels: bool = None,
+        honorTimestamps: bool = None,
         basicAuth: "BasicAuth" = None,
         metricRelabelings: List["RelabelConfig"] = None,
         relabelings: List["RelabelConfig"] = None,
@@ -1017,7 +1143,13 @@ class Endpoint(types.Object):
         self.__scrapeTimeout = scrapeTimeout
         self.__tlsConfig = tlsConfig
         self.__bearerTokenFile = bearerTokenFile
+        self.__bearerTokenSecret = (
+            bearerTokenSecret
+            if bearerTokenSecret is not None
+            else corev1.SecretKeySelector()
+        )
         self.__honorLabels = honorLabels
+        self.__honorTimestamps = honorTimestamps
         self.__basicAuth = basicAuth
         self.__metricRelabelings = (
             metricRelabelings if metricRelabelings is not None else []
@@ -1064,10 +1196,19 @@ class Endpoint(types.Object):
         check_type("bearerTokenFile", bearerTokenFile, Optional[str])
         if bearerTokenFile:  # omit empty
             v["bearerTokenFile"] = bearerTokenFile
+        bearerTokenSecret = self.bearerTokenSecret()
+        check_type(
+            "bearerTokenSecret", bearerTokenSecret, Optional["corev1.SecretKeySelector"]
+        )
+        v["bearerTokenSecret"] = bearerTokenSecret
         honorLabels = self.honorLabels()
         check_type("honorLabels", honorLabels, Optional[bool])
         if honorLabels:  # omit empty
             v["honorLabels"] = honorLabels
+        honorTimestamps = self.honorTimestamps()
+        check_type("honorTimestamps", honorTimestamps, Optional[bool])
+        if honorTimestamps is not None:  # omit empty
+            v["honorTimestamps"] = honorTimestamps
         basicAuth = self.basicAuth()
         check_type("basicAuth", basicAuth, Optional["BasicAuth"])
         if basicAuth is not None:  # omit empty
@@ -1142,11 +1283,25 @@ class Endpoint(types.Object):
         """
         return self.__bearerTokenFile
 
+    def bearerTokenSecret(self) -> Optional["corev1.SecretKeySelector"]:
+        """
+        Secret to mount to read bearer token for scraping targets. The secret
+        needs to be in the same namespace as the service monitor and accessible by
+        the Prometheus Operator.
+        """
+        return self.__bearerTokenSecret
+
     def honorLabels(self) -> Optional[bool]:
         """
         HonorLabels chooses the metric's labels on collisions with target labels.
         """
         return self.__honorLabels
+
+    def honorTimestamps(self) -> Optional[bool]:
+        """
+        HonorTimestamps controls whether Prometheus respects the timestamps present in scraped data.
+        """
+        return self.__honorTimestamps
 
     def basicAuth(self) -> Optional["BasicAuth"]:
         """
@@ -1232,6 +1387,7 @@ class PodMetricsEndpoint(types.Object):
         interval: str = None,
         scrapeTimeout: str = None,
         honorLabels: bool = None,
+        honorTimestamps: bool = None,
         metricRelabelings: List["RelabelConfig"] = None,
         relabelings: List["RelabelConfig"] = None,
         proxyUrl: str = None,
@@ -1245,6 +1401,7 @@ class PodMetricsEndpoint(types.Object):
         self.__interval = interval
         self.__scrapeTimeout = scrapeTimeout
         self.__honorLabels = honorLabels
+        self.__honorTimestamps = honorTimestamps
         self.__metricRelabelings = (
             metricRelabelings if metricRelabelings is not None else []
         )
@@ -1286,6 +1443,10 @@ class PodMetricsEndpoint(types.Object):
         check_type("honorLabels", honorLabels, Optional[bool])
         if honorLabels:  # omit empty
             v["honorLabels"] = honorLabels
+        honorTimestamps = self.honorTimestamps()
+        check_type("honorTimestamps", honorTimestamps, Optional[bool])
+        if honorTimestamps is not None:  # omit empty
+            v["honorTimestamps"] = honorTimestamps
         metricRelabelings = self.metricRelabelings()
         check_type(
             "metricRelabelings", metricRelabelings, Optional[List["RelabelConfig"]]
@@ -1349,6 +1510,12 @@ class PodMetricsEndpoint(types.Object):
         HonorLabels chooses the metric's labels on collisions with target labels.
         """
         return self.__honorLabels
+
+    def honorTimestamps(self) -> Optional[bool]:
+        """
+        HonorTimestamps controls whether Prometheus respects the timestamps present in scraped data.
+        """
+        return self.__honorTimestamps
 
     def metricRelabelings(self) -> Optional[List["RelabelConfig"]]:
         """
@@ -2039,6 +2206,7 @@ class ThanosSpec(types.Object):
         baseImage: str = None,
         resources: "corev1.ResourceRequirements" = None,
         objectStorageConfig: "corev1.SecretKeySelector" = None,
+        listenLocal: bool = None,
     ):
         super().__init__()
         self.__image = image
@@ -2050,6 +2218,7 @@ class ThanosSpec(types.Object):
             resources if resources is not None else corev1.ResourceRequirements()
         )
         self.__objectStorageConfig = objectStorageConfig
+        self.__listenLocal = listenLocal
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2085,6 +2254,10 @@ class ThanosSpec(types.Object):
         )
         if objectStorageConfig is not None:  # omit empty
             v["objectStorageConfig"] = objectStorageConfig
+        listenLocal = self.listenLocal()
+        check_type("listenLocal", listenLocal, Optional[bool])
+        if listenLocal:  # omit empty
+            v["listenLocal"] = listenLocal
         return v
 
     def image(self) -> Optional[str]:
@@ -2135,6 +2308,13 @@ class ThanosSpec(types.Object):
         ObjectStorageConfig configures object storage in Thanos.
         """
         return self.__objectStorageConfig
+
+    def listenLocal(self) -> Optional[bool]:
+        """
+        ListenLocal makes the Thanos sidecar listen on loopback, so that it
+        does not bind against the Pod IP.
+        """
+        return self.__listenLocal
 
 
 class PrometheusSpec(types.Object):
@@ -2200,6 +2380,11 @@ class PrometheusSpec(types.Object):
         thanos: "ThanosSpec" = None,
         priorityClassName: str = None,
         portName: str = None,
+        arbitraryFSAccessThroughSMs: "ArbitraryFSAccessThroughSMsConfig" = None,
+        overrideHonorLabels: bool = None,
+        overrideHonorTimestamps: bool = None,
+        ignoreNamespaceSelectors: bool = None,
+        enforcedNamespaceLabel: str = None,
     ):
         super().__init__()
         self.__podMetadata = podMetadata
@@ -2259,6 +2444,15 @@ class PrometheusSpec(types.Object):
         self.__thanos = thanos
         self.__priorityClassName = priorityClassName
         self.__portName = portName
+        self.__arbitraryFSAccessThroughSMs = (
+            arbitraryFSAccessThroughSMs
+            if arbitraryFSAccessThroughSMs is not None
+            else ArbitraryFSAccessThroughSMsConfig()
+        )
+        self.__overrideHonorLabels = overrideHonorLabels
+        self.__overrideHonorTimestamps = overrideHonorTimestamps
+        self.__ignoreNamespaceSelectors = ignoreNamespaceSelectors
+        self.__enforcedNamespaceLabel = enforcedNamespaceLabel
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2511,12 +2705,35 @@ class PrometheusSpec(types.Object):
         check_type("portName", portName, Optional[str])
         if portName:  # omit empty
             v["portName"] = portName
+        arbitraryFSAccessThroughSMs = self.arbitraryFSAccessThroughSMs()
+        check_type(
+            "arbitraryFSAccessThroughSMs",
+            arbitraryFSAccessThroughSMs,
+            Optional["ArbitraryFSAccessThroughSMsConfig"],
+        )
+        v["arbitraryFSAccessThroughSMs"] = arbitraryFSAccessThroughSMs
+        overrideHonorLabels = self.overrideHonorLabels()
+        check_type("overrideHonorLabels", overrideHonorLabels, Optional[bool])
+        if overrideHonorLabels:  # omit empty
+            v["overrideHonorLabels"] = overrideHonorLabels
+        overrideHonorTimestamps = self.overrideHonorTimestamps()
+        check_type("overrideHonorTimestamps", overrideHonorTimestamps, Optional[bool])
+        if overrideHonorTimestamps:  # omit empty
+            v["overrideHonorTimestamps"] = overrideHonorTimestamps
+        ignoreNamespaceSelectors = self.ignoreNamespaceSelectors()
+        check_type("ignoreNamespaceSelectors", ignoreNamespaceSelectors, Optional[bool])
+        if ignoreNamespaceSelectors:  # omit empty
+            v["ignoreNamespaceSelectors"] = ignoreNamespaceSelectors
+        enforcedNamespaceLabel = self.enforcedNamespaceLabel()
+        check_type("enforcedNamespaceLabel", enforcedNamespaceLabel, Optional[str])
+        if enforcedNamespaceLabel:  # omit empty
+            v["enforcedNamespaceLabel"] = enforcedNamespaceLabel
         return v
 
     def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
         """
         Standard object’s metadata. More info:
-        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#metadata
+        https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
         Metadata Labels and Annotations gets propagated to the prometheus pods.
         """
         return self.__podMetadata
@@ -2927,6 +3144,45 @@ class PrometheusSpec(types.Object):
         """
         return self.__portName
 
+    def arbitraryFSAccessThroughSMs(
+        self
+    ) -> Optional["ArbitraryFSAccessThroughSMsConfig"]:
+        """
+        ArbitraryFSAccessThroughSMs configures whether configuration
+        based on a service monitor can access arbitrary files on the file system
+        of the Prometheus container e.g. bearer token files.
+        """
+        return self.__arbitraryFSAccessThroughSMs
+
+    def overrideHonorLabels(self) -> Optional[bool]:
+        """
+        OverrideHonorLabels if set to true overrides all user configured honor_labels.
+        If HonorLabels is set in ServiceMonitor or PodMonitor to true, this overrides honor_labels to false.
+        """
+        return self.__overrideHonorLabels
+
+    def overrideHonorTimestamps(self) -> Optional[bool]:
+        """
+        OverrideHonorTimestamps allows to globally enforce honoring timestamps in all scrape configs.
+        """
+        return self.__overrideHonorTimestamps
+
+    def ignoreNamespaceSelectors(self) -> Optional[bool]:
+        """
+        IgnoreNamespaceSelectors if set to true will ignore NamespaceSelector settings from
+        the podmonitor and servicemonitor configs, and they will only discover endpoints
+        within their current namespace.  Defaults to false.
+        """
+        return self.__ignoreNamespaceSelectors
+
+    def enforcedNamespaceLabel(self) -> Optional[str]:
+        """
+        EnforcedNamespaceLabel enforces adding a namespace label of origin for each alert
+        and metric that is user created. The label value will always be the namespace of the object that is
+        being created.
+        """
+        return self.__enforcedNamespaceLabel
+
 
 class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
     """
@@ -2965,7 +3221,7 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
     def spec(self) -> "PrometheusSpec":
         """
         Specification of the desired behavior of the Prometheus cluster. More info:
-        https://github.com/kubernetes/community/blob/master/contributors/devel/api-conventions.md#spec-and-status
+        https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#spec-and-status
         """
         return self.__spec
 
