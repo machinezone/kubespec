@@ -264,7 +264,7 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         ports: List["EndpointPort"] = None,
     ):
         super().__init__(
-            apiVersion="discovery.k8s.io/v1alpha1",
+            apiVersion="discovery.k8s.io/v1beta1",
             kind="EndpointSlice",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

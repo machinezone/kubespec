@@ -132,6 +132,7 @@ class PolicyRule(types.Object):
 class ClusterRole(base.TypedObject, base.MetadataObject):
     """
     ClusterRole is a cluster level, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding or ClusterRoleBinding.
+    Deprecated in v1.17 in favor of rbac.authorization.k8s.io/v1 ClusterRole, and will no longer be served in v1.20.
     """
 
     @context.scoped
@@ -305,6 +306,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
     """
     ClusterRoleBinding references a ClusterRole, but not contain it.  It can reference a ClusterRole in the global namespace,
     and adds who information via Subject.
+    Deprecated in v1.17 in favor of rbac.authorization.k8s.io/v1 ClusterRoleBinding, and will no longer be served in v1.20.
     """
 
     @context.scoped
@@ -356,6 +358,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
 class Role(base.TypedObject, base.NamespacedMetadataObject):
     """
     Role is a namespaced, logical grouping of PolicyRules that can be referenced as a unit by a RoleBinding.
+    Deprecated in v1.17 in favor of rbac.authorization.k8s.io/v1 Role, and will no longer be served in v1.20.
     """
 
     @context.scoped
@@ -398,6 +401,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
     RoleBinding references a role, but does not contain it.  It can reference a Role in the same namespace or a ClusterRole in the global namespace.
     It adds who information via Subjects and namespace information by which namespace it exists in.  RoleBindings in a given
     namespace only have effect in that namespace.
+    Deprecated in v1.17 in favor of rbac.authorization.k8s.io/v1 RoleBinding, and will no longer be served in v1.20.
     """
 
     @context.scoped

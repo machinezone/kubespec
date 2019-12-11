@@ -598,7 +598,7 @@ class MutatingWebhook(types.Object):
 
     def sideEffects(self) -> Optional[SideEffectClass]:
         """
-        SideEffects states whether this webhookk has side effects.
+        SideEffects states whether this webhook has side effects.
         Acceptable values are: Unknown, None, Some, NoneOnDryRun
         Webhooks with side effects MUST implement a reconciliation system, since a request may be
         rejected by a future step in the admission change and the side effects therefore need to be undone.
@@ -900,7 +900,7 @@ class ValidatingWebhook(types.Object):
 
     def sideEffects(self) -> Optional[SideEffectClass]:
         """
-        SideEffects states whether this webhookk has side effects.
+        SideEffects states whether this webhook has side effects.
         Acceptable values are: Unknown, None, Some, NoneOnDryRun
         Webhooks with side effects MUST implement a reconciliation system, since a request may be
         rejected by a future step in the admission change and the side effects therefore need to be undone.

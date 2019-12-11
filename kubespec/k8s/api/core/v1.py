@@ -3279,7 +3279,7 @@ class EnvVarSource(types.Object):
     def fieldRef(self) -> Optional["ObjectFieldSelector"]:
         """
         Selects a field of the pod: supports metadata.name, metadata.namespace, metadata.labels, metadata.annotations,
-        spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP.
+        spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
         """
         return self.__fieldRef
 
@@ -3920,7 +3920,7 @@ class WindowsSecurityContextOptions(types.Object):
         Defaults to the user specified in image metadata if unspecified.
         May also be set in PodSecurityContext. If set in both SecurityContext and
         PodSecurityContext, the value specified in SecurityContext takes precedence.
-        This field is alpha-level and it is only honored by servers that enable the WindowsRunAsUserName feature flag.
+        This field is beta-level and may be disabled with the WindowsRunAsUserName feature flag.
         """
         return self.__runAsUserName
 
@@ -4224,7 +4224,6 @@ class VolumeMount(types.Object):
         Behaves similarly to SubPath but environment variable references $(VAR_NAME) are expanded using the container's environment.
         Defaults to "" (volume's root).
         SubPathExpr and SubPath are mutually exclusive.
-        This field is beta in 1.15.
         """
         return self.__subPathExpr
 
@@ -10647,7 +10646,6 @@ class PodSpec(types.Object):
         in the same pod, and the first process in each container will not be assigned PID 1.
         HostPID and ShareProcessNamespace cannot both be set.
         Optional: Default to false.
-        This field is beta-level and may be disabled with the PodShareProcessNamespace feature.
         """
         return self.__shareProcessNamespace
 
@@ -11044,6 +11042,7 @@ class PodLogOptions(base.TypedObject):
         timestamps: bool = None,
         tailLines: int = None,
         limitBytes: int = None,
+        insecureSkipTLSVerifyBackend: bool = None,
     ):
         super().__init__(apiVersion="v1", kind="PodLogOptions")
         self.__container = container
@@ -11054,6 +11053,7 @@ class PodLogOptions(base.TypedObject):
         self.__timestamps = timestamps
         self.__tailLines = tailLines
         self.__limitBytes = limitBytes
+        self.__insecureSkipTLSVerifyBackend = insecureSkipTLSVerifyBackend
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -11090,6 +11090,12 @@ class PodLogOptions(base.TypedObject):
         check_type("limitBytes", limitBytes, Optional[int])
         if limitBytes is not None:  # omit empty
             v["limitBytes"] = limitBytes
+        insecureSkipTLSVerifyBackend = self.insecureSkipTLSVerifyBackend()
+        check_type(
+            "insecureSkipTLSVerifyBackend", insecureSkipTLSVerifyBackend, Optional[bool]
+        )
+        if insecureSkipTLSVerifyBackend:  # omit empty
+            v["insecureSkipTLSVerifyBackend"] = insecureSkipTLSVerifyBackend
         return v
 
     def container(self) -> Optional[str]:
@@ -11149,6 +11155,17 @@ class PodLogOptions(base.TypedObject):
         slightly more or slightly less than the specified limit.
         """
         return self.__limitBytes
+
+    def insecureSkipTLSVerifyBackend(self) -> Optional[bool]:
+        """
+        insecureSkipTLSVerifyBackend indicates that the apiserver should not confirm the validity of the
+        serving certificate of the backend it is connecting to.  This will make the HTTPS connection between the apiserver
+        and the backend insecure. This means the apiserver cannot verify the log data it is receiving came from the real
+        kubelet.  If the kubelet is configured to verify the apiserver's TLS credentials, it does not mean the
+        connection to the real kubelet is vulnerable to a man in the middle attack (e.g. an attacker could not intercept
+        the actual log data coming from the real kubelet).
+        """
+        return self.__insecureSkipTLSVerifyBackend
 
 
 class PodPortForwardOptions(base.TypedObject):
@@ -11921,6 +11938,7 @@ class ServiceSpec(types.Object):
         publishNotReadyAddresses: bool = None,
         sessionAffinityConfig: "SessionAffinityConfig" = None,
         ipFamily: IPFamily = None,
+        topologyKeys: List[str] = None,
     ):
         super().__init__()
         self.__ports = ports if ports is not None else []
@@ -11939,6 +11957,7 @@ class ServiceSpec(types.Object):
         self.__publishNotReadyAddresses = publishNotReadyAddresses
         self.__sessionAffinityConfig = sessionAffinityConfig
         self.__ipFamily = ipFamily
+        self.__topologyKeys = topologyKeys if topologyKeys is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -12009,6 +12028,10 @@ class ServiceSpec(types.Object):
         check_type("ipFamily", ipFamily, Optional[IPFamily])
         if ipFamily is not None:  # omit empty
             v["ipFamily"] = ipFamily
+        topologyKeys = self.topologyKeys()
+        check_type("topologyKeys", topologyKeys, Optional[List[str]])
+        if topologyKeys:  # omit empty
+            v["topologyKeys"] = topologyKeys
         return v
 
     def ports(self) -> Optional[List["ServicePort"]]:
@@ -12162,6 +12185,23 @@ class ServiceSpec(types.Object):
         cluster (e.g. IPv6 in IPv4 only cluster) is an error condition and will fail during clusterIP assignment.
         """
         return self.__ipFamily
+
+    def topologyKeys(self) -> Optional[List[str]]:
+        """
+        topologyKeys is a preference-order list of topology keys which
+        implementations of services should use to preferentially sort endpoints
+        when accessing this Service, it can not be used at the same time as
+        externalTrafficPolicy=Local.
+        Topology keys must be valid label keys and at most 16 keys may be specified.
+        Endpoints are chosen based on the first topology key with available backends.
+        If this field is specified and all entries have no backends that match
+        the topology of the client, the service has no backends for that client
+        and connections should fail.
+        The special value "*" may be used to mean "any topology". This catch-all
+        value, if used, only makes sense as the last value in the list.
+        If this is not specified or empty, no topology constraints will be applied.
+        """
+        return self.__topologyKeys
 
 
 class Service(base.TypedObject, base.NamespacedMetadataObject):

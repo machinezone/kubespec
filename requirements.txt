@@ -1,2 +1,2 @@
 pytz>=2019.2
-typeguard>=2.5.1
+typeguard>=2.6.0

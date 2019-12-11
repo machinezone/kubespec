@@ -29,6 +29,192 @@ VolumeBindingMode = base.Enum(
 )
 
 
+class VolumeNodeResources(types.Object):
+    """
+    VolumeNodeResources is a set of resource limits for scheduling of volumes.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, count: int = None):
+        super().__init__()
+        self.__count = count
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        count = self.count()
+        check_type("count", count, Optional[int])
+        if count is not None:  # omit empty
+            v["count"] = count
+        return v
+
+    def count(self) -> Optional[int]:
+        """
+        Maximum number of unique volumes managed by the CSI driver that can be used on a node.
+        A volume that is both attached and mounted on a node is considered to be used once, not twice.
+        The same rule applies for a unique volume that is shared among multiple pods on the same node.
+        If this field is not specified, then the supported number of volumes on this node is unbounded.
+        """
+        return self.__count
+
+
+class CSINodeDriver(types.Object):
+    """
+    CSINodeDriver holds information about the specification of one CSI driver installed on a node
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = "",
+        nodeID: str = "",
+        topologyKeys: List[str] = None,
+        allocatable: "VolumeNodeResources" = None,
+    ):
+        super().__init__()
+        self.__name = name
+        self.__nodeID = nodeID
+        self.__topologyKeys = topologyKeys if topologyKeys is not None else []
+        self.__allocatable = allocatable
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        name = self.name()
+        check_type("name", name, str)
+        v["name"] = name
+        nodeID = self.nodeID()
+        check_type("nodeID", nodeID, str)
+        v["nodeID"] = nodeID
+        topologyKeys = self.topologyKeys()
+        check_type("topologyKeys", topologyKeys, List[str])
+        v["topologyKeys"] = topologyKeys
+        allocatable = self.allocatable()
+        check_type("allocatable", allocatable, Optional["VolumeNodeResources"])
+        if allocatable is not None:  # omit empty
+            v["allocatable"] = allocatable
+        return v
+
+    def name(self) -> str:
+        """
+        This is the name of the CSI driver that this object refers to.
+        This MUST be the same name returned by the CSI GetPluginName() call for
+        that driver.
+        """
+        return self.__name
+
+    def nodeID(self) -> str:
+        """
+        nodeID of the node from the driver point of view.
+        This field enables Kubernetes to communicate with storage systems that do
+        not share the same nomenclature for nodes. For example, Kubernetes may
+        refer to a given node as "node1", but the storage system may refer to
+        the same node as "nodeA". When Kubernetes issues a command to the storage
+        system to attach a volume to a specific node, it can use this field to
+        refer to the node name using the ID that the storage system will
+        understand, e.g. "nodeA" instead of "node1". This field is required.
+        """
+        return self.__nodeID
+
+    def topologyKeys(self) -> List[str]:
+        """
+        topologyKeys is the list of keys supported by the driver.
+        When a driver is initialized on a cluster, it provides a set of topology
+        keys that it understands (e.g. "company.com/zone", "company.com/region").
+        When a driver is initialized on a node, it provides the same topology keys
+        along with values. Kubelet will expose these topology keys as labels
+        on its own node object.
+        When Kubernetes does topology aware provisioning, it can use this list to
+        determine which labels it should retrieve from the node object and pass
+        back to the driver.
+        It is possible for different nodes to use different topology keys.
+        This can be empty if driver does not support topology.
+        """
+        return self.__topologyKeys
+
+    def allocatable(self) -> Optional["VolumeNodeResources"]:
+        """
+        allocatable represents the volume resources of a node that are available for scheduling.
+        This field is beta.
+        """
+        return self.__allocatable
+
+
+class CSINodeSpec(types.Object):
+    """
+    CSINodeSpec holds information about the specification of all CSI drivers installed on a node
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, drivers: List["CSINodeDriver"] = None):
+        super().__init__()
+        self.__drivers = drivers if drivers is not None else []
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        drivers = self.drivers()
+        check_type("drivers", drivers, List["CSINodeDriver"])
+        v["drivers"] = drivers
+        return v
+
+    def drivers(self) -> List["CSINodeDriver"]:
+        """
+        drivers is a list of information of all CSI Drivers existing on a node.
+        If all drivers in the list are uninstalled, this can become empty.
+        """
+        return self.__drivers
+
+
+class CSINode(base.TypedObject, base.MetadataObject):
+    """
+    CSINode holds information about all CSI drivers installed on a node.
+    CSI drivers do not need to create the CSINode object directly. As long as
+    they use the node-driver-registrar sidecar container, the kubelet will
+    automatically populate the CSINode object for the CSI driver as part of
+    kubelet plugin registration.
+    CSINode has the same name as a node. If the object is missing, it means either
+    there are no CSI Drivers available on the node, or the Kubelet version is low
+    enough that it doesn't create this object.
+    CSINode has an OwnerReference that points to the corresponding node object.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "CSINodeSpec" = None,
+    ):
+        super().__init__(
+            apiVersion="storage.k8s.io/v1",
+            kind="CSINode",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__spec = spec if spec is not None else CSINodeSpec()
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        spec = self.spec()
+        check_type("spec", spec, "CSINodeSpec")
+        v["spec"] = spec
+        return v
+
+    def spec(self) -> "CSINodeSpec":
+        """
+        spec is the specification of CSINode
+        """
+        return self.__spec
+
+
 class StorageClass(base.TypedObject, base.MetadataObject):
     """
     StorageClass describes the parameters for a class of storage for
