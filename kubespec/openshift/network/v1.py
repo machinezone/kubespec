@@ -1,0 +1,465 @@
+# Code is generated: DO NOT EDIT
+
+# Copyright 2019 Machine Zone, Inc. All rights reserved.
+# Use of this source code is governed by a BSD-style
+# license that can be found in the LICENSE file.
+
+
+from kubespec import context
+from kubespec import types
+from kubespec.k8s import base
+from typeguard import check_type, typechecked
+from typing import Any, Dict, List, Optional
+
+
+# EgressNetworkPolicyRuleType indicates whether an EgressNetworkPolicyRule allows or denies traffic
+EgressNetworkPolicyRuleType = base.Enum(
+    "EgressNetworkPolicyRuleType", {"Allow": "Allow", "Deny": "Deny"}
+)
+
+
+class ClusterNetworkEntry(types.Object):
+    """
+    ClusterNetworkEntry defines an individual cluster network. The CIDRs cannot overlap with other cluster network CIDRs, CIDRs reserved for external ips, CIDRs reserved for service networks, and CIDRs reserved for ingress ips.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, cIDR: str = "", hostSubnetLength: int = 0):
+        super().__init__()
+        self.__cIDR = cIDR
+        self.__hostSubnetLength = hostSubnetLength
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        cIDR = self.cIDR()
+        check_type("cIDR", cIDR, str)
+        v["CIDR"] = cIDR
+        hostSubnetLength = self.hostSubnetLength()
+        check_type("hostSubnetLength", hostSubnetLength, int)
+        v["hostSubnetLength"] = hostSubnetLength
+        return v
+
+    def cIDR(self) -> str:
+        """
+        CIDR defines the total range of a cluster networks address space.
+        """
+        return self.__cIDR
+
+    def hostSubnetLength(self) -> int:
+        """
+        HostSubnetLength is the number of bits of the accompanying CIDR address to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods.
+        """
+        return self.__hostSubnetLength
+
+
+class ClusterNetwork(base.TypedObject, base.MetadataObject):
+    """
+    ClusterNetwork describes the cluster network. There is normally only one object of this type,
+    named "default", which is created by the SDN network plugin based on the master configuration
+    when the cluster is brought up for the first time.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        network: str = None,
+        hostsubnetlength: int = None,
+        serviceNetwork: str = "",
+        pluginName: str = None,
+        clusterNetworks: List["ClusterNetworkEntry"] = None,
+        vxlanPort: int = None,
+        mtu: int = None,
+    ):
+        super().__init__(
+            apiVersion="network.openshift.io/v1",
+            kind="ClusterNetwork",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__network = network
+        self.__hostsubnetlength = hostsubnetlength
+        self.__serviceNetwork = serviceNetwork
+        self.__pluginName = pluginName
+        self.__clusterNetworks = clusterNetworks if clusterNetworks is not None else []
+        self.__vxlanPort = vxlanPort
+        self.__mtu = mtu
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        network = self.network()
+        check_type("network", network, Optional[str])
+        if network:  # omit empty
+            v["network"] = network
+        hostsubnetlength = self.hostsubnetlength()
+        check_type("hostsubnetlength", hostsubnetlength, Optional[int])
+        if hostsubnetlength:  # omit empty
+            v["hostsubnetlength"] = hostsubnetlength
+        serviceNetwork = self.serviceNetwork()
+        check_type("serviceNetwork", serviceNetwork, str)
+        v["serviceNetwork"] = serviceNetwork
+        pluginName = self.pluginName()
+        check_type("pluginName", pluginName, Optional[str])
+        if pluginName:  # omit empty
+            v["pluginName"] = pluginName
+        clusterNetworks = self.clusterNetworks()
+        check_type("clusterNetworks", clusterNetworks, List["ClusterNetworkEntry"])
+        v["clusterNetworks"] = clusterNetworks
+        vxlanPort = self.vxlanPort()
+        check_type("vxlanPort", vxlanPort, Optional[int])
+        if vxlanPort is not None:  # omit empty
+            v["vxlanPort"] = vxlanPort
+        mtu = self.mtu()
+        check_type("mtu", mtu, Optional[int])
+        if mtu is not None:  # omit empty
+            v["mtu"] = mtu
+        return v
+
+    def network(self) -> Optional[str]:
+        """
+        Network is a CIDR string specifying the global overlay network's L3 space
+        """
+        return self.__network
+
+    def hostsubnetlength(self) -> Optional[int]:
+        """
+        HostSubnetLength is the number of bits of network to allocate to each node. eg, 8 would mean that each node would have a /24 slice of the overlay network for its pods
+        """
+        return self.__hostsubnetlength
+
+    def serviceNetwork(self) -> str:
+        """
+        ServiceNetwork is the CIDR range that Service IP addresses are allocated from
+        """
+        return self.__serviceNetwork
+
+    def pluginName(self) -> Optional[str]:
+        """
+        PluginName is the name of the network plugin being used
+        """
+        return self.__pluginName
+
+    def clusterNetworks(self) -> List["ClusterNetworkEntry"]:
+        """
+        ClusterNetworks is a list of ClusterNetwork objects that defines the global overlay network's L3 space by specifying a set of CIDR and netmasks that the SDN can allocate addresses from.
+        """
+        return self.__clusterNetworks
+
+    def vxlanPort(self) -> Optional[int]:
+        """
+        VXLANPort sets the VXLAN destination port used by the cluster. It is set by the master configuration file on startup and cannot be edited manually. Valid values for VXLANPort are integers 1-65535 inclusive and if unset defaults to 4789. Changing VXLANPort allows users to resolve issues between openshift SDN and other software trying to use the same VXLAN destination port.
+        """
+        return self.__vxlanPort
+
+    def mtu(self) -> Optional[int]:
+        """
+        MTU is the MTU for the overlay network. This should be 50 less than the MTU of the network connecting the nodes. It is normally autodetected by the cluster network operator.
+        """
+        return self.__mtu
+
+
+class EgressNetworkPolicyPeer(types.Object):
+    """
+    EgressNetworkPolicyPeer specifies a target to apply egress network policy to
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, cidrSelector: str = None, dnsName: str = None):
+        super().__init__()
+        self.__cidrSelector = cidrSelector
+        self.__dnsName = dnsName
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        cidrSelector = self.cidrSelector()
+        check_type("cidrSelector", cidrSelector, Optional[str])
+        if cidrSelector:  # omit empty
+            v["cidrSelector"] = cidrSelector
+        dnsName = self.dnsName()
+        check_type("dnsName", dnsName, Optional[str])
+        if dnsName:  # omit empty
+            v["dnsName"] = dnsName
+        return v
+
+    def cidrSelector(self) -> Optional[str]:
+        """
+        cidrSelector is the CIDR range to allow/deny traffic to. If this is set, dnsName must be unset
+        """
+        return self.__cidrSelector
+
+    def dnsName(self) -> Optional[str]:
+        """
+        dnsName is the domain name to allow/deny traffic to. If this is set, cidrSelector must be unset
+        """
+        return self.__dnsName
+
+
+class EgressNetworkPolicyRule(types.Object):
+    """
+    EgressNetworkPolicyRule contains a single egress network policy rule
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        type: EgressNetworkPolicyRuleType = None,
+        to: "EgressNetworkPolicyPeer" = None,
+    ):
+        super().__init__()
+        self.__type = type
+        self.__to = to if to is not None else EgressNetworkPolicyPeer()
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        type = self.type()
+        check_type("type", type, EgressNetworkPolicyRuleType)
+        v["type"] = type
+        to = self.to()
+        check_type("to", to, "EgressNetworkPolicyPeer")
+        v["to"] = to
+        return v
+
+    def type(self) -> EgressNetworkPolicyRuleType:
+        """
+        type marks this as an "Allow" or "Deny" rule
+        """
+        return self.__type
+
+    def to(self) -> "EgressNetworkPolicyPeer":
+        """
+        to is the target that traffic is allowed/denied to
+        """
+        return self.__to
+
+
+class EgressNetworkPolicySpec(types.Object):
+    """
+    EgressNetworkPolicySpec provides a list of policies on outgoing network traffic
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, egress: List["EgressNetworkPolicyRule"] = None):
+        super().__init__()
+        self.__egress = egress if egress is not None else []
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        egress = self.egress()
+        check_type("egress", egress, List["EgressNetworkPolicyRule"])
+        v["egress"] = egress
+        return v
+
+    def egress(self) -> List["EgressNetworkPolicyRule"]:
+        """
+        egress contains the list of egress policy rules
+        """
+        return self.__egress
+
+
+class EgressNetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    EgressNetworkPolicy describes the current egress network policy for a Namespace. When using
+    the 'redhat/openshift-ovs-multitenant' network plugin, traffic from a pod to an IP address
+    outside the cluster will be checked against each EgressNetworkPolicyRule in the pod's
+    namespace's EgressNetworkPolicy, in order. If no rule matches (or no EgressNetworkPolicy
+    is present) then the traffic will be allowed by default.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "EgressNetworkPolicySpec" = None,
+    ):
+        super().__init__(
+            apiVersion="network.openshift.io/v1",
+            kind="EgressNetworkPolicy",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__spec = spec if spec is not None else EgressNetworkPolicySpec()
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        spec = self.spec()
+        check_type("spec", spec, "EgressNetworkPolicySpec")
+        v["spec"] = spec
+        return v
+
+    def spec(self) -> "EgressNetworkPolicySpec":
+        """
+        spec is the specification of the current egress network policy
+        """
+        return self.__spec
+
+
+class HostSubnet(base.TypedObject, base.MetadataObject):
+    """
+    HostSubnet describes the container subnet network on a node. The HostSubnet object must have the
+    same name as the Node object it corresponds to.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        host: str = "",
+        hostIP: str = "",
+        subnet: str = "",
+        egressIPs: List[str] = None,
+        egressCIDRs: List[str] = None,
+    ):
+        super().__init__(
+            apiVersion="network.openshift.io/v1",
+            kind="HostSubnet",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__host = host
+        self.__hostIP = hostIP
+        self.__subnet = subnet
+        self.__egressIPs = egressIPs if egressIPs is not None else []
+        self.__egressCIDRs = egressCIDRs if egressCIDRs is not None else []
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        host = self.host()
+        check_type("host", host, str)
+        v["host"] = host
+        hostIP = self.hostIP()
+        check_type("hostIP", hostIP, str)
+        v["hostIP"] = hostIP
+        subnet = self.subnet()
+        check_type("subnet", subnet, str)
+        v["subnet"] = subnet
+        egressIPs = self.egressIPs()
+        check_type("egressIPs", egressIPs, Optional[List[str]])
+        if egressIPs:  # omit empty
+            v["egressIPs"] = egressIPs
+        egressCIDRs = self.egressCIDRs()
+        check_type("egressCIDRs", egressCIDRs, Optional[List[str]])
+        if egressCIDRs:  # omit empty
+            v["egressCIDRs"] = egressCIDRs
+        return v
+
+    def host(self) -> str:
+        """
+        Host is the name of the node. (This is the same as the object's name, but both fields must be set.)
+        """
+        return self.__host
+
+    def hostIP(self) -> str:
+        """
+        HostIP is the IP address to be used as a VTEP by other nodes in the overlay network
+        """
+        return self.__hostIP
+
+    def subnet(self) -> str:
+        """
+        Subnet is the CIDR range of the overlay network assigned to the node for its pods
+        """
+        return self.__subnet
+
+    def egressIPs(self) -> Optional[List[str]]:
+        """
+        EgressIPs is the list of automatic egress IP addresses currently hosted by this node.
+        If EgressCIDRs is empty, this can be set by hand; if EgressCIDRs is set then the
+        master will overwrite the value here with its own allocation of egress IPs.
+        """
+        return self.__egressIPs
+
+    def egressCIDRs(self) -> Optional[List[str]]:
+        """
+        EgressCIDRs is the list of CIDR ranges available for automatically assigning
+        egress IPs to this node from. If this field is set then EgressIPs should be
+        treated as read-only.
+        """
+        return self.__egressCIDRs
+
+
+class NetNamespace(base.TypedObject, base.MetadataObject):
+    """
+    NetNamespace describes a single isolated network. When using the redhat/openshift-ovs-multitenant
+    plugin, every Namespace will have a corresponding NetNamespace object with the same name.
+    (When using redhat/openshift-ovs-subnet, NetNamespaces are not used.)
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        netname: str = "",
+        netid: int = 0,
+        egressIPs: List[str] = None,
+    ):
+        super().__init__(
+            apiVersion="network.openshift.io/v1",
+            kind="NetNamespace",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__netname = netname
+        self.__netid = netid
+        self.__egressIPs = egressIPs if egressIPs is not None else []
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        netname = self.netname()
+        check_type("netname", netname, str)
+        v["netname"] = netname
+        netid = self.netid()
+        check_type("netid", netid, int)
+        v["netid"] = netid
+        egressIPs = self.egressIPs()
+        check_type("egressIPs", egressIPs, Optional[List[str]])
+        if egressIPs:  # omit empty
+            v["egressIPs"] = egressIPs
+        return v
+
+    def netname(self) -> str:
+        """
+        NetName is the name of the network namespace. (This is the same as the object's name, but both fields must be set.)
+        """
+        return self.__netname
+
+    def netid(self) -> int:
+        """
+        NetID is the network identifier of the network namespace assigned to each overlay network packet. This can be manipulated with the "oc adm pod-network" commands.
+        """
+        return self.__netid
+
+    def egressIPs(self) -> Optional[List[str]]:
+        """
+        EgressIPs is a list of reserved IPs that will be used as the source for external traffic coming from pods in this namespace. (If empty, external traffic will be masqueraded to Node IPs.)
+        """
+        return self.__egressIPs
