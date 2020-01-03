@@ -206,7 +206,7 @@ class ConfigMapSecret(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ConfigMapSecretSpec" = None,
     ):
         super().__init__(
-            apiVersion="secrets.k8s.mz.com/v1alpha1",
+            apiVersion="secrets.mz.com/v1alpha1",
             kind="ConfigMapSecret",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
