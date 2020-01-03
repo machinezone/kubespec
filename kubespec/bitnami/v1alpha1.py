@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
 
@@ -27,7 +27,7 @@ class SecretTemplateSpec(base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        type: corev1.SecretType = None,
+        type: k8sv1.SecretType = None,
     ):
         super().__init__(
             **({"namespace": namespace} if namespace is not None else {}),
@@ -41,12 +41,12 @@ class SecretTemplateSpec(base.NamespacedMetadataObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         type = self.type()
-        check_type("type", type, Optional[corev1.SecretType])
+        check_type("type", type, Optional[k8sv1.SecretType])
         if type:  # omit empty
             v["type"] = type
         return v
 
-    def type(self) -> Optional[corev1.SecretType]:
+    def type(self) -> Optional[k8sv1.SecretType]:
         """
         Used to facilitate programmatic handling of secret data.
         """

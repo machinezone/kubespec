@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
@@ -616,7 +616,7 @@ class SELinuxStrategyOptions(types.Object):
     def __init__(
         self,
         rule: SELinuxStrategy = None,
-        seLinuxOptions: "corev1.SELinuxOptions" = None,
+        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__rule = rule
@@ -629,7 +629,7 @@ class SELinuxStrategyOptions(types.Object):
         check_type("rule", rule, SELinuxStrategy)
         v["rule"] = rule
         seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["corev1.SELinuxOptions"])
+        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
         return v
@@ -640,7 +640,7 @@ class SELinuxStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
+    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -701,9 +701,9 @@ class PodSecurityPolicySpec(types.Object):
     def __init__(
         self,
         privileged: bool = None,
-        defaultAddCapabilities: List[corev1.Capability] = None,
-        requiredDropCapabilities: List[corev1.Capability] = None,
-        allowedCapabilities: List[corev1.Capability] = None,
+        defaultAddCapabilities: List[k8sv1.Capability] = None,
+        requiredDropCapabilities: List[k8sv1.Capability] = None,
+        allowedCapabilities: List[k8sv1.Capability] = None,
         volumes: List[FSType] = None,
         hostNetwork: bool = None,
         hostPorts: List["HostPortRange"] = None,
@@ -722,7 +722,7 @@ class PodSecurityPolicySpec(types.Object):
         allowedCSIDrivers: List["AllowedCSIDriver"] = None,
         allowedUnsafeSysctls: List[str] = None,
         forbiddenSysctls: List[str] = None,
-        allowedProcMountTypes: List[corev1.ProcMountType] = None,
+        allowedProcMountTypes: List[k8sv1.ProcMountType] = None,
         runtimeClass: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
@@ -788,7 +788,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "defaultAddCapabilities",
             defaultAddCapabilities,
-            Optional[List[corev1.Capability]],
+            Optional[List[k8sv1.Capability]],
         )
         if defaultAddCapabilities:  # omit empty
             v["defaultAddCapabilities"] = defaultAddCapabilities
@@ -796,15 +796,13 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "requiredDropCapabilities",
             requiredDropCapabilities,
-            Optional[List[corev1.Capability]],
+            Optional[List[k8sv1.Capability]],
         )
         if requiredDropCapabilities:  # omit empty
             v["requiredDropCapabilities"] = requiredDropCapabilities
         allowedCapabilities = self.allowedCapabilities()
         check_type(
-            "allowedCapabilities",
-            allowedCapabilities,
-            Optional[List[corev1.Capability]],
+            "allowedCapabilities", allowedCapabilities, Optional[List[k8sv1.Capability]]
         )
         if allowedCapabilities:  # omit empty
             v["allowedCapabilities"] = allowedCapabilities
@@ -896,7 +894,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "allowedProcMountTypes",
             allowedProcMountTypes,
-            Optional[List[corev1.ProcMountType]],
+            Optional[List[k8sv1.ProcMountType]],
         )
         if allowedProcMountTypes:  # omit empty
             v["allowedProcMountTypes"] = allowedProcMountTypes
@@ -914,7 +912,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__privileged
 
-    def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def defaultAddCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         defaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capability in both
@@ -923,14 +921,14 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__defaultAddCapabilities
 
-    def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def requiredDropCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         requiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
         """
         return self.__requiredDropCapabilities
 
-    def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def allowedCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         allowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field may be added at the pod author's discretion.
@@ -1073,7 +1071,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__forbiddenSysctls
 
-    def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+    def allowedProcMountTypes(self) -> Optional[List[k8sv1.ProcMountType]]:
         """
         AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
         Empty or nil indicates that only the DefaultProcMountType may be used.

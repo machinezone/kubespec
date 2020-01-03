@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -75,7 +75,7 @@ class Endpoint(types.Object):
         addresses: List[str] = None,
         conditions: "EndpointConditions" = None,
         hostname: str = None,
-        targetRef: "corev1.ObjectReference" = None,
+        targetRef: "k8sv1.ObjectReference" = None,
         topology: Dict[str, str] = None,
     ):
         super().__init__()
@@ -101,7 +101,7 @@ class Endpoint(types.Object):
         if hostname is not None:  # omit empty
             v["hostname"] = hostname
         targetRef = self.targetRef()
-        check_type("targetRef", targetRef, Optional["corev1.ObjectReference"])
+        check_type("targetRef", targetRef, Optional["k8sv1.ObjectReference"])
         if targetRef is not None:  # omit empty
             v["targetRef"] = targetRef
         topology = self.topology()
@@ -137,7 +137,7 @@ class Endpoint(types.Object):
         """
         return self.__hostname
 
-    def targetRef(self) -> Optional["corev1.ObjectReference"]:
+    def targetRef(self) -> Optional["k8sv1.ObjectReference"]:
         """
         targetRef is a reference to a Kubernetes object that represents this
         endpoint.
@@ -172,13 +172,13 @@ class EndpointPort(types.Object):
     def __init__(
         self,
         name: str = None,
-        protocol: corev1.Protocol = None,
+        protocol: k8sv1.Protocol = None,
         port: int = None,
         appProtocol: str = None,
     ):
         super().__init__()
         self.__name = name
-        self.__protocol = protocol if protocol is not None else corev1.Protocol["TCP"]
+        self.__protocol = protocol if protocol is not None else k8sv1.Protocol["TCP"]
         self.__port = port
         self.__appProtocol = appProtocol
 
@@ -190,7 +190,7 @@ class EndpointPort(types.Object):
         if name is not None:  # omit empty
             v["name"] = name
         protocol = self.protocol()
-        check_type("protocol", protocol, Optional[corev1.Protocol])
+        check_type("protocol", protocol, Optional[k8sv1.Protocol])
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
         port = self.port()
@@ -216,7 +216,7 @@ class EndpointPort(types.Object):
         """
         return self.__name
 
-    def protocol(self) -> Optional[corev1.Protocol]:
+    def protocol(self) -> Optional[k8sv1.Protocol]:
         """
         The IP protocol for this port.
         Must be UDP, TCP, or SCTP.

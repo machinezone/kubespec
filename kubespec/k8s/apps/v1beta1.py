@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
@@ -243,7 +243,7 @@ class DeploymentSpec(types.Object):
         self,
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         strategy: "DeploymentStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
@@ -253,7 +253,7 @@ class DeploymentSpec(types.Object):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
         self.__minReadySeconds = minReadySeconds
         self.__revisionHistoryLimit = (
@@ -276,7 +276,7 @@ class DeploymentSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         strategy = self.strategy()
         check_type("strategy", strategy, Optional["DeploymentStrategy"])
@@ -313,7 +313,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         Template describes the pods that will be created.
         """
@@ -634,8 +634,8 @@ class StatefulSetSpec(types.Object):
         self,
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
-        template: "corev1.PodTemplateSpec" = None,
-        volumeClaimTemplates: List["corev1.PersistentVolumeClaim"] = None,
+        template: "k8sv1.PodTemplateSpec" = None,
+        volumeClaimTemplates: List["k8sv1.PersistentVolumeClaim"] = None,
         serviceName: str = "",
         podManagementPolicy: PodManagementPolicyType = PodManagementPolicyType[
             "OrderedReady"
@@ -646,7 +646,7 @@ class StatefulSetSpec(types.Object):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__volumeClaimTemplates = (
             volumeClaimTemplates if volumeClaimTemplates is not None else []
         )
@@ -673,13 +673,13 @@ class StatefulSetSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         volumeClaimTemplates = self.volumeClaimTemplates()
         check_type(
             "volumeClaimTemplates",
             volumeClaimTemplates,
-            Optional[List["corev1.PersistentVolumeClaim"]],
+            Optional[List["k8sv1.PersistentVolumeClaim"]],
         )
         if volumeClaimTemplates:  # omit empty
             v["volumeClaimTemplates"] = volumeClaimTemplates
@@ -723,7 +723,7 @@ class StatefulSetSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         template is the object that describes the pod that will be created if
         insufficient replicas are detected. Each pod stamped out by the StatefulSet
@@ -732,7 +732,7 @@ class StatefulSetSpec(types.Object):
         """
         return self.__template
 
-    def volumeClaimTemplates(self) -> Optional[List["corev1.PersistentVolumeClaim"]]:
+    def volumeClaimTemplates(self) -> Optional[List["k8sv1.PersistentVolumeClaim"]]:
         """
         volumeClaimTemplates is a list of claims that pods are allowed to reference.
         The StatefulSet controller is responsible for mapping network identities to

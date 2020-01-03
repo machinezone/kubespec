@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
@@ -1401,9 +1401,9 @@ class BuildDefaults(types.Object):
         self,
         defaultProxy: "ProxySpec" = None,
         gitProxy: "ProxySpec" = None,
-        env: List["corev1.EnvVar"] = None,
+        env: List["k8sv1.EnvVar"] = None,
         imageLabels: List["ImageLabel"] = None,
-        resources: "corev1.ResourceRequirements" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
     ):
         super().__init__()
         self.__defaultProxy = defaultProxy
@@ -1411,7 +1411,7 @@ class BuildDefaults(types.Object):
         self.__env = env if env is not None else []
         self.__imageLabels = imageLabels if imageLabels is not None else []
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
 
     @typechecked
@@ -1426,7 +1426,7 @@ class BuildDefaults(types.Object):
         if gitProxy is not None:  # omit empty
             v["gitProxy"] = gitProxy
         env = self.env()
-        check_type("env", env, Optional[List["corev1.EnvVar"]])
+        check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
         imageLabels = self.imageLabels()
@@ -1434,7 +1434,7 @@ class BuildDefaults(types.Object):
         if imageLabels:  # omit empty
             v["imageLabels"] = imageLabels
         resources = self.resources()
-        check_type("resources", resources, "corev1.ResourceRequirements")
+        check_type("resources", resources, "k8sv1.ResourceRequirements")
         v["resources"] = resources
         return v
 
@@ -1457,7 +1457,7 @@ class BuildDefaults(types.Object):
         """
         return self.__gitProxy
 
-    def env(self) -> Optional[List["corev1.EnvVar"]]:
+    def env(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
         Env is a set of default environment variables that will be applied to the
         build if the specified variables do not exist on the build
@@ -1472,7 +1472,7 @@ class BuildDefaults(types.Object):
         """
         return self.__imageLabels
 
-    def resources(self) -> "corev1.ResourceRequirements":
+    def resources(self) -> "k8sv1.ResourceRequirements":
         """
         Resources defines resource requirements to execute the build.
         """
@@ -1486,7 +1486,7 @@ class BuildOverrides(types.Object):
         self,
         imageLabels: List["ImageLabel"] = None,
         nodeSelector: Dict[str, str] = None,
-        tolerations: List["corev1.Toleration"] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
         self.__imageLabels = imageLabels if imageLabels is not None else []
@@ -1505,7 +1505,7 @@ class BuildOverrides(types.Object):
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -1524,7 +1524,7 @@ class BuildOverrides(types.Object):
         """
         return self.__nodeSelector
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         Tolerations is a list of Tolerations that will override any existing
         tolerations set on a build pod.

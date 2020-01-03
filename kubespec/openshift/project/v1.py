@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -20,7 +20,7 @@ class ProjectSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, finalizers: List[corev1.FinalizerName] = None):
+    def __init__(self, finalizers: List[k8sv1.FinalizerName] = None):
         super().__init__()
         self.__finalizers = finalizers if finalizers is not None else []
 
@@ -28,12 +28,12 @@ class ProjectSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         finalizers = self.finalizers()
-        check_type("finalizers", finalizers, Optional[List[corev1.FinalizerName]])
+        check_type("finalizers", finalizers, Optional[List[k8sv1.FinalizerName]])
         if finalizers:  # omit empty
             v["finalizers"] = finalizers
         return v
 
-    def finalizers(self) -> Optional[List[corev1.FinalizerName]]:
+    def finalizers(self) -> Optional[List[k8sv1.FinalizerName]]:
         """
         Finalizers is an opaque list of values that must be empty to permanently remove object from storage
         """

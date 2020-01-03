@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from kubespec.openshift.config import v1 as configv1
 from typeguard import check_type, typechecked
@@ -1809,7 +1809,7 @@ class NodePlacement(types.Object):
     def __init__(
         self,
         nodeSelector: "metav1.LabelSelector" = None,
-        tolerations: List["corev1.Toleration"] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
         self.__nodeSelector = nodeSelector
@@ -1823,7 +1823,7 @@ class NodePlacement(types.Object):
         if nodeSelector is not None:  # omit empty
             v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -1842,7 +1842,7 @@ class NodePlacement(types.Object):
         """
         return self.__nodeSelector
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         tolerations is a list of tolerations applied to ingress controller
         deployments.
@@ -1867,7 +1867,7 @@ class IngressControllerSpec(types.Object):
         domain: str = None,
         replicas: int = None,
         endpointPublishingStrategy: "EndpointPublishingStrategy" = None,
-        defaultCertificate: "corev1.LocalObjectReference" = None,
+        defaultCertificate: "k8sv1.LocalObjectReference" = None,
         namespaceSelector: "metav1.LabelSelector" = None,
         routeSelector: "metav1.LabelSelector" = None,
         nodePlacement: "NodePlacement" = None,
@@ -1906,7 +1906,7 @@ class IngressControllerSpec(types.Object):
         check_type(
             "defaultCertificate",
             defaultCertificate,
-            Optional["corev1.LocalObjectReference"],
+            Optional["k8sv1.LocalObjectReference"],
         )
         if defaultCertificate is not None:  # omit empty
             v["defaultCertificate"] = defaultCertificate
@@ -1981,7 +1981,7 @@ class IngressControllerSpec(types.Object):
         """
         return self.__endpointPublishingStrategy
 
-    def defaultCertificate(self) -> Optional["corev1.LocalObjectReference"]:
+    def defaultCertificate(self) -> Optional["k8sv1.LocalObjectReference"]:
         """
         defaultCertificate is a reference to a secret containing the default
         certificate served by the ingress controller. When Routes don't specify

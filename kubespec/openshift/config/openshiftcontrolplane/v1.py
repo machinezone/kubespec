@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from kubespec.openshift.build import v1 as buildv1
 from kubespec.openshift.config import v1 as configv1
@@ -70,12 +70,12 @@ class BuildDefaultsConfig(base.TypedObject):
         gitHTTPProxy: str = None,
         gitHTTPSProxy: str = None,
         gitNoProxy: str = None,
-        env: List["corev1.EnvVar"] = None,
+        env: List["k8sv1.EnvVar"] = None,
         sourceStrategyDefaults: "SourceStrategyDefaultsConfig" = None,
         imageLabels: List["buildv1.ImageLabel"] = None,
         nodeSelector: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        resources: "corev1.ResourceRequirements" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
     ):
         super().__init__(
             apiVersion="openshiftcontrolplane.config.openshift.io/v1",
@@ -90,7 +90,7 @@ class BuildDefaultsConfig(base.TypedObject):
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
         self.__annotations = annotations if annotations is not None else {}
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
 
     @typechecked
@@ -109,7 +109,7 @@ class BuildDefaultsConfig(base.TypedObject):
         if gitNoProxy:  # omit empty
             v["gitNoProxy"] = gitNoProxy
         env = self.env()
-        check_type("env", env, Optional[List["corev1.EnvVar"]])
+        check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
         sourceStrategyDefaults = self.sourceStrategyDefaults()
@@ -133,7 +133,7 @@ class BuildDefaultsConfig(base.TypedObject):
         if annotations:  # omit empty
             v["annotations"] = annotations
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
         return v
 
@@ -155,7 +155,7 @@ class BuildDefaultsConfig(base.TypedObject):
         """
         return self.__gitNoProxy
 
-    def env(self) -> Optional[List["corev1.EnvVar"]]:
+    def env(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
         env is a set of default environment variables that will be applied to the
         build if the specified variables do not exist on the build
@@ -189,7 +189,7 @@ class BuildDefaultsConfig(base.TypedObject):
         """
         return self.__annotations
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         resources defines resource requirements to execute the build.
         """
@@ -209,7 +209,7 @@ class BuildOverridesConfig(base.TypedObject):
         imageLabels: List["buildv1.ImageLabel"] = None,
         nodeSelector: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        tolerations: List["corev1.Toleration"] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__(
             apiVersion="openshiftcontrolplane.config.openshift.io/v1",
@@ -240,7 +240,7 @@ class BuildOverridesConfig(base.TypedObject):
         if annotations:  # omit empty
             v["annotations"] = annotations
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -271,7 +271,7 @@ class BuildOverridesConfig(base.TypedObject):
         """
         return self.__annotations
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         tolerations is a list of Tolerations that will override any existing
         tolerations set on a build pod.

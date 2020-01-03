@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -233,11 +233,11 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         provisioner: str = "",
         parameters: Dict[str, str] = None,
-        reclaimPolicy: corev1.PersistentVolumeReclaimPolicy = None,
+        reclaimPolicy: k8sv1.PersistentVolumeReclaimPolicy = None,
         mountOptions: List[str] = None,
         allowVolumeExpansion: bool = None,
         volumeBindingMode: VolumeBindingMode = None,
-        allowedTopologies: List["corev1.TopologySelectorTerm"] = None,
+        allowedTopologies: List["k8sv1.TopologySelectorTerm"] = None,
     ):
         super().__init__(
             apiVersion="storage.k8s.io/v1",
@@ -251,7 +251,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         self.__reclaimPolicy = (
             reclaimPolicy
             if reclaimPolicy is not None
-            else corev1.PersistentVolumeReclaimPolicy["Delete"]
+            else k8sv1.PersistentVolumeReclaimPolicy["Delete"]
         )
         self.__mountOptions = mountOptions if mountOptions is not None else []
         self.__allowVolumeExpansion = allowVolumeExpansion
@@ -278,7 +278,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         check_type(
             "reclaimPolicy",
             reclaimPolicy,
-            Optional[corev1.PersistentVolumeReclaimPolicy],
+            Optional[k8sv1.PersistentVolumeReclaimPolicy],
         )
         if reclaimPolicy is not None:  # omit empty
             v["reclaimPolicy"] = reclaimPolicy
@@ -298,7 +298,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         check_type(
             "allowedTopologies",
             allowedTopologies,
-            Optional[List["corev1.TopologySelectorTerm"]],
+            Optional[List["k8sv1.TopologySelectorTerm"]],
         )
         if allowedTopologies:  # omit empty
             v["allowedTopologies"] = allowedTopologies
@@ -317,7 +317,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         """
         return self.__parameters
 
-    def reclaimPolicy(self) -> Optional[corev1.PersistentVolumeReclaimPolicy]:
+    def reclaimPolicy(self) -> Optional[k8sv1.PersistentVolumeReclaimPolicy]:
         """
         Dynamically provisioned PersistentVolumes of this storage class are
         created with this reclaimPolicy. Defaults to Delete.
@@ -346,7 +346,7 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         """
         return self.__volumeBindingMode
 
-    def allowedTopologies(self) -> Optional[List["corev1.TopologySelectorTerm"]]:
+    def allowedTopologies(self) -> Optional[List["k8sv1.TopologySelectorTerm"]]:
         """
         Restrict the node topologies where volumes can be dynamically provisioned.
         Each volume plugin defines its own supported topology specifications.
@@ -369,7 +369,7 @@ class VolumeAttachmentSource(types.Object):
     def __init__(
         self,
         persistentVolumeName: str = None,
-        inlineVolumeSpec: "corev1.PersistentVolumeSpec" = None,
+        inlineVolumeSpec: "k8sv1.PersistentVolumeSpec" = None,
     ):
         super().__init__()
         self.__persistentVolumeName = persistentVolumeName
@@ -384,9 +384,7 @@ class VolumeAttachmentSource(types.Object):
             v["persistentVolumeName"] = persistentVolumeName
         inlineVolumeSpec = self.inlineVolumeSpec()
         check_type(
-            "inlineVolumeSpec",
-            inlineVolumeSpec,
-            Optional["corev1.PersistentVolumeSpec"],
+            "inlineVolumeSpec", inlineVolumeSpec, Optional["k8sv1.PersistentVolumeSpec"]
         )
         if inlineVolumeSpec is not None:  # omit empty
             v["inlineVolumeSpec"] = inlineVolumeSpec
@@ -398,7 +396,7 @@ class VolumeAttachmentSource(types.Object):
         """
         return self.__persistentVolumeName
 
-    def inlineVolumeSpec(self) -> Optional["corev1.PersistentVolumeSpec"]:
+    def inlineVolumeSpec(self) -> Optional["k8sv1.PersistentVolumeSpec"]:
         """
         inlineVolumeSpec contains all the information necessary to attach
         a persistent volume defined by a pod's inline VolumeSource. This field

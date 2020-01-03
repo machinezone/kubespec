@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import resource
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List
@@ -25,7 +25,7 @@ class ContainerMetrics(types.Object):
     def __init__(
         self,
         name: str = "",
-        usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
+        usage: Dict[k8sv1.ResourceName, "resource.Quantity"] = None,
     ):
         super().__init__()
         self.__name = name
@@ -38,7 +38,7 @@ class ContainerMetrics(types.Object):
         check_type("name", name, str)
         v["name"] = name
         usage = self.usage()
-        check_type("usage", usage, Dict[corev1.ResourceName, "resource.Quantity"])
+        check_type("usage", usage, Dict[k8sv1.ResourceName, "resource.Quantity"])
         v["usage"] = usage
         return v
 
@@ -48,7 +48,7 @@ class ContainerMetrics(types.Object):
         """
         return self.__name
 
-    def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
+    def usage(self) -> Dict[k8sv1.ResourceName, "resource.Quantity"]:
         """
         The memory usage is the memory working set.
         """
@@ -69,7 +69,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         timestamp: "base.Time" = None,
         window: "base.Duration" = None,
-        usage: Dict[corev1.ResourceName, "resource.Quantity"] = None,
+        usage: Dict[k8sv1.ResourceName, "resource.Quantity"] = None,
     ):
         super().__init__(
             apiVersion="metrics.k8s.io/v1alpha1",
@@ -92,7 +92,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         check_type("window", window, "base.Duration")
         v["window"] = window
         usage = self.usage()
-        check_type("usage", usage, Dict[corev1.ResourceName, "resource.Quantity"])
+        check_type("usage", usage, Dict[k8sv1.ResourceName, "resource.Quantity"])
         v["usage"] = usage
         return v
 
@@ -106,7 +106,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
     def window(self) -> "base.Duration":
         return self.__window
 
-    def usage(self) -> Dict[corev1.ResourceName, "resource.Quantity"]:
+    def usage(self) -> Dict[k8sv1.ResourceName, "resource.Quantity"]:
         """
         The memory usage is the memory working set.
         """

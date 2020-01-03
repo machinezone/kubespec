@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
 
@@ -69,8 +69,8 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         reportingInstance: str = None,
         action: str = None,
         reason: str = None,
-        regarding: "corev1.ObjectReference" = None,
-        related: "corev1.ObjectReference" = None,
+        regarding: "k8sv1.ObjectReference" = None,
+        related: "k8sv1.ObjectReference" = None,
         note: str = None,
         type: str = None,
     ):
@@ -89,7 +89,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         self.__action = action
         self.__reason = reason
         self.__regarding = (
-            regarding if regarding is not None else corev1.ObjectReference()
+            regarding if regarding is not None else k8sv1.ObjectReference()
         )
         self.__related = related
         self.__note = note
@@ -122,10 +122,10 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         if reason:  # omit empty
             v["reason"] = reason
         regarding = self.regarding()
-        check_type("regarding", regarding, Optional["corev1.ObjectReference"])
+        check_type("regarding", regarding, Optional["k8sv1.ObjectReference"])
         v["regarding"] = regarding
         related = self.related()
-        check_type("related", related, Optional["corev1.ObjectReference"])
+        check_type("related", related, Optional["k8sv1.ObjectReference"])
         if related is not None:  # omit empty
             v["related"] = related
         note = self.note()
@@ -174,7 +174,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__reason
 
-    def regarding(self) -> Optional["corev1.ObjectReference"]:
+    def regarding(self) -> Optional["k8sv1.ObjectReference"]:
         """
         The object this Event is about. In most cases it's an Object reporting controller implements.
         E.g. ReplicaSetController implements ReplicaSets and this event is emitted because
@@ -182,7 +182,7 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__regarding
 
-    def related(self) -> Optional["corev1.ObjectReference"]:
+    def related(self) -> Optional["k8sv1.ObjectReference"]:
         """
         Optional secondary object for more complex actions. E.g. when regarding object triggers
         a creation or deletion of related object.

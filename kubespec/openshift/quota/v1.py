@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
@@ -66,13 +66,13 @@ class ClusterResourceQuotaSpec(types.Object):
     def __init__(
         self,
         selector: "ClusterResourceQuotaSelector" = None,
-        quota: "corev1.ResourceQuotaSpec" = None,
+        quota: "k8sv1.ResourceQuotaSpec" = None,
     ):
         super().__init__()
         self.__selector = (
             selector if selector is not None else ClusterResourceQuotaSelector()
         )
-        self.__quota = quota if quota is not None else corev1.ResourceQuotaSpec()
+        self.__quota = quota if quota is not None else k8sv1.ResourceQuotaSpec()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -81,7 +81,7 @@ class ClusterResourceQuotaSpec(types.Object):
         check_type("selector", selector, "ClusterResourceQuotaSelector")
         v["selector"] = selector
         quota = self.quota()
-        check_type("quota", quota, "corev1.ResourceQuotaSpec")
+        check_type("quota", quota, "k8sv1.ResourceQuotaSpec")
         v["quota"] = quota
         return v
 
@@ -94,7 +94,7 @@ class ClusterResourceQuotaSpec(types.Object):
         """
         return self.__selector
 
-    def quota(self) -> "corev1.ResourceQuotaSpec":
+    def quota(self) -> "k8sv1.ResourceQuotaSpec":
         """
         Quota defines the desired quota
         """

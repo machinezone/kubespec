@@ -7,7 +7,7 @@
 
 from kubespec import context
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -68,7 +68,7 @@ class Identity(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         providerName: str = "",
         providerUserName: str = "",
-        user: "corev1.ObjectReference" = None,
+        user: "k8sv1.ObjectReference" = None,
         extra: Dict[str, str] = None,
     ):
         super().__init__(
@@ -80,7 +80,7 @@ class Identity(base.TypedObject, base.MetadataObject):
         )
         self.__providerName = providerName
         self.__providerUserName = providerUserName
-        self.__user = user if user is not None else corev1.ObjectReference()
+        self.__user = user if user is not None else k8sv1.ObjectReference()
         self.__extra = extra if extra is not None else {}
 
     @typechecked
@@ -93,7 +93,7 @@ class Identity(base.TypedObject, base.MetadataObject):
         check_type("providerUserName", providerUserName, str)
         v["providerUserName"] = providerUserName
         user = self.user()
-        check_type("user", user, "corev1.ObjectReference")
+        check_type("user", user, "k8sv1.ObjectReference")
         v["user"] = user
         extra = self.extra()
         check_type("extra", extra, Optional[Dict[str, str]])
@@ -113,7 +113,7 @@ class Identity(base.TypedObject, base.MetadataObject):
         """
         return self.__providerUserName
 
-    def user(self) -> "corev1.ObjectReference":
+    def user(self) -> "k8sv1.ObjectReference":
         """
         User is a reference to the user this identity is associated with
         Both Name and UID must be set
@@ -206,8 +206,8 @@ class UserIdentityMapping(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        identity: "corev1.ObjectReference" = None,
-        user: "corev1.ObjectReference" = None,
+        identity: "k8sv1.ObjectReference" = None,
+        user: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
             apiVersion="user.openshift.io/v1",
@@ -216,27 +216,27 @@ class UserIdentityMapping(base.TypedObject, base.MetadataObject):
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__identity = identity if identity is not None else corev1.ObjectReference()
-        self.__user = user if user is not None else corev1.ObjectReference()
+        self.__identity = identity if identity is not None else k8sv1.ObjectReference()
+        self.__user = user if user is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         identity = self.identity()
-        check_type("identity", identity, Optional["corev1.ObjectReference"])
+        check_type("identity", identity, Optional["k8sv1.ObjectReference"])
         v["identity"] = identity
         user = self.user()
-        check_type("user", user, Optional["corev1.ObjectReference"])
+        check_type("user", user, Optional["k8sv1.ObjectReference"])
         v["user"] = user
         return v
 
-    def identity(self) -> Optional["corev1.ObjectReference"]:
+    def identity(self) -> Optional["k8sv1.ObjectReference"]:
         """
         Identity is a reference to an identity
         """
         return self.__identity
 
-    def user(self) -> Optional["corev1.ObjectReference"]:
+    def user(self) -> Optional["k8sv1.ObjectReference"]:
         """
         User is a reference to a user
         """

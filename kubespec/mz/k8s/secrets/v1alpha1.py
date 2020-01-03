@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -83,8 +83,8 @@ class TemplateVariable(types.Object):
         self,
         name: str = "",
         value: str = None,
-        secretValue: "corev1.SecretKeySelector" = None,
-        configMapValue: "corev1.ConfigMapKeySelector" = None,
+        secretValue: "k8sv1.SecretKeySelector" = None,
+        configMapValue: "k8sv1.ConfigMapKeySelector" = None,
     ):
         super().__init__()
         self.__name = name
@@ -103,12 +103,12 @@ class TemplateVariable(types.Object):
         if value:  # omit empty
             v["value"] = value
         secretValue = self.secretValue()
-        check_type("secretValue", secretValue, Optional["corev1.SecretKeySelector"])
+        check_type("secretValue", secretValue, Optional["k8sv1.SecretKeySelector"])
         if secretValue is not None:  # omit empty
             v["secretValue"] = secretValue
         configMapValue = self.configMapValue()
         check_type(
-            "configMapValue", configMapValue, Optional["corev1.ConfigMapKeySelector"]
+            "configMapValue", configMapValue, Optional["k8sv1.ConfigMapKeySelector"]
         )
         if configMapValue is not None:  # omit empty
             v["configMapValue"] = configMapValue
@@ -131,13 +131,13 @@ class TemplateVariable(types.Object):
         """
         return self.__value
 
-    def secretValue(self) -> Optional["corev1.SecretKeySelector"]:
+    def secretValue(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         SecretValue selects a value by its key in a Secret.
         """
         return self.__secretValue
 
-    def configMapValue(self) -> Optional["corev1.ConfigMapKeySelector"]:
+    def configMapValue(self) -> Optional["k8sv1.ConfigMapKeySelector"]:
         """
         ConfigMapValue selects a value by its key in a ConfigMap.
         """

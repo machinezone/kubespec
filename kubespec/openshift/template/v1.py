@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -23,27 +23,27 @@ class BrokerTemplateInstanceSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        templateInstance: "corev1.ObjectReference" = None,
-        secret: "corev1.ObjectReference" = None,
+        templateInstance: "k8sv1.ObjectReference" = None,
+        secret: "k8sv1.ObjectReference" = None,
         bindingIDs: List[str] = None,
     ):
         super().__init__()
         self.__templateInstance = (
             templateInstance
             if templateInstance is not None
-            else corev1.ObjectReference()
+            else k8sv1.ObjectReference()
         )
-        self.__secret = secret if secret is not None else corev1.ObjectReference()
+        self.__secret = secret if secret is not None else k8sv1.ObjectReference()
         self.__bindingIDs = bindingIDs if bindingIDs is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         templateInstance = self.templateInstance()
-        check_type("templateInstance", templateInstance, "corev1.ObjectReference")
+        check_type("templateInstance", templateInstance, "k8sv1.ObjectReference")
         v["templateInstance"] = templateInstance
         secret = self.secret()
-        check_type("secret", secret, "corev1.ObjectReference")
+        check_type("secret", secret, "k8sv1.ObjectReference")
         v["secret"] = secret
         bindingIDs = self.bindingIDs()
         check_type("bindingIDs", bindingIDs, Optional[List[str]])
@@ -51,14 +51,14 @@ class BrokerTemplateInstanceSpec(types.Object):
             v["bindingIDs"] = bindingIDs
         return v
 
-    def templateInstance(self) -> "corev1.ObjectReference":
+    def templateInstance(self) -> "k8sv1.ObjectReference":
         """
         templateinstance is a reference to a TemplateInstance object residing
         in a namespace.
         """
         return self.__templateInstance
 
-    def secret(self) -> "corev1.ObjectReference":
+    def secret(self) -> "k8sv1.ObjectReference":
         """
         secret is a reference to a Secret object residing in a namespace,
         containing the necessary template parameters.
@@ -401,7 +401,7 @@ class TemplateInstanceSpec(types.Object):
     def __init__(
         self,
         template: "Template" = None,
-        secret: "corev1.LocalObjectReference" = None,
+        secret: "k8sv1.LocalObjectReference" = None,
         requester: "TemplateInstanceRequester" = None,
     ):
         super().__init__()
@@ -416,7 +416,7 @@ class TemplateInstanceSpec(types.Object):
         check_type("template", template, "Template")
         v["template"] = template
         secret = self.secret()
-        check_type("secret", secret, Optional["corev1.LocalObjectReference"])
+        check_type("secret", secret, Optional["k8sv1.LocalObjectReference"])
         if secret is not None:  # omit empty
             v["secret"] = secret
         requester = self.requester()
@@ -430,7 +430,7 @@ class TemplateInstanceSpec(types.Object):
         """
         return self.__template
 
-    def secret(self) -> Optional["corev1.LocalObjectReference"]:
+    def secret(self) -> Optional["k8sv1.LocalObjectReference"]:
         """
         secret is a reference to a Secret object containing the necessary
         template parameters.

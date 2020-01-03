@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
@@ -24,10 +24,10 @@ class PodPresetSpec(types.Object):
     def __init__(
         self,
         selector: "metav1.LabelSelector" = None,
-        env: List["corev1.EnvVar"] = None,
-        envFrom: List["corev1.EnvFromSource"] = None,
-        volumes: List["corev1.Volume"] = None,
-        volumeMounts: List["corev1.VolumeMount"] = None,
+        env: List["k8sv1.EnvVar"] = None,
+        envFrom: List["k8sv1.EnvFromSource"] = None,
+        volumes: List["k8sv1.Volume"] = None,
+        volumeMounts: List["k8sv1.VolumeMount"] = None,
     ):
         super().__init__()
         self.__selector = selector if selector is not None else metav1.LabelSelector()
@@ -43,19 +43,19 @@ class PodPresetSpec(types.Object):
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         v["selector"] = selector
         env = self.env()
-        check_type("env", env, Optional[List["corev1.EnvVar"]])
+        check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
         envFrom = self.envFrom()
-        check_type("envFrom", envFrom, Optional[List["corev1.EnvFromSource"]])
+        check_type("envFrom", envFrom, Optional[List["k8sv1.EnvFromSource"]])
         if envFrom:  # omit empty
             v["envFrom"] = envFrom
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["k8sv1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[List["corev1.VolumeMount"]])
+        check_type("volumeMounts", volumeMounts, Optional[List["k8sv1.VolumeMount"]])
         if volumeMounts:  # omit empty
             v["volumeMounts"] = volumeMounts
         return v
@@ -67,25 +67,25 @@ class PodPresetSpec(types.Object):
         """
         return self.__selector
 
-    def env(self) -> Optional[List["corev1.EnvVar"]]:
+    def env(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
         Env defines the collection of EnvVar to inject into containers.
         """
         return self.__env
 
-    def envFrom(self) -> Optional[List["corev1.EnvFromSource"]]:
+    def envFrom(self) -> Optional[List["k8sv1.EnvFromSource"]]:
         """
         EnvFrom defines the collection of EnvFromSource to inject into containers.
         """
         return self.__envFrom
 
-    def volumes(self) -> Optional[List["corev1.Volume"]]:
+    def volumes(self) -> Optional[List["k8sv1.Volume"]]:
         """
         Volumes defines the collection of Volume to inject into the pod.
         """
         return self.__volumes
 
-    def volumeMounts(self) -> Optional[List["corev1.VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["k8sv1.VolumeMount"]]:
         """
         VolumeMounts defines the collection of VolumeMount to inject into containers.
         """

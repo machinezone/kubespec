@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -222,11 +222,11 @@ class PodSecurityPolicyReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         serviceAccountNames: List[str] = None,
     ):
         super().__init__()
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__serviceAccountNames = (
             serviceAccountNames if serviceAccountNames is not None else []
         )
@@ -235,7 +235,7 @@ class PodSecurityPolicyReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         serviceAccountNames = self.serviceAccountNames()
         check_type("serviceAccountNames", serviceAccountNames, Optional[List[str]])
@@ -243,7 +243,7 @@ class PodSecurityPolicyReviewSpec(types.Object):
             v["serviceAccountNames"] = serviceAccountNames
         return v
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         template is the PodTemplateSpec to check. The template.spec.serviceAccountName field is used
         if serviceAccountNames is empty, unless the template.spec.serviceAccountName is empty,
@@ -299,19 +299,19 @@ class PodSecurityPolicySelfSubjectReviewSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, template: "corev1.PodTemplateSpec" = None):
+    def __init__(self, template: "k8sv1.PodTemplateSpec" = None):
         super().__init__()
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         return v
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         template is the PodTemplateSpec to check.
         """
@@ -358,12 +358,12 @@ class PodSecurityPolicySubjectReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         user: str = None,
         groups: List[str] = None,
     ):
         super().__init__()
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__user = user
         self.__groups = groups if groups is not None else []
 
@@ -371,7 +371,7 @@ class PodSecurityPolicySubjectReviewSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         user = self.user()
         check_type("user", user, Optional[str])
@@ -383,7 +383,7 @@ class PodSecurityPolicySubjectReviewSpec(types.Object):
             v["groups"] = groups
         return v
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         template is the PodTemplateSpec to check. If template.spec.serviceAccountName is empty it will not be defaulted.
         If its non-empty, it will be checked.
@@ -560,7 +560,7 @@ class SELinuxContextStrategyOptions(types.Object):
     def __init__(
         self,
         type: SELinuxContextStrategyType = None,
-        seLinuxOptions: "corev1.SELinuxOptions" = None,
+        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__type = type
@@ -574,7 +574,7 @@ class SELinuxContextStrategyOptions(types.Object):
         if type:  # omit empty
             v["type"] = type
         seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["corev1.SELinuxOptions"])
+        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
         return v
@@ -585,7 +585,7 @@ class SELinuxContextStrategyOptions(types.Object):
         """
         return self.__type
 
-    def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
+    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         """
@@ -655,9 +655,9 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         priority: int = None,
         allowPrivilegedContainer: bool = False,
-        defaultAddCapabilities: List[corev1.Capability] = None,
-        requiredDropCapabilities: List[corev1.Capability] = None,
-        allowedCapabilities: List[corev1.Capability] = None,
+        defaultAddCapabilities: List[k8sv1.Capability] = None,
+        requiredDropCapabilities: List[k8sv1.Capability] = None,
+        allowedCapabilities: List[k8sv1.Capability] = None,
         allowHostDirVolumePlugin: bool = False,
         volumes: List[FSType] = None,
         allowedFlexVolumes: List["AllowedFlexVolume"] = None,
@@ -743,18 +743,16 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         v["allowPrivilegedContainer"] = allowPrivilegedContainer
         defaultAddCapabilities = self.defaultAddCapabilities()
         check_type(
-            "defaultAddCapabilities", defaultAddCapabilities, List[corev1.Capability]
+            "defaultAddCapabilities", defaultAddCapabilities, List[k8sv1.Capability]
         )
         v["defaultAddCapabilities"] = defaultAddCapabilities
         requiredDropCapabilities = self.requiredDropCapabilities()
         check_type(
-            "requiredDropCapabilities",
-            requiredDropCapabilities,
-            List[corev1.Capability],
+            "requiredDropCapabilities", requiredDropCapabilities, List[k8sv1.Capability]
         )
         v["requiredDropCapabilities"] = requiredDropCapabilities
         allowedCapabilities = self.allowedCapabilities()
-        check_type("allowedCapabilities", allowedCapabilities, List[corev1.Capability])
+        check_type("allowedCapabilities", allowedCapabilities, List[k8sv1.Capability])
         v["allowedCapabilities"] = allowedCapabilities
         allowHostDirVolumePlugin = self.allowHostDirVolumePlugin()
         check_type("allowHostDirVolumePlugin", allowHostDirVolumePlugin, bool)
@@ -853,7 +851,7 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__allowPrivilegedContainer
 
-    def defaultAddCapabilities(self) -> List[corev1.Capability]:
+    def defaultAddCapabilities(self) -> List[k8sv1.Capability]:
         """
         DefaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capabiility in both
@@ -862,7 +860,7 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__defaultAddCapabilities
 
-    def requiredDropCapabilities(self) -> List[corev1.Capability]:
+    def requiredDropCapabilities(self) -> List[k8sv1.Capability]:
         """
         RequiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
@@ -870,7 +868,7 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__requiredDropCapabilities
 
-    def allowedCapabilities(self) -> List[corev1.Capability]:
+    def allowedCapabilities(self) -> List[k8sv1.Capability]:
         """
         AllowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field maybe added at the pod author's discretion.

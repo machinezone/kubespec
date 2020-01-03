@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
@@ -144,16 +144,16 @@ class NetworkPolicyPort(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
+    def __init__(self, protocol: k8sv1.Protocol = None, port: Union[int, str] = None):
         super().__init__()
-        self.__protocol = protocol if protocol is not None else corev1.Protocol["TCP"]
+        self.__protocol = protocol if protocol is not None else k8sv1.Protocol["TCP"]
         self.__port = port
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         protocol = self.protocol()
-        check_type("protocol", protocol, Optional[corev1.Protocol])
+        check_type("protocol", protocol, Optional[k8sv1.Protocol])
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
         port = self.port()
@@ -162,7 +162,7 @@ class NetworkPolicyPort(types.Object):
             v["port"] = port
         return v
 
-    def protocol(self) -> Optional[corev1.Protocol]:
+    def protocol(self) -> Optional[k8sv1.Protocol]:
         """
         The protocol (TCP, UDP, or SCTP) which traffic must match. If not specified, this
         field defaults to TCP.

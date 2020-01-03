@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from kubespec.openshift.operator import v1 as operatorv1
 from typeguard import check_type, typechecked
@@ -371,14 +371,14 @@ class ImageRegistryConfigStorageS3CloudFront(types.Object):
     def __init__(
         self,
         baseURL: str = "",
-        privateKey: "corev1.SecretKeySelector" = None,
+        privateKey: "k8sv1.SecretKeySelector" = None,
         keypairID: str = "",
         duration: "base.Duration" = None,
     ):
         super().__init__()
         self.__baseURL = baseURL
         self.__privateKey = (
-            privateKey if privateKey is not None else corev1.SecretKeySelector()
+            privateKey if privateKey is not None else k8sv1.SecretKeySelector()
         )
         self.__keypairID = keypairID
         self.__duration = duration if duration is not None else metav1.Duration()
@@ -390,7 +390,7 @@ class ImageRegistryConfigStorageS3CloudFront(types.Object):
         check_type("baseURL", baseURL, str)
         v["baseURL"] = baseURL
         privateKey = self.privateKey()
-        check_type("privateKey", privateKey, "corev1.SecretKeySelector")
+        check_type("privateKey", privateKey, "k8sv1.SecretKeySelector")
         v["privateKey"] = privateKey
         keypairID = self.keypairID()
         check_type("keypairID", keypairID, str)
@@ -406,7 +406,7 @@ class ImageRegistryConfigStorageS3CloudFront(types.Object):
         """
         return self.__baseURL
 
-    def privateKey(self) -> "corev1.SecretKeySelector":
+    def privateKey(self) -> "k8sv1.SecretKeySelector":
         """
         privateKey points to secret containing the private key, provided by AWS.
         """
@@ -745,9 +745,9 @@ class ImageRegistrySpec(types.Object):
         routes: List["ImageRegistryConfigRoute"] = None,
         replicas: int = 0,
         logging: int = 0,
-        resources: "corev1.ResourceRequirements" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
         nodeSelector: Dict[str, str] = None,
-        tolerations: List["corev1.Toleration"] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
         self.__managementState = managementState
@@ -807,7 +807,7 @@ class ImageRegistrySpec(types.Object):
         check_type("logging", logging, int)
         v["logging"] = logging
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         if resources is not None:  # omit empty
             v["resources"] = resources
         nodeSelector = self.nodeSelector()
@@ -815,7 +815,7 @@ class ImageRegistrySpec(types.Object):
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -895,7 +895,7 @@ class ImageRegistrySpec(types.Object):
         """
         return self.__logging
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         resources defines the resource requests+limits for the registry pod.
         """
@@ -908,7 +908,7 @@ class ImageRegistrySpec(types.Object):
         """
         return self.__nodeSelector
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         tolerations defines the tolerations for the registry pod.
         """

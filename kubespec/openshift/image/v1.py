@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -99,7 +99,7 @@ class SignatureCondition(types.Object):
     def __init__(
         self,
         type: SignatureConditionType = None,
-        status: corev1.ConditionStatus = None,
+        status: k8sv1.ConditionStatus = None,
         lastProbeTime: "base.Time" = None,
         lastTransitionTime: "base.Time" = None,
         reason: str = None,
@@ -120,7 +120,7 @@ class SignatureCondition(types.Object):
         check_type("type", type, SignatureConditionType)
         v["type"] = type
         status = self.status()
-        check_type("status", status, corev1.ConditionStatus)
+        check_type("status", status, k8sv1.ConditionStatus)
         v["status"] = status
         lastProbeTime = self.lastProbeTime()
         check_type("lastProbeTime", lastProbeTime, Optional["base.Time"])
@@ -144,7 +144,7 @@ class SignatureCondition(types.Object):
         """
         return self.__type
 
-    def status(self) -> corev1.ConditionStatus:
+    def status(self) -> k8sv1.ConditionStatus:
         """
         Status of the condition, one of True, False, Unknown.
         """
@@ -705,14 +705,14 @@ class ImageImportSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        from_: "corev1.ObjectReference" = None,
-        to: "corev1.LocalObjectReference" = None,
+        from_: "k8sv1.ObjectReference" = None,
+        to: "k8sv1.LocalObjectReference" = None,
         importPolicy: "TagImportPolicy" = None,
         referencePolicy: "TagReferencePolicy" = None,
         includeManifest: bool = None,
     ):
         super().__init__()
-        self.__from_ = from_ if from_ is not None else corev1.ObjectReference()
+        self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__to = to
         self.__importPolicy = (
             importPolicy if importPolicy is not None else TagImportPolicy()
@@ -726,10 +726,10 @@ class ImageImportSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         from_ = self.from_()
-        check_type("from_", from_, "corev1.ObjectReference")
+        check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
         to = self.to()
-        check_type("to", to, Optional["corev1.LocalObjectReference"])
+        check_type("to", to, Optional["k8sv1.LocalObjectReference"])
         if to is not None:  # omit empty
             v["to"] = to
         importPolicy = self.importPolicy()
@@ -744,13 +744,13 @@ class ImageImportSpec(types.Object):
             v["includeManifest"] = includeManifest
         return v
 
-    def from_(self) -> "corev1.ObjectReference":
+    def from_(self) -> "k8sv1.ObjectReference":
         """
         From is the source of an image to import; only kind DockerImage is allowed
         """
         return self.__from_
 
-    def to(self) -> Optional["corev1.LocalObjectReference"]:
+    def to(self) -> Optional["k8sv1.LocalObjectReference"]:
         """
         To is a tag in the current image stream to assign the imported image to, if name is not specified the default tag from from.name will be used
         """
@@ -854,7 +854,7 @@ class TagReference(types.Object):
         self,
         name: str = "",
         annotations: Dict[str, str] = None,
-        from_: "corev1.ObjectReference" = None,
+        from_: "k8sv1.ObjectReference" = None,
         reference: bool = None,
         generation: int = None,
         importPolicy: "TagImportPolicy" = None,
@@ -883,7 +883,7 @@ class TagReference(types.Object):
         check_type("annotations", annotations, Dict[str, str])
         v["annotations"] = annotations
         from_ = self.from_()
-        check_type("from_", from_, Optional["corev1.ObjectReference"])
+        check_type("from_", from_, Optional["k8sv1.ObjectReference"])
         if from_ is not None:  # omit empty
             v["from"] = from_
         reference = self.reference()
@@ -913,7 +913,7 @@ class TagReference(types.Object):
         """
         return self.__annotations
 
-    def from_(self) -> Optional["corev1.ObjectReference"]:
+    def from_(self) -> Optional["k8sv1.ObjectReference"]:
         """
         Optional; if specified, a reference to another image that this tag should point to. Valid values
         are ImageStreamTag, ImageStreamImage, and DockerImage.  ImageStreamTag references
@@ -1109,13 +1109,13 @@ class RepositoryImportSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        from_: "corev1.ObjectReference" = None,
+        from_: "k8sv1.ObjectReference" = None,
         importPolicy: "TagImportPolicy" = None,
         referencePolicy: "TagReferencePolicy" = None,
         includeManifest: bool = None,
     ):
         super().__init__()
-        self.__from_ = from_ if from_ is not None else corev1.ObjectReference()
+        self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__importPolicy = (
             importPolicy if importPolicy is not None else TagImportPolicy()
         )
@@ -1128,7 +1128,7 @@ class RepositoryImportSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         from_ = self.from_()
-        check_type("from_", from_, "corev1.ObjectReference")
+        check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
         importPolicy = self.importPolicy()
         check_type("importPolicy", importPolicy, Optional["TagImportPolicy"])
@@ -1142,7 +1142,7 @@ class RepositoryImportSpec(types.Object):
             v["includeManifest"] = includeManifest
         return v
 
-    def from_(self) -> "corev1.ObjectReference":
+    def from_(self) -> "k8sv1.ObjectReference":
         """
         From is the source for the image repository to import; only kind DockerImage and a name of a container image repository is allowed
         """
@@ -1390,7 +1390,7 @@ class TagEventCondition(types.Object):
     def __init__(
         self,
         type: TagEventConditionType = None,
-        status: corev1.ConditionStatus = None,
+        status: k8sv1.ConditionStatus = None,
         lastTransitionTime: "base.Time" = None,
         reason: str = None,
         message: str = None,
@@ -1411,7 +1411,7 @@ class TagEventCondition(types.Object):
         check_type("type", type, TagEventConditionType)
         v["type"] = type
         status = self.status()
-        check_type("status", status, corev1.ConditionStatus)
+        check_type("status", status, k8sv1.ConditionStatus)
         v["status"] = status
         lastTransitionTime = self.lastTransitionTime()
         check_type("lastTransitionTime", lastTransitionTime, Optional["base.Time"])
@@ -1435,7 +1435,7 @@ class TagEventCondition(types.Object):
         """
         return self.__type
 
-    def status(self) -> corev1.ConditionStatus:
+    def status(self) -> k8sv1.ConditionStatus:
         """
         Status of the condition, one of True, False, Unknown.
         """

@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
 
@@ -65,7 +65,7 @@ class CustomDeploymentStrategyParams(types.Object):
     def __init__(
         self,
         image: str = None,
-        environment: List["corev1.EnvVar"] = None,
+        environment: List["k8sv1.EnvVar"] = None,
         command: List[str] = None,
     ):
         super().__init__()
@@ -81,7 +81,7 @@ class CustomDeploymentStrategyParams(types.Object):
         if image:  # omit empty
             v["image"] = image
         environment = self.environment()
-        check_type("environment", environment, Optional[List["corev1.EnvVar"]])
+        check_type("environment", environment, Optional[List["k8sv1.EnvVar"]])
         if environment:  # omit empty
             v["environment"] = environment
         command = self.command()
@@ -96,7 +96,7 @@ class CustomDeploymentStrategyParams(types.Object):
         """
         return self.__image
 
-    def environment(self) -> Optional[List["corev1.EnvVar"]]:
+    def environment(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
         Environment holds the environment which will be given to the container for Image.
         """
@@ -121,7 +121,7 @@ class ExecNewPodHook(types.Object):
     def __init__(
         self,
         command: List[str] = None,
-        env: List["corev1.EnvVar"] = None,
+        env: List["k8sv1.EnvVar"] = None,
         containerName: str = "",
         volumes: List[str] = None,
     ):
@@ -138,7 +138,7 @@ class ExecNewPodHook(types.Object):
         check_type("command", command, List[str])
         v["command"] = command
         env = self.env()
-        check_type("env", env, Optional[List["corev1.EnvVar"]])
+        check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
         containerName = self.containerName()
@@ -156,7 +156,7 @@ class ExecNewPodHook(types.Object):
         """
         return self.__command
 
-    def env(self) -> Optional[List["corev1.EnvVar"]]:
+    def env(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
         Env is a set of environment variables to supply to the hook pod's container.
         """
@@ -185,10 +185,10 @@ class TagImageHook(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, containerName: str = "", to: "corev1.ObjectReference" = None):
+    def __init__(self, containerName: str = "", to: "k8sv1.ObjectReference" = None):
         super().__init__()
         self.__containerName = containerName
-        self.__to = to if to is not None else corev1.ObjectReference()
+        self.__to = to if to is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -197,7 +197,7 @@ class TagImageHook(types.Object):
         check_type("containerName", containerName, str)
         v["containerName"] = containerName
         to = self.to()
-        check_type("to", to, "corev1.ObjectReference")
+        check_type("to", to, "k8sv1.ObjectReference")
         v["to"] = to
         return v
 
@@ -208,7 +208,7 @@ class TagImageHook(types.Object):
         """
         return self.__containerName
 
-    def to(self) -> "corev1.ObjectReference":
+    def to(self) -> "k8sv1.ObjectReference":
         """
         To is the target ImageStreamTag to set the container's image onto.
         """
@@ -485,7 +485,7 @@ class DeploymentStrategy(types.Object):
         customParams: "CustomDeploymentStrategyParams" = None,
         recreateParams: "RecreateDeploymentStrategyParams" = None,
         rollingParams: "RollingDeploymentStrategyParams" = None,
-        resources: "corev1.ResourceRequirements" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         activeDeadlineSeconds: int = None,
@@ -500,7 +500,7 @@ class DeploymentStrategy(types.Object):
             else RollingDeploymentStrategyParams()
         )
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
         self.__labels = labels if labels is not None else {}
         self.__annotations = annotations if annotations is not None else {}
@@ -536,7 +536,7 @@ class DeploymentStrategy(types.Object):
         if rollingParams is not None:  # omit empty
             v["rollingParams"] = rollingParams
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
         labels = self.labels()
         check_type("labels", labels, Optional[Dict[str, str]])
@@ -578,7 +578,7 @@ class DeploymentStrategy(types.Object):
         """
         return self.__rollingParams
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         Resources contains resource requirements to execute the deployment and any hooks.
         """
@@ -615,13 +615,13 @@ class DeploymentTriggerImageChangeParams(types.Object):
         self,
         automatic: bool = None,
         containerNames: List[str] = None,
-        from_: "corev1.ObjectReference" = None,
+        from_: "k8sv1.ObjectReference" = None,
         lastTriggeredImage: str = None,
     ):
         super().__init__()
         self.__automatic = automatic
         self.__containerNames = containerNames if containerNames is not None else []
-        self.__from_ = from_ if from_ is not None else corev1.ObjectReference()
+        self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__lastTriggeredImage = lastTriggeredImage
 
     @typechecked
@@ -636,7 +636,7 @@ class DeploymentTriggerImageChangeParams(types.Object):
         if containerNames:  # omit empty
             v["containerNames"] = containerNames
         from_ = self.from_()
-        check_type("from_", from_, "corev1.ObjectReference")
+        check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
         lastTriggeredImage = self.lastTriggeredImage()
         check_type("lastTriggeredImage", lastTriggeredImage, Optional[str])
@@ -660,7 +660,7 @@ class DeploymentTriggerImageChangeParams(types.Object):
         """
         return self.__containerNames
 
-    def from_(self) -> "corev1.ObjectReference":
+    def from_(self) -> "k8sv1.ObjectReference":
         """
         From is a reference to an image stream tag to watch for changes. From.Name is the only
         required subfield - if From.Namespace is blank, the namespace of the current deployment
@@ -738,7 +738,7 @@ class DeploymentConfigSpec(types.Object):
         test: bool = False,
         paused: bool = None,
         selector: Dict[str, str] = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
     ):
         super().__init__()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
@@ -783,7 +783,7 @@ class DeploymentConfigSpec(types.Object):
         if selector:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, Optional["corev1.PodTemplateSpec"])
+        check_type("template", template, Optional["k8sv1.PodTemplateSpec"])
         if template is not None:  # omit empty
             v["template"] = template
         return v
@@ -845,7 +845,7 @@ class DeploymentConfigSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> Optional["corev1.PodTemplateSpec"]:
+    def template(self) -> Optional["k8sv1.PodTemplateSpec"]:
         """
         Template is the object that describes the pod that will be created if
         insufficient replicas are detected.
@@ -910,7 +910,7 @@ class DeploymentConfigRollbackSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        from_: "corev1.ObjectReference" = None,
+        from_: "k8sv1.ObjectReference" = None,
         revision: int = None,
         includeTriggers: bool = False,
         includeTemplate: bool = False,
@@ -918,7 +918,7 @@ class DeploymentConfigRollbackSpec(types.Object):
         includeStrategy: bool = False,
     ):
         super().__init__()
-        self.__from_ = from_ if from_ is not None else corev1.ObjectReference()
+        self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__revision = revision
         self.__includeTriggers = includeTriggers
         self.__includeTemplate = includeTemplate
@@ -929,7 +929,7 @@ class DeploymentConfigRollbackSpec(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         from_ = self.from_()
-        check_type("from_", from_, "corev1.ObjectReference")
+        check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
         revision = self.revision()
         check_type("revision", revision, Optional[int])
@@ -949,7 +949,7 @@ class DeploymentConfigRollbackSpec(types.Object):
         v["includeStrategy"] = includeStrategy
         return v
 
-    def from_(self) -> "corev1.ObjectReference":
+    def from_(self) -> "k8sv1.ObjectReference":
         """
         From points to a ReplicationController which is a deployment.
         """

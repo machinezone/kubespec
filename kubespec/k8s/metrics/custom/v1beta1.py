@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec.k8s import base
 from kubespec.k8s import resource
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
@@ -64,7 +64,7 @@ class MetricValue(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        describedObject: "corev1.ObjectReference" = None,
+        describedObject: "k8sv1.ObjectReference" = None,
         metricName: str = "",
         timestamp: "base.Time" = None,
         window: int = None,
@@ -73,7 +73,7 @@ class MetricValue(base.TypedObject):
     ):
         super().__init__(apiVersion="custom.metrics.k8s.io/v1beta1", kind="MetricValue")
         self.__describedObject = (
-            describedObject if describedObject is not None else corev1.ObjectReference()
+            describedObject if describedObject is not None else k8sv1.ObjectReference()
         )
         self.__metricName = metricName
         self.__timestamp = timestamp
@@ -85,7 +85,7 @@ class MetricValue(base.TypedObject):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         describedObject = self.describedObject()
-        check_type("describedObject", describedObject, "corev1.ObjectReference")
+        check_type("describedObject", describedObject, "k8sv1.ObjectReference")
         v["describedObject"] = describedObject
         metricName = self.metricName()
         check_type("metricName", metricName, str)
@@ -105,7 +105,7 @@ class MetricValue(base.TypedObject):
         v["selector"] = selector
         return v
 
-    def describedObject(self) -> "corev1.ObjectReference":
+    def describedObject(self) -> "k8sv1.ObjectReference":
         """
         a reference to the described object
         """

@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
@@ -24,36 +24,36 @@ class BasicAuth(types.Object):
     @typechecked
     def __init__(
         self,
-        username: "corev1.SecretKeySelector" = None,
-        password: "corev1.SecretKeySelector" = None,
+        username: "k8sv1.SecretKeySelector" = None,
+        password: "k8sv1.SecretKeySelector" = None,
     ):
         super().__init__()
         self.__username = (
-            username if username is not None else corev1.SecretKeySelector()
+            username if username is not None else k8sv1.SecretKeySelector()
         )
         self.__password = (
-            password if password is not None else corev1.SecretKeySelector()
+            password if password is not None else k8sv1.SecretKeySelector()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         username = self.username()
-        check_type("username", username, Optional["corev1.SecretKeySelector"])
+        check_type("username", username, Optional["k8sv1.SecretKeySelector"])
         v["username"] = username
         password = self.password()
-        check_type("password", password, Optional["corev1.SecretKeySelector"])
+        check_type("password", password, Optional["k8sv1.SecretKeySelector"])
         v["password"] = password
         return v
 
-    def username(self) -> Optional["corev1.SecretKeySelector"]:
+    def username(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         The secret in the service monitor namespace that contains the username
         for authentication.
         """
         return self.__username
 
-    def password(self) -> Optional["corev1.SecretKeySelector"]:
+    def password(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         The secret in the service monitor namespace that contains the password
         for authentication.
@@ -70,8 +70,8 @@ class SecretOrConfigMap(types.Object):
     @typechecked
     def __init__(
         self,
-        secret: "corev1.SecretKeySelector" = None,
-        configMap: "corev1.ConfigMapKeySelector" = None,
+        secret: "k8sv1.SecretKeySelector" = None,
+        configMap: "k8sv1.ConfigMapKeySelector" = None,
     ):
         super().__init__()
         self.__secret = secret
@@ -81,22 +81,22 @@ class SecretOrConfigMap(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         secret = self.secret()
-        check_type("secret", secret, Optional["corev1.SecretKeySelector"])
+        check_type("secret", secret, Optional["k8sv1.SecretKeySelector"])
         if secret is not None:  # omit empty
             v["secret"] = secret
         configMap = self.configMap()
-        check_type("configMap", configMap, Optional["corev1.ConfigMapKeySelector"])
+        check_type("configMap", configMap, Optional["k8sv1.ConfigMapKeySelector"])
         if configMap is not None:  # omit empty
             v["configMap"] = configMap
         return v
 
-    def secret(self) -> Optional["corev1.SecretKeySelector"]:
+    def secret(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         Secret containing data to use for the targets.
         """
         return self.__secret
 
-    def configMap(self) -> Optional["corev1.ConfigMapKeySelector"]:
+    def configMap(self) -> Optional["k8sv1.ConfigMapKeySelector"]:
         """
         ConfigMap containing data to use for the targets.
         """
@@ -117,7 +117,7 @@ class TLSConfig(types.Object):
         certFile: str = None,
         cert: "SecretOrConfigMap" = None,
         keyFile: str = None,
-        keySecret: "corev1.SecretKeySelector" = None,
+        keySecret: "k8sv1.SecretKeySelector" = None,
         serverName: str = None,
         insecureSkipVerify: bool = None,
     ):
@@ -153,7 +153,7 @@ class TLSConfig(types.Object):
         if keyFile:  # omit empty
             v["keyFile"] = keyFile
         keySecret = self.keySecret()
-        check_type("keySecret", keySecret, Optional["corev1.SecretKeySelector"])
+        check_type("keySecret", keySecret, Optional["k8sv1.SecretKeySelector"])
         if keySecret is not None:  # omit empty
             v["keySecret"] = keySecret
         serverName = self.serverName()
@@ -196,7 +196,7 @@ class TLSConfig(types.Object):
         """
         return self.__keyFile
 
-    def keySecret(self) -> Optional["corev1.SecretKeySelector"]:
+    def keySecret(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         Secret containing the client key file for the targets.
         """
@@ -431,41 +431,41 @@ class StorageSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        emptyDir: "corev1.EmptyDirVolumeSource" = None,
-        volumeClaimTemplate: "corev1.PersistentVolumeClaim" = None,
+        emptyDir: "k8sv1.EmptyDirVolumeSource" = None,
+        volumeClaimTemplate: "k8sv1.PersistentVolumeClaim" = None,
     ):
         super().__init__()
         self.__emptyDir = emptyDir
         self.__volumeClaimTemplate = (
             volumeClaimTemplate
             if volumeClaimTemplate is not None
-            else corev1.PersistentVolumeClaim()
+            else k8sv1.PersistentVolumeClaim()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         emptyDir = self.emptyDir()
-        check_type("emptyDir", emptyDir, Optional["corev1.EmptyDirVolumeSource"])
+        check_type("emptyDir", emptyDir, Optional["k8sv1.EmptyDirVolumeSource"])
         if emptyDir is not None:  # omit empty
             v["emptyDir"] = emptyDir
         volumeClaimTemplate = self.volumeClaimTemplate()
         check_type(
             "volumeClaimTemplate",
             volumeClaimTemplate,
-            Optional["corev1.PersistentVolumeClaim"],
+            Optional["k8sv1.PersistentVolumeClaim"],
         )
         v["volumeClaimTemplate"] = volumeClaimTemplate
         return v
 
-    def emptyDir(self) -> Optional["corev1.EmptyDirVolumeSource"]:
+    def emptyDir(self) -> Optional["k8sv1.EmptyDirVolumeSource"]:
         """
         EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More
         info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
         """
         return self.__emptyDir
 
-    def volumeClaimTemplate(self) -> Optional["corev1.PersistentVolumeClaim"]:
+    def volumeClaimTemplate(self) -> Optional["k8sv1.PersistentVolumeClaim"]:
         """
         A PVC spec to be used by the Prometheus StatefulSets.
         """
@@ -488,7 +488,7 @@ class AlertmanagerSpec(types.Object):
         tag: str = None,
         sha: str = None,
         baseImage: str = None,
-        imagePullSecrets: List["corev1.LocalObjectReference"] = None,
+        imagePullSecrets: List["k8sv1.LocalObjectReference"] = None,
         secrets: List[str] = None,
         configMaps: List[str] = None,
         configSecret: str = None,
@@ -497,20 +497,20 @@ class AlertmanagerSpec(types.Object):
         replicas: int = None,
         retention: str = None,
         storage: "StorageSpec" = None,
-        volumes: List["corev1.Volume"] = None,
-        volumeMounts: List["corev1.VolumeMount"] = None,
+        volumes: List["k8sv1.Volume"] = None,
+        volumeMounts: List["k8sv1.VolumeMount"] = None,
         externalUrl: str = None,
         routePrefix: str = None,
         paused: bool = None,
         nodeSelector: Dict[str, str] = None,
-        resources: "corev1.ResourceRequirements" = None,
-        affinity: "corev1.Affinity" = None,
-        tolerations: List["corev1.Toleration"] = None,
-        securityContext: "corev1.PodSecurityContext" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
+        affinity: "k8sv1.Affinity" = None,
+        tolerations: List["k8sv1.Toleration"] = None,
+        securityContext: "k8sv1.PodSecurityContext" = None,
         serviceAccountName: str = None,
         listenLocal: bool = None,
-        containers: List["corev1.Container"] = None,
-        initContainers: List["corev1.Container"] = None,
+        containers: List["k8sv1.Container"] = None,
+        initContainers: List["k8sv1.Container"] = None,
         priorityClassName: str = None,
         additionalPeers: List[str] = None,
         portName: str = None,
@@ -540,7 +540,7 @@ class AlertmanagerSpec(types.Object):
         self.__paused = paused
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
         self.__affinity = affinity
         self.__tolerations = tolerations if tolerations is not None else []
@@ -584,7 +584,7 @@ class AlertmanagerSpec(types.Object):
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[List["corev1.LocalObjectReference"]],
+            Optional[List["k8sv1.LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
             v["imagePullSecrets"] = imagePullSecrets
@@ -621,11 +621,11 @@ class AlertmanagerSpec(types.Object):
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["k8sv1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes
         volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[List["corev1.VolumeMount"]])
+        check_type("volumeMounts", volumeMounts, Optional[List["k8sv1.VolumeMount"]])
         if volumeMounts:  # omit empty
             v["volumeMounts"] = volumeMounts
         externalUrl = self.externalUrl()
@@ -645,19 +645,19 @@ class AlertmanagerSpec(types.Object):
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
         affinity = self.affinity()
-        check_type("affinity", affinity, Optional["corev1.Affinity"])
+        check_type("affinity", affinity, Optional["k8sv1.Affinity"])
         if affinity is not None:  # omit empty
             v["affinity"] = affinity
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         securityContext = self.securityContext()
         check_type(
-            "securityContext", securityContext, Optional["corev1.PodSecurityContext"]
+            "securityContext", securityContext, Optional["k8sv1.PodSecurityContext"]
         )
         if securityContext is not None:  # omit empty
             v["securityContext"] = securityContext
@@ -670,11 +670,11 @@ class AlertmanagerSpec(types.Object):
         if listenLocal:  # omit empty
             v["listenLocal"] = listenLocal
         containers = self.containers()
-        check_type("containers", containers, Optional[List["corev1.Container"]])
+        check_type("containers", containers, Optional[List["k8sv1.Container"]])
         if containers:  # omit empty
             v["containers"] = containers
         initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[List["corev1.Container"]])
+        check_type("initContainers", initContainers, Optional[List["k8sv1.Container"]])
         if initContainers:  # omit empty
             v["initContainers"] = initContainers
         priorityClassName = self.priorityClassName()
@@ -735,7 +735,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__baseImage
 
-    def imagePullSecrets(self) -> Optional[List["corev1.LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
@@ -802,7 +802,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__storage
 
-    def volumes(self) -> Optional[List["corev1.Volume"]]:
+    def volumes(self) -> Optional[List["k8sv1.Volume"]]:
         """
         Volumes allows configuration of additional volumes on the output StatefulSet definition.
         Volumes specified will be appended to other volumes that are generated as a result of
@@ -810,7 +810,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__volumes
 
-    def volumeMounts(self) -> Optional[List["corev1.VolumeMount"]]:
+    def volumeMounts(self) -> Optional[List["k8sv1.VolumeMount"]]:
         """
         VolumeMounts allows configuration of additional VolumeMounts on the output StatefulSet definition.
         VolumeMounts specified will be appended to other VolumeMounts in the alertmanager container,
@@ -848,25 +848,25 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__nodeSelector
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         Define resources requests and limits for single Pods.
         """
         return self.__resources
 
-    def affinity(self) -> Optional["corev1.Affinity"]:
+    def affinity(self) -> Optional["k8sv1.Affinity"]:
         """
         If specified, the pod's scheduling constraints.
         """
         return self.__affinity
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         If specified, the pod's tolerations.
         """
         return self.__tolerations
 
-    def securityContext(self) -> Optional["corev1.PodSecurityContext"]:
+    def securityContext(self) -> Optional["k8sv1.PodSecurityContext"]:
         """
         SecurityContext holds pod-level security attributes and common container settings.
         This defaults to the default PodSecurityContext.
@@ -888,14 +888,14 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__listenLocal
 
-    def containers(self) -> Optional[List["corev1.Container"]]:
+    def containers(self) -> Optional[List["k8sv1.Container"]]:
         """
         Containers allows injecting additional containers. This is meant to
         allow adding an authentication proxy to an Alertmanager pod.
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[List["corev1.Container"]]:
+    def initContainers(self) -> Optional[List["k8sv1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Alertmanager configuration from external sources. Any
@@ -1125,7 +1125,7 @@ class Endpoint(types.Object):
         scrapeTimeout: str = None,
         tlsConfig: "TLSConfig" = None,
         bearerTokenFile: str = None,
-        bearerTokenSecret: "corev1.SecretKeySelector" = None,
+        bearerTokenSecret: "k8sv1.SecretKeySelector" = None,
         honorLabels: bool = None,
         honorTimestamps: bool = None,
         basicAuth: "BasicAuth" = None,
@@ -1146,7 +1146,7 @@ class Endpoint(types.Object):
         self.__bearerTokenSecret = (
             bearerTokenSecret
             if bearerTokenSecret is not None
-            else corev1.SecretKeySelector()
+            else k8sv1.SecretKeySelector()
         )
         self.__honorLabels = honorLabels
         self.__honorTimestamps = honorTimestamps
@@ -1198,7 +1198,7 @@ class Endpoint(types.Object):
             v["bearerTokenFile"] = bearerTokenFile
         bearerTokenSecret = self.bearerTokenSecret()
         check_type(
-            "bearerTokenSecret", bearerTokenSecret, Optional["corev1.SecretKeySelector"]
+            "bearerTokenSecret", bearerTokenSecret, Optional["k8sv1.SecretKeySelector"]
         )
         v["bearerTokenSecret"] = bearerTokenSecret
         honorLabels = self.honorLabels()
@@ -1283,7 +1283,7 @@ class Endpoint(types.Object):
         """
         return self.__bearerTokenFile
 
-    def bearerTokenSecret(self) -> Optional["corev1.SecretKeySelector"]:
+    def bearerTokenSecret(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         Secret to mount to read bearer token for scraping targets. The secret
         needs to be in the same namespace as the service monitor and accessible by
@@ -2204,8 +2204,8 @@ class ThanosSpec(types.Object):
         tag: str = None,
         sha: str = None,
         baseImage: str = None,
-        resources: "corev1.ResourceRequirements" = None,
-        objectStorageConfig: "corev1.SecretKeySelector" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
+        objectStorageConfig: "k8sv1.SecretKeySelector" = None,
         listenLocal: bool = None,
     ):
         super().__init__()
@@ -2215,7 +2215,7 @@ class ThanosSpec(types.Object):
         self.__sha = sha
         self.__baseImage = baseImage
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
         self.__objectStorageConfig = objectStorageConfig
         self.__listenLocal = listenLocal
@@ -2244,13 +2244,13 @@ class ThanosSpec(types.Object):
         if baseImage is not None:  # omit empty
             v["baseImage"] = baseImage
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
         objectStorageConfig = self.objectStorageConfig()
         check_type(
             "objectStorageConfig",
             objectStorageConfig,
-            Optional["corev1.SecretKeySelector"],
+            Optional["k8sv1.SecretKeySelector"],
         )
         if objectStorageConfig is not None:  # omit empty
             v["objectStorageConfig"] = objectStorageConfig
@@ -2296,14 +2296,14 @@ class ThanosSpec(types.Object):
         """
         return self.__baseImage
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         Resources defines the resource requirements for the Thanos sidecar.
         If not provided, no requests/limits will be set
         """
         return self.__resources
 
-    def objectStorageConfig(self) -> Optional["corev1.SecretKeySelector"]:
+    def objectStorageConfig(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         ObjectStorageConfig configures object storage in Thanos.
         """
@@ -2338,7 +2338,7 @@ class PrometheusSpec(types.Object):
         paused: bool = None,
         image: str = None,
         baseImage: str = None,
-        imagePullSecrets: List["corev1.LocalObjectReference"] = None,
+        imagePullSecrets: List["k8sv1.LocalObjectReference"] = None,
         replicas: int = None,
         replicaExternalLabelName: str = None,
         prometheusExternalLabelName: str = None,
@@ -2356,26 +2356,26 @@ class PrometheusSpec(types.Object):
         routePrefix: str = None,
         query: "QuerySpec" = None,
         storage: "StorageSpec" = None,
-        volumes: List["corev1.Volume"] = None,
+        volumes: List["k8sv1.Volume"] = None,
         ruleSelector: "metav1.LabelSelector" = None,
         ruleNamespaceSelector: "metav1.LabelSelector" = None,
         alerting: "AlertingSpec" = None,
-        resources: "corev1.ResourceRequirements" = None,
+        resources: "k8sv1.ResourceRequirements" = None,
         nodeSelector: Dict[str, str] = None,
         serviceAccountName: str = None,
         secrets: List[str] = None,
         configMaps: List[str] = None,
-        affinity: "corev1.Affinity" = None,
-        tolerations: List["corev1.Toleration"] = None,
+        affinity: "k8sv1.Affinity" = None,
+        tolerations: List["k8sv1.Toleration"] = None,
         remoteWrite: List["RemoteWriteSpec"] = None,
         remoteRead: List["RemoteReadSpec"] = None,
-        securityContext: "corev1.PodSecurityContext" = None,
+        securityContext: "k8sv1.PodSecurityContext" = None,
         listenLocal: bool = None,
-        containers: List["corev1.Container"] = None,
-        initContainers: List["corev1.Container"] = None,
-        additionalScrapeConfigs: "corev1.SecretKeySelector" = None,
-        additionalAlertRelabelConfigs: "corev1.SecretKeySelector" = None,
-        additionalAlertManagerConfigs: "corev1.SecretKeySelector" = None,
+        containers: List["k8sv1.Container"] = None,
+        initContainers: List["k8sv1.Container"] = None,
+        additionalScrapeConfigs: "k8sv1.SecretKeySelector" = None,
+        additionalAlertRelabelConfigs: "k8sv1.SecretKeySelector" = None,
+        additionalAlertManagerConfigs: "k8sv1.SecretKeySelector" = None,
         apiserverConfig: "APIServerConfig" = None,
         thanos: "ThanosSpec" = None,
         priorityClassName: str = None,
@@ -2423,7 +2423,7 @@ class PrometheusSpec(types.Object):
         self.__ruleNamespaceSelector = ruleNamespaceSelector
         self.__alerting = alerting
         self.__resources = (
-            resources if resources is not None else corev1.ResourceRequirements()
+            resources if resources is not None else k8sv1.ResourceRequirements()
         )
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
         self.__serviceAccountName = serviceAccountName
@@ -2519,7 +2519,7 @@ class PrometheusSpec(types.Object):
         check_type(
             "imagePullSecrets",
             imagePullSecrets,
-            Optional[List["corev1.LocalObjectReference"]],
+            Optional[List["k8sv1.LocalObjectReference"]],
         )
         if imagePullSecrets:  # omit empty
             v["imagePullSecrets"] = imagePullSecrets
@@ -2593,7 +2593,7 @@ class PrometheusSpec(types.Object):
         if storage is not None:  # omit empty
             v["storage"] = storage
         volumes = self.volumes()
-        check_type("volumes", volumes, Optional[List["corev1.Volume"]])
+        check_type("volumes", volumes, Optional[List["k8sv1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes
         ruleSelector = self.ruleSelector()
@@ -2613,7 +2613,7 @@ class PrometheusSpec(types.Object):
         if alerting is not None:  # omit empty
             v["alerting"] = alerting
         resources = self.resources()
-        check_type("resources", resources, Optional["corev1.ResourceRequirements"])
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
         nodeSelector = self.nodeSelector()
         check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
@@ -2632,11 +2632,11 @@ class PrometheusSpec(types.Object):
         if configMaps:  # omit empty
             v["configMaps"] = configMaps
         affinity = self.affinity()
-        check_type("affinity", affinity, Optional["corev1.Affinity"])
+        check_type("affinity", affinity, Optional["k8sv1.Affinity"])
         if affinity is not None:  # omit empty
             v["affinity"] = affinity
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         remoteWrite = self.remoteWrite()
@@ -2649,7 +2649,7 @@ class PrometheusSpec(types.Object):
             v["remoteRead"] = remoteRead
         securityContext = self.securityContext()
         check_type(
-            "securityContext", securityContext, Optional["corev1.PodSecurityContext"]
+            "securityContext", securityContext, Optional["k8sv1.PodSecurityContext"]
         )
         if securityContext is not None:  # omit empty
             v["securityContext"] = securityContext
@@ -2658,18 +2658,18 @@ class PrometheusSpec(types.Object):
         if listenLocal:  # omit empty
             v["listenLocal"] = listenLocal
         containers = self.containers()
-        check_type("containers", containers, Optional[List["corev1.Container"]])
+        check_type("containers", containers, Optional[List["k8sv1.Container"]])
         if containers:  # omit empty
             v["containers"] = containers
         initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[List["corev1.Container"]])
+        check_type("initContainers", initContainers, Optional[List["k8sv1.Container"]])
         if initContainers:  # omit empty
             v["initContainers"] = initContainers
         additionalScrapeConfigs = self.additionalScrapeConfigs()
         check_type(
             "additionalScrapeConfigs",
             additionalScrapeConfigs,
-            Optional["corev1.SecretKeySelector"],
+            Optional["k8sv1.SecretKeySelector"],
         )
         if additionalScrapeConfigs is not None:  # omit empty
             v["additionalScrapeConfigs"] = additionalScrapeConfigs
@@ -2677,7 +2677,7 @@ class PrometheusSpec(types.Object):
         check_type(
             "additionalAlertRelabelConfigs",
             additionalAlertRelabelConfigs,
-            Optional["corev1.SecretKeySelector"],
+            Optional["k8sv1.SecretKeySelector"],
         )
         if additionalAlertRelabelConfigs is not None:  # omit empty
             v["additionalAlertRelabelConfigs"] = additionalAlertRelabelConfigs
@@ -2685,7 +2685,7 @@ class PrometheusSpec(types.Object):
         check_type(
             "additionalAlertManagerConfigs",
             additionalAlertManagerConfigs,
-            Optional["corev1.SecretKeySelector"],
+            Optional["k8sv1.SecretKeySelector"],
         )
         if additionalAlertManagerConfigs is not None:  # omit empty
             v["additionalAlertManagerConfigs"] = additionalAlertManagerConfigs
@@ -2807,7 +2807,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__baseImage
 
-    def imagePullSecrets(self) -> Optional[List["corev1.LocalObjectReference"]]:
+    def imagePullSecrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
@@ -2934,7 +2934,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__storage
 
-    def volumes(self) -> Optional[List["corev1.Volume"]]:
+    def volumes(self) -> Optional[List["k8sv1.Volume"]]:
         """
         Volumes allows configuration of additional volumes on the output StatefulSet definition. Volumes specified will
         be appended to other volumes that are generated as a result of StorageSpec objects.
@@ -2964,7 +2964,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__alerting
 
-    def resources(self) -> Optional["corev1.ResourceRequirements"]:
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
         Define resources requests and limits for single Pods.
         """
@@ -2999,13 +2999,13 @@ class PrometheusSpec(types.Object):
         """
         return self.__configMaps
 
-    def affinity(self) -> Optional["corev1.Affinity"]:
+    def affinity(self) -> Optional["k8sv1.Affinity"]:
         """
         If specified, the pod's scheduling constraints.
         """
         return self.__affinity
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         If specified, the pod's tolerations.
         """
@@ -3023,7 +3023,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__remoteRead
 
-    def securityContext(self) -> Optional["corev1.PodSecurityContext"]:
+    def securityContext(self) -> Optional["k8sv1.PodSecurityContext"]:
         """
         SecurityContext holds pod-level security attributes and common container settings.
         This defaults to the default PodSecurityContext.
@@ -3037,7 +3037,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__listenLocal
 
-    def containers(self) -> Optional[List["corev1.Container"]]:
+    def containers(self) -> Optional[List["k8sv1.Container"]]:
         """
         Containers allows injecting additional containers or modifying operator generated
         containers. This can be used to allow adding an authentication proxy to a Prometheus pod or
@@ -3050,7 +3050,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[List["corev1.Container"]]:
+    def initContainers(self) -> Optional[List["k8sv1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Prometheus configuration from external sources. Any errors
@@ -3061,7 +3061,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__initContainers
 
-    def additionalScrapeConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+    def additionalScrapeConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalScrapeConfigs allows specifying a key of a Secret containing
         additional Prometheus scrape configurations. Scrape configurations
@@ -3077,7 +3077,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__additionalScrapeConfigs
 
-    def additionalAlertRelabelConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+    def additionalAlertRelabelConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalAlertRelabelConfigs allows specifying a key of a Secret containing
         additional Prometheus alert relabel configurations. Alert relabel configurations
@@ -3093,7 +3093,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__additionalAlertRelabelConfigs
 
-    def additionalAlertManagerConfigs(self) -> Optional["corev1.SecretKeySelector"]:
+    def additionalAlertManagerConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalAlertManagerConfigs allows specifying a key of a Secret containing
         additional Prometheus AlertManager configurations. AlertManager configurations

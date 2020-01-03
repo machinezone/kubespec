@@ -9,8 +9,8 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import runtime
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.authorization.rbac import v1 as rbacv1
-from kubespec.k8s.core import v1 as corev1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
@@ -302,8 +302,8 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         userNames: List[str] = None,
         groupNames: List[str] = None,
-        subjects: List["corev1.ObjectReference"] = None,
-        roleRef: "corev1.ObjectReference" = None,
+        subjects: List["k8sv1.ObjectReference"] = None,
+        roleRef: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
             apiVersion="authorization.openshift.io/v1",
@@ -315,7 +315,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         self.__userNames = userNames if userNames is not None else []
         self.__groupNames = groupNames if groupNames is not None else []
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else corev1.ObjectReference()
+        self.__roleRef = roleRef if roleRef is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -327,10 +327,10 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         check_type("groupNames", groupNames, List[str])
         v["groupNames"] = groupNames
         subjects = self.subjects()
-        check_type("subjects", subjects, List["corev1.ObjectReference"])
+        check_type("subjects", subjects, List["k8sv1.ObjectReference"])
         v["subjects"] = subjects
         roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "corev1.ObjectReference")
+        check_type("roleRef", roleRef, "k8sv1.ObjectReference")
         v["roleRef"] = roleRef
         return v
 
@@ -350,7 +350,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         """
         return self.__groupNames
 
-    def subjects(self) -> List["corev1.ObjectReference"]:
+    def subjects(self) -> List["k8sv1.ObjectReference"]:
         """
         Subjects hold object references to authorize with this rule.
         This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers.
@@ -360,7 +360,7 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "corev1.ObjectReference":
+    def roleRef(self) -> "k8sv1.ObjectReference":
         """
         RoleRef can only reference the current namespace and the global namespace.
         If the ClusterRoleRef cannot be resolved, the Authorizer must return an error.
@@ -679,8 +679,8 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         annotations: Dict[str, str] = None,
         userNames: List[str] = None,
         groupNames: List[str] = None,
-        subjects: List["corev1.ObjectReference"] = None,
-        roleRef: "corev1.ObjectReference" = None,
+        subjects: List["k8sv1.ObjectReference"] = None,
+        roleRef: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
             apiVersion="authorization.openshift.io/v1",
@@ -693,7 +693,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         self.__userNames = userNames if userNames is not None else []
         self.__groupNames = groupNames if groupNames is not None else []
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else corev1.ObjectReference()
+        self.__roleRef = roleRef if roleRef is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -705,10 +705,10 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         check_type("groupNames", groupNames, List[str])
         v["groupNames"] = groupNames
         subjects = self.subjects()
-        check_type("subjects", subjects, List["corev1.ObjectReference"])
+        check_type("subjects", subjects, List["k8sv1.ObjectReference"])
         v["subjects"] = subjects
         roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "corev1.ObjectReference")
+        check_type("roleRef", roleRef, "k8sv1.ObjectReference")
         v["roleRef"] = roleRef
         return v
 
@@ -728,7 +728,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__groupNames
 
-    def subjects(self) -> List["corev1.ObjectReference"]:
+    def subjects(self) -> List["k8sv1.ObjectReference"]:
         """
         Subjects hold object references to authorize with this rule.
         This field is ignored if UserNames or GroupNames are specified to support legacy clients and servers.
@@ -738,7 +738,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "corev1.ObjectReference":
+    def roleRef(self) -> "k8sv1.ObjectReference":
         """
         RoleRef can only reference the current namespace and the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.

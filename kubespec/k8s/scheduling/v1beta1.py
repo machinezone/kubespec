@@ -7,7 +7,7 @@
 
 from kubespec import context
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
 
@@ -29,7 +29,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         value: int = 0,
         globalDefault: bool = None,
         description: str = None,
-        preemptionPolicy: corev1.PreemptionPolicy = None,
+        preemptionPolicy: k8sv1.PreemptionPolicy = None,
     ):
         super().__init__(
             apiVersion="scheduling.k8s.io/v1beta1",
@@ -59,7 +59,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
             v["description"] = description
         preemptionPolicy = self.preemptionPolicy()
         check_type(
-            "preemptionPolicy", preemptionPolicy, Optional[corev1.PreemptionPolicy]
+            "preemptionPolicy", preemptionPolicy, Optional[k8sv1.PreemptionPolicy]
         )
         if preemptionPolicy is not None:  # omit empty
             v["preemptionPolicy"] = preemptionPolicy
@@ -89,7 +89,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         """
         return self.__description
 
-    def preemptionPolicy(self) -> Optional[corev1.PreemptionPolicy]:
+    def preemptionPolicy(self) -> Optional[k8sv1.PreemptionPolicy]:
         """
         PreemptionPolicy is the Policy for preempting pods with lower priority.
         One of Never, PreemptLowerPriority.

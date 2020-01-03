@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import resource
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
 
@@ -21,7 +21,7 @@ class Overhead(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, podFixed: Dict[corev1.ResourceName, "resource.Quantity"] = None):
+    def __init__(self, podFixed: Dict[k8sv1.ResourceName, "resource.Quantity"] = None):
         super().__init__()
         self.__podFixed = podFixed if podFixed is not None else {}
 
@@ -32,13 +32,13 @@ class Overhead(types.Object):
         check_type(
             "podFixed",
             podFixed,
-            Optional[Dict[corev1.ResourceName, "resource.Quantity"]],
+            Optional[Dict[k8sv1.ResourceName, "resource.Quantity"]],
         )
         if podFixed:  # omit empty
             v["podFixed"] = podFixed
         return v
 
-    def podFixed(self) -> Optional[Dict[corev1.ResourceName, "resource.Quantity"]]:
+    def podFixed(self) -> Optional[Dict[k8sv1.ResourceName, "resource.Quantity"]]:
         """
         PodFixed represents the fixed resource overhead associated with running a pod.
         """
@@ -56,7 +56,7 @@ class Scheduling(types.Object):
     def __init__(
         self,
         nodeSelector: Dict[str, str] = None,
-        tolerations: List["corev1.Toleration"] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
@@ -70,7 +70,7 @@ class Scheduling(types.Object):
         if nodeSelector:  # omit empty
             v["nodeSelector"] = nodeSelector
         tolerations = self.tolerations()
-        check_type("tolerations", tolerations, Optional[List["corev1.Toleration"]])
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
@@ -85,7 +85,7 @@ class Scheduling(types.Object):
         """
         return self.__nodeSelector
 
-    def tolerations(self) -> Optional[List["corev1.Toleration"]]:
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
         tolerations are appended (excluding duplicates) to pods running with this
         RuntimeClass during admission, effectively unioning the set of nodes

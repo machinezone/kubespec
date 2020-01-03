@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, Optional
@@ -29,7 +29,7 @@ class JobSpec(types.Object):
         backoffLimit: int = None,
         selector: "metav1.LabelSelector" = None,
         manualSelector: bool = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         ttlSecondsAfterFinished: int = None,
     ):
         super().__init__()
@@ -39,7 +39,7 @@ class JobSpec(types.Object):
         self.__backoffLimit = backoffLimit if backoffLimit is not None else 6
         self.__selector = selector
         self.__manualSelector = manualSelector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__ttlSecondsAfterFinished = ttlSecondsAfterFinished
 
     @typechecked
@@ -70,7 +70,7 @@ class JobSpec(types.Object):
         if manualSelector is not None:  # omit empty
             v["manualSelector"] = manualSelector
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         ttlSecondsAfterFinished = self.ttlSecondsAfterFinished()
         check_type("ttlSecondsAfterFinished", ttlSecondsAfterFinished, Optional[int])
@@ -136,7 +136,7 @@ class JobSpec(types.Object):
         """
         return self.__manualSelector
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         Describes the pod that will be created when executing a job.
         More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/

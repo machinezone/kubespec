@@ -9,7 +9,7 @@ from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
 from kubespec.k8s import resource
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional
@@ -314,7 +314,7 @@ class ResourceMetricSource(types.Object):
     @typechecked
     def __init__(
         self,
-        name: corev1.ResourceName = None,
+        name: k8sv1.ResourceName = None,
         targetAverageUtilization: int = None,
         targetAverageValue: "resource.Quantity" = None,
     ):
@@ -327,7 +327,7 @@ class ResourceMetricSource(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         name = self.name()
-        check_type("name", name, corev1.ResourceName)
+        check_type("name", name, k8sv1.ResourceName)
         v["name"] = name
         targetAverageUtilization = self.targetAverageUtilization()
         check_type("targetAverageUtilization", targetAverageUtilization, Optional[int])
@@ -341,7 +341,7 @@ class ResourceMetricSource(types.Object):
             v["targetAverageValue"] = targetAverageValue
         return v
 
-    def name(self) -> corev1.ResourceName:
+    def name(self) -> k8sv1.ResourceName:
         """
         name is the name of the resource in question.
         """

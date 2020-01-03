@@ -8,7 +8,7 @@
 from kubespec import context
 from kubespec import types
 from kubespec.k8s import base
-from kubespec.k8s.core import v1 as corev1
+from kubespec.k8s import v1 as k8sv1
 from kubespec.k8s.meta import v1 as metav1
 from typeguard import check_type, typechecked
 from typing import Any, Dict, List, Optional, Union
@@ -360,14 +360,14 @@ class DaemonSetSpec(types.Object):
     def __init__(
         self,
         selector: "metav1.LabelSelector" = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         updateStrategy: "DaemonSetUpdateStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
     ):
         super().__init__()
         self.__selector = selector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__updateStrategy = (
             updateStrategy if updateStrategy is not None else DaemonSetUpdateStrategy()
         )
@@ -384,7 +384,7 @@ class DaemonSetSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         updateStrategy = self.updateStrategy()
         check_type(
@@ -410,7 +410,7 @@ class DaemonSetSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         An object that describes the pod that will be created.
         The DaemonSet will create exactly one copy of this pod on every node
@@ -605,7 +605,7 @@ class DeploymentSpec(types.Object):
         self,
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
         strategy: "DeploymentStrategy" = None,
         minReadySeconds: int = None,
         revisionHistoryLimit: int = None,
@@ -615,7 +615,7 @@ class DeploymentSpec(types.Object):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
         self.__minReadySeconds = minReadySeconds
         self.__revisionHistoryLimit = (
@@ -640,7 +640,7 @@ class DeploymentSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, "corev1.PodTemplateSpec")
+        check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
         strategy = self.strategy()
         check_type("strategy", strategy, Optional["DeploymentStrategy"])
@@ -677,7 +677,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> "corev1.PodTemplateSpec":
+    def template(self) -> "k8sv1.PodTemplateSpec":
         """
         Template describes the pods that will be created.
         """
@@ -1429,7 +1429,7 @@ class NetworkPolicyPort(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, protocol: corev1.Protocol = None, port: Union[int, str] = None):
+    def __init__(self, protocol: k8sv1.Protocol = None, port: Union[int, str] = None):
         super().__init__()
         self.__protocol = protocol
         self.__port = port
@@ -1438,7 +1438,7 @@ class NetworkPolicyPort(types.Object):
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
         protocol = self.protocol()
-        check_type("protocol", protocol, Optional[corev1.Protocol])
+        check_type("protocol", protocol, Optional[k8sv1.Protocol])
         if protocol is not None:  # omit empty
             v["protocol"] = protocol
         port = self.port()
@@ -1447,7 +1447,7 @@ class NetworkPolicyPort(types.Object):
             v["port"] = port
         return v
 
-    def protocol(self) -> Optional[corev1.Protocol]:
+    def protocol(self) -> Optional[k8sv1.Protocol]:
         """
         Optional.  The protocol (TCP, UDP, or SCTP) which traffic must match.
         If not specified, this field defaults to TCP.
@@ -1839,7 +1839,7 @@ class SELinuxStrategyOptions(types.Object):
     def __init__(
         self,
         rule: SELinuxStrategy = None,
-        seLinuxOptions: "corev1.SELinuxOptions" = None,
+        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__rule = rule
@@ -1852,7 +1852,7 @@ class SELinuxStrategyOptions(types.Object):
         check_type("rule", rule, SELinuxStrategy)
         v["rule"] = rule
         seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["corev1.SELinuxOptions"])
+        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
         if seLinuxOptions is not None:  # omit empty
             v["seLinuxOptions"] = seLinuxOptions
         return v
@@ -1863,7 +1863,7 @@ class SELinuxStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def seLinuxOptions(self) -> Optional["corev1.SELinuxOptions"]:
+    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
@@ -1926,9 +1926,9 @@ class PodSecurityPolicySpec(types.Object):
     def __init__(
         self,
         privileged: bool = None,
-        defaultAddCapabilities: List[corev1.Capability] = None,
-        requiredDropCapabilities: List[corev1.Capability] = None,
-        allowedCapabilities: List[corev1.Capability] = None,
+        defaultAddCapabilities: List[k8sv1.Capability] = None,
+        requiredDropCapabilities: List[k8sv1.Capability] = None,
+        allowedCapabilities: List[k8sv1.Capability] = None,
         volumes: List[FSType] = None,
         hostNetwork: bool = None,
         hostPorts: List["HostPortRange"] = None,
@@ -1947,7 +1947,7 @@ class PodSecurityPolicySpec(types.Object):
         allowedCSIDrivers: List["AllowedCSIDriver"] = None,
         allowedUnsafeSysctls: List[str] = None,
         forbiddenSysctls: List[str] = None,
-        allowedProcMountTypes: List[corev1.ProcMountType] = None,
+        allowedProcMountTypes: List[k8sv1.ProcMountType] = None,
         runtimeClass: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
@@ -2013,7 +2013,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "defaultAddCapabilities",
             defaultAddCapabilities,
-            Optional[List[corev1.Capability]],
+            Optional[List[k8sv1.Capability]],
         )
         if defaultAddCapabilities:  # omit empty
             v["defaultAddCapabilities"] = defaultAddCapabilities
@@ -2021,15 +2021,13 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "requiredDropCapabilities",
             requiredDropCapabilities,
-            Optional[List[corev1.Capability]],
+            Optional[List[k8sv1.Capability]],
         )
         if requiredDropCapabilities:  # omit empty
             v["requiredDropCapabilities"] = requiredDropCapabilities
         allowedCapabilities = self.allowedCapabilities()
         check_type(
-            "allowedCapabilities",
-            allowedCapabilities,
-            Optional[List[corev1.Capability]],
+            "allowedCapabilities", allowedCapabilities, Optional[List[k8sv1.Capability]]
         )
         if allowedCapabilities:  # omit empty
             v["allowedCapabilities"] = allowedCapabilities
@@ -2121,7 +2119,7 @@ class PodSecurityPolicySpec(types.Object):
         check_type(
             "allowedProcMountTypes",
             allowedProcMountTypes,
-            Optional[List[corev1.ProcMountType]],
+            Optional[List[k8sv1.ProcMountType]],
         )
         if allowedProcMountTypes:  # omit empty
             v["allowedProcMountTypes"] = allowedProcMountTypes
@@ -2139,7 +2137,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__privileged
 
-    def defaultAddCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def defaultAddCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         defaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capability in both
@@ -2148,14 +2146,14 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__defaultAddCapabilities
 
-    def requiredDropCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def requiredDropCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         requiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
         """
         return self.__requiredDropCapabilities
 
-    def allowedCapabilities(self) -> Optional[List[corev1.Capability]]:
+    def allowedCapabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         allowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field may be added at the pod author's discretion.
@@ -2297,7 +2295,7 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__forbiddenSysctls
 
-    def allowedProcMountTypes(self) -> Optional[List[corev1.ProcMountType]]:
+    def allowedProcMountTypes(self) -> Optional[List[k8sv1.ProcMountType]]:
         """
         AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
         Empty or nil indicates that only the DefaultProcMountType may be used.
@@ -2366,13 +2364,13 @@ class ReplicaSetSpec(types.Object):
         replicas: int = None,
         minReadySeconds: int = None,
         selector: "metav1.LabelSelector" = None,
-        template: "corev1.PodTemplateSpec" = None,
+        template: "k8sv1.PodTemplateSpec" = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__minReadySeconds = minReadySeconds
         self.__selector = selector
-        self.__template = template if template is not None else corev1.PodTemplateSpec()
+        self.__template = template if template is not None else k8sv1.PodTemplateSpec()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2390,7 +2388,7 @@ class ReplicaSetSpec(types.Object):
         if selector is not None:  # omit empty
             v["selector"] = selector
         template = self.template()
-        check_type("template", template, Optional["corev1.PodTemplateSpec"])
+        check_type("template", template, Optional["k8sv1.PodTemplateSpec"])
         v["template"] = template
         return v
 
@@ -2420,7 +2418,7 @@ class ReplicaSetSpec(types.Object):
         """
         return self.__selector
 
-    def template(self) -> Optional["corev1.PodTemplateSpec"]:
+    def template(self) -> Optional["k8sv1.PodTemplateSpec"]:
         """
         Template is the object that describes the pod that will be created if
         insufficient replicas are detected.
