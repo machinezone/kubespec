@@ -1,2 +1,2 @@
-pytz>=2019.2
-typeguard>=2.6.0
+pytz>=2019.3
+typeguard>=2.7.1

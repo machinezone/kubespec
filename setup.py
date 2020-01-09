@@ -9,7 +9,7 @@ with open("README.md") as f:
 
 setup(
     name="kubespec",
-    version="0.1.dev20191106",
+    version="0.1.dev20200109",
     url="https://github.com/machinezone/kubespec",
     author="Andy Bursavich",
     author_email="abursavich@mz.com",
