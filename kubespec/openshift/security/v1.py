@@ -643,7 +643,6 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
     That exposure is deprecated and will be removed in a future release - users
     should instead use the security.openshift.io group to manage
     SecurityContextConstraints.
-    +kubebuilder:singular=securitycontextconstraint
     """
 
     @context.scoped

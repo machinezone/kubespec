@@ -33,7 +33,6 @@ AuthenticationType = base.Enum(
 ClusterID = base.Enum("ClusterID", {})
 
 
-# +kubebuilder:validation:Enum="";identity;aescbc
 EncryptionType = base.Enum(
     "EncryptionType",
     {
@@ -241,7 +240,6 @@ class SecretNameReference(types.Object):
     def name(self) -> str:
         """
         name is the metadata.name of the referenced secret
-        +kubebuilder:validation:Required
         +required
         """
         return self.__name
@@ -349,7 +347,6 @@ class ConfigMapNameReference(types.Object):
     def name(self) -> str:
         """
         name is the metadata.name of the referenced config map
-        +kubebuilder:validation:Required
         +required
         """
         return self.__name
@@ -764,7 +761,6 @@ class APIServer(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "APIServerSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -807,7 +803,6 @@ class AdmissionPluginConfig(types.Object):
         Configuration is an embedded configuration object to be used as the plugin's
         configuration. If present, it will be used instead of the path to the configuration file.
         +nullable
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__configuration
 
@@ -974,7 +969,6 @@ class AuditConfig(types.Object):
         as the audit policy configuration. If present, it will be used instead of
         the path to the policy file.
         +nullable
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__policyConfiguration
 
@@ -1139,7 +1133,6 @@ class Authentication(base.TypedObject, base.MetadataObject):
     def spec(self) -> "AuthenticationSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -1609,7 +1602,6 @@ class Build(base.TypedObject, base.MetadataObject):
     def spec(self) -> "BuildSpec":
         """
         Spec holds user-settable values for the build controller configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -1744,7 +1736,6 @@ class ClusterNetworkEntry(types.Object):
     def hostPrefix(self) -> int:
         """
         The size (prefix) of block to allocate to each node.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__hostPrefix
 
@@ -1793,7 +1784,6 @@ class ClusterOperator(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ClusterOperatorSpec":
         """
         spec holds configuration that could apply to any operator.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -1845,7 +1835,6 @@ class ComponentOverride(types.Object):
     def kind(self) -> str:
         """
         kind indentifies which object to override.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__kind
@@ -1853,7 +1842,6 @@ class ComponentOverride(types.Object):
     def group(self) -> str:
         """
         group identifies the API group that the kind is in.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__group
@@ -1862,7 +1850,6 @@ class ComponentOverride(types.Object):
         """
         namespace is the component's namespace. If the resource is cluster
         scoped, the namespace should be empty.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__namespace
@@ -1870,7 +1857,6 @@ class ComponentOverride(types.Object):
     def name(self) -> str:
         """
         name is the component's name.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__name
@@ -1880,7 +1866,6 @@ class ComponentOverride(types.Object):
         unmanaged controls if cluster version operator should stop managing the
         resources in this cluster.
         Default: false
-        +kubebuilder:validation:Required
         +required
         """
         return self.__unmanaged
@@ -1998,7 +1983,6 @@ class ClusterVersionSpec(types.Object):
         clusterID uniquely identifies this cluster. This is expected to be
         an RFC4122 UUID value (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx in
         hexadecimal values). This is a required field.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__clusterID
@@ -2080,7 +2064,6 @@ class ClusterVersion(base.TypedObject, base.MetadataObject):
         """
         spec is the desired state of the cluster version - the operator will work
         to ensure that the desired version is applied to the cluster.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2153,7 +2136,6 @@ class ConsoleAuthentication(types.Object):
         Logging out of the console will destroy the user's token. The logoutRedirect
         provides the user the option to perform single logout (SLO) through the identity
         provider to destroy their single sign-on session.
-        +kubebuilder:validation:Pattern=`^$|^((https):\/\/?)[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|\/?))$`
         """
         return self.__logoutRedirect
 
@@ -2219,7 +2201,6 @@ class Console(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ConsoleSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2409,7 +2390,6 @@ class DNS(base.TypedObject, base.MetadataObject):
     def spec(self) -> "DNSSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2749,7 +2729,6 @@ class FeatureGate(base.TypedObject, base.MetadataObject):
     def spec(self) -> "FeatureGateSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -3544,16 +3523,12 @@ class HubSource(types.Object):
     def name(self) -> str:
         """
         name is the name of one of the default hub sources
-        +kubebuilder:validation:MaxLength=253
-        +kubebuilder:validation:MinLength=1
-        +kubebuilder:Required
         """
         return self.__name
 
     def disabled(self) -> bool:
         """
         disabled is used to disable a default hub source on cluster
-        +kubebuilder:Required
         """
         return self.__disabled
 
@@ -4521,7 +4496,6 @@ class Image(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ImageSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -4592,7 +4566,6 @@ class Infrastructure(base.TypedObject, base.MetadataObject):
     def spec(self) -> "InfrastructureSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -4662,7 +4635,6 @@ class Ingress(base.TypedObject, base.MetadataObject):
     def spec(self) -> "IngressSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -4782,7 +4754,6 @@ class Network(base.TypedObject, base.MetadataObject):
         As a general rule, this SHOULD NOT be read directly. Instead, you should
         consume the NetworkStatus, as it indicates the currently deployed configuration.
         Currently, most spec fields are immutable after installation. Please view the individual ones for further details on each.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -5009,7 +4980,6 @@ class OAuth(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "OAuthSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -5069,7 +5039,6 @@ class OperatorHub(base.TypedObject, base.NamespacedMetadataObject):
     OperatorHub is the Schema for the operatorhubs API. It can be used to change
     the state of the default hub sources for OperatorHub on the cluster from
     enabled to disabled and vice versa.
-    +kubebuilder:subresource:status
     +genclient:nonNamespaced
     """
 
@@ -5214,7 +5183,6 @@ class Project(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ProjectSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -5254,7 +5222,6 @@ class Proxy(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ProxySpec":
         """
         Spec holds user-settable values for the proxy configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -5418,7 +5385,6 @@ class Scheduler(base.TypedObject, base.MetadataObject):
     def spec(self) -> "SchedulerSpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec

@@ -131,7 +131,6 @@ class Action(types.Object):
     def content(self) -> Optional["runtime.RawExtension"]:
         """
         Content is the actual content of the request for create and update
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__content
 
@@ -200,7 +199,6 @@ class PolicyRule(types.Object):
         """
         AttributeRestrictions will vary depending on what the Authorizer/AuthorizationAttributeBuilder pair supports.
         If the Authorizer does not recognize how to handle the AttributeRestrictions, the Authorizer should report an error.
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__attributeRestrictions
 

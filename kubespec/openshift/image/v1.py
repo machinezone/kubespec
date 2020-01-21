@@ -522,7 +522,6 @@ class Image(base.TypedObject, base.MetadataObject):
     def dockerImageMetadata(self) -> Optional["runtime.RawExtension"]:
         """
         DockerImageMetadata contains metadata about this image
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__dockerImageMetadata
 

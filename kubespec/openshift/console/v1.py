@@ -14,7 +14,6 @@ from typing import Any, Dict, List, Optional
 
 
 # ConsoleLinkLocationSelector is a set of possible menu targets to which a link may be appended.
-# +kubebuilder:validation:Pattern=`^(ApplicationMenu|HelpMenu|UserMenu|NamespaceDashboard)$`
 ConsoleLinkLocation = base.Enum(
     "ConsoleLinkLocation",
     {
@@ -32,7 +31,6 @@ ConsoleLinkLocation = base.Enum(
 
 # ConsoleNotificationLocationSelector is a set of possible notification targets
 # to which a notification may be appended.
-# +kubebuilder:validation:Pattern=`^(BannerTop|BannerBottom|BannerTopBottom)$`
 ConsoleNotificationLocation = base.Enum(
     "ConsoleNotificationLocation",
     {
@@ -47,17 +45,14 @@ ConsoleNotificationLocation = base.Enum(
 
 
 # ConsoleYAMLSampleDescription of the YAML sample.
-# +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 ConsoleYAMLSampleDescription = base.Enum("ConsoleYAMLSampleDescription", {})
 
 
 # ConsoleYAMLSampleTitle of the YAML sample.
-# +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 ConsoleYAMLSampleTitle = base.Enum("ConsoleYAMLSampleTitle", {})
 
 
 # ConsoleYAMLSampleYAML is the YAML sample to display.
-# +kubebuilder:validation:Pattern=`^(.|\s)*\S(.|\s)*$`
 ConsoleYAMLSampleYAML = base.Enum("ConsoleYAMLSampleYAML", {})
 
 
@@ -129,7 +124,6 @@ class CLIDownloadLink(types.Object):
     def href(self) -> str:
         """
         href is the absolute secure URL for the link (must use https)
-        +kubebuilder:validation:Pattern=`^https://`
         """
         return self.__href
 
@@ -274,7 +268,6 @@ class ConsoleExternalLogLinkSpec(types.Object):
                     - e.g. `{"key1":"value1","key2":"value2"}`
         
         e.g., https://example.com/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
-        +kubebuilder:validation:Pattern=`^https://`
         """
         return self.__hrefTemplate
 
@@ -355,7 +348,6 @@ class Link(types.Object):
     def href(self) -> str:
         """
         href is the absolute secure URL for the link (must use https)
-        +kubebuilder:validation:Pattern=`^https://`
         """
         return self.__href
 

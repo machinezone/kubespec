@@ -476,7 +476,6 @@ class IdentityProvider(types.Object):
     def provider(self) -> "runtime.RawExtension":
         """
         provider contains the information about how to set up a specific identity provider
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__provider
 

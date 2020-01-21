@@ -179,7 +179,6 @@ class ServiceCertSignerOperatorConfigSpec(types.Object):
         it will end up overlaying in the following order:
         1. hardcoded default
         2. this config
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__serviceServingCertSignerConfig
 
@@ -189,7 +188,6 @@ class ServiceCertSignerOperatorConfigSpec(types.Object):
         it will end up overlaying in the following order:
         1. hardcoded default
         2. this config
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__apiServiceCABundleInjectorConfig
 
@@ -199,7 +197,6 @@ class ServiceCertSignerOperatorConfigSpec(types.Object):
         it will end up overlaying in the following order:
         1. hardcoded default
         2. this config
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__configMapCABundleInjectorConfig
 

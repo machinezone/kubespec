@@ -17,7 +17,6 @@ from typing import Any, Dict, List, Optional
 
 
 # Brand is a specific supported brand within the console.
-# +kubebuilder:validation:Pattern=`^$|^(ocp|origin|okd|dedicated|online|azure)$`
 Brand = base.Enum(
     "Brand",
     {
@@ -113,7 +112,6 @@ MacvlanMode = base.Enum(
 )
 
 
-# +kubebuilder:validation:Pattern=`^(Managed|Unmanaged|Force|Removed)$`
 ManagementState = base.Enum(
     "ManagementState",
     {
@@ -456,7 +454,6 @@ class SimpleMacvlanConfig(types.Object):
         """
         mtu is the mtu to use for the macvlan interface. if unset, host's
         kernel will select the value.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__mtu
 
@@ -620,7 +617,6 @@ class OperatorSpec(types.Object):
         2. observedConfig
         3. unsupportedConfigOverrides
         +nullable
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__unsupportedConfigOverrides
 
@@ -629,7 +625,6 @@ class OperatorSpec(types.Object):
         observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
         it is an input to the level for the operator
         +nullable
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__observedConfig
 
@@ -688,7 +683,6 @@ class Authentication(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> Optional["AuthenticationSpec"]:
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -723,9 +717,6 @@ class ClusterNetworkEntry(types.Object):
         return self.__cidr
 
     def hostPrefix(self) -> int:
-        """
-        +kubebuilder:validation:Minimum=0
-        """
         return self.__hostPrefix
 
 
@@ -792,7 +783,6 @@ class ConsoleCustomization(types.Object):
         of the web console.  Providing documentationBaseURL will override the default
         documentation URL.
         Invalid value will prevent a console rollout.
-        +kubebuilder:validation:Pattern=`^$|^((https):\/\/?)[^\s()<>]+(?:\([\w\d]+\)|([^[:punct:]\s]|\/?))\/$`
         """
         return self.__documentationBaseURL
 
@@ -958,7 +948,6 @@ class Console(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> Optional["ConsoleSpec"]:
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -993,8 +982,6 @@ class ForwardPlugin(types.Object):
         than 53.
         
         A maximum of 15 upstreams is allowed per ForwardPlugin.
-        
-        +kubebuilder:validation:MaxItems=15
         """
         return self.__upstreams
 
@@ -1199,14 +1186,12 @@ class KuryrConfig(types.Object):
     def daemonProbesPort(self) -> Optional[int]:
         """
         The port kuryr-daemon will listen for readiness and liveness requests.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__daemonProbesPort
 
     def controllerProbesPort(self) -> Optional[int]:
         """
         The port kuryr-controller will listen for readiness and liveness requests.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__controllerProbesPort
 
@@ -1243,7 +1228,6 @@ class KuryrConfig(types.Object):
         will disable this upper bound, effectively preventing pools from shrinking and this
         is the default value. For more information about port pools see
         enablePortPoolsPrepopulation setting.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__poolMaxPorts
 
@@ -1253,7 +1237,6 @@ class KuryrConfig(types.Object):
         If the number of ports is lower than this setting, new ports will get created and
         added to pool. The default is 1. For more information about port pools see
         enablePortPoolsPrepopulation setting.
-        +kubebuilder:validation:Minimum=1
         """
         return self.__poolMinPorts
 
@@ -1262,7 +1245,6 @@ class KuryrConfig(types.Object):
         poolBatchPorts sets a number of ports that should be created in a single batch request
         to extend the port pool. The default is 3. For more information about port pools see
         enablePortPoolsPrepopulation setting.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__poolBatchPorts
 
@@ -1336,7 +1318,6 @@ class OVNKubernetesConfig(types.Object):
         mtu is the MTU to use for the tunnel interface. This must be 100
         bytes smaller than the uplink mtu.
         Default is 1400
-        +kubebuilder:validation:Minimum=0
         """
         return self.__mtu
 
@@ -1344,7 +1325,6 @@ class OVNKubernetesConfig(types.Object):
         """
         geneve port is the UDP port to be used by geneve encapulation.
         Default is 6081
-        +kubebuilder:validation:Minimum=1
         """
         return self.__genevePort
 
@@ -1411,7 +1391,6 @@ class OpenShiftSDNConfig(types.Object):
     def vxlanPort(self) -> Optional[int]:
         """
         vxlanPort is the port to use for all vxlan packets. The default is 4789.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__vxlanPort
 
@@ -1419,7 +1398,6 @@ class OpenShiftSDNConfig(types.Object):
         """
         mtu is the mtu to use for the tunnel interface. Defaults to 1450 if unset.
         This must be 50 bytes smaller than the machine's uplink.
-        +kubebuilder:validation:Minimum=0
         """
         return self.__mtu
 
@@ -1543,7 +1521,6 @@ class LoadBalancerStrategy(types.Object):
         scope indicates the scope at which the load balancer is exposed.
         Possible values are "External" and "Internal".
         
-        +kubebuilder:validation:Required
         +required
         """
         return self.__scope
@@ -1640,7 +1617,6 @@ class EndpointPublishingStrategy(types.Object):
         networking, and is not explicitly published. The user must manually publish
         the ingress controller.
         +unionDiscriminator
-        +kubebuilder:validation:Required
         +required
         """
         return self.__type
@@ -1792,7 +1768,6 @@ class Etcd(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "EtcdSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2160,7 +2135,6 @@ class KubeAPIServer(base.TypedObject, base.MetadataObject):
     def spec(self) -> "KubeAPIServerSpec":
         """
         spec is the specification of the desired behavior of the Kubernetes API Server
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2225,7 +2199,6 @@ class KubeControllerManager(base.TypedObject, base.MetadataObject):
     def spec(self) -> "KubeControllerManagerSpec":
         """
         spec is the specification of the desired behavior of the Kubernetes Controller Manager
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2290,7 +2263,6 @@ class KubeScheduler(base.TypedObject, base.MetadataObject):
     def spec(self) -> "KubeSchedulerSpec":
         """
         spec is the specification of the desired behavior of the Kubernetes Scheduler
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2350,7 +2322,6 @@ class KubeStorageVersionMigrator(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "KubeStorageVersionMigratorSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2638,7 +2609,6 @@ class OpenShiftAPIServer(base.TypedObject, base.MetadataObject):
     def spec(self) -> "OpenShiftAPIServerSpec":
         """
         spec is the specification of the desired behavior of the OpenShift API Server.
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2698,7 +2668,6 @@ class OpenShiftControllerManager(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "OpenShiftControllerManagerSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2759,7 +2728,6 @@ class ServiceCA(base.TypedObject, base.MetadataObject):
     def spec(self) -> "ServiceCASpec":
         """
         spec holds user settable values for configuration
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2819,7 +2787,6 @@ class ServiceCatalogAPIServer(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "ServiceCatalogAPIServerSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
@@ -2881,7 +2848,6 @@ class ServiceCatalogControllerManager(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "ServiceCatalogControllerManagerSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec

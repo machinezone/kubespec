@@ -303,7 +303,6 @@ class Template(base.TypedObject, base.NamespacedMetadataObject):
         is, or contains, a ${PARAMETER_REFERENCE}, the resolved
         value after parameter substitution will be respected and the object
         will be created in that namespace.
-        +kubebuilder:pruning:PreserveUnknownFields
         """
         return self.__objects
 

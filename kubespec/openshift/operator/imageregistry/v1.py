@@ -244,9 +244,6 @@ class ImageRegistryConfigStorageAzure(types.Object):
     def container(self) -> str:
         """
         container defines Azure's container to be used by registry.
-        +kubebuilder:validation:MaxLength=63
-        +kubebuilder:validation:MinLength=3
-        +kubebuilder:validation:Pattern=`^[0-9a-z]+(-[0-9a-z]+)*$`
         """
         return self.__container
 

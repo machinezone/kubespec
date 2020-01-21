@@ -150,7 +150,6 @@ class Config(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> "ConfigSpec":
         """
-        +kubebuilder:validation:Required
         +required
         """
         return self.__spec
