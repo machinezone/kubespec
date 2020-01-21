@@ -46,6 +46,8 @@ EndpointPublishingStrategyType = base.Enum(
         # LoadBalancerService publishes the ingress controller using a Kubernetes
         # LoadBalancer Service.
         "LoadBalancerService": "LoadBalancerService",
+        # NodePortService publishes the ingress controller using a Kubernetes NodePort Service.
+        "NodePortService": "NodePortService",
         # Private does not publish the ingress controller.
         "Private": "Private",
     },
@@ -128,6 +130,19 @@ ManagementState = base.Enum(
         # Unmanaged means that the operator will not take any action related to the component
         # Some operators might not support this management state as it might damage the cluster and lead to manual recovery.
         "Unmanaged": "Unmanaged",
+    },
+)
+
+
+# NamespaceOwnershipCheck is a route admission policy component that describes
+# how host name claims across namespaces should be handled.
+NamespaceOwnershipCheck = base.Enum(
+    "NamespaceOwnershipCheck",
+    {
+        # InterNamespaceAllowed allows routes to claim different paths of the same host name across namespaces.
+        "InterNamespaceAllowed": "InterNamespaceAllowed",
+        # Strict does not allow routes to claim the same host name across namespaces.
+        "Strict": "Strict",
     },
 )
 
@@ -683,6 +698,70 @@ class Authentication(base.TypedObject, base.MetadataObject):
 
     def spec(self) -> Optional["AuthenticationSpec"]:
         """
+        +required
+        """
+        return self.__spec
+
+
+class CSISnapshotControllerSpec(types.Object):
+    """
+    CSISnapshotControllerSpec is the specification of the desired behavior of the CSISnapshotController operator.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, operatorSpec: "OperatorSpec" = None):
+        super().__init__()
+        self.__operatorSpec = (
+            operatorSpec if operatorSpec is not None else OperatorSpec()
+        )
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        operatorSpec = self.operatorSpec()
+        check_type("operatorSpec", operatorSpec, "OperatorSpec")
+        v.update(operatorSpec._root())  # inline
+        return v
+
+    def operatorSpec(self) -> "OperatorSpec":
+        return self.__operatorSpec
+
+
+class CSISnapshotController(base.TypedObject, base.MetadataObject):
+    """
+    CSISnapshotController provides a means to configure an operator to manage the CSI snapshots. `cluster` is the canonical name.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "CSISnapshotControllerSpec" = None,
+    ):
+        super().__init__(
+            apiVersion="operator.openshift.io/v1",
+            kind="CSISnapshotController",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__spec = spec if spec is not None else CSISnapshotControllerSpec()
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        spec = self.spec()
+        check_type("spec", spec, "CSISnapshotControllerSpec")
+        v["spec"] = spec
+        return v
+
+    def spec(self) -> "CSISnapshotControllerSpec":
+        """
+        spec holds user settable values for configuration
         +required
         """
         return self.__spec
@@ -1526,6 +1605,14 @@ class LoadBalancerStrategy(types.Object):
         return self.__scope
 
 
+class NodePortStrategy(types.Object):
+    """
+    NodePortStrategy holds parameters for the NodePortService endpoint publishing strategy.
+    """
+
+    pass  # FIXME
+
+
 class PrivateStrategy(types.Object):
     """
     PrivateStrategy holds parameters for the Private endpoint publishing
@@ -1551,12 +1638,14 @@ class EndpointPublishingStrategy(types.Object):
         loadBalancer: "LoadBalancerStrategy" = None,
         hostNetwork: "HostNetworkStrategy" = None,
         private: "PrivateStrategy" = None,
+        nodePort: "NodePortStrategy" = None,
     ):
         super().__init__()
         self.__type = type
         self.__loadBalancer = loadBalancer
         self.__hostNetwork = hostNetwork
         self.__private = private
+        self.__nodePort = nodePort
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1576,6 +1665,10 @@ class EndpointPublishingStrategy(types.Object):
         check_type("private", private, Optional["PrivateStrategy"])
         if private is not None:  # omit empty
             v["private"] = private
+        nodePort = self.nodePort()
+        check_type("nodePort", nodePort, Optional["NodePortStrategy"])
+        if nodePort is not None:  # omit empty
+            v["nodePort"] = nodePort
         return v
 
     def type(self) -> EndpointPublishingStrategyType:
@@ -1616,6 +1709,17 @@ class EndpointPublishingStrategy(types.Object):
         In this configuration, the ingress controller deployment uses container
         networking, and is not explicitly published. The user must manually publish
         the ingress controller.
+        
+        * NodePortService
+        
+        Publishes the ingress controller using a Kubernetes NodePort Service.
+        
+        In this configuration, the ingress controller deployment uses container
+        networking. A NodePort Service is created to publish the deployment. The
+        specific node ports are dynamically allocated by OpenShift; however, to
+        support static port allocations, user changes to the node port
+        field of the managed NodePort Service will preserved.
+        
         +unionDiscriminator
         +required
         """
@@ -1641,6 +1745,13 @@ class EndpointPublishingStrategy(types.Object):
         strategy. Present only if type is Private.
         """
         return self.__private
+
+    def nodePort(self) -> Optional["NodePortStrategy"]:
+        """
+        nodePort holds parameters for the NodePortService endpoint publishing strategy.
+        Present only if type is NodePortService.
+        """
+        return self.__nodePort
 
 
 class StaticPodOperatorSpec(types.Object):
@@ -1829,6 +1940,45 @@ class NodePlacement(types.Object):
         return self.__tolerations
 
 
+class RouteAdmissionPolicy(types.Object):
+    """
+    RouteAdmissionPolicy is an admission policy for allowing new route claims.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(self, namespaceOwnership: NamespaceOwnershipCheck = None):
+        super().__init__()
+        self.__namespaceOwnership = namespaceOwnership
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        namespaceOwnership = self.namespaceOwnership()
+        check_type(
+            "namespaceOwnership", namespaceOwnership, Optional[NamespaceOwnershipCheck]
+        )
+        if namespaceOwnership:  # omit empty
+            v["namespaceOwnership"] = namespaceOwnership
+        return v
+
+    def namespaceOwnership(self) -> Optional[NamespaceOwnershipCheck]:
+        """
+        namespaceOwnership describes how host name claims across namespaces should
+        be handled.
+        
+        Value must be one of:
+        
+        - Strict: Do not allow routes in different namespaces to claim the same host.
+        
+        - InterNamespaceAllowed: Allow routes to claim different paths of the same
+          host name across namespaces.
+        
+        If empty, the default is Strict.
+        """
+        return self.__namespaceOwnership
+
+
 class IngressControllerSpec(types.Object):
     """
     IngressControllerSpec is the specification of the desired behavior of the
@@ -1847,6 +1997,7 @@ class IngressControllerSpec(types.Object):
         routeSelector: "metav1.LabelSelector" = None,
         nodePlacement: "NodePlacement" = None,
         tlsSecurityProfile: "configv1.TLSSecurityProfile" = None,
+        routeAdmission: "RouteAdmissionPolicy" = None,
     ):
         super().__init__()
         self.__domain = domain
@@ -1857,6 +2008,7 @@ class IngressControllerSpec(types.Object):
         self.__routeSelector = routeSelector
         self.__nodePlacement = nodePlacement
         self.__tlsSecurityProfile = tlsSecurityProfile
+        self.__routeAdmission = routeAdmission
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1907,6 +2059,10 @@ class IngressControllerSpec(types.Object):
         )
         if tlsSecurityProfile is not None:  # omit empty
             v["tlsSecurityProfile"] = tlsSecurityProfile
+        routeAdmission = self.routeAdmission()
+        check_type("routeAdmission", routeAdmission, Optional["RouteAdmissionPolicy"])
+        if routeAdmission is not None:  # omit empty
+            v["routeAdmission"] = routeAdmission
         return v
 
     def domain(self) -> Optional[str]:
@@ -1948,6 +2104,7 @@ class IngressControllerSpec(types.Object):
           AWS:      LoadBalancerService (with External scope)
           Azure:    LoadBalancerService (with External scope)
           GCP:      LoadBalancerService (with External scope)
+          IBMCloud: LoadBalancerService (with External scope)
           Libvirt:  HostNetwork
         
         Any other platform types (including None) default to HostNetwork.
@@ -2022,6 +2179,16 @@ class IngressControllerSpec(types.Object):
         requires TLS 1.3.
         """
         return self.__tlsSecurityProfile
+
+    def routeAdmission(self) -> Optional["RouteAdmissionPolicy"]:
+        """
+        routeAdmission defines a policy for handling new route claims (for example,
+        to allow or deny claims across namespaces).
+        
+        If empty, defaults will be applied. See specific routeAdmission fields
+        for details about their defaults.
+        """
+        return self.__routeAdmission
 
 
 class IngressController(base.TypedObject, base.NamespacedMetadataObject):

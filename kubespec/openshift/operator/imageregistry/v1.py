@@ -745,6 +745,7 @@ class ImageRegistrySpec(types.Object):
         resources: "k8sv1.ResourceRequirements" = None,
         nodeSelector: Dict[str, str] = None,
         tolerations: List["k8sv1.Toleration"] = None,
+        rolloutStrategy: str = None,
     ):
         super().__init__()
         self.__managementState = managementState
@@ -765,6 +766,7 @@ class ImageRegistrySpec(types.Object):
         self.__resources = resources
         self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
         self.__tolerations = tolerations if tolerations is not None else []
+        self.__rolloutStrategy = rolloutStrategy
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -815,6 +817,10 @@ class ImageRegistrySpec(types.Object):
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
+        rolloutStrategy = self.rolloutStrategy()
+        check_type("rolloutStrategy", rolloutStrategy, Optional[str])
+        if rolloutStrategy:  # omit empty
+            v["rolloutStrategy"] = rolloutStrategy
         return v
 
     def managementState(self) -> operatorv1.ManagementState:
@@ -911,6 +917,13 @@ class ImageRegistrySpec(types.Object):
         """
         return self.__tolerations
 
+    def rolloutStrategy(self) -> Optional[str]:
+        """
+        rolloutStrategy defines rollout strategy for the image registry
+        deployment.
+        """
+        return self.__rolloutStrategy
+
 
 class Config(base.TypedObject, base.MetadataObject):
     """
@@ -945,4 +958,185 @@ class Config(base.TypedObject, base.MetadataObject):
         return v
 
     def spec(self) -> "ImageRegistrySpec":
+        return self.__spec
+
+
+class ImagePrunerSpec(types.Object):
+    """
+    ImagePrunerSpec defines the specs for the running image pruner.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        schedule: str = "",
+        suspend: bool = None,
+        keepTagRevisions: int = None,
+        keepYoungerThan: int = None,
+        resources: "k8sv1.ResourceRequirements" = None,
+        affinity: "k8sv1.Affinity" = None,
+        nodeSelector: Dict[str, str] = None,
+        tolerations: List["k8sv1.Toleration"] = None,
+        successfulJobsHistoryLimit: int = None,
+        failedJobsHistoryLimit: int = None,
+    ):
+        super().__init__()
+        self.__schedule = schedule
+        self.__suspend = suspend
+        self.__keepTagRevisions = keepTagRevisions
+        self.__keepYoungerThan = keepYoungerThan
+        self.__resources = resources
+        self.__affinity = affinity
+        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__tolerations = tolerations if tolerations is not None else []
+        self.__successfulJobsHistoryLimit = successfulJobsHistoryLimit
+        self.__failedJobsHistoryLimit = failedJobsHistoryLimit
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        schedule = self.schedule()
+        check_type("schedule", schedule, str)
+        v["schedule"] = schedule
+        suspend = self.suspend()
+        check_type("suspend", suspend, Optional[bool])
+        if suspend is not None:  # omit empty
+            v["suspend"] = suspend
+        keepTagRevisions = self.keepTagRevisions()
+        check_type("keepTagRevisions", keepTagRevisions, Optional[int])
+        if keepTagRevisions is not None:  # omit empty
+            v["keepTagRevisions"] = keepTagRevisions
+        keepYoungerThan = self.keepYoungerThan()
+        check_type("keepYoungerThan", keepYoungerThan, Optional[int])
+        if keepYoungerThan is not None:  # omit empty
+            v["keepYoungerThan"] = keepYoungerThan
+        resources = self.resources()
+        check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
+        if resources is not None:  # omit empty
+            v["resources"] = resources
+        affinity = self.affinity()
+        check_type("affinity", affinity, Optional["k8sv1.Affinity"])
+        if affinity is not None:  # omit empty
+            v["affinity"] = affinity
+        nodeSelector = self.nodeSelector()
+        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
+        if nodeSelector:  # omit empty
+            v["nodeSelector"] = nodeSelector
+        tolerations = self.tolerations()
+        check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
+        if tolerations:  # omit empty
+            v["tolerations"] = tolerations
+        successfulJobsHistoryLimit = self.successfulJobsHistoryLimit()
+        check_type(
+            "successfulJobsHistoryLimit", successfulJobsHistoryLimit, Optional[int]
+        )
+        if successfulJobsHistoryLimit is not None:  # omit empty
+            v["successfulJobsHistoryLimit"] = successfulJobsHistoryLimit
+        failedJobsHistoryLimit = self.failedJobsHistoryLimit()
+        check_type("failedJobsHistoryLimit", failedJobsHistoryLimit, Optional[int])
+        if failedJobsHistoryLimit is not None:  # omit empty
+            v["failedJobsHistoryLimit"] = failedJobsHistoryLimit
+        return v
+
+    def schedule(self) -> str:
+        """
+        schedule specifies when to execute the job using standard cronjob syntax: https://wikipedia.org/wiki/Cron.
+        Defaults to `0 0 * * *`.
+        """
+        return self.__schedule
+
+    def suspend(self) -> Optional[bool]:
+        """
+        suspend specifies whether or not to suspend subsequent executions of this cronjob.
+        Defaults to false.
+        """
+        return self.__suspend
+
+    def keepTagRevisions(self) -> Optional[int]:
+        """
+        keepTagRevisions specifies the number of image revisions for a tag in an image stream that will be preserved.
+        Defaults to 5.
+        """
+        return self.__keepTagRevisions
+
+    def keepYoungerThan(self) -> Optional[int]:
+        """
+        keepYoungerThan specifies the minimum age of an image and its referrers for it to be considered a candidate for pruning.
+        Defaults to 96h (96 hours).
+        """
+        return self.__keepYoungerThan
+
+    def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
+        """
+        resources defines the resource requests and limits for the image pruner pod.
+        """
+        return self.__resources
+
+    def affinity(self) -> Optional["k8sv1.Affinity"]:
+        """
+        affinity is a group of node affinity scheduling rules for the image pruner pod.
+        """
+        return self.__affinity
+
+    def nodeSelector(self) -> Optional[Dict[str, str]]:
+        """
+        nodeSelector defines the node selection constraints for the image pruner pod.
+        """
+        return self.__nodeSelector
+
+    def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
+        """
+        tolerations defines the node tolerations for the image pruner pod.
+        """
+        return self.__tolerations
+
+    def successfulJobsHistoryLimit(self) -> Optional[int]:
+        """
+        successfulJobsHistoryLimit specifies how many successful image pruner jobs to retain.
+        Defaults to 3 if not set.
+        """
+        return self.__successfulJobsHistoryLimit
+
+    def failedJobsHistoryLimit(self) -> Optional[int]:
+        """
+        failedJobsHistoryLimit specifies how many failed image pruner jobs to retain.
+        Defaults to 3 if not set.
+        """
+        return self.__failedJobsHistoryLimit
+
+
+class ImagePruner(base.TypedObject, base.MetadataObject):
+    """
+    ImagePruner is the configuration object for an image registry pruner
+    managed by the registry operator.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "ImagePrunerSpec" = None,
+    ):
+        super().__init__(
+            apiVersion="imageregistry.operator.openshift.io/v1",
+            kind="ImagePruner",
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__spec = spec if spec is not None else ImagePrunerSpec()
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        spec = self.spec()
+        check_type("spec", spec, "ImagePrunerSpec")
+        v["spec"] = spec
+        return v
+
+    def spec(self) -> "ImagePrunerSpec":
         return self.__spec

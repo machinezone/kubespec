@@ -2395,60 +2395,6 @@ class DNS(base.TypedObject, base.MetadataObject):
         return self.__spec
 
 
-class DelegatedAuthentication(types.Object):
-    """
-    DelegatedAuthentication allows authentication to be disabled.
-    """
-
-    @context.scoped
-    @typechecked
-    def __init__(self, disabled: bool = None):
-        super().__init__()
-        self.__disabled = disabled
-
-    @typechecked
-    def _root(self) -> Dict[str, Any]:
-        v = super()._root()
-        disabled = self.disabled()
-        check_type("disabled", disabled, Optional[bool])
-        if disabled:  # omit empty
-            v["disabled"] = disabled
-        return v
-
-    def disabled(self) -> Optional[bool]:
-        """
-        disabled indicates that authentication should be disabled.  By default it will use delegated authentication.
-        """
-        return self.__disabled
-
-
-class DelegatedAuthorization(types.Object):
-    """
-    DelegatedAuthorization allows authorization to be disabled.
-    """
-
-    @context.scoped
-    @typechecked
-    def __init__(self, disabled: bool = None):
-        super().__init__()
-        self.__disabled = disabled
-
-    @typechecked
-    def _root(self) -> Dict[str, Any]:
-        v = super()._root()
-        disabled = self.disabled()
-        check_type("disabled", disabled, Optional[bool])
-        if disabled:  # omit empty
-            v["disabled"] = disabled
-        return v
-
-    def disabled(self) -> Optional[bool]:
-        """
-        disabled indicates that authorization should be disabled.  By default it will use delegated authorization.
-        """
-        return self.__disabled
-
-
 class EtcdConnectionInfo(types.Object):
     """
     EtcdConnectionInfo holds information necessary for connecting to an etcd server
@@ -3060,182 +3006,6 @@ class GenericAPIServerConfig(types.Object):
 
     def kubeClientConfig(self) -> "KubeClientConfig":
         return self.__kubeClientConfig
-
-
-class LeaderElection(types.Object):
-    """
-    LeaderElection provides information to elect a leader
-    """
-
-    @context.scoped
-    @typechecked
-    def __init__(
-        self,
-        disable: bool = None,
-        namespace: str = None,
-        name: str = None,
-        leaseDuration: "base.Duration" = None,
-        renewDeadline: "base.Duration" = None,
-        retryPeriod: "base.Duration" = None,
-    ):
-        super().__init__()
-        self.__disable = disable
-        self.__namespace = namespace
-        self.__name = name
-        self.__leaseDuration = (
-            leaseDuration if leaseDuration is not None else metav1.Duration()
-        )
-        self.__renewDeadline = (
-            renewDeadline if renewDeadline is not None else metav1.Duration()
-        )
-        self.__retryPeriod = (
-            retryPeriod if retryPeriod is not None else metav1.Duration()
-        )
-
-    @typechecked
-    def _root(self) -> Dict[str, Any]:
-        v = super()._root()
-        disable = self.disable()
-        check_type("disable", disable, Optional[bool])
-        if disable:  # omit empty
-            v["disable"] = disable
-        namespace = self.namespace()
-        check_type("namespace", namespace, Optional[str])
-        if namespace:  # omit empty
-            v["namespace"] = namespace
-        name = self.name()
-        check_type("name", name, Optional[str])
-        if name:  # omit empty
-            v["name"] = name
-        leaseDuration = self.leaseDuration()
-        check_type("leaseDuration", leaseDuration, "base.Duration")
-        v["leaseDuration"] = leaseDuration
-        renewDeadline = self.renewDeadline()
-        check_type("renewDeadline", renewDeadline, "base.Duration")
-        v["renewDeadline"] = renewDeadline
-        retryPeriod = self.retryPeriod()
-        check_type("retryPeriod", retryPeriod, "base.Duration")
-        v["retryPeriod"] = retryPeriod
-        return v
-
-    def disable(self) -> Optional[bool]:
-        """
-        disable allows leader election to be suspended while allowing a fully defaulted "normal" startup case.
-        """
-        return self.__disable
-
-    def namespace(self) -> Optional[str]:
-        """
-        namespace indicates which namespace the resource is in
-        """
-        return self.__namespace
-
-    def name(self) -> Optional[str]:
-        """
-        name indicates what name to use for the resource
-        """
-        return self.__name
-
-    def leaseDuration(self) -> "base.Duration":
-        """
-        leaseDuration is the duration that non-leader candidates will wait
-        after observing a leadership renewal until attempting to acquire
-        leadership of a led but unrenewed leader slot. This is effectively the
-        maximum duration that a leader can be stopped before it is replaced
-        by another candidate. This is only applicable if leader election is
-        enabled.
-        +nullable
-        """
-        return self.__leaseDuration
-
-    def renewDeadline(self) -> "base.Duration":
-        """
-        renewDeadline is the interval between attempts by the acting master to
-        renew a leadership slot before it stops leading. This must be less
-        than or equal to the lease duration. This is only applicable if leader
-        election is enabled.
-        +nullable
-        """
-        return self.__renewDeadline
-
-    def retryPeriod(self) -> "base.Duration":
-        """
-        retryPeriod is the duration the clients should wait between attempting
-        acquisition and renewal of a leadership. This is only applicable if
-        leader election is enabled.
-        +nullable
-        """
-        return self.__retryPeriod
-
-
-class GenericControllerConfig(types.Object):
-    """
-    GenericControllerConfig provides information to configure a controller
-    """
-
-    @context.scoped
-    @typechecked
-    def __init__(
-        self,
-        servingInfo: "HTTPServingInfo" = None,
-        leaderElection: "LeaderElection" = None,
-        authentication: "DelegatedAuthentication" = None,
-        authorization: "DelegatedAuthorization" = None,
-    ):
-        super().__init__()
-        self.__servingInfo = (
-            servingInfo if servingInfo is not None else HTTPServingInfo()
-        )
-        self.__leaderElection = (
-            leaderElection if leaderElection is not None else LeaderElection()
-        )
-        self.__authentication = (
-            authentication if authentication is not None else DelegatedAuthentication()
-        )
-        self.__authorization = (
-            authorization if authorization is not None else DelegatedAuthorization()
-        )
-
-    @typechecked
-    def _root(self) -> Dict[str, Any]:
-        v = super()._root()
-        servingInfo = self.servingInfo()
-        check_type("servingInfo", servingInfo, "HTTPServingInfo")
-        v["servingInfo"] = servingInfo
-        leaderElection = self.leaderElection()
-        check_type("leaderElection", leaderElection, "LeaderElection")
-        v["leaderElection"] = leaderElection
-        authentication = self.authentication()
-        check_type("authentication", authentication, "DelegatedAuthentication")
-        v["authentication"] = authentication
-        authorization = self.authorization()
-        check_type("authorization", authorization, "DelegatedAuthorization")
-        v["authorization"] = authorization
-        return v
-
-    def servingInfo(self) -> "HTTPServingInfo":
-        """
-        ServingInfo is the HTTP serving information for the controller's endpoints
-        """
-        return self.__servingInfo
-
-    def leaderElection(self) -> "LeaderElection":
-        """
-        leaderElection provides information to elect a leader. Only override this if you have a specific need
-        """
-        return self.__leaderElection
-
-    def authentication(self) -> "DelegatedAuthentication":
-        """
-        authentication allows configuration of authentication for the endpoints
-        """
-        return self.__authentication
-
-    def authorization(self) -> "DelegatedAuthorization":
-        """
-        authorization allows configuration of authentication for the endpoints
-        """
-        return self.__authorization
 
 
 class GitHubIdentityProvider(types.Object):
@@ -4352,7 +4122,7 @@ class RegistrySources(types.Object):
 
     def blockedRegistries(self) -> Optional[List[str]]:
         """
-        blockedRegistries are blacklisted from image pull/push. All other registries are allowed.
+        blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.
         
         Only one of BlockedRegistries or AllowedRegistries may be set.
         """
@@ -4360,7 +4130,7 @@ class RegistrySources(types.Object):
 
     def allowedRegistries(self) -> Optional[List[str]]:
         """
-        allowedRegistries are whitelisted for image pull/push. All other registries are blocked.
+        allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.
         
         Only one of BlockedRegistries or AllowedRegistries may be set.
         """
@@ -4462,7 +4232,7 @@ class Image(base.TypedObject, base.MetadataObject):
     Image governs policies related to imagestream imports and runtime configuration
     for external registries. It allows cluster admins to configure which registries
     OpenShift is allowed to import images from, extra CA trust bundles for external
-    registries, and policies to blacklist/whitelist registry hostnames.
+    registries, and policies to block or allow registry hostnames.
     When exposing OpenShift's image registry to the public, this also lets cluster
     admins specify the external hostname.
     """
@@ -4638,6 +4408,112 @@ class Ingress(base.TypedObject, base.MetadataObject):
         +required
         """
         return self.__spec
+
+
+class LeaderElection(types.Object):
+    """
+    LeaderElection provides information to elect a leader
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        disable: bool = None,
+        namespace: str = None,
+        name: str = None,
+        leaseDuration: "base.Duration" = None,
+        renewDeadline: "base.Duration" = None,
+        retryPeriod: "base.Duration" = None,
+    ):
+        super().__init__()
+        self.__disable = disable
+        self.__namespace = namespace
+        self.__name = name
+        self.__leaseDuration = (
+            leaseDuration if leaseDuration is not None else metav1.Duration()
+        )
+        self.__renewDeadline = (
+            renewDeadline if renewDeadline is not None else metav1.Duration()
+        )
+        self.__retryPeriod = (
+            retryPeriod if retryPeriod is not None else metav1.Duration()
+        )
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        disable = self.disable()
+        check_type("disable", disable, Optional[bool])
+        if disable:  # omit empty
+            v["disable"] = disable
+        namespace = self.namespace()
+        check_type("namespace", namespace, Optional[str])
+        if namespace:  # omit empty
+            v["namespace"] = namespace
+        name = self.name()
+        check_type("name", name, Optional[str])
+        if name:  # omit empty
+            v["name"] = name
+        leaseDuration = self.leaseDuration()
+        check_type("leaseDuration", leaseDuration, "base.Duration")
+        v["leaseDuration"] = leaseDuration
+        renewDeadline = self.renewDeadline()
+        check_type("renewDeadline", renewDeadline, "base.Duration")
+        v["renewDeadline"] = renewDeadline
+        retryPeriod = self.retryPeriod()
+        check_type("retryPeriod", retryPeriod, "base.Duration")
+        v["retryPeriod"] = retryPeriod
+        return v
+
+    def disable(self) -> Optional[bool]:
+        """
+        disable allows leader election to be suspended while allowing a fully defaulted "normal" startup case.
+        """
+        return self.__disable
+
+    def namespace(self) -> Optional[str]:
+        """
+        namespace indicates which namespace the resource is in
+        """
+        return self.__namespace
+
+    def name(self) -> Optional[str]:
+        """
+        name indicates what name to use for the resource
+        """
+        return self.__name
+
+    def leaseDuration(self) -> "base.Duration":
+        """
+        leaseDuration is the duration that non-leader candidates will wait
+        after observing a leadership renewal until attempting to acquire
+        leadership of a led but unrenewed leader slot. This is effectively the
+        maximum duration that a leader can be stopped before it is replaced
+        by another candidate. This is only applicable if leader election is
+        enabled.
+        +nullable
+        """
+        return self.__leaseDuration
+
+    def renewDeadline(self) -> "base.Duration":
+        """
+        renewDeadline is the interval between attempts by the acting master to
+        renew a leadership slot before it stops leading. This must be less
+        than or equal to the lease duration. This is only applicable if leader
+        election is enabled.
+        +nullable
+        """
+        return self.__renewDeadline
+
+    def retryPeriod(self) -> "base.Duration":
+        """
+        retryPeriod is the duration the clients should wait between attempting
+        acquisition and renewal of a leadership. This is only applicable if
+        leader election is enabled.
+        +nullable
+        """
+        return self.__retryPeriod
 
 
 class NetworkSpec(types.Object):

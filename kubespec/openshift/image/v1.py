@@ -1562,3 +1562,66 @@ class ImageStreamTag(base.TypedObject, base.NamespacedMetadataObject):
         image associated with the ImageStream and tag.
         """
         return self.__image
+
+
+class ImageTag(base.TypedObject, base.NamespacedMetadataObject):
+    """
+    ImageTag represents a single tag within an image stream and includes the spec,
+    the status history, and the currently referenced image (if any) of the provided
+    tag. This type replaces the ImageStreamTag by providing a full view of the tag.
+    ImageTags are returned for every spec or status tag present on the image stream.
+    If no tag exists in either form a not found error will be returned by the API.
+    A create operation will succeed if no spec tag has already been defined and the
+    spec field is set. Delete will remove both spec and status elements from the
+    image stream.
+    """
+
+    @context.scoped
+    @typechecked
+    def __init__(
+        self,
+        namespace: str = None,
+        name: str = None,
+        labels: Dict[str, str] = None,
+        annotations: Dict[str, str] = None,
+        spec: "TagReference" = None,
+        image: "Image" = None,
+    ):
+        super().__init__(
+            apiVersion="image.openshift.io/v1",
+            kind="ImageTag",
+            **({"namespace": namespace} if namespace is not None else {}),
+            **({"name": name} if name is not None else {}),
+            **({"labels": labels} if labels is not None else {}),
+            **({"annotations": annotations} if annotations is not None else {}),
+        )
+        self.__spec = spec
+        self.__image = image
+
+    @typechecked
+    def _root(self) -> Dict[str, Any]:
+        v = super()._root()
+        spec = self.spec()
+        check_type("spec", spec, Optional["TagReference"])
+        v["spec"] = spec
+        image = self.image()
+        check_type("image", image, Optional["Image"])
+        v["image"] = image
+        return v
+
+    def spec(self) -> Optional["TagReference"]:
+        """
+        spec is the spec tag associated with this image stream tag, and it may be null
+        if only pushes have occurred to this image stream.
+        """
+        return self.__spec
+
+    def image(self) -> Optional["Image"]:
+        """
+        image is the details of the most recent image stream status tag, and it may be
+        null if import has not completed or an administrator has deleted the image
+        object. To verify this is the most recent image, you must verify the generation
+        of the most recent status.items entry matches the spec tag (if a spec tag is
+        set). This field will not be set when listing image tags.
+        """
+        return self.__image
