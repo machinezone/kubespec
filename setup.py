@@ -9,7 +9,7 @@ with open("README.md") as f:
 
 setup(
     name="kubespec",
-    version="0.1.dev20200109",
+    version="0.1.dev20200123",
     url="https://github.com/machinezone/kubespec",
     author="Andy Bursavich",
     author_email="abursavich@mz.com",
@@ -21,7 +21,7 @@ setup(
     python_requires=">=3.7",
     packages=find_packages(),
     classifiers=[
-        "Development Status :: 2 - Pre-Alpha",
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "Intended Audience :: System Administrators",
