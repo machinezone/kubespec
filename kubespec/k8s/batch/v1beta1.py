@@ -80,26 +80,28 @@ class CronJobSpec(types.Object):
     def __init__(
         self,
         schedule: str = "",
-        startingDeadlineSeconds: int = None,
-        concurrencyPolicy: ConcurrencyPolicy = ConcurrencyPolicy["Allow"],
+        starting_deadline_seconds: int = None,
+        concurrency_policy: ConcurrencyPolicy = ConcurrencyPolicy["Allow"],
         suspend: bool = None,
-        jobTemplate: "JobTemplateSpec" = None,
-        successfulJobsHistoryLimit: int = None,
-        failedJobsHistoryLimit: int = None,
+        job_template: "JobTemplateSpec" = None,
+        successful_jobs_history_limit: int = None,
+        failed_jobs_history_limit: int = None,
     ):
         super().__init__()
         self.__schedule = schedule
-        self.__startingDeadlineSeconds = startingDeadlineSeconds
-        self.__concurrencyPolicy = concurrencyPolicy
+        self.__starting_deadline_seconds = starting_deadline_seconds
+        self.__concurrency_policy = concurrency_policy
         self.__suspend = suspend
-        self.__jobTemplate = (
-            jobTemplate if jobTemplate is not None else JobTemplateSpec()
+        self.__job_template = (
+            job_template if job_template is not None else JobTemplateSpec()
         )
-        self.__successfulJobsHistoryLimit = (
-            successfulJobsHistoryLimit if successfulJobsHistoryLimit is not None else 3
+        self.__successful_jobs_history_limit = (
+            successful_jobs_history_limit
+            if successful_jobs_history_limit is not None
+            else 3
         )
-        self.__failedJobsHistoryLimit = (
-            failedJobsHistoryLimit if failedJobsHistoryLimit is not None else 1
+        self.__failed_jobs_history_limit = (
+            failed_jobs_history_limit if failed_jobs_history_limit is not None else 1
         )
 
     @typechecked
@@ -108,31 +110,39 @@ class CronJobSpec(types.Object):
         schedule = self.schedule()
         check_type("schedule", schedule, str)
         v["schedule"] = schedule
-        startingDeadlineSeconds = self.startingDeadlineSeconds()
-        check_type("startingDeadlineSeconds", startingDeadlineSeconds, Optional[int])
-        if startingDeadlineSeconds is not None:  # omit empty
-            v["startingDeadlineSeconds"] = startingDeadlineSeconds
-        concurrencyPolicy = self.concurrencyPolicy()
-        check_type("concurrencyPolicy", concurrencyPolicy, Optional[ConcurrencyPolicy])
-        if concurrencyPolicy:  # omit empty
-            v["concurrencyPolicy"] = concurrencyPolicy
+        starting_deadline_seconds = self.starting_deadline_seconds()
+        check_type(
+            "starting_deadline_seconds", starting_deadline_seconds, Optional[int]
+        )
+        if starting_deadline_seconds is not None:  # omit empty
+            v["startingDeadlineSeconds"] = starting_deadline_seconds
+        concurrency_policy = self.concurrency_policy()
+        check_type(
+            "concurrency_policy", concurrency_policy, Optional[ConcurrencyPolicy]
+        )
+        if concurrency_policy:  # omit empty
+            v["concurrencyPolicy"] = concurrency_policy
         suspend = self.suspend()
         check_type("suspend", suspend, Optional[bool])
         if suspend is not None:  # omit empty
             v["suspend"] = suspend
-        jobTemplate = self.jobTemplate()
-        check_type("jobTemplate", jobTemplate, "JobTemplateSpec")
-        v["jobTemplate"] = jobTemplate
-        successfulJobsHistoryLimit = self.successfulJobsHistoryLimit()
+        job_template = self.job_template()
+        check_type("job_template", job_template, "JobTemplateSpec")
+        v["jobTemplate"] = job_template
+        successful_jobs_history_limit = self.successful_jobs_history_limit()
         check_type(
-            "successfulJobsHistoryLimit", successfulJobsHistoryLimit, Optional[int]
+            "successful_jobs_history_limit",
+            successful_jobs_history_limit,
+            Optional[int],
         )
-        if successfulJobsHistoryLimit is not None:  # omit empty
-            v["successfulJobsHistoryLimit"] = successfulJobsHistoryLimit
-        failedJobsHistoryLimit = self.failedJobsHistoryLimit()
-        check_type("failedJobsHistoryLimit", failedJobsHistoryLimit, Optional[int])
-        if failedJobsHistoryLimit is not None:  # omit empty
-            v["failedJobsHistoryLimit"] = failedJobsHistoryLimit
+        if successful_jobs_history_limit is not None:  # omit empty
+            v["successfulJobsHistoryLimit"] = successful_jobs_history_limit
+        failed_jobs_history_limit = self.failed_jobs_history_limit()
+        check_type(
+            "failed_jobs_history_limit", failed_jobs_history_limit, Optional[int]
+        )
+        if failed_jobs_history_limit is not None:  # omit empty
+            v["failedJobsHistoryLimit"] = failed_jobs_history_limit
         return v
 
     def schedule(self) -> str:
@@ -141,14 +151,14 @@ class CronJobSpec(types.Object):
         """
         return self.__schedule
 
-    def startingDeadlineSeconds(self) -> Optional[int]:
+    def starting_deadline_seconds(self) -> Optional[int]:
         """
         Optional deadline in seconds for starting the job if it misses scheduled
         time for any reason.  Missed jobs executions will be counted as failed ones.
         """
-        return self.__startingDeadlineSeconds
+        return self.__starting_deadline_seconds
 
-    def concurrencyPolicy(self) -> Optional[ConcurrencyPolicy]:
+    def concurrency_policy(self) -> Optional[ConcurrencyPolicy]:
         """
         Specifies how to treat concurrent executions of a Job.
         Valid values are:
@@ -156,7 +166,7 @@ class CronJobSpec(types.Object):
         - "Forbid": forbids concurrent runs, skipping next run if previous run hasn't finished yet;
         - "Replace": cancels currently running job and replaces it with a new one
         """
-        return self.__concurrencyPolicy
+        return self.__concurrency_policy
 
     def suspend(self) -> Optional[bool]:
         """
@@ -165,27 +175,27 @@ class CronJobSpec(types.Object):
         """
         return self.__suspend
 
-    def jobTemplate(self) -> "JobTemplateSpec":
+    def job_template(self) -> "JobTemplateSpec":
         """
         Specifies the job that will be created when executing a CronJob.
         """
-        return self.__jobTemplate
+        return self.__job_template
 
-    def successfulJobsHistoryLimit(self) -> Optional[int]:
+    def successful_jobs_history_limit(self) -> Optional[int]:
         """
         The number of successful finished jobs to retain.
         This is a pointer to distinguish between explicit zero and not specified.
         Defaults to 3.
         """
-        return self.__successfulJobsHistoryLimit
+        return self.__successful_jobs_history_limit
 
-    def failedJobsHistoryLimit(self) -> Optional[int]:
+    def failed_jobs_history_limit(self) -> Optional[int]:
         """
         The number of failed finished jobs to retain.
         This is a pointer to distinguish between explicit zero and not specified.
         Defaults to 1.
         """
-        return self.__failedJobsHistoryLimit
+        return self.__failed_jobs_history_limit
 
 
 class CronJob(base.TypedObject, base.NamespacedMetadataObject):
@@ -204,7 +214,7 @@ class CronJob(base.TypedObject, base.NamespacedMetadataObject):
         spec: "CronJobSpec" = None,
     ):
         super().__init__(
-            apiVersion="batch/v1beta1",
+            api_version="batch/v1beta1",
             kind="CronJob",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -245,7 +255,7 @@ class JobTemplate(base.TypedObject, base.NamespacedMetadataObject):
         template: "JobTemplateSpec" = None,
     ):
         super().__init__(
-            apiVersion="batch/v1beta1",
+            api_version="batch/v1beta1",
             kind="JobTemplate",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

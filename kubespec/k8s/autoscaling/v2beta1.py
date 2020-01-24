@@ -49,11 +49,11 @@ class CrossVersionObjectReference(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
+    def __init__(self, kind: str = "", name: str = "", api_version: str = None):
         super().__init__()
         self.__kind = kind
         self.__name = name
-        self.__apiVersion = apiVersion
+        self.__api_version = api_version
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -64,10 +64,10 @@ class CrossVersionObjectReference(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omit empty
-            v["apiVersion"] = apiVersion
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omit empty
+            v["apiVersion"] = api_version
         return v
 
     def kind(self) -> str:
@@ -82,11 +82,11 @@ class CrossVersionObjectReference(types.Object):
         """
         return self.__name
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         API version of the referent
         """
-        return self.__apiVersion
+        return self.__api_version
 
 
 class ExternalMetricSource(types.Object):
@@ -101,65 +101,65 @@ class ExternalMetricSource(types.Object):
     @typechecked
     def __init__(
         self,
-        metricName: str = "",
-        metricSelector: "metav1.LabelSelector" = None,
-        targetValue: "resource.Quantity" = None,
-        targetAverageValue: "resource.Quantity" = None,
+        metric_name: str = "",
+        metric_selector: "metav1.LabelSelector" = None,
+        target_value: "resource.Quantity" = None,
+        target_average_value: "resource.Quantity" = None,
     ):
         super().__init__()
-        self.__metricName = metricName
-        self.__metricSelector = metricSelector
-        self.__targetValue = targetValue
-        self.__targetAverageValue = targetAverageValue
+        self.__metric_name = metric_name
+        self.__metric_selector = metric_selector
+        self.__target_value = target_value
+        self.__target_average_value = target_average_value
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        metricName = self.metricName()
-        check_type("metricName", metricName, str)
-        v["metricName"] = metricName
-        metricSelector = self.metricSelector()
-        check_type("metricSelector", metricSelector, Optional["metav1.LabelSelector"])
-        if metricSelector is not None:  # omit empty
-            v["metricSelector"] = metricSelector
-        targetValue = self.targetValue()
-        check_type("targetValue", targetValue, Optional["resource.Quantity"])
-        if targetValue is not None:  # omit empty
-            v["targetValue"] = targetValue
-        targetAverageValue = self.targetAverageValue()
+        metric_name = self.metric_name()
+        check_type("metric_name", metric_name, str)
+        v["metricName"] = metric_name
+        metric_selector = self.metric_selector()
+        check_type("metric_selector", metric_selector, Optional["metav1.LabelSelector"])
+        if metric_selector is not None:  # omit empty
+            v["metricSelector"] = metric_selector
+        target_value = self.target_value()
+        check_type("target_value", target_value, Optional["resource.Quantity"])
+        if target_value is not None:  # omit empty
+            v["targetValue"] = target_value
+        target_average_value = self.target_average_value()
         check_type(
-            "targetAverageValue", targetAverageValue, Optional["resource.Quantity"]
+            "target_average_value", target_average_value, Optional["resource.Quantity"]
         )
-        if targetAverageValue is not None:  # omit empty
-            v["targetAverageValue"] = targetAverageValue
+        if target_average_value is not None:  # omit empty
+            v["targetAverageValue"] = target_average_value
         return v
 
-    def metricName(self) -> str:
+    def metric_name(self) -> str:
         """
         metricName is the name of the metric in question.
         """
-        return self.__metricName
+        return self.__metric_name
 
-    def metricSelector(self) -> Optional["metav1.LabelSelector"]:
+    def metric_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         metricSelector is used to identify a specific time series
         within a given metric.
         """
-        return self.__metricSelector
+        return self.__metric_selector
 
-    def targetValue(self) -> Optional["resource.Quantity"]:
+    def target_value(self) -> Optional["resource.Quantity"]:
         """
         targetValue is the target value of the metric (as a quantity).
         Mutually exclusive with TargetAverageValue.
         """
-        return self.__targetValue
+        return self.__target_value
 
-    def targetAverageValue(self) -> Optional["resource.Quantity"]:
+    def target_average_value(self) -> Optional["resource.Quantity"]:
         """
         targetAverageValue is the target per-pod value of global metric (as a quantity).
         Mutually exclusive with TargetValue.
         """
-        return self.__targetAverageValue
+        return self.__target_average_value
 
 
 class ObjectMetricSource(types.Object):
@@ -173,17 +173,17 @@ class ObjectMetricSource(types.Object):
     def __init__(
         self,
         target: "CrossVersionObjectReference" = None,
-        metricName: str = "",
-        targetValue: "resource.Quantity" = None,
+        metric_name: str = "",
+        target_value: "resource.Quantity" = None,
         selector: "metav1.LabelSelector" = None,
-        averageValue: "resource.Quantity" = None,
+        average_value: "resource.Quantity" = None,
     ):
         super().__init__()
         self.__target = target if target is not None else CrossVersionObjectReference()
-        self.__metricName = metricName
-        self.__targetValue = targetValue
+        self.__metric_name = metric_name
+        self.__target_value = target_value
         self.__selector = selector
-        self.__averageValue = averageValue
+        self.__average_value = average_value
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -191,20 +191,20 @@ class ObjectMetricSource(types.Object):
         target = self.target()
         check_type("target", target, "CrossVersionObjectReference")
         v["target"] = target
-        metricName = self.metricName()
-        check_type("metricName", metricName, str)
-        v["metricName"] = metricName
-        targetValue = self.targetValue()
-        check_type("targetValue", targetValue, "resource.Quantity")
-        v["targetValue"] = targetValue
+        metric_name = self.metric_name()
+        check_type("metric_name", metric_name, str)
+        v["metricName"] = metric_name
+        target_value = self.target_value()
+        check_type("target_value", target_value, "resource.Quantity")
+        v["targetValue"] = target_value
         selector = self.selector()
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
-        averageValue = self.averageValue()
-        check_type("averageValue", averageValue, Optional["resource.Quantity"])
-        if averageValue is not None:  # omit empty
-            v["averageValue"] = averageValue
+        average_value = self.average_value()
+        check_type("average_value", average_value, Optional["resource.Quantity"])
+        if average_value is not None:  # omit empty
+            v["averageValue"] = average_value
         return v
 
     def target(self) -> "CrossVersionObjectReference":
@@ -213,17 +213,17 @@ class ObjectMetricSource(types.Object):
         """
         return self.__target
 
-    def metricName(self) -> str:
+    def metric_name(self) -> str:
         """
         metricName is the name of the metric in question.
         """
-        return self.__metricName
+        return self.__metric_name
 
-    def targetValue(self) -> "resource.Quantity":
+    def target_value(self) -> "resource.Quantity":
         """
         targetValue is the target value of the metric (as a quantity).
         """
-        return self.__targetValue
+        return self.__target_value
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
         """
@@ -233,12 +233,12 @@ class ObjectMetricSource(types.Object):
         """
         return self.__selector
 
-    def averageValue(self) -> Optional["resource.Quantity"]:
+    def average_value(self) -> Optional["resource.Quantity"]:
         """
         averageValue is the target value of the average of the
         metric across all relevant pods (as a quantity)
         """
-        return self.__averageValue
+        return self.__average_value
 
 
 class PodsMetricSource(types.Object):
@@ -253,42 +253,42 @@ class PodsMetricSource(types.Object):
     @typechecked
     def __init__(
         self,
-        metricName: str = "",
-        targetAverageValue: "resource.Quantity" = None,
+        metric_name: str = "",
+        target_average_value: "resource.Quantity" = None,
         selector: "metav1.LabelSelector" = None,
     ):
         super().__init__()
-        self.__metricName = metricName
-        self.__targetAverageValue = targetAverageValue
+        self.__metric_name = metric_name
+        self.__target_average_value = target_average_value
         self.__selector = selector
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        metricName = self.metricName()
-        check_type("metricName", metricName, str)
-        v["metricName"] = metricName
-        targetAverageValue = self.targetAverageValue()
-        check_type("targetAverageValue", targetAverageValue, "resource.Quantity")
-        v["targetAverageValue"] = targetAverageValue
+        metric_name = self.metric_name()
+        check_type("metric_name", metric_name, str)
+        v["metricName"] = metric_name
+        target_average_value = self.target_average_value()
+        check_type("target_average_value", target_average_value, "resource.Quantity")
+        v["targetAverageValue"] = target_average_value
         selector = self.selector()
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
         return v
 
-    def metricName(self) -> str:
+    def metric_name(self) -> str:
         """
         metricName is the name of the metric in question
         """
-        return self.__metricName
+        return self.__metric_name
 
-    def targetAverageValue(self) -> "resource.Quantity":
+    def target_average_value(self) -> "resource.Quantity":
         """
         targetAverageValue is the target value of the average of the
         metric across all relevant pods (as a quantity)
         """
-        return self.__targetAverageValue
+        return self.__target_average_value
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
         """
@@ -315,13 +315,13 @@ class ResourceMetricSource(types.Object):
     def __init__(
         self,
         name: k8sv1.ResourceName = None,
-        targetAverageUtilization: int = None,
-        targetAverageValue: "resource.Quantity" = None,
+        target_average_utilization: int = None,
+        target_average_value: "resource.Quantity" = None,
     ):
         super().__init__()
         self.__name = name
-        self.__targetAverageUtilization = targetAverageUtilization
-        self.__targetAverageValue = targetAverageValue
+        self.__target_average_utilization = target_average_utilization
+        self.__target_average_value = target_average_value
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -329,16 +329,18 @@ class ResourceMetricSource(types.Object):
         name = self.name()
         check_type("name", name, k8sv1.ResourceName)
         v["name"] = name
-        targetAverageUtilization = self.targetAverageUtilization()
-        check_type("targetAverageUtilization", targetAverageUtilization, Optional[int])
-        if targetAverageUtilization is not None:  # omit empty
-            v["targetAverageUtilization"] = targetAverageUtilization
-        targetAverageValue = self.targetAverageValue()
+        target_average_utilization = self.target_average_utilization()
         check_type(
-            "targetAverageValue", targetAverageValue, Optional["resource.Quantity"]
+            "target_average_utilization", target_average_utilization, Optional[int]
         )
-        if targetAverageValue is not None:  # omit empty
-            v["targetAverageValue"] = targetAverageValue
+        if target_average_utilization is not None:  # omit empty
+            v["targetAverageUtilization"] = target_average_utilization
+        target_average_value = self.target_average_value()
+        check_type(
+            "target_average_value", target_average_value, Optional["resource.Quantity"]
+        )
+        if target_average_value is not None:  # omit empty
+            v["targetAverageValue"] = target_average_value
         return v
 
     def name(self) -> k8sv1.ResourceName:
@@ -347,21 +349,21 @@ class ResourceMetricSource(types.Object):
         """
         return self.__name
 
-    def targetAverageUtilization(self) -> Optional[int]:
+    def target_average_utilization(self) -> Optional[int]:
         """
         targetAverageUtilization is the target value of the average of the
         resource metric across all relevant pods, represented as a percentage of
         the requested value of the resource for the pods.
         """
-        return self.__targetAverageUtilization
+        return self.__target_average_utilization
 
-    def targetAverageValue(self) -> Optional["resource.Quantity"]:
+    def target_average_value(self) -> Optional["resource.Quantity"]:
         """
         targetAverageValue is the target value of the average of the
         resource metric across all relevant pods, as a raw value (instead of as
         a percentage of the request), similar to the "pods" metric source type.
         """
-        return self.__targetAverageValue
+        return self.__target_average_value
 
 
 class MetricSpec(types.Object):
@@ -463,48 +465,48 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        scaleTargetRef: "CrossVersionObjectReference" = None,
-        minReplicas: int = None,
-        maxReplicas: int = 0,
+        scale_target_ref: "CrossVersionObjectReference" = None,
+        min_replicas: int = None,
+        max_replicas: int = 0,
         metrics: List["MetricSpec"] = None,
     ):
         super().__init__()
-        self.__scaleTargetRef = (
-            scaleTargetRef
-            if scaleTargetRef is not None
+        self.__scale_target_ref = (
+            scale_target_ref
+            if scale_target_ref is not None
             else CrossVersionObjectReference()
         )
-        self.__minReplicas = minReplicas if minReplicas is not None else 1
-        self.__maxReplicas = maxReplicas
+        self.__min_replicas = min_replicas if min_replicas is not None else 1
+        self.__max_replicas = max_replicas
         self.__metrics = metrics if metrics is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        scaleTargetRef = self.scaleTargetRef()
-        check_type("scaleTargetRef", scaleTargetRef, "CrossVersionObjectReference")
-        v["scaleTargetRef"] = scaleTargetRef
-        minReplicas = self.minReplicas()
-        check_type("minReplicas", minReplicas, Optional[int])
-        if minReplicas is not None:  # omit empty
-            v["minReplicas"] = minReplicas
-        maxReplicas = self.maxReplicas()
-        check_type("maxReplicas", maxReplicas, int)
-        v["maxReplicas"] = maxReplicas
+        scale_target_ref = self.scale_target_ref()
+        check_type("scale_target_ref", scale_target_ref, "CrossVersionObjectReference")
+        v["scaleTargetRef"] = scale_target_ref
+        min_replicas = self.min_replicas()
+        check_type("min_replicas", min_replicas, Optional[int])
+        if min_replicas is not None:  # omit empty
+            v["minReplicas"] = min_replicas
+        max_replicas = self.max_replicas()
+        check_type("max_replicas", max_replicas, int)
+        v["maxReplicas"] = max_replicas
         metrics = self.metrics()
         check_type("metrics", metrics, Optional[List["MetricSpec"]])
         if metrics:  # omit empty
             v["metrics"] = metrics
         return v
 
-    def scaleTargetRef(self) -> "CrossVersionObjectReference":
+    def scale_target_ref(self) -> "CrossVersionObjectReference":
         """
         scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
         should be collected, as well as to actually change the replica count.
         """
-        return self.__scaleTargetRef
+        return self.__scale_target_ref
 
-    def minReplicas(self) -> Optional[int]:
+    def min_replicas(self) -> Optional[int]:
         """
         minReplicas is the lower limit for the number of replicas to which the autoscaler
         can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
@@ -512,14 +514,14 @@ class HorizontalPodAutoscalerSpec(types.Object):
         metric is configured.  Scaling is active as long as at least one metric value is
         available.
         """
-        return self.__minReplicas
+        return self.__min_replicas
 
-    def maxReplicas(self) -> int:
+    def max_replicas(self) -> int:
         """
         maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
         It cannot be less that minReplicas.
         """
-        return self.__maxReplicas
+        return self.__max_replicas
 
     def metrics(self) -> Optional[List["MetricSpec"]]:
         """
@@ -552,7 +554,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         spec: "HorizontalPodAutoscalerSpec" = None,
     ):
         super().__init__(
-            apiVersion="autoscaling/v2beta1",
+            api_version="autoscaling/v2beta1",
             kind="HorizontalPodAutoscaler",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

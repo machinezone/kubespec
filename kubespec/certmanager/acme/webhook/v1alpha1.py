@@ -32,24 +32,24 @@ class ChallengeRequest(types.Object):
         uid: str = "",
         action: ChallengeAction = None,
         type: str = "",
-        dnsName: str = "",
+        dns_name: str = "",
         key: str = "",
-        resourceNamespace: str = "",
-        resolvedFQDN: str = None,
-        resolvedZone: str = None,
-        allowAmbientCredentials: bool = False,
+        resource_namespace: str = "",
+        resolved_fqdn: str = None,
+        resolved_zone: str = None,
+        allow_ambient_credentials: bool = False,
         config: "apiextensionsv1beta1.JSON" = None,
     ):
         super().__init__()
         self.__uid = uid
         self.__action = action
         self.__type = type
-        self.__dnsName = dnsName
+        self.__dns_name = dns_name
         self.__key = key
-        self.__resourceNamespace = resourceNamespace
-        self.__resolvedFQDN = resolvedFQDN
-        self.__resolvedZone = resolvedZone
-        self.__allowAmbientCredentials = allowAmbientCredentials
+        self.__resource_namespace = resource_namespace
+        self.__resolved_fqdn = resolved_fqdn
+        self.__resolved_zone = resolved_zone
+        self.__allow_ambient_credentials = allow_ambient_credentials
         self.__config = config
 
     @typechecked
@@ -64,26 +64,26 @@ class ChallengeRequest(types.Object):
         type = self.type()
         check_type("type", type, str)
         v["type"] = type
-        dnsName = self.dnsName()
-        check_type("dnsName", dnsName, str)
-        v["dnsName"] = dnsName
+        dns_name = self.dns_name()
+        check_type("dns_name", dns_name, str)
+        v["dnsName"] = dns_name
         key = self.key()
         check_type("key", key, str)
         v["key"] = key
-        resourceNamespace = self.resourceNamespace()
-        check_type("resourceNamespace", resourceNamespace, str)
-        v["resourceNamespace"] = resourceNamespace
-        resolvedFQDN = self.resolvedFQDN()
-        check_type("resolvedFQDN", resolvedFQDN, Optional[str])
-        if resolvedFQDN:  # omit empty
-            v["resolvedFQDN"] = resolvedFQDN
-        resolvedZone = self.resolvedZone()
-        check_type("resolvedZone", resolvedZone, Optional[str])
-        if resolvedZone:  # omit empty
-            v["resolvedZone"] = resolvedZone
-        allowAmbientCredentials = self.allowAmbientCredentials()
-        check_type("allowAmbientCredentials", allowAmbientCredentials, bool)
-        v["allowAmbientCredentials"] = allowAmbientCredentials
+        resource_namespace = self.resource_namespace()
+        check_type("resource_namespace", resource_namespace, str)
+        v["resourceNamespace"] = resource_namespace
+        resolved_fqdn = self.resolved_fqdn()
+        check_type("resolved_fqdn", resolved_fqdn, Optional[str])
+        if resolved_fqdn:  # omit empty
+            v["resolvedFQDN"] = resolved_fqdn
+        resolved_zone = self.resolved_zone()
+        check_type("resolved_zone", resolved_zone, Optional[str])
+        if resolved_zone:  # omit empty
+            v["resolvedZone"] = resolved_zone
+        allow_ambient_credentials = self.allow_ambient_credentials()
+        check_type("allow_ambient_credentials", allow_ambient_credentials, bool)
+        v["allowAmbientCredentials"] = allow_ambient_credentials
         config = self.config()
         check_type("config", config, Optional["apiextensionsv1beta1.JSON"])
         if config is not None:  # omit empty
@@ -116,14 +116,14 @@ class ChallengeRequest(types.Object):
         """
         return self.__type
 
-    def dnsName(self) -> str:
+    def dns_name(self) -> str:
         """
         DNSName is the name of the domain that is actually being validated, as
         requested by the user on the Certificate resource.
         This will be of the form 'example.com' from normal hostnames, and
         '*.example.com' for wildcards.
         """
-        return self.__dnsName
+        return self.__dns_name
 
     def key(self) -> str:
         """
@@ -134,7 +134,7 @@ class ChallengeRequest(types.Object):
         """
         return self.__key
 
-    def resourceNamespace(self) -> str:
+    def resource_namespace(self) -> str:
         """
         ResourceNamespace is the namespace containing resources that are
         referenced in the providers config.
@@ -143,18 +143,18 @@ class ChallengeRequest(types.Object):
         If this request is solving for a ClusterIssuer resource, this will be
         the configured 'cluster resource namespace'
         """
-        return self.__resourceNamespace
+        return self.__resource_namespace
 
-    def resolvedFQDN(self) -> Optional[str]:
+    def resolved_fqdn(self) -> Optional[str]:
         """
         ResolvedFQDN is the fully-qualified domain name that should be
         updated/presented after resolving all CNAMEs.
         This should be honoured when using the DNS01 solver type.
         This will be of the form '_acme-challenge.example.com.'.
         """
-        return self.__resolvedFQDN
+        return self.__resolved_fqdn
 
-    def resolvedZone(self) -> Optional[str]:
+    def resolved_zone(self) -> Optional[str]:
         """
         ResolvedZone is the zone encompassing the ResolvedFQDN.
         This is included as part of the ChallengeRequest so that webhook
@@ -164,9 +164,9 @@ class ChallengeRequest(types.Object):
         until an authoritative zone is found.
         This will be of the form 'example.com.'.
         """
-        return self.__resolvedZone
+        return self.__resolved_zone
 
-    def allowAmbientCredentials(self) -> bool:
+    def allow_ambient_credentials(self) -> bool:
         """
         AllowAmbientCredentials advises webhook implementations that they can
         use 'ambient credentials' for authenticating with their respective
@@ -175,7 +175,7 @@ class ChallengeRequest(types.Object):
         in certain instances where it does not make sense to honour this option,
         an implementation may ignore it.
         """
-        return self.__allowAmbientCredentials
+        return self.__allow_ambient_credentials
 
     def config(self) -> Optional["apiextensionsv1beta1.JSON"]:
         """
@@ -248,7 +248,7 @@ class ChallengePayload(base.TypedObject):
         self, request: "ChallengeRequest" = None, response: "ChallengeResponse" = None
     ):
         super().__init__(
-            apiVersion="webhook.acme.cert-manager.io/v1alpha1", kind="ChallengePayload"
+            api_version="webhook.acme.cert-manager.io/v1alpha1", kind="ChallengePayload"
         )
         self.__request = request
         self.__response = response

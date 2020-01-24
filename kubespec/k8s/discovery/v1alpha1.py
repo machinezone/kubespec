@@ -75,7 +75,7 @@ class Endpoint(types.Object):
         addresses: List[str] = None,
         conditions: "EndpointConditions" = None,
         hostname: str = None,
-        targetRef: "k8sv1.ObjectReference" = None,
+        target_ref: "k8sv1.ObjectReference" = None,
         topology: Dict[str, str] = None,
     ):
         super().__init__()
@@ -84,7 +84,7 @@ class Endpoint(types.Object):
             conditions if conditions is not None else EndpointConditions()
         )
         self.__hostname = hostname
-        self.__targetRef = targetRef
+        self.__target_ref = target_ref
         self.__topology = topology if topology is not None else {}
 
     @typechecked
@@ -100,10 +100,10 @@ class Endpoint(types.Object):
         check_type("hostname", hostname, Optional[str])
         if hostname is not None:  # omit empty
             v["hostname"] = hostname
-        targetRef = self.targetRef()
-        check_type("targetRef", targetRef, Optional["k8sv1.ObjectReference"])
-        if targetRef is not None:  # omit empty
-            v["targetRef"] = targetRef
+        target_ref = self.target_ref()
+        check_type("target_ref", target_ref, Optional["k8sv1.ObjectReference"])
+        if target_ref is not None:  # omit empty
+            v["targetRef"] = target_ref
         topology = self.topology()
         check_type("topology", topology, Optional[Dict[str, str]])
         if topology:  # omit empty
@@ -137,12 +137,12 @@ class Endpoint(types.Object):
         """
         return self.__hostname
 
-    def targetRef(self) -> Optional["k8sv1.ObjectReference"]:
+    def target_ref(self) -> Optional["k8sv1.ObjectReference"]:
         """
         targetRef is a reference to a Kubernetes object that represents this
         endpoint.
         """
-        return self.__targetRef
+        return self.__target_ref
 
     def topology(self) -> Optional[Dict[str, str]]:
         """
@@ -174,13 +174,13 @@ class EndpointPort(types.Object):
         name: str = None,
         protocol: k8sv1.Protocol = None,
         port: int = None,
-        appProtocol: str = None,
+        app_protocol: str = None,
     ):
         super().__init__()
         self.__name = name
         self.__protocol = protocol if protocol is not None else k8sv1.Protocol["TCP"]
         self.__port = port
-        self.__appProtocol = appProtocol
+        self.__app_protocol = app_protocol
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -197,10 +197,10 @@ class EndpointPort(types.Object):
         check_type("port", port, Optional[int])
         if port is not None:  # omit empty
             v["port"] = port
-        appProtocol = self.appProtocol()
-        check_type("appProtocol", appProtocol, Optional[str])
-        if appProtocol is not None:  # omit empty
-            v["appProtocol"] = appProtocol
+        app_protocol = self.app_protocol()
+        check_type("app_protocol", app_protocol, Optional[str])
+        if app_protocol is not None:  # omit empty
+            v["appProtocol"] = app_protocol
         return v
 
     def name(self) -> Optional[str]:
@@ -232,7 +232,7 @@ class EndpointPort(types.Object):
         """
         return self.__port
 
-    def appProtocol(self) -> Optional[str]:
+    def app_protocol(self) -> Optional[str]:
         """
         The application protocol for this port.
         This field follows standard Kubernetes label syntax.
@@ -241,7 +241,7 @@ class EndpointPort(types.Object):
         Non-standard protocols should use prefixed names.
         Default is empty string.
         """
-        return self.__appProtocol
+        return self.__app_protocol
 
 
 class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
@@ -259,28 +259,28 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        addressType: AddressType = None,
+        address_type: AddressType = None,
         endpoints: List["Endpoint"] = None,
         ports: List["EndpointPort"] = None,
     ):
         super().__init__(
-            apiVersion="discovery.k8s.io/v1alpha1",
+            api_version="discovery.k8s.io/v1alpha1",
             kind="EndpointSlice",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__addressType = addressType
+        self.__address_type = address_type
         self.__endpoints = endpoints if endpoints is not None else []
         self.__ports = ports if ports is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        addressType = self.addressType()
-        check_type("addressType", addressType, AddressType)
-        v["addressType"] = addressType
+        address_type = self.address_type()
+        check_type("address_type", address_type, AddressType)
+        v["addressType"] = address_type
         endpoints = self.endpoints()
         check_type("endpoints", endpoints, List["Endpoint"])
         v["endpoints"] = endpoints
@@ -289,7 +289,7 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         v["ports"] = ports
         return v
 
-    def addressType(self) -> AddressType:
+    def address_type(self) -> AddressType:
         """
         addressType specifies the type of address carried by this EndpointSlice.
         All addresses in this slice must be the same type. This field is
@@ -299,7 +299,7 @@ class EndpointSlice(base.TypedObject, base.NamespacedMetadataObject):
         * IPv6: Represents an IPv6 Address.
         * FQDN: Represents a Fully Qualified Domain Name.
         """
-        return self.__addressType
+        return self.__address_type
 
     def endpoints(self) -> List["Endpoint"]:
         """

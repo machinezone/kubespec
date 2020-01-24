@@ -42,12 +42,12 @@ class ConversionRequest(types.Object):
     def __init__(
         self,
         uid: str = "",
-        desiredAPIVersion: str = "",
+        desired_api_version: str = "",
         objects: List["runtime.RawExtension"] = None,
     ):
         super().__init__()
         self.__uid = uid
-        self.__desiredAPIVersion = desiredAPIVersion
+        self.__desired_api_version = desired_api_version
         self.__objects = objects if objects is not None else []
 
     @typechecked
@@ -56,9 +56,9 @@ class ConversionRequest(types.Object):
         uid = self.uid()
         check_type("uid", uid, str)
         v["uid"] = uid
-        desiredAPIVersion = self.desiredAPIVersion()
-        check_type("desiredAPIVersion", desiredAPIVersion, str)
-        v["desiredAPIVersion"] = desiredAPIVersion
+        desired_api_version = self.desired_api_version()
+        check_type("desired_api_version", desired_api_version, str)
+        v["desiredAPIVersion"] = desired_api_version
         objects = self.objects()
         check_type("objects", objects, List["runtime.RawExtension"])
         v["objects"] = objects
@@ -73,11 +73,11 @@ class ConversionRequest(types.Object):
         """
         return self.__uid
 
-    def desiredAPIVersion(self) -> str:
+    def desired_api_version(self) -> str:
         """
         desiredAPIVersion is the version to convert given objects to. e.g. "myapi.example.com/v1"
         """
-        return self.__desiredAPIVersion
+        return self.__desired_api_version
 
     def objects(self) -> List["runtime.RawExtension"]:
         """
@@ -96,13 +96,13 @@ class ConversionResponse(types.Object):
     def __init__(
         self,
         uid: str = "",
-        convertedObjects: List["runtime.RawExtension"] = None,
+        converted_objects: List["runtime.RawExtension"] = None,
         result: "metav1.Status" = None,
     ):
         super().__init__()
         self.__uid = uid
-        self.__convertedObjects = (
-            convertedObjects if convertedObjects is not None else []
+        self.__converted_objects = (
+            converted_objects if converted_objects is not None else []
         )
         self.__result = result if result is not None else metav1.Status()
 
@@ -112,9 +112,9 @@ class ConversionResponse(types.Object):
         uid = self.uid()
         check_type("uid", uid, str)
         v["uid"] = uid
-        convertedObjects = self.convertedObjects()
-        check_type("convertedObjects", convertedObjects, List["runtime.RawExtension"])
-        v["convertedObjects"] = convertedObjects
+        converted_objects = self.converted_objects()
+        check_type("converted_objects", converted_objects, List["runtime.RawExtension"])
+        v["convertedObjects"] = converted_objects
         result = self.result()
         check_type("result", result, "metav1.Status")
         v["result"] = result
@@ -127,14 +127,14 @@ class ConversionResponse(types.Object):
         """
         return self.__uid
 
-    def convertedObjects(self) -> List["runtime.RawExtension"]:
+    def converted_objects(self) -> List["runtime.RawExtension"]:
         """
         convertedObjects is the list of converted version of `request.objects` if the `result` is successful, otherwise empty.
         The webhook is expected to set `apiVersion` of these objects to the `request.desiredAPIVersion`. The list
         must also have the same size as the input list with the same objects in the same order (equal kind, metadata.uid, metadata.name and metadata.namespace).
         The webhook is allowed to mutate labels and annotations. Any other change to the metadata is silently ignored.
         """
-        return self.__convertedObjects
+        return self.__converted_objects
 
     def result(self) -> "metav1.Status":
         """
@@ -157,7 +157,7 @@ class ConversionReview(base.TypedObject):
     def __init__(
         self, request: "ConversionRequest" = None, response: "ConversionResponse" = None
     ):
-        super().__init__(apiVersion="apiextensions.k8s.io/v1", kind="ConversionReview")
+        super().__init__(api_version="apiextensions.k8s.io/v1", kind="ConversionReview")
         self.__request = request
         self.__response = response
 
@@ -201,7 +201,7 @@ class CustomResourceColumnDefinition(types.Object):
         format: str = None,
         description: str = None,
         priority: int = None,
-        jsonPath: str = "",
+        json_path: str = "",
     ):
         super().__init__()
         self.__name = name
@@ -209,7 +209,7 @@ class CustomResourceColumnDefinition(types.Object):
         self.__format = format
         self.__description = description
         self.__priority = priority
-        self.__jsonPath = jsonPath
+        self.__json_path = json_path
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -232,9 +232,9 @@ class CustomResourceColumnDefinition(types.Object):
         check_type("priority", priority, Optional[int])
         if priority:  # omit empty
             v["priority"] = priority
-        jsonPath = self.jsonPath()
-        check_type("jsonPath", jsonPath, str)
-        v["jsonPath"] = jsonPath
+        json_path = self.json_path()
+        check_type("json_path", json_path, str)
+        v["jsonPath"] = json_path
         return v
 
     def name(self) -> str:
@@ -272,12 +272,12 @@ class CustomResourceColumnDefinition(types.Object):
         """
         return self.__priority
 
-    def jsonPath(self) -> str:
+    def json_path(self) -> str:
         """
         jsonPath is a simple JSON path (i.e. with array notation) which is evaluated against
         each custom resource to produce the value for this column.
         """
-        return self.__jsonPath
+        return self.__json_path
 
 
 class ServiceReference(types.Object):
@@ -355,12 +355,12 @@ class WebhookClientConfig(types.Object):
         self,
         url: str = None,
         service: "ServiceReference" = None,
-        caBundle: bytes = None,
+        ca_bundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
         self.__service = service
-        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -373,10 +373,10 @@ class WebhookClientConfig(types.Object):
         check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
         return v
 
     def url(self) -> Optional[str]:
@@ -418,12 +418,12 @@ class WebhookClientConfig(types.Object):
         """
         return self.__service
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         caBundle is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
         If unspecified, system trust roots on the apiserver are used.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
 
 class WebhookConversion(types.Object):
@@ -435,34 +435,34 @@ class WebhookConversion(types.Object):
     @typechecked
     def __init__(
         self,
-        clientConfig: "WebhookClientConfig" = None,
-        conversionReviewVersions: List[str] = None,
+        client_config: "WebhookClientConfig" = None,
+        conversion_review_versions: List[str] = None,
     ):
         super().__init__()
-        self.__clientConfig = clientConfig
-        self.__conversionReviewVersions = (
-            conversionReviewVersions if conversionReviewVersions is not None else []
+        self.__client_config = client_config
+        self.__conversion_review_versions = (
+            conversion_review_versions if conversion_review_versions is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, Optional["WebhookClientConfig"])
-        if clientConfig is not None:  # omit empty
-            v["clientConfig"] = clientConfig
-        conversionReviewVersions = self.conversionReviewVersions()
-        check_type("conversionReviewVersions", conversionReviewVersions, List[str])
-        v["conversionReviewVersions"] = conversionReviewVersions
+        client_config = self.client_config()
+        check_type("client_config", client_config, Optional["WebhookClientConfig"])
+        if client_config is not None:  # omit empty
+            v["clientConfig"] = client_config
+        conversion_review_versions = self.conversion_review_versions()
+        check_type("conversion_review_versions", conversion_review_versions, List[str])
+        v["conversionReviewVersions"] = conversion_review_versions
         return v
 
-    def clientConfig(self) -> Optional["WebhookClientConfig"]:
+    def client_config(self) -> Optional["WebhookClientConfig"]:
         """
         clientConfig is the instructions for how to call the webhook if strategy is `Webhook`.
         """
-        return self.__clientConfig
+        return self.__client_config
 
-    def conversionReviewVersions(self) -> List[str]:
+    def conversion_review_versions(self) -> List[str]:
         """
         conversionReviewVersions is an ordered list of preferred `ConversionReview`
         versions the Webhook expects. The API server will use the first version in
@@ -471,7 +471,7 @@ class WebhookConversion(types.Object):
         If a persisted Webhook configuration specifies allowed versions and does not
         include any versions known to the API Server, calls to the webhook will fail.
         """
-        return self.__conversionReviewVersions
+        return self.__conversion_review_versions
 
 
 class CustomResourceConversion(types.Object):
@@ -529,17 +529,17 @@ class CustomResourceDefinitionNames(types.Object):
         self,
         plural: str = "",
         singular: str = None,
-        shortNames: List[str] = None,
+        short_names: List[str] = None,
         kind: str = "",
-        listKind: str = None,
+        list_kind: str = None,
         categories: List[str] = None,
     ):
         super().__init__()
         self.__plural = plural
         self.__singular = singular
-        self.__shortNames = shortNames if shortNames is not None else []
+        self.__short_names = short_names if short_names is not None else []
         self.__kind = kind
-        self.__listKind = listKind
+        self.__list_kind = list_kind
         self.__categories = categories if categories is not None else []
 
     @typechecked
@@ -552,17 +552,17 @@ class CustomResourceDefinitionNames(types.Object):
         check_type("singular", singular, Optional[str])
         if singular:  # omit empty
             v["singular"] = singular
-        shortNames = self.shortNames()
-        check_type("shortNames", shortNames, Optional[List[str]])
-        if shortNames:  # omit empty
-            v["shortNames"] = shortNames
+        short_names = self.short_names()
+        check_type("short_names", short_names, Optional[List[str]])
+        if short_names:  # omit empty
+            v["shortNames"] = short_names
         kind = self.kind()
         check_type("kind", kind, str)
         v["kind"] = kind
-        listKind = self.listKind()
-        check_type("listKind", listKind, Optional[str])
-        if listKind:  # omit empty
-            v["listKind"] = listKind
+        list_kind = self.list_kind()
+        check_type("list_kind", list_kind, Optional[str])
+        if list_kind:  # omit empty
+            v["listKind"] = list_kind
         categories = self.categories()
         check_type("categories", categories, Optional[List[str]])
         if categories:  # omit empty
@@ -584,13 +584,13 @@ class CustomResourceDefinitionNames(types.Object):
         """
         return self.__singular
 
-    def shortNames(self) -> Optional[List[str]]:
+    def short_names(self) -> Optional[List[str]]:
         """
         shortNames are short names for the resource, exposed in API discovery documents,
         and used by clients to support invocations like `kubectl get <shortname>`.
         It must be all lowercase.
         """
-        return self.__shortNames
+        return self.__short_names
 
     def kind(self) -> str:
         """
@@ -599,11 +599,11 @@ class CustomResourceDefinitionNames(types.Object):
         """
         return self.__kind
 
-    def listKind(self) -> Optional[str]:
+    def list_kind(self) -> Optional[str]:
         """
         listKind is the serialized kind of the list for this resource. Defaults to "`kind`List".
         """
-        return self.__listKind
+        return self.__list_kind
 
     def categories(self) -> Optional[List[str]]:
         """
@@ -623,40 +623,40 @@ class CustomResourceSubresourceScale(types.Object):
     @typechecked
     def __init__(
         self,
-        specReplicasPath: str = "",
-        statusReplicasPath: str = "",
-        labelSelectorPath: str = None,
+        spec_replicas_path: str = "",
+        status_replicas_path: str = "",
+        label_selector_path: str = None,
     ):
         super().__init__()
-        self.__specReplicasPath = specReplicasPath
-        self.__statusReplicasPath = statusReplicasPath
-        self.__labelSelectorPath = labelSelectorPath
+        self.__spec_replicas_path = spec_replicas_path
+        self.__status_replicas_path = status_replicas_path
+        self.__label_selector_path = label_selector_path
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        specReplicasPath = self.specReplicasPath()
-        check_type("specReplicasPath", specReplicasPath, str)
-        v["specReplicasPath"] = specReplicasPath
-        statusReplicasPath = self.statusReplicasPath()
-        check_type("statusReplicasPath", statusReplicasPath, str)
-        v["statusReplicasPath"] = statusReplicasPath
-        labelSelectorPath = self.labelSelectorPath()
-        check_type("labelSelectorPath", labelSelectorPath, Optional[str])
-        if labelSelectorPath is not None:  # omit empty
-            v["labelSelectorPath"] = labelSelectorPath
+        spec_replicas_path = self.spec_replicas_path()
+        check_type("spec_replicas_path", spec_replicas_path, str)
+        v["specReplicasPath"] = spec_replicas_path
+        status_replicas_path = self.status_replicas_path()
+        check_type("status_replicas_path", status_replicas_path, str)
+        v["statusReplicasPath"] = status_replicas_path
+        label_selector_path = self.label_selector_path()
+        check_type("label_selector_path", label_selector_path, Optional[str])
+        if label_selector_path is not None:  # omit empty
+            v["labelSelectorPath"] = label_selector_path
         return v
 
-    def specReplicasPath(self) -> str:
+    def spec_replicas_path(self) -> str:
         """
         specReplicasPath defines the JSON path inside of a custom resource that corresponds to Scale `spec.replicas`.
         Only JSON paths without the array notation are allowed.
         Must be a JSON Path under `.spec`.
         If there is no value under the given path in the custom resource, the `/scale` subresource will return an error on GET.
         """
-        return self.__specReplicasPath
+        return self.__spec_replicas_path
 
-    def statusReplicasPath(self) -> str:
+    def status_replicas_path(self) -> str:
         """
         statusReplicasPath defines the JSON path inside of a custom resource that corresponds to Scale `status.replicas`.
         Only JSON paths without the array notation are allowed.
@@ -664,9 +664,9 @@ class CustomResourceSubresourceScale(types.Object):
         If there is no value under the given path in the custom resource, the `status.replicas` value in the `/scale` subresource
         will default to 0.
         """
-        return self.__statusReplicasPath
+        return self.__status_replicas_path
 
-    def labelSelectorPath(self) -> Optional[str]:
+    def label_selector_path(self) -> Optional[str]:
         """
         labelSelectorPath defines the JSON path inside of a custom resource that corresponds to Scale `status.selector`.
         Only JSON paths without the array notation are allowed.
@@ -678,7 +678,7 @@ class CustomResourceSubresourceScale(types.Object):
         If there is no value under the given path in the custom resource, the `status.selector` value in the `/scale`
         subresource will default to the empty string.
         """
-        return self.__labelSelectorPath
+        return self.__label_selector_path
 
 
 class CustomResourceSubresourceStatus(types.Object):
@@ -812,40 +812,40 @@ class JSONSchemaProps(types.Object):
         title: str = None,
         default: "JSON" = None,
         maximum: float = None,
-        exclusiveMaximum: bool = None,
+        exclusive_maximum: bool = None,
         minimum: float = None,
-        exclusiveMinimum: bool = None,
-        maxLength: int = None,
-        minLength: int = None,
+        exclusive_minimum: bool = None,
+        max_length: int = None,
+        min_length: int = None,
         pattern: str = None,
-        maxItems: int = None,
-        minItems: int = None,
-        uniqueItems: bool = None,
-        multipleOf: float = None,
+        max_items: int = None,
+        min_items: int = None,
+        unique_items: bool = None,
+        multiple_of: float = None,
         enum: List["JSON"] = None,
-        maxProperties: int = None,
-        minProperties: int = None,
+        max_properties: int = None,
+        min_properties: int = None,
         required: List[str] = None,
         items: Union["JSONSchemaProps", List["JSONSchemaProps"]] = None,
-        allOf: List["JSONSchemaProps"] = None,
-        oneOf: List["JSONSchemaProps"] = None,
-        anyOf: List["JSONSchemaProps"] = None,
+        all_of: List["JSONSchemaProps"] = None,
+        one_of: List["JSONSchemaProps"] = None,
+        any_of: List["JSONSchemaProps"] = None,
         not_: "JSONSchemaProps" = None,
         properties: Dict[str, "JSONSchemaProps"] = None,
-        additionalProperties: Union["JSONSchemaProps", bool] = None,
-        patternProperties: Dict[str, "JSONSchemaProps"] = None,
+        additional_properties: Union["JSONSchemaProps", bool] = None,
+        pattern_properties: Dict[str, "JSONSchemaProps"] = None,
         dependencies: Dict[str, Union["JSONSchemaProps", List[str]]] = None,
-        additionalItems: Union["JSONSchemaProps", bool] = None,
+        additional_items: Union["JSONSchemaProps", bool] = None,
         definitions: Dict[str, "JSONSchemaProps"] = None,
-        externalDocs: "ExternalDocumentation" = None,
+        external_docs: "ExternalDocumentation" = None,
         example: "JSON" = None,
         nullable: bool = None,
-        xKubernetesPreserveUnknownFields: bool = None,
-        xKubernetesEmbeddedResource: bool = None,
-        xKubernetesIntOrString: bool = None,
-        xKubernetesListMapKeys: List[str] = None,
-        xKubernetesListType: str = None,
-        xKubernetesMapType: str = None,
+        x_kubernetes_preserve_unknown_fields: bool = None,
+        x_kubernetes_embedded_resource: bool = None,
+        x_kubernetes_int_or_string: bool = None,
+        x_kubernetes_list_map_keys: List[str] = None,
+        x_kubernetes_list_type: str = None,
+        x_kubernetes_map_type: str = None,
     ):
         super().__init__()
         self.__id = id
@@ -857,44 +857,46 @@ class JSONSchemaProps(types.Object):
         self.__title = title
         self.__default = default
         self.__maximum = maximum
-        self.__exclusiveMaximum = exclusiveMaximum
+        self.__exclusive_maximum = exclusive_maximum
         self.__minimum = minimum
-        self.__exclusiveMinimum = exclusiveMinimum
-        self.__maxLength = maxLength
-        self.__minLength = minLength
+        self.__exclusive_minimum = exclusive_minimum
+        self.__max_length = max_length
+        self.__min_length = min_length
         self.__pattern = pattern
-        self.__maxItems = maxItems
-        self.__minItems = minItems
-        self.__uniqueItems = uniqueItems
-        self.__multipleOf = multipleOf
+        self.__max_items = max_items
+        self.__min_items = min_items
+        self.__unique_items = unique_items
+        self.__multiple_of = multiple_of
         self.__enum = enum if enum is not None else []
-        self.__maxProperties = maxProperties
-        self.__minProperties = minProperties
+        self.__max_properties = max_properties
+        self.__min_properties = min_properties
         self.__required = required if required is not None else []
         self.__items = items
-        self.__allOf = allOf if allOf is not None else []
-        self.__oneOf = oneOf if oneOf is not None else []
-        self.__anyOf = anyOf if anyOf is not None else []
+        self.__all_of = all_of if all_of is not None else []
+        self.__one_of = one_of if one_of is not None else []
+        self.__any_of = any_of if any_of is not None else []
         self.__not_ = not_
         self.__properties = properties if properties is not None else {}
-        self.__additionalProperties = additionalProperties
-        self.__patternProperties = (
-            patternProperties if patternProperties is not None else {}
+        self.__additional_properties = additional_properties
+        self.__pattern_properties = (
+            pattern_properties if pattern_properties is not None else {}
         )
         self.__dependencies = dependencies if dependencies is not None else {}
-        self.__additionalItems = additionalItems
+        self.__additional_items = additional_items
         self.__definitions = definitions if definitions is not None else {}
-        self.__externalDocs = externalDocs
+        self.__external_docs = external_docs
         self.__example = example
         self.__nullable = nullable
-        self.__xKubernetesPreserveUnknownFields = xKubernetesPreserveUnknownFields
-        self.__xKubernetesEmbeddedResource = xKubernetesEmbeddedResource
-        self.__xKubernetesIntOrString = xKubernetesIntOrString
-        self.__xKubernetesListMapKeys = (
-            xKubernetesListMapKeys if xKubernetesListMapKeys is not None else []
+        self.__x_kubernetes_preserve_unknown_fields = (
+            x_kubernetes_preserve_unknown_fields
         )
-        self.__xKubernetesListType = xKubernetesListType
-        self.__xKubernetesMapType = xKubernetesMapType
+        self.__x_kubernetes_embedded_resource = x_kubernetes_embedded_resource
+        self.__x_kubernetes_int_or_string = x_kubernetes_int_or_string
+        self.__x_kubernetes_list_map_keys = (
+            x_kubernetes_list_map_keys if x_kubernetes_list_map_keys is not None else []
+        )
+        self.__x_kubernetes_list_type = x_kubernetes_list_type
+        self.__x_kubernetes_map_type = x_kubernetes_map_type
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -935,58 +937,58 @@ class JSONSchemaProps(types.Object):
         check_type("maximum", maximum, Optional[float])
         if maximum is not None:  # omit empty
             v["maximum"] = maximum
-        exclusiveMaximum = self.exclusiveMaximum()
-        check_type("exclusiveMaximum", exclusiveMaximum, Optional[bool])
-        if exclusiveMaximum:  # omit empty
-            v["exclusiveMaximum"] = exclusiveMaximum
+        exclusive_maximum = self.exclusive_maximum()
+        check_type("exclusive_maximum", exclusive_maximum, Optional[bool])
+        if exclusive_maximum:  # omit empty
+            v["exclusiveMaximum"] = exclusive_maximum
         minimum = self.minimum()
         check_type("minimum", minimum, Optional[float])
         if minimum is not None:  # omit empty
             v["minimum"] = minimum
-        exclusiveMinimum = self.exclusiveMinimum()
-        check_type("exclusiveMinimum", exclusiveMinimum, Optional[bool])
-        if exclusiveMinimum:  # omit empty
-            v["exclusiveMinimum"] = exclusiveMinimum
-        maxLength = self.maxLength()
-        check_type("maxLength", maxLength, Optional[int])
-        if maxLength is not None:  # omit empty
-            v["maxLength"] = maxLength
-        minLength = self.minLength()
-        check_type("minLength", minLength, Optional[int])
-        if minLength is not None:  # omit empty
-            v["minLength"] = minLength
+        exclusive_minimum = self.exclusive_minimum()
+        check_type("exclusive_minimum", exclusive_minimum, Optional[bool])
+        if exclusive_minimum:  # omit empty
+            v["exclusiveMinimum"] = exclusive_minimum
+        max_length = self.max_length()
+        check_type("max_length", max_length, Optional[int])
+        if max_length is not None:  # omit empty
+            v["maxLength"] = max_length
+        min_length = self.min_length()
+        check_type("min_length", min_length, Optional[int])
+        if min_length is not None:  # omit empty
+            v["minLength"] = min_length
         pattern = self.pattern()
         check_type("pattern", pattern, Optional[str])
         if pattern:  # omit empty
             v["pattern"] = pattern
-        maxItems = self.maxItems()
-        check_type("maxItems", maxItems, Optional[int])
-        if maxItems is not None:  # omit empty
-            v["maxItems"] = maxItems
-        minItems = self.minItems()
-        check_type("minItems", minItems, Optional[int])
-        if minItems is not None:  # omit empty
-            v["minItems"] = minItems
-        uniqueItems = self.uniqueItems()
-        check_type("uniqueItems", uniqueItems, Optional[bool])
-        if uniqueItems:  # omit empty
-            v["uniqueItems"] = uniqueItems
-        multipleOf = self.multipleOf()
-        check_type("multipleOf", multipleOf, Optional[float])
-        if multipleOf is not None:  # omit empty
-            v["multipleOf"] = multipleOf
+        max_items = self.max_items()
+        check_type("max_items", max_items, Optional[int])
+        if max_items is not None:  # omit empty
+            v["maxItems"] = max_items
+        min_items = self.min_items()
+        check_type("min_items", min_items, Optional[int])
+        if min_items is not None:  # omit empty
+            v["minItems"] = min_items
+        unique_items = self.unique_items()
+        check_type("unique_items", unique_items, Optional[bool])
+        if unique_items:  # omit empty
+            v["uniqueItems"] = unique_items
+        multiple_of = self.multiple_of()
+        check_type("multiple_of", multiple_of, Optional[float])
+        if multiple_of is not None:  # omit empty
+            v["multipleOf"] = multiple_of
         enum = self.enum()
         check_type("enum", enum, Optional[List["JSON"]])
         if enum:  # omit empty
             v["enum"] = enum
-        maxProperties = self.maxProperties()
-        check_type("maxProperties", maxProperties, Optional[int])
-        if maxProperties is not None:  # omit empty
-            v["maxProperties"] = maxProperties
-        minProperties = self.minProperties()
-        check_type("minProperties", minProperties, Optional[int])
-        if minProperties is not None:  # omit empty
-            v["minProperties"] = minProperties
+        max_properties = self.max_properties()
+        check_type("max_properties", max_properties, Optional[int])
+        if max_properties is not None:  # omit empty
+            v["maxProperties"] = max_properties
+        min_properties = self.min_properties()
+        check_type("min_properties", min_properties, Optional[int])
+        if min_properties is not None:  # omit empty
+            v["minProperties"] = min_properties
         required = self.required()
         check_type("required", required, Optional[List[str]])
         if required:  # omit empty
@@ -997,18 +999,18 @@ class JSONSchemaProps(types.Object):
         )
         if items is not None:  # omit empty
             v["items"] = items
-        allOf = self.allOf()
-        check_type("allOf", allOf, Optional[List["JSONSchemaProps"]])
-        if allOf:  # omit empty
-            v["allOf"] = allOf
-        oneOf = self.oneOf()
-        check_type("oneOf", oneOf, Optional[List["JSONSchemaProps"]])
-        if oneOf:  # omit empty
-            v["oneOf"] = oneOf
-        anyOf = self.anyOf()
-        check_type("anyOf", anyOf, Optional[List["JSONSchemaProps"]])
-        if anyOf:  # omit empty
-            v["anyOf"] = anyOf
+        all_of = self.all_of()
+        check_type("all_of", all_of, Optional[List["JSONSchemaProps"]])
+        if all_of:  # omit empty
+            v["allOf"] = all_of
+        one_of = self.one_of()
+        check_type("one_of", one_of, Optional[List["JSONSchemaProps"]])
+        if one_of:  # omit empty
+            v["oneOf"] = one_of
+        any_of = self.any_of()
+        check_type("any_of", any_of, Optional[List["JSONSchemaProps"]])
+        if any_of:  # omit empty
+            v["anyOf"] = any_of
         not_ = self.not_()
         check_type("not_", not_, Optional["JSONSchemaProps"])
         if not_ is not None:  # omit empty
@@ -1017,22 +1019,22 @@ class JSONSchemaProps(types.Object):
         check_type("properties", properties, Optional[Dict[str, "JSONSchemaProps"]])
         if properties:  # omit empty
             v["properties"] = properties
-        additionalProperties = self.additionalProperties()
+        additional_properties = self.additional_properties()
         check_type(
-            "additionalProperties",
-            additionalProperties,
+            "additional_properties",
+            additional_properties,
             Optional[Union["JSONSchemaProps", bool]],
         )
-        if additionalProperties is not None:  # omit empty
-            v["additionalProperties"] = additionalProperties
-        patternProperties = self.patternProperties()
+        if additional_properties is not None:  # omit empty
+            v["additionalProperties"] = additional_properties
+        pattern_properties = self.pattern_properties()
         check_type(
-            "patternProperties",
-            patternProperties,
+            "pattern_properties",
+            pattern_properties,
             Optional[Dict[str, "JSONSchemaProps"]],
         )
-        if patternProperties:  # omit empty
-            v["patternProperties"] = patternProperties
+        if pattern_properties:  # omit empty
+            v["patternProperties"] = pattern_properties
         dependencies = self.dependencies()
         check_type(
             "dependencies",
@@ -1041,20 +1043,22 @@ class JSONSchemaProps(types.Object):
         )
         if dependencies:  # omit empty
             v["dependencies"] = dependencies
-        additionalItems = self.additionalItems()
+        additional_items = self.additional_items()
         check_type(
-            "additionalItems", additionalItems, Optional[Union["JSONSchemaProps", bool]]
+            "additional_items",
+            additional_items,
+            Optional[Union["JSONSchemaProps", bool]],
         )
-        if additionalItems is not None:  # omit empty
-            v["additionalItems"] = additionalItems
+        if additional_items is not None:  # omit empty
+            v["additionalItems"] = additional_items
         definitions = self.definitions()
         check_type("definitions", definitions, Optional[Dict[str, "JSONSchemaProps"]])
         if definitions:  # omit empty
             v["definitions"] = definitions
-        externalDocs = self.externalDocs()
-        check_type("externalDocs", externalDocs, Optional["ExternalDocumentation"])
-        if externalDocs is not None:  # omit empty
-            v["externalDocs"] = externalDocs
+        external_docs = self.external_docs()
+        check_type("external_docs", external_docs, Optional["ExternalDocumentation"])
+        if external_docs is not None:  # omit empty
+            v["externalDocs"] = external_docs
         example = self.example()
         check_type("example", example, Optional["JSON"])
         if example is not None:  # omit empty
@@ -1063,38 +1067,48 @@ class JSONSchemaProps(types.Object):
         check_type("nullable", nullable, Optional[bool])
         if nullable:  # omit empty
             v["nullable"] = nullable
-        xKubernetesPreserveUnknownFields = self.xKubernetesPreserveUnknownFields()
+        x_kubernetes_preserve_unknown_fields = (
+            self.x_kubernetes_preserve_unknown_fields()
+        )
         check_type(
-            "xKubernetesPreserveUnknownFields",
-            xKubernetesPreserveUnknownFields,
+            "x_kubernetes_preserve_unknown_fields",
+            x_kubernetes_preserve_unknown_fields,
             Optional[bool],
         )
-        if xKubernetesPreserveUnknownFields is not None:  # omit empty
-            v["x-kubernetes-preserve-unknown-fields"] = xKubernetesPreserveUnknownFields
-        xKubernetesEmbeddedResource = self.xKubernetesEmbeddedResource()
+        if x_kubernetes_preserve_unknown_fields is not None:  # omit empty
+            v[
+                "x-kubernetes-preserve-unknown-fields"
+            ] = x_kubernetes_preserve_unknown_fields
+        x_kubernetes_embedded_resource = self.x_kubernetes_embedded_resource()
         check_type(
-            "xKubernetesEmbeddedResource", xKubernetesEmbeddedResource, Optional[bool]
+            "x_kubernetes_embedded_resource",
+            x_kubernetes_embedded_resource,
+            Optional[bool],
         )
-        if xKubernetesEmbeddedResource:  # omit empty
-            v["x-kubernetes-embedded-resource"] = xKubernetesEmbeddedResource
-        xKubernetesIntOrString = self.xKubernetesIntOrString()
-        check_type("xKubernetesIntOrString", xKubernetesIntOrString, Optional[bool])
-        if xKubernetesIntOrString:  # omit empty
-            v["x-kubernetes-int-or-string"] = xKubernetesIntOrString
-        xKubernetesListMapKeys = self.xKubernetesListMapKeys()
+        if x_kubernetes_embedded_resource:  # omit empty
+            v["x-kubernetes-embedded-resource"] = x_kubernetes_embedded_resource
+        x_kubernetes_int_or_string = self.x_kubernetes_int_or_string()
         check_type(
-            "xKubernetesListMapKeys", xKubernetesListMapKeys, Optional[List[str]]
+            "x_kubernetes_int_or_string", x_kubernetes_int_or_string, Optional[bool]
         )
-        if xKubernetesListMapKeys:  # omit empty
-            v["x-kubernetes-list-map-keys"] = xKubernetesListMapKeys
-        xKubernetesListType = self.xKubernetesListType()
-        check_type("xKubernetesListType", xKubernetesListType, Optional[str])
-        if xKubernetesListType is not None:  # omit empty
-            v["x-kubernetes-list-type"] = xKubernetesListType
-        xKubernetesMapType = self.xKubernetesMapType()
-        check_type("xKubernetesMapType", xKubernetesMapType, Optional[str])
-        if xKubernetesMapType is not None:  # omit empty
-            v["x-kubernetes-map-type"] = xKubernetesMapType
+        if x_kubernetes_int_or_string:  # omit empty
+            v["x-kubernetes-int-or-string"] = x_kubernetes_int_or_string
+        x_kubernetes_list_map_keys = self.x_kubernetes_list_map_keys()
+        check_type(
+            "x_kubernetes_list_map_keys",
+            x_kubernetes_list_map_keys,
+            Optional[List[str]],
+        )
+        if x_kubernetes_list_map_keys:  # omit empty
+            v["x-kubernetes-list-map-keys"] = x_kubernetes_list_map_keys
+        x_kubernetes_list_type = self.x_kubernetes_list_type()
+        check_type("x_kubernetes_list_type", x_kubernetes_list_type, Optional[str])
+        if x_kubernetes_list_type is not None:  # omit empty
+            v["x-kubernetes-list-type"] = x_kubernetes_list_type
+        x_kubernetes_map_type = self.x_kubernetes_map_type()
+        check_type("x_kubernetes_map_type", x_kubernetes_map_type, Optional[str])
+        if x_kubernetes_map_type is not None:  # omit empty
+            v["x-kubernetes-map-type"] = x_kubernetes_map_type
         return v
 
     def id(self) -> Optional[str]:
@@ -1157,44 +1171,44 @@ class JSONSchemaProps(types.Object):
     def maximum(self) -> Optional[float]:
         return self.__maximum
 
-    def exclusiveMaximum(self) -> Optional[bool]:
-        return self.__exclusiveMaximum
+    def exclusive_maximum(self) -> Optional[bool]:
+        return self.__exclusive_maximum
 
     def minimum(self) -> Optional[float]:
         return self.__minimum
 
-    def exclusiveMinimum(self) -> Optional[bool]:
-        return self.__exclusiveMinimum
+    def exclusive_minimum(self) -> Optional[bool]:
+        return self.__exclusive_minimum
 
-    def maxLength(self) -> Optional[int]:
-        return self.__maxLength
+    def max_length(self) -> Optional[int]:
+        return self.__max_length
 
-    def minLength(self) -> Optional[int]:
-        return self.__minLength
+    def min_length(self) -> Optional[int]:
+        return self.__min_length
 
     def pattern(self) -> Optional[str]:
         return self.__pattern
 
-    def maxItems(self) -> Optional[int]:
-        return self.__maxItems
+    def max_items(self) -> Optional[int]:
+        return self.__max_items
 
-    def minItems(self) -> Optional[int]:
-        return self.__minItems
+    def min_items(self) -> Optional[int]:
+        return self.__min_items
 
-    def uniqueItems(self) -> Optional[bool]:
-        return self.__uniqueItems
+    def unique_items(self) -> Optional[bool]:
+        return self.__unique_items
 
-    def multipleOf(self) -> Optional[float]:
-        return self.__multipleOf
+    def multiple_of(self) -> Optional[float]:
+        return self.__multiple_of
 
     def enum(self) -> Optional[List["JSON"]]:
         return self.__enum
 
-    def maxProperties(self) -> Optional[int]:
-        return self.__maxProperties
+    def max_properties(self) -> Optional[int]:
+        return self.__max_properties
 
-    def minProperties(self) -> Optional[int]:
-        return self.__minProperties
+    def min_properties(self) -> Optional[int]:
+        return self.__min_properties
 
     def required(self) -> Optional[List[str]]:
         return self.__required
@@ -1202,14 +1216,14 @@ class JSONSchemaProps(types.Object):
     def items(self) -> Optional[Union["JSONSchemaProps", List["JSONSchemaProps"]]]:
         return self.__items
 
-    def allOf(self) -> Optional[List["JSONSchemaProps"]]:
-        return self.__allOf
+    def all_of(self) -> Optional[List["JSONSchemaProps"]]:
+        return self.__all_of
 
-    def oneOf(self) -> Optional[List["JSONSchemaProps"]]:
-        return self.__oneOf
+    def one_of(self) -> Optional[List["JSONSchemaProps"]]:
+        return self.__one_of
 
-    def anyOf(self) -> Optional[List["JSONSchemaProps"]]:
-        return self.__anyOf
+    def any_of(self) -> Optional[List["JSONSchemaProps"]]:
+        return self.__any_of
 
     def not_(self) -> Optional["JSONSchemaProps"]:
         return self.__not_
@@ -1217,23 +1231,23 @@ class JSONSchemaProps(types.Object):
     def properties(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
         return self.__properties
 
-    def additionalProperties(self) -> Optional[Union["JSONSchemaProps", bool]]:
-        return self.__additionalProperties
+    def additional_properties(self) -> Optional[Union["JSONSchemaProps", bool]]:
+        return self.__additional_properties
 
-    def patternProperties(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
-        return self.__patternProperties
+    def pattern_properties(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
+        return self.__pattern_properties
 
     def dependencies(self) -> Optional[Dict[str, Union["JSONSchemaProps", List[str]]]]:
         return self.__dependencies
 
-    def additionalItems(self) -> Optional[Union["JSONSchemaProps", bool]]:
-        return self.__additionalItems
+    def additional_items(self) -> Optional[Union["JSONSchemaProps", bool]]:
+        return self.__additional_items
 
     def definitions(self) -> Optional[Dict[str, "JSONSchemaProps"]]:
         return self.__definitions
 
-    def externalDocs(self) -> Optional["ExternalDocumentation"]:
-        return self.__externalDocs
+    def external_docs(self) -> Optional["ExternalDocumentation"]:
+        return self.__external_docs
 
     def example(self) -> Optional["JSON"]:
         return self.__example
@@ -1241,7 +1255,7 @@ class JSONSchemaProps(types.Object):
     def nullable(self) -> Optional[bool]:
         return self.__nullable
 
-    def xKubernetesPreserveUnknownFields(self) -> Optional[bool]:
+    def x_kubernetes_preserve_unknown_fields(self) -> Optional[bool]:
         """
         x-kubernetes-preserve-unknown-fields stops the API server
         decoding step from pruning fields which are not specified
@@ -1250,9 +1264,9 @@ class JSONSchemaProps(types.Object):
         properties or additionalProperties are specified in the schema.
         This can either be true or undefined. False is forbidden.
         """
-        return self.__xKubernetesPreserveUnknownFields
+        return self.__x_kubernetes_preserve_unknown_fields
 
-    def xKubernetesEmbeddedResource(self) -> Optional[bool]:
+    def x_kubernetes_embedded_resource(self) -> Optional[bool]:
         """
         x-kubernetes-embedded-resource defines that the value is an
         embedded Kubernetes runtime.Object, with TypeMeta and
@@ -1262,9 +1276,9 @@ class JSONSchemaProps(types.Object):
         is allowed to be true, but does not have to be if the object
         is fully specified (up to kind, apiVersion, metadata).
         """
-        return self.__xKubernetesEmbeddedResource
+        return self.__x_kubernetes_embedded_resource
 
-    def xKubernetesIntOrString(self) -> Optional[bool]:
+    def x_kubernetes_int_or_string(self) -> Optional[bool]:
         """
         x-kubernetes-int-or-string specifies that this value is
         either an integer or a string. If this is true, an empty
@@ -1280,9 +1294,9 @@ class JSONSchemaProps(types.Object):
              - type: string
            - ... zero or more
         """
-        return self.__xKubernetesIntOrString
+        return self.__x_kubernetes_int_or_string
 
-    def xKubernetesListMapKeys(self) -> Optional[List[str]]:
+    def x_kubernetes_list_map_keys(self) -> Optional[List[str]]:
         """
         x-kubernetes-list-map-keys annotates an array with the x-kubernetes-list-type `map` by specifying the keys used
         as the index of the map.
@@ -1291,9 +1305,9 @@ class JSONSchemaProps(types.Object):
         extension set to "map". Also, the values specified for this attribute must
         be a scalar typed field of the child structure (no nesting is supported).
         """
-        return self.__xKubernetesListMapKeys
+        return self.__x_kubernetes_list_map_keys
 
-    def xKubernetesListType(self) -> Optional[str]:
+    def x_kubernetes_list_type(self) -> Optional[str]:
         """
         x-kubernetes-list-type annotates an array to further describe its topology.
         This extension must only be used on lists and may have 3 possible values:
@@ -1311,9 +1325,9 @@ class JSONSchemaProps(types.Object):
              must only be used on a list with elements of type object.
         Defaults to atomic for arrays.
         """
-        return self.__xKubernetesListType
+        return self.__x_kubernetes_list_type
 
-    def xKubernetesMapType(self) -> Optional[str]:
+    def x_kubernetes_map_type(self) -> Optional[str]:
         """
         x-kubernetes-map-type annotates an object to further describe its topology.
         This extension must only be used when type is object and may have 2 possible values:
@@ -1325,7 +1339,7 @@ class JSONSchemaProps(types.Object):
         2) `atomic`: the list is treated as a single entity, like a scalar.
              Atomic maps will be entirely replaced when updated.
         """
-        return self.__xKubernetesMapType
+        return self.__x_kubernetes_map_type
 
 
 class CustomResourceValidation(types.Object):
@@ -1335,24 +1349,24 @@ class CustomResourceValidation(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, openAPIV3Schema: "JSONSchemaProps" = None):
+    def __init__(self, open_apiv3_schema: "JSONSchemaProps" = None):
         super().__init__()
-        self.__openAPIV3Schema = openAPIV3Schema
+        self.__open_apiv3_schema = open_apiv3_schema
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        openAPIV3Schema = self.openAPIV3Schema()
-        check_type("openAPIV3Schema", openAPIV3Schema, Optional["JSONSchemaProps"])
-        if openAPIV3Schema is not None:  # omit empty
-            v["openAPIV3Schema"] = openAPIV3Schema
+        open_apiv3_schema = self.open_apiv3_schema()
+        check_type("open_apiv3_schema", open_apiv3_schema, Optional["JSONSchemaProps"])
+        if open_apiv3_schema is not None:  # omit empty
+            v["openAPIV3Schema"] = open_apiv3_schema
         return v
 
-    def openAPIV3Schema(self) -> Optional["JSONSchemaProps"]:
+    def open_apiv3_schema(self) -> Optional["JSONSchemaProps"]:
         """
         openAPIV3Schema is the OpenAPI v3 schema to use for validation and pruning.
         """
-        return self.__openAPIV3Schema
+        return self.__open_apiv3_schema
 
 
 class CustomResourceDefinitionVersion(types.Object):
@@ -1369,7 +1383,7 @@ class CustomResourceDefinitionVersion(types.Object):
         storage: bool = False,
         schema: "CustomResourceValidation" = None,
         subresources: "CustomResourceSubresources" = None,
-        additionalPrinterColumns: List["CustomResourceColumnDefinition"] = None,
+        additional_printer_columns: List["CustomResourceColumnDefinition"] = None,
     ):
         super().__init__()
         self.__name = name
@@ -1377,8 +1391,8 @@ class CustomResourceDefinitionVersion(types.Object):
         self.__storage = storage
         self.__schema = schema
         self.__subresources = subresources
-        self.__additionalPrinterColumns = (
-            additionalPrinterColumns if additionalPrinterColumns is not None else []
+        self.__additional_printer_columns = (
+            additional_printer_columns if additional_printer_columns is not None else []
         )
 
     @typechecked
@@ -1401,14 +1415,14 @@ class CustomResourceDefinitionVersion(types.Object):
         check_type("subresources", subresources, Optional["CustomResourceSubresources"])
         if subresources is not None:  # omit empty
             v["subresources"] = subresources
-        additionalPrinterColumns = self.additionalPrinterColumns()
+        additional_printer_columns = self.additional_printer_columns()
         check_type(
-            "additionalPrinterColumns",
-            additionalPrinterColumns,
+            "additional_printer_columns",
+            additional_printer_columns,
             Optional[List["CustomResourceColumnDefinition"]],
         )
-        if additionalPrinterColumns:  # omit empty
-            v["additionalPrinterColumns"] = additionalPrinterColumns
+        if additional_printer_columns:  # omit empty
+            v["additionalPrinterColumns"] = additional_printer_columns
         return v
 
     def name(self) -> str:
@@ -1443,7 +1457,7 @@ class CustomResourceDefinitionVersion(types.Object):
         """
         return self.__subresources
 
-    def additionalPrinterColumns(
+    def additional_printer_columns(
         self
     ) -> Optional[List["CustomResourceColumnDefinition"]]:
         """
@@ -1451,7 +1465,7 @@ class CustomResourceDefinitionVersion(types.Object):
         See https://kubernetes.io/docs/reference/using-api/api-concepts/#receiving-resources-as-tables for details.
         If no columns are specified, a single column displaying the age of the custom resource is used.
         """
-        return self.__additionalPrinterColumns
+        return self.__additional_printer_columns
 
 
 class CustomResourceDefinitionSpec(types.Object):
@@ -1468,7 +1482,7 @@ class CustomResourceDefinitionSpec(types.Object):
         scope: ResourceScope = ResourceScope["NamespaceScoped"],
         versions: List["CustomResourceDefinitionVersion"] = None,
         conversion: "CustomResourceConversion" = None,
-        preserveUnknownFields: bool = None,
+        preserve_unknown_fields: bool = None,
     ):
         super().__init__()
         self.__group = group
@@ -1478,7 +1492,7 @@ class CustomResourceDefinitionSpec(types.Object):
         self.__conversion = (
             conversion if conversion is not None else CustomResourceConversion()
         )
-        self.__preserveUnknownFields = preserveUnknownFields
+        self.__preserve_unknown_fields = preserve_unknown_fields
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1499,10 +1513,10 @@ class CustomResourceDefinitionSpec(types.Object):
         check_type("conversion", conversion, Optional["CustomResourceConversion"])
         if conversion is not None:  # omit empty
             v["conversion"] = conversion
-        preserveUnknownFields = self.preserveUnknownFields()
-        check_type("preserveUnknownFields", preserveUnknownFields, Optional[bool])
-        if preserveUnknownFields:  # omit empty
-            v["preserveUnknownFields"] = preserveUnknownFields
+        preserve_unknown_fields = self.preserve_unknown_fields()
+        check_type("preserve_unknown_fields", preserve_unknown_fields, Optional[bool])
+        if preserve_unknown_fields:  # omit empty
+            v["preserveUnknownFields"] = preserve_unknown_fields
         return v
 
     def group(self) -> str:
@@ -1545,7 +1559,7 @@ class CustomResourceDefinitionSpec(types.Object):
         """
         return self.__conversion
 
-    def preserveUnknownFields(self) -> Optional[bool]:
+    def preserve_unknown_fields(self) -> Optional[bool]:
         """
         preserveUnknownFields indicates that object fields which are not specified
         in the OpenAPI schema should be preserved when persisting to storage.
@@ -1553,7 +1567,7 @@ class CustomResourceDefinitionSpec(types.Object):
         This field is deprecated in favor of setting `x-preserve-unknown-fields` to true in `spec.versions[*].schema.openAPIV3Schema`.
         See https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/#pruning-versus-preserving-unknown-fields for details.
         """
-        return self.__preserveUnknownFields
+        return self.__preserve_unknown_fields
 
 
 class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
@@ -1572,7 +1586,7 @@ class CustomResourceDefinition(base.TypedObject, base.MetadataObject):
         spec: "CustomResourceDefinitionSpec" = None,
     ):
         super().__init__(
-            apiVersion="apiextensions.k8s.io/v1",
+            api_version="apiextensions.k8s.io/v1",
             kind="CustomResourceDefinition",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

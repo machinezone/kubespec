@@ -110,28 +110,28 @@ class Rule(types.Object):
     @typechecked
     def __init__(
         self,
-        apiGroups: List[str] = None,
-        apiVersions: List[str] = None,
+        api_groups: List[str] = None,
+        api_versions: List[str] = None,
         resources: List[str] = None,
         scope: ScopeType = None,
     ):
         super().__init__()
-        self.__apiGroups = apiGroups if apiGroups is not None else []
-        self.__apiVersions = apiVersions if apiVersions is not None else []
+        self.__api_groups = api_groups if api_groups is not None else []
+        self.__api_versions = api_versions if api_versions is not None else []
         self.__resources = resources if resources is not None else []
         self.__scope = scope if scope is not None else ScopeType["All"]
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        apiGroups = self.apiGroups()
-        check_type("apiGroups", apiGroups, Optional[List[str]])
-        if apiGroups:  # omit empty
-            v["apiGroups"] = apiGroups
-        apiVersions = self.apiVersions()
-        check_type("apiVersions", apiVersions, Optional[List[str]])
-        if apiVersions:  # omit empty
-            v["apiVersions"] = apiVersions
+        api_groups = self.api_groups()
+        check_type("api_groups", api_groups, Optional[List[str]])
+        if api_groups:  # omit empty
+            v["apiGroups"] = api_groups
+        api_versions = self.api_versions()
+        check_type("api_versions", api_versions, Optional[List[str]])
+        if api_versions:  # omit empty
+            v["apiVersions"] = api_versions
         resources = self.resources()
         check_type("resources", resources, Optional[List[str]])
         if resources:  # omit empty
@@ -142,21 +142,21 @@ class Rule(types.Object):
             v["scope"] = scope
         return v
 
-    def apiGroups(self) -> Optional[List[str]]:
+    def api_groups(self) -> Optional[List[str]]:
         """
         APIGroups is the API groups the resources belong to. '*' is all groups.
         If '*' is present, the length of the slice must be one.
         Required.
         """
-        return self.__apiGroups
+        return self.__api_groups
 
-    def apiVersions(self) -> Optional[List[str]]:
+    def api_versions(self) -> Optional[List[str]]:
         """
         APIVersions is the API versions the resources belong to. '*' is all versions.
         If '*' is present, the length of the slice must be one.
         Required.
         """
-        return self.__apiVersions
+        return self.__api_versions
 
     def resources(self) -> Optional[List[str]]:
         """
@@ -311,12 +311,12 @@ class WebhookClientConfig(types.Object):
         self,
         url: str = None,
         service: "ServiceReference" = None,
-        caBundle: bytes = None,
+        ca_bundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
         self.__service = service
-        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -329,10 +329,10 @@ class WebhookClientConfig(types.Object):
         check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
         return v
 
     def url(self) -> Optional[str]:
@@ -374,12 +374,12 @@ class WebhookClientConfig(types.Object):
         """
         return self.__service
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
         If unspecified, system trust roots on the apiserver are used.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
 
 class MutatingWebhook(types.Object):
@@ -392,41 +392,43 @@ class MutatingWebhook(types.Object):
     def __init__(
         self,
         name: str = "",
-        clientConfig: "WebhookClientConfig" = None,
+        client_config: "WebhookClientConfig" = None,
         rules: List["RuleWithOperations"] = None,
-        failurePolicy: FailurePolicyType = None,
-        matchPolicy: MatchPolicyType = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
-        objectSelector: "metav1.LabelSelector" = None,
-        sideEffects: SideEffectClass = None,
-        timeoutSeconds: int = None,
-        admissionReviewVersions: List[str] = None,
-        reinvocationPolicy: ReinvocationPolicyType = None,
+        failure_policy: FailurePolicyType = None,
+        match_policy: MatchPolicyType = None,
+        namespace_selector: "metav1.LabelSelector" = None,
+        object_selector: "metav1.LabelSelector" = None,
+        side_effects: SideEffectClass = None,
+        timeout_seconds: int = None,
+        admission_review_versions: List[str] = None,
+        reinvocation_policy: ReinvocationPolicyType = None,
     ):
         super().__init__()
         self.__name = name
-        self.__clientConfig = (
-            clientConfig if clientConfig is not None else WebhookClientConfig()
+        self.__client_config = (
+            client_config if client_config is not None else WebhookClientConfig()
         )
         self.__rules = rules if rules is not None else []
-        self.__failurePolicy = (
-            failurePolicy if failurePolicy is not None else FailurePolicyType["Ignore"]
+        self.__failure_policy = (
+            failure_policy
+            if failure_policy is not None
+            else FailurePolicyType["Ignore"]
         )
-        self.__matchPolicy = (
-            matchPolicy if matchPolicy is not None else MatchPolicyType["Exact"]
+        self.__match_policy = (
+            match_policy if match_policy is not None else MatchPolicyType["Exact"]
         )
-        self.__namespaceSelector = namespaceSelector
-        self.__objectSelector = objectSelector
-        self.__sideEffects = (
-            sideEffects if sideEffects is not None else SideEffectClass["Unknown"]
+        self.__namespace_selector = namespace_selector
+        self.__object_selector = object_selector
+        self.__side_effects = (
+            side_effects if side_effects is not None else SideEffectClass["Unknown"]
         )
-        self.__timeoutSeconds = timeoutSeconds if timeoutSeconds is not None else 30
-        self.__admissionReviewVersions = (
-            admissionReviewVersions if admissionReviewVersions is not None else []
+        self.__timeout_seconds = timeout_seconds if timeout_seconds is not None else 30
+        self.__admission_review_versions = (
+            admission_review_versions if admission_review_versions is not None else []
         )
-        self.__reinvocationPolicy = (
-            reinvocationPolicy
-            if reinvocationPolicy is not None
+        self.__reinvocation_policy = (
+            reinvocation_policy
+            if reinvocation_policy is not None
             else ReinvocationPolicyType["Never"]
         )
 
@@ -436,51 +438,51 @@ class MutatingWebhook(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, "WebhookClientConfig")
-        v["clientConfig"] = clientConfig
+        client_config = self.client_config()
+        check_type("client_config", client_config, "WebhookClientConfig")
+        v["clientConfig"] = client_config
         rules = self.rules()
         check_type("rules", rules, Optional[List["RuleWithOperations"]])
         if rules:  # omit empty
             v["rules"] = rules
-        failurePolicy = self.failurePolicy()
-        check_type("failurePolicy", failurePolicy, Optional[FailurePolicyType])
-        if failurePolicy is not None:  # omit empty
-            v["failurePolicy"] = failurePolicy
-        matchPolicy = self.matchPolicy()
-        check_type("matchPolicy", matchPolicy, Optional[MatchPolicyType])
-        if matchPolicy is not None:  # omit empty
-            v["matchPolicy"] = matchPolicy
-        namespaceSelector = self.namespaceSelector()
+        failure_policy = self.failure_policy()
+        check_type("failure_policy", failure_policy, Optional[FailurePolicyType])
+        if failure_policy is not None:  # omit empty
+            v["failurePolicy"] = failure_policy
+        match_policy = self.match_policy()
+        check_type("match_policy", match_policy, Optional[MatchPolicyType])
+        if match_policy is not None:  # omit empty
+            v["matchPolicy"] = match_policy
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
-        objectSelector = self.objectSelector()
-        check_type("objectSelector", objectSelector, Optional["metav1.LabelSelector"])
-        if objectSelector is not None:  # omit empty
-            v["objectSelector"] = objectSelector
-        sideEffects = self.sideEffects()
-        check_type("sideEffects", sideEffects, Optional[SideEffectClass])
-        if sideEffects is not None:  # omit empty
-            v["sideEffects"] = sideEffects
-        timeoutSeconds = self.timeoutSeconds()
-        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
-        if timeoutSeconds is not None:  # omit empty
-            v["timeoutSeconds"] = timeoutSeconds
-        admissionReviewVersions = self.admissionReviewVersions()
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
+        object_selector = self.object_selector()
+        check_type("object_selector", object_selector, Optional["metav1.LabelSelector"])
+        if object_selector is not None:  # omit empty
+            v["objectSelector"] = object_selector
+        side_effects = self.side_effects()
+        check_type("side_effects", side_effects, Optional[SideEffectClass])
+        if side_effects is not None:  # omit empty
+            v["sideEffects"] = side_effects
+        timeout_seconds = self.timeout_seconds()
+        check_type("timeout_seconds", timeout_seconds, Optional[int])
+        if timeout_seconds is not None:  # omit empty
+            v["timeoutSeconds"] = timeout_seconds
+        admission_review_versions = self.admission_review_versions()
         check_type(
-            "admissionReviewVersions", admissionReviewVersions, Optional[List[str]]
+            "admission_review_versions", admission_review_versions, Optional[List[str]]
         )
-        if admissionReviewVersions:  # omit empty
-            v["admissionReviewVersions"] = admissionReviewVersions
-        reinvocationPolicy = self.reinvocationPolicy()
+        if admission_review_versions:  # omit empty
+            v["admissionReviewVersions"] = admission_review_versions
+        reinvocation_policy = self.reinvocation_policy()
         check_type(
-            "reinvocationPolicy", reinvocationPolicy, Optional[ReinvocationPolicyType]
+            "reinvocation_policy", reinvocation_policy, Optional[ReinvocationPolicyType]
         )
-        if reinvocationPolicy is not None:  # omit empty
-            v["reinvocationPolicy"] = reinvocationPolicy
+        if reinvocation_policy is not None:  # omit empty
+            v["reinvocationPolicy"] = reinvocation_policy
         return v
 
     def name(self) -> str:
@@ -493,12 +495,12 @@ class MutatingWebhook(types.Object):
         """
         return self.__name
 
-    def clientConfig(self) -> "WebhookClientConfig":
+    def client_config(self) -> "WebhookClientConfig":
         """
         ClientConfig defines how to communicate with the hook.
         Required
         """
-        return self.__clientConfig
+        return self.__client_config
 
     def rules(self) -> Optional[List["RuleWithOperations"]]:
         """
@@ -511,14 +513,14 @@ class MutatingWebhook(types.Object):
         """
         return self.__rules
 
-    def failurePolicy(self) -> Optional[FailurePolicyType]:
+    def failure_policy(self) -> Optional[FailurePolicyType]:
         """
         FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
         allowed values are Ignore or Fail. Defaults to Ignore.
         """
-        return self.__failurePolicy
+        return self.__failure_policy
 
-    def matchPolicy(self) -> Optional[MatchPolicyType]:
+    def match_policy(self) -> Optional[MatchPolicyType]:
         """
         matchPolicy defines how the "rules" list is used to match incoming requests.
         Allowed values are "Exact" or "Equivalent".
@@ -535,9 +537,9 @@ class MutatingWebhook(types.Object):
         
         Defaults to "Exact"
         """
-        return self.__matchPolicy
+        return self.__match_policy
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         NamespaceSelector decides whether to run the webhook on an object based
         on whether the namespace for that object matches the selector. If the
@@ -583,9 +585,9 @@ class MutatingWebhook(types.Object):
         
         Default to the empty LabelSelector, which matches everything.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def objectSelector(self) -> Optional["metav1.LabelSelector"]:
+    def object_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         ObjectSelector decides whether to run the webhook based on if the
         object has matching labels. objectSelector is evaluated against both
@@ -599,9 +601,9 @@ class MutatingWebhook(types.Object):
         users may skip the admission webhook by setting the labels.
         Default to the empty LabelSelector, which matches everything.
         """
-        return self.__objectSelector
+        return self.__object_selector
 
-    def sideEffects(self) -> Optional[SideEffectClass]:
+    def side_effects(self) -> Optional[SideEffectClass]:
         """
         SideEffects states whether this webhook has side effects.
         Acceptable values are: Unknown, None, Some, NoneOnDryRun
@@ -610,9 +612,9 @@ class MutatingWebhook(types.Object):
         Requests with the dryRun attribute will be auto-rejected if they match a webhook with
         sideEffects == Unknown or Some. Defaults to Unknown.
         """
-        return self.__sideEffects
+        return self.__side_effects
 
-    def timeoutSeconds(self) -> Optional[int]:
+    def timeout_seconds(self) -> Optional[int]:
         """
         TimeoutSeconds specifies the timeout for this webhook. After the timeout passes,
         the webhook call will be ignored or the API call will fail based on the
@@ -620,9 +622,9 @@ class MutatingWebhook(types.Object):
         The timeout value must be between 1 and 30 seconds.
         Default to 30 seconds.
         """
-        return self.__timeoutSeconds
+        return self.__timeout_seconds
 
-    def admissionReviewVersions(self) -> Optional[List[str]]:
+    def admission_review_versions(self) -> Optional[List[str]]:
         """
         AdmissionReviewVersions is an ordered list of preferred `AdmissionReview`
         versions the Webhook expects. API server will try to use first version in
@@ -633,9 +635,9 @@ class MutatingWebhook(types.Object):
         and be subject to the failure policy.
         Default to `['v1beta1']`.
         """
-        return self.__admissionReviewVersions
+        return self.__admission_review_versions
 
-    def reinvocationPolicy(self) -> Optional[ReinvocationPolicyType]:
+    def reinvocation_policy(self) -> Optional[ReinvocationPolicyType]:
         """
         reinvocationPolicy indicates whether this webhook should be called multiple times as part of a single admission evaluation.
         Allowed values are "Never" and "IfNeeded".
@@ -653,7 +655,7 @@ class MutatingWebhook(types.Object):
         
         Defaults to "Never".
         """
-        return self.__reinvocationPolicy
+        return self.__reinvocation_policy
 
 
 class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
@@ -672,7 +674,7 @@ class MutatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         webhooks: List["MutatingWebhook"] = None,
     ):
         super().__init__(
-            apiVersion="admissionregistration.k8s.io/v1beta1",
+            api_version="admissionregistration.k8s.io/v1beta1",
             kind="MutatingWebhookConfiguration",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -706,36 +708,38 @@ class ValidatingWebhook(types.Object):
     def __init__(
         self,
         name: str = "",
-        clientConfig: "WebhookClientConfig" = None,
+        client_config: "WebhookClientConfig" = None,
         rules: List["RuleWithOperations"] = None,
-        failurePolicy: FailurePolicyType = None,
-        matchPolicy: MatchPolicyType = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
-        objectSelector: "metav1.LabelSelector" = None,
-        sideEffects: SideEffectClass = None,
-        timeoutSeconds: int = None,
-        admissionReviewVersions: List[str] = None,
+        failure_policy: FailurePolicyType = None,
+        match_policy: MatchPolicyType = None,
+        namespace_selector: "metav1.LabelSelector" = None,
+        object_selector: "metav1.LabelSelector" = None,
+        side_effects: SideEffectClass = None,
+        timeout_seconds: int = None,
+        admission_review_versions: List[str] = None,
     ):
         super().__init__()
         self.__name = name
-        self.__clientConfig = (
-            clientConfig if clientConfig is not None else WebhookClientConfig()
+        self.__client_config = (
+            client_config if client_config is not None else WebhookClientConfig()
         )
         self.__rules = rules if rules is not None else []
-        self.__failurePolicy = (
-            failurePolicy if failurePolicy is not None else FailurePolicyType["Ignore"]
+        self.__failure_policy = (
+            failure_policy
+            if failure_policy is not None
+            else FailurePolicyType["Ignore"]
         )
-        self.__matchPolicy = (
-            matchPolicy if matchPolicy is not None else MatchPolicyType["Exact"]
+        self.__match_policy = (
+            match_policy if match_policy is not None else MatchPolicyType["Exact"]
         )
-        self.__namespaceSelector = namespaceSelector
-        self.__objectSelector = objectSelector
-        self.__sideEffects = (
-            sideEffects if sideEffects is not None else SideEffectClass["Unknown"]
+        self.__namespace_selector = namespace_selector
+        self.__object_selector = object_selector
+        self.__side_effects = (
+            side_effects if side_effects is not None else SideEffectClass["Unknown"]
         )
-        self.__timeoutSeconds = timeoutSeconds if timeoutSeconds is not None else 30
-        self.__admissionReviewVersions = (
-            admissionReviewVersions if admissionReviewVersions is not None else []
+        self.__timeout_seconds = timeout_seconds if timeout_seconds is not None else 30
+        self.__admission_review_versions = (
+            admission_review_versions if admission_review_versions is not None else []
         )
 
     @typechecked
@@ -744,45 +748,45 @@ class ValidatingWebhook(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, "WebhookClientConfig")
-        v["clientConfig"] = clientConfig
+        client_config = self.client_config()
+        check_type("client_config", client_config, "WebhookClientConfig")
+        v["clientConfig"] = client_config
         rules = self.rules()
         check_type("rules", rules, Optional[List["RuleWithOperations"]])
         if rules:  # omit empty
             v["rules"] = rules
-        failurePolicy = self.failurePolicy()
-        check_type("failurePolicy", failurePolicy, Optional[FailurePolicyType])
-        if failurePolicy is not None:  # omit empty
-            v["failurePolicy"] = failurePolicy
-        matchPolicy = self.matchPolicy()
-        check_type("matchPolicy", matchPolicy, Optional[MatchPolicyType])
-        if matchPolicy is not None:  # omit empty
-            v["matchPolicy"] = matchPolicy
-        namespaceSelector = self.namespaceSelector()
+        failure_policy = self.failure_policy()
+        check_type("failure_policy", failure_policy, Optional[FailurePolicyType])
+        if failure_policy is not None:  # omit empty
+            v["failurePolicy"] = failure_policy
+        match_policy = self.match_policy()
+        check_type("match_policy", match_policy, Optional[MatchPolicyType])
+        if match_policy is not None:  # omit empty
+            v["matchPolicy"] = match_policy
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
-        objectSelector = self.objectSelector()
-        check_type("objectSelector", objectSelector, Optional["metav1.LabelSelector"])
-        if objectSelector is not None:  # omit empty
-            v["objectSelector"] = objectSelector
-        sideEffects = self.sideEffects()
-        check_type("sideEffects", sideEffects, Optional[SideEffectClass])
-        if sideEffects is not None:  # omit empty
-            v["sideEffects"] = sideEffects
-        timeoutSeconds = self.timeoutSeconds()
-        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
-        if timeoutSeconds is not None:  # omit empty
-            v["timeoutSeconds"] = timeoutSeconds
-        admissionReviewVersions = self.admissionReviewVersions()
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
+        object_selector = self.object_selector()
+        check_type("object_selector", object_selector, Optional["metav1.LabelSelector"])
+        if object_selector is not None:  # omit empty
+            v["objectSelector"] = object_selector
+        side_effects = self.side_effects()
+        check_type("side_effects", side_effects, Optional[SideEffectClass])
+        if side_effects is not None:  # omit empty
+            v["sideEffects"] = side_effects
+        timeout_seconds = self.timeout_seconds()
+        check_type("timeout_seconds", timeout_seconds, Optional[int])
+        if timeout_seconds is not None:  # omit empty
+            v["timeoutSeconds"] = timeout_seconds
+        admission_review_versions = self.admission_review_versions()
         check_type(
-            "admissionReviewVersions", admissionReviewVersions, Optional[List[str]]
+            "admission_review_versions", admission_review_versions, Optional[List[str]]
         )
-        if admissionReviewVersions:  # omit empty
-            v["admissionReviewVersions"] = admissionReviewVersions
+        if admission_review_versions:  # omit empty
+            v["admissionReviewVersions"] = admission_review_versions
         return v
 
     def name(self) -> str:
@@ -795,12 +799,12 @@ class ValidatingWebhook(types.Object):
         """
         return self.__name
 
-    def clientConfig(self) -> "WebhookClientConfig":
+    def client_config(self) -> "WebhookClientConfig":
         """
         ClientConfig defines how to communicate with the hook.
         Required
         """
-        return self.__clientConfig
+        return self.__client_config
 
     def rules(self) -> Optional[List["RuleWithOperations"]]:
         """
@@ -813,14 +817,14 @@ class ValidatingWebhook(types.Object):
         """
         return self.__rules
 
-    def failurePolicy(self) -> Optional[FailurePolicyType]:
+    def failure_policy(self) -> Optional[FailurePolicyType]:
         """
         FailurePolicy defines how unrecognized errors from the admission endpoint are handled -
         allowed values are Ignore or Fail. Defaults to Ignore.
         """
-        return self.__failurePolicy
+        return self.__failure_policy
 
-    def matchPolicy(self) -> Optional[MatchPolicyType]:
+    def match_policy(self) -> Optional[MatchPolicyType]:
         """
         matchPolicy defines how the "rules" list is used to match incoming requests.
         Allowed values are "Exact" or "Equivalent".
@@ -837,9 +841,9 @@ class ValidatingWebhook(types.Object):
         
         Defaults to "Exact"
         """
-        return self.__matchPolicy
+        return self.__match_policy
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         NamespaceSelector decides whether to run the webhook on an object based
         on whether the namespace for that object matches the selector. If the
@@ -885,9 +889,9 @@ class ValidatingWebhook(types.Object):
         
         Default to the empty LabelSelector, which matches everything.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def objectSelector(self) -> Optional["metav1.LabelSelector"]:
+    def object_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         ObjectSelector decides whether to run the webhook based on if the
         object has matching labels. objectSelector is evaluated against both
@@ -901,9 +905,9 @@ class ValidatingWebhook(types.Object):
         users may skip the admission webhook by setting the labels.
         Default to the empty LabelSelector, which matches everything.
         """
-        return self.__objectSelector
+        return self.__object_selector
 
-    def sideEffects(self) -> Optional[SideEffectClass]:
+    def side_effects(self) -> Optional[SideEffectClass]:
         """
         SideEffects states whether this webhook has side effects.
         Acceptable values are: Unknown, None, Some, NoneOnDryRun
@@ -912,9 +916,9 @@ class ValidatingWebhook(types.Object):
         Requests with the dryRun attribute will be auto-rejected if they match a webhook with
         sideEffects == Unknown or Some. Defaults to Unknown.
         """
-        return self.__sideEffects
+        return self.__side_effects
 
-    def timeoutSeconds(self) -> Optional[int]:
+    def timeout_seconds(self) -> Optional[int]:
         """
         TimeoutSeconds specifies the timeout for this webhook. After the timeout passes,
         the webhook call will be ignored or the API call will fail based on the
@@ -922,9 +926,9 @@ class ValidatingWebhook(types.Object):
         The timeout value must be between 1 and 30 seconds.
         Default to 30 seconds.
         """
-        return self.__timeoutSeconds
+        return self.__timeout_seconds
 
-    def admissionReviewVersions(self) -> Optional[List[str]]:
+    def admission_review_versions(self) -> Optional[List[str]]:
         """
         AdmissionReviewVersions is an ordered list of preferred `AdmissionReview`
         versions the Webhook expects. API server will try to use first version in
@@ -935,7 +939,7 @@ class ValidatingWebhook(types.Object):
         and be subject to the failure policy.
         Default to `['v1beta1']`.
         """
-        return self.__admissionReviewVersions
+        return self.__admission_review_versions
 
 
 class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
@@ -954,7 +958,7 @@ class ValidatingWebhookConfiguration(base.TypedObject, base.MetadataObject):
         webhooks: List["ValidatingWebhook"] = None,
     ):
         super().__init__(
-            apiVersion="admissionregistration.k8s.io/v1beta1",
+            api_version="admissionregistration.k8s.io/v1beta1",
             kind="ValidatingWebhookConfiguration",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

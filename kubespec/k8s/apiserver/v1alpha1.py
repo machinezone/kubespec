@@ -73,7 +73,7 @@ class AdmissionConfiguration(base.TypedObject):
     @typechecked
     def __init__(self, plugins: List["AdmissionPluginConfiguration"] = None):
         super().__init__(
-            apiVersion="apiserver.k8s.io/v1alpha1", kind="AdmissionConfiguration"
+            api_version="apiserver.k8s.io/v1alpha1", kind="AdmissionConfiguration"
         )
         self.__plugins = plugins if plugins is not None else []
 
@@ -98,15 +98,15 @@ class HTTPConnectConfig(types.Object):
     def __init__(
         self,
         url: str = "",
-        caBundle: str = None,
-        clientKey: str = None,
-        clientCert: str = None,
+        ca_bundle: str = None,
+        client_key: str = None,
+        client_cert: str = None,
     ):
         super().__init__()
         self.__url = url
-        self.__caBundle = caBundle
-        self.__clientKey = clientKey
-        self.__clientCert = clientCert
+        self.__ca_bundle = ca_bundle
+        self.__client_key = client_key
+        self.__client_cert = client_cert
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -114,18 +114,18 @@ class HTTPConnectConfig(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[str])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
-        clientKey = self.clientKey()
-        check_type("clientKey", clientKey, Optional[str])
-        if clientKey:  # omit empty
-            v["clientKey"] = clientKey
-        clientCert = self.clientCert()
-        check_type("clientCert", clientCert, Optional[str])
-        if clientCert:  # omit empty
-            v["clientCert"] = clientCert
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[str])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
+        client_key = self.client_key()
+        check_type("client_key", client_key, Optional[str])
+        if client_key:  # omit empty
+            v["clientKey"] = client_key
+        client_cert = self.client_cert()
+        check_type("client_cert", client_cert, Optional[str])
+        if client_cert:  # omit empty
+            v["clientCert"] = client_cert
         return v
 
     def url(self) -> str:
@@ -135,32 +135,32 @@ class HTTPConnectConfig(types.Object):
         """
         return self.__url
 
-    def caBundle(self) -> Optional[str]:
+    def ca_bundle(self) -> Optional[str]:
         """
         caBundle is the file location of the CA to be used to determine trust with the konnectivity server.
         Must be absent/empty http-connect using the plain http
         Must be configured for http-connect using the https protocol
         Misconfiguration will cause an error
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
-    def clientKey(self) -> Optional[str]:
+    def client_key(self) -> Optional[str]:
         """
         clientKey is the file location of the client key to be used in mtls handshakes with the konnectivity server.
         Must be absent/empty http-connect using the plain http
         Must be configured for http-connect using the https protocol
         Misconfiguration will cause an error
         """
-        return self.__clientKey
+        return self.__client_key
 
-    def clientCert(self) -> Optional[str]:
+    def client_cert(self) -> Optional[str]:
         """
         clientCert is the file location of the client certificate to be used in mtls handshakes with the konnectivity server.
         Must be absent/empty http-connect using the plain http
         Must be configured for http-connect using the https protocol
         Misconfiguration will cause an error
         """
-        return self.__clientCert
+        return self.__client_cert
 
 
 class Connection(types.Object):
@@ -170,10 +170,10 @@ class Connection(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, type: str = "", httpConnect: "HTTPConnectConfig" = None):
+    def __init__(self, type: str = "", http_connect: "HTTPConnectConfig" = None):
         super().__init__()
         self.__type = type
-        self.__httpConnect = httpConnect
+        self.__http_connect = http_connect
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -181,10 +181,10 @@ class Connection(types.Object):
         type = self.type()
         check_type("type", type, str)
         v["type"] = type
-        httpConnect = self.httpConnect()
-        check_type("httpConnect", httpConnect, Optional["HTTPConnectConfig"])
-        if httpConnect is not None:  # omit empty
-            v["httpConnect"] = httpConnect
+        http_connect = self.http_connect()
+        check_type("http_connect", http_connect, Optional["HTTPConnectConfig"])
+        if http_connect is not None:  # omit empty
+            v["httpConnect"] = http_connect
         return v
 
     def type(self) -> str:
@@ -194,13 +194,13 @@ class Connection(types.Object):
         """
         return self.__type
 
-    def httpConnect(self) -> Optional["HTTPConnectConfig"]:
+    def http_connect(self) -> Optional["HTTPConnectConfig"]:
         """
         httpConnect is the config needed to use http-connect to the konnectivity server.
         Absence when the type is "http-connect" will cause an error
         Presence when the type is "direct" will also cause an error
         """
-        return self.__httpConnect
+        return self.__http_connect
 
 
 class EgressSelection(types.Object):
@@ -247,24 +247,24 @@ class EgressSelectorConfiguration(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, egressSelections: List["EgressSelection"] = None):
+    def __init__(self, egress_selections: List["EgressSelection"] = None):
         super().__init__(
-            apiVersion="apiserver.k8s.io/v1alpha1", kind="EgressSelectorConfiguration"
+            api_version="apiserver.k8s.io/v1alpha1", kind="EgressSelectorConfiguration"
         )
-        self.__egressSelections = (
-            egressSelections if egressSelections is not None else []
+        self.__egress_selections = (
+            egress_selections if egress_selections is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        egressSelections = self.egressSelections()
-        check_type("egressSelections", egressSelections, List["EgressSelection"])
-        v["egressSelections"] = egressSelections
+        egress_selections = self.egress_selections()
+        check_type("egress_selections", egress_selections, List["EgressSelection"])
+        v["egressSelections"] = egress_selections
         return v
 
-    def egressSelections(self) -> List["EgressSelection"]:
+    def egress_selections(self) -> List["EgressSelection"]:
         """
         connectionServices contains a list of egress selection client configurations
         """
-        return self.__egressSelections
+        return self.__egress_selections

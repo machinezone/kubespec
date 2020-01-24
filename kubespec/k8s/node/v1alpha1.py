@@ -21,28 +21,28 @@ class Overhead(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, podFixed: Dict[k8sv1.ResourceName, "resource.Quantity"] = None):
+    def __init__(self, pod_fixed: Dict[k8sv1.ResourceName, "resource.Quantity"] = None):
         super().__init__()
-        self.__podFixed = podFixed if podFixed is not None else {}
+        self.__pod_fixed = pod_fixed if pod_fixed is not None else {}
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podFixed = self.podFixed()
+        pod_fixed = self.pod_fixed()
         check_type(
-            "podFixed",
-            podFixed,
+            "pod_fixed",
+            pod_fixed,
             Optional[Dict[k8sv1.ResourceName, "resource.Quantity"]],
         )
-        if podFixed:  # omit empty
-            v["podFixed"] = podFixed
+        if pod_fixed:  # omit empty
+            v["podFixed"] = pod_fixed
         return v
 
-    def podFixed(self) -> Optional[Dict[k8sv1.ResourceName, "resource.Quantity"]]:
+    def pod_fixed(self) -> Optional[Dict[k8sv1.ResourceName, "resource.Quantity"]]:
         """
         PodFixed represents the fixed resource overhead associated with running a pod.
         """
-        return self.__podFixed
+        return self.__pod_fixed
 
 
 class Scheduling(types.Object):
@@ -55,27 +55,27 @@ class Scheduling(types.Object):
     @typechecked
     def __init__(
         self,
-        nodeSelector: Dict[str, str] = None,
+        node_selector: Dict[str, str] = None,
         tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
-        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__node_selector = node_selector if node_selector is not None else {}
         self.__tolerations = tolerations if tolerations is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
-        if nodeSelector:  # omit empty
-            v["nodeSelector"] = nodeSelector
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional[Dict[str, str]])
+        if node_selector:  # omit empty
+            v["nodeSelector"] = node_selector
         tolerations = self.tolerations()
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
 
-    def nodeSelector(self) -> Optional[Dict[str, str]]:
+    def node_selector(self) -> Optional[Dict[str, str]]:
         """
         nodeSelector lists labels that must be present on nodes that support this
         RuntimeClass. Pods using this RuntimeClass can only be scheduled to a
@@ -83,7 +83,7 @@ class Scheduling(types.Object):
         with a pod's existing nodeSelector. Any conflicts will cause the pod to
         be rejected in admission.
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
     def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
@@ -107,21 +107,21 @@ class RuntimeClassSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        runtimeHandler: str = "",
+        runtime_handler: str = "",
         overhead: "Overhead" = None,
         scheduling: "Scheduling" = None,
     ):
         super().__init__()
-        self.__runtimeHandler = runtimeHandler
+        self.__runtime_handler = runtime_handler
         self.__overhead = overhead
         self.__scheduling = scheduling
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        runtimeHandler = self.runtimeHandler()
-        check_type("runtimeHandler", runtimeHandler, str)
-        v["runtimeHandler"] = runtimeHandler
+        runtime_handler = self.runtime_handler()
+        check_type("runtime_handler", runtime_handler, str)
+        v["runtimeHandler"] = runtime_handler
         overhead = self.overhead()
         check_type("overhead", overhead, Optional["Overhead"])
         if overhead is not None:  # omit empty
@@ -132,7 +132,7 @@ class RuntimeClassSpec(types.Object):
             v["scheduling"] = scheduling
         return v
 
-    def runtimeHandler(self) -> str:
+    def runtime_handler(self) -> str:
         """
         RuntimeHandler specifies the underlying runtime and configuration that the
         CRI implementation will use to handle pods of this class. The possible
@@ -145,7 +145,7 @@ class RuntimeClassSpec(types.Object):
         The RuntimeHandler must conform to the DNS Label (RFC 1123) requirements
         and is immutable.
         """
-        return self.__runtimeHandler
+        return self.__runtime_handler
 
     def overhead(self) -> Optional["Overhead"]:
         """
@@ -187,7 +187,7 @@ class RuntimeClass(base.TypedObject, base.MetadataObject):
         spec: "RuntimeClassSpec" = None,
     ):
         super().__init__(
-            apiVersion="node.k8s.io/v1alpha1",
+            api_version="node.k8s.io/v1alpha1",
             kind="RuntimeClass",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

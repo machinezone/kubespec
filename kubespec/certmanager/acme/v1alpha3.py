@@ -58,13 +58,13 @@ class ACMEIssuerDNS01ProviderAcmeDNS(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, host: str = "", accountSecretRef: "k8sv1.SecretKeySelector" = None
+        self, host: str = "", account_secret_ref: "k8sv1.SecretKeySelector" = None
     ):
         super().__init__()
         self.__host = host
-        self.__accountSecretRef = (
-            accountSecretRef
-            if accountSecretRef is not None
+        self.__account_secret_ref = (
+            account_secret_ref
+            if account_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
 
@@ -74,16 +74,16 @@ class ACMEIssuerDNS01ProviderAcmeDNS(types.Object):
         host = self.host()
         check_type("host", host, str)
         v["host"] = host
-        accountSecretRef = self.accountSecretRef()
-        check_type("accountSecretRef", accountSecretRef, "k8sv1.SecretKeySelector")
-        v["accountSecretRef"] = accountSecretRef
+        account_secret_ref = self.account_secret_ref()
+        check_type("account_secret_ref", account_secret_ref, "k8sv1.SecretKeySelector")
+        v["accountSecretRef"] = account_secret_ref
         return v
 
     def host(self) -> str:
         return self.__host
 
-    def accountSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__accountSecretRef
+    def account_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__account_secret_ref
 
 
 class ACMEIssuerDNS01ProviderAkamai(types.Object):
@@ -96,63 +96,69 @@ class ACMEIssuerDNS01ProviderAkamai(types.Object):
     @typechecked
     def __init__(
         self,
-        serviceConsumerDomain: str = "",
-        clientTokenSecretRef: "k8sv1.SecretKeySelector" = None,
-        clientSecretSecretRef: "k8sv1.SecretKeySelector" = None,
-        accessTokenSecretRef: "k8sv1.SecretKeySelector" = None,
+        service_consumer_domain: str = "",
+        client_token_secret_ref: "k8sv1.SecretKeySelector" = None,
+        client_secret_secret_ref: "k8sv1.SecretKeySelector" = None,
+        access_token_secret_ref: "k8sv1.SecretKeySelector" = None,
     ):
         super().__init__()
-        self.__serviceConsumerDomain = serviceConsumerDomain
-        self.__clientTokenSecretRef = (
-            clientTokenSecretRef
-            if clientTokenSecretRef is not None
+        self.__service_consumer_domain = service_consumer_domain
+        self.__client_token_secret_ref = (
+            client_token_secret_ref
+            if client_token_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
-        self.__clientSecretSecretRef = (
-            clientSecretSecretRef
-            if clientSecretSecretRef is not None
+        self.__client_secret_secret_ref = (
+            client_secret_secret_ref
+            if client_secret_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
-        self.__accessTokenSecretRef = (
-            accessTokenSecretRef
-            if accessTokenSecretRef is not None
+        self.__access_token_secret_ref = (
+            access_token_secret_ref
+            if access_token_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        serviceConsumerDomain = self.serviceConsumerDomain()
-        check_type("serviceConsumerDomain", serviceConsumerDomain, str)
-        v["serviceConsumerDomain"] = serviceConsumerDomain
-        clientTokenSecretRef = self.clientTokenSecretRef()
+        service_consumer_domain = self.service_consumer_domain()
+        check_type("service_consumer_domain", service_consumer_domain, str)
+        v["serviceConsumerDomain"] = service_consumer_domain
+        client_token_secret_ref = self.client_token_secret_ref()
         check_type(
-            "clientTokenSecretRef", clientTokenSecretRef, "k8sv1.SecretKeySelector"
+            "client_token_secret_ref",
+            client_token_secret_ref,
+            "k8sv1.SecretKeySelector",
         )
-        v["clientTokenSecretRef"] = clientTokenSecretRef
-        clientSecretSecretRef = self.clientSecretSecretRef()
+        v["clientTokenSecretRef"] = client_token_secret_ref
+        client_secret_secret_ref = self.client_secret_secret_ref()
         check_type(
-            "clientSecretSecretRef", clientSecretSecretRef, "k8sv1.SecretKeySelector"
+            "client_secret_secret_ref",
+            client_secret_secret_ref,
+            "k8sv1.SecretKeySelector",
         )
-        v["clientSecretSecretRef"] = clientSecretSecretRef
-        accessTokenSecretRef = self.accessTokenSecretRef()
+        v["clientSecretSecretRef"] = client_secret_secret_ref
+        access_token_secret_ref = self.access_token_secret_ref()
         check_type(
-            "accessTokenSecretRef", accessTokenSecretRef, "k8sv1.SecretKeySelector"
+            "access_token_secret_ref",
+            access_token_secret_ref,
+            "k8sv1.SecretKeySelector",
         )
-        v["accessTokenSecretRef"] = accessTokenSecretRef
+        v["accessTokenSecretRef"] = access_token_secret_ref
         return v
 
-    def serviceConsumerDomain(self) -> str:
-        return self.__serviceConsumerDomain
+    def service_consumer_domain(self) -> str:
+        return self.__service_consumer_domain
 
-    def clientTokenSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__clientTokenSecretRef
+    def client_token_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__client_token_secret_ref
 
-    def clientSecretSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__clientSecretSecretRef
+    def client_secret_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__client_secret_secret_ref
 
-    def accessTokenSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__accessTokenSecretRef
+    def access_token_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__access_token_secret_ref
 
 
 class ACMEIssuerDNS01ProviderAzureDNS(types.Object):
@@ -165,74 +171,76 @@ class ACMEIssuerDNS01ProviderAzureDNS(types.Object):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecretSecretRef: "k8sv1.SecretKeySelector" = None,
-        subscriptionID: str = "",
-        tenantID: str = "",
-        resourceGroupName: str = "",
-        hostedZoneName: str = None,
+        client_id: str = "",
+        client_secret_secret_ref: "k8sv1.SecretKeySelector" = None,
+        subscription_id: str = "",
+        tenant_id: str = "",
+        resource_group_name: str = "",
+        hosted_zone_name: str = None,
         environment: AzureDNSEnvironment = None,
     ):
         super().__init__()
-        self.__clientID = clientID
-        self.__clientSecretSecretRef = (
-            clientSecretSecretRef
-            if clientSecretSecretRef is not None
+        self.__client_id = client_id
+        self.__client_secret_secret_ref = (
+            client_secret_secret_ref
+            if client_secret_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
-        self.__subscriptionID = subscriptionID
-        self.__tenantID = tenantID
-        self.__resourceGroupName = resourceGroupName
-        self.__hostedZoneName = hostedZoneName
+        self.__subscription_id = subscription_id
+        self.__tenant_id = tenant_id
+        self.__resource_group_name = resource_group_name
+        self.__hosted_zone_name = hosted_zone_name
         self.__environment = environment
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecretSecretRef = self.clientSecretSecretRef()
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret_secret_ref = self.client_secret_secret_ref()
         check_type(
-            "clientSecretSecretRef", clientSecretSecretRef, "k8sv1.SecretKeySelector"
+            "client_secret_secret_ref",
+            client_secret_secret_ref,
+            "k8sv1.SecretKeySelector",
         )
-        v["clientSecretSecretRef"] = clientSecretSecretRef
-        subscriptionID = self.subscriptionID()
-        check_type("subscriptionID", subscriptionID, str)
-        v["subscriptionID"] = subscriptionID
-        tenantID = self.tenantID()
-        check_type("tenantID", tenantID, str)
-        v["tenantID"] = tenantID
-        resourceGroupName = self.resourceGroupName()
-        check_type("resourceGroupName", resourceGroupName, str)
-        v["resourceGroupName"] = resourceGroupName
-        hostedZoneName = self.hostedZoneName()
-        check_type("hostedZoneName", hostedZoneName, Optional[str])
-        if hostedZoneName:  # omit empty
-            v["hostedZoneName"] = hostedZoneName
+        v["clientSecretSecretRef"] = client_secret_secret_ref
+        subscription_id = self.subscription_id()
+        check_type("subscription_id", subscription_id, str)
+        v["subscriptionID"] = subscription_id
+        tenant_id = self.tenant_id()
+        check_type("tenant_id", tenant_id, str)
+        v["tenantID"] = tenant_id
+        resource_group_name = self.resource_group_name()
+        check_type("resource_group_name", resource_group_name, str)
+        v["resourceGroupName"] = resource_group_name
+        hosted_zone_name = self.hosted_zone_name()
+        check_type("hosted_zone_name", hosted_zone_name, Optional[str])
+        if hosted_zone_name:  # omit empty
+            v["hostedZoneName"] = hosted_zone_name
         environment = self.environment()
         check_type("environment", environment, Optional[AzureDNSEnvironment])
         if environment:  # omit empty
             v["environment"] = environment
         return v
 
-    def clientID(self) -> str:
-        return self.__clientID
+    def client_id(self) -> str:
+        return self.__client_id
 
-    def clientSecretSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__clientSecretSecretRef
+    def client_secret_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__client_secret_secret_ref
 
-    def subscriptionID(self) -> str:
-        return self.__subscriptionID
+    def subscription_id(self) -> str:
+        return self.__subscription_id
 
-    def tenantID(self) -> str:
-        return self.__tenantID
+    def tenant_id(self) -> str:
+        return self.__tenant_id
 
-    def resourceGroupName(self) -> str:
-        return self.__resourceGroupName
+    def resource_group_name(self) -> str:
+        return self.__resource_group_name
 
-    def hostedZoneName(self) -> Optional[str]:
-        return self.__hostedZoneName
+    def hosted_zone_name(self) -> Optional[str]:
+        return self.__hosted_zone_name
 
     def environment(self) -> Optional[AzureDNSEnvironment]:
         return self.__environment
@@ -248,31 +256,31 @@ class ACMEIssuerDNS01ProviderCloudDNS(types.Object):
     @typechecked
     def __init__(
         self,
-        serviceAccountSecretRef: "k8sv1.SecretKeySelector" = None,
+        service_account_secret_ref: "k8sv1.SecretKeySelector" = None,
         project: str = "",
     ):
         super().__init__()
-        self.__serviceAccountSecretRef = serviceAccountSecretRef
+        self.__service_account_secret_ref = service_account_secret_ref
         self.__project = project
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        serviceAccountSecretRef = self.serviceAccountSecretRef()
+        service_account_secret_ref = self.service_account_secret_ref()
         check_type(
-            "serviceAccountSecretRef",
-            serviceAccountSecretRef,
+            "service_account_secret_ref",
+            service_account_secret_ref,
             Optional["k8sv1.SecretKeySelector"],
         )
-        if serviceAccountSecretRef is not None:  # omit empty
-            v["serviceAccountSecretRef"] = serviceAccountSecretRef
+        if service_account_secret_ref is not None:  # omit empty
+            v["serviceAccountSecretRef"] = service_account_secret_ref
         project = self.project()
         check_type("project", project, str)
         v["project"] = project
         return v
 
-    def serviceAccountSecretRef(self) -> Optional["k8sv1.SecretKeySelector"]:
-        return self.__serviceAccountSecretRef
+    def service_account_secret_ref(self) -> Optional["k8sv1.SecretKeySelector"]:
+        return self.__service_account_secret_ref
 
     def project(self) -> str:
         return self.__project
@@ -289,13 +297,13 @@ class ACMEIssuerDNS01ProviderCloudflare(types.Object):
     def __init__(
         self,
         email: str = "",
-        apiKeySecretRef: "k8sv1.SecretKeySelector" = None,
-        apiTokenSecretRef: "k8sv1.SecretKeySelector" = None,
+        api_key_secret_ref: "k8sv1.SecretKeySelector" = None,
+        api_token_secret_ref: "k8sv1.SecretKeySelector" = None,
     ):
         super().__init__()
         self.__email = email
-        self.__apiKeySecretRef = apiKeySecretRef
-        self.__apiTokenSecretRef = apiTokenSecretRef
+        self.__api_key_secret_ref = api_key_secret_ref
+        self.__api_token_secret_ref = api_token_secret_ref
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -303,28 +311,32 @@ class ACMEIssuerDNS01ProviderCloudflare(types.Object):
         email = self.email()
         check_type("email", email, str)
         v["email"] = email
-        apiKeySecretRef = self.apiKeySecretRef()
+        api_key_secret_ref = self.api_key_secret_ref()
         check_type(
-            "apiKeySecretRef", apiKeySecretRef, Optional["k8sv1.SecretKeySelector"]
+            "api_key_secret_ref",
+            api_key_secret_ref,
+            Optional["k8sv1.SecretKeySelector"],
         )
-        if apiKeySecretRef is not None:  # omit empty
-            v["apiKeySecretRef"] = apiKeySecretRef
-        apiTokenSecretRef = self.apiTokenSecretRef()
+        if api_key_secret_ref is not None:  # omit empty
+            v["apiKeySecretRef"] = api_key_secret_ref
+        api_token_secret_ref = self.api_token_secret_ref()
         check_type(
-            "apiTokenSecretRef", apiTokenSecretRef, Optional["k8sv1.SecretKeySelector"]
+            "api_token_secret_ref",
+            api_token_secret_ref,
+            Optional["k8sv1.SecretKeySelector"],
         )
-        if apiTokenSecretRef is not None:  # omit empty
-            v["apiTokenSecretRef"] = apiTokenSecretRef
+        if api_token_secret_ref is not None:  # omit empty
+            v["apiTokenSecretRef"] = api_token_secret_ref
         return v
 
     def email(self) -> str:
         return self.__email
 
-    def apiKeySecretRef(self) -> Optional["k8sv1.SecretKeySelector"]:
-        return self.__apiKeySecretRef
+    def api_key_secret_ref(self) -> Optional["k8sv1.SecretKeySelector"]:
+        return self.__api_key_secret_ref
 
-    def apiTokenSecretRef(self) -> Optional["k8sv1.SecretKeySelector"]:
-        return self.__apiTokenSecretRef
+    def api_token_secret_ref(self) -> Optional["k8sv1.SecretKeySelector"]:
+        return self.__api_token_secret_ref
 
 
 class ACMEIssuerDNS01ProviderDigitalOcean(types.Object):
@@ -335,22 +347,24 @@ class ACMEIssuerDNS01ProviderDigitalOcean(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, tokenSecretRef: "k8sv1.SecretKeySelector" = None):
+    def __init__(self, token_secret_ref: "k8sv1.SecretKeySelector" = None):
         super().__init__()
-        self.__tokenSecretRef = (
-            tokenSecretRef if tokenSecretRef is not None else k8sv1.SecretKeySelector()
+        self.__token_secret_ref = (
+            token_secret_ref
+            if token_secret_ref is not None
+            else k8sv1.SecretKeySelector()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        tokenSecretRef = self.tokenSecretRef()
-        check_type("tokenSecretRef", tokenSecretRef, "k8sv1.SecretKeySelector")
-        v["tokenSecretRef"] = tokenSecretRef
+        token_secret_ref = self.token_secret_ref()
+        check_type("token_secret_ref", token_secret_ref, "k8sv1.SecretKeySelector")
+        v["tokenSecretRef"] = token_secret_ref
         return v
 
-    def tokenSecretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__tokenSecretRef
+    def token_secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__token_secret_ref
 
 
 class ACMEIssuerDNS01ProviderRFC2136(types.Object):
@@ -364,19 +378,19 @@ class ACMEIssuerDNS01ProviderRFC2136(types.Object):
     def __init__(
         self,
         nameserver: str = "",
-        tsigSecretSecretRef: "k8sv1.SecretKeySelector" = None,
-        tsigKeyName: str = None,
-        tsigAlgorithm: str = None,
+        tsig_secret_secret_ref: "k8sv1.SecretKeySelector" = None,
+        tsig_key_name: str = None,
+        tsig_algorithm: str = None,
     ):
         super().__init__()
         self.__nameserver = nameserver
-        self.__tsigSecretSecretRef = (
-            tsigSecretSecretRef
-            if tsigSecretSecretRef is not None
+        self.__tsig_secret_secret_ref = (
+            tsig_secret_secret_ref
+            if tsig_secret_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
-        self.__tsigKeyName = tsigKeyName
-        self.__tsigAlgorithm = tsigAlgorithm
+        self.__tsig_key_name = tsig_key_name
+        self.__tsig_algorithm = tsig_algorithm
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -384,21 +398,21 @@ class ACMEIssuerDNS01ProviderRFC2136(types.Object):
         nameserver = self.nameserver()
         check_type("nameserver", nameserver, str)
         v["nameserver"] = nameserver
-        tsigSecretSecretRef = self.tsigSecretSecretRef()
+        tsig_secret_secret_ref = self.tsig_secret_secret_ref()
         check_type(
-            "tsigSecretSecretRef",
-            tsigSecretSecretRef,
+            "tsig_secret_secret_ref",
+            tsig_secret_secret_ref,
             Optional["k8sv1.SecretKeySelector"],
         )
-        v["tsigSecretSecretRef"] = tsigSecretSecretRef
-        tsigKeyName = self.tsigKeyName()
-        check_type("tsigKeyName", tsigKeyName, Optional[str])
-        if tsigKeyName:  # omit empty
-            v["tsigKeyName"] = tsigKeyName
-        tsigAlgorithm = self.tsigAlgorithm()
-        check_type("tsigAlgorithm", tsigAlgorithm, Optional[str])
-        if tsigAlgorithm:  # omit empty
-            v["tsigAlgorithm"] = tsigAlgorithm
+        v["tsigSecretSecretRef"] = tsig_secret_secret_ref
+        tsig_key_name = self.tsig_key_name()
+        check_type("tsig_key_name", tsig_key_name, Optional[str])
+        if tsig_key_name:  # omit empty
+            v["tsigKeyName"] = tsig_key_name
+        tsig_algorithm = self.tsig_algorithm()
+        check_type("tsig_algorithm", tsig_algorithm, Optional[str])
+        if tsig_algorithm:  # omit empty
+            v["tsigAlgorithm"] = tsig_algorithm
         return v
 
     def nameserver(self) -> str:
@@ -408,28 +422,28 @@ class ACMEIssuerDNS01ProviderRFC2136(types.Object):
         """
         return self.__nameserver
 
-    def tsigSecretSecretRef(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def tsig_secret_secret_ref(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         The name of the secret containing the TSIG value.
         If ``tsigKeyName`` is defined, this field is required.
         """
-        return self.__tsigSecretSecretRef
+        return self.__tsig_secret_secret_ref
 
-    def tsigKeyName(self) -> Optional[str]:
+    def tsig_key_name(self) -> Optional[str]:
         """
         The TSIG Key name configured in the DNS.
         If ``tsigSecretSecretRef`` is defined, this field is required.
         """
-        return self.__tsigKeyName
+        return self.__tsig_key_name
 
-    def tsigAlgorithm(self) -> Optional[str]:
+    def tsig_algorithm(self) -> Optional[str]:
         """
         The TSIG Algorithm configured in the DNS supporting RFC2136. Used only
         when ``tsigSecretSecretRef`` and ``tsigKeyName`` are defined.
         Supported values are (case-insensitive): ``HMACMD5`` (default),
         ``HMACSHA1``, ``HMACSHA256`` or ``HMACSHA512``.
         """
-        return self.__tsigAlgorithm
+        return self.__tsig_algorithm
 
 
 class ACMEIssuerDNS01ProviderRoute53(types.Object):
@@ -442,61 +456,61 @@ class ACMEIssuerDNS01ProviderRoute53(types.Object):
     @typechecked
     def __init__(
         self,
-        accessKeyID: str = "",
-        secretAccessKeySecretRef: "k8sv1.SecretKeySelector" = None,
+        access_key_id: str = "",
+        secret_access_key_secret_ref: "k8sv1.SecretKeySelector" = None,
         role: str = "",
-        hostedZoneID: str = None,
+        hosted_zone_id: str = None,
         region: str = "",
     ):
         super().__init__()
-        self.__accessKeyID = accessKeyID
-        self.__secretAccessKeySecretRef = (
-            secretAccessKeySecretRef
-            if secretAccessKeySecretRef is not None
+        self.__access_key_id = access_key_id
+        self.__secret_access_key_secret_ref = (
+            secret_access_key_secret_ref
+            if secret_access_key_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
         self.__role = role
-        self.__hostedZoneID = hostedZoneID
+        self.__hosted_zone_id = hosted_zone_id
         self.__region = region
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        accessKeyID = self.accessKeyID()
-        check_type("accessKeyID", accessKeyID, str)
-        v["accessKeyID"] = accessKeyID
-        secretAccessKeySecretRef = self.secretAccessKeySecretRef()
+        access_key_id = self.access_key_id()
+        check_type("access_key_id", access_key_id, str)
+        v["accessKeyID"] = access_key_id
+        secret_access_key_secret_ref = self.secret_access_key_secret_ref()
         check_type(
-            "secretAccessKeySecretRef",
-            secretAccessKeySecretRef,
+            "secret_access_key_secret_ref",
+            secret_access_key_secret_ref,
             "k8sv1.SecretKeySelector",
         )
-        v["secretAccessKeySecretRef"] = secretAccessKeySecretRef
+        v["secretAccessKeySecretRef"] = secret_access_key_secret_ref
         role = self.role()
         check_type("role", role, str)
         v["role"] = role
-        hostedZoneID = self.hostedZoneID()
-        check_type("hostedZoneID", hostedZoneID, Optional[str])
-        if hostedZoneID:  # omit empty
-            v["hostedZoneID"] = hostedZoneID
+        hosted_zone_id = self.hosted_zone_id()
+        check_type("hosted_zone_id", hosted_zone_id, Optional[str])
+        if hosted_zone_id:  # omit empty
+            v["hostedZoneID"] = hosted_zone_id
         region = self.region()
         check_type("region", region, str)
         v["region"] = region
         return v
 
-    def accessKeyID(self) -> str:
+    def access_key_id(self) -> str:
         """
         The AccessKeyID is used for authentication. If not set we fall-back to using env vars, shared credentials file or AWS Instance metadata
         see: https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
         """
-        return self.__accessKeyID
+        return self.__access_key_id
 
-    def secretAccessKeySecretRef(self) -> "k8sv1.SecretKeySelector":
+    def secret_access_key_secret_ref(self) -> "k8sv1.SecretKeySelector":
         """
         The SecretAccessKey is used for authentication. If not set we fall-back to using env vars, shared credentials file or AWS Instance metadata
         https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html#specifying-credentials
         """
-        return self.__secretAccessKeySecretRef
+        return self.__secret_access_key_secret_ref
 
     def role(self) -> str:
         """
@@ -505,11 +519,11 @@ class ACMEIssuerDNS01ProviderRoute53(types.Object):
         """
         return self.__role
 
-    def hostedZoneID(self) -> Optional[str]:
+    def hosted_zone_id(self) -> Optional[str]:
         """
         If set, the provider will manage only this zone in Route53 and will not do an lookup using the route53:ListHostedZonesByName api call.
         """
-        return self.__hostedZoneID
+        return self.__hosted_zone_id
 
     def region(self) -> str:
         """
@@ -528,46 +542,46 @@ class ACMEIssuerDNS01ProviderWebhook(types.Object):
     @typechecked
     def __init__(
         self,
-        groupName: str = "",
-        solverName: str = "",
+        group_name: str = "",
+        solver_name: str = "",
         config: "apiextensionsv1beta1.JSON" = None,
     ):
         super().__init__()
-        self.__groupName = groupName
-        self.__solverName = solverName
+        self.__group_name = group_name
+        self.__solver_name = solver_name
         self.__config = config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        groupName = self.groupName()
-        check_type("groupName", groupName, str)
-        v["groupName"] = groupName
-        solverName = self.solverName()
-        check_type("solverName", solverName, str)
-        v["solverName"] = solverName
+        group_name = self.group_name()
+        check_type("group_name", group_name, str)
+        v["groupName"] = group_name
+        solver_name = self.solver_name()
+        check_type("solver_name", solver_name, str)
+        v["solverName"] = solver_name
         config = self.config()
         check_type("config", config, Optional["apiextensionsv1beta1.JSON"])
         if config is not None:  # omit empty
             v["config"] = config
         return v
 
-    def groupName(self) -> str:
+    def group_name(self) -> str:
         """
         The API group name that should be used when POSTing ChallengePayload
         resources to the webhook apiserver.
         This should be the same as the GroupName specified in the webhook
         provider implementation.
         """
-        return self.__groupName
+        return self.__group_name
 
-    def solverName(self) -> str:
+    def solver_name(self) -> str:
         """
         The name of the solver to use, as defined in the webhook provider
         implementation.
         This will typically be the name of the provider, e.g. 'cloudflare'.
         """
-        return self.__solverName
+        return self.__solver_name
 
     def config(self) -> Optional["apiextensionsv1beta1.JSON"]:
         """
@@ -588,7 +602,7 @@ class ACMEChallengeSolverDNS01(types.Object):
     @typechecked
     def __init__(
         self,
-        cnameStrategy: CNAMEStrategy = None,
+        cname_strategy: CNAMEStrategy = None,
         akamai: "ACMEIssuerDNS01ProviderAkamai" = None,
         clouddns: "ACMEIssuerDNS01ProviderCloudDNS" = None,
         cloudflare: "ACMEIssuerDNS01ProviderCloudflare" = None,
@@ -600,7 +614,7 @@ class ACMEChallengeSolverDNS01(types.Object):
         webhook: "ACMEIssuerDNS01ProviderWebhook" = None,
     ):
         super().__init__()
-        self.__cnameStrategy = cnameStrategy
+        self.__cname_strategy = cname_strategy
         self.__akamai = akamai
         self.__clouddns = clouddns
         self.__cloudflare = cloudflare
@@ -614,10 +628,10 @@ class ACMEChallengeSolverDNS01(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        cnameStrategy = self.cnameStrategy()
-        check_type("cnameStrategy", cnameStrategy, Optional[CNAMEStrategy])
-        if cnameStrategy:  # omit empty
-            v["cnameStrategy"] = cnameStrategy
+        cname_strategy = self.cname_strategy()
+        check_type("cname_strategy", cname_strategy, Optional[CNAMEStrategy])
+        if cname_strategy:  # omit empty
+            v["cnameStrategy"] = cname_strategy
         akamai = self.akamai()
         check_type("akamai", akamai, Optional["ACMEIssuerDNS01ProviderAkamai"])
         if akamai is not None:  # omit empty
@@ -662,12 +676,12 @@ class ACMEChallengeSolverDNS01(types.Object):
             v["webhook"] = webhook
         return v
 
-    def cnameStrategy(self) -> Optional[CNAMEStrategy]:
+    def cname_strategy(self) -> Optional[CNAMEStrategy]:
         """
         CNAMEStrategy configures how the DNS01 provider should handle CNAME
         records when found in DNS zones.
         """
-        return self.__cnameStrategy
+        return self.__cname_strategy
 
     def akamai(self) -> Optional["ACMEIssuerDNS01ProviderAkamai"]:
         return self.__akamai
@@ -738,22 +752,22 @@ class ACMEChallengeSolverHTTP01IngressPodSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        nodeSelector: Dict[str, str] = None,
+        node_selector: Dict[str, str] = None,
         affinity: "k8sv1.Affinity" = None,
         tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
-        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__node_selector = node_selector if node_selector is not None else {}
         self.__affinity = affinity
         self.__tolerations = tolerations if tolerations is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
-        if nodeSelector:  # omit empty
-            v["nodeSelector"] = nodeSelector
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional[Dict[str, str]])
+        if node_selector:  # omit empty
+            v["nodeSelector"] = node_selector
         affinity = self.affinity()
         check_type("affinity", affinity, Optional["k8sv1.Affinity"])
         if affinity is not None:  # omit empty
@@ -764,13 +778,13 @@ class ACMEChallengeSolverHTTP01IngressPodSpec(types.Object):
             v["tolerations"] = tolerations
         return v
 
-    def nodeSelector(self) -> Optional[Dict[str, str]]:
+    def node_selector(self) -> Optional[Dict[str, str]]:
         """
         NodeSelector is a selector which must be true for the pod to fit on a node.
         Selector which must match a node's labels for the pod to be scheduled on that node.
         More info: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
     def affinity(self) -> Optional["k8sv1.Affinity"]:
         """
@@ -841,24 +855,24 @@ class ACMEChallengeSolverHTTP01Ingress(types.Object):
     @typechecked
     def __init__(
         self,
-        serviceType: k8sv1.ServiceType = None,
+        service_type: k8sv1.ServiceType = None,
         class_: str = None,
         name: str = None,
-        podTemplate: "ACMEChallengeSolverHTTP01IngressPodTemplate" = None,
+        pod_template: "ACMEChallengeSolverHTTP01IngressPodTemplate" = None,
     ):
         super().__init__()
-        self.__serviceType = serviceType
+        self.__service_type = service_type
         self.__class_ = class_
         self.__name = name
-        self.__podTemplate = podTemplate
+        self.__pod_template = pod_template
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        serviceType = self.serviceType()
-        check_type("serviceType", serviceType, Optional[k8sv1.ServiceType])
-        if serviceType:  # omit empty
-            v["serviceType"] = serviceType
+        service_type = self.service_type()
+        check_type("service_type", service_type, Optional[k8sv1.ServiceType])
+        if service_type:  # omit empty
+            v["serviceType"] = service_type
         class_ = self.class_()
         check_type("class_", class_, Optional[str])
         if class_ is not None:  # omit empty
@@ -867,21 +881,21 @@ class ACMEChallengeSolverHTTP01Ingress(types.Object):
         check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
-        podTemplate = self.podTemplate()
+        pod_template = self.pod_template()
         check_type(
-            "podTemplate",
-            podTemplate,
+            "pod_template",
+            pod_template,
             Optional["ACMEChallengeSolverHTTP01IngressPodTemplate"],
         )
-        if podTemplate is not None:  # omit empty
-            v["podTemplate"] = podTemplate
+        if pod_template is not None:  # omit empty
+            v["podTemplate"] = pod_template
         return v
 
-    def serviceType(self) -> Optional[k8sv1.ServiceType]:
+    def service_type(self) -> Optional[k8sv1.ServiceType]:
         """
         Optional service type for Kubernetes solver service
         """
-        return self.__serviceType
+        return self.__service_type
 
     def class_(self) -> Optional[str]:
         """
@@ -901,12 +915,12 @@ class ACMEChallengeSolverHTTP01Ingress(types.Object):
         """
         return self.__name
 
-    def podTemplate(self) -> Optional["ACMEChallengeSolverHTTP01IngressPodTemplate"]:
+    def pod_template(self) -> Optional["ACMEChallengeSolverHTTP01IngressPodTemplate"]:
         """
         Optional pod template used to configure the ACME challenge solver pods
         used for HTTP01 challenges
         """
-        return self.__podTemplate
+        return self.__pod_template
 
 
 class ACMEChallengeSolverHTTP01(types.Object):
@@ -954,40 +968,40 @@ class CertificateDNSNameSelector(types.Object):
     @typechecked
     def __init__(
         self,
-        matchLabels: Dict[str, str] = None,
-        dnsNames: List[str] = None,
-        dnsZones: List[str] = None,
+        match_labels: Dict[str, str] = None,
+        dns_names: List[str] = None,
+        dns_zones: List[str] = None,
     ):
         super().__init__()
-        self.__matchLabels = matchLabels if matchLabels is not None else {}
-        self.__dnsNames = dnsNames if dnsNames is not None else []
-        self.__dnsZones = dnsZones if dnsZones is not None else []
+        self.__match_labels = match_labels if match_labels is not None else {}
+        self.__dns_names = dns_names if dns_names is not None else []
+        self.__dns_zones = dns_zones if dns_zones is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        matchLabels = self.matchLabels()
-        check_type("matchLabels", matchLabels, Optional[Dict[str, str]])
-        if matchLabels:  # omit empty
-            v["matchLabels"] = matchLabels
-        dnsNames = self.dnsNames()
-        check_type("dnsNames", dnsNames, Optional[List[str]])
-        if dnsNames:  # omit empty
-            v["dnsNames"] = dnsNames
-        dnsZones = self.dnsZones()
-        check_type("dnsZones", dnsZones, Optional[List[str]])
-        if dnsZones:  # omit empty
-            v["dnsZones"] = dnsZones
+        match_labels = self.match_labels()
+        check_type("match_labels", match_labels, Optional[Dict[str, str]])
+        if match_labels:  # omit empty
+            v["matchLabels"] = match_labels
+        dns_names = self.dns_names()
+        check_type("dns_names", dns_names, Optional[List[str]])
+        if dns_names:  # omit empty
+            v["dnsNames"] = dns_names
+        dns_zones = self.dns_zones()
+        check_type("dns_zones", dns_zones, Optional[List[str]])
+        if dns_zones:  # omit empty
+            v["dnsZones"] = dns_zones
         return v
 
-    def matchLabels(self) -> Optional[Dict[str, str]]:
+    def match_labels(self) -> Optional[Dict[str, str]]:
         """
         A label selector that is used to refine the set of certificate's that
         this challenge solver will apply to.
         """
-        return self.__matchLabels
+        return self.__match_labels
 
-    def dnsNames(self) -> Optional[List[str]]:
+    def dns_names(self) -> Optional[List[str]]:
         """
         List of DNSNames that this solver will be used to solve.
         If specified and a match is found, a dnsNames selector will take
@@ -997,9 +1011,9 @@ class CertificateDNSNameSelector(types.Object):
         If neither has more matches, the solver defined earlier in the list
         will be selected.
         """
-        return self.__dnsNames
+        return self.__dns_names
 
-    def dnsZones(self) -> Optional[List[str]]:
+    def dns_zones(self) -> Optional[List[str]]:
         """
         List of DNSZones that this solver will be used to solve.
         The most specific DNS zone match specified here will take precedence
@@ -1011,7 +1025,7 @@ class CertificateDNSNameSelector(types.Object):
         If neither has more matches, the solver defined earlier in the list
         will be selected.
         """
-        return self.__dnsZones
+        return self.__dns_zones
 
 
 class ACMEChallengeSolver(types.Object):
@@ -1069,38 +1083,38 @@ class ACMEExternalAccountBinding(types.Object):
     @typechecked
     def __init__(
         self,
-        keyID: str = "",
-        keySecretRef: "k8sv1.SecretKeySelector" = None,
-        keyAlgorithm: HMACKeyAlgorithm = None,
+        key_id: str = "",
+        key_secret_ref: "k8sv1.SecretKeySelector" = None,
+        key_algorithm: HMACKeyAlgorithm = None,
     ):
         super().__init__()
-        self.__keyID = keyID
-        self.__keySecretRef = (
-            keySecretRef if keySecretRef is not None else k8sv1.SecretKeySelector()
+        self.__key_id = key_id
+        self.__key_secret_ref = (
+            key_secret_ref if key_secret_ref is not None else k8sv1.SecretKeySelector()
         )
-        self.__keyAlgorithm = keyAlgorithm
+        self.__key_algorithm = key_algorithm
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        keyID = self.keyID()
-        check_type("keyID", keyID, str)
-        v["keyID"] = keyID
-        keySecretRef = self.keySecretRef()
-        check_type("keySecretRef", keySecretRef, "k8sv1.SecretKeySelector")
-        v["keySecretRef"] = keySecretRef
-        keyAlgorithm = self.keyAlgorithm()
-        check_type("keyAlgorithm", keyAlgorithm, HMACKeyAlgorithm)
-        v["keyAlgorithm"] = keyAlgorithm
+        key_id = self.key_id()
+        check_type("key_id", key_id, str)
+        v["keyID"] = key_id
+        key_secret_ref = self.key_secret_ref()
+        check_type("key_secret_ref", key_secret_ref, "k8sv1.SecretKeySelector")
+        v["keySecretRef"] = key_secret_ref
+        key_algorithm = self.key_algorithm()
+        check_type("key_algorithm", key_algorithm, HMACKeyAlgorithm)
+        v["keyAlgorithm"] = key_algorithm
         return v
 
-    def keyID(self) -> str:
+    def key_id(self) -> str:
         """
         keyID is the ID of the CA key that the External Account is bound to.
         """
-        return self.__keyID
+        return self.__key_id
 
-    def keySecretRef(self) -> "k8sv1.SecretKeySelector":
+    def key_secret_ref(self) -> "k8sv1.SecretKeySelector":
         """
         keySecretRef is a Secret Key Selector referencing a data item in a Kubernetes
         Secret which holds the symmetric MAC key of the External Account Binding.
@@ -1110,14 +1124,14 @@ class ACMEExternalAccountBinding(types.Object):
         The secret key stored in the Secret **must** be un-padded, base64 URL
         encoded data.
         """
-        return self.__keySecretRef
+        return self.__key_secret_ref
 
-    def keyAlgorithm(self) -> HMACKeyAlgorithm:
+    def key_algorithm(self) -> HMACKeyAlgorithm:
         """
         keyAlgorithm is the MAC key algorithm that the key is used for. Valid
         values are "HS256", "HS384" and "HS512".
         """
-        return self.__keyAlgorithm
+        return self.__key_algorithm
 
 
 class ACMEIssuer(types.Object):
@@ -1131,19 +1145,19 @@ class ACMEIssuer(types.Object):
         self,
         email: str = None,
         server: str = "",
-        skipTLSVerify: bool = None,
-        externalAccountBinding: "ACMEExternalAccountBinding" = None,
-        privateKeySecretRef: "k8sv1.SecretKeySelector" = None,
+        skip_tls_verify: bool = None,
+        external_account_binding: "ACMEExternalAccountBinding" = None,
+        private_key_secret_ref: "k8sv1.SecretKeySelector" = None,
         solvers: List["ACMEChallengeSolver"] = None,
     ):
         super().__init__()
         self.__email = email
         self.__server = server
-        self.__skipTLSVerify = skipTLSVerify
-        self.__externalAccountBinding = externalAccountBinding
-        self.__privateKeySecretRef = (
-            privateKeySecretRef
-            if privateKeySecretRef is not None
+        self.__skip_tls_verify = skip_tls_verify
+        self.__external_account_binding = external_account_binding
+        self.__private_key_secret_ref = (
+            private_key_secret_ref
+            if private_key_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
         self.__solvers = solvers if solvers is not None else []
@@ -1158,23 +1172,23 @@ class ACMEIssuer(types.Object):
         server = self.server()
         check_type("server", server, str)
         v["server"] = server
-        skipTLSVerify = self.skipTLSVerify()
-        check_type("skipTLSVerify", skipTLSVerify, Optional[bool])
-        if skipTLSVerify:  # omit empty
-            v["skipTLSVerify"] = skipTLSVerify
-        externalAccountBinding = self.externalAccountBinding()
+        skip_tls_verify = self.skip_tls_verify()
+        check_type("skip_tls_verify", skip_tls_verify, Optional[bool])
+        if skip_tls_verify:  # omit empty
+            v["skipTLSVerify"] = skip_tls_verify
+        external_account_binding = self.external_account_binding()
         check_type(
-            "externalAccountBinding",
-            externalAccountBinding,
+            "external_account_binding",
+            external_account_binding,
             Optional["ACMEExternalAccountBinding"],
         )
-        if externalAccountBinding is not None:  # omit empty
-            v["externalAccountBinding"] = externalAccountBinding
-        privateKeySecretRef = self.privateKeySecretRef()
+        if external_account_binding is not None:  # omit empty
+            v["externalAccountBinding"] = external_account_binding
+        private_key_secret_ref = self.private_key_secret_ref()
         check_type(
-            "privateKeySecretRef", privateKeySecretRef, "k8sv1.SecretKeySelector"
+            "private_key_secret_ref", private_key_secret_ref, "k8sv1.SecretKeySelector"
         )
-        v["privateKeySecretRef"] = privateKeySecretRef
+        v["privateKeySecretRef"] = private_key_secret_ref
         solvers = self.solvers()
         check_type("solvers", solvers, Optional[List["ACMEChallengeSolver"]])
         if solvers:  # omit empty
@@ -1193,25 +1207,25 @@ class ACMEIssuer(types.Object):
         """
         return self.__server
 
-    def skipTLSVerify(self) -> Optional[bool]:
+    def skip_tls_verify(self) -> Optional[bool]:
         """
         If true, skip verifying the ACME server TLS certificate
         """
-        return self.__skipTLSVerify
+        return self.__skip_tls_verify
 
-    def externalAccountBinding(self) -> Optional["ACMEExternalAccountBinding"]:
+    def external_account_binding(self) -> Optional["ACMEExternalAccountBinding"]:
         """
         ExternalAcccountBinding is a reference to a CA external account of the ACME
         server.
         """
-        return self.__externalAccountBinding
+        return self.__external_account_binding
 
-    def privateKeySecretRef(self) -> "k8sv1.SecretKeySelector":
+    def private_key_secret_ref(self) -> "k8sv1.SecretKeySelector":
         """
         PrivateKey is the name of a secret containing the private key for this
         user account.
         """
-        return self.__privateKeySecretRef
+        return self.__private_key_secret_ref
 
     def solvers(self) -> Optional[List["ACMEChallengeSolver"]]:
         """
@@ -1226,44 +1240,44 @@ class ChallengeSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        authzURL: str = "",
+        authz_url: str = "",
         type: ACMEChallengeType = None,
         url: str = "",
-        dnsName: str = "",
+        dns_name: str = "",
         token: str = "",
         key: str = "",
         wildcard: bool = False,
         solver: "ACMEChallengeSolver" = None,
-        issuerRef: "k8sv1.TypedLocalObjectReference" = None,
+        issuer_ref: "k8sv1.TypedLocalObjectReference" = None,
     ):
         super().__init__()
-        self.__authzURL = authzURL
+        self.__authz_url = authz_url
         self.__type = type
         self.__url = url
-        self.__dnsName = dnsName
+        self.__dns_name = dns_name
         self.__token = token
         self.__key = key
         self.__wildcard = wildcard
         self.__solver = solver
-        self.__issuerRef = (
-            issuerRef if issuerRef is not None else k8sv1.TypedLocalObjectReference()
+        self.__issuer_ref = (
+            issuer_ref if issuer_ref is not None else k8sv1.TypedLocalObjectReference()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        authzURL = self.authzURL()
-        check_type("authzURL", authzURL, str)
-        v["authzURL"] = authzURL
+        authz_url = self.authz_url()
+        check_type("authz_url", authz_url, str)
+        v["authzURL"] = authz_url
         type = self.type()
         check_type("type", type, ACMEChallengeType)
         v["type"] = type
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        dnsName = self.dnsName()
-        check_type("dnsName", dnsName, str)
-        v["dnsName"] = dnsName
+        dns_name = self.dns_name()
+        check_type("dns_name", dns_name, str)
+        v["dnsName"] = dns_name
         token = self.token()
         check_type("token", token, str)
         v["token"] = token
@@ -1277,17 +1291,17 @@ class ChallengeSpec(types.Object):
         check_type("solver", solver, Optional["ACMEChallengeSolver"])
         if solver is not None:  # omit empty
             v["solver"] = solver
-        issuerRef = self.issuerRef()
-        check_type("issuerRef", issuerRef, "k8sv1.TypedLocalObjectReference")
-        v["issuerRef"] = issuerRef
+        issuer_ref = self.issuer_ref()
+        check_type("issuer_ref", issuer_ref, "k8sv1.TypedLocalObjectReference")
+        v["issuerRef"] = issuer_ref
         return v
 
-    def authzURL(self) -> str:
+    def authz_url(self) -> str:
         """
         AuthzURL is the URL to the ACME Authorization resource that this
         challenge is a part of.
         """
-        return self.__authzURL
+        return self.__authz_url
 
     def type(self) -> ACMEChallengeType:
         """
@@ -1303,11 +1317,11 @@ class ChallengeSpec(types.Object):
         """
         return self.__url
 
-    def dnsName(self) -> str:
+    def dns_name(self) -> str:
         """
         DNSName is the identifier that this challenge is for, e.g. example.com.
         """
-        return self.__dnsName
+        return self.__dns_name
 
     def token(self) -> str:
         """
@@ -1335,7 +1349,7 @@ class ChallengeSpec(types.Object):
         """
         return self.__solver
 
-    def issuerRef(self) -> "k8sv1.TypedLocalObjectReference":
+    def issuer_ref(self) -> "k8sv1.TypedLocalObjectReference":
         """
         IssuerRef references a properly configured ACME-type Issuer which should
         be used to create this Challenge.
@@ -1343,7 +1357,7 @@ class ChallengeSpec(types.Object):
         If the Issuer is not an 'ACME' Issuer, an error will be returned and the
         Challenge will be marked as failed.
         """
-        return self.__issuerRef
+        return self.__issuer_ref
 
 
 class Challenge(base.TypedObject, base.NamespacedMetadataObject):
@@ -1362,7 +1376,7 @@ class Challenge(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ChallengeSpec" = None,
     ):
         super().__init__(
-            apiVersion="acme.cert-manager.io/v1alpha3",
+            api_version="acme.cert-manager.io/v1alpha3",
             kind="Challenge",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1389,17 +1403,17 @@ class OrderSpec(types.Object):
     def __init__(
         self,
         csr: bytes = None,
-        issuerRef: "k8sv1.TypedLocalObjectReference" = None,
-        commonName: str = None,
-        dnsNames: List[str] = None,
+        issuer_ref: "k8sv1.TypedLocalObjectReference" = None,
+        common_name: str = None,
+        dns_names: List[str] = None,
     ):
         super().__init__()
         self.__csr = csr if csr is not None else b""
-        self.__issuerRef = (
-            issuerRef if issuerRef is not None else k8sv1.TypedLocalObjectReference()
+        self.__issuer_ref = (
+            issuer_ref if issuer_ref is not None else k8sv1.TypedLocalObjectReference()
         )
-        self.__commonName = commonName
-        self.__dnsNames = dnsNames if dnsNames is not None else []
+        self.__common_name = common_name
+        self.__dns_names = dns_names if dns_names is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1407,17 +1421,17 @@ class OrderSpec(types.Object):
         csr = self.csr()
         check_type("csr", csr, bytes)
         v["csr"] = csr
-        issuerRef = self.issuerRef()
-        check_type("issuerRef", issuerRef, "k8sv1.TypedLocalObjectReference")
-        v["issuerRef"] = issuerRef
-        commonName = self.commonName()
-        check_type("commonName", commonName, Optional[str])
-        if commonName:  # omit empty
-            v["commonName"] = commonName
-        dnsNames = self.dnsNames()
-        check_type("dnsNames", dnsNames, Optional[List[str]])
-        if dnsNames:  # omit empty
-            v["dnsNames"] = dnsNames
+        issuer_ref = self.issuer_ref()
+        check_type("issuer_ref", issuer_ref, "k8sv1.TypedLocalObjectReference")
+        v["issuerRef"] = issuer_ref
+        common_name = self.common_name()
+        check_type("common_name", common_name, Optional[str])
+        if common_name:  # omit empty
+            v["commonName"] = common_name
+        dns_names = self.dns_names()
+        check_type("dns_names", dns_names, Optional[List[str]])
+        if dns_names:  # omit empty
+            v["dnsNames"] = dns_names
         return v
 
     def csr(self) -> bytes:
@@ -1428,7 +1442,7 @@ class OrderSpec(types.Object):
         """
         return self.__csr
 
-    def issuerRef(self) -> "k8sv1.TypedLocalObjectReference":
+    def issuer_ref(self) -> "k8sv1.TypedLocalObjectReference":
         """
         IssuerRef references a properly configured ACME-type Issuer which should
         be used to create this Order.
@@ -1436,9 +1450,9 @@ class OrderSpec(types.Object):
         If the Issuer is not an 'ACME' Issuer, an error will be returned and the
         Order will be marked as failed.
         """
-        return self.__issuerRef
+        return self.__issuer_ref
 
-    def commonName(self) -> Optional[str]:
+    def common_name(self) -> Optional[str]:
         """
         CommonName is the common name as specified on the DER encoded CSR.
         If CommonName is not specified, the first DNSName specified will be used
@@ -1446,9 +1460,9 @@ class OrderSpec(types.Object):
         At least one of CommonName or a DNSNames must be set.
         This field must match the corresponding field on the DER encoded CSR.
         """
-        return self.__commonName
+        return self.__common_name
 
-    def dnsNames(self) -> Optional[List[str]]:
+    def dns_names(self) -> Optional[List[str]]:
         """
         DNSNames is a list of DNS names that should be included as part of the Order
         validation process.
@@ -1457,7 +1471,7 @@ class OrderSpec(types.Object):
         At least one of CommonName or a DNSNames must be set.
         This field must match the corresponding field on the DER encoded CSR.
         """
-        return self.__dnsNames
+        return self.__dns_names
 
 
 class Order(base.TypedObject, base.NamespacedMetadataObject):
@@ -1476,7 +1490,7 @@ class Order(base.TypedObject, base.NamespacedMetadataObject):
         spec: "OrderSpec" = None,
     ):
         super().__init__(
-            apiVersion="acme.cert-manager.io/v1alpha3",
+            api_version="acme.cert-manager.io/v1alpha3",
             kind="Order",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

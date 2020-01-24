@@ -72,7 +72,7 @@ class NodeMetrics(base.TypedObject, base.MetadataObject):
         usage: Dict[k8sv1.ResourceName, "resource.Quantity"] = None,
     ):
         super().__init__(
-            apiVersion="metrics.k8s.io/v1alpha1",
+            api_version="metrics.k8s.io/v1alpha1",
             kind="NodeMetrics",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -131,7 +131,7 @@ class PodMetrics(base.TypedObject, base.NamespacedMetadataObject):
         containers: List["ContainerMetrics"] = None,
     ):
         super().__init__(
-            apiVersion="metrics.k8s.io/v1alpha1",
+            api_version="metrics.k8s.io/v1alpha1",
             kind="PodMetrics",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

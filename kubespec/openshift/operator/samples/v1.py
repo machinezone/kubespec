@@ -24,51 +24,51 @@ class ConfigSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        managementState: operatorv1.ManagementState = None,
-        samplesRegistry: str = None,
+        management_state: operatorv1.ManagementState = None,
+        samples_registry: str = None,
         architectures: List[str] = None,
-        skippedImagestreams: List[str] = None,
-        skippedTemplates: List[str] = None,
+        skipped_imagestreams: List[str] = None,
+        skipped_templates: List[str] = None,
     ):
         super().__init__()
-        self.__managementState = managementState
-        self.__samplesRegistry = samplesRegistry
+        self.__management_state = management_state
+        self.__samples_registry = samples_registry
         self.__architectures = architectures if architectures is not None else []
-        self.__skippedImagestreams = (
-            skippedImagestreams if skippedImagestreams is not None else []
+        self.__skipped_imagestreams = (
+            skipped_imagestreams if skipped_imagestreams is not None else []
         )
-        self.__skippedTemplates = (
-            skippedTemplates if skippedTemplates is not None else []
+        self.__skipped_templates = (
+            skipped_templates if skipped_templates is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        managementState = self.managementState()
+        management_state = self.management_state()
         check_type(
-            "managementState", managementState, Optional[operatorv1.ManagementState]
+            "management_state", management_state, Optional[operatorv1.ManagementState]
         )
-        if managementState:  # omit empty
-            v["managementState"] = managementState
-        samplesRegistry = self.samplesRegistry()
-        check_type("samplesRegistry", samplesRegistry, Optional[str])
-        if samplesRegistry:  # omit empty
-            v["samplesRegistry"] = samplesRegistry
+        if management_state:  # omit empty
+            v["managementState"] = management_state
+        samples_registry = self.samples_registry()
+        check_type("samples_registry", samples_registry, Optional[str])
+        if samples_registry:  # omit empty
+            v["samplesRegistry"] = samples_registry
         architectures = self.architectures()
         check_type("architectures", architectures, Optional[List[str]])
         if architectures:  # omit empty
             v["architectures"] = architectures
-        skippedImagestreams = self.skippedImagestreams()
-        check_type("skippedImagestreams", skippedImagestreams, Optional[List[str]])
-        if skippedImagestreams:  # omit empty
-            v["skippedImagestreams"] = skippedImagestreams
-        skippedTemplates = self.skippedTemplates()
-        check_type("skippedTemplates", skippedTemplates, Optional[List[str]])
-        if skippedTemplates:  # omit empty
-            v["skippedTemplates"] = skippedTemplates
+        skipped_imagestreams = self.skipped_imagestreams()
+        check_type("skipped_imagestreams", skipped_imagestreams, Optional[List[str]])
+        if skipped_imagestreams:  # omit empty
+            v["skippedImagestreams"] = skipped_imagestreams
+        skipped_templates = self.skipped_templates()
+        check_type("skipped_templates", skipped_templates, Optional[List[str]])
+        if skipped_templates:  # omit empty
+            v["skippedTemplates"] = skipped_templates
         return v
 
-    def managementState(self) -> Optional[operatorv1.ManagementState]:
+    def management_state(self) -> Optional[operatorv1.ManagementState]:
         """
         managementState is top level on/off type of switch for all operators.
         When "Managed", this operator processes config and manipulates the samples accordingly.
@@ -78,16 +78,16 @@ class ConfigSpec(types.Object):
         lists) and the registry secret are deleted, along with the ConfigMap in the operator's
         namespace that represents the last config used to manipulate the samples,
         """
-        return self.__managementState
+        return self.__management_state
 
-    def samplesRegistry(self) -> Optional[str]:
+    def samples_registry(self) -> Optional[str]:
         """
         samplesRegistry allows for the specification of which registry is accessed
         by the ImageStreams for their image content.  Defaults on the content in https://github.com/openshift/library
         that are pulled into this github repository, but based on our pulling only ocp content it typically
         defaults to registry.redhat.io.
         """
-        return self.__samplesRegistry
+        return self.__samples_registry
 
     def architectures(self) -> Optional[List[str]]:
         """
@@ -96,7 +96,7 @@ class ConfigSpec(types.Object):
         """
         return self.__architectures
 
-    def skippedImagestreams(self) -> Optional[List[str]]:
+    def skipped_imagestreams(self) -> Optional[List[str]]:
         """
         skippedImagestreams specifies names of image streams that should NOT be
         created/updated.  Admins can use this to allow them to delete content
@@ -104,9 +104,9 @@ class ConfigSpec(types.Object):
         content but the operator will not recreate(or update) anything
         listed here.
         """
-        return self.__skippedImagestreams
+        return self.__skipped_imagestreams
 
-    def skippedTemplates(self) -> Optional[List[str]]:
+    def skipped_templates(self) -> Optional[List[str]]:
         """
         skippedTemplates specifies names of templates that should NOT be
         created/updated.  Admins can use this to allow them to delete content
@@ -114,7 +114,7 @@ class ConfigSpec(types.Object):
         content but the operator will not recreate(or update) anything
         listed here.
         """
-        return self.__skippedTemplates
+        return self.__skipped_templates
 
 
 class Config(base.TypedObject, base.MetadataObject):
@@ -132,7 +132,7 @@ class Config(base.TypedObject, base.MetadataObject):
         spec: "ConfigSpec" = None,
     ):
         super().__init__(
-            apiVersion="samples.operator.openshift.io/v1",
+            api_version="samples.operator.openshift.io/v1",
             kind="Config",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

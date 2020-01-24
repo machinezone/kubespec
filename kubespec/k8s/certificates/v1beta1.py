@@ -158,7 +158,7 @@ class CertificateSigningRequest(base.TypedObject, base.MetadataObject):
         spec: "CertificateSigningRequestSpec" = None,
     ):
         super().__init__(
-            apiVersion="certificates.k8s.io/v1beta1",
+            api_version="certificates.k8s.io/v1beta1",
             kind="CertificateSigningRequest",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

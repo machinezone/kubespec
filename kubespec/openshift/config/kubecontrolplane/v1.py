@@ -21,25 +21,25 @@ class AggregatorConfig(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, proxyClientInfo: "configv1.CertInfo" = None):
+    def __init__(self, proxy_client_info: "configv1.CertInfo" = None):
         super().__init__()
-        self.__proxyClientInfo = (
-            proxyClientInfo if proxyClientInfo is not None else configv1.CertInfo()
+        self.__proxy_client_info = (
+            proxy_client_info if proxy_client_info is not None else configv1.CertInfo()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        proxyClientInfo = self.proxyClientInfo()
-        check_type("proxyClientInfo", proxyClientInfo, "configv1.CertInfo")
-        v["proxyClientInfo"] = proxyClientInfo
+        proxy_client_info = self.proxy_client_info()
+        check_type("proxy_client_info", proxy_client_info, "configv1.CertInfo")
+        v["proxyClientInfo"] = proxy_client_info
         return v
 
-    def proxyClientInfo(self) -> "configv1.CertInfo":
+    def proxy_client_info(self) -> "configv1.CertInfo":
         """
         proxyClientInfo specifies the client cert/key to use when proxying to aggregated API servers
         """
-        return self.__proxyClientInfo
+        return self.__proxy_client_info
 
 
 class KubeAPIServerImagePolicyConfig(types.Object):
@@ -47,65 +47,69 @@ class KubeAPIServerImagePolicyConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        internalRegistryHostname: str = "",
-        externalRegistryHostnames: List[str] = None,
+        internal_registry_hostname: str = "",
+        external_registry_hostnames: List[str] = None,
     ):
         super().__init__()
-        self.__internalRegistryHostname = internalRegistryHostname
-        self.__externalRegistryHostnames = (
-            externalRegistryHostnames if externalRegistryHostnames is not None else []
+        self.__internal_registry_hostname = internal_registry_hostname
+        self.__external_registry_hostnames = (
+            external_registry_hostnames
+            if external_registry_hostnames is not None
+            else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        internalRegistryHostname = self.internalRegistryHostname()
-        check_type("internalRegistryHostname", internalRegistryHostname, str)
-        v["internalRegistryHostname"] = internalRegistryHostname
-        externalRegistryHostnames = self.externalRegistryHostnames()
-        check_type("externalRegistryHostnames", externalRegistryHostnames, List[str])
-        v["externalRegistryHostnames"] = externalRegistryHostnames
+        internal_registry_hostname = self.internal_registry_hostname()
+        check_type("internal_registry_hostname", internal_registry_hostname, str)
+        v["internalRegistryHostname"] = internal_registry_hostname
+        external_registry_hostnames = self.external_registry_hostnames()
+        check_type(
+            "external_registry_hostnames", external_registry_hostnames, List[str]
+        )
+        v["externalRegistryHostnames"] = external_registry_hostnames
         return v
 
-    def internalRegistryHostname(self) -> str:
+    def internal_registry_hostname(self) -> str:
         """
         internalRegistryHostname sets the hostname for the default internal image
         registry. The value must be in "hostname[:port]" format.
         For backward compatibility, users can still use OPENSHIFT_DEFAULT_REGISTRY
         environment variable but this setting overrides the environment variable.
         """
-        return self.__internalRegistryHostname
+        return self.__internal_registry_hostname
 
-    def externalRegistryHostnames(self) -> List[str]:
+    def external_registry_hostnames(self) -> List[str]:
         """
         externalRegistryHostnames provides the hostnames for the default external image
         registry. The external hostname should be set only when the image registry
         is exposed externally. The first value is used in 'publicDockerImageRepository'
         field in ImageStreams. The value must be in "hostname[:port]" format.
         """
-        return self.__externalRegistryHostnames
+        return self.__external_registry_hostnames
 
 
 class KubeAPIServerProjectConfig(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, defaultNodeSelector: str = ""):
+    def __init__(self, default_node_selector: str = ""):
         super().__init__()
-        self.__defaultNodeSelector = defaultNodeSelector
+        self.__default_node_selector = default_node_selector
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        defaultNodeSelector = self.defaultNodeSelector()
-        check_type("defaultNodeSelector", defaultNodeSelector, str)
-        v["defaultNodeSelector"] = defaultNodeSelector
+        default_node_selector = self.default_node_selector()
+        check_type("default_node_selector", default_node_selector, str)
+        v["defaultNodeSelector"] = default_node_selector
         return v
 
-    def defaultNodeSelector(self) -> str:
+    def default_node_selector(self) -> str:
         """
         defaultNodeSelector holds default project node label selector
         """
-        return self.__defaultNodeSelector
+        return self.__default_node_selector
 
 
 class KubeletConnectionInfo(types.Object):
@@ -116,12 +120,12 @@ class KubeletConnectionInfo(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, port: int = 0, ca: str = "", certInfo: "configv1.CertInfo" = None
+        self, port: int = 0, ca: str = "", cert_info: "configv1.CertInfo" = None
     ):
         super().__init__()
         self.__port = port
         self.__ca = ca
-        self.__certInfo = certInfo if certInfo is not None else configv1.CertInfo()
+        self.__cert_info = cert_info if cert_info is not None else configv1.CertInfo()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -132,9 +136,9 @@ class KubeletConnectionInfo(types.Object):
         ca = self.ca()
         check_type("ca", ca, str)
         v["ca"] = ca
-        certInfo = self.certInfo()
-        check_type("certInfo", certInfo, "configv1.CertInfo")
-        v.update(certInfo._root())  # inline
+        cert_info = self.cert_info()
+        check_type("cert_info", cert_info, "configv1.CertInfo")
+        v.update(cert_info._root())  # inline
         return v
 
     def port(self) -> int:
@@ -149,12 +153,12 @@ class KubeletConnectionInfo(types.Object):
         """
         return self.__ca
 
-    def certInfo(self) -> "configv1.CertInfo":
+    def cert_info(self) -> "configv1.CertInfo":
         """
         CertInfo is the TLS client cert information for securing communication to kubelets
         this is anonymous so that we can inline it for serialization
         """
-        return self.__certInfo
+        return self.__cert_info
 
 
 class RequestHeaderAuthenticationOptions(types.Object):
@@ -167,72 +171,74 @@ class RequestHeaderAuthenticationOptions(types.Object):
     @typechecked
     def __init__(
         self,
-        clientCA: str = "",
-        clientCommonNames: List[str] = None,
-        usernameHeaders: List[str] = None,
-        groupHeaders: List[str] = None,
-        extraHeaderPrefixes: List[str] = None,
+        client_ca: str = "",
+        client_common_names: List[str] = None,
+        username_headers: List[str] = None,
+        group_headers: List[str] = None,
+        extra_header_prefixes: List[str] = None,
     ):
         super().__init__()
-        self.__clientCA = clientCA
-        self.__clientCommonNames = (
-            clientCommonNames if clientCommonNames is not None else []
+        self.__client_ca = client_ca
+        self.__client_common_names = (
+            client_common_names if client_common_names is not None else []
         )
-        self.__usernameHeaders = usernameHeaders if usernameHeaders is not None else []
-        self.__groupHeaders = groupHeaders if groupHeaders is not None else []
-        self.__extraHeaderPrefixes = (
-            extraHeaderPrefixes if extraHeaderPrefixes is not None else []
+        self.__username_headers = (
+            username_headers if username_headers is not None else []
+        )
+        self.__group_headers = group_headers if group_headers is not None else []
+        self.__extra_header_prefixes = (
+            extra_header_prefixes if extra_header_prefixes is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientCA = self.clientCA()
-        check_type("clientCA", clientCA, str)
-        v["clientCA"] = clientCA
-        clientCommonNames = self.clientCommonNames()
-        check_type("clientCommonNames", clientCommonNames, List[str])
-        v["clientCommonNames"] = clientCommonNames
-        usernameHeaders = self.usernameHeaders()
-        check_type("usernameHeaders", usernameHeaders, List[str])
-        v["usernameHeaders"] = usernameHeaders
-        groupHeaders = self.groupHeaders()
-        check_type("groupHeaders", groupHeaders, List[str])
-        v["groupHeaders"] = groupHeaders
-        extraHeaderPrefixes = self.extraHeaderPrefixes()
-        check_type("extraHeaderPrefixes", extraHeaderPrefixes, List[str])
-        v["extraHeaderPrefixes"] = extraHeaderPrefixes
+        client_ca = self.client_ca()
+        check_type("client_ca", client_ca, str)
+        v["clientCA"] = client_ca
+        client_common_names = self.client_common_names()
+        check_type("client_common_names", client_common_names, List[str])
+        v["clientCommonNames"] = client_common_names
+        username_headers = self.username_headers()
+        check_type("username_headers", username_headers, List[str])
+        v["usernameHeaders"] = username_headers
+        group_headers = self.group_headers()
+        check_type("group_headers", group_headers, List[str])
+        v["groupHeaders"] = group_headers
+        extra_header_prefixes = self.extra_header_prefixes()
+        check_type("extra_header_prefixes", extra_header_prefixes, List[str])
+        v["extraHeaderPrefixes"] = extra_header_prefixes
         return v
 
-    def clientCA(self) -> str:
+    def client_ca(self) -> str:
         """
         clientCA is a file with the trusted signer certs.  It is required.
         """
-        return self.__clientCA
+        return self.__client_ca
 
-    def clientCommonNames(self) -> List[str]:
+    def client_common_names(self) -> List[str]:
         """
         clientCommonNames is a required list of common names to require a match from.
         """
-        return self.__clientCommonNames
+        return self.__client_common_names
 
-    def usernameHeaders(self) -> List[str]:
+    def username_headers(self) -> List[str]:
         """
         usernameHeaders is the list of headers to check for user information.  First hit wins.
         """
-        return self.__usernameHeaders
+        return self.__username_headers
 
-    def groupHeaders(self) -> List[str]:
+    def group_headers(self) -> List[str]:
         """
         groupHeaders is the set of headers to check for group information.  All are unioned.
         """
-        return self.__groupHeaders
+        return self.__group_headers
 
-    def extraHeaderPrefixes(self) -> List[str]:
+    def extra_header_prefixes(self) -> List[str]:
         """
         extraHeaderPrefixes is the set of request header prefixes to inspect for user extra. X-Remote-Extra- is suggested.
         """
-        return self.__extraHeaderPrefixes
+        return self.__extra_header_prefixes
 
 
 class WebhookTokenAuthenticator(types.Object):
@@ -243,36 +249,36 @@ class WebhookTokenAuthenticator(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, configFile: str = "", cacheTTL: str = ""):
+    def __init__(self, config_file: str = "", cache_ttl: str = ""):
         super().__init__()
-        self.__configFile = configFile
-        self.__cacheTTL = cacheTTL
+        self.__config_file = config_file
+        self.__cache_ttl = cache_ttl
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        configFile = self.configFile()
-        check_type("configFile", configFile, str)
-        v["configFile"] = configFile
-        cacheTTL = self.cacheTTL()
-        check_type("cacheTTL", cacheTTL, str)
-        v["cacheTTL"] = cacheTTL
+        config_file = self.config_file()
+        check_type("config_file", config_file, str)
+        v["configFile"] = config_file
+        cache_ttl = self.cache_ttl()
+        check_type("cache_ttl", cache_ttl, str)
+        v["cacheTTL"] = cache_ttl
         return v
 
-    def configFile(self) -> str:
+    def config_file(self) -> str:
         """
         configFile is a path to a Kubeconfig file with the webhook configuration
         """
-        return self.__configFile
+        return self.__config_file
 
-    def cacheTTL(self) -> str:
+    def cache_ttl(self) -> str:
         """
         cacheTTL indicates how long an authentication result should be cached.
         It takes a valid time duration string (e.g. "5m").
         If empty, you get a default timeout of 2 minutes.
         If zero (e.g. "0m"), caching is disabled
         """
-        return self.__cacheTTL
+        return self.__cache_ttl
 
 
 class MasterAuthConfig(types.Object):
@@ -285,59 +291,61 @@ class MasterAuthConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        requestHeader: "RequestHeaderAuthenticationOptions" = None,
-        webhookTokenAuthenticators: List["WebhookTokenAuthenticator"] = None,
-        oauthMetadataFile: str = "",
+        request_header: "RequestHeaderAuthenticationOptions" = None,
+        webhook_token_authenticators: List["WebhookTokenAuthenticator"] = None,
+        oauth_metadata_file: str = "",
     ):
         super().__init__()
-        self.__requestHeader = requestHeader
-        self.__webhookTokenAuthenticators = (
-            webhookTokenAuthenticators if webhookTokenAuthenticators is not None else []
+        self.__request_header = request_header
+        self.__webhook_token_authenticators = (
+            webhook_token_authenticators
+            if webhook_token_authenticators is not None
+            else []
         )
-        self.__oauthMetadataFile = oauthMetadataFile
+        self.__oauth_metadata_file = oauth_metadata_file
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        requestHeader = self.requestHeader()
+        request_header = self.request_header()
         check_type(
-            "requestHeader",
-            requestHeader,
+            "request_header",
+            request_header,
             Optional["RequestHeaderAuthenticationOptions"],
         )
-        v["requestHeader"] = requestHeader
-        webhookTokenAuthenticators = self.webhookTokenAuthenticators()
+        v["requestHeader"] = request_header
+        webhook_token_authenticators = self.webhook_token_authenticators()
         check_type(
-            "webhookTokenAuthenticators",
-            webhookTokenAuthenticators,
+            "webhook_token_authenticators",
+            webhook_token_authenticators,
             List["WebhookTokenAuthenticator"],
         )
-        v["webhookTokenAuthenticators"] = webhookTokenAuthenticators
-        oauthMetadataFile = self.oauthMetadataFile()
-        check_type("oauthMetadataFile", oauthMetadataFile, str)
-        v["oauthMetadataFile"] = oauthMetadataFile
+        v["webhookTokenAuthenticators"] = webhook_token_authenticators
+        oauth_metadata_file = self.oauth_metadata_file()
+        check_type("oauth_metadata_file", oauth_metadata_file, str)
+        v["oauthMetadataFile"] = oauth_metadata_file
         return v
 
-    def requestHeader(self) -> Optional["RequestHeaderAuthenticationOptions"]:
+    def request_header(self) -> Optional["RequestHeaderAuthenticationOptions"]:
         """
         requestHeader holds options for setting up a front proxy against the the API.  It is optional.
         """
-        return self.__requestHeader
+        return self.__request_header
 
-    def webhookTokenAuthenticators(self) -> List["WebhookTokenAuthenticator"]:
+    def webhook_token_authenticators(self) -> List["WebhookTokenAuthenticator"]:
         """
         webhookTokenAuthenticators, if present configures remote token reviewers
         """
-        return self.__webhookTokenAuthenticators
+        return self.__webhook_token_authenticators
 
-    def oauthMetadataFile(self) -> str:
+    def oauth_metadata_file(self) -> str:
         """
         oauthMetadataFile is a path to a file containing the discovery endpoint for OAuth 2.0 Authorization
         Server Metadata for an external OAuth server.
         See IETF Draft: // https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2
         This option is mutually exclusive with OAuthConfig
         """
-        return self.__oauthMetadataFile
+        return self.__oauth_metadata_file
 
 
 class UserAgentMatchRule(types.Object):
@@ -347,10 +355,10 @@ class UserAgentMatchRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, regex: str = "", httpVerbs: List[str] = None):
+    def __init__(self, regex: str = "", http_verbs: List[str] = None):
         super().__init__()
         self.__regex = regex
-        self.__httpVerbs = httpVerbs if httpVerbs is not None else []
+        self.__http_verbs = http_verbs if http_verbs is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -358,9 +366,9 @@ class UserAgentMatchRule(types.Object):
         regex = self.regex()
         check_type("regex", regex, str)
         v["regex"] = regex
-        httpVerbs = self.httpVerbs()
-        check_type("httpVerbs", httpVerbs, List[str])
-        v["httpVerbs"] = httpVerbs
+        http_verbs = self.http_verbs()
+        check_type("http_verbs", http_verbs, List[str])
+        v["httpVerbs"] = http_verbs
         return v
 
     def regex(self) -> str:
@@ -378,11 +386,11 @@ class UserAgentMatchRule(types.Object):
         """
         return self.__regex
 
-    def httpVerbs(self) -> List[str]:
+    def http_verbs(self) -> List[str]:
         """
         httpVerbs specifies which HTTP verbs should be matched.  An empty list means "match all verbs".
         """
-        return self.__httpVerbs
+        return self.__http_verbs
 
 
 class UserAgentDenyRule(types.Object):
@@ -394,36 +402,36 @@ class UserAgentDenyRule(types.Object):
     @typechecked
     def __init__(
         self,
-        userAgentMatchRule: "UserAgentMatchRule" = None,
-        rejectionMessage: str = "",
+        user_agent_match_rule: "UserAgentMatchRule" = None,
+        rejection_message: str = "",
     ):
         super().__init__()
-        self.__userAgentMatchRule = (
-            userAgentMatchRule
-            if userAgentMatchRule is not None
+        self.__user_agent_match_rule = (
+            user_agent_match_rule
+            if user_agent_match_rule is not None
             else UserAgentMatchRule()
         )
-        self.__rejectionMessage = rejectionMessage
+        self.__rejection_message = rejection_message
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        userAgentMatchRule = self.userAgentMatchRule()
-        check_type("userAgentMatchRule", userAgentMatchRule, "UserAgentMatchRule")
-        v.update(userAgentMatchRule._root())  # inline
-        rejectionMessage = self.rejectionMessage()
-        check_type("rejectionMessage", rejectionMessage, str)
-        v["rejectionMessage"] = rejectionMessage
+        user_agent_match_rule = self.user_agent_match_rule()
+        check_type("user_agent_match_rule", user_agent_match_rule, "UserAgentMatchRule")
+        v.update(user_agent_match_rule._root())  # inline
+        rejection_message = self.rejection_message()
+        check_type("rejection_message", rejection_message, str)
+        v["rejectionMessage"] = rejection_message
         return v
 
-    def userAgentMatchRule(self) -> "UserAgentMatchRule":
-        return self.__userAgentMatchRule
+    def user_agent_match_rule(self) -> "UserAgentMatchRule":
+        return self.__user_agent_match_rule
 
-    def rejectionMessage(self) -> str:
+    def rejection_message(self) -> str:
         """
         RejectionMessage is the message shown when rejecting a client.  If it is not a set, the default message is used.
         """
-        return self.__rejectionMessage
+        return self.__rejection_message
 
 
 class UserAgentMatchingConfig(types.Object):
@@ -435,46 +443,48 @@ class UserAgentMatchingConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        requiredClients: List["UserAgentMatchRule"] = None,
-        deniedClients: List["UserAgentDenyRule"] = None,
-        defaultRejectionMessage: str = "",
+        required_clients: List["UserAgentMatchRule"] = None,
+        denied_clients: List["UserAgentDenyRule"] = None,
+        default_rejection_message: str = "",
     ):
         super().__init__()
-        self.__requiredClients = requiredClients if requiredClients is not None else []
-        self.__deniedClients = deniedClients if deniedClients is not None else []
-        self.__defaultRejectionMessage = defaultRejectionMessage
+        self.__required_clients = (
+            required_clients if required_clients is not None else []
+        )
+        self.__denied_clients = denied_clients if denied_clients is not None else []
+        self.__default_rejection_message = default_rejection_message
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        requiredClients = self.requiredClients()
-        check_type("requiredClients", requiredClients, List["UserAgentMatchRule"])
-        v["requiredClients"] = requiredClients
-        deniedClients = self.deniedClients()
-        check_type("deniedClients", deniedClients, List["UserAgentDenyRule"])
-        v["deniedClients"] = deniedClients
-        defaultRejectionMessage = self.defaultRejectionMessage()
-        check_type("defaultRejectionMessage", defaultRejectionMessage, str)
-        v["defaultRejectionMessage"] = defaultRejectionMessage
+        required_clients = self.required_clients()
+        check_type("required_clients", required_clients, List["UserAgentMatchRule"])
+        v["requiredClients"] = required_clients
+        denied_clients = self.denied_clients()
+        check_type("denied_clients", denied_clients, List["UserAgentDenyRule"])
+        v["deniedClients"] = denied_clients
+        default_rejection_message = self.default_rejection_message()
+        check_type("default_rejection_message", default_rejection_message, str)
+        v["defaultRejectionMessage"] = default_rejection_message
         return v
 
-    def requiredClients(self) -> List["UserAgentMatchRule"]:
+    def required_clients(self) -> List["UserAgentMatchRule"]:
         """
         requiredClients if this list is non-empty, then a User-Agent must match one of the UserAgentRegexes to be allowed
         """
-        return self.__requiredClients
+        return self.__required_clients
 
-    def deniedClients(self) -> List["UserAgentDenyRule"]:
+    def denied_clients(self) -> List["UserAgentDenyRule"]:
         """
         deniedClients if this list is non-empty, then a User-Agent must not match any of the UserAgentRegexes
         """
-        return self.__deniedClients
+        return self.__denied_clients
 
-    def defaultRejectionMessage(self) -> str:
+    def default_rejection_message(self) -> str:
         """
         defaultRejectionMessage is the message shown when rejecting a client.  If it is not a set, a generic message is given.
         """
-        return self.__defaultRejectionMessage
+        return self.__default_rejection_message
 
 
 class KubeAPIServerConfig(base.TypedObject):
@@ -482,185 +492,191 @@ class KubeAPIServerConfig(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        genericAPIServerConfig: "configv1.GenericAPIServerConfig" = None,
-        authConfig: "MasterAuthConfig" = None,
-        aggregatorConfig: "AggregatorConfig" = None,
-        kubeletClientInfo: "KubeletConnectionInfo" = None,
-        servicesSubnet: str = "",
-        servicesNodePortRange: str = "",
-        consolePublicURL: str = "",
-        userAgentMatchingConfig: "UserAgentMatchingConfig" = None,
-        imagePolicyConfig: "KubeAPIServerImagePolicyConfig" = None,
-        projectConfig: "KubeAPIServerProjectConfig" = None,
-        serviceAccountPublicKeyFiles: List[str] = None,
-        oauthConfig: "osinv1.OAuthConfig" = None,
-        apiServerArguments: Dict[str, List[str]] = None,
+        generic_api_server_config: "configv1.GenericAPIServerConfig" = None,
+        auth_config: "MasterAuthConfig" = None,
+        aggregator_config: "AggregatorConfig" = None,
+        kubelet_client_info: "KubeletConnectionInfo" = None,
+        services_subnet: str = "",
+        services_node_port_range: str = "",
+        console_public_url: str = "",
+        user_agent_matching_config: "UserAgentMatchingConfig" = None,
+        image_policy_config: "KubeAPIServerImagePolicyConfig" = None,
+        project_config: "KubeAPIServerProjectConfig" = None,
+        service_account_public_key_files: List[str] = None,
+        oauth_config: "osinv1.OAuthConfig" = None,
+        api_server_arguments: Dict[str, List[str]] = None,
     ):
         super().__init__(
-            apiVersion="kubecontrolplane.config.openshift.io/v1",
+            api_version="kubecontrolplane.config.openshift.io/v1",
             kind="KubeAPIServerConfig",
         )
-        self.__genericAPIServerConfig = (
-            genericAPIServerConfig
-            if genericAPIServerConfig is not None
+        self.__generic_api_server_config = (
+            generic_api_server_config
+            if generic_api_server_config is not None
             else configv1.GenericAPIServerConfig()
         )
-        self.__authConfig = authConfig if authConfig is not None else MasterAuthConfig()
-        self.__aggregatorConfig = (
-            aggregatorConfig if aggregatorConfig is not None else AggregatorConfig()
+        self.__auth_config = (
+            auth_config if auth_config is not None else MasterAuthConfig()
         )
-        self.__kubeletClientInfo = (
-            kubeletClientInfo
-            if kubeletClientInfo is not None
+        self.__aggregator_config = (
+            aggregator_config if aggregator_config is not None else AggregatorConfig()
+        )
+        self.__kubelet_client_info = (
+            kubelet_client_info
+            if kubelet_client_info is not None
             else KubeletConnectionInfo()
         )
-        self.__servicesSubnet = servicesSubnet
-        self.__servicesNodePortRange = servicesNodePortRange
-        self.__consolePublicURL = consolePublicURL
-        self.__userAgentMatchingConfig = (
-            userAgentMatchingConfig
-            if userAgentMatchingConfig is not None
+        self.__services_subnet = services_subnet
+        self.__services_node_port_range = services_node_port_range
+        self.__console_public_url = console_public_url
+        self.__user_agent_matching_config = (
+            user_agent_matching_config
+            if user_agent_matching_config is not None
             else UserAgentMatchingConfig()
         )
-        self.__imagePolicyConfig = (
-            imagePolicyConfig
-            if imagePolicyConfig is not None
+        self.__image_policy_config = (
+            image_policy_config
+            if image_policy_config is not None
             else KubeAPIServerImagePolicyConfig()
         )
-        self.__projectConfig = (
-            projectConfig if projectConfig is not None else KubeAPIServerProjectConfig()
+        self.__project_config = (
+            project_config
+            if project_config is not None
+            else KubeAPIServerProjectConfig()
         )
-        self.__serviceAccountPublicKeyFiles = (
-            serviceAccountPublicKeyFiles
-            if serviceAccountPublicKeyFiles is not None
+        self.__service_account_public_key_files = (
+            service_account_public_key_files
+            if service_account_public_key_files is not None
             else []
         )
-        self.__oauthConfig = oauthConfig
-        self.__apiServerArguments = (
-            apiServerArguments if apiServerArguments is not None else {}
+        self.__oauth_config = oauth_config
+        self.__api_server_arguments = (
+            api_server_arguments if api_server_arguments is not None else {}
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        genericAPIServerConfig = self.genericAPIServerConfig()
+        generic_api_server_config = self.generic_api_server_config()
         check_type(
-            "genericAPIServerConfig",
-            genericAPIServerConfig,
+            "generic_api_server_config",
+            generic_api_server_config,
             "configv1.GenericAPIServerConfig",
         )
-        v.update(genericAPIServerConfig._root())  # inline
-        authConfig = self.authConfig()
-        check_type("authConfig", authConfig, "MasterAuthConfig")
-        v["authConfig"] = authConfig
-        aggregatorConfig = self.aggregatorConfig()
-        check_type("aggregatorConfig", aggregatorConfig, "AggregatorConfig")
-        v["aggregatorConfig"] = aggregatorConfig
-        kubeletClientInfo = self.kubeletClientInfo()
-        check_type("kubeletClientInfo", kubeletClientInfo, "KubeletConnectionInfo")
-        v["kubeletClientInfo"] = kubeletClientInfo
-        servicesSubnet = self.servicesSubnet()
-        check_type("servicesSubnet", servicesSubnet, str)
-        v["servicesSubnet"] = servicesSubnet
-        servicesNodePortRange = self.servicesNodePortRange()
-        check_type("servicesNodePortRange", servicesNodePortRange, str)
-        v["servicesNodePortRange"] = servicesNodePortRange
-        consolePublicURL = self.consolePublicURL()
-        check_type("consolePublicURL", consolePublicURL, str)
-        v["consolePublicURL"] = consolePublicURL
-        userAgentMatchingConfig = self.userAgentMatchingConfig()
+        v.update(generic_api_server_config._root())  # inline
+        auth_config = self.auth_config()
+        check_type("auth_config", auth_config, "MasterAuthConfig")
+        v["authConfig"] = auth_config
+        aggregator_config = self.aggregator_config()
+        check_type("aggregator_config", aggregator_config, "AggregatorConfig")
+        v["aggregatorConfig"] = aggregator_config
+        kubelet_client_info = self.kubelet_client_info()
+        check_type("kubelet_client_info", kubelet_client_info, "KubeletConnectionInfo")
+        v["kubeletClientInfo"] = kubelet_client_info
+        services_subnet = self.services_subnet()
+        check_type("services_subnet", services_subnet, str)
+        v["servicesSubnet"] = services_subnet
+        services_node_port_range = self.services_node_port_range()
+        check_type("services_node_port_range", services_node_port_range, str)
+        v["servicesNodePortRange"] = services_node_port_range
+        console_public_url = self.console_public_url()
+        check_type("console_public_url", console_public_url, str)
+        v["consolePublicURL"] = console_public_url
+        user_agent_matching_config = self.user_agent_matching_config()
         check_type(
-            "userAgentMatchingConfig",
-            userAgentMatchingConfig,
+            "user_agent_matching_config",
+            user_agent_matching_config,
             "UserAgentMatchingConfig",
         )
-        v["userAgentMatchingConfig"] = userAgentMatchingConfig
-        imagePolicyConfig = self.imagePolicyConfig()
+        v["userAgentMatchingConfig"] = user_agent_matching_config
+        image_policy_config = self.image_policy_config()
         check_type(
-            "imagePolicyConfig", imagePolicyConfig, "KubeAPIServerImagePolicyConfig"
+            "image_policy_config", image_policy_config, "KubeAPIServerImagePolicyConfig"
         )
-        v["imagePolicyConfig"] = imagePolicyConfig
-        projectConfig = self.projectConfig()
-        check_type("projectConfig", projectConfig, "KubeAPIServerProjectConfig")
-        v["projectConfig"] = projectConfig
-        serviceAccountPublicKeyFiles = self.serviceAccountPublicKeyFiles()
+        v["imagePolicyConfig"] = image_policy_config
+        project_config = self.project_config()
+        check_type("project_config", project_config, "KubeAPIServerProjectConfig")
+        v["projectConfig"] = project_config
+        service_account_public_key_files = self.service_account_public_key_files()
         check_type(
-            "serviceAccountPublicKeyFiles", serviceAccountPublicKeyFiles, List[str]
+            "service_account_public_key_files",
+            service_account_public_key_files,
+            List[str],
         )
-        v["serviceAccountPublicKeyFiles"] = serviceAccountPublicKeyFiles
-        oauthConfig = self.oauthConfig()
-        check_type("oauthConfig", oauthConfig, Optional["osinv1.OAuthConfig"])
-        v["oauthConfig"] = oauthConfig
-        apiServerArguments = self.apiServerArguments()
-        check_type("apiServerArguments", apiServerArguments, Dict[str, List[str]])
-        v["apiServerArguments"] = apiServerArguments
+        v["serviceAccountPublicKeyFiles"] = service_account_public_key_files
+        oauth_config = self.oauth_config()
+        check_type("oauth_config", oauth_config, Optional["osinv1.OAuthConfig"])
+        v["oauthConfig"] = oauth_config
+        api_server_arguments = self.api_server_arguments()
+        check_type("api_server_arguments", api_server_arguments, Dict[str, List[str]])
+        v["apiServerArguments"] = api_server_arguments
         return v
 
-    def genericAPIServerConfig(self) -> "configv1.GenericAPIServerConfig":
+    def generic_api_server_config(self) -> "configv1.GenericAPIServerConfig":
         """
         provides the standard apiserver configuration
         """
-        return self.__genericAPIServerConfig
+        return self.__generic_api_server_config
 
-    def authConfig(self) -> "MasterAuthConfig":
+    def auth_config(self) -> "MasterAuthConfig":
         """
         authConfig configures authentication options in addition to the standard
         oauth token and client certificate authenticators
         """
-        return self.__authConfig
+        return self.__auth_config
 
-    def aggregatorConfig(self) -> "AggregatorConfig":
+    def aggregator_config(self) -> "AggregatorConfig":
         """
         aggregatorConfig has options for configuring the aggregator component of the API server.
         """
-        return self.__aggregatorConfig
+        return self.__aggregator_config
 
-    def kubeletClientInfo(self) -> "KubeletConnectionInfo":
+    def kubelet_client_info(self) -> "KubeletConnectionInfo":
         """
         kubeletClientInfo contains information about how to connect to kubelets
         """
-        return self.__kubeletClientInfo
+        return self.__kubelet_client_info
 
-    def servicesSubnet(self) -> str:
+    def services_subnet(self) -> str:
         """
         servicesSubnet is the subnet to use for assigning service IPs
         """
-        return self.__servicesSubnet
+        return self.__services_subnet
 
-    def servicesNodePortRange(self) -> str:
+    def services_node_port_range(self) -> str:
         """
         servicesNodePortRange is the range to use for assigning service public ports on a host.
         """
-        return self.__servicesNodePortRange
+        return self.__services_node_port_range
 
-    def consolePublicURL(self) -> str:
+    def console_public_url(self) -> str:
         """
         consolePublicURL is an optional URL to provide a redirect from the kube-apiserver to the webconsole
         """
-        return self.__consolePublicURL
+        return self.__console_public_url
 
-    def userAgentMatchingConfig(self) -> "UserAgentMatchingConfig":
+    def user_agent_matching_config(self) -> "UserAgentMatchingConfig":
         """
         UserAgentMatchingConfig controls how API calls from *voluntarily* identifying clients will be handled.  THIS DOES NOT DEFEND AGAINST MALICIOUS CLIENTS!
         TODO I think we should just drop this feature.
         """
-        return self.__userAgentMatchingConfig
+        return self.__user_agent_matching_config
 
-    def imagePolicyConfig(self) -> "KubeAPIServerImagePolicyConfig":
+    def image_policy_config(self) -> "KubeAPIServerImagePolicyConfig":
         """
         imagePolicyConfig feeds the image policy admission plugin
         TODO make it an admission plugin config
         """
-        return self.__imagePolicyConfig
+        return self.__image_policy_config
 
-    def projectConfig(self) -> "KubeAPIServerProjectConfig":
+    def project_config(self) -> "KubeAPIServerProjectConfig":
         """
         projectConfig feeds an admission plugin
         TODO make it an admission plugin config
         """
-        return self.__projectConfig
+        return self.__project_config
 
-    def serviceAccountPublicKeyFiles(self) -> List[str]:
+    def service_account_public_key_files(self) -> List[str]:
         """
         serviceAccountPublicKeyFiles is a list of files, each containing a PEM-encoded public RSA key.
         (If any file contains a private key, the public portion of the key is used)
@@ -668,41 +684,41 @@ class KubeAPIServerConfig(base.TypedObject):
         Each key is tried in order until the list is exhausted or verification succeeds.
         If no keys are specified, no service account authentication will be available.
         """
-        return self.__serviceAccountPublicKeyFiles
+        return self.__service_account_public_key_files
 
-    def oauthConfig(self) -> Optional["osinv1.OAuthConfig"]:
+    def oauth_config(self) -> Optional["osinv1.OAuthConfig"]:
         """
         oauthConfig, if present start the /oauth endpoint in this process
         """
-        return self.__oauthConfig
+        return self.__oauth_config
 
-    def apiServerArguments(self) -> Dict[str, List[str]]:
+    def api_server_arguments(self) -> Dict[str, List[str]]:
         """
         TODO this needs to be removed.
         """
-        return self.__apiServerArguments
+        return self.__api_server_arguments
 
 
 class KubeControllerManagerProjectConfig(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, defaultNodeSelector: str = ""):
+    def __init__(self, default_node_selector: str = ""):
         super().__init__()
-        self.__defaultNodeSelector = defaultNodeSelector
+        self.__default_node_selector = default_node_selector
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        defaultNodeSelector = self.defaultNodeSelector()
-        check_type("defaultNodeSelector", defaultNodeSelector, str)
-        v["defaultNodeSelector"] = defaultNodeSelector
+        default_node_selector = self.default_node_selector()
+        check_type("default_node_selector", default_node_selector, str)
+        v["defaultNodeSelector"] = default_node_selector
         return v
 
-    def defaultNodeSelector(self) -> str:
+    def default_node_selector(self) -> str:
         """
         defaultNodeSelector holds default project node label selector
         """
-        return self.__defaultNodeSelector
+        return self.__default_node_selector
 
 
 class ServiceServingCert(types.Object):
@@ -713,23 +729,23 @@ class ServiceServingCert(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, certFile: str = ""):
+    def __init__(self, cert_file: str = ""):
         super().__init__()
-        self.__certFile = certFile
+        self.__cert_file = cert_file
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        certFile = self.certFile()
-        check_type("certFile", certFile, str)
-        v["certFile"] = certFile
+        cert_file = self.cert_file()
+        check_type("cert_file", cert_file, str)
+        v["certFile"] = cert_file
         return v
 
-    def certFile(self) -> str:
+    def cert_file(self) -> str:
         """
         CertFile is a file containing a PEM-encoded certificate
         """
-        return self.__certFile
+        return self.__cert_file
 
 
 class KubeControllerManagerConfig(base.TypedObject):
@@ -737,56 +753,58 @@ class KubeControllerManagerConfig(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        serviceServingCert: "ServiceServingCert" = None,
-        projectConfig: "KubeControllerManagerProjectConfig" = None,
-        extendedArguments: Dict[str, List[str]] = None,
+        service_serving_cert: "ServiceServingCert" = None,
+        project_config: "KubeControllerManagerProjectConfig" = None,
+        extended_arguments: Dict[str, List[str]] = None,
     ):
         super().__init__(
-            apiVersion="kubecontrolplane.config.openshift.io/v1",
+            api_version="kubecontrolplane.config.openshift.io/v1",
             kind="KubeControllerManagerConfig",
         )
-        self.__serviceServingCert = (
-            serviceServingCert
-            if serviceServingCert is not None
+        self.__service_serving_cert = (
+            service_serving_cert
+            if service_serving_cert is not None
             else ServiceServingCert()
         )
-        self.__projectConfig = (
-            projectConfig
-            if projectConfig is not None
+        self.__project_config = (
+            project_config
+            if project_config is not None
             else KubeControllerManagerProjectConfig()
         )
-        self.__extendedArguments = (
-            extendedArguments if extendedArguments is not None else {}
+        self.__extended_arguments = (
+            extended_arguments if extended_arguments is not None else {}
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        serviceServingCert = self.serviceServingCert()
-        check_type("serviceServingCert", serviceServingCert, "ServiceServingCert")
-        v["serviceServingCert"] = serviceServingCert
-        projectConfig = self.projectConfig()
-        check_type("projectConfig", projectConfig, "KubeControllerManagerProjectConfig")
-        v["projectConfig"] = projectConfig
-        extendedArguments = self.extendedArguments()
-        check_type("extendedArguments", extendedArguments, Dict[str, List[str]])
-        v["extendedArguments"] = extendedArguments
+        service_serving_cert = self.service_serving_cert()
+        check_type("service_serving_cert", service_serving_cert, "ServiceServingCert")
+        v["serviceServingCert"] = service_serving_cert
+        project_config = self.project_config()
+        check_type(
+            "project_config", project_config, "KubeControllerManagerProjectConfig"
+        )
+        v["projectConfig"] = project_config
+        extended_arguments = self.extended_arguments()
+        check_type("extended_arguments", extended_arguments, Dict[str, List[str]])
+        v["extendedArguments"] = extended_arguments
         return v
 
-    def serviceServingCert(self) -> "ServiceServingCert":
+    def service_serving_cert(self) -> "ServiceServingCert":
         """
         serviceServingCert provides support for the old alpha service serving cert signer CA bundle
         """
-        return self.__serviceServingCert
+        return self.__service_serving_cert
 
-    def projectConfig(self) -> "KubeControllerManagerProjectConfig":
+    def project_config(self) -> "KubeControllerManagerProjectConfig":
         """
         projectConfig is an optimization for the daemonset controller
         """
-        return self.__projectConfig
+        return self.__project_config
 
-    def extendedArguments(self) -> Dict[str, List[str]]:
+    def extended_arguments(self) -> Dict[str, List[str]]:
         """
         extendedArguments is used to configure the kube-controller-manager
         """
-        return self.__extendedArguments
+        return self.__extended_arguments

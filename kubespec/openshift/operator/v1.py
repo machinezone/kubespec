@@ -373,11 +373,11 @@ class IPAMConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, type: IPAMType = None, staticIPAMConfig: "StaticIPAMConfig" = None
+        self, type: IPAMType = None, static_ipam_config: "StaticIPAMConfig" = None
     ):
         super().__init__()
         self.__type = type
-        self.__staticIPAMConfig = staticIPAMConfig
+        self.__static_ipam_config = static_ipam_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -385,10 +385,12 @@ class IPAMConfig(types.Object):
         type = self.type()
         check_type("type", type, IPAMType)
         v["type"] = type
-        staticIPAMConfig = self.staticIPAMConfig()
-        check_type("staticIPAMConfig", staticIPAMConfig, Optional["StaticIPAMConfig"])
-        if staticIPAMConfig is not None:  # omit empty
-            v["staticIPAMConfig"] = staticIPAMConfig
+        static_ipam_config = self.static_ipam_config()
+        check_type(
+            "static_ipam_config", static_ipam_config, Optional["StaticIPAMConfig"]
+        )
+        if static_ipam_config is not None:  # omit empty
+            v["staticIPAMConfig"] = static_ipam_config
         return v
 
     def type(self) -> IPAMType:
@@ -398,11 +400,11 @@ class IPAMConfig(types.Object):
         """
         return self.__type
 
-    def staticIPAMConfig(self) -> Optional["StaticIPAMConfig"]:
+    def static_ipam_config(self) -> Optional["StaticIPAMConfig"]:
         """
         StaticIPAMConfig configures the static IP address in case of type:IPAMTypeStatic
         """
-        return self.__staticIPAMConfig
+        return self.__static_ipam_config
 
 
 class SimpleMacvlanConfig(types.Object):
@@ -415,13 +417,13 @@ class SimpleMacvlanConfig(types.Object):
     def __init__(
         self,
         master: str = None,
-        ipamConfig: "IPAMConfig" = None,
+        ipam_config: "IPAMConfig" = None,
         mode: MacvlanMode = None,
         mtu: int = None,
     ):
         super().__init__()
         self.__master = master
-        self.__ipamConfig = ipamConfig
+        self.__ipam_config = ipam_config
         self.__mode = mode
         self.__mtu = mtu
 
@@ -432,10 +434,10 @@ class SimpleMacvlanConfig(types.Object):
         check_type("master", master, Optional[str])
         if master:  # omit empty
             v["master"] = master
-        ipamConfig = self.ipamConfig()
-        check_type("ipamConfig", ipamConfig, Optional["IPAMConfig"])
-        if ipamConfig is not None:  # omit empty
-            v["ipamConfig"] = ipamConfig
+        ipam_config = self.ipam_config()
+        check_type("ipam_config", ipam_config, Optional["IPAMConfig"])
+        if ipam_config is not None:  # omit empty
+            v["ipamConfig"] = ipam_config
         mode = self.mode()
         check_type("mode", mode, Optional[MacvlanMode])
         if mode:  # omit empty
@@ -453,11 +455,11 @@ class SimpleMacvlanConfig(types.Object):
         """
         return self.__master
 
-    def ipamConfig(self) -> Optional["IPAMConfig"]:
+    def ipam_config(self) -> Optional["IPAMConfig"]:
         """
         IPAMConfig configures IPAM module will be used for IP Address Management (IPAM).
         """
-        return self.__ipamConfig
+        return self.__ipam_config
 
     def mode(self) -> Optional[MacvlanMode]:
         """
@@ -487,15 +489,15 @@ class AdditionalNetworkDefinition(types.Object):
         type: NetworkType = None,
         name: str = "",
         namespace: str = None,
-        rawCNIConfig: str = None,
-        simpleMacvlanConfig: "SimpleMacvlanConfig" = None,
+        raw_cni_config: str = None,
+        simple_macvlan_config: "SimpleMacvlanConfig" = None,
     ):
         super().__init__()
         self.__type = type
         self.__name = name
         self.__namespace = namespace
-        self.__rawCNIConfig = rawCNIConfig
-        self.__simpleMacvlanConfig = simpleMacvlanConfig
+        self.__raw_cni_config = raw_cni_config
+        self.__simple_macvlan_config = simple_macvlan_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -510,16 +512,18 @@ class AdditionalNetworkDefinition(types.Object):
         check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
-        rawCNIConfig = self.rawCNIConfig()
-        check_type("rawCNIConfig", rawCNIConfig, Optional[str])
-        if rawCNIConfig:  # omit empty
-            v["rawCNIConfig"] = rawCNIConfig
-        simpleMacvlanConfig = self.simpleMacvlanConfig()
+        raw_cni_config = self.raw_cni_config()
+        check_type("raw_cni_config", raw_cni_config, Optional[str])
+        if raw_cni_config:  # omit empty
+            v["rawCNIConfig"] = raw_cni_config
+        simple_macvlan_config = self.simple_macvlan_config()
         check_type(
-            "simpleMacvlanConfig", simpleMacvlanConfig, Optional["SimpleMacvlanConfig"]
+            "simple_macvlan_config",
+            simple_macvlan_config,
+            Optional["SimpleMacvlanConfig"],
         )
-        if simpleMacvlanConfig is not None:  # omit empty
-            v["simpleMacvlanConfig"] = simpleMacvlanConfig
+        if simple_macvlan_config is not None:  # omit empty
+            v["simpleMacvlanConfig"] = simple_macvlan_config
         return v
 
     def type(self) -> NetworkType:
@@ -543,18 +547,18 @@ class AdditionalNetworkDefinition(types.Object):
         """
         return self.__namespace
 
-    def rawCNIConfig(self) -> Optional[str]:
+    def raw_cni_config(self) -> Optional[str]:
         """
         rawCNIConfig is the raw CNI configuration json to create in the
         NetworkAttachmentDefinition CRD
         """
-        return self.__rawCNIConfig
+        return self.__raw_cni_config
 
-    def simpleMacvlanConfig(self) -> Optional["SimpleMacvlanConfig"]:
+    def simple_macvlan_config(self) -> Optional["SimpleMacvlanConfig"]:
         """
         SimpleMacvlanConfig configures the macvlan interface in case of type:NetworkTypeSimpleMacvlan
         """
-        return self.__simpleMacvlanConfig
+        return self.__simple_macvlan_config
 
 
 class OperatorSpec(types.Object):
@@ -567,64 +571,64 @@ class OperatorSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        managementState: ManagementState = None,
-        logLevel: LogLevel = None,
-        operatorLogLevel: LogLevel = None,
-        unsupportedConfigOverrides: "runtime.RawExtension" = None,
-        observedConfig: "runtime.RawExtension" = None,
+        management_state: ManagementState = None,
+        log_level: LogLevel = None,
+        operator_log_level: LogLevel = None,
+        unsupported_config_overrides: "runtime.RawExtension" = None,
+        observed_config: "runtime.RawExtension" = None,
     ):
         super().__init__()
-        self.__managementState = managementState
-        self.__logLevel = logLevel
-        self.__operatorLogLevel = operatorLogLevel
-        self.__unsupportedConfigOverrides = unsupportedConfigOverrides
-        self.__observedConfig = observedConfig
+        self.__management_state = management_state
+        self.__log_level = log_level
+        self.__operator_log_level = operator_log_level
+        self.__unsupported_config_overrides = unsupported_config_overrides
+        self.__observed_config = observed_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        managementState = self.managementState()
-        check_type("managementState", managementState, ManagementState)
-        v["managementState"] = managementState
-        logLevel = self.logLevel()
-        check_type("logLevel", logLevel, LogLevel)
-        v["logLevel"] = logLevel
-        operatorLogLevel = self.operatorLogLevel()
-        check_type("operatorLogLevel", operatorLogLevel, LogLevel)
-        v["operatorLogLevel"] = operatorLogLevel
-        unsupportedConfigOverrides = self.unsupportedConfigOverrides()
+        management_state = self.management_state()
+        check_type("management_state", management_state, ManagementState)
+        v["managementState"] = management_state
+        log_level = self.log_level()
+        check_type("log_level", log_level, LogLevel)
+        v["logLevel"] = log_level
+        operator_log_level = self.operator_log_level()
+        check_type("operator_log_level", operator_log_level, LogLevel)
+        v["operatorLogLevel"] = operator_log_level
+        unsupported_config_overrides = self.unsupported_config_overrides()
         check_type(
-            "unsupportedConfigOverrides",
-            unsupportedConfigOverrides,
+            "unsupported_config_overrides",
+            unsupported_config_overrides,
             "runtime.RawExtension",
         )
-        v["unsupportedConfigOverrides"] = unsupportedConfigOverrides
-        observedConfig = self.observedConfig()
-        check_type("observedConfig", observedConfig, "runtime.RawExtension")
-        v["observedConfig"] = observedConfig
+        v["unsupportedConfigOverrides"] = unsupported_config_overrides
+        observed_config = self.observed_config()
+        check_type("observed_config", observed_config, "runtime.RawExtension")
+        v["observedConfig"] = observed_config
         return v
 
-    def managementState(self) -> ManagementState:
+    def management_state(self) -> ManagementState:
         """
         managementState indicates whether and how the operator should manage the component
         """
-        return self.__managementState
+        return self.__management_state
 
-    def logLevel(self) -> LogLevel:
+    def log_level(self) -> LogLevel:
         """
         logLevel is an intent based logging for an overall component.  It does not give fine grained control, but it is a
         simple way to manage coarse grained logging choices that operators have to interpret for their operands.
         """
-        return self.__logLevel
+        return self.__log_level
 
-    def operatorLogLevel(self) -> LogLevel:
+    def operator_log_level(self) -> LogLevel:
         """
         operatorLogLevel is an intent based logging for the operator itself.  It does not give fine grained control, but it is a
         simple way to manage coarse grained logging choices that operators have to interpret for themselves.
         """
-        return self.__operatorLogLevel
+        return self.__operator_log_level
 
-    def unsupportedConfigOverrides(self) -> "runtime.RawExtension":
+    def unsupported_config_overrides(self) -> "runtime.RawExtension":
         """
         unsupportedConfigOverrides holds a sparse config that will override any previously set options.  It only needs to be the fields to override
         it will end up overlaying in the following order:
@@ -633,36 +637,36 @@ class OperatorSpec(types.Object):
         3. unsupportedConfigOverrides
         +nullable
         """
-        return self.__unsupportedConfigOverrides
+        return self.__unsupported_config_overrides
 
-    def observedConfig(self) -> "runtime.RawExtension":
+    def observed_config(self) -> "runtime.RawExtension":
         """
         observedConfig holds a sparse config that controller has observed from the cluster state.  It exists in spec because
         it is an input to the level for the operator
         +nullable
         """
-        return self.__observedConfig
+        return self.__observed_config
 
 
 class AuthenticationSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class Authentication(base.TypedObject, base.MetadataObject):
@@ -680,7 +684,7 @@ class Authentication(base.TypedObject, base.MetadataObject):
         spec: "AuthenticationSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="Authentication",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -710,22 +714,22 @@ class CSISnapshotControllerSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class CSISnapshotController(base.TypedObject, base.MetadataObject):
@@ -743,7 +747,7 @@ class CSISnapshotController(base.TypedObject, base.MetadataObject):
         spec: "CSISnapshotControllerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="CSISnapshotController",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -776,10 +780,10 @@ class ClusterNetworkEntry(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, cidr: str = "", hostPrefix: int = 0):
+    def __init__(self, cidr: str = "", host_prefix: int = 0):
         super().__init__()
         self.__cidr = cidr
-        self.__hostPrefix = hostPrefix
+        self.__host_prefix = host_prefix
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -787,16 +791,16 @@ class ClusterNetworkEntry(types.Object):
         cidr = self.cidr()
         check_type("cidr", cidr, str)
         v["cidr"] = cidr
-        hostPrefix = self.hostPrefix()
-        check_type("hostPrefix", hostPrefix, int)
-        v["hostPrefix"] = hostPrefix
+        host_prefix = self.host_prefix()
+        check_type("host_prefix", host_prefix, int)
+        v["hostPrefix"] = host_prefix
         return v
 
     def cidr(self) -> str:
         return self.__cidr
 
-    def hostPrefix(self) -> int:
-        return self.__hostPrefix
+    def host_prefix(self) -> int:
+        return self.__host_prefix
 
 
 class ConsoleCustomization(types.Object):
@@ -809,17 +813,17 @@ class ConsoleCustomization(types.Object):
     def __init__(
         self,
         brand: Brand = None,
-        documentationBaseURL: str = None,
-        customProductName: str = None,
-        customLogoFile: "configv1.ConfigMapFileReference" = None,
+        documentation_base_url: str = None,
+        custom_product_name: str = None,
+        custom_logo_file: "configv1.ConfigMapFileReference" = None,
     ):
         super().__init__()
         self.__brand = brand
-        self.__documentationBaseURL = documentationBaseURL
-        self.__customProductName = customProductName
-        self.__customLogoFile = (
-            customLogoFile
-            if customLogoFile is not None
+        self.__documentation_base_url = documentation_base_url
+        self.__custom_product_name = custom_product_name
+        self.__custom_logo_file = (
+            custom_logo_file
+            if custom_logo_file is not None
             else configv1.ConfigMapFileReference()
         )
 
@@ -830,21 +834,21 @@ class ConsoleCustomization(types.Object):
         check_type("brand", brand, Optional[Brand])
         if brand:  # omit empty
             v["brand"] = brand
-        documentationBaseURL = self.documentationBaseURL()
-        check_type("documentationBaseURL", documentationBaseURL, Optional[str])
-        if documentationBaseURL:  # omit empty
-            v["documentationBaseURL"] = documentationBaseURL
-        customProductName = self.customProductName()
-        check_type("customProductName", customProductName, Optional[str])
-        if customProductName:  # omit empty
-            v["customProductName"] = customProductName
-        customLogoFile = self.customLogoFile()
+        documentation_base_url = self.documentation_base_url()
+        check_type("documentation_base_url", documentation_base_url, Optional[str])
+        if documentation_base_url:  # omit empty
+            v["documentationBaseURL"] = documentation_base_url
+        custom_product_name = self.custom_product_name()
+        check_type("custom_product_name", custom_product_name, Optional[str])
+        if custom_product_name:  # omit empty
+            v["customProductName"] = custom_product_name
+        custom_logo_file = self.custom_logo_file()
         check_type(
-            "customLogoFile",
-            customLogoFile,
+            "custom_logo_file",
+            custom_logo_file,
             Optional["configv1.ConfigMapFileReference"],
         )
-        v["customLogoFile"] = customLogoFile
+        v["customLogoFile"] = custom_logo_file
         return v
 
     def brand(self) -> Optional[Brand]:
@@ -856,23 +860,23 @@ class ConsoleCustomization(types.Object):
         """
         return self.__brand
 
-    def documentationBaseURL(self) -> Optional[str]:
+    def documentation_base_url(self) -> Optional[str]:
         """
         documentationBaseURL links to external documentation are shown in various sections
         of the web console.  Providing documentationBaseURL will override the default
         documentation URL.
         Invalid value will prevent a console rollout.
         """
-        return self.__documentationBaseURL
+        return self.__documentation_base_url
 
-    def customProductName(self) -> Optional[str]:
+    def custom_product_name(self) -> Optional[str]:
         """
         customProductName is the name that will be displayed in page titles, logo alt text, and the about dialog
         instead of the normal OpenShift product name.
         """
-        return self.__customProductName
+        return self.__custom_product_name
 
-    def customLogoFile(self) -> Optional["configv1.ConfigMapFileReference"]:
+    def custom_logo_file(self) -> Optional["configv1.ConfigMapFileReference"]:
         """
         customLogoFile replaces the default OpenShift logo in the masthead and about dialog. It is a reference to a
         ConfigMap in the openshift-config namespace. This can be created with a command like
@@ -884,7 +888,7 @@ class ConsoleCustomization(types.Object):
         Dimensions: Max height of 68px and max width of 200px
         SVG format preferred
         """
-        return self.__customLogoFile
+        return self.__custom_logo_file
 
 
 class StatuspageProvider(types.Object):
@@ -894,23 +898,23 @@ class StatuspageProvider(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, pageID: str = ""):
+    def __init__(self, page_id: str = ""):
         super().__init__()
-        self.__pageID = pageID
+        self.__page_id = page_id
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        pageID = self.pageID()
-        check_type("pageID", pageID, str)
-        v["pageID"] = pageID
+        page_id = self.page_id()
+        check_type("page_id", page_id, str)
+        v["pageID"] = page_id
         return v
 
-    def pageID(self) -> str:
+    def page_id(self) -> str:
         """
         pageID is the unique ID assigned by Statuspage for your page. This must be a public page.
         """
-        return self.__pageID
+        return self.__page_id
 
 
 class ConsoleProviders(types.Object):
@@ -950,13 +954,13 @@ class ConsoleSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        operatorSpec: "OperatorSpec" = None,
+        operator_spec: "OperatorSpec" = None,
         customization: "ConsoleCustomization" = None,
         providers: "ConsoleProviders" = None,
     ):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
         self.__customization = (
             customization if customization is not None else ConsoleCustomization()
@@ -966,9 +970,9 @@ class ConsoleSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         customization = self.customization()
         check_type("customization", customization, "ConsoleCustomization")
         v["customization"] = customization
@@ -977,8 +981,8 @@ class ConsoleSpec(types.Object):
         v["providers"] = providers
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
     def customization(self) -> "ConsoleCustomization":
         """
@@ -1009,7 +1013,7 @@ class Console(base.TypedObject, base.MetadataObject):
         spec: "ConsoleSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="Console",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1076,13 +1080,13 @@ class Server(types.Object):
         self,
         name: str = "",
         zones: List[str] = None,
-        forwardPlugin: "ForwardPlugin" = None,
+        forward_plugin: "ForwardPlugin" = None,
     ):
         super().__init__()
         self.__name = name
         self.__zones = zones if zones is not None else []
-        self.__forwardPlugin = (
-            forwardPlugin if forwardPlugin is not None else ForwardPlugin()
+        self.__forward_plugin = (
+            forward_plugin if forward_plugin is not None else ForwardPlugin()
         )
 
     @typechecked
@@ -1094,9 +1098,9 @@ class Server(types.Object):
         zones = self.zones()
         check_type("zones", zones, List[str])
         v["zones"] = zones
-        forwardPlugin = self.forwardPlugin()
-        check_type("forwardPlugin", forwardPlugin, "ForwardPlugin")
-        v["forwardPlugin"] = forwardPlugin
+        forward_plugin = self.forward_plugin()
+        check_type("forward_plugin", forward_plugin, "ForwardPlugin")
+        v["forwardPlugin"] = forward_plugin
         return v
 
     def name(self) -> str:
@@ -1114,12 +1118,12 @@ class Server(types.Object):
         """
         return self.__zones
 
-    def forwardPlugin(self) -> "ForwardPlugin":
+    def forward_plugin(self) -> "ForwardPlugin":
         """
         forwardPlugin defines a schema for configuring CoreDNS to proxy DNS messages
         to upstream resolvers.
         """
-        return self.__forwardPlugin
+        return self.__forward_plugin
 
 
 class DNSSpec(types.Object):
@@ -1178,7 +1182,7 @@ class DNS(base.TypedObject, base.MetadataObject):
         spec: "DNSSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="DNS",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1210,71 +1214,75 @@ class KuryrConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        daemonProbesPort: int = None,
-        controllerProbesPort: int = None,
-        openStackServiceNetwork: str = None,
-        enablePortPoolsPrepopulation: bool = None,
-        poolMaxPorts: int = None,
-        poolMinPorts: int = None,
-        poolBatchPorts: int = None,
+        daemon_probes_port: int = None,
+        controller_probes_port: int = None,
+        open_stack_service_network: str = None,
+        enable_port_pools_prepopulation: bool = None,
+        pool_max_ports: int = None,
+        pool_min_ports: int = None,
+        pool_batch_ports: int = None,
     ):
         super().__init__()
-        self.__daemonProbesPort = daemonProbesPort
-        self.__controllerProbesPort = controllerProbesPort
-        self.__openStackServiceNetwork = openStackServiceNetwork
-        self.__enablePortPoolsPrepopulation = enablePortPoolsPrepopulation
-        self.__poolMaxPorts = poolMaxPorts
-        self.__poolMinPorts = poolMinPorts
-        self.__poolBatchPorts = poolBatchPorts
+        self.__daemon_probes_port = daemon_probes_port
+        self.__controller_probes_port = controller_probes_port
+        self.__open_stack_service_network = open_stack_service_network
+        self.__enable_port_pools_prepopulation = enable_port_pools_prepopulation
+        self.__pool_max_ports = pool_max_ports
+        self.__pool_min_ports = pool_min_ports
+        self.__pool_batch_ports = pool_batch_ports
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        daemonProbesPort = self.daemonProbesPort()
-        check_type("daemonProbesPort", daemonProbesPort, Optional[int])
-        if daemonProbesPort is not None:  # omit empty
-            v["daemonProbesPort"] = daemonProbesPort
-        controllerProbesPort = self.controllerProbesPort()
-        check_type("controllerProbesPort", controllerProbesPort, Optional[int])
-        if controllerProbesPort is not None:  # omit empty
-            v["controllerProbesPort"] = controllerProbesPort
-        openStackServiceNetwork = self.openStackServiceNetwork()
-        check_type("openStackServiceNetwork", openStackServiceNetwork, Optional[str])
-        if openStackServiceNetwork:  # omit empty
-            v["openStackServiceNetwork"] = openStackServiceNetwork
-        enablePortPoolsPrepopulation = self.enablePortPoolsPrepopulation()
+        daemon_probes_port = self.daemon_probes_port()
+        check_type("daemon_probes_port", daemon_probes_port, Optional[int])
+        if daemon_probes_port is not None:  # omit empty
+            v["daemonProbesPort"] = daemon_probes_port
+        controller_probes_port = self.controller_probes_port()
+        check_type("controller_probes_port", controller_probes_port, Optional[int])
+        if controller_probes_port is not None:  # omit empty
+            v["controllerProbesPort"] = controller_probes_port
+        open_stack_service_network = self.open_stack_service_network()
         check_type(
-            "enablePortPoolsPrepopulation", enablePortPoolsPrepopulation, Optional[bool]
+            "open_stack_service_network", open_stack_service_network, Optional[str]
         )
-        if enablePortPoolsPrepopulation:  # omit empty
-            v["enablePortPoolsPrepopulation"] = enablePortPoolsPrepopulation
-        poolMaxPorts = self.poolMaxPorts()
-        check_type("poolMaxPorts", poolMaxPorts, Optional[int])
-        if poolMaxPorts:  # omit empty
-            v["poolMaxPorts"] = poolMaxPorts
-        poolMinPorts = self.poolMinPorts()
-        check_type("poolMinPorts", poolMinPorts, Optional[int])
-        if poolMinPorts:  # omit empty
-            v["poolMinPorts"] = poolMinPorts
-        poolBatchPorts = self.poolBatchPorts()
-        check_type("poolBatchPorts", poolBatchPorts, Optional[int])
-        if poolBatchPorts is not None:  # omit empty
-            v["poolBatchPorts"] = poolBatchPorts
+        if open_stack_service_network:  # omit empty
+            v["openStackServiceNetwork"] = open_stack_service_network
+        enable_port_pools_prepopulation = self.enable_port_pools_prepopulation()
+        check_type(
+            "enable_port_pools_prepopulation",
+            enable_port_pools_prepopulation,
+            Optional[bool],
+        )
+        if enable_port_pools_prepopulation:  # omit empty
+            v["enablePortPoolsPrepopulation"] = enable_port_pools_prepopulation
+        pool_max_ports = self.pool_max_ports()
+        check_type("pool_max_ports", pool_max_ports, Optional[int])
+        if pool_max_ports:  # omit empty
+            v["poolMaxPorts"] = pool_max_ports
+        pool_min_ports = self.pool_min_ports()
+        check_type("pool_min_ports", pool_min_ports, Optional[int])
+        if pool_min_ports:  # omit empty
+            v["poolMinPorts"] = pool_min_ports
+        pool_batch_ports = self.pool_batch_ports()
+        check_type("pool_batch_ports", pool_batch_ports, Optional[int])
+        if pool_batch_ports is not None:  # omit empty
+            v["poolBatchPorts"] = pool_batch_ports
         return v
 
-    def daemonProbesPort(self) -> Optional[int]:
+    def daemon_probes_port(self) -> Optional[int]:
         """
         The port kuryr-daemon will listen for readiness and liveness requests.
         """
-        return self.__daemonProbesPort
+        return self.__daemon_probes_port
 
-    def controllerProbesPort(self) -> Optional[int]:
+    def controller_probes_port(self) -> Optional[int]:
         """
         The port kuryr-controller will listen for readiness and liveness requests.
         """
-        return self.__controllerProbesPort
+        return self.__controller_probes_port
 
-    def openStackServiceNetwork(self) -> Optional[str]:
+    def open_stack_service_network(self) -> Optional[str]:
         """
         openStackServiceNetwork contains the CIDR of network from which to allocate IPs for
         OpenStack Octavia's Amphora VMs. Please note that with Amphora driver Octavia uses
@@ -1288,9 +1296,9 @@ class KuryrConfig(types.Object):
         cluster-network-operator will use `serviceNetwork` expanded by decrementing the prefix
         size by 1.
         """
-        return self.__openStackServiceNetwork
+        return self.__open_stack_service_network
 
-    def enablePortPoolsPrepopulation(self) -> Optional[bool]:
+    def enable_port_pools_prepopulation(self) -> Optional[bool]:
         """
         enablePortPoolsPrepopulation when true will make Kuryr prepopulate each newly created port
         pool with a minimum number of ports. Kuryr uses Neutron port pooling to fight the fact
@@ -1298,9 +1306,9 @@ class KuryrConfig(types.Object):
         pod is being deployed, Kuryr keeps a number of ports ready to be attached to pods. By
         default port prepopulation is disabled.
         """
-        return self.__enablePortPoolsPrepopulation
+        return self.__enable_port_pools_prepopulation
 
-    def poolMaxPorts(self) -> Optional[int]:
+    def pool_max_ports(self) -> Optional[int]:
         """
         poolMaxPorts sets a maximum number of free ports that are being kept in a port pool.
         If the number of ports exceeds this setting, free ports will get deleted. Setting 0
@@ -1308,50 +1316,52 @@ class KuryrConfig(types.Object):
         is the default value. For more information about port pools see
         enablePortPoolsPrepopulation setting.
         """
-        return self.__poolMaxPorts
+        return self.__pool_max_ports
 
-    def poolMinPorts(self) -> Optional[int]:
+    def pool_min_ports(self) -> Optional[int]:
         """
         poolMinPorts sets a minimum number of free ports that should be kept in a port pool.
         If the number of ports is lower than this setting, new ports will get created and
         added to pool. The default is 1. For more information about port pools see
         enablePortPoolsPrepopulation setting.
         """
-        return self.__poolMinPorts
+        return self.__pool_min_ports
 
-    def poolBatchPorts(self) -> Optional[int]:
+    def pool_batch_ports(self) -> Optional[int]:
         """
         poolBatchPorts sets a number of ports that should be created in a single batch request
         to extend the port pool. The default is 3. For more information about port pools see
         enablePortPoolsPrepopulation setting.
         """
-        return self.__poolBatchPorts
+        return self.__pool_batch_ports
 
 
 class HybridOverlayConfig(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, hybridClusterNetwork: List["ClusterNetworkEntry"] = None):
+    def __init__(self, hybrid_cluster_network: List["ClusterNetworkEntry"] = None):
         super().__init__()
-        self.__hybridClusterNetwork = (
-            hybridClusterNetwork if hybridClusterNetwork is not None else []
+        self.__hybrid_cluster_network = (
+            hybrid_cluster_network if hybrid_cluster_network is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        hybridClusterNetwork = self.hybridClusterNetwork()
+        hybrid_cluster_network = self.hybrid_cluster_network()
         check_type(
-            "hybridClusterNetwork", hybridClusterNetwork, List["ClusterNetworkEntry"]
+            "hybrid_cluster_network",
+            hybrid_cluster_network,
+            List["ClusterNetworkEntry"],
         )
-        v["hybridClusterNetwork"] = hybridClusterNetwork
+        v["hybridClusterNetwork"] = hybrid_cluster_network
         return v
 
-    def hybridClusterNetwork(self) -> List["ClusterNetworkEntry"]:
+    def hybrid_cluster_network(self) -> List["ClusterNetworkEntry"]:
         """
         HybridClusterNetwork defines a network space given to nodes on an additional overlay network.
         """
-        return self.__hybridClusterNetwork
+        return self.__hybrid_cluster_network
 
 
 class OVNKubernetesConfig(types.Object):
@@ -1365,13 +1375,13 @@ class OVNKubernetesConfig(types.Object):
     def __init__(
         self,
         mtu: int = None,
-        genevePort: int = None,
-        hybridOverlayConfig: "HybridOverlayConfig" = None,
+        geneve_port: int = None,
+        hybrid_overlay_config: "HybridOverlayConfig" = None,
     ):
         super().__init__()
         self.__mtu = mtu
-        self.__genevePort = genevePort
-        self.__hybridOverlayConfig = hybridOverlayConfig
+        self.__geneve_port = geneve_port
+        self.__hybrid_overlay_config = hybrid_overlay_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1380,16 +1390,18 @@ class OVNKubernetesConfig(types.Object):
         check_type("mtu", mtu, Optional[int])
         if mtu is not None:  # omit empty
             v["mtu"] = mtu
-        genevePort = self.genevePort()
-        check_type("genevePort", genevePort, Optional[int])
-        if genevePort is not None:  # omit empty
-            v["genevePort"] = genevePort
-        hybridOverlayConfig = self.hybridOverlayConfig()
+        geneve_port = self.geneve_port()
+        check_type("geneve_port", geneve_port, Optional[int])
+        if geneve_port is not None:  # omit empty
+            v["genevePort"] = geneve_port
+        hybrid_overlay_config = self.hybrid_overlay_config()
         check_type(
-            "hybridOverlayConfig", hybridOverlayConfig, Optional["HybridOverlayConfig"]
+            "hybrid_overlay_config",
+            hybrid_overlay_config,
+            Optional["HybridOverlayConfig"],
         )
-        if hybridOverlayConfig is not None:  # omit empty
-            v["hybridOverlayConfig"] = hybridOverlayConfig
+        if hybrid_overlay_config is not None:  # omit empty
+            v["hybridOverlayConfig"] = hybrid_overlay_config
         return v
 
     def mtu(self) -> Optional[int]:
@@ -1400,19 +1412,19 @@ class OVNKubernetesConfig(types.Object):
         """
         return self.__mtu
 
-    def genevePort(self) -> Optional[int]:
+    def geneve_port(self) -> Optional[int]:
         """
         geneve port is the UDP port to be used by geneve encapulation.
         Default is 6081
         """
-        return self.__genevePort
+        return self.__geneve_port
 
-    def hybridOverlayConfig(self) -> Optional["HybridOverlayConfig"]:
+    def hybrid_overlay_config(self) -> Optional["HybridOverlayConfig"]:
         """
         HybridOverlayConfig configures an additional overlay network for peers that are
         not using OVN.
         """
-        return self.__hybridOverlayConfig
+        return self.__hybrid_overlay_config
 
 
 class OpenShiftSDNConfig(types.Object):
@@ -1425,17 +1437,17 @@ class OpenShiftSDNConfig(types.Object):
     def __init__(
         self,
         mode: SDNMode = None,
-        vxlanPort: int = None,
+        vxlan_port: int = None,
         mtu: int = None,
-        useExternalOpenvswitch: bool = None,
-        enableUnidling: bool = None,
+        use_external_openvswitch: bool = None,
+        enable_unidling: bool = None,
     ):
         super().__init__()
         self.__mode = mode
-        self.__vxlanPort = vxlanPort
+        self.__vxlan_port = vxlan_port
         self.__mtu = mtu
-        self.__useExternalOpenvswitch = useExternalOpenvswitch
-        self.__enableUnidling = enableUnidling
+        self.__use_external_openvswitch = use_external_openvswitch
+        self.__enable_unidling = enable_unidling
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1443,22 +1455,22 @@ class OpenShiftSDNConfig(types.Object):
         mode = self.mode()
         check_type("mode", mode, SDNMode)
         v["mode"] = mode
-        vxlanPort = self.vxlanPort()
-        check_type("vxlanPort", vxlanPort, Optional[int])
-        if vxlanPort is not None:  # omit empty
-            v["vxlanPort"] = vxlanPort
+        vxlan_port = self.vxlan_port()
+        check_type("vxlan_port", vxlan_port, Optional[int])
+        if vxlan_port is not None:  # omit empty
+            v["vxlanPort"] = vxlan_port
         mtu = self.mtu()
         check_type("mtu", mtu, Optional[int])
         if mtu is not None:  # omit empty
             v["mtu"] = mtu
-        useExternalOpenvswitch = self.useExternalOpenvswitch()
-        check_type("useExternalOpenvswitch", useExternalOpenvswitch, Optional[bool])
-        if useExternalOpenvswitch is not None:  # omit empty
-            v["useExternalOpenvswitch"] = useExternalOpenvswitch
-        enableUnidling = self.enableUnidling()
-        check_type("enableUnidling", enableUnidling, Optional[bool])
-        if enableUnidling is not None:  # omit empty
-            v["enableUnidling"] = enableUnidling
+        use_external_openvswitch = self.use_external_openvswitch()
+        check_type("use_external_openvswitch", use_external_openvswitch, Optional[bool])
+        if use_external_openvswitch is not None:  # omit empty
+            v["useExternalOpenvswitch"] = use_external_openvswitch
+        enable_unidling = self.enable_unidling()
+        check_type("enable_unidling", enable_unidling, Optional[bool])
+        if enable_unidling is not None:  # omit empty
+            v["enableUnidling"] = enable_unidling
         return v
 
     def mode(self) -> SDNMode:
@@ -1467,11 +1479,11 @@ class OpenShiftSDNConfig(types.Object):
         """
         return self.__mode
 
-    def vxlanPort(self) -> Optional[int]:
+    def vxlan_port(self) -> Optional[int]:
         """
         vxlanPort is the port to use for all vxlan packets. The default is 4789.
         """
-        return self.__vxlanPort
+        return self.__vxlan_port
 
     def mtu(self) -> Optional[int]:
         """
@@ -1480,19 +1492,19 @@ class OpenShiftSDNConfig(types.Object):
         """
         return self.__mtu
 
-    def useExternalOpenvswitch(self) -> Optional[bool]:
+    def use_external_openvswitch(self) -> Optional[bool]:
         """
         useExternalOpenvswitch tells the operator not to install openvswitch, because
         it will be provided separately. If set, you must provide it yourself.
         """
-        return self.__useExternalOpenvswitch
+        return self.__use_external_openvswitch
 
-    def enableUnidling(self) -> Optional[bool]:
+    def enable_unidling(self) -> Optional[bool]:
         """
         enableUnidling controls whether or not the service proxy will support idling
         and unidling of services. By default, unidling is enabled.
         """
-        return self.__enableUnidling
+        return self.__enable_unidling
 
 
 class DefaultNetworkDefinition(types.Object):
@@ -1506,15 +1518,15 @@ class DefaultNetworkDefinition(types.Object):
     def __init__(
         self,
         type: NetworkType = None,
-        openshiftSDNConfig: "OpenShiftSDNConfig" = None,
-        ovnKubernetesConfig: "OVNKubernetesConfig" = None,
-        kuryrConfig: "KuryrConfig" = None,
+        openshift_sdn_config: "OpenShiftSDNConfig" = None,
+        ovn_kubernetes_config: "OVNKubernetesConfig" = None,
+        kuryr_config: "KuryrConfig" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__openshiftSDNConfig = openshiftSDNConfig
-        self.__ovnKubernetesConfig = ovnKubernetesConfig
-        self.__kuryrConfig = kuryrConfig
+        self.__openshift_sdn_config = openshift_sdn_config
+        self.__ovn_kubernetes_config = ovn_kubernetes_config
+        self.__kuryr_config = kuryr_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1522,22 +1534,24 @@ class DefaultNetworkDefinition(types.Object):
         type = self.type()
         check_type("type", type, NetworkType)
         v["type"] = type
-        openshiftSDNConfig = self.openshiftSDNConfig()
+        openshift_sdn_config = self.openshift_sdn_config()
         check_type(
-            "openshiftSDNConfig", openshiftSDNConfig, Optional["OpenShiftSDNConfig"]
+            "openshift_sdn_config", openshift_sdn_config, Optional["OpenShiftSDNConfig"]
         )
-        if openshiftSDNConfig is not None:  # omit empty
-            v["openshiftSDNConfig"] = openshiftSDNConfig
-        ovnKubernetesConfig = self.ovnKubernetesConfig()
+        if openshift_sdn_config is not None:  # omit empty
+            v["openshiftSDNConfig"] = openshift_sdn_config
+        ovn_kubernetes_config = self.ovn_kubernetes_config()
         check_type(
-            "ovnKubernetesConfig", ovnKubernetesConfig, Optional["OVNKubernetesConfig"]
+            "ovn_kubernetes_config",
+            ovn_kubernetes_config,
+            Optional["OVNKubernetesConfig"],
         )
-        if ovnKubernetesConfig is not None:  # omit empty
-            v["ovnKubernetesConfig"] = ovnKubernetesConfig
-        kuryrConfig = self.kuryrConfig()
-        check_type("kuryrConfig", kuryrConfig, Optional["KuryrConfig"])
-        if kuryrConfig is not None:  # omit empty
-            v["kuryrConfig"] = kuryrConfig
+        if ovn_kubernetes_config is not None:  # omit empty
+            v["ovnKubernetesConfig"] = ovn_kubernetes_config
+        kuryr_config = self.kuryr_config()
+        check_type("kuryr_config", kuryr_config, Optional["KuryrConfig"])
+        if kuryr_config is not None:  # omit empty
+            v["kuryrConfig"] = kuryr_config
         return v
 
     def type(self) -> NetworkType:
@@ -1547,24 +1561,24 @@ class DefaultNetworkDefinition(types.Object):
         """
         return self.__type
 
-    def openshiftSDNConfig(self) -> Optional["OpenShiftSDNConfig"]:
+    def openshift_sdn_config(self) -> Optional["OpenShiftSDNConfig"]:
         """
         openShiftSDNConfig configures the openshift-sdn plugin
         """
-        return self.__openshiftSDNConfig
+        return self.__openshift_sdn_config
 
-    def ovnKubernetesConfig(self) -> Optional["OVNKubernetesConfig"]:
+    def ovn_kubernetes_config(self) -> Optional["OVNKubernetesConfig"]:
         """
         oVNKubernetesConfig configures the ovn-kubernetes plugin. This is currently
         not implemented.
         """
-        return self.__ovnKubernetesConfig
+        return self.__ovn_kubernetes_config
 
-    def kuryrConfig(self) -> Optional["KuryrConfig"]:
+    def kuryr_config(self) -> Optional["KuryrConfig"]:
         """
         KuryrConfig configures the kuryr plugin
         """
-        return self.__kuryrConfig
+        return self.__kuryr_config
 
 
 class HostNetworkStrategy(types.Object):
@@ -1635,17 +1649,17 @@ class EndpointPublishingStrategy(types.Object):
     def __init__(
         self,
         type: EndpointPublishingStrategyType = None,
-        loadBalancer: "LoadBalancerStrategy" = None,
-        hostNetwork: "HostNetworkStrategy" = None,
+        load_balancer: "LoadBalancerStrategy" = None,
+        host_network: "HostNetworkStrategy" = None,
         private: "PrivateStrategy" = None,
-        nodePort: "NodePortStrategy" = None,
+        node_port: "NodePortStrategy" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__loadBalancer = loadBalancer
-        self.__hostNetwork = hostNetwork
+        self.__load_balancer = load_balancer
+        self.__host_network = host_network
         self.__private = private
-        self.__nodePort = nodePort
+        self.__node_port = node_port
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1653,22 +1667,22 @@ class EndpointPublishingStrategy(types.Object):
         type = self.type()
         check_type("type", type, EndpointPublishingStrategyType)
         v["type"] = type
-        loadBalancer = self.loadBalancer()
-        check_type("loadBalancer", loadBalancer, Optional["LoadBalancerStrategy"])
-        if loadBalancer is not None:  # omit empty
-            v["loadBalancer"] = loadBalancer
-        hostNetwork = self.hostNetwork()
-        check_type("hostNetwork", hostNetwork, Optional["HostNetworkStrategy"])
-        if hostNetwork is not None:  # omit empty
-            v["hostNetwork"] = hostNetwork
+        load_balancer = self.load_balancer()
+        check_type("load_balancer", load_balancer, Optional["LoadBalancerStrategy"])
+        if load_balancer is not None:  # omit empty
+            v["loadBalancer"] = load_balancer
+        host_network = self.host_network()
+        check_type("host_network", host_network, Optional["HostNetworkStrategy"])
+        if host_network is not None:  # omit empty
+            v["hostNetwork"] = host_network
         private = self.private()
         check_type("private", private, Optional["PrivateStrategy"])
         if private is not None:  # omit empty
             v["private"] = private
-        nodePort = self.nodePort()
-        check_type("nodePort", nodePort, Optional["NodePortStrategy"])
-        if nodePort is not None:  # omit empty
-            v["nodePort"] = nodePort
+        node_port = self.node_port()
+        check_type("node_port", node_port, Optional["NodePortStrategy"])
+        if node_port is not None:  # omit empty
+            v["nodePort"] = node_port
         return v
 
     def type(self) -> EndpointPublishingStrategyType:
@@ -1725,19 +1739,19 @@ class EndpointPublishingStrategy(types.Object):
         """
         return self.__type
 
-    def loadBalancer(self) -> Optional["LoadBalancerStrategy"]:
+    def load_balancer(self) -> Optional["LoadBalancerStrategy"]:
         """
         loadBalancer holds parameters for the load balancer. Present only if
         type is LoadBalancerService.
         """
-        return self.__loadBalancer
+        return self.__load_balancer
 
-    def hostNetwork(self) -> Optional["HostNetworkStrategy"]:
+    def host_network(self) -> Optional["HostNetworkStrategy"]:
         """
         hostNetwork holds parameters for the HostNetwork endpoint publishing
         strategy. Present only if type is HostNetwork.
         """
-        return self.__hostNetwork
+        return self.__host_network
 
     def private(self) -> Optional["PrivateStrategy"]:
         """
@@ -1746,12 +1760,12 @@ class EndpointPublishingStrategy(types.Object):
         """
         return self.__private
 
-    def nodePort(self) -> Optional["NodePortStrategy"]:
+    def node_port(self) -> Optional["NodePortStrategy"]:
         """
         nodePort holds parameters for the NodePortService endpoint publishing strategy.
         Present only if type is NodePortService.
         """
-        return self.__nodePort
+        return self.__node_port
 
 
 class StaticPodOperatorSpec(types.Object):
@@ -1763,87 +1777,89 @@ class StaticPodOperatorSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        operatorSpec: "OperatorSpec" = None,
-        forceRedeploymentReason: str = "",
-        failedRevisionLimit: int = None,
-        succeededRevisionLimit: int = None,
+        operator_spec: "OperatorSpec" = None,
+        force_redeployment_reason: str = "",
+        failed_revision_limit: int = None,
+        succeeded_revision_limit: int = None,
     ):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
-        self.__forceRedeploymentReason = forceRedeploymentReason
-        self.__failedRevisionLimit = failedRevisionLimit
-        self.__succeededRevisionLimit = succeededRevisionLimit
+        self.__force_redeployment_reason = force_redeployment_reason
+        self.__failed_revision_limit = failed_revision_limit
+        self.__succeeded_revision_limit = succeeded_revision_limit
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
-        forceRedeploymentReason = self.forceRedeploymentReason()
-        check_type("forceRedeploymentReason", forceRedeploymentReason, str)
-        v["forceRedeploymentReason"] = forceRedeploymentReason
-        failedRevisionLimit = self.failedRevisionLimit()
-        check_type("failedRevisionLimit", failedRevisionLimit, Optional[int])
-        if failedRevisionLimit:  # omit empty
-            v["failedRevisionLimit"] = failedRevisionLimit
-        succeededRevisionLimit = self.succeededRevisionLimit()
-        check_type("succeededRevisionLimit", succeededRevisionLimit, Optional[int])
-        if succeededRevisionLimit:  # omit empty
-            v["succeededRevisionLimit"] = succeededRevisionLimit
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
+        force_redeployment_reason = self.force_redeployment_reason()
+        check_type("force_redeployment_reason", force_redeployment_reason, str)
+        v["forceRedeploymentReason"] = force_redeployment_reason
+        failed_revision_limit = self.failed_revision_limit()
+        check_type("failed_revision_limit", failed_revision_limit, Optional[int])
+        if failed_revision_limit:  # omit empty
+            v["failedRevisionLimit"] = failed_revision_limit
+        succeeded_revision_limit = self.succeeded_revision_limit()
+        check_type("succeeded_revision_limit", succeeded_revision_limit, Optional[int])
+        if succeeded_revision_limit:  # omit empty
+            v["succeededRevisionLimit"] = succeeded_revision_limit
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
-    def forceRedeploymentReason(self) -> str:
+    def force_redeployment_reason(self) -> str:
         """
         forceRedeploymentReason can be used to force the redeployment of the operand by providing a unique string.
         This provides a mechanism to kick a previously failed deployment and provide a reason why you think it will work
         this time instead of failing again on the same config.
         """
-        return self.__forceRedeploymentReason
+        return self.__force_redeployment_reason
 
-    def failedRevisionLimit(self) -> Optional[int]:
+    def failed_revision_limit(self) -> Optional[int]:
         """
         failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api
         -1 = unlimited, 0 or unset = 5 (default)
         """
-        return self.__failedRevisionLimit
+        return self.__failed_revision_limit
 
-    def succeededRevisionLimit(self) -> Optional[int]:
+    def succeeded_revision_limit(self) -> Optional[int]:
         """
         succeededRevisionLimit is the number of successful static pod installer revisions to keep on disk and in the api
         -1 = unlimited, 0 or unset = 5 (default)
         """
-        return self.__succeededRevisionLimit
+        return self.__succeeded_revision_limit
 
 
 class EtcdSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, staticPodOperatorSpec: "StaticPodOperatorSpec" = None):
+    def __init__(self, static_pod_operator_spec: "StaticPodOperatorSpec" = None):
         super().__init__()
-        self.__staticPodOperatorSpec = (
-            staticPodOperatorSpec
-            if staticPodOperatorSpec is not None
+        self.__static_pod_operator_spec = (
+            static_pod_operator_spec
+            if static_pod_operator_spec is not None
             else StaticPodOperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        staticPodOperatorSpec = self.staticPodOperatorSpec()
+        static_pod_operator_spec = self.static_pod_operator_spec()
         check_type(
-            "staticPodOperatorSpec", staticPodOperatorSpec, "StaticPodOperatorSpec"
+            "static_pod_operator_spec",
+            static_pod_operator_spec,
+            "StaticPodOperatorSpec",
         )
-        v.update(staticPodOperatorSpec._root())  # inline
+        v.update(static_pod_operator_spec._root())  # inline
         return v
 
-    def staticPodOperatorSpec(self) -> "StaticPodOperatorSpec":
-        return self.__staticPodOperatorSpec
+    def static_pod_operator_spec(self) -> "StaticPodOperatorSpec":
+        return self.__static_pod_operator_spec
 
 
 class Etcd(base.TypedObject, base.MetadataObject):
@@ -1861,7 +1877,7 @@ class Etcd(base.TypedObject, base.MetadataObject):
         spec: "EtcdSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="Etcd",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1894,27 +1910,27 @@ class NodePlacement(types.Object):
     @typechecked
     def __init__(
         self,
-        nodeSelector: "metav1.LabelSelector" = None,
+        node_selector: "metav1.LabelSelector" = None,
         tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
-        self.__nodeSelector = nodeSelector
+        self.__node_selector = node_selector
         self.__tolerations = tolerations if tolerations is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional["metav1.LabelSelector"])
-        if nodeSelector is not None:  # omit empty
-            v["nodeSelector"] = nodeSelector
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional["metav1.LabelSelector"])
+        if node_selector is not None:  # omit empty
+            v["nodeSelector"] = node_selector
         tolerations = self.tolerations()
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
 
-    def nodeSelector(self) -> Optional["metav1.LabelSelector"]:
+    def node_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         nodeSelector is the node selector applied to ingress controller
         deployments.
@@ -1926,7 +1942,7 @@ class NodePlacement(types.Object):
         
         If set, the specified selector is used and replaces the default.
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
     def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
@@ -1947,22 +1963,24 @@ class RouteAdmissionPolicy(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, namespaceOwnership: NamespaceOwnershipCheck = None):
+    def __init__(self, namespace_ownership: NamespaceOwnershipCheck = None):
         super().__init__()
-        self.__namespaceOwnership = namespaceOwnership
+        self.__namespace_ownership = namespace_ownership
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        namespaceOwnership = self.namespaceOwnership()
+        namespace_ownership = self.namespace_ownership()
         check_type(
-            "namespaceOwnership", namespaceOwnership, Optional[NamespaceOwnershipCheck]
+            "namespace_ownership",
+            namespace_ownership,
+            Optional[NamespaceOwnershipCheck],
         )
-        if namespaceOwnership:  # omit empty
-            v["namespaceOwnership"] = namespaceOwnership
+        if namespace_ownership:  # omit empty
+            v["namespaceOwnership"] = namespace_ownership
         return v
 
-    def namespaceOwnership(self) -> Optional[NamespaceOwnershipCheck]:
+    def namespace_ownership(self) -> Optional[NamespaceOwnershipCheck]:
         """
         namespaceOwnership describes how host name claims across namespaces should
         be handled.
@@ -1976,7 +1994,7 @@ class RouteAdmissionPolicy(types.Object):
         
         If empty, the default is Strict.
         """
-        return self.__namespaceOwnership
+        return self.__namespace_ownership
 
 
 class IngressControllerSpec(types.Object):
@@ -1991,24 +2009,24 @@ class IngressControllerSpec(types.Object):
         self,
         domain: str = None,
         replicas: int = None,
-        endpointPublishingStrategy: "EndpointPublishingStrategy" = None,
-        defaultCertificate: "k8sv1.LocalObjectReference" = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
-        routeSelector: "metav1.LabelSelector" = None,
-        nodePlacement: "NodePlacement" = None,
-        tlsSecurityProfile: "configv1.TLSSecurityProfile" = None,
-        routeAdmission: "RouteAdmissionPolicy" = None,
+        endpoint_publishing_strategy: "EndpointPublishingStrategy" = None,
+        default_certificate: "k8sv1.LocalObjectReference" = None,
+        namespace_selector: "metav1.LabelSelector" = None,
+        route_selector: "metav1.LabelSelector" = None,
+        node_placement: "NodePlacement" = None,
+        tls_security_profile: "configv1.TLSSecurityProfile" = None,
+        route_admission: "RouteAdmissionPolicy" = None,
     ):
         super().__init__()
         self.__domain = domain
         self.__replicas = replicas
-        self.__endpointPublishingStrategy = endpointPublishingStrategy
-        self.__defaultCertificate = defaultCertificate
-        self.__namespaceSelector = namespaceSelector
-        self.__routeSelector = routeSelector
-        self.__nodePlacement = nodePlacement
-        self.__tlsSecurityProfile = tlsSecurityProfile
-        self.__routeAdmission = routeAdmission
+        self.__endpoint_publishing_strategy = endpoint_publishing_strategy
+        self.__default_certificate = default_certificate
+        self.__namespace_selector = namespace_selector
+        self.__route_selector = route_selector
+        self.__node_placement = node_placement
+        self.__tls_security_profile = tls_security_profile
+        self.__route_admission = route_admission
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2021,48 +2039,48 @@ class IngressControllerSpec(types.Object):
         check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
-        endpointPublishingStrategy = self.endpointPublishingStrategy()
+        endpoint_publishing_strategy = self.endpoint_publishing_strategy()
         check_type(
-            "endpointPublishingStrategy",
-            endpointPublishingStrategy,
+            "endpoint_publishing_strategy",
+            endpoint_publishing_strategy,
             Optional["EndpointPublishingStrategy"],
         )
-        if endpointPublishingStrategy is not None:  # omit empty
-            v["endpointPublishingStrategy"] = endpointPublishingStrategy
-        defaultCertificate = self.defaultCertificate()
+        if endpoint_publishing_strategy is not None:  # omit empty
+            v["endpointPublishingStrategy"] = endpoint_publishing_strategy
+        default_certificate = self.default_certificate()
         check_type(
-            "defaultCertificate",
-            defaultCertificate,
+            "default_certificate",
+            default_certificate,
             Optional["k8sv1.LocalObjectReference"],
         )
-        if defaultCertificate is not None:  # omit empty
-            v["defaultCertificate"] = defaultCertificate
-        namespaceSelector = self.namespaceSelector()
+        if default_certificate is not None:  # omit empty
+            v["defaultCertificate"] = default_certificate
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
-        routeSelector = self.routeSelector()
-        check_type("routeSelector", routeSelector, Optional["metav1.LabelSelector"])
-        if routeSelector is not None:  # omit empty
-            v["routeSelector"] = routeSelector
-        nodePlacement = self.nodePlacement()
-        check_type("nodePlacement", nodePlacement, Optional["NodePlacement"])
-        if nodePlacement is not None:  # omit empty
-            v["nodePlacement"] = nodePlacement
-        tlsSecurityProfile = self.tlsSecurityProfile()
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
+        route_selector = self.route_selector()
+        check_type("route_selector", route_selector, Optional["metav1.LabelSelector"])
+        if route_selector is not None:  # omit empty
+            v["routeSelector"] = route_selector
+        node_placement = self.node_placement()
+        check_type("node_placement", node_placement, Optional["NodePlacement"])
+        if node_placement is not None:  # omit empty
+            v["nodePlacement"] = node_placement
+        tls_security_profile = self.tls_security_profile()
         check_type(
-            "tlsSecurityProfile",
-            tlsSecurityProfile,
+            "tls_security_profile",
+            tls_security_profile,
             Optional["configv1.TLSSecurityProfile"],
         )
-        if tlsSecurityProfile is not None:  # omit empty
-            v["tlsSecurityProfile"] = tlsSecurityProfile
-        routeAdmission = self.routeAdmission()
-        check_type("routeAdmission", routeAdmission, Optional["RouteAdmissionPolicy"])
-        if routeAdmission is not None:  # omit empty
-            v["routeAdmission"] = routeAdmission
+        if tls_security_profile is not None:  # omit empty
+            v["tlsSecurityProfile"] = tls_security_profile
+        route_admission = self.route_admission()
+        check_type("route_admission", route_admission, Optional["RouteAdmissionPolicy"])
+        if route_admission is not None:  # omit empty
+            v["routeAdmission"] = route_admission
         return v
 
     def domain(self) -> Optional[str]:
@@ -2093,7 +2111,7 @@ class IngressControllerSpec(types.Object):
         """
         return self.__replicas
 
-    def endpointPublishingStrategy(self) -> Optional["EndpointPublishingStrategy"]:
+    def endpoint_publishing_strategy(self) -> Optional["EndpointPublishingStrategy"]:
         """
         endpointPublishingStrategy is used to publish the ingress controller
         endpoints to other networks, enable load balancer integrations, etc.
@@ -2111,9 +2129,9 @@ class IngressControllerSpec(types.Object):
         
         endpointPublishingStrategy cannot be updated.
         """
-        return self.__endpointPublishingStrategy
+        return self.__endpoint_publishing_strategy
 
-    def defaultCertificate(self) -> Optional["k8sv1.LocalObjectReference"]:
+    def default_certificate(self) -> Optional["k8sv1.LocalObjectReference"]:
         """
         defaultCertificate is a reference to a secret containing the default
         certificate served by the ingress controller. When Routes don't specify
@@ -2132,36 +2150,36 @@ class IngressControllerSpec(types.Object):
         The in-use certificate (whether generated or user-specified) will be
         automatically integrated with OpenShift's built-in OAuth server.
         """
-        return self.__defaultCertificate
+        return self.__default_certificate
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         namespaceSelector is used to filter the set of namespaces serviced by the
         ingress controller. This is useful for implementing shards.
         
         If unset, the default is no filtering.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def routeSelector(self) -> Optional["metav1.LabelSelector"]:
+    def route_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         routeSelector is used to filter the set of Routes serviced by the ingress
         controller. This is useful for implementing shards.
         
         If unset, the default is no filtering.
         """
-        return self.__routeSelector
+        return self.__route_selector
 
-    def nodePlacement(self) -> Optional["NodePlacement"]:
+    def node_placement(self) -> Optional["NodePlacement"]:
         """
         nodePlacement enables explicit control over the scheduling of the ingress
         controller.
         
         If unset, defaults are used. See NodePlacement for more details.
         """
-        return self.__nodePlacement
+        return self.__node_placement
 
-    def tlsSecurityProfile(self) -> Optional["configv1.TLSSecurityProfile"]:
+    def tls_security_profile(self) -> Optional["configv1.TLSSecurityProfile"]:
         """
         tlsSecurityProfile specifies settings for TLS connections for ingresscontrollers.
         
@@ -2178,9 +2196,9 @@ class IngressControllerSpec(types.Object):
         is that the Modern TLS profile type cannot be used because it
         requires TLS 1.3.
         """
-        return self.__tlsSecurityProfile
+        return self.__tls_security_profile
 
-    def routeAdmission(self) -> Optional["RouteAdmissionPolicy"]:
+    def route_admission(self) -> Optional["RouteAdmissionPolicy"]:
         """
         routeAdmission defines a policy for handling new route claims (for example,
         to allow or deny claims across namespaces).
@@ -2188,7 +2206,7 @@ class IngressControllerSpec(types.Object):
         If empty, defaults will be applied. See specific routeAdmission fields
         for details about their defaults.
         """
-        return self.__routeAdmission
+        return self.__route_admission
 
 
 class IngressController(base.TypedObject, base.NamespacedMetadataObject):
@@ -2219,7 +2237,7 @@ class IngressController(base.TypedObject, base.NamespacedMetadataObject):
         spec: "IngressControllerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="IngressController",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -2246,26 +2264,28 @@ class IngressController(base.TypedObject, base.NamespacedMetadataObject):
 class KubeAPIServerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, staticPodOperatorSpec: "StaticPodOperatorSpec" = None):
+    def __init__(self, static_pod_operator_spec: "StaticPodOperatorSpec" = None):
         super().__init__()
-        self.__staticPodOperatorSpec = (
-            staticPodOperatorSpec
-            if staticPodOperatorSpec is not None
+        self.__static_pod_operator_spec = (
+            static_pod_operator_spec
+            if static_pod_operator_spec is not None
             else StaticPodOperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        staticPodOperatorSpec = self.staticPodOperatorSpec()
+        static_pod_operator_spec = self.static_pod_operator_spec()
         check_type(
-            "staticPodOperatorSpec", staticPodOperatorSpec, "StaticPodOperatorSpec"
+            "static_pod_operator_spec",
+            static_pod_operator_spec,
+            "StaticPodOperatorSpec",
         )
-        v.update(staticPodOperatorSpec._root())  # inline
+        v.update(static_pod_operator_spec._root())  # inline
         return v
 
-    def staticPodOperatorSpec(self) -> "StaticPodOperatorSpec":
-        return self.__staticPodOperatorSpec
+    def static_pod_operator_spec(self) -> "StaticPodOperatorSpec":
+        return self.__static_pod_operator_spec
 
 
 class KubeAPIServer(base.TypedObject, base.MetadataObject):
@@ -2283,7 +2303,7 @@ class KubeAPIServer(base.TypedObject, base.MetadataObject):
         spec: "KubeAPIServerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="KubeAPIServer",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2310,26 +2330,28 @@ class KubeAPIServer(base.TypedObject, base.MetadataObject):
 class KubeControllerManagerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, staticPodOperatorSpec: "StaticPodOperatorSpec" = None):
+    def __init__(self, static_pod_operator_spec: "StaticPodOperatorSpec" = None):
         super().__init__()
-        self.__staticPodOperatorSpec = (
-            staticPodOperatorSpec
-            if staticPodOperatorSpec is not None
+        self.__static_pod_operator_spec = (
+            static_pod_operator_spec
+            if static_pod_operator_spec is not None
             else StaticPodOperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        staticPodOperatorSpec = self.staticPodOperatorSpec()
+        static_pod_operator_spec = self.static_pod_operator_spec()
         check_type(
-            "staticPodOperatorSpec", staticPodOperatorSpec, "StaticPodOperatorSpec"
+            "static_pod_operator_spec",
+            static_pod_operator_spec,
+            "StaticPodOperatorSpec",
         )
-        v.update(staticPodOperatorSpec._root())  # inline
+        v.update(static_pod_operator_spec._root())  # inline
         return v
 
-    def staticPodOperatorSpec(self) -> "StaticPodOperatorSpec":
-        return self.__staticPodOperatorSpec
+    def static_pod_operator_spec(self) -> "StaticPodOperatorSpec":
+        return self.__static_pod_operator_spec
 
 
 class KubeControllerManager(base.TypedObject, base.MetadataObject):
@@ -2347,7 +2369,7 @@ class KubeControllerManager(base.TypedObject, base.MetadataObject):
         spec: "KubeControllerManagerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="KubeControllerManager",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2374,26 +2396,28 @@ class KubeControllerManager(base.TypedObject, base.MetadataObject):
 class KubeSchedulerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, staticPodOperatorSpec: "StaticPodOperatorSpec" = None):
+    def __init__(self, static_pod_operator_spec: "StaticPodOperatorSpec" = None):
         super().__init__()
-        self.__staticPodOperatorSpec = (
-            staticPodOperatorSpec
-            if staticPodOperatorSpec is not None
+        self.__static_pod_operator_spec = (
+            static_pod_operator_spec
+            if static_pod_operator_spec is not None
             else StaticPodOperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        staticPodOperatorSpec = self.staticPodOperatorSpec()
+        static_pod_operator_spec = self.static_pod_operator_spec()
         check_type(
-            "staticPodOperatorSpec", staticPodOperatorSpec, "StaticPodOperatorSpec"
+            "static_pod_operator_spec",
+            static_pod_operator_spec,
+            "StaticPodOperatorSpec",
         )
-        v.update(staticPodOperatorSpec._root())  # inline
+        v.update(static_pod_operator_spec._root())  # inline
         return v
 
-    def staticPodOperatorSpec(self) -> "StaticPodOperatorSpec":
-        return self.__staticPodOperatorSpec
+    def static_pod_operator_spec(self) -> "StaticPodOperatorSpec":
+        return self.__static_pod_operator_spec
 
 
 class KubeScheduler(base.TypedObject, base.MetadataObject):
@@ -2411,7 +2435,7 @@ class KubeScheduler(base.TypedObject, base.MetadataObject):
         spec: "KubeSchedulerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="KubeScheduler",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2438,22 +2462,22 @@ class KubeScheduler(base.TypedObject, base.MetadataObject):
 class KubeStorageVersionMigratorSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class KubeStorageVersionMigrator(base.TypedObject, base.MetadataObject):
@@ -2471,7 +2495,7 @@ class KubeStorageVersionMigrator(base.TypedObject, base.MetadataObject):
         spec: "KubeStorageVersionMigratorSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="KubeStorageVersionMigrator",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2504,51 +2528,51 @@ class ProxyConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        iptablesSyncPeriod: str = None,
-        bindAddress: str = None,
-        proxyArguments: Dict[str, List[str]] = None,
+        iptables_sync_period: str = None,
+        bind_address: str = None,
+        proxy_arguments: Dict[str, List[str]] = None,
     ):
         super().__init__()
-        self.__iptablesSyncPeriod = iptablesSyncPeriod
-        self.__bindAddress = bindAddress
-        self.__proxyArguments = proxyArguments if proxyArguments is not None else {}
+        self.__iptables_sync_period = iptables_sync_period
+        self.__bind_address = bind_address
+        self.__proxy_arguments = proxy_arguments if proxy_arguments is not None else {}
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        iptablesSyncPeriod = self.iptablesSyncPeriod()
-        check_type("iptablesSyncPeriod", iptablesSyncPeriod, Optional[str])
-        if iptablesSyncPeriod:  # omit empty
-            v["iptablesSyncPeriod"] = iptablesSyncPeriod
-        bindAddress = self.bindAddress()
-        check_type("bindAddress", bindAddress, Optional[str])
-        if bindAddress:  # omit empty
-            v["bindAddress"] = bindAddress
-        proxyArguments = self.proxyArguments()
-        check_type("proxyArguments", proxyArguments, Optional[Dict[str, List[str]]])
-        if proxyArguments:  # omit empty
-            v["proxyArguments"] = proxyArguments
+        iptables_sync_period = self.iptables_sync_period()
+        check_type("iptables_sync_period", iptables_sync_period, Optional[str])
+        if iptables_sync_period:  # omit empty
+            v["iptablesSyncPeriod"] = iptables_sync_period
+        bind_address = self.bind_address()
+        check_type("bind_address", bind_address, Optional[str])
+        if bind_address:  # omit empty
+            v["bindAddress"] = bind_address
+        proxy_arguments = self.proxy_arguments()
+        check_type("proxy_arguments", proxy_arguments, Optional[Dict[str, List[str]]])
+        if proxy_arguments:  # omit empty
+            v["proxyArguments"] = proxy_arguments
         return v
 
-    def iptablesSyncPeriod(self) -> Optional[str]:
+    def iptables_sync_period(self) -> Optional[str]:
         """
         The period that iptables rules are refreshed.
         Default: 30s
         """
-        return self.__iptablesSyncPeriod
+        return self.__iptables_sync_period
 
-    def bindAddress(self) -> Optional[str]:
+    def bind_address(self) -> Optional[str]:
         """
         The address to "bind" on
         Defaults to 0.0.0.0
         """
-        return self.__bindAddress
+        return self.__bind_address
 
-    def proxyArguments(self) -> Optional[Dict[str, List[str]]]:
+    def proxy_arguments(self) -> Optional[Dict[str, List[str]]]:
         """
         Any additional arguments to pass to the kubeproxy process
         """
-        return self.__proxyArguments
+        return self.__proxy_arguments
 
 
 class NetworkSpec(types.Object):
@@ -2560,104 +2584,106 @@ class NetworkSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        clusterNetwork: List["ClusterNetworkEntry"] = None,
-        serviceNetwork: List[str] = None,
-        defaultNetwork: "DefaultNetworkDefinition" = None,
-        additionalNetworks: List["AdditionalNetworkDefinition"] = None,
-        disableMultiNetwork: bool = None,
-        deployKubeProxy: bool = None,
-        kubeProxyConfig: "ProxyConfig" = None,
-        logLevel: LogLevel = None,
+        cluster_network: List["ClusterNetworkEntry"] = None,
+        service_network: List[str] = None,
+        default_network: "DefaultNetworkDefinition" = None,
+        additional_networks: List["AdditionalNetworkDefinition"] = None,
+        disable_multi_network: bool = None,
+        deploy_kube_proxy: bool = None,
+        kube_proxy_config: "ProxyConfig" = None,
+        log_level: LogLevel = None,
     ):
         super().__init__()
-        self.__clusterNetwork = clusterNetwork if clusterNetwork is not None else []
-        self.__serviceNetwork = serviceNetwork if serviceNetwork is not None else []
-        self.__defaultNetwork = (
-            defaultNetwork if defaultNetwork is not None else DefaultNetworkDefinition()
+        self.__cluster_network = cluster_network if cluster_network is not None else []
+        self.__service_network = service_network if service_network is not None else []
+        self.__default_network = (
+            default_network
+            if default_network is not None
+            else DefaultNetworkDefinition()
         )
-        self.__additionalNetworks = (
-            additionalNetworks if additionalNetworks is not None else []
+        self.__additional_networks = (
+            additional_networks if additional_networks is not None else []
         )
-        self.__disableMultiNetwork = disableMultiNetwork
-        self.__deployKubeProxy = deployKubeProxy
-        self.__kubeProxyConfig = kubeProxyConfig
-        self.__logLevel = logLevel
+        self.__disable_multi_network = disable_multi_network
+        self.__deploy_kube_proxy = deploy_kube_proxy
+        self.__kube_proxy_config = kube_proxy_config
+        self.__log_level = log_level
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clusterNetwork = self.clusterNetwork()
-        check_type("clusterNetwork", clusterNetwork, List["ClusterNetworkEntry"])
-        v["clusterNetwork"] = clusterNetwork
-        serviceNetwork = self.serviceNetwork()
-        check_type("serviceNetwork", serviceNetwork, List[str])
-        v["serviceNetwork"] = serviceNetwork
-        defaultNetwork = self.defaultNetwork()
-        check_type("defaultNetwork", defaultNetwork, "DefaultNetworkDefinition")
-        v["defaultNetwork"] = defaultNetwork
-        additionalNetworks = self.additionalNetworks()
+        cluster_network = self.cluster_network()
+        check_type("cluster_network", cluster_network, List["ClusterNetworkEntry"])
+        v["clusterNetwork"] = cluster_network
+        service_network = self.service_network()
+        check_type("service_network", service_network, List[str])
+        v["serviceNetwork"] = service_network
+        default_network = self.default_network()
+        check_type("default_network", default_network, "DefaultNetworkDefinition")
+        v["defaultNetwork"] = default_network
+        additional_networks = self.additional_networks()
         check_type(
-            "additionalNetworks",
-            additionalNetworks,
+            "additional_networks",
+            additional_networks,
             Optional[List["AdditionalNetworkDefinition"]],
         )
-        if additionalNetworks:  # omit empty
-            v["additionalNetworks"] = additionalNetworks
-        disableMultiNetwork = self.disableMultiNetwork()
-        check_type("disableMultiNetwork", disableMultiNetwork, Optional[bool])
-        if disableMultiNetwork is not None:  # omit empty
-            v["disableMultiNetwork"] = disableMultiNetwork
-        deployKubeProxy = self.deployKubeProxy()
-        check_type("deployKubeProxy", deployKubeProxy, Optional[bool])
-        if deployKubeProxy is not None:  # omit empty
-            v["deployKubeProxy"] = deployKubeProxy
-        kubeProxyConfig = self.kubeProxyConfig()
-        check_type("kubeProxyConfig", kubeProxyConfig, Optional["ProxyConfig"])
-        if kubeProxyConfig is not None:  # omit empty
-            v["kubeProxyConfig"] = kubeProxyConfig
-        logLevel = self.logLevel()
-        check_type("logLevel", logLevel, LogLevel)
-        v["logLevel"] = logLevel
+        if additional_networks:  # omit empty
+            v["additionalNetworks"] = additional_networks
+        disable_multi_network = self.disable_multi_network()
+        check_type("disable_multi_network", disable_multi_network, Optional[bool])
+        if disable_multi_network is not None:  # omit empty
+            v["disableMultiNetwork"] = disable_multi_network
+        deploy_kube_proxy = self.deploy_kube_proxy()
+        check_type("deploy_kube_proxy", deploy_kube_proxy, Optional[bool])
+        if deploy_kube_proxy is not None:  # omit empty
+            v["deployKubeProxy"] = deploy_kube_proxy
+        kube_proxy_config = self.kube_proxy_config()
+        check_type("kube_proxy_config", kube_proxy_config, Optional["ProxyConfig"])
+        if kube_proxy_config is not None:  # omit empty
+            v["kubeProxyConfig"] = kube_proxy_config
+        log_level = self.log_level()
+        check_type("log_level", log_level, LogLevel)
+        v["logLevel"] = log_level
         return v
 
-    def clusterNetwork(self) -> List["ClusterNetworkEntry"]:
+    def cluster_network(self) -> List["ClusterNetworkEntry"]:
         """
         clusterNetwork is the IP address pool to use for pod IPs.
         Some network providers, e.g. OpenShift SDN, support multiple ClusterNetworks.
         Others only support one. This is equivalent to the cluster-cidr.
         """
-        return self.__clusterNetwork
+        return self.__cluster_network
 
-    def serviceNetwork(self) -> List[str]:
+    def service_network(self) -> List[str]:
         """
         serviceNetwork is the ip address pool to use for Service IPs
         Currently, all existing network providers only support a single value
         here, but this is an array to allow for growth.
         """
-        return self.__serviceNetwork
+        return self.__service_network
 
-    def defaultNetwork(self) -> "DefaultNetworkDefinition":
+    def default_network(self) -> "DefaultNetworkDefinition":
         """
         defaultNetwork is the "default" network that all pods will receive
         """
-        return self.__defaultNetwork
+        return self.__default_network
 
-    def additionalNetworks(self) -> Optional[List["AdditionalNetworkDefinition"]]:
+    def additional_networks(self) -> Optional[List["AdditionalNetworkDefinition"]]:
         """
         additionalNetworks is a list of extra networks to make available to pods
         when multiple networks are enabled.
         """
-        return self.__additionalNetworks
+        return self.__additional_networks
 
-    def disableMultiNetwork(self) -> Optional[bool]:
+    def disable_multi_network(self) -> Optional[bool]:
         """
         disableMultiNetwork specifies whether or not multiple pod network
         support should be disabled. If unset, this property defaults to
         'false' and multiple network support is enabled.
         """
-        return self.__disableMultiNetwork
+        return self.__disable_multi_network
 
-    def deployKubeProxy(self) -> Optional[bool]:
+    def deploy_kube_proxy(self) -> Optional[bool]:
         """
         deployKubeProxy specifies whether or not a standalone kube-proxy should
         be deployed by the operator. Some network providers include kube-proxy
@@ -2665,24 +2691,24 @@ class NetworkSpec(types.Object):
         the correct value, which is false when OpenShift SDN and ovn-kubernetes are
         used and true otherwise.
         """
-        return self.__deployKubeProxy
+        return self.__deploy_kube_proxy
 
-    def kubeProxyConfig(self) -> Optional["ProxyConfig"]:
+    def kube_proxy_config(self) -> Optional["ProxyConfig"]:
         """
         kubeProxyConfig lets us configure desired proxy configuration.
         If not specified, sensible defaults will be chosen by OpenShift directly.
         Not consumed by all network providers - currently only openshift-sdn.
         """
-        return self.__kubeProxyConfig
+        return self.__kube_proxy_config
 
-    def logLevel(self) -> LogLevel:
+    def log_level(self) -> LogLevel:
         """
         logLevel allows configuring the logging level of the components deployed
         by the operator. Currently only Kuryr SDN is affected by this setting.
         Please note that turning on extensive logging may affect performance.
         The default value is "Normal".
         """
-        return self.__logLevel
+        return self.__log_level
 
 
 class Network(base.TypedObject, base.MetadataObject):
@@ -2701,7 +2727,7 @@ class Network(base.TypedObject, base.MetadataObject):
         spec: "NetworkSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="Network",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2724,22 +2750,22 @@ class Network(base.TypedObject, base.MetadataObject):
 class OpenShiftAPIServerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class OpenShiftAPIServer(base.TypedObject, base.MetadataObject):
@@ -2757,7 +2783,7 @@ class OpenShiftAPIServer(base.TypedObject, base.MetadataObject):
         spec: "OpenShiftAPIServerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="OpenShiftAPIServer",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2784,22 +2810,22 @@ class OpenShiftAPIServer(base.TypedObject, base.MetadataObject):
 class OpenShiftControllerManagerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class OpenShiftControllerManager(base.TypedObject, base.MetadataObject):
@@ -2817,7 +2843,7 @@ class OpenShiftControllerManager(base.TypedObject, base.MetadataObject):
         spec: "OpenShiftControllerManagerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="OpenShiftControllerManager",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2843,22 +2869,22 @@ class OpenShiftControllerManager(base.TypedObject, base.MetadataObject):
 class ServiceCASpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class ServiceCA(base.TypedObject, base.MetadataObject):
@@ -2876,7 +2902,7 @@ class ServiceCA(base.TypedObject, base.MetadataObject):
         spec: "ServiceCASpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="ServiceCA",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2903,22 +2929,22 @@ class ServiceCA(base.TypedObject, base.MetadataObject):
 class ServiceCatalogAPIServerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class ServiceCatalogAPIServer(base.TypedObject, base.MetadataObject):
@@ -2936,7 +2962,7 @@ class ServiceCatalogAPIServer(base.TypedObject, base.MetadataObject):
         spec: "ServiceCatalogAPIServerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="ServiceCatalogAPIServer",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2962,22 +2988,22 @@ class ServiceCatalogAPIServer(base.TypedObject, base.MetadataObject):
 class ServiceCatalogControllerManagerSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "OperatorSpec" = None):
+    def __init__(self, operator_spec: "OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "OperatorSpec":
+        return self.__operator_spec
 
 
 class ServiceCatalogControllerManager(base.TypedObject, base.MetadataObject):
@@ -2995,7 +3021,7 @@ class ServiceCatalogControllerManager(base.TypedObject, base.MetadataObject):
         spec: "ServiceCatalogControllerManagerSpec" = None,
     ):
         super().__init__(
-            apiVersion="operator.openshift.io/v1",
+            api_version="operator.openshift.io/v1",
             kind="ServiceCatalogControllerManager",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

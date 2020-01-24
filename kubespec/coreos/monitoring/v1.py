@@ -71,11 +71,11 @@ class SecretOrConfigMap(types.Object):
     def __init__(
         self,
         secret: "k8sv1.SecretKeySelector" = None,
-        configMap: "k8sv1.ConfigMapKeySelector" = None,
+        config_map: "k8sv1.ConfigMapKeySelector" = None,
     ):
         super().__init__()
         self.__secret = secret
-        self.__configMap = configMap
+        self.__config_map = config_map
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -84,10 +84,10 @@ class SecretOrConfigMap(types.Object):
         check_type("secret", secret, Optional["k8sv1.SecretKeySelector"])
         if secret is not None:  # omit empty
             v["secret"] = secret
-        configMap = self.configMap()
-        check_type("configMap", configMap, Optional["k8sv1.ConfigMapKeySelector"])
-        if configMap is not None:  # omit empty
-            v["configMap"] = configMap
+        config_map = self.config_map()
+        check_type("config_map", config_map, Optional["k8sv1.ConfigMapKeySelector"])
+        if config_map is not None:  # omit empty
+            v["configMap"] = config_map
         return v
 
     def secret(self) -> Optional["k8sv1.SecretKeySelector"]:
@@ -96,11 +96,11 @@ class SecretOrConfigMap(types.Object):
         """
         return self.__secret
 
-    def configMap(self) -> Optional["k8sv1.ConfigMapKeySelector"]:
+    def config_map(self) -> Optional["k8sv1.ConfigMapKeySelector"]:
         """
         ConfigMap containing data to use for the targets.
         """
-        return self.__configMap
+        return self.__config_map
 
 
 class TLSConfig(types.Object):
@@ -112,65 +112,65 @@ class TLSConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        caFile: str = None,
+        ca_file: str = None,
         ca: "SecretOrConfigMap" = None,
-        certFile: str = None,
+        cert_file: str = None,
         cert: "SecretOrConfigMap" = None,
-        keyFile: str = None,
-        keySecret: "k8sv1.SecretKeySelector" = None,
-        serverName: str = None,
-        insecureSkipVerify: bool = None,
+        key_file: str = None,
+        key_secret: "k8sv1.SecretKeySelector" = None,
+        server_name: str = None,
+        insecure_skip_verify: bool = None,
     ):
         super().__init__()
-        self.__caFile = caFile
+        self.__ca_file = ca_file
         self.__ca = ca if ca is not None else SecretOrConfigMap()
-        self.__certFile = certFile
+        self.__cert_file = cert_file
         self.__cert = cert if cert is not None else SecretOrConfigMap()
-        self.__keyFile = keyFile
-        self.__keySecret = keySecret
-        self.__serverName = serverName
-        self.__insecureSkipVerify = insecureSkipVerify
+        self.__key_file = key_file
+        self.__key_secret = key_secret
+        self.__server_name = server_name
+        self.__insecure_skip_verify = insecure_skip_verify
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        caFile = self.caFile()
-        check_type("caFile", caFile, Optional[str])
-        if caFile:  # omit empty
-            v["caFile"] = caFile
+        ca_file = self.ca_file()
+        check_type("ca_file", ca_file, Optional[str])
+        if ca_file:  # omit empty
+            v["caFile"] = ca_file
         ca = self.ca()
         check_type("ca", ca, Optional["SecretOrConfigMap"])
         v["ca"] = ca
-        certFile = self.certFile()
-        check_type("certFile", certFile, Optional[str])
-        if certFile:  # omit empty
-            v["certFile"] = certFile
+        cert_file = self.cert_file()
+        check_type("cert_file", cert_file, Optional[str])
+        if cert_file:  # omit empty
+            v["certFile"] = cert_file
         cert = self.cert()
         check_type("cert", cert, Optional["SecretOrConfigMap"])
         v["cert"] = cert
-        keyFile = self.keyFile()
-        check_type("keyFile", keyFile, Optional[str])
-        if keyFile:  # omit empty
-            v["keyFile"] = keyFile
-        keySecret = self.keySecret()
-        check_type("keySecret", keySecret, Optional["k8sv1.SecretKeySelector"])
-        if keySecret is not None:  # omit empty
-            v["keySecret"] = keySecret
-        serverName = self.serverName()
-        check_type("serverName", serverName, Optional[str])
-        if serverName:  # omit empty
-            v["serverName"] = serverName
-        insecureSkipVerify = self.insecureSkipVerify()
-        check_type("insecureSkipVerify", insecureSkipVerify, Optional[bool])
-        if insecureSkipVerify:  # omit empty
-            v["insecureSkipVerify"] = insecureSkipVerify
+        key_file = self.key_file()
+        check_type("key_file", key_file, Optional[str])
+        if key_file:  # omit empty
+            v["keyFile"] = key_file
+        key_secret = self.key_secret()
+        check_type("key_secret", key_secret, Optional["k8sv1.SecretKeySelector"])
+        if key_secret is not None:  # omit empty
+            v["keySecret"] = key_secret
+        server_name = self.server_name()
+        check_type("server_name", server_name, Optional[str])
+        if server_name:  # omit empty
+            v["serverName"] = server_name
+        insecure_skip_verify = self.insecure_skip_verify()
+        check_type("insecure_skip_verify", insecure_skip_verify, Optional[bool])
+        if insecure_skip_verify:  # omit empty
+            v["insecureSkipVerify"] = insecure_skip_verify
         return v
 
-    def caFile(self) -> Optional[str]:
+    def ca_file(self) -> Optional[str]:
         """
         Path to the CA cert in the Prometheus container to use for the targets.
         """
-        return self.__caFile
+        return self.__ca_file
 
     def ca(self) -> Optional["SecretOrConfigMap"]:
         """
@@ -178,11 +178,11 @@ class TLSConfig(types.Object):
         """
         return self.__ca
 
-    def certFile(self) -> Optional[str]:
+    def cert_file(self) -> Optional[str]:
         """
         Path to the client cert file in the Prometheus container for the targets.
         """
-        return self.__certFile
+        return self.__cert_file
 
     def cert(self) -> Optional["SecretOrConfigMap"]:
         """
@@ -190,29 +190,29 @@ class TLSConfig(types.Object):
         """
         return self.__cert
 
-    def keyFile(self) -> Optional[str]:
+    def key_file(self) -> Optional[str]:
         """
         Path to the client key file in the Prometheus container for the targets.
         """
-        return self.__keyFile
+        return self.__key_file
 
-    def keySecret(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def key_secret(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         Secret containing the client key file for the targets.
         """
-        return self.__keySecret
+        return self.__key_secret
 
-    def serverName(self) -> Optional[str]:
+    def server_name(self) -> Optional[str]:
         """
         Used to verify the hostname for the targets.
         """
-        return self.__serverName
+        return self.__server_name
 
-    def insecureSkipVerify(self) -> Optional[bool]:
+    def insecure_skip_verify(self) -> Optional[bool]:
         """
         Disable target certificate validation.
         """
-        return self.__insecureSkipVerify
+        return self.__insecure_skip_verify
 
 
 class APIServerConfig(types.Object):
@@ -226,17 +226,17 @@ class APIServerConfig(types.Object):
     def __init__(
         self,
         host: str = "",
-        basicAuth: "BasicAuth" = None,
-        bearerToken: str = None,
-        bearerTokenFile: str = None,
-        tlsConfig: "TLSConfig" = None,
+        basic_auth: "BasicAuth" = None,
+        bearer_token: str = None,
+        bearer_token_file: str = None,
+        tls_config: "TLSConfig" = None,
     ):
         super().__init__()
         self.__host = host
-        self.__basicAuth = basicAuth
-        self.__bearerToken = bearerToken
-        self.__bearerTokenFile = bearerTokenFile
-        self.__tlsConfig = tlsConfig
+        self.__basic_auth = basic_auth
+        self.__bearer_token = bearer_token
+        self.__bearer_token_file = bearer_token_file
+        self.__tls_config = tls_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -244,22 +244,22 @@ class APIServerConfig(types.Object):
         host = self.host()
         check_type("host", host, str)
         v["host"] = host
-        basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
-        if basicAuth is not None:  # omit empty
-            v["basicAuth"] = basicAuth
-        bearerToken = self.bearerToken()
-        check_type("bearerToken", bearerToken, Optional[str])
-        if bearerToken:  # omit empty
-            v["bearerToken"] = bearerToken
-        bearerTokenFile = self.bearerTokenFile()
-        check_type("bearerTokenFile", bearerTokenFile, Optional[str])
-        if bearerTokenFile:  # omit empty
-            v["bearerTokenFile"] = bearerTokenFile
-        tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
-        if tlsConfig is not None:  # omit empty
-            v["tlsConfig"] = tlsConfig
+        basic_auth = self.basic_auth()
+        check_type("basic_auth", basic_auth, Optional["BasicAuth"])
+        if basic_auth is not None:  # omit empty
+            v["basicAuth"] = basic_auth
+        bearer_token = self.bearer_token()
+        check_type("bearer_token", bearer_token, Optional[str])
+        if bearer_token:  # omit empty
+            v["bearerToken"] = bearer_token
+        bearer_token_file = self.bearer_token_file()
+        check_type("bearer_token_file", bearer_token_file, Optional[str])
+        if bearer_token_file:  # omit empty
+            v["bearerTokenFile"] = bearer_token_file
+        tls_config = self.tls_config()
+        check_type("tls_config", tls_config, Optional["TLSConfig"])
+        if tls_config is not None:  # omit empty
+            v["tlsConfig"] = tls_config
         return v
 
     def host(self) -> str:
@@ -269,29 +269,29 @@ class APIServerConfig(types.Object):
         """
         return self.__host
 
-    def basicAuth(self) -> Optional["BasicAuth"]:
+    def basic_auth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth allow an endpoint to authenticate over basic authentication
         """
-        return self.__basicAuth
+        return self.__basic_auth
 
-    def bearerToken(self) -> Optional[str]:
+    def bearer_token(self) -> Optional[str]:
         """
         Bearer token for accessing apiserver.
         """
-        return self.__bearerToken
+        return self.__bearer_token
 
-    def bearerTokenFile(self) -> Optional[str]:
+    def bearer_token_file(self) -> Optional[str]:
         """
         File to read bearer token for accessing apiserver.
         """
-        return self.__bearerTokenFile
+        return self.__bearer_token_file
 
-    def tlsConfig(self) -> Optional["TLSConfig"]:
+    def tls_config(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for accessing apiserver.
         """
-        return self.__tlsConfig
+        return self.__tls_config
 
 
 class AlertmanagerEndpoints(types.Object):
@@ -308,18 +308,18 @@ class AlertmanagerEndpoints(types.Object):
         name: str = "",
         port: Union[int, str] = None,
         scheme: str = None,
-        pathPrefix: str = None,
-        tlsConfig: "TLSConfig" = None,
-        bearerTokenFile: str = None,
+        path_prefix: str = None,
+        tls_config: "TLSConfig" = None,
+        bearer_token_file: str = None,
     ):
         super().__init__()
         self.__namespace = namespace
         self.__name = name
         self.__port = port if port is not None else 0
         self.__scheme = scheme
-        self.__pathPrefix = pathPrefix
-        self.__tlsConfig = tlsConfig
-        self.__bearerTokenFile = bearerTokenFile
+        self.__path_prefix = path_prefix
+        self.__tls_config = tls_config
+        self.__bearer_token_file = bearer_token_file
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -337,18 +337,18 @@ class AlertmanagerEndpoints(types.Object):
         check_type("scheme", scheme, Optional[str])
         if scheme:  # omit empty
             v["scheme"] = scheme
-        pathPrefix = self.pathPrefix()
-        check_type("pathPrefix", pathPrefix, Optional[str])
-        if pathPrefix:  # omit empty
-            v["pathPrefix"] = pathPrefix
-        tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
-        if tlsConfig is not None:  # omit empty
-            v["tlsConfig"] = tlsConfig
-        bearerTokenFile = self.bearerTokenFile()
-        check_type("bearerTokenFile", bearerTokenFile, Optional[str])
-        if bearerTokenFile:  # omit empty
-            v["bearerTokenFile"] = bearerTokenFile
+        path_prefix = self.path_prefix()
+        check_type("path_prefix", path_prefix, Optional[str])
+        if path_prefix:  # omit empty
+            v["pathPrefix"] = path_prefix
+        tls_config = self.tls_config()
+        check_type("tls_config", tls_config, Optional["TLSConfig"])
+        if tls_config is not None:  # omit empty
+            v["tlsConfig"] = tls_config
+        bearer_token_file = self.bearer_token_file()
+        check_type("bearer_token_file", bearer_token_file, Optional[str])
+        if bearer_token_file:  # omit empty
+            v["bearerTokenFile"] = bearer_token_file
         return v
 
     def namespace(self) -> str:
@@ -375,24 +375,24 @@ class AlertmanagerEndpoints(types.Object):
         """
         return self.__scheme
 
-    def pathPrefix(self) -> Optional[str]:
+    def path_prefix(self) -> Optional[str]:
         """
         Prefix for the HTTP path alerts are pushed to.
         """
-        return self.__pathPrefix
+        return self.__path_prefix
 
-    def tlsConfig(self) -> Optional["TLSConfig"]:
+    def tls_config(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for alertmanager connection.
         """
-        return self.__tlsConfig
+        return self.__tls_config
 
-    def bearerTokenFile(self) -> Optional[str]:
+    def bearer_token_file(self) -> Optional[str]:
         """
         BearerTokenFile to read from filesystem to use when authenticating to
         Alertmanager.
         """
-        return self.__bearerTokenFile
+        return self.__bearer_token_file
 
 
 class AlertingSpec(types.Object):
@@ -431,45 +431,45 @@ class StorageSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        emptyDir: "k8sv1.EmptyDirVolumeSource" = None,
-        volumeClaimTemplate: "k8sv1.PersistentVolumeClaim" = None,
+        empty_dir: "k8sv1.EmptyDirVolumeSource" = None,
+        volume_claim_template: "k8sv1.PersistentVolumeClaim" = None,
     ):
         super().__init__()
-        self.__emptyDir = emptyDir
-        self.__volumeClaimTemplate = (
-            volumeClaimTemplate
-            if volumeClaimTemplate is not None
+        self.__empty_dir = empty_dir
+        self.__volume_claim_template = (
+            volume_claim_template
+            if volume_claim_template is not None
             else k8sv1.PersistentVolumeClaim()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        emptyDir = self.emptyDir()
-        check_type("emptyDir", emptyDir, Optional["k8sv1.EmptyDirVolumeSource"])
-        if emptyDir is not None:  # omit empty
-            v["emptyDir"] = emptyDir
-        volumeClaimTemplate = self.volumeClaimTemplate()
+        empty_dir = self.empty_dir()
+        check_type("empty_dir", empty_dir, Optional["k8sv1.EmptyDirVolumeSource"])
+        if empty_dir is not None:  # omit empty
+            v["emptyDir"] = empty_dir
+        volume_claim_template = self.volume_claim_template()
         check_type(
-            "volumeClaimTemplate",
-            volumeClaimTemplate,
+            "volume_claim_template",
+            volume_claim_template,
             Optional["k8sv1.PersistentVolumeClaim"],
         )
-        v["volumeClaimTemplate"] = volumeClaimTemplate
+        v["volumeClaimTemplate"] = volume_claim_template
         return v
 
-    def emptyDir(self) -> Optional["k8sv1.EmptyDirVolumeSource"]:
+    def empty_dir(self) -> Optional["k8sv1.EmptyDirVolumeSource"]:
         """
         EmptyDirVolumeSource to be used by the Prometheus StatefulSets. If specified, used in place of any volumeClaimTemplate. More
         info: https://kubernetes.io/docs/concepts/storage/volumes/#emptydir
         """
-        return self.__emptyDir
+        return self.__empty_dir
 
-    def volumeClaimTemplate(self) -> Optional["k8sv1.PersistentVolumeClaim"]:
+    def volume_claim_template(self) -> Optional["k8sv1.PersistentVolumeClaim"]:
         """
         A PVC spec to be used by the Prometheus StatefulSets.
         """
-        return self.__volumeClaimTemplate
+        return self.__volume_claim_template
 
 
 class AlertmanagerSpec(types.Object):
@@ -482,84 +482,86 @@ class AlertmanagerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        podMetadata: "metav1.ObjectMeta" = None,
+        pod_metadata: "metav1.ObjectMeta" = None,
         image: str = None,
         version: str = None,
         tag: str = None,
         sha: str = None,
-        baseImage: str = None,
-        imagePullSecrets: List["k8sv1.LocalObjectReference"] = None,
+        base_image: str = None,
+        image_pull_secrets: List["k8sv1.LocalObjectReference"] = None,
         secrets: List[str] = None,
-        configMaps: List[str] = None,
-        configSecret: str = None,
-        logLevel: str = None,
-        logFormat: str = None,
+        config_maps: List[str] = None,
+        config_secret: str = None,
+        log_level: str = None,
+        log_format: str = None,
         replicas: int = None,
         retention: str = None,
         storage: "StorageSpec" = None,
         volumes: List["k8sv1.Volume"] = None,
-        volumeMounts: List["k8sv1.VolumeMount"] = None,
-        externalUrl: str = None,
-        routePrefix: str = None,
+        volume_mounts: List["k8sv1.VolumeMount"] = None,
+        external_url: str = None,
+        route_prefix: str = None,
         paused: bool = None,
-        nodeSelector: Dict[str, str] = None,
+        node_selector: Dict[str, str] = None,
         resources: "k8sv1.ResourceRequirements" = None,
         affinity: "k8sv1.Affinity" = None,
         tolerations: List["k8sv1.Toleration"] = None,
-        securityContext: "k8sv1.PodSecurityContext" = None,
-        serviceAccountName: str = None,
-        listenLocal: bool = None,
+        security_context: "k8sv1.PodSecurityContext" = None,
+        service_account_name: str = None,
+        listen_local: bool = None,
         containers: List["k8sv1.Container"] = None,
-        initContainers: List["k8sv1.Container"] = None,
-        priorityClassName: str = None,
-        additionalPeers: List[str] = None,
-        portName: str = None,
+        init_containers: List["k8sv1.Container"] = None,
+        priority_class_name: str = None,
+        additional_peers: List[str] = None,
+        port_name: str = None,
     ):
         super().__init__()
-        self.__podMetadata = podMetadata
+        self.__pod_metadata = pod_metadata
         self.__image = image
         self.__version = version
         self.__tag = tag
         self.__sha = sha
-        self.__baseImage = baseImage
-        self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else []
+        self.__base_image = base_image
+        self.__image_pull_secrets = (
+            image_pull_secrets if image_pull_secrets is not None else []
         )
         self.__secrets = secrets if secrets is not None else []
-        self.__configMaps = configMaps if configMaps is not None else []
-        self.__configSecret = configSecret
-        self.__logLevel = logLevel
-        self.__logFormat = logFormat
+        self.__config_maps = config_maps if config_maps is not None else []
+        self.__config_secret = config_secret
+        self.__log_level = log_level
+        self.__log_format = log_format
         self.__replicas = replicas
         self.__retention = retention
         self.__storage = storage
         self.__volumes = volumes if volumes is not None else []
-        self.__volumeMounts = volumeMounts if volumeMounts is not None else []
-        self.__externalUrl = externalUrl
-        self.__routePrefix = routePrefix
+        self.__volume_mounts = volume_mounts if volume_mounts is not None else []
+        self.__external_url = external_url
+        self.__route_prefix = route_prefix
         self.__paused = paused
-        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__node_selector = node_selector if node_selector is not None else {}
         self.__resources = (
             resources if resources is not None else k8sv1.ResourceRequirements()
         )
         self.__affinity = affinity
         self.__tolerations = tolerations if tolerations is not None else []
-        self.__securityContext = securityContext
-        self.__serviceAccountName = serviceAccountName
-        self.__listenLocal = listenLocal
+        self.__security_context = security_context
+        self.__service_account_name = service_account_name
+        self.__listen_local = listen_local
         self.__containers = containers if containers is not None else []
-        self.__initContainers = initContainers if initContainers is not None else []
-        self.__priorityClassName = priorityClassName
-        self.__additionalPeers = additionalPeers if additionalPeers is not None else []
-        self.__portName = portName
+        self.__init_containers = init_containers if init_containers is not None else []
+        self.__priority_class_name = priority_class_name
+        self.__additional_peers = (
+            additional_peers if additional_peers is not None else []
+        )
+        self.__port_name = port_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podMetadata = self.podMetadata()
-        check_type("podMetadata", podMetadata, Optional["metav1.ObjectMeta"])
-        if podMetadata is not None:  # omit empty
-            v["podMetadata"] = podMetadata
+        pod_metadata = self.pod_metadata()
+        check_type("pod_metadata", pod_metadata, Optional["metav1.ObjectMeta"])
+        if pod_metadata is not None:  # omit empty
+            v["podMetadata"] = pod_metadata
         image = self.image()
         check_type("image", image, Optional[str])
         if image is not None:  # omit empty
@@ -576,38 +578,38 @@ class AlertmanagerSpec(types.Object):
         check_type("sha", sha, Optional[str])
         if sha:  # omit empty
             v["sha"] = sha
-        baseImage = self.baseImage()
-        check_type("baseImage", baseImage, Optional[str])
-        if baseImage:  # omit empty
-            v["baseImage"] = baseImage
-        imagePullSecrets = self.imagePullSecrets()
+        base_image = self.base_image()
+        check_type("base_image", base_image, Optional[str])
+        if base_image:  # omit empty
+            v["baseImage"] = base_image
+        image_pull_secrets = self.image_pull_secrets()
         check_type(
-            "imagePullSecrets",
-            imagePullSecrets,
+            "image_pull_secrets",
+            image_pull_secrets,
             Optional[List["k8sv1.LocalObjectReference"]],
         )
-        if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets
+        if image_pull_secrets:  # omit empty
+            v["imagePullSecrets"] = image_pull_secrets
         secrets = self.secrets()
         check_type("secrets", secrets, Optional[List[str]])
         if secrets:  # omit empty
             v["secrets"] = secrets
-        configMaps = self.configMaps()
-        check_type("configMaps", configMaps, Optional[List[str]])
-        if configMaps:  # omit empty
-            v["configMaps"] = configMaps
-        configSecret = self.configSecret()
-        check_type("configSecret", configSecret, Optional[str])
-        if configSecret:  # omit empty
-            v["configSecret"] = configSecret
-        logLevel = self.logLevel()
-        check_type("logLevel", logLevel, Optional[str])
-        if logLevel:  # omit empty
-            v["logLevel"] = logLevel
-        logFormat = self.logFormat()
-        check_type("logFormat", logFormat, Optional[str])
-        if logFormat:  # omit empty
-            v["logFormat"] = logFormat
+        config_maps = self.config_maps()
+        check_type("config_maps", config_maps, Optional[List[str]])
+        if config_maps:  # omit empty
+            v["configMaps"] = config_maps
+        config_secret = self.config_secret()
+        check_type("config_secret", config_secret, Optional[str])
+        if config_secret:  # omit empty
+            v["configSecret"] = config_secret
+        log_level = self.log_level()
+        check_type("log_level", log_level, Optional[str])
+        if log_level:  # omit empty
+            v["logLevel"] = log_level
+        log_format = self.log_format()
+        check_type("log_format", log_format, Optional[str])
+        if log_format:  # omit empty
+            v["logFormat"] = log_format
         replicas = self.replicas()
         check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
@@ -624,26 +626,26 @@ class AlertmanagerSpec(types.Object):
         check_type("volumes", volumes, Optional[List["k8sv1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes
-        volumeMounts = self.volumeMounts()
-        check_type("volumeMounts", volumeMounts, Optional[List["k8sv1.VolumeMount"]])
-        if volumeMounts:  # omit empty
-            v["volumeMounts"] = volumeMounts
-        externalUrl = self.externalUrl()
-        check_type("externalUrl", externalUrl, Optional[str])
-        if externalUrl:  # omit empty
-            v["externalUrl"] = externalUrl
-        routePrefix = self.routePrefix()
-        check_type("routePrefix", routePrefix, Optional[str])
-        if routePrefix:  # omit empty
-            v["routePrefix"] = routePrefix
+        volume_mounts = self.volume_mounts()
+        check_type("volume_mounts", volume_mounts, Optional[List["k8sv1.VolumeMount"]])
+        if volume_mounts:  # omit empty
+            v["volumeMounts"] = volume_mounts
+        external_url = self.external_url()
+        check_type("external_url", external_url, Optional[str])
+        if external_url:  # omit empty
+            v["externalUrl"] = external_url
+        route_prefix = self.route_prefix()
+        check_type("route_prefix", route_prefix, Optional[str])
+        if route_prefix:  # omit empty
+            v["routePrefix"] = route_prefix
         paused = self.paused()
         check_type("paused", paused, Optional[bool])
         if paused:  # omit empty
             v["paused"] = paused
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
-        if nodeSelector:  # omit empty
-            v["nodeSelector"] = nodeSelector
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional[Dict[str, str]])
+        if node_selector:  # omit empty
+            v["nodeSelector"] = node_selector
         resources = self.resources()
         check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
@@ -655,49 +657,51 @@ class AlertmanagerSpec(types.Object):
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
-        securityContext = self.securityContext()
+        security_context = self.security_context()
         check_type(
-            "securityContext", securityContext, Optional["k8sv1.PodSecurityContext"]
+            "security_context", security_context, Optional["k8sv1.PodSecurityContext"]
         )
-        if securityContext is not None:  # omit empty
-            v["securityContext"] = securityContext
-        serviceAccountName = self.serviceAccountName()
-        check_type("serviceAccountName", serviceAccountName, Optional[str])
-        if serviceAccountName:  # omit empty
-            v["serviceAccountName"] = serviceAccountName
-        listenLocal = self.listenLocal()
-        check_type("listenLocal", listenLocal, Optional[bool])
-        if listenLocal:  # omit empty
-            v["listenLocal"] = listenLocal
+        if security_context is not None:  # omit empty
+            v["securityContext"] = security_context
+        service_account_name = self.service_account_name()
+        check_type("service_account_name", service_account_name, Optional[str])
+        if service_account_name:  # omit empty
+            v["serviceAccountName"] = service_account_name
+        listen_local = self.listen_local()
+        check_type("listen_local", listen_local, Optional[bool])
+        if listen_local:  # omit empty
+            v["listenLocal"] = listen_local
         containers = self.containers()
         check_type("containers", containers, Optional[List["k8sv1.Container"]])
         if containers:  # omit empty
             v["containers"] = containers
-        initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[List["k8sv1.Container"]])
-        if initContainers:  # omit empty
-            v["initContainers"] = initContainers
-        priorityClassName = self.priorityClassName()
-        check_type("priorityClassName", priorityClassName, Optional[str])
-        if priorityClassName:  # omit empty
-            v["priorityClassName"] = priorityClassName
-        additionalPeers = self.additionalPeers()
-        check_type("additionalPeers", additionalPeers, Optional[List[str]])
-        if additionalPeers:  # omit empty
-            v["additionalPeers"] = additionalPeers
-        portName = self.portName()
-        check_type("portName", portName, Optional[str])
-        if portName:  # omit empty
-            v["portName"] = portName
+        init_containers = self.init_containers()
+        check_type(
+            "init_containers", init_containers, Optional[List["k8sv1.Container"]]
+        )
+        if init_containers:  # omit empty
+            v["initContainers"] = init_containers
+        priority_class_name = self.priority_class_name()
+        check_type("priority_class_name", priority_class_name, Optional[str])
+        if priority_class_name:  # omit empty
+            v["priorityClassName"] = priority_class_name
+        additional_peers = self.additional_peers()
+        check_type("additional_peers", additional_peers, Optional[List[str]])
+        if additional_peers:  # omit empty
+            v["additionalPeers"] = additional_peers
+        port_name = self.port_name()
+        check_type("port_name", port_name, Optional[str])
+        if port_name:  # omit empty
+            v["portName"] = port_name
         return v
 
-    def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
+    def pod_metadata(self) -> Optional["metav1.ObjectMeta"]:
         """
         Standard object’s metadata. More info:
         https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
         Metadata Labels and Annotations gets propagated to the prometheus pods.
         """
-        return self.__podMetadata
+        return self.__pod_metadata
 
     def image(self) -> Optional[str]:
         """
@@ -729,19 +733,19 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__sha
 
-    def baseImage(self) -> Optional[str]:
+    def base_image(self) -> Optional[str]:
         """
         Base image that is used to deploy pods, without tag.
         """
-        return self.__baseImage
+        return self.__base_image
 
-    def imagePullSecrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
+    def image_pull_secrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
         see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
         """
-        return self.__imagePullSecrets
+        return self.__image_pull_secrets
 
     def secrets(self) -> Optional[List[str]]:
         """
@@ -751,34 +755,34 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__secrets
 
-    def configMaps(self) -> Optional[List[str]]:
+    def config_maps(self) -> Optional[List[str]]:
         """
         ConfigMaps is a list of ConfigMaps in the same namespace as the Alertmanager
         object, which shall be mounted into the Alertmanager Pods.
         The ConfigMaps are mounted into /etc/alertmanager/configmaps/<configmap-name>.
         """
-        return self.__configMaps
+        return self.__config_maps
 
-    def configSecret(self) -> Optional[str]:
+    def config_secret(self) -> Optional[str]:
         """
         ConfigSecret is the name of a Kubernetes Secret in the same namespace as the
         Alertmanager object, which contains configuration for this Alertmanager
         instance. Defaults to 'alertmanager-<alertmanager-name>'
         The secret is mounted into /etc/alertmanager/config.
         """
-        return self.__configSecret
+        return self.__config_secret
 
-    def logLevel(self) -> Optional[str]:
+    def log_level(self) -> Optional[str]:
         """
         Log level for Alertmanager to be configured with.
         """
-        return self.__logLevel
+        return self.__log_level
 
-    def logFormat(self) -> Optional[str]:
+    def log_format(self) -> Optional[str]:
         """
         Log format for Alertmanager to be configured with.
         """
-        return self.__logFormat
+        return self.__log_format
 
     def replicas(self) -> Optional[int]:
         """
@@ -810,30 +814,30 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__volumes
 
-    def volumeMounts(self) -> Optional[List["k8sv1.VolumeMount"]]:
+    def volume_mounts(self) -> Optional[List["k8sv1.VolumeMount"]]:
         """
         VolumeMounts allows configuration of additional VolumeMounts on the output StatefulSet definition.
         VolumeMounts specified will be appended to other VolumeMounts in the alertmanager container,
         that are generated as a result of StorageSpec objects.
         """
-        return self.__volumeMounts
+        return self.__volume_mounts
 
-    def externalUrl(self) -> Optional[str]:
+    def external_url(self) -> Optional[str]:
         """
         The external URL the Alertmanager instances will be available under. This is
         necessary to generate correct URLs. This is necessary if Alertmanager is not
         served from root of a DNS name.
         """
-        return self.__externalUrl
+        return self.__external_url
 
-    def routePrefix(self) -> Optional[str]:
+    def route_prefix(self) -> Optional[str]:
         """
         The route prefix Alertmanager registers HTTP handlers for. This is useful,
         if using ExternalURL and a proxy is rewriting HTTP routes of a request,
         and the actual ExternalURL is still true, but the server serves requests
         under a different route prefix. For example for use with `kubectl proxy`.
         """
-        return self.__routePrefix
+        return self.__route_prefix
 
     def paused(self) -> Optional[bool]:
         """
@@ -842,11 +846,11 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__paused
 
-    def nodeSelector(self) -> Optional[Dict[str, str]]:
+    def node_selector(self) -> Optional[Dict[str, str]]:
         """
         Define which Nodes the Pods are scheduled on.
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
     def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
@@ -866,27 +870,27 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__tolerations
 
-    def securityContext(self) -> Optional["k8sv1.PodSecurityContext"]:
+    def security_context(self) -> Optional["k8sv1.PodSecurityContext"]:
         """
         SecurityContext holds pod-level security attributes and common container settings.
         This defaults to the default PodSecurityContext.
         """
-        return self.__securityContext
+        return self.__security_context
 
-    def serviceAccountName(self) -> Optional[str]:
+    def service_account_name(self) -> Optional[str]:
         """
         ServiceAccountName is the name of the ServiceAccount to use to run the
         Prometheus Pods.
         """
-        return self.__serviceAccountName
+        return self.__service_account_name
 
-    def listenLocal(self) -> Optional[bool]:
+    def listen_local(self) -> Optional[bool]:
         """
         ListenLocal makes the Alertmanager server listen on loopback, so that it
         does not bind against the Pod IP. Note this is only for the Alertmanager
         UI, not the gossip communication.
         """
-        return self.__listenLocal
+        return self.__listen_local
 
     def containers(self) -> Optional[List["k8sv1.Container"]]:
         """
@@ -895,7 +899,7 @@ class AlertmanagerSpec(types.Object):
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[List["k8sv1.Container"]]:
+    def init_containers(self) -> Optional[List["k8sv1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Alertmanager configuration from external sources. Any
@@ -904,26 +908,26 @@ class AlertmanagerSpec(types.Object):
         of what the maintainers will support and by doing so, you accept that this behaviour may break
         at any time without notice.
         """
-        return self.__initContainers
+        return self.__init_containers
 
-    def priorityClassName(self) -> Optional[str]:
+    def priority_class_name(self) -> Optional[str]:
         """
         Priority class assigned to the Pods
         """
-        return self.__priorityClassName
+        return self.__priority_class_name
 
-    def additionalPeers(self) -> Optional[List[str]]:
+    def additional_peers(self) -> Optional[List[str]]:
         """
         AdditionalPeers allows injecting a set of additional Alertmanagers to peer with to form a highly available cluster.
         """
-        return self.__additionalPeers
+        return self.__additional_peers
 
-    def portName(self) -> Optional[str]:
+    def port_name(self) -> Optional[str]:
         """
         Port name used for the pods and governing service.
         This defaults to web
         """
-        return self.__portName
+        return self.__port_name
 
 
 class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
@@ -943,7 +947,7 @@ class Alertmanager(base.TypedObject, base.NamespacedMetadataObject):
         spec: "AlertmanagerSpec" = None,
     ):
         super().__init__(
-            apiVersion="monitoring.coreos.com/v1",
+            api_version="monitoring.coreos.com/v1",
             kind="Alertmanager",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1010,18 +1014,18 @@ class RelabelConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        sourceLabels: List[str] = None,
+        source_labels: List[str] = None,
         separator: str = None,
-        targetLabel: str = None,
+        target_label: str = None,
         regex: str = None,
         modulus: int = None,
         replacement: str = None,
         action: str = None,
     ):
         super().__init__()
-        self.__sourceLabels = sourceLabels if sourceLabels is not None else []
+        self.__source_labels = source_labels if source_labels is not None else []
         self.__separator = separator
-        self.__targetLabel = targetLabel
+        self.__target_label = target_label
         self.__regex = regex
         self.__modulus = modulus
         self.__replacement = replacement
@@ -1030,18 +1034,18 @@ class RelabelConfig(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        sourceLabels = self.sourceLabels()
-        check_type("sourceLabels", sourceLabels, Optional[List[str]])
-        if sourceLabels:  # omit empty
-            v["sourceLabels"] = sourceLabels
+        source_labels = self.source_labels()
+        check_type("source_labels", source_labels, Optional[List[str]])
+        if source_labels:  # omit empty
+            v["sourceLabels"] = source_labels
         separator = self.separator()
         check_type("separator", separator, Optional[str])
         if separator:  # omit empty
             v["separator"] = separator
-        targetLabel = self.targetLabel()
-        check_type("targetLabel", targetLabel, Optional[str])
-        if targetLabel:  # omit empty
-            v["targetLabel"] = targetLabel
+        target_label = self.target_label()
+        check_type("target_label", target_label, Optional[str])
+        if target_label:  # omit empty
+            v["targetLabel"] = target_label
         regex = self.regex()
         check_type("regex", regex, Optional[str])
         if regex:  # omit empty
@@ -1060,13 +1064,13 @@ class RelabelConfig(types.Object):
             v["action"] = action
         return v
 
-    def sourceLabels(self) -> Optional[List[str]]:
+    def source_labels(self) -> Optional[List[str]]:
         """
         The source labels select values from existing labels. Their content is concatenated
         using the configured separator and matched against the configured regular expression
         for the replace, keep, and drop actions.
         """
-        return self.__sourceLabels
+        return self.__source_labels
 
     def separator(self) -> Optional[str]:
         """
@@ -1074,12 +1078,12 @@ class RelabelConfig(types.Object):
         """
         return self.__separator
 
-    def targetLabel(self) -> Optional[str]:
+    def target_label(self) -> Optional[str]:
         """
         Label to which the resulting value is written in a replace action.
         It is mandatory for replace actions. Regex capture groups are available.
         """
-        return self.__targetLabel
+        return self.__target_label
 
     def regex(self) -> Optional[str]:
         """
@@ -1117,45 +1121,45 @@ class Endpoint(types.Object):
     def __init__(
         self,
         port: str = None,
-        targetPort: Union[int, str] = None,
+        target_port: Union[int, str] = None,
         path: str = None,
         scheme: str = None,
         params: Dict[str, List[str]] = None,
         interval: str = None,
-        scrapeTimeout: str = None,
-        tlsConfig: "TLSConfig" = None,
-        bearerTokenFile: str = None,
-        bearerTokenSecret: "k8sv1.SecretKeySelector" = None,
-        honorLabels: bool = None,
-        honorTimestamps: bool = None,
-        basicAuth: "BasicAuth" = None,
-        metricRelabelings: List["RelabelConfig"] = None,
+        scrape_timeout: str = None,
+        tls_config: "TLSConfig" = None,
+        bearer_token_file: str = None,
+        bearer_token_secret: "k8sv1.SecretKeySelector" = None,
+        honor_labels: bool = None,
+        honor_timestamps: bool = None,
+        basic_auth: "BasicAuth" = None,
+        metric_relabelings: List["RelabelConfig"] = None,
         relabelings: List["RelabelConfig"] = None,
-        proxyUrl: str = None,
+        proxy_url: str = None,
     ):
         super().__init__()
         self.__port = port
-        self.__targetPort = targetPort
+        self.__target_port = target_port
         self.__path = path
         self.__scheme = scheme
         self.__params = params if params is not None else {}
         self.__interval = interval
-        self.__scrapeTimeout = scrapeTimeout
-        self.__tlsConfig = tlsConfig
-        self.__bearerTokenFile = bearerTokenFile
-        self.__bearerTokenSecret = (
-            bearerTokenSecret
-            if bearerTokenSecret is not None
+        self.__scrape_timeout = scrape_timeout
+        self.__tls_config = tls_config
+        self.__bearer_token_file = bearer_token_file
+        self.__bearer_token_secret = (
+            bearer_token_secret
+            if bearer_token_secret is not None
             else k8sv1.SecretKeySelector()
         )
-        self.__honorLabels = honorLabels
-        self.__honorTimestamps = honorTimestamps
-        self.__basicAuth = basicAuth
-        self.__metricRelabelings = (
-            metricRelabelings if metricRelabelings is not None else []
+        self.__honor_labels = honor_labels
+        self.__honor_timestamps = honor_timestamps
+        self.__basic_auth = basic_auth
+        self.__metric_relabelings = (
+            metric_relabelings if metric_relabelings is not None else []
         )
         self.__relabelings = relabelings if relabelings is not None else []
-        self.__proxyUrl = proxyUrl
+        self.__proxy_url = proxy_url
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1164,10 +1168,10 @@ class Endpoint(types.Object):
         check_type("port", port, Optional[str])
         if port:  # omit empty
             v["port"] = port
-        targetPort = self.targetPort()
-        check_type("targetPort", targetPort, Optional[Union[int, str]])
-        if targetPort is not None:  # omit empty
-            v["targetPort"] = targetPort
+        target_port = self.target_port()
+        check_type("target_port", target_port, Optional[Union[int, str]])
+        if target_port is not None:  # omit empty
+            v["targetPort"] = target_port
         path = self.path()
         check_type("path", path, Optional[str])
         if path:  # omit empty
@@ -1184,49 +1188,51 @@ class Endpoint(types.Object):
         check_type("interval", interval, Optional[str])
         if interval:  # omit empty
             v["interval"] = interval
-        scrapeTimeout = self.scrapeTimeout()
-        check_type("scrapeTimeout", scrapeTimeout, Optional[str])
-        if scrapeTimeout:  # omit empty
-            v["scrapeTimeout"] = scrapeTimeout
-        tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
-        if tlsConfig is not None:  # omit empty
-            v["tlsConfig"] = tlsConfig
-        bearerTokenFile = self.bearerTokenFile()
-        check_type("bearerTokenFile", bearerTokenFile, Optional[str])
-        if bearerTokenFile:  # omit empty
-            v["bearerTokenFile"] = bearerTokenFile
-        bearerTokenSecret = self.bearerTokenSecret()
+        scrape_timeout = self.scrape_timeout()
+        check_type("scrape_timeout", scrape_timeout, Optional[str])
+        if scrape_timeout:  # omit empty
+            v["scrapeTimeout"] = scrape_timeout
+        tls_config = self.tls_config()
+        check_type("tls_config", tls_config, Optional["TLSConfig"])
+        if tls_config is not None:  # omit empty
+            v["tlsConfig"] = tls_config
+        bearer_token_file = self.bearer_token_file()
+        check_type("bearer_token_file", bearer_token_file, Optional[str])
+        if bearer_token_file:  # omit empty
+            v["bearerTokenFile"] = bearer_token_file
+        bearer_token_secret = self.bearer_token_secret()
         check_type(
-            "bearerTokenSecret", bearerTokenSecret, Optional["k8sv1.SecretKeySelector"]
+            "bearer_token_secret",
+            bearer_token_secret,
+            Optional["k8sv1.SecretKeySelector"],
         )
-        v["bearerTokenSecret"] = bearerTokenSecret
-        honorLabels = self.honorLabels()
-        check_type("honorLabels", honorLabels, Optional[bool])
-        if honorLabels:  # omit empty
-            v["honorLabels"] = honorLabels
-        honorTimestamps = self.honorTimestamps()
-        check_type("honorTimestamps", honorTimestamps, Optional[bool])
-        if honorTimestamps is not None:  # omit empty
-            v["honorTimestamps"] = honorTimestamps
-        basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
-        if basicAuth is not None:  # omit empty
-            v["basicAuth"] = basicAuth
-        metricRelabelings = self.metricRelabelings()
+        v["bearerTokenSecret"] = bearer_token_secret
+        honor_labels = self.honor_labels()
+        check_type("honor_labels", honor_labels, Optional[bool])
+        if honor_labels:  # omit empty
+            v["honorLabels"] = honor_labels
+        honor_timestamps = self.honor_timestamps()
+        check_type("honor_timestamps", honor_timestamps, Optional[bool])
+        if honor_timestamps is not None:  # omit empty
+            v["honorTimestamps"] = honor_timestamps
+        basic_auth = self.basic_auth()
+        check_type("basic_auth", basic_auth, Optional["BasicAuth"])
+        if basic_auth is not None:  # omit empty
+            v["basicAuth"] = basic_auth
+        metric_relabelings = self.metric_relabelings()
         check_type(
-            "metricRelabelings", metricRelabelings, Optional[List["RelabelConfig"]]
+            "metric_relabelings", metric_relabelings, Optional[List["RelabelConfig"]]
         )
-        if metricRelabelings:  # omit empty
-            v["metricRelabelings"] = metricRelabelings
+        if metric_relabelings:  # omit empty
+            v["metricRelabelings"] = metric_relabelings
         relabelings = self.relabelings()
         check_type("relabelings", relabelings, Optional[List["RelabelConfig"]])
         if relabelings:  # omit empty
             v["relabelings"] = relabelings
-        proxyUrl = self.proxyUrl()
-        check_type("proxyUrl", proxyUrl, Optional[str])
-        if proxyUrl is not None:  # omit empty
-            v["proxyUrl"] = proxyUrl
+        proxy_url = self.proxy_url()
+        check_type("proxy_url", proxy_url, Optional[str])
+        if proxy_url is not None:  # omit empty
+            v["proxyUrl"] = proxy_url
         return v
 
     def port(self) -> Optional[str]:
@@ -1235,11 +1241,11 @@ class Endpoint(types.Object):
         """
         return self.__port
 
-    def targetPort(self) -> Optional[Union[int, str]]:
+    def target_port(self) -> Optional[Union[int, str]]:
         """
         Name or number of the target port of the endpoint. Mutually exclusive with port.
         """
-        return self.__targetPort
+        return self.__target_port
 
     def path(self) -> Optional[str]:
         """
@@ -1265,56 +1271,56 @@ class Endpoint(types.Object):
         """
         return self.__interval
 
-    def scrapeTimeout(self) -> Optional[str]:
+    def scrape_timeout(self) -> Optional[str]:
         """
         Timeout after which the scrape is ended
         """
-        return self.__scrapeTimeout
+        return self.__scrape_timeout
 
-    def tlsConfig(self) -> Optional["TLSConfig"]:
+    def tls_config(self) -> Optional["TLSConfig"]:
         """
         TLS configuration to use when scraping the endpoint
         """
-        return self.__tlsConfig
+        return self.__tls_config
 
-    def bearerTokenFile(self) -> Optional[str]:
+    def bearer_token_file(self) -> Optional[str]:
         """
         File to read bearer token for scraping targets.
         """
-        return self.__bearerTokenFile
+        return self.__bearer_token_file
 
-    def bearerTokenSecret(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def bearer_token_secret(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         Secret to mount to read bearer token for scraping targets. The secret
         needs to be in the same namespace as the service monitor and accessible by
         the Prometheus Operator.
         """
-        return self.__bearerTokenSecret
+        return self.__bearer_token_secret
 
-    def honorLabels(self) -> Optional[bool]:
+    def honor_labels(self) -> Optional[bool]:
         """
         HonorLabels chooses the metric's labels on collisions with target labels.
         """
-        return self.__honorLabels
+        return self.__honor_labels
 
-    def honorTimestamps(self) -> Optional[bool]:
+    def honor_timestamps(self) -> Optional[bool]:
         """
         HonorTimestamps controls whether Prometheus respects the timestamps present in scraped data.
         """
-        return self.__honorTimestamps
+        return self.__honor_timestamps
 
-    def basicAuth(self) -> Optional["BasicAuth"]:
+    def basic_auth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth allow an endpoint to authenticate over basic authentication
         More info: https://prometheus.io/docs/operating/configuration/#endpoints
         """
-        return self.__basicAuth
+        return self.__basic_auth
 
-    def metricRelabelings(self) -> Optional[List["RelabelConfig"]]:
+    def metric_relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         MetricRelabelConfigs to apply to samples before ingestion.
         """
-        return self.__metricRelabelings
+        return self.__metric_relabelings
 
     def relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
@@ -1323,11 +1329,11 @@ class Endpoint(types.Object):
         """
         return self.__relabelings
 
-    def proxyUrl(self) -> Optional[str]:
+    def proxy_url(self) -> Optional[str]:
         """
         ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
         """
-        return self.__proxyUrl
+        return self.__proxy_url
 
 
 class NamespaceSelector(types.Object):
@@ -1338,10 +1344,10 @@ class NamespaceSelector(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, any: bool = None, matchNames: List[str] = None):
+    def __init__(self, any: bool = None, match_names: List[str] = None):
         super().__init__()
         self.__any = any
-        self.__matchNames = matchNames if matchNames is not None else []
+        self.__match_names = match_names if match_names is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1350,10 +1356,10 @@ class NamespaceSelector(types.Object):
         check_type("any", any, Optional[bool])
         if any:  # omit empty
             v["any"] = any
-        matchNames = self.matchNames()
-        check_type("matchNames", matchNames, Optional[List[str]])
-        if matchNames:  # omit empty
-            v["matchNames"] = matchNames
+        match_names = self.match_names()
+        check_type("match_names", match_names, Optional[List[str]])
+        if match_names:  # omit empty
+            v["matchNames"] = match_names
         return v
 
     def any(self) -> Optional[bool]:
@@ -1363,11 +1369,11 @@ class NamespaceSelector(types.Object):
         """
         return self.__any
 
-    def matchNames(self) -> Optional[List[str]]:
+    def match_names(self) -> Optional[List[str]]:
         """
         List of namespace names.
         """
-        return self.__matchNames
+        return self.__match_names
 
 
 class PodMetricsEndpoint(types.Object):
@@ -1380,33 +1386,33 @@ class PodMetricsEndpoint(types.Object):
     def __init__(
         self,
         port: str = None,
-        targetPort: Union[int, str] = None,
+        target_port: Union[int, str] = None,
         path: str = None,
         scheme: str = None,
         params: Dict[str, List[str]] = None,
         interval: str = None,
-        scrapeTimeout: str = None,
-        honorLabels: bool = None,
-        honorTimestamps: bool = None,
-        metricRelabelings: List["RelabelConfig"] = None,
+        scrape_timeout: str = None,
+        honor_labels: bool = None,
+        honor_timestamps: bool = None,
+        metric_relabelings: List["RelabelConfig"] = None,
         relabelings: List["RelabelConfig"] = None,
-        proxyUrl: str = None,
+        proxy_url: str = None,
     ):
         super().__init__()
         self.__port = port
-        self.__targetPort = targetPort
+        self.__target_port = target_port
         self.__path = path
         self.__scheme = scheme
         self.__params = params if params is not None else {}
         self.__interval = interval
-        self.__scrapeTimeout = scrapeTimeout
-        self.__honorLabels = honorLabels
-        self.__honorTimestamps = honorTimestamps
-        self.__metricRelabelings = (
-            metricRelabelings if metricRelabelings is not None else []
+        self.__scrape_timeout = scrape_timeout
+        self.__honor_labels = honor_labels
+        self.__honor_timestamps = honor_timestamps
+        self.__metric_relabelings = (
+            metric_relabelings if metric_relabelings is not None else []
         )
         self.__relabelings = relabelings if relabelings is not None else []
-        self.__proxyUrl = proxyUrl
+        self.__proxy_url = proxy_url
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1415,10 +1421,10 @@ class PodMetricsEndpoint(types.Object):
         check_type("port", port, Optional[str])
         if port:  # omit empty
             v["port"] = port
-        targetPort = self.targetPort()
-        check_type("targetPort", targetPort, Optional[Union[int, str]])
-        if targetPort is not None:  # omit empty
-            v["targetPort"] = targetPort
+        target_port = self.target_port()
+        check_type("target_port", target_port, Optional[Union[int, str]])
+        if target_port is not None:  # omit empty
+            v["targetPort"] = target_port
         path = self.path()
         check_type("path", path, Optional[str])
         if path:  # omit empty
@@ -1435,32 +1441,32 @@ class PodMetricsEndpoint(types.Object):
         check_type("interval", interval, Optional[str])
         if interval:  # omit empty
             v["interval"] = interval
-        scrapeTimeout = self.scrapeTimeout()
-        check_type("scrapeTimeout", scrapeTimeout, Optional[str])
-        if scrapeTimeout:  # omit empty
-            v["scrapeTimeout"] = scrapeTimeout
-        honorLabels = self.honorLabels()
-        check_type("honorLabels", honorLabels, Optional[bool])
-        if honorLabels:  # omit empty
-            v["honorLabels"] = honorLabels
-        honorTimestamps = self.honorTimestamps()
-        check_type("honorTimestamps", honorTimestamps, Optional[bool])
-        if honorTimestamps is not None:  # omit empty
-            v["honorTimestamps"] = honorTimestamps
-        metricRelabelings = self.metricRelabelings()
+        scrape_timeout = self.scrape_timeout()
+        check_type("scrape_timeout", scrape_timeout, Optional[str])
+        if scrape_timeout:  # omit empty
+            v["scrapeTimeout"] = scrape_timeout
+        honor_labels = self.honor_labels()
+        check_type("honor_labels", honor_labels, Optional[bool])
+        if honor_labels:  # omit empty
+            v["honorLabels"] = honor_labels
+        honor_timestamps = self.honor_timestamps()
+        check_type("honor_timestamps", honor_timestamps, Optional[bool])
+        if honor_timestamps is not None:  # omit empty
+            v["honorTimestamps"] = honor_timestamps
+        metric_relabelings = self.metric_relabelings()
         check_type(
-            "metricRelabelings", metricRelabelings, Optional[List["RelabelConfig"]]
+            "metric_relabelings", metric_relabelings, Optional[List["RelabelConfig"]]
         )
-        if metricRelabelings:  # omit empty
-            v["metricRelabelings"] = metricRelabelings
+        if metric_relabelings:  # omit empty
+            v["metricRelabelings"] = metric_relabelings
         relabelings = self.relabelings()
         check_type("relabelings", relabelings, Optional[List["RelabelConfig"]])
         if relabelings:  # omit empty
             v["relabelings"] = relabelings
-        proxyUrl = self.proxyUrl()
-        check_type("proxyUrl", proxyUrl, Optional[str])
-        if proxyUrl is not None:  # omit empty
-            v["proxyUrl"] = proxyUrl
+        proxy_url = self.proxy_url()
+        check_type("proxy_url", proxy_url, Optional[str])
+        if proxy_url is not None:  # omit empty
+            v["proxyUrl"] = proxy_url
         return v
 
     def port(self) -> Optional[str]:
@@ -1469,11 +1475,11 @@ class PodMetricsEndpoint(types.Object):
         """
         return self.__port
 
-    def targetPort(self) -> Optional[Union[int, str]]:
+    def target_port(self) -> Optional[Union[int, str]]:
         """
         Name or number of the target port of the endpoint. Mutually exclusive with port.
         """
-        return self.__targetPort
+        return self.__target_port
 
     def path(self) -> Optional[str]:
         """
@@ -1499,29 +1505,29 @@ class PodMetricsEndpoint(types.Object):
         """
         return self.__interval
 
-    def scrapeTimeout(self) -> Optional[str]:
+    def scrape_timeout(self) -> Optional[str]:
         """
         Timeout after which the scrape is ended
         """
-        return self.__scrapeTimeout
+        return self.__scrape_timeout
 
-    def honorLabels(self) -> Optional[bool]:
+    def honor_labels(self) -> Optional[bool]:
         """
         HonorLabels chooses the metric's labels on collisions with target labels.
         """
-        return self.__honorLabels
+        return self.__honor_labels
 
-    def honorTimestamps(self) -> Optional[bool]:
+    def honor_timestamps(self) -> Optional[bool]:
         """
         HonorTimestamps controls whether Prometheus respects the timestamps present in scraped data.
         """
-        return self.__honorTimestamps
+        return self.__honor_timestamps
 
-    def metricRelabelings(self) -> Optional[List["RelabelConfig"]]:
+    def metric_relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
         MetricRelabelConfigs to apply to samples before ingestion.
         """
-        return self.__metricRelabelings
+        return self.__metric_relabelings
 
     def relabelings(self) -> Optional[List["RelabelConfig"]]:
         """
@@ -1530,11 +1536,11 @@ class PodMetricsEndpoint(types.Object):
         """
         return self.__relabelings
 
-    def proxyUrl(self) -> Optional[str]:
+    def proxy_url(self) -> Optional[str]:
         """
         ProxyURL eg http://proxyserver:2195 Directs scrapes to proxy through this endpoint.
         """
-        return self.__proxyUrl
+        return self.__proxy_url
 
 
 class PodMonitorSpec(types.Object):
@@ -1546,72 +1552,76 @@ class PodMonitorSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        jobLabel: str = None,
-        podTargetLabels: List[str] = None,
-        podMetricsEndpoints: List["PodMetricsEndpoint"] = None,
+        job_label: str = None,
+        pod_target_labels: List[str] = None,
+        pod_metrics_endpoints: List["PodMetricsEndpoint"] = None,
         selector: "metav1.LabelSelector" = None,
-        namespaceSelector: "NamespaceSelector" = None,
-        sampleLimit: int = None,
+        namespace_selector: "NamespaceSelector" = None,
+        sample_limit: int = None,
     ):
         super().__init__()
-        self.__jobLabel = jobLabel
-        self.__podTargetLabels = podTargetLabels if podTargetLabels is not None else []
-        self.__podMetricsEndpoints = (
-            podMetricsEndpoints if podMetricsEndpoints is not None else []
+        self.__job_label = job_label
+        self.__pod_target_labels = (
+            pod_target_labels if pod_target_labels is not None else []
+        )
+        self.__pod_metrics_endpoints = (
+            pod_metrics_endpoints if pod_metrics_endpoints is not None else []
         )
         self.__selector = selector if selector is not None else metav1.LabelSelector()
-        self.__namespaceSelector = (
-            namespaceSelector if namespaceSelector is not None else NamespaceSelector()
+        self.__namespace_selector = (
+            namespace_selector
+            if namespace_selector is not None
+            else NamespaceSelector()
         )
-        self.__sampleLimit = sampleLimit
+        self.__sample_limit = sample_limit
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        jobLabel = self.jobLabel()
-        check_type("jobLabel", jobLabel, Optional[str])
-        if jobLabel:  # omit empty
-            v["jobLabel"] = jobLabel
-        podTargetLabels = self.podTargetLabels()
-        check_type("podTargetLabels", podTargetLabels, Optional[List[str]])
-        if podTargetLabels:  # omit empty
-            v["podTargetLabels"] = podTargetLabels
-        podMetricsEndpoints = self.podMetricsEndpoints()
+        job_label = self.job_label()
+        check_type("job_label", job_label, Optional[str])
+        if job_label:  # omit empty
+            v["jobLabel"] = job_label
+        pod_target_labels = self.pod_target_labels()
+        check_type("pod_target_labels", pod_target_labels, Optional[List[str]])
+        if pod_target_labels:  # omit empty
+            v["podTargetLabels"] = pod_target_labels
+        pod_metrics_endpoints = self.pod_metrics_endpoints()
         check_type(
-            "podMetricsEndpoints", podMetricsEndpoints, List["PodMetricsEndpoint"]
+            "pod_metrics_endpoints", pod_metrics_endpoints, List["PodMetricsEndpoint"]
         )
-        v["podMetricsEndpoints"] = podMetricsEndpoints
+        v["podMetricsEndpoints"] = pod_metrics_endpoints
         selector = self.selector()
         check_type("selector", selector, "metav1.LabelSelector")
         v["selector"] = selector
-        namespaceSelector = self.namespaceSelector()
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["NamespaceSelector"]
+            "namespace_selector", namespace_selector, Optional["NamespaceSelector"]
         )
-        v["namespaceSelector"] = namespaceSelector
-        sampleLimit = self.sampleLimit()
-        check_type("sampleLimit", sampleLimit, Optional[int])
-        if sampleLimit:  # omit empty
-            v["sampleLimit"] = sampleLimit
+        v["namespaceSelector"] = namespace_selector
+        sample_limit = self.sample_limit()
+        check_type("sample_limit", sample_limit, Optional[int])
+        if sample_limit:  # omit empty
+            v["sampleLimit"] = sample_limit
         return v
 
-    def jobLabel(self) -> Optional[str]:
+    def job_label(self) -> Optional[str]:
         """
         The label to use to retrieve the job name from.
         """
-        return self.__jobLabel
+        return self.__job_label
 
-    def podTargetLabels(self) -> Optional[List[str]]:
+    def pod_target_labels(self) -> Optional[List[str]]:
         """
         PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
         """
-        return self.__podTargetLabels
+        return self.__pod_target_labels
 
-    def podMetricsEndpoints(self) -> List["PodMetricsEndpoint"]:
+    def pod_metrics_endpoints(self) -> List["PodMetricsEndpoint"]:
         """
         A list of endpoints allowed as part of this PodMonitor.
         """
-        return self.__podMetricsEndpoints
+        return self.__pod_metrics_endpoints
 
     def selector(self) -> "metav1.LabelSelector":
         """
@@ -1619,17 +1629,17 @@ class PodMonitorSpec(types.Object):
         """
         return self.__selector
 
-    def namespaceSelector(self) -> Optional["NamespaceSelector"]:
+    def namespace_selector(self) -> Optional["NamespaceSelector"]:
         """
         Selector to select which namespaces the Endpoints objects are discovered from.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def sampleLimit(self) -> Optional[int]:
+    def sample_limit(self) -> Optional[int]:
         """
         SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
         """
-        return self.__sampleLimit
+        return self.__sample_limit
 
 
 class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
@@ -1649,7 +1659,7 @@ class PodMonitor(base.TypedObject, base.NamespacedMetadataObject):
         spec: "PodMonitorSpec" = None,
     ):
         super().__init__(
-            apiVersion="monitoring.coreos.com/v1",
+            api_version="monitoring.coreos.com/v1",
             kind="PodMonitor",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1682,55 +1692,55 @@ class QuerySpec(types.Object):
     @typechecked
     def __init__(
         self,
-        lookbackDelta: str = None,
-        maxConcurrency: int = None,
-        maxSamples: int = None,
+        lookback_delta: str = None,
+        max_concurrency: int = None,
+        max_samples: int = None,
         timeout: str = None,
     ):
         super().__init__()
-        self.__lookbackDelta = lookbackDelta
-        self.__maxConcurrency = maxConcurrency
-        self.__maxSamples = maxSamples
+        self.__lookback_delta = lookback_delta
+        self.__max_concurrency = max_concurrency
+        self.__max_samples = max_samples
         self.__timeout = timeout
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        lookbackDelta = self.lookbackDelta()
-        check_type("lookbackDelta", lookbackDelta, Optional[str])
-        if lookbackDelta is not None:  # omit empty
-            v["lookbackDelta"] = lookbackDelta
-        maxConcurrency = self.maxConcurrency()
-        check_type("maxConcurrency", maxConcurrency, Optional[int])
-        if maxConcurrency is not None:  # omit empty
-            v["maxConcurrency"] = maxConcurrency
-        maxSamples = self.maxSamples()
-        check_type("maxSamples", maxSamples, Optional[int])
-        if maxSamples is not None:  # omit empty
-            v["maxSamples"] = maxSamples
+        lookback_delta = self.lookback_delta()
+        check_type("lookback_delta", lookback_delta, Optional[str])
+        if lookback_delta is not None:  # omit empty
+            v["lookbackDelta"] = lookback_delta
+        max_concurrency = self.max_concurrency()
+        check_type("max_concurrency", max_concurrency, Optional[int])
+        if max_concurrency is not None:  # omit empty
+            v["maxConcurrency"] = max_concurrency
+        max_samples = self.max_samples()
+        check_type("max_samples", max_samples, Optional[int])
+        if max_samples is not None:  # omit empty
+            v["maxSamples"] = max_samples
         timeout = self.timeout()
         check_type("timeout", timeout, Optional[str])
         if timeout is not None:  # omit empty
             v["timeout"] = timeout
         return v
 
-    def lookbackDelta(self) -> Optional[str]:
+    def lookback_delta(self) -> Optional[str]:
         """
         The delta difference allowed for retrieving metrics during expression evaluations.
         """
-        return self.__lookbackDelta
+        return self.__lookback_delta
 
-    def maxConcurrency(self) -> Optional[int]:
+    def max_concurrency(self) -> Optional[int]:
         """
         Number of concurrent queries that can be run at once.
         """
-        return self.__maxConcurrency
+        return self.__max_concurrency
 
-    def maxSamples(self) -> Optional[int]:
+    def max_samples(self) -> Optional[int]:
         """
         Maximum number of samples a single query can load into memory. Note that queries will fail if they would load more samples than this into memory, so this also limits the number of samples a query can return.
         """
-        return self.__maxSamples
+        return self.__max_samples
 
     def timeout(self) -> Optional[str]:
         """
@@ -1749,27 +1759,27 @@ class RemoteReadSpec(types.Object):
     def __init__(
         self,
         url: str = "",
-        requiredMatchers: Dict[str, str] = None,
-        remoteTimeout: str = None,
-        readRecent: bool = None,
-        basicAuth: "BasicAuth" = None,
-        bearerToken: str = None,
-        bearerTokenFile: str = None,
-        tlsConfig: "TLSConfig" = None,
-        proxyUrl: str = None,
+        required_matchers: Dict[str, str] = None,
+        remote_timeout: str = None,
+        read_recent: bool = None,
+        basic_auth: "BasicAuth" = None,
+        bearer_token: str = None,
+        bearer_token_file: str = None,
+        tls_config: "TLSConfig" = None,
+        proxy_url: str = None,
     ):
         super().__init__()
         self.__url = url
-        self.__requiredMatchers = (
-            requiredMatchers if requiredMatchers is not None else {}
+        self.__required_matchers = (
+            required_matchers if required_matchers is not None else {}
         )
-        self.__remoteTimeout = remoteTimeout
-        self.__readRecent = readRecent
-        self.__basicAuth = basicAuth
-        self.__bearerToken = bearerToken
-        self.__bearerTokenFile = bearerTokenFile
-        self.__tlsConfig = tlsConfig
-        self.__proxyUrl = proxyUrl
+        self.__remote_timeout = remote_timeout
+        self.__read_recent = read_recent
+        self.__basic_auth = basic_auth
+        self.__bearer_token = bearer_token
+        self.__bearer_token_file = bearer_token_file
+        self.__tls_config = tls_config
+        self.__proxy_url = proxy_url
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1777,38 +1787,38 @@ class RemoteReadSpec(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        requiredMatchers = self.requiredMatchers()
-        check_type("requiredMatchers", requiredMatchers, Optional[Dict[str, str]])
-        if requiredMatchers:  # omit empty
-            v["requiredMatchers"] = requiredMatchers
-        remoteTimeout = self.remoteTimeout()
-        check_type("remoteTimeout", remoteTimeout, Optional[str])
-        if remoteTimeout:  # omit empty
-            v["remoteTimeout"] = remoteTimeout
-        readRecent = self.readRecent()
-        check_type("readRecent", readRecent, Optional[bool])
-        if readRecent:  # omit empty
-            v["readRecent"] = readRecent
-        basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
-        if basicAuth is not None:  # omit empty
-            v["basicAuth"] = basicAuth
-        bearerToken = self.bearerToken()
-        check_type("bearerToken", bearerToken, Optional[str])
-        if bearerToken:  # omit empty
-            v["bearerToken"] = bearerToken
-        bearerTokenFile = self.bearerTokenFile()
-        check_type("bearerTokenFile", bearerTokenFile, Optional[str])
-        if bearerTokenFile:  # omit empty
-            v["bearerTokenFile"] = bearerTokenFile
-        tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
-        if tlsConfig is not None:  # omit empty
-            v["tlsConfig"] = tlsConfig
-        proxyUrl = self.proxyUrl()
-        check_type("proxyUrl", proxyUrl, Optional[str])
-        if proxyUrl:  # omit empty
-            v["proxyUrl"] = proxyUrl
+        required_matchers = self.required_matchers()
+        check_type("required_matchers", required_matchers, Optional[Dict[str, str]])
+        if required_matchers:  # omit empty
+            v["requiredMatchers"] = required_matchers
+        remote_timeout = self.remote_timeout()
+        check_type("remote_timeout", remote_timeout, Optional[str])
+        if remote_timeout:  # omit empty
+            v["remoteTimeout"] = remote_timeout
+        read_recent = self.read_recent()
+        check_type("read_recent", read_recent, Optional[bool])
+        if read_recent:  # omit empty
+            v["readRecent"] = read_recent
+        basic_auth = self.basic_auth()
+        check_type("basic_auth", basic_auth, Optional["BasicAuth"])
+        if basic_auth is not None:  # omit empty
+            v["basicAuth"] = basic_auth
+        bearer_token = self.bearer_token()
+        check_type("bearer_token", bearer_token, Optional[str])
+        if bearer_token:  # omit empty
+            v["bearerToken"] = bearer_token
+        bearer_token_file = self.bearer_token_file()
+        check_type("bearer_token_file", bearer_token_file, Optional[str])
+        if bearer_token_file:  # omit empty
+            v["bearerTokenFile"] = bearer_token_file
+        tls_config = self.tls_config()
+        check_type("tls_config", tls_config, Optional["TLSConfig"])
+        if tls_config is not None:  # omit empty
+            v["tlsConfig"] = tls_config
+        proxy_url = self.proxy_url()
+        check_type("proxy_url", proxy_url, Optional[str])
+        if proxy_url:  # omit empty
+            v["proxyUrl"] = proxy_url
         return v
 
     def url(self) -> str:
@@ -1817,55 +1827,55 @@ class RemoteReadSpec(types.Object):
         """
         return self.__url
 
-    def requiredMatchers(self) -> Optional[Dict[str, str]]:
+    def required_matchers(self) -> Optional[Dict[str, str]]:
         """
         An optional list of equality matchers which have to be present
         in a selector to query the remote read endpoint.
         """
-        return self.__requiredMatchers
+        return self.__required_matchers
 
-    def remoteTimeout(self) -> Optional[str]:
+    def remote_timeout(self) -> Optional[str]:
         """
         Timeout for requests to the remote read endpoint.
         """
-        return self.__remoteTimeout
+        return self.__remote_timeout
 
-    def readRecent(self) -> Optional[bool]:
+    def read_recent(self) -> Optional[bool]:
         """
         Whether reads should be made for queries for time ranges that
         the local storage should have complete data for.
         """
-        return self.__readRecent
+        return self.__read_recent
 
-    def basicAuth(self) -> Optional["BasicAuth"]:
+    def basic_auth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth for the URL.
         """
-        return self.__basicAuth
+        return self.__basic_auth
 
-    def bearerToken(self) -> Optional[str]:
+    def bearer_token(self) -> Optional[str]:
         """
         bearer token for remote read.
         """
-        return self.__bearerToken
+        return self.__bearer_token
 
-    def bearerTokenFile(self) -> Optional[str]:
+    def bearer_token_file(self) -> Optional[str]:
         """
         File to read bearer token for remote read.
         """
-        return self.__bearerTokenFile
+        return self.__bearer_token_file
 
-    def tlsConfig(self) -> Optional["TLSConfig"]:
+    def tls_config(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for remote read.
         """
-        return self.__tlsConfig
+        return self.__tls_config
 
-    def proxyUrl(self) -> Optional[str]:
+    def proxy_url(self) -> Optional[str]:
         """
         Optional ProxyURL
         """
-        return self.__proxyUrl
+        return self.__proxy_url
 
 
 class QueueConfig(types.Object):
@@ -1879,23 +1889,23 @@ class QueueConfig(types.Object):
     def __init__(
         self,
         capacity: int = None,
-        minShards: int = None,
-        maxShards: int = None,
-        maxSamplesPerSend: int = None,
-        batchSendDeadline: str = None,
-        maxRetries: int = None,
-        minBackoff: str = None,
-        maxBackoff: str = None,
+        min_shards: int = None,
+        max_shards: int = None,
+        max_samples_per_send: int = None,
+        batch_send_deadline: str = None,
+        max_retries: int = None,
+        min_backoff: str = None,
+        max_backoff: str = None,
     ):
         super().__init__()
         self.__capacity = capacity
-        self.__minShards = minShards
-        self.__maxShards = maxShards
-        self.__maxSamplesPerSend = maxSamplesPerSend
-        self.__batchSendDeadline = batchSendDeadline
-        self.__maxRetries = maxRetries
-        self.__minBackoff = minBackoff
-        self.__maxBackoff = maxBackoff
+        self.__min_shards = min_shards
+        self.__max_shards = max_shards
+        self.__max_samples_per_send = max_samples_per_send
+        self.__batch_send_deadline = batch_send_deadline
+        self.__max_retries = max_retries
+        self.__min_backoff = min_backoff
+        self.__max_backoff = max_backoff
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1904,34 +1914,34 @@ class QueueConfig(types.Object):
         check_type("capacity", capacity, Optional[int])
         if capacity:  # omit empty
             v["capacity"] = capacity
-        minShards = self.minShards()
-        check_type("minShards", minShards, Optional[int])
-        if minShards:  # omit empty
-            v["minShards"] = minShards
-        maxShards = self.maxShards()
-        check_type("maxShards", maxShards, Optional[int])
-        if maxShards:  # omit empty
-            v["maxShards"] = maxShards
-        maxSamplesPerSend = self.maxSamplesPerSend()
-        check_type("maxSamplesPerSend", maxSamplesPerSend, Optional[int])
-        if maxSamplesPerSend:  # omit empty
-            v["maxSamplesPerSend"] = maxSamplesPerSend
-        batchSendDeadline = self.batchSendDeadline()
-        check_type("batchSendDeadline", batchSendDeadline, Optional[str])
-        if batchSendDeadline:  # omit empty
-            v["batchSendDeadline"] = batchSendDeadline
-        maxRetries = self.maxRetries()
-        check_type("maxRetries", maxRetries, Optional[int])
-        if maxRetries:  # omit empty
-            v["maxRetries"] = maxRetries
-        minBackoff = self.minBackoff()
-        check_type("minBackoff", minBackoff, Optional[str])
-        if minBackoff:  # omit empty
-            v["minBackoff"] = minBackoff
-        maxBackoff = self.maxBackoff()
-        check_type("maxBackoff", maxBackoff, Optional[str])
-        if maxBackoff:  # omit empty
-            v["maxBackoff"] = maxBackoff
+        min_shards = self.min_shards()
+        check_type("min_shards", min_shards, Optional[int])
+        if min_shards:  # omit empty
+            v["minShards"] = min_shards
+        max_shards = self.max_shards()
+        check_type("max_shards", max_shards, Optional[int])
+        if max_shards:  # omit empty
+            v["maxShards"] = max_shards
+        max_samples_per_send = self.max_samples_per_send()
+        check_type("max_samples_per_send", max_samples_per_send, Optional[int])
+        if max_samples_per_send:  # omit empty
+            v["maxSamplesPerSend"] = max_samples_per_send
+        batch_send_deadline = self.batch_send_deadline()
+        check_type("batch_send_deadline", batch_send_deadline, Optional[str])
+        if batch_send_deadline:  # omit empty
+            v["batchSendDeadline"] = batch_send_deadline
+        max_retries = self.max_retries()
+        check_type("max_retries", max_retries, Optional[int])
+        if max_retries:  # omit empty
+            v["maxRetries"] = max_retries
+        min_backoff = self.min_backoff()
+        check_type("min_backoff", min_backoff, Optional[str])
+        if min_backoff:  # omit empty
+            v["minBackoff"] = min_backoff
+        max_backoff = self.max_backoff()
+        check_type("max_backoff", max_backoff, Optional[str])
+        if max_backoff:  # omit empty
+            v["maxBackoff"] = max_backoff
         return v
 
     def capacity(self) -> Optional[int]:
@@ -1940,47 +1950,47 @@ class QueueConfig(types.Object):
         """
         return self.__capacity
 
-    def minShards(self) -> Optional[int]:
+    def min_shards(self) -> Optional[int]:
         """
         MinShards is the minimum number of shards, i.e. amount of concurrency.
         """
-        return self.__minShards
+        return self.__min_shards
 
-    def maxShards(self) -> Optional[int]:
+    def max_shards(self) -> Optional[int]:
         """
         MaxShards is the maximum number of shards, i.e. amount of concurrency.
         """
-        return self.__maxShards
+        return self.__max_shards
 
-    def maxSamplesPerSend(self) -> Optional[int]:
+    def max_samples_per_send(self) -> Optional[int]:
         """
         MaxSamplesPerSend is the maximum number of samples per send.
         """
-        return self.__maxSamplesPerSend
+        return self.__max_samples_per_send
 
-    def batchSendDeadline(self) -> Optional[str]:
+    def batch_send_deadline(self) -> Optional[str]:
         """
         BatchSendDeadline is the maximum time a sample will wait in buffer.
         """
-        return self.__batchSendDeadline
+        return self.__batch_send_deadline
 
-    def maxRetries(self) -> Optional[int]:
+    def max_retries(self) -> Optional[int]:
         """
         MaxRetries is the maximum number of times to retry a batch on recoverable errors.
         """
-        return self.__maxRetries
+        return self.__max_retries
 
-    def minBackoff(self) -> Optional[str]:
+    def min_backoff(self) -> Optional[str]:
         """
         MinBackoff is the initial retry delay. Gets doubled for every retry.
         """
-        return self.__minBackoff
+        return self.__min_backoff
 
-    def maxBackoff(self) -> Optional[str]:
+    def max_backoff(self) -> Optional[str]:
         """
         MaxBackoff is the maximum retry delay.
         """
-        return self.__maxBackoff
+        return self.__max_backoff
 
 
 class RemoteWriteSpec(types.Object):
@@ -1993,27 +2003,27 @@ class RemoteWriteSpec(types.Object):
     def __init__(
         self,
         url: str = "",
-        remoteTimeout: str = None,
-        writeRelabelConfigs: List["RelabelConfig"] = None,
-        basicAuth: "BasicAuth" = None,
-        bearerToken: str = None,
-        bearerTokenFile: str = None,
-        tlsConfig: "TLSConfig" = None,
-        proxyUrl: str = None,
-        queueConfig: "QueueConfig" = None,
+        remote_timeout: str = None,
+        write_relabel_configs: List["RelabelConfig"] = None,
+        basic_auth: "BasicAuth" = None,
+        bearer_token: str = None,
+        bearer_token_file: str = None,
+        tls_config: "TLSConfig" = None,
+        proxy_url: str = None,
+        queue_config: "QueueConfig" = None,
     ):
         super().__init__()
         self.__url = url
-        self.__remoteTimeout = remoteTimeout
-        self.__writeRelabelConfigs = (
-            writeRelabelConfigs if writeRelabelConfigs is not None else []
+        self.__remote_timeout = remote_timeout
+        self.__write_relabel_configs = (
+            write_relabel_configs if write_relabel_configs is not None else []
         )
-        self.__basicAuth = basicAuth
-        self.__bearerToken = bearerToken
-        self.__bearerTokenFile = bearerTokenFile
-        self.__tlsConfig = tlsConfig
-        self.__proxyUrl = proxyUrl
-        self.__queueConfig = queueConfig
+        self.__basic_auth = basic_auth
+        self.__bearer_token = bearer_token
+        self.__bearer_token_file = bearer_token_file
+        self.__tls_config = tls_config
+        self.__proxy_url = proxy_url
+        self.__queue_config = queue_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2021,40 +2031,42 @@ class RemoteWriteSpec(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        remoteTimeout = self.remoteTimeout()
-        check_type("remoteTimeout", remoteTimeout, Optional[str])
-        if remoteTimeout:  # omit empty
-            v["remoteTimeout"] = remoteTimeout
-        writeRelabelConfigs = self.writeRelabelConfigs()
+        remote_timeout = self.remote_timeout()
+        check_type("remote_timeout", remote_timeout, Optional[str])
+        if remote_timeout:  # omit empty
+            v["remoteTimeout"] = remote_timeout
+        write_relabel_configs = self.write_relabel_configs()
         check_type(
-            "writeRelabelConfigs", writeRelabelConfigs, Optional[List["RelabelConfig"]]
+            "write_relabel_configs",
+            write_relabel_configs,
+            Optional[List["RelabelConfig"]],
         )
-        if writeRelabelConfigs:  # omit empty
-            v["writeRelabelConfigs"] = writeRelabelConfigs
-        basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional["BasicAuth"])
-        if basicAuth is not None:  # omit empty
-            v["basicAuth"] = basicAuth
-        bearerToken = self.bearerToken()
-        check_type("bearerToken", bearerToken, Optional[str])
-        if bearerToken:  # omit empty
-            v["bearerToken"] = bearerToken
-        bearerTokenFile = self.bearerTokenFile()
-        check_type("bearerTokenFile", bearerTokenFile, Optional[str])
-        if bearerTokenFile:  # omit empty
-            v["bearerTokenFile"] = bearerTokenFile
-        tlsConfig = self.tlsConfig()
-        check_type("tlsConfig", tlsConfig, Optional["TLSConfig"])
-        if tlsConfig is not None:  # omit empty
-            v["tlsConfig"] = tlsConfig
-        proxyUrl = self.proxyUrl()
-        check_type("proxyUrl", proxyUrl, Optional[str])
-        if proxyUrl:  # omit empty
-            v["proxyUrl"] = proxyUrl
-        queueConfig = self.queueConfig()
-        check_type("queueConfig", queueConfig, Optional["QueueConfig"])
-        if queueConfig is not None:  # omit empty
-            v["queueConfig"] = queueConfig
+        if write_relabel_configs:  # omit empty
+            v["writeRelabelConfigs"] = write_relabel_configs
+        basic_auth = self.basic_auth()
+        check_type("basic_auth", basic_auth, Optional["BasicAuth"])
+        if basic_auth is not None:  # omit empty
+            v["basicAuth"] = basic_auth
+        bearer_token = self.bearer_token()
+        check_type("bearer_token", bearer_token, Optional[str])
+        if bearer_token:  # omit empty
+            v["bearerToken"] = bearer_token
+        bearer_token_file = self.bearer_token_file()
+        check_type("bearer_token_file", bearer_token_file, Optional[str])
+        if bearer_token_file:  # omit empty
+            v["bearerTokenFile"] = bearer_token_file
+        tls_config = self.tls_config()
+        check_type("tls_config", tls_config, Optional["TLSConfig"])
+        if tls_config is not None:  # omit empty
+            v["tlsConfig"] = tls_config
+        proxy_url = self.proxy_url()
+        check_type("proxy_url", proxy_url, Optional[str])
+        if proxy_url:  # omit empty
+            v["proxyUrl"] = proxy_url
+        queue_config = self.queue_config()
+        check_type("queue_config", queue_config, Optional["QueueConfig"])
+        if queue_config is not None:  # omit empty
+            v["queueConfig"] = queue_config
         return v
 
     def url(self) -> str:
@@ -2063,53 +2075,53 @@ class RemoteWriteSpec(types.Object):
         """
         return self.__url
 
-    def remoteTimeout(self) -> Optional[str]:
+    def remote_timeout(self) -> Optional[str]:
         """
         Timeout for requests to the remote write endpoint.
         """
-        return self.__remoteTimeout
+        return self.__remote_timeout
 
-    def writeRelabelConfigs(self) -> Optional[List["RelabelConfig"]]:
+    def write_relabel_configs(self) -> Optional[List["RelabelConfig"]]:
         """
         The list of remote write relabel configurations.
         """
-        return self.__writeRelabelConfigs
+        return self.__write_relabel_configs
 
-    def basicAuth(self) -> Optional["BasicAuth"]:
+    def basic_auth(self) -> Optional["BasicAuth"]:
         """
         BasicAuth for the URL.
         """
-        return self.__basicAuth
+        return self.__basic_auth
 
-    def bearerToken(self) -> Optional[str]:
+    def bearer_token(self) -> Optional[str]:
         """
         File to read bearer token for remote write.
         """
-        return self.__bearerToken
+        return self.__bearer_token
 
-    def bearerTokenFile(self) -> Optional[str]:
+    def bearer_token_file(self) -> Optional[str]:
         """
         File to read bearer token for remote write.
         """
-        return self.__bearerTokenFile
+        return self.__bearer_token_file
 
-    def tlsConfig(self) -> Optional["TLSConfig"]:
+    def tls_config(self) -> Optional["TLSConfig"]:
         """
         TLS Config to use for remote write.
         """
-        return self.__tlsConfig
+        return self.__tls_config
 
-    def proxyUrl(self) -> Optional[str]:
+    def proxy_url(self) -> Optional[str]:
         """
         Optional ProxyURL
         """
-        return self.__proxyUrl
+        return self.__proxy_url
 
-    def queueConfig(self) -> Optional["QueueConfig"]:
+    def queue_config(self) -> Optional["QueueConfig"]:
         """
         QueueConfig allows tuning of the remote write queue parameters.
         """
-        return self.__queueConfig
+        return self.__queue_config
 
 
 class RulesAlert(types.Object):
@@ -2121,50 +2133,50 @@ class RulesAlert(types.Object):
     @typechecked
     def __init__(
         self,
-        forOutageTolerance: str = None,
-        forGracePeriod: str = None,
-        resendDelay: str = None,
+        for_outage_tolerance: str = None,
+        for_grace_period: str = None,
+        resend_delay: str = None,
     ):
         super().__init__()
-        self.__forOutageTolerance = forOutageTolerance
-        self.__forGracePeriod = forGracePeriod
-        self.__resendDelay = resendDelay
+        self.__for_outage_tolerance = for_outage_tolerance
+        self.__for_grace_period = for_grace_period
+        self.__resend_delay = resend_delay
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        forOutageTolerance = self.forOutageTolerance()
-        check_type("forOutageTolerance", forOutageTolerance, Optional[str])
-        if forOutageTolerance:  # omit empty
-            v["forOutageTolerance"] = forOutageTolerance
-        forGracePeriod = self.forGracePeriod()
-        check_type("forGracePeriod", forGracePeriod, Optional[str])
-        if forGracePeriod:  # omit empty
-            v["forGracePeriod"] = forGracePeriod
-        resendDelay = self.resendDelay()
-        check_type("resendDelay", resendDelay, Optional[str])
-        if resendDelay:  # omit empty
-            v["resendDelay"] = resendDelay
+        for_outage_tolerance = self.for_outage_tolerance()
+        check_type("for_outage_tolerance", for_outage_tolerance, Optional[str])
+        if for_outage_tolerance:  # omit empty
+            v["forOutageTolerance"] = for_outage_tolerance
+        for_grace_period = self.for_grace_period()
+        check_type("for_grace_period", for_grace_period, Optional[str])
+        if for_grace_period:  # omit empty
+            v["forGracePeriod"] = for_grace_period
+        resend_delay = self.resend_delay()
+        check_type("resend_delay", resend_delay, Optional[str])
+        if resend_delay:  # omit empty
+            v["resendDelay"] = resend_delay
         return v
 
-    def forOutageTolerance(self) -> Optional[str]:
+    def for_outage_tolerance(self) -> Optional[str]:
         """
         Max time to tolerate prometheus outage for restoring 'for' state of alert.
         """
-        return self.__forOutageTolerance
+        return self.__for_outage_tolerance
 
-    def forGracePeriod(self) -> Optional[str]:
+    def for_grace_period(self) -> Optional[str]:
         """
         Minimum duration between alert and restored 'for' state.
         This is maintained only for alerts with configured 'for' time greater than grace period.
         """
-        return self.__forGracePeriod
+        return self.__for_grace_period
 
-    def resendDelay(self) -> Optional[str]:
+    def resend_delay(self) -> Optional[str]:
         """
         Minimum amount of time to wait before resending an alert to Alertmanager.
         """
-        return self.__resendDelay
+        return self.__resend_delay
 
 
 class Rules(types.Object):
@@ -2203,22 +2215,22 @@ class ThanosSpec(types.Object):
         version: str = None,
         tag: str = None,
         sha: str = None,
-        baseImage: str = None,
+        base_image: str = None,
         resources: "k8sv1.ResourceRequirements" = None,
-        objectStorageConfig: "k8sv1.SecretKeySelector" = None,
-        listenLocal: bool = None,
+        object_storage_config: "k8sv1.SecretKeySelector" = None,
+        listen_local: bool = None,
     ):
         super().__init__()
         self.__image = image
         self.__version = version
         self.__tag = tag
         self.__sha = sha
-        self.__baseImage = baseImage
+        self.__base_image = base_image
         self.__resources = (
             resources if resources is not None else k8sv1.ResourceRequirements()
         )
-        self.__objectStorageConfig = objectStorageConfig
-        self.__listenLocal = listenLocal
+        self.__object_storage_config = object_storage_config
+        self.__listen_local = listen_local
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2239,25 +2251,25 @@ class ThanosSpec(types.Object):
         check_type("sha", sha, Optional[str])
         if sha is not None:  # omit empty
             v["sha"] = sha
-        baseImage = self.baseImage()
-        check_type("baseImage", baseImage, Optional[str])
-        if baseImage is not None:  # omit empty
-            v["baseImage"] = baseImage
+        base_image = self.base_image()
+        check_type("base_image", base_image, Optional[str])
+        if base_image is not None:  # omit empty
+            v["baseImage"] = base_image
         resources = self.resources()
         check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
-        objectStorageConfig = self.objectStorageConfig()
+        object_storage_config = self.object_storage_config()
         check_type(
-            "objectStorageConfig",
-            objectStorageConfig,
+            "object_storage_config",
+            object_storage_config,
             Optional["k8sv1.SecretKeySelector"],
         )
-        if objectStorageConfig is not None:  # omit empty
-            v["objectStorageConfig"] = objectStorageConfig
-        listenLocal = self.listenLocal()
-        check_type("listenLocal", listenLocal, Optional[bool])
-        if listenLocal:  # omit empty
-            v["listenLocal"] = listenLocal
+        if object_storage_config is not None:  # omit empty
+            v["objectStorageConfig"] = object_storage_config
+        listen_local = self.listen_local()
+        check_type("listen_local", listen_local, Optional[bool])
+        if listen_local:  # omit empty
+            v["listenLocal"] = listen_local
         return v
 
     def image(self) -> Optional[str]:
@@ -2290,11 +2302,11 @@ class ThanosSpec(types.Object):
         """
         return self.__sha
 
-    def baseImage(self) -> Optional[str]:
+    def base_image(self) -> Optional[str]:
         """
         Thanos base image if other than default.
         """
-        return self.__baseImage
+        return self.__base_image
 
     def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
@@ -2303,18 +2315,18 @@ class ThanosSpec(types.Object):
         """
         return self.__resources
 
-    def objectStorageConfig(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def object_storage_config(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         ObjectStorageConfig configures object storage in Thanos.
         """
-        return self.__objectStorageConfig
+        return self.__object_storage_config
 
-    def listenLocal(self) -> Optional[bool]:
+    def listen_local(self) -> Optional[bool]:
         """
         ListenLocal makes the Thanos sidecar listen on loopback, so that it
         does not bind against the Pod IP.
         """
-        return self.__listenLocal
+        return self.__listen_local
 
 
 class PrometheusSpec(types.Object):
@@ -2327,170 +2339,172 @@ class PrometheusSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        podMetadata: "metav1.ObjectMeta" = None,
-        serviceMonitorSelector: "metav1.LabelSelector" = None,
-        serviceMonitorNamespaceSelector: "metav1.LabelSelector" = None,
-        podMonitorSelector: "metav1.LabelSelector" = None,
-        podMonitorNamespaceSelector: "metav1.LabelSelector" = None,
+        pod_metadata: "metav1.ObjectMeta" = None,
+        service_monitor_selector: "metav1.LabelSelector" = None,
+        service_monitor_namespace_selector: "metav1.LabelSelector" = None,
+        pod_monitor_selector: "metav1.LabelSelector" = None,
+        pod_monitor_namespace_selector: "metav1.LabelSelector" = None,
         version: str = None,
         tag: str = None,
         sha: str = None,
         paused: bool = None,
         image: str = None,
-        baseImage: str = None,
-        imagePullSecrets: List["k8sv1.LocalObjectReference"] = None,
+        base_image: str = None,
+        image_pull_secrets: List["k8sv1.LocalObjectReference"] = None,
         replicas: int = None,
-        replicaExternalLabelName: str = None,
-        prometheusExternalLabelName: str = None,
+        replica_external_label_name: str = None,
+        prometheus_external_label_name: str = None,
         retention: str = None,
-        retentionSize: str = None,
-        walCompression: bool = None,
-        logLevel: str = None,
-        logFormat: str = None,
-        scrapeInterval: str = None,
-        evaluationInterval: str = None,
+        retention_size: str = None,
+        wal_compression: bool = None,
+        log_level: str = None,
+        log_format: str = None,
+        scrape_interval: str = None,
+        evaluation_interval: str = None,
         rules: "Rules" = None,
-        externalLabels: Dict[str, str] = None,
-        enableAdminAPI: bool = None,
-        externalUrl: str = None,
-        routePrefix: str = None,
+        external_labels: Dict[str, str] = None,
+        enable_admin_api: bool = None,
+        external_url: str = None,
+        route_prefix: str = None,
         query: "QuerySpec" = None,
         storage: "StorageSpec" = None,
         volumes: List["k8sv1.Volume"] = None,
-        ruleSelector: "metav1.LabelSelector" = None,
-        ruleNamespaceSelector: "metav1.LabelSelector" = None,
+        rule_selector: "metav1.LabelSelector" = None,
+        rule_namespace_selector: "metav1.LabelSelector" = None,
         alerting: "AlertingSpec" = None,
         resources: "k8sv1.ResourceRequirements" = None,
-        nodeSelector: Dict[str, str] = None,
-        serviceAccountName: str = None,
+        node_selector: Dict[str, str] = None,
+        service_account_name: str = None,
         secrets: List[str] = None,
-        configMaps: List[str] = None,
+        config_maps: List[str] = None,
         affinity: "k8sv1.Affinity" = None,
         tolerations: List["k8sv1.Toleration"] = None,
-        remoteWrite: List["RemoteWriteSpec"] = None,
-        remoteRead: List["RemoteReadSpec"] = None,
-        securityContext: "k8sv1.PodSecurityContext" = None,
-        listenLocal: bool = None,
+        remote_write: List["RemoteWriteSpec"] = None,
+        remote_read: List["RemoteReadSpec"] = None,
+        security_context: "k8sv1.PodSecurityContext" = None,
+        listen_local: bool = None,
         containers: List["k8sv1.Container"] = None,
-        initContainers: List["k8sv1.Container"] = None,
-        additionalScrapeConfigs: "k8sv1.SecretKeySelector" = None,
-        additionalAlertRelabelConfigs: "k8sv1.SecretKeySelector" = None,
-        additionalAlertManagerConfigs: "k8sv1.SecretKeySelector" = None,
-        apiserverConfig: "APIServerConfig" = None,
+        init_containers: List["k8sv1.Container"] = None,
+        additional_scrape_configs: "k8sv1.SecretKeySelector" = None,
+        additional_alert_relabel_configs: "k8sv1.SecretKeySelector" = None,
+        additional_alert_manager_configs: "k8sv1.SecretKeySelector" = None,
+        apiserver_config: "APIServerConfig" = None,
         thanos: "ThanosSpec" = None,
-        priorityClassName: str = None,
-        portName: str = None,
-        arbitraryFSAccessThroughSMs: "ArbitraryFSAccessThroughSMsConfig" = None,
-        overrideHonorLabels: bool = None,
-        overrideHonorTimestamps: bool = None,
-        ignoreNamespaceSelectors: bool = None,
-        enforcedNamespaceLabel: str = None,
+        priority_class_name: str = None,
+        port_name: str = None,
+        arbitrary_fs_access_through_sms: "ArbitraryFSAccessThroughSMsConfig" = None,
+        override_honor_labels: bool = None,
+        override_honor_timestamps: bool = None,
+        ignore_namespace_selectors: bool = None,
+        enforced_namespace_label: str = None,
     ):
         super().__init__()
-        self.__podMetadata = podMetadata
-        self.__serviceMonitorSelector = serviceMonitorSelector
-        self.__serviceMonitorNamespaceSelector = serviceMonitorNamespaceSelector
-        self.__podMonitorSelector = podMonitorSelector
-        self.__podMonitorNamespaceSelector = podMonitorNamespaceSelector
+        self.__pod_metadata = pod_metadata
+        self.__service_monitor_selector = service_monitor_selector
+        self.__service_monitor_namespace_selector = service_monitor_namespace_selector
+        self.__pod_monitor_selector = pod_monitor_selector
+        self.__pod_monitor_namespace_selector = pod_monitor_namespace_selector
         self.__version = version
         self.__tag = tag
         self.__sha = sha
         self.__paused = paused
         self.__image = image
-        self.__baseImage = baseImage
-        self.__imagePullSecrets = (
-            imagePullSecrets if imagePullSecrets is not None else []
+        self.__base_image = base_image
+        self.__image_pull_secrets = (
+            image_pull_secrets if image_pull_secrets is not None else []
         )
         self.__replicas = replicas
-        self.__replicaExternalLabelName = replicaExternalLabelName
-        self.__prometheusExternalLabelName = prometheusExternalLabelName
+        self.__replica_external_label_name = replica_external_label_name
+        self.__prometheus_external_label_name = prometheus_external_label_name
         self.__retention = retention
-        self.__retentionSize = retentionSize
-        self.__walCompression = walCompression
-        self.__logLevel = logLevel
-        self.__logFormat = logFormat
-        self.__scrapeInterval = scrapeInterval
-        self.__evaluationInterval = evaluationInterval
+        self.__retention_size = retention_size
+        self.__wal_compression = wal_compression
+        self.__log_level = log_level
+        self.__log_format = log_format
+        self.__scrape_interval = scrape_interval
+        self.__evaluation_interval = evaluation_interval
         self.__rules = rules if rules is not None else Rules()
-        self.__externalLabels = externalLabels if externalLabels is not None else {}
-        self.__enableAdminAPI = enableAdminAPI
-        self.__externalUrl = externalUrl
-        self.__routePrefix = routePrefix
+        self.__external_labels = external_labels if external_labels is not None else {}
+        self.__enable_admin_api = enable_admin_api
+        self.__external_url = external_url
+        self.__route_prefix = route_prefix
         self.__query = query
         self.__storage = storage
         self.__volumes = volumes if volumes is not None else []
-        self.__ruleSelector = ruleSelector
-        self.__ruleNamespaceSelector = ruleNamespaceSelector
+        self.__rule_selector = rule_selector
+        self.__rule_namespace_selector = rule_namespace_selector
         self.__alerting = alerting
         self.__resources = (
             resources if resources is not None else k8sv1.ResourceRequirements()
         )
-        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
-        self.__serviceAccountName = serviceAccountName
+        self.__node_selector = node_selector if node_selector is not None else {}
+        self.__service_account_name = service_account_name
         self.__secrets = secrets if secrets is not None else []
-        self.__configMaps = configMaps if configMaps is not None else []
+        self.__config_maps = config_maps if config_maps is not None else []
         self.__affinity = affinity
         self.__tolerations = tolerations if tolerations is not None else []
-        self.__remoteWrite = remoteWrite if remoteWrite is not None else []
-        self.__remoteRead = remoteRead if remoteRead is not None else []
-        self.__securityContext = securityContext
-        self.__listenLocal = listenLocal
+        self.__remote_write = remote_write if remote_write is not None else []
+        self.__remote_read = remote_read if remote_read is not None else []
+        self.__security_context = security_context
+        self.__listen_local = listen_local
         self.__containers = containers if containers is not None else []
-        self.__initContainers = initContainers if initContainers is not None else []
-        self.__additionalScrapeConfigs = additionalScrapeConfigs
-        self.__additionalAlertRelabelConfigs = additionalAlertRelabelConfigs
-        self.__additionalAlertManagerConfigs = additionalAlertManagerConfigs
-        self.__apiserverConfig = apiserverConfig
+        self.__init_containers = init_containers if init_containers is not None else []
+        self.__additional_scrape_configs = additional_scrape_configs
+        self.__additional_alert_relabel_configs = additional_alert_relabel_configs
+        self.__additional_alert_manager_configs = additional_alert_manager_configs
+        self.__apiserver_config = apiserver_config
         self.__thanos = thanos
-        self.__priorityClassName = priorityClassName
-        self.__portName = portName
-        self.__arbitraryFSAccessThroughSMs = (
-            arbitraryFSAccessThroughSMs
-            if arbitraryFSAccessThroughSMs is not None
+        self.__priority_class_name = priority_class_name
+        self.__port_name = port_name
+        self.__arbitrary_fs_access_through_sms = (
+            arbitrary_fs_access_through_sms
+            if arbitrary_fs_access_through_sms is not None
             else ArbitraryFSAccessThroughSMsConfig()
         )
-        self.__overrideHonorLabels = overrideHonorLabels
-        self.__overrideHonorTimestamps = overrideHonorTimestamps
-        self.__ignoreNamespaceSelectors = ignoreNamespaceSelectors
-        self.__enforcedNamespaceLabel = enforcedNamespaceLabel
+        self.__override_honor_labels = override_honor_labels
+        self.__override_honor_timestamps = override_honor_timestamps
+        self.__ignore_namespace_selectors = ignore_namespace_selectors
+        self.__enforced_namespace_label = enforced_namespace_label
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podMetadata = self.podMetadata()
-        check_type("podMetadata", podMetadata, Optional["metav1.ObjectMeta"])
-        if podMetadata is not None:  # omit empty
-            v["podMetadata"] = podMetadata
-        serviceMonitorSelector = self.serviceMonitorSelector()
+        pod_metadata = self.pod_metadata()
+        check_type("pod_metadata", pod_metadata, Optional["metav1.ObjectMeta"])
+        if pod_metadata is not None:  # omit empty
+            v["podMetadata"] = pod_metadata
+        service_monitor_selector = self.service_monitor_selector()
         check_type(
-            "serviceMonitorSelector",
-            serviceMonitorSelector,
+            "service_monitor_selector",
+            service_monitor_selector,
             Optional["metav1.LabelSelector"],
         )
-        if serviceMonitorSelector is not None:  # omit empty
-            v["serviceMonitorSelector"] = serviceMonitorSelector
-        serviceMonitorNamespaceSelector = self.serviceMonitorNamespaceSelector()
+        if service_monitor_selector is not None:  # omit empty
+            v["serviceMonitorSelector"] = service_monitor_selector
+        service_monitor_namespace_selector = self.service_monitor_namespace_selector()
         check_type(
-            "serviceMonitorNamespaceSelector",
-            serviceMonitorNamespaceSelector,
+            "service_monitor_namespace_selector",
+            service_monitor_namespace_selector,
             Optional["metav1.LabelSelector"],
         )
-        if serviceMonitorNamespaceSelector is not None:  # omit empty
-            v["serviceMonitorNamespaceSelector"] = serviceMonitorNamespaceSelector
-        podMonitorSelector = self.podMonitorSelector()
+        if service_monitor_namespace_selector is not None:  # omit empty
+            v["serviceMonitorNamespaceSelector"] = service_monitor_namespace_selector
+        pod_monitor_selector = self.pod_monitor_selector()
         check_type(
-            "podMonitorSelector", podMonitorSelector, Optional["metav1.LabelSelector"]
-        )
-        if podMonitorSelector is not None:  # omit empty
-            v["podMonitorSelector"] = podMonitorSelector
-        podMonitorNamespaceSelector = self.podMonitorNamespaceSelector()
-        check_type(
-            "podMonitorNamespaceSelector",
-            podMonitorNamespaceSelector,
+            "pod_monitor_selector",
+            pod_monitor_selector,
             Optional["metav1.LabelSelector"],
         )
-        if podMonitorNamespaceSelector is not None:  # omit empty
-            v["podMonitorNamespaceSelector"] = podMonitorNamespaceSelector
+        if pod_monitor_selector is not None:  # omit empty
+            v["podMonitorSelector"] = pod_monitor_selector
+        pod_monitor_namespace_selector = self.pod_monitor_namespace_selector()
+        check_type(
+            "pod_monitor_namespace_selector",
+            pod_monitor_namespace_selector,
+            Optional["metav1.LabelSelector"],
+        )
+        if pod_monitor_namespace_selector is not None:  # omit empty
+            v["podMonitorNamespaceSelector"] = pod_monitor_namespace_selector
         version = self.version()
         check_type("version", version, Optional[str])
         if version:  # omit empty
@@ -2511,79 +2525,83 @@ class PrometheusSpec(types.Object):
         check_type("image", image, Optional[str])
         if image is not None:  # omit empty
             v["image"] = image
-        baseImage = self.baseImage()
-        check_type("baseImage", baseImage, Optional[str])
-        if baseImage:  # omit empty
-            v["baseImage"] = baseImage
-        imagePullSecrets = self.imagePullSecrets()
+        base_image = self.base_image()
+        check_type("base_image", base_image, Optional[str])
+        if base_image:  # omit empty
+            v["baseImage"] = base_image
+        image_pull_secrets = self.image_pull_secrets()
         check_type(
-            "imagePullSecrets",
-            imagePullSecrets,
+            "image_pull_secrets",
+            image_pull_secrets,
             Optional[List["k8sv1.LocalObjectReference"]],
         )
-        if imagePullSecrets:  # omit empty
-            v["imagePullSecrets"] = imagePullSecrets
+        if image_pull_secrets:  # omit empty
+            v["imagePullSecrets"] = image_pull_secrets
         replicas = self.replicas()
         check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
-        replicaExternalLabelName = self.replicaExternalLabelName()
-        check_type("replicaExternalLabelName", replicaExternalLabelName, Optional[str])
-        if replicaExternalLabelName is not None:  # omit empty
-            v["replicaExternalLabelName"] = replicaExternalLabelName
-        prometheusExternalLabelName = self.prometheusExternalLabelName()
+        replica_external_label_name = self.replica_external_label_name()
         check_type(
-            "prometheusExternalLabelName", prometheusExternalLabelName, Optional[str]
+            "replica_external_label_name", replica_external_label_name, Optional[str]
         )
-        if prometheusExternalLabelName is not None:  # omit empty
-            v["prometheusExternalLabelName"] = prometheusExternalLabelName
+        if replica_external_label_name is not None:  # omit empty
+            v["replicaExternalLabelName"] = replica_external_label_name
+        prometheus_external_label_name = self.prometheus_external_label_name()
+        check_type(
+            "prometheus_external_label_name",
+            prometheus_external_label_name,
+            Optional[str],
+        )
+        if prometheus_external_label_name is not None:  # omit empty
+            v["prometheusExternalLabelName"] = prometheus_external_label_name
         retention = self.retention()
         check_type("retention", retention, Optional[str])
         if retention:  # omit empty
             v["retention"] = retention
-        retentionSize = self.retentionSize()
-        check_type("retentionSize", retentionSize, Optional[str])
-        if retentionSize:  # omit empty
-            v["retentionSize"] = retentionSize
-        walCompression = self.walCompression()
-        check_type("walCompression", walCompression, Optional[bool])
-        if walCompression is not None:  # omit empty
-            v["walCompression"] = walCompression
-        logLevel = self.logLevel()
-        check_type("logLevel", logLevel, Optional[str])
-        if logLevel:  # omit empty
-            v["logLevel"] = logLevel
-        logFormat = self.logFormat()
-        check_type("logFormat", logFormat, Optional[str])
-        if logFormat:  # omit empty
-            v["logFormat"] = logFormat
-        scrapeInterval = self.scrapeInterval()
-        check_type("scrapeInterval", scrapeInterval, Optional[str])
-        if scrapeInterval:  # omit empty
-            v["scrapeInterval"] = scrapeInterval
-        evaluationInterval = self.evaluationInterval()
-        check_type("evaluationInterval", evaluationInterval, Optional[str])
-        if evaluationInterval:  # omit empty
-            v["evaluationInterval"] = evaluationInterval
+        retention_size = self.retention_size()
+        check_type("retention_size", retention_size, Optional[str])
+        if retention_size:  # omit empty
+            v["retentionSize"] = retention_size
+        wal_compression = self.wal_compression()
+        check_type("wal_compression", wal_compression, Optional[bool])
+        if wal_compression is not None:  # omit empty
+            v["walCompression"] = wal_compression
+        log_level = self.log_level()
+        check_type("log_level", log_level, Optional[str])
+        if log_level:  # omit empty
+            v["logLevel"] = log_level
+        log_format = self.log_format()
+        check_type("log_format", log_format, Optional[str])
+        if log_format:  # omit empty
+            v["logFormat"] = log_format
+        scrape_interval = self.scrape_interval()
+        check_type("scrape_interval", scrape_interval, Optional[str])
+        if scrape_interval:  # omit empty
+            v["scrapeInterval"] = scrape_interval
+        evaluation_interval = self.evaluation_interval()
+        check_type("evaluation_interval", evaluation_interval, Optional[str])
+        if evaluation_interval:  # omit empty
+            v["evaluationInterval"] = evaluation_interval
         rules = self.rules()
         check_type("rules", rules, Optional["Rules"])
         v["rules"] = rules
-        externalLabels = self.externalLabels()
-        check_type("externalLabels", externalLabels, Optional[Dict[str, str]])
-        if externalLabels:  # omit empty
-            v["externalLabels"] = externalLabels
-        enableAdminAPI = self.enableAdminAPI()
-        check_type("enableAdminAPI", enableAdminAPI, Optional[bool])
-        if enableAdminAPI:  # omit empty
-            v["enableAdminAPI"] = enableAdminAPI
-        externalUrl = self.externalUrl()
-        check_type("externalUrl", externalUrl, Optional[str])
-        if externalUrl:  # omit empty
-            v["externalUrl"] = externalUrl
-        routePrefix = self.routePrefix()
-        check_type("routePrefix", routePrefix, Optional[str])
-        if routePrefix:  # omit empty
-            v["routePrefix"] = routePrefix
+        external_labels = self.external_labels()
+        check_type("external_labels", external_labels, Optional[Dict[str, str]])
+        if external_labels:  # omit empty
+            v["externalLabels"] = external_labels
+        enable_admin_api = self.enable_admin_api()
+        check_type("enable_admin_api", enable_admin_api, Optional[bool])
+        if enable_admin_api:  # omit empty
+            v["enableAdminAPI"] = enable_admin_api
+        external_url = self.external_url()
+        check_type("external_url", external_url, Optional[str])
+        if external_url:  # omit empty
+            v["externalUrl"] = external_url
+        route_prefix = self.route_prefix()
+        check_type("route_prefix", route_prefix, Optional[str])
+        if route_prefix:  # omit empty
+            v["routePrefix"] = route_prefix
         query = self.query()
         check_type("query", query, Optional["QuerySpec"])
         if query is not None:  # omit empty
@@ -2596,18 +2614,18 @@ class PrometheusSpec(types.Object):
         check_type("volumes", volumes, Optional[List["k8sv1.Volume"]])
         if volumes:  # omit empty
             v["volumes"] = volumes
-        ruleSelector = self.ruleSelector()
-        check_type("ruleSelector", ruleSelector, Optional["metav1.LabelSelector"])
-        if ruleSelector is not None:  # omit empty
-            v["ruleSelector"] = ruleSelector
-        ruleNamespaceSelector = self.ruleNamespaceSelector()
+        rule_selector = self.rule_selector()
+        check_type("rule_selector", rule_selector, Optional["metav1.LabelSelector"])
+        if rule_selector is not None:  # omit empty
+            v["ruleSelector"] = rule_selector
+        rule_namespace_selector = self.rule_namespace_selector()
         check_type(
-            "ruleNamespaceSelector",
-            ruleNamespaceSelector,
+            "rule_namespace_selector",
+            rule_namespace_selector,
             Optional["metav1.LabelSelector"],
         )
-        if ruleNamespaceSelector is not None:  # omit empty
-            v["ruleNamespaceSelector"] = ruleNamespaceSelector
+        if rule_namespace_selector is not None:  # omit empty
+            v["ruleNamespaceSelector"] = rule_namespace_selector
         alerting = self.alerting()
         check_type("alerting", alerting, Optional["AlertingSpec"])
         if alerting is not None:  # omit empty
@@ -2615,22 +2633,22 @@ class PrometheusSpec(types.Object):
         resources = self.resources()
         check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
-        if nodeSelector:  # omit empty
-            v["nodeSelector"] = nodeSelector
-        serviceAccountName = self.serviceAccountName()
-        check_type("serviceAccountName", serviceAccountName, Optional[str])
-        if serviceAccountName:  # omit empty
-            v["serviceAccountName"] = serviceAccountName
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional[Dict[str, str]])
+        if node_selector:  # omit empty
+            v["nodeSelector"] = node_selector
+        service_account_name = self.service_account_name()
+        check_type("service_account_name", service_account_name, Optional[str])
+        if service_account_name:  # omit empty
+            v["serviceAccountName"] = service_account_name
         secrets = self.secrets()
         check_type("secrets", secrets, Optional[List[str]])
         if secrets:  # omit empty
             v["secrets"] = secrets
-        configMaps = self.configMaps()
-        check_type("configMaps", configMaps, Optional[List[str]])
-        if configMaps:  # omit empty
-            v["configMaps"] = configMaps
+        config_maps = self.config_maps()
+        check_type("config_maps", config_maps, Optional[List[str]])
+        if config_maps:  # omit empty
+            v["configMaps"] = config_maps
         affinity = self.affinity()
         check_type("affinity", affinity, Optional["k8sv1.Affinity"])
         if affinity is not None:  # omit empty
@@ -2639,130 +2657,136 @@ class PrometheusSpec(types.Object):
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
-        remoteWrite = self.remoteWrite()
-        check_type("remoteWrite", remoteWrite, Optional[List["RemoteWriteSpec"]])
-        if remoteWrite:  # omit empty
-            v["remoteWrite"] = remoteWrite
-        remoteRead = self.remoteRead()
-        check_type("remoteRead", remoteRead, Optional[List["RemoteReadSpec"]])
-        if remoteRead:  # omit empty
-            v["remoteRead"] = remoteRead
-        securityContext = self.securityContext()
+        remote_write = self.remote_write()
+        check_type("remote_write", remote_write, Optional[List["RemoteWriteSpec"]])
+        if remote_write:  # omit empty
+            v["remoteWrite"] = remote_write
+        remote_read = self.remote_read()
+        check_type("remote_read", remote_read, Optional[List["RemoteReadSpec"]])
+        if remote_read:  # omit empty
+            v["remoteRead"] = remote_read
+        security_context = self.security_context()
         check_type(
-            "securityContext", securityContext, Optional["k8sv1.PodSecurityContext"]
+            "security_context", security_context, Optional["k8sv1.PodSecurityContext"]
         )
-        if securityContext is not None:  # omit empty
-            v["securityContext"] = securityContext
-        listenLocal = self.listenLocal()
-        check_type("listenLocal", listenLocal, Optional[bool])
-        if listenLocal:  # omit empty
-            v["listenLocal"] = listenLocal
+        if security_context is not None:  # omit empty
+            v["securityContext"] = security_context
+        listen_local = self.listen_local()
+        check_type("listen_local", listen_local, Optional[bool])
+        if listen_local:  # omit empty
+            v["listenLocal"] = listen_local
         containers = self.containers()
         check_type("containers", containers, Optional[List["k8sv1.Container"]])
         if containers:  # omit empty
             v["containers"] = containers
-        initContainers = self.initContainers()
-        check_type("initContainers", initContainers, Optional[List["k8sv1.Container"]])
-        if initContainers:  # omit empty
-            v["initContainers"] = initContainers
-        additionalScrapeConfigs = self.additionalScrapeConfigs()
+        init_containers = self.init_containers()
         check_type(
-            "additionalScrapeConfigs",
-            additionalScrapeConfigs,
+            "init_containers", init_containers, Optional[List["k8sv1.Container"]]
+        )
+        if init_containers:  # omit empty
+            v["initContainers"] = init_containers
+        additional_scrape_configs = self.additional_scrape_configs()
+        check_type(
+            "additional_scrape_configs",
+            additional_scrape_configs,
             Optional["k8sv1.SecretKeySelector"],
         )
-        if additionalScrapeConfigs is not None:  # omit empty
-            v["additionalScrapeConfigs"] = additionalScrapeConfigs
-        additionalAlertRelabelConfigs = self.additionalAlertRelabelConfigs()
+        if additional_scrape_configs is not None:  # omit empty
+            v["additionalScrapeConfigs"] = additional_scrape_configs
+        additional_alert_relabel_configs = self.additional_alert_relabel_configs()
         check_type(
-            "additionalAlertRelabelConfigs",
-            additionalAlertRelabelConfigs,
+            "additional_alert_relabel_configs",
+            additional_alert_relabel_configs,
             Optional["k8sv1.SecretKeySelector"],
         )
-        if additionalAlertRelabelConfigs is not None:  # omit empty
-            v["additionalAlertRelabelConfigs"] = additionalAlertRelabelConfigs
-        additionalAlertManagerConfigs = self.additionalAlertManagerConfigs()
+        if additional_alert_relabel_configs is not None:  # omit empty
+            v["additionalAlertRelabelConfigs"] = additional_alert_relabel_configs
+        additional_alert_manager_configs = self.additional_alert_manager_configs()
         check_type(
-            "additionalAlertManagerConfigs",
-            additionalAlertManagerConfigs,
+            "additional_alert_manager_configs",
+            additional_alert_manager_configs,
             Optional["k8sv1.SecretKeySelector"],
         )
-        if additionalAlertManagerConfigs is not None:  # omit empty
-            v["additionalAlertManagerConfigs"] = additionalAlertManagerConfigs
-        apiserverConfig = self.apiserverConfig()
-        check_type("apiserverConfig", apiserverConfig, Optional["APIServerConfig"])
-        if apiserverConfig is not None:  # omit empty
-            v["apiserverConfig"] = apiserverConfig
+        if additional_alert_manager_configs is not None:  # omit empty
+            v["additionalAlertManagerConfigs"] = additional_alert_manager_configs
+        apiserver_config = self.apiserver_config()
+        check_type("apiserver_config", apiserver_config, Optional["APIServerConfig"])
+        if apiserver_config is not None:  # omit empty
+            v["apiserverConfig"] = apiserver_config
         thanos = self.thanos()
         check_type("thanos", thanos, Optional["ThanosSpec"])
         if thanos is not None:  # omit empty
             v["thanos"] = thanos
-        priorityClassName = self.priorityClassName()
-        check_type("priorityClassName", priorityClassName, Optional[str])
-        if priorityClassName:  # omit empty
-            v["priorityClassName"] = priorityClassName
-        portName = self.portName()
-        check_type("portName", portName, Optional[str])
-        if portName:  # omit empty
-            v["portName"] = portName
-        arbitraryFSAccessThroughSMs = self.arbitraryFSAccessThroughSMs()
+        priority_class_name = self.priority_class_name()
+        check_type("priority_class_name", priority_class_name, Optional[str])
+        if priority_class_name:  # omit empty
+            v["priorityClassName"] = priority_class_name
+        port_name = self.port_name()
+        check_type("port_name", port_name, Optional[str])
+        if port_name:  # omit empty
+            v["portName"] = port_name
+        arbitrary_fs_access_through_sms = self.arbitrary_fs_access_through_sms()
         check_type(
-            "arbitraryFSAccessThroughSMs",
-            arbitraryFSAccessThroughSMs,
+            "arbitrary_fs_access_through_sms",
+            arbitrary_fs_access_through_sms,
             Optional["ArbitraryFSAccessThroughSMsConfig"],
         )
-        v["arbitraryFSAccessThroughSMs"] = arbitraryFSAccessThroughSMs
-        overrideHonorLabels = self.overrideHonorLabels()
-        check_type("overrideHonorLabels", overrideHonorLabels, Optional[bool])
-        if overrideHonorLabels:  # omit empty
-            v["overrideHonorLabels"] = overrideHonorLabels
-        overrideHonorTimestamps = self.overrideHonorTimestamps()
-        check_type("overrideHonorTimestamps", overrideHonorTimestamps, Optional[bool])
-        if overrideHonorTimestamps:  # omit empty
-            v["overrideHonorTimestamps"] = overrideHonorTimestamps
-        ignoreNamespaceSelectors = self.ignoreNamespaceSelectors()
-        check_type("ignoreNamespaceSelectors", ignoreNamespaceSelectors, Optional[bool])
-        if ignoreNamespaceSelectors:  # omit empty
-            v["ignoreNamespaceSelectors"] = ignoreNamespaceSelectors
-        enforcedNamespaceLabel = self.enforcedNamespaceLabel()
-        check_type("enforcedNamespaceLabel", enforcedNamespaceLabel, Optional[str])
-        if enforcedNamespaceLabel:  # omit empty
-            v["enforcedNamespaceLabel"] = enforcedNamespaceLabel
+        v["arbitraryFSAccessThroughSMs"] = arbitrary_fs_access_through_sms
+        override_honor_labels = self.override_honor_labels()
+        check_type("override_honor_labels", override_honor_labels, Optional[bool])
+        if override_honor_labels:  # omit empty
+            v["overrideHonorLabels"] = override_honor_labels
+        override_honor_timestamps = self.override_honor_timestamps()
+        check_type(
+            "override_honor_timestamps", override_honor_timestamps, Optional[bool]
+        )
+        if override_honor_timestamps:  # omit empty
+            v["overrideHonorTimestamps"] = override_honor_timestamps
+        ignore_namespace_selectors = self.ignore_namespace_selectors()
+        check_type(
+            "ignore_namespace_selectors", ignore_namespace_selectors, Optional[bool]
+        )
+        if ignore_namespace_selectors:  # omit empty
+            v["ignoreNamespaceSelectors"] = ignore_namespace_selectors
+        enforced_namespace_label = self.enforced_namespace_label()
+        check_type("enforced_namespace_label", enforced_namespace_label, Optional[str])
+        if enforced_namespace_label:  # omit empty
+            v["enforcedNamespaceLabel"] = enforced_namespace_label
         return v
 
-    def podMetadata(self) -> Optional["metav1.ObjectMeta"]:
+    def pod_metadata(self) -> Optional["metav1.ObjectMeta"]:
         """
         Standard object’s metadata. More info:
         https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#metadata
         Metadata Labels and Annotations gets propagated to the prometheus pods.
         """
-        return self.__podMetadata
+        return self.__pod_metadata
 
-    def serviceMonitorSelector(self) -> Optional["metav1.LabelSelector"]:
+    def service_monitor_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         ServiceMonitors to be selected for target discovery.
         """
-        return self.__serviceMonitorSelector
+        return self.__service_monitor_selector
 
-    def serviceMonitorNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def service_monitor_namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         Namespaces to be selected for ServiceMonitor discovery. If nil, only
         check own namespace.
         """
-        return self.__serviceMonitorNamespaceSelector
+        return self.__service_monitor_namespace_selector
 
-    def podMonitorSelector(self) -> Optional["metav1.LabelSelector"]:
+    def pod_monitor_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         *Experimental* PodMonitors to be selected for target discovery.
         """
-        return self.__podMonitorSelector
+        return self.__pod_monitor_selector
 
-    def podMonitorNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def pod_monitor_namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         Namespaces to be selected for PodMonitor discovery. If nil, only
         check own namespace.
         """
-        return self.__podMonitorNamespaceSelector
+        return self.__pod_monitor_namespace_selector
 
     def version(self) -> Optional[str]:
         """
@@ -2801,19 +2825,19 @@ class PrometheusSpec(types.Object):
         """
         return self.__image
 
-    def baseImage(self) -> Optional[str]:
+    def base_image(self) -> Optional[str]:
         """
         Base image to use for a Prometheus deployment.
         """
-        return self.__baseImage
+        return self.__base_image
 
-    def imagePullSecrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
+    def image_pull_secrets(self) -> Optional[List["k8sv1.LocalObjectReference"]]:
         """
         An optional list of references to secrets in the same namespace
         to use for pulling prometheus and alertmanager images from registries
         see http://kubernetes.io/docs/user-guide/images#specifying-imagepullsecrets-on-a-pod
         """
-        return self.__imagePullSecrets
+        return self.__image_pull_secrets
 
     def replicas(self) -> Optional[int]:
         """
@@ -2821,21 +2845,21 @@ class PrometheusSpec(types.Object):
         """
         return self.__replicas
 
-    def replicaExternalLabelName(self) -> Optional[str]:
+    def replica_external_label_name(self) -> Optional[str]:
         """
         Name of Prometheus external label used to denote replica name.
         Defaults to the value of `prometheus_replica`. External label will
         _not_ be added when value is set to empty string (`""`).
         """
-        return self.__replicaExternalLabelName
+        return self.__replica_external_label_name
 
-    def prometheusExternalLabelName(self) -> Optional[str]:
+    def prometheus_external_label_name(self) -> Optional[str]:
         """
         Name of Prometheus external label used to denote Prometheus instance
         name. Defaults to the value of `prometheus`. External label will
         _not_ be added when value is set to empty string (`""`).
         """
-        return self.__prometheusExternalLabelName
+        return self.__prometheus_external_label_name
 
     def retention(self) -> Optional[str]:
         """
@@ -2844,42 +2868,42 @@ class PrometheusSpec(types.Object):
         """
         return self.__retention
 
-    def retentionSize(self) -> Optional[str]:
+    def retention_size(self) -> Optional[str]:
         """
         Maximum amount of disk space used by blocks.
         """
-        return self.__retentionSize
+        return self.__retention_size
 
-    def walCompression(self) -> Optional[bool]:
+    def wal_compression(self) -> Optional[bool]:
         """
         Enable compression of the write-ahead log using Snappy. This flag is
         only available in versions of Prometheus >= 2.11.0.
         """
-        return self.__walCompression
+        return self.__wal_compression
 
-    def logLevel(self) -> Optional[str]:
+    def log_level(self) -> Optional[str]:
         """
         Log level for Prometheus to be configured with.
         """
-        return self.__logLevel
+        return self.__log_level
 
-    def logFormat(self) -> Optional[str]:
+    def log_format(self) -> Optional[str]:
         """
         Log format for Prometheus to be configured with.
         """
-        return self.__logFormat
+        return self.__log_format
 
-    def scrapeInterval(self) -> Optional[str]:
+    def scrape_interval(self) -> Optional[str]:
         """
         Interval between consecutive scrapes.
         """
-        return self.__scrapeInterval
+        return self.__scrape_interval
 
-    def evaluationInterval(self) -> Optional[str]:
+    def evaluation_interval(self) -> Optional[str]:
         """
         Interval between consecutive evaluations.
         """
-        return self.__evaluationInterval
+        return self.__evaluation_interval
 
     def rules(self) -> Optional["Rules"]:
         """
@@ -2887,14 +2911,14 @@ class PrometheusSpec(types.Object):
         """
         return self.__rules
 
-    def externalLabels(self) -> Optional[Dict[str, str]]:
+    def external_labels(self) -> Optional[Dict[str, str]]:
         """
         The labels to add to any time series or alerts when communicating with
         external systems (federation, remote storage, Alertmanager).
         """
-        return self.__externalLabels
+        return self.__external_labels
 
-    def enableAdminAPI(self) -> Optional[bool]:
+    def enable_admin_api(self) -> Optional[bool]:
         """
         Enable access to prometheus web admin API. Defaults to the value of `false`.
         WARNING: Enabling the admin APIs enables mutating endpoints, to delete data,
@@ -2903,24 +2927,24 @@ class PrometheusSpec(types.Object):
         ensure only clients authorized to perform these actions can do so.
         For more information see https://prometheus.io/docs/prometheus/latest/querying/api/#tsdb-admin-apis
         """
-        return self.__enableAdminAPI
+        return self.__enable_admin_api
 
-    def externalUrl(self) -> Optional[str]:
+    def external_url(self) -> Optional[str]:
         """
         The external URL the Prometheus instances will be available under. This is
         necessary to generate correct URLs. This is necessary if Prometheus is not
         served from root of a DNS name.
         """
-        return self.__externalUrl
+        return self.__external_url
 
-    def routePrefix(self) -> Optional[str]:
+    def route_prefix(self) -> Optional[str]:
         """
         The route prefix Prometheus registers HTTP handlers for. This is useful,
         if using ExternalURL and a proxy is rewriting HTTP routes of a request,
         and the actual ExternalURL is still true, but the server serves requests
         under a different route prefix. For example for use with `kubectl proxy`.
         """
-        return self.__routePrefix
+        return self.__route_prefix
 
     def query(self) -> Optional["QuerySpec"]:
         """
@@ -2941,7 +2965,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__volumes
 
-    def ruleSelector(self) -> Optional["metav1.LabelSelector"]:
+    def rule_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         A selector to select which PrometheusRules to mount for loading alerting
         rules from. Until (excluding) Prometheus Operator v0.24.0 Prometheus
@@ -2949,14 +2973,14 @@ class PrometheusSpec(types.Object):
         resources selected by RuleSelector. Make sure it does not match any config
         maps that you do not want to be migrated.
         """
-        return self.__ruleSelector
+        return self.__rule_selector
 
-    def ruleNamespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def rule_namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         Namespaces to be selected for PrometheusRules discovery. If unspecified, only
         the same namespace as the Prometheus object is in is used.
         """
-        return self.__ruleNamespaceSelector
+        return self.__rule_namespace_selector
 
     def alerting(self) -> Optional["AlertingSpec"]:
         """
@@ -2970,18 +2994,18 @@ class PrometheusSpec(types.Object):
         """
         return self.__resources
 
-    def nodeSelector(self) -> Optional[Dict[str, str]]:
+    def node_selector(self) -> Optional[Dict[str, str]]:
         """
         Define which Nodes the Pods are scheduled on.
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
-    def serviceAccountName(self) -> Optional[str]:
+    def service_account_name(self) -> Optional[str]:
         """
         ServiceAccountName is the name of the ServiceAccount to use to run the
         Prometheus Pods.
         """
-        return self.__serviceAccountName
+        return self.__service_account_name
 
     def secrets(self) -> Optional[List[str]]:
         """
@@ -2991,13 +3015,13 @@ class PrometheusSpec(types.Object):
         """
         return self.__secrets
 
-    def configMaps(self) -> Optional[List[str]]:
+    def config_maps(self) -> Optional[List[str]]:
         """
         ConfigMaps is a list of ConfigMaps in the same namespace as the Prometheus
         object, which shall be mounted into the Prometheus Pods.
         The ConfigMaps are mounted into /etc/prometheus/configmaps/<configmap-name>.
         """
-        return self.__configMaps
+        return self.__config_maps
 
     def affinity(self) -> Optional["k8sv1.Affinity"]:
         """
@@ -3011,31 +3035,31 @@ class PrometheusSpec(types.Object):
         """
         return self.__tolerations
 
-    def remoteWrite(self) -> Optional[List["RemoteWriteSpec"]]:
+    def remote_write(self) -> Optional[List["RemoteWriteSpec"]]:
         """
         If specified, the remote_write spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
         """
-        return self.__remoteWrite
+        return self.__remote_write
 
-    def remoteRead(self) -> Optional[List["RemoteReadSpec"]]:
+    def remote_read(self) -> Optional[List["RemoteReadSpec"]]:
         """
         If specified, the remote_read spec. This is an experimental feature, it may change in any upcoming release in a breaking way.
         """
-        return self.__remoteRead
+        return self.__remote_read
 
-    def securityContext(self) -> Optional["k8sv1.PodSecurityContext"]:
+    def security_context(self) -> Optional["k8sv1.PodSecurityContext"]:
         """
         SecurityContext holds pod-level security attributes and common container settings.
         This defaults to the default PodSecurityContext.
         """
-        return self.__securityContext
+        return self.__security_context
 
-    def listenLocal(self) -> Optional[bool]:
+    def listen_local(self) -> Optional[bool]:
         """
         ListenLocal makes the Prometheus server listen on loopback, so that it
         does not bind against the Pod IP.
         """
-        return self.__listenLocal
+        return self.__listen_local
 
     def containers(self) -> Optional[List["k8sv1.Container"]]:
         """
@@ -3050,7 +3074,7 @@ class PrometheusSpec(types.Object):
         """
         return self.__containers
 
-    def initContainers(self) -> Optional[List["k8sv1.Container"]]:
+    def init_containers(self) -> Optional[List["k8sv1.Container"]]:
         """
         InitContainers allows adding initContainers to the pod definition. Those can be used to e.g.
         fetch secrets for injection into the Prometheus configuration from external sources. Any errors
@@ -3059,9 +3083,9 @@ class PrometheusSpec(types.Object):
         of what the maintainers will support and by doing so, you accept that this behaviour may break
         at any time without notice.
         """
-        return self.__initContainers
+        return self.__init_containers
 
-    def additionalScrapeConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def additional_scrape_configs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalScrapeConfigs allows specifying a key of a Secret containing
         additional Prometheus scrape configurations. Scrape configurations
@@ -3075,9 +3099,9 @@ class PrometheusSpec(types.Object):
         notes to ensure that no incompatible scrape configs are going to break
         Prometheus after the upgrade.
         """
-        return self.__additionalScrapeConfigs
+        return self.__additional_scrape_configs
 
-    def additionalAlertRelabelConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def additional_alert_relabel_configs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalAlertRelabelConfigs allows specifying a key of a Secret containing
         additional Prometheus alert relabel configurations. Alert relabel configurations
@@ -3091,9 +3115,9 @@ class PrometheusSpec(types.Object):
         notes to ensure that no incompatible alert relabel configs are going to break
         Prometheus after the upgrade.
         """
-        return self.__additionalAlertRelabelConfigs
+        return self.__additional_alert_relabel_configs
 
-    def additionalAlertManagerConfigs(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def additional_alert_manager_configs(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         AdditionalAlertManagerConfigs allows specifying a key of a Secret containing
         additional Prometheus AlertManager configurations. AlertManager configurations
@@ -3107,16 +3131,16 @@ class PrometheusSpec(types.Object):
         notes to ensure that no incompatible AlertManager configs are going to break
         Prometheus after the upgrade.
         """
-        return self.__additionalAlertManagerConfigs
+        return self.__additional_alert_manager_configs
 
-    def apiserverConfig(self) -> Optional["APIServerConfig"]:
+    def apiserver_config(self) -> Optional["APIServerConfig"]:
         """
         APIServerConfig allows specifying a host and auth methods to access apiserver.
         If left empty, Prometheus is assumed to run inside of the cluster
         and will discover API servers automatically and use the pod's CA certificate
         and bearer token file at /var/run/secrets/kubernetes.io/serviceaccount/.
         """
-        return self.__apiserverConfig
+        return self.__apiserver_config
 
     def thanos(self) -> Optional["ThanosSpec"]:
         """
@@ -3131,20 +3155,20 @@ class PrometheusSpec(types.Object):
         """
         return self.__thanos
 
-    def priorityClassName(self) -> Optional[str]:
+    def priority_class_name(self) -> Optional[str]:
         """
         Priority class assigned to the Pods
         """
-        return self.__priorityClassName
+        return self.__priority_class_name
 
-    def portName(self) -> Optional[str]:
+    def port_name(self) -> Optional[str]:
         """
         Port name used for the pods and governing service.
         This defaults to web
         """
-        return self.__portName
+        return self.__port_name
 
-    def arbitraryFSAccessThroughSMs(
+    def arbitrary_fs_access_through_sms(
         self
     ) -> Optional["ArbitraryFSAccessThroughSMsConfig"]:
         """
@@ -3152,36 +3176,36 @@ class PrometheusSpec(types.Object):
         based on a service monitor can access arbitrary files on the file system
         of the Prometheus container e.g. bearer token files.
         """
-        return self.__arbitraryFSAccessThroughSMs
+        return self.__arbitrary_fs_access_through_sms
 
-    def overrideHonorLabels(self) -> Optional[bool]:
+    def override_honor_labels(self) -> Optional[bool]:
         """
         OverrideHonorLabels if set to true overrides all user configured honor_labels.
         If HonorLabels is set in ServiceMonitor or PodMonitor to true, this overrides honor_labels to false.
         """
-        return self.__overrideHonorLabels
+        return self.__override_honor_labels
 
-    def overrideHonorTimestamps(self) -> Optional[bool]:
+    def override_honor_timestamps(self) -> Optional[bool]:
         """
         OverrideHonorTimestamps allows to globally enforce honoring timestamps in all scrape configs.
         """
-        return self.__overrideHonorTimestamps
+        return self.__override_honor_timestamps
 
-    def ignoreNamespaceSelectors(self) -> Optional[bool]:
+    def ignore_namespace_selectors(self) -> Optional[bool]:
         """
         IgnoreNamespaceSelectors if set to true will ignore NamespaceSelector settings from
         the podmonitor and servicemonitor configs, and they will only discover endpoints
         within their current namespace.  Defaults to false.
         """
-        return self.__ignoreNamespaceSelectors
+        return self.__ignore_namespace_selectors
 
-    def enforcedNamespaceLabel(self) -> Optional[str]:
+    def enforced_namespace_label(self) -> Optional[str]:
         """
         EnforcedNamespaceLabel enforces adding a namespace label of origin for each alert
         and metric that is user created. The label value will always be the namespace of the object that is
         being created.
         """
-        return self.__enforcedNamespaceLabel
+        return self.__enforced_namespace_label
 
 
 class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
@@ -3201,7 +3225,7 @@ class Prometheus(base.TypedObject, base.NamespacedMetadataObject):
         spec: "PrometheusSpec" = None,
     ):
         super().__init__(
-            apiVersion="monitoring.coreos.com/v1",
+            api_version="monitoring.coreos.com/v1",
             kind="Prometheus",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -3381,7 +3405,7 @@ class PrometheusRule(base.TypedObject, base.NamespacedMetadataObject):
         spec: "PrometheusRuleSpec" = None,
     ):
         super().__init__(
-            apiVersion="monitoring.coreos.com/v1",
+            api_version="monitoring.coreos.com/v1",
             kind="PrometheusRule",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -3414,74 +3438,78 @@ class ServiceMonitorSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        jobLabel: str = None,
-        targetLabels: List[str] = None,
-        podTargetLabels: List[str] = None,
+        job_label: str = None,
+        target_labels: List[str] = None,
+        pod_target_labels: List[str] = None,
         endpoints: List["Endpoint"] = None,
         selector: "metav1.LabelSelector" = None,
-        namespaceSelector: "NamespaceSelector" = None,
-        sampleLimit: int = None,
+        namespace_selector: "NamespaceSelector" = None,
+        sample_limit: int = None,
     ):
         super().__init__()
-        self.__jobLabel = jobLabel
-        self.__targetLabels = targetLabels if targetLabels is not None else []
-        self.__podTargetLabels = podTargetLabels if podTargetLabels is not None else []
+        self.__job_label = job_label
+        self.__target_labels = target_labels if target_labels is not None else []
+        self.__pod_target_labels = (
+            pod_target_labels if pod_target_labels is not None else []
+        )
         self.__endpoints = endpoints if endpoints is not None else []
         self.__selector = selector if selector is not None else metav1.LabelSelector()
-        self.__namespaceSelector = (
-            namespaceSelector if namespaceSelector is not None else NamespaceSelector()
+        self.__namespace_selector = (
+            namespace_selector
+            if namespace_selector is not None
+            else NamespaceSelector()
         )
-        self.__sampleLimit = sampleLimit
+        self.__sample_limit = sample_limit
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        jobLabel = self.jobLabel()
-        check_type("jobLabel", jobLabel, Optional[str])
-        if jobLabel:  # omit empty
-            v["jobLabel"] = jobLabel
-        targetLabels = self.targetLabels()
-        check_type("targetLabels", targetLabels, Optional[List[str]])
-        if targetLabels:  # omit empty
-            v["targetLabels"] = targetLabels
-        podTargetLabels = self.podTargetLabels()
-        check_type("podTargetLabels", podTargetLabels, Optional[List[str]])
-        if podTargetLabels:  # omit empty
-            v["podTargetLabels"] = podTargetLabels
+        job_label = self.job_label()
+        check_type("job_label", job_label, Optional[str])
+        if job_label:  # omit empty
+            v["jobLabel"] = job_label
+        target_labels = self.target_labels()
+        check_type("target_labels", target_labels, Optional[List[str]])
+        if target_labels:  # omit empty
+            v["targetLabels"] = target_labels
+        pod_target_labels = self.pod_target_labels()
+        check_type("pod_target_labels", pod_target_labels, Optional[List[str]])
+        if pod_target_labels:  # omit empty
+            v["podTargetLabels"] = pod_target_labels
         endpoints = self.endpoints()
         check_type("endpoints", endpoints, List["Endpoint"])
         v["endpoints"] = endpoints
         selector = self.selector()
         check_type("selector", selector, "metav1.LabelSelector")
         v["selector"] = selector
-        namespaceSelector = self.namespaceSelector()
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["NamespaceSelector"]
+            "namespace_selector", namespace_selector, Optional["NamespaceSelector"]
         )
-        v["namespaceSelector"] = namespaceSelector
-        sampleLimit = self.sampleLimit()
-        check_type("sampleLimit", sampleLimit, Optional[int])
-        if sampleLimit:  # omit empty
-            v["sampleLimit"] = sampleLimit
+        v["namespaceSelector"] = namespace_selector
+        sample_limit = self.sample_limit()
+        check_type("sample_limit", sample_limit, Optional[int])
+        if sample_limit:  # omit empty
+            v["sampleLimit"] = sample_limit
         return v
 
-    def jobLabel(self) -> Optional[str]:
+    def job_label(self) -> Optional[str]:
         """
         The label to use to retrieve the job name from.
         """
-        return self.__jobLabel
+        return self.__job_label
 
-    def targetLabels(self) -> Optional[List[str]]:
+    def target_labels(self) -> Optional[List[str]]:
         """
         TargetLabels transfers labels on the Kubernetes Service onto the target.
         """
-        return self.__targetLabels
+        return self.__target_labels
 
-    def podTargetLabels(self) -> Optional[List[str]]:
+    def pod_target_labels(self) -> Optional[List[str]]:
         """
         PodTargetLabels transfers labels on the Kubernetes Pod onto the target.
         """
-        return self.__podTargetLabels
+        return self.__pod_target_labels
 
     def endpoints(self) -> List["Endpoint"]:
         """
@@ -3495,17 +3523,17 @@ class ServiceMonitorSpec(types.Object):
         """
         return self.__selector
 
-    def namespaceSelector(self) -> Optional["NamespaceSelector"]:
+    def namespace_selector(self) -> Optional["NamespaceSelector"]:
         """
         Selector to select which namespaces the Endpoints objects are discovered from.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def sampleLimit(self) -> Optional[int]:
+    def sample_limit(self) -> Optional[int]:
         """
         SampleLimit defines per-scrape limit on number of scraped samples that will be accepted.
         """
-        return self.__sampleLimit
+        return self.__sample_limit
 
 
 class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
@@ -3525,7 +3553,7 @@ class ServiceMonitor(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ServiceMonitorSpec" = None,
     ):
         super().__init__(
-            apiVersion="monitoring.coreos.com/v1",
+            api_version="monitoring.coreos.com/v1",
             kind="ServiceMonitor",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

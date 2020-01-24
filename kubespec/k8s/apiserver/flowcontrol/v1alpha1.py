@@ -104,10 +104,12 @@ class NonResourcePolicyRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, verbs: List[str] = None, nonResourceURLs: List[str] = None):
+    def __init__(self, verbs: List[str] = None, non_resource_urls: List[str] = None):
         super().__init__()
         self.__verbs = verbs if verbs is not None else []
-        self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
+        self.__non_resource_urls = (
+            non_resource_urls if non_resource_urls is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -115,9 +117,9 @@ class NonResourcePolicyRule(types.Object):
         verbs = self.verbs()
         check_type("verbs", verbs, List[str])
         v["verbs"] = verbs
-        nonResourceURLs = self.nonResourceURLs()
-        check_type("nonResourceURLs", nonResourceURLs, List[str])
-        v["nonResourceURLs"] = nonResourceURLs
+        non_resource_urls = self.non_resource_urls()
+        check_type("non_resource_urls", non_resource_urls, List[str])
+        v["nonResourceURLs"] = non_resource_urls
         return v
 
     def verbs(self) -> List[str]:
@@ -129,7 +131,7 @@ class NonResourcePolicyRule(types.Object):
         """
         return self.__verbs
 
-    def nonResourceURLs(self) -> List[str]:
+    def non_resource_urls(self) -> List[str]:
         """
         `nonResourceURLs` is a set of url prefixes that a user should have access to and may not be empty.
         For example:
@@ -142,7 +144,7 @@ class NonResourcePolicyRule(types.Object):
         +listType=set
         Required.
         """
-        return self.__nonResourceURLs
+        return self.__non_resource_urls
 
 
 class ResourcePolicyRule(types.Object):
@@ -161,16 +163,16 @@ class ResourcePolicyRule(types.Object):
     def __init__(
         self,
         verbs: List[str] = None,
-        apiGroups: List[str] = None,
+        api_groups: List[str] = None,
         resources: List[str] = None,
-        clusterScope: bool = None,
+        cluster_scope: bool = None,
         namespaces: List[str] = None,
     ):
         super().__init__()
         self.__verbs = verbs if verbs is not None else []
-        self.__apiGroups = apiGroups if apiGroups is not None else []
+        self.__api_groups = api_groups if api_groups is not None else []
         self.__resources = resources if resources is not None else []
-        self.__clusterScope = clusterScope
+        self.__cluster_scope = cluster_scope
         self.__namespaces = namespaces if namespaces is not None else []
 
     @typechecked
@@ -179,16 +181,16 @@ class ResourcePolicyRule(types.Object):
         verbs = self.verbs()
         check_type("verbs", verbs, List[str])
         v["verbs"] = verbs
-        apiGroups = self.apiGroups()
-        check_type("apiGroups", apiGroups, List[str])
-        v["apiGroups"] = apiGroups
+        api_groups = self.api_groups()
+        check_type("api_groups", api_groups, List[str])
+        v["apiGroups"] = api_groups
         resources = self.resources()
         check_type("resources", resources, List[str])
         v["resources"] = resources
-        clusterScope = self.clusterScope()
-        check_type("clusterScope", clusterScope, Optional[bool])
-        if clusterScope:  # omit empty
-            v["clusterScope"] = clusterScope
+        cluster_scope = self.cluster_scope()
+        check_type("cluster_scope", cluster_scope, Optional[bool])
+        if cluster_scope:  # omit empty
+            v["clusterScope"] = cluster_scope
         namespaces = self.namespaces()
         check_type("namespaces", namespaces, List[str])
         v["namespaces"] = namespaces
@@ -203,14 +205,14 @@ class ResourcePolicyRule(types.Object):
         """
         return self.__verbs
 
-    def apiGroups(self) -> List[str]:
+    def api_groups(self) -> List[str]:
         """
         `apiGroups` is a list of matching API groups and may not be empty.
         "*" matches all API groups and, if present, must be the only entry.
         +listType=set
         Required.
         """
-        return self.__apiGroups
+        return self.__api_groups
 
     def resources(self) -> List[str]:
         """
@@ -223,7 +225,7 @@ class ResourcePolicyRule(types.Object):
         """
         return self.__resources
 
-    def clusterScope(self) -> Optional[bool]:
+    def cluster_scope(self) -> Optional[bool]:
         """
         `clusterScope` indicates whether to match requests that do not
         specify a namespace (which happens either because the resource
@@ -231,7 +233,7 @@ class ResourcePolicyRule(types.Object):
         If this field is omitted or false then the `namespaces` field
         must contain a non-empty list.
         """
-        return self.__clusterScope
+        return self.__cluster_scope
 
     def namespaces(self) -> List[str]:
         """
@@ -356,13 +358,13 @@ class Subject(types.Object):
         kind: SubjectKind = None,
         user: "UserSubject" = None,
         group: "GroupSubject" = None,
-        serviceAccount: "ServiceAccountSubject" = None,
+        service_account: "ServiceAccountSubject" = None,
     ):
         super().__init__()
         self.__kind = kind
         self.__user = user
         self.__group = group
-        self.__serviceAccount = serviceAccount
+        self.__service_account = service_account
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -378,10 +380,12 @@ class Subject(types.Object):
         check_type("group", group, Optional["GroupSubject"])
         if group is not None:  # omit empty
             v["group"] = group
-        serviceAccount = self.serviceAccount()
-        check_type("serviceAccount", serviceAccount, Optional["ServiceAccountSubject"])
-        if serviceAccount is not None:  # omit empty
-            v["serviceAccount"] = serviceAccount
+        service_account = self.service_account()
+        check_type(
+            "service_account", service_account, Optional["ServiceAccountSubject"]
+        )
+        if service_account is not None:  # omit empty
+            v["serviceAccount"] = service_account
         return v
 
     def kind(self) -> SubjectKind:
@@ -397,8 +401,8 @@ class Subject(types.Object):
     def group(self) -> Optional["GroupSubject"]:
         return self.__group
 
-    def serviceAccount(self) -> Optional["ServiceAccountSubject"]:
-        return self.__serviceAccount
+    def service_account(self) -> Optional["ServiceAccountSubject"]:
+        return self.__service_account
 
 
 class PolicyRulesWithSubjects(types.Object):
@@ -414,14 +418,14 @@ class PolicyRulesWithSubjects(types.Object):
     def __init__(
         self,
         subjects: List["Subject"] = None,
-        resourceRules: List["ResourcePolicyRule"] = None,
-        nonResourceRules: List["NonResourcePolicyRule"] = None,
+        resource_rules: List["ResourcePolicyRule"] = None,
+        non_resource_rules: List["NonResourcePolicyRule"] = None,
     ):
         super().__init__()
         self.__subjects = subjects if subjects is not None else []
-        self.__resourceRules = resourceRules if resourceRules is not None else []
-        self.__nonResourceRules = (
-            nonResourceRules if nonResourceRules is not None else []
+        self.__resource_rules = resource_rules if resource_rules is not None else []
+        self.__non_resource_rules = (
+            non_resource_rules if non_resource_rules is not None else []
         )
 
     @typechecked
@@ -430,18 +434,20 @@ class PolicyRulesWithSubjects(types.Object):
         subjects = self.subjects()
         check_type("subjects", subjects, List["Subject"])
         v["subjects"] = subjects
-        resourceRules = self.resourceRules()
-        check_type("resourceRules", resourceRules, Optional[List["ResourcePolicyRule"]])
-        if resourceRules:  # omit empty
-            v["resourceRules"] = resourceRules
-        nonResourceRules = self.nonResourceRules()
+        resource_rules = self.resource_rules()
         check_type(
-            "nonResourceRules",
-            nonResourceRules,
+            "resource_rules", resource_rules, Optional[List["ResourcePolicyRule"]]
+        )
+        if resource_rules:  # omit empty
+            v["resourceRules"] = resource_rules
+        non_resource_rules = self.non_resource_rules()
+        check_type(
+            "non_resource_rules",
+            non_resource_rules,
             Optional[List["NonResourcePolicyRule"]],
         )
-        if nonResourceRules:  # omit empty
-            v["nonResourceRules"] = nonResourceRules
+        if non_resource_rules:  # omit empty
+            v["nonResourceRules"] = non_resource_rules
         return v
 
     def subjects(self) -> List["Subject"]:
@@ -454,22 +460,22 @@ class PolicyRulesWithSubjects(types.Object):
         """
         return self.__subjects
 
-    def resourceRules(self) -> Optional[List["ResourcePolicyRule"]]:
+    def resource_rules(self) -> Optional[List["ResourcePolicyRule"]]:
         """
         `resourceRules` is a slice of ResourcePolicyRules that identify matching requests according to their verb and the
         target resource.
         At least one of `resourceRules` and `nonResourceRules` has to be non-empty.
         +listType=set
         """
-        return self.__resourceRules
+        return self.__resource_rules
 
-    def nonResourceRules(self) -> Optional[List["NonResourcePolicyRule"]]:
+    def non_resource_rules(self) -> Optional[List["NonResourcePolicyRule"]]:
         """
         `nonResourceRules` is a list of NonResourcePolicyRules that identify matching requests according to their verb
         and the target non-resource URL.
         +listType=set
         """
-        return self.__nonResourceRules
+        return self.__non_resource_rules
 
 
 class PriorityLevelConfigurationReference(types.Object):
@@ -508,71 +514,71 @@ class FlowSchemaSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        priorityLevelConfiguration: "PriorityLevelConfigurationReference" = None,
-        matchingPrecedence: int = 1000,
-        distinguisherMethod: "FlowDistinguisherMethod" = None,
+        priority_level_configuration: "PriorityLevelConfigurationReference" = None,
+        matching_precedence: int = 1000,
+        distinguisher_method: "FlowDistinguisherMethod" = None,
         rules: List["PolicyRulesWithSubjects"] = None,
     ):
         super().__init__()
-        self.__priorityLevelConfiguration = (
-            priorityLevelConfiguration
-            if priorityLevelConfiguration is not None
+        self.__priority_level_configuration = (
+            priority_level_configuration
+            if priority_level_configuration is not None
             else PriorityLevelConfigurationReference()
         )
-        self.__matchingPrecedence = matchingPrecedence
-        self.__distinguisherMethod = distinguisherMethod
+        self.__matching_precedence = matching_precedence
+        self.__distinguisher_method = distinguisher_method
         self.__rules = rules if rules is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        priorityLevelConfiguration = self.priorityLevelConfiguration()
+        priority_level_configuration = self.priority_level_configuration()
         check_type(
-            "priorityLevelConfiguration",
-            priorityLevelConfiguration,
+            "priority_level_configuration",
+            priority_level_configuration,
             "PriorityLevelConfigurationReference",
         )
-        v["priorityLevelConfiguration"] = priorityLevelConfiguration
-        matchingPrecedence = self.matchingPrecedence()
-        check_type("matchingPrecedence", matchingPrecedence, int)
-        v["matchingPrecedence"] = matchingPrecedence
-        distinguisherMethod = self.distinguisherMethod()
+        v["priorityLevelConfiguration"] = priority_level_configuration
+        matching_precedence = self.matching_precedence()
+        check_type("matching_precedence", matching_precedence, int)
+        v["matchingPrecedence"] = matching_precedence
+        distinguisher_method = self.distinguisher_method()
         check_type(
-            "distinguisherMethod",
-            distinguisherMethod,
+            "distinguisher_method",
+            distinguisher_method,
             Optional["FlowDistinguisherMethod"],
         )
-        if distinguisherMethod is not None:  # omit empty
-            v["distinguisherMethod"] = distinguisherMethod
+        if distinguisher_method is not None:  # omit empty
+            v["distinguisherMethod"] = distinguisher_method
         rules = self.rules()
         check_type("rules", rules, Optional[List["PolicyRulesWithSubjects"]])
         if rules:  # omit empty
             v["rules"] = rules
         return v
 
-    def priorityLevelConfiguration(self) -> "PriorityLevelConfigurationReference":
+    def priority_level_configuration(self) -> "PriorityLevelConfigurationReference":
         """
         `priorityLevelConfiguration` should reference a PriorityLevelConfiguration in the cluster. If the reference cannot
         be resolved, the FlowSchema will be ignored and marked as invalid in its status.
         Required.
         """
-        return self.__priorityLevelConfiguration
+        return self.__priority_level_configuration
 
-    def matchingPrecedence(self) -> int:
+    def matching_precedence(self) -> int:
         """
         `matchingPrecedence` is used to choose among the FlowSchemas that match a given request. The chosen
         FlowSchema is among those with the numerically lowest (which we take to be logically highest)
         MatchingPrecedence.  Each MatchingPrecedence value must be non-negative.
         Note that if the precedence is not specified or zero, it will be set to 1000 as default.
         """
-        return self.__matchingPrecedence
+        return self.__matching_precedence
 
-    def distinguisherMethod(self) -> Optional["FlowDistinguisherMethod"]:
+    def distinguisher_method(self) -> Optional["FlowDistinguisherMethod"]:
         """
         `distinguisherMethod` defines how to compute the flow distinguisher for requests that match this schema.
         `nil` specifies that the distinguisher is disabled and thus will always be the empty string.
         """
-        return self.__distinguisherMethod
+        return self.__distinguisher_method
 
     def rules(self) -> Optional[List["PolicyRulesWithSubjects"]]:
         """
@@ -600,7 +606,7 @@ class FlowSchema(base.TypedObject, base.MetadataObject):
         spec: "FlowSchemaSpec" = None,
     ):
         super().__init__(
-            apiVersion="flowcontrol.apiserver.k8s.io/v1alpha1",
+            api_version="flowcontrol.apiserver.k8s.io/v1alpha1",
             kind="FlowSchema",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -631,11 +637,13 @@ class QueuingConfiguration(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, queues: int = 64, handSize: int = 8, queueLengthLimit: int = 50):
+    def __init__(
+        self, queues: int = 64, hand_size: int = 8, queue_length_limit: int = 50
+    ):
         super().__init__()
         self.__queues = queues
-        self.__handSize = handSize
-        self.__queueLengthLimit = queueLengthLimit
+        self.__hand_size = hand_size
+        self.__queue_length_limit = queue_length_limit
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -643,12 +651,12 @@ class QueuingConfiguration(types.Object):
         queues = self.queues()
         check_type("queues", queues, int)
         v["queues"] = queues
-        handSize = self.handSize()
-        check_type("handSize", handSize, int)
-        v["handSize"] = handSize
-        queueLengthLimit = self.queueLengthLimit()
-        check_type("queueLengthLimit", queueLengthLimit, int)
-        v["queueLengthLimit"] = queueLengthLimit
+        hand_size = self.hand_size()
+        check_type("hand_size", hand_size, int)
+        v["handSize"] = hand_size
+        queue_length_limit = self.queue_length_limit()
+        check_type("queue_length_limit", queue_length_limit, int)
+        v["queueLengthLimit"] = queue_length_limit
         return v
 
     def queues(self) -> int:
@@ -662,7 +670,7 @@ class QueuingConfiguration(types.Object):
         """
         return self.__queues
 
-    def handSize(self) -> int:
+    def hand_size(self) -> int:
         """
         `handSize` is a small positive number that configures the
         shuffle sharding of requests into queues.  When enqueuing a request
@@ -676,16 +684,16 @@ class QueuingConfiguration(types.Object):
         documentation for more extensive guidance on setting this
         field.  This field has a default value of 8.
         """
-        return self.__handSize
+        return self.__hand_size
 
-    def queueLengthLimit(self) -> int:
+    def queue_length_limit(self) -> int:
         """
         `queueLengthLimit` is the maximum number of requests allowed to
         be waiting in a given queue of this priority level at a time;
         excess requests are rejected.  This value must be positive.  If
         not specified, it will be defaulted to 50.
         """
-        return self.__queueLengthLimit
+        return self.__queue_length_limit
 
 
 class LimitResponse(types.Object):
@@ -747,26 +755,28 @@ class LimitedPriorityLevelConfiguration(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, assuredConcurrencyShares: int = 30, limitResponse: "LimitResponse" = None
+        self,
+        assured_concurrency_shares: int = 30,
+        limit_response: "LimitResponse" = None,
     ):
         super().__init__()
-        self.__assuredConcurrencyShares = assuredConcurrencyShares
-        self.__limitResponse = (
-            limitResponse if limitResponse is not None else LimitResponse()
+        self.__assured_concurrency_shares = assured_concurrency_shares
+        self.__limit_response = (
+            limit_response if limit_response is not None else LimitResponse()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        assuredConcurrencyShares = self.assuredConcurrencyShares()
-        check_type("assuredConcurrencyShares", assuredConcurrencyShares, int)
-        v["assuredConcurrencyShares"] = assuredConcurrencyShares
-        limitResponse = self.limitResponse()
-        check_type("limitResponse", limitResponse, Optional["LimitResponse"])
-        v["limitResponse"] = limitResponse
+        assured_concurrency_shares = self.assured_concurrency_shares()
+        check_type("assured_concurrency_shares", assured_concurrency_shares, int)
+        v["assuredConcurrencyShares"] = assured_concurrency_shares
+        limit_response = self.limit_response()
+        check_type("limit_response", limit_response, Optional["LimitResponse"])
+        v["limitResponse"] = limit_response
         return v
 
-    def assuredConcurrencyShares(self) -> int:
+    def assured_concurrency_shares(self) -> int:
         """
         `assuredConcurrencyShares` (ACS) configures the execution
         limit, which is a limit on the number of requests of this
@@ -784,13 +794,13 @@ class LimitedPriorityLevelConfiguration(types.Object):
         expense of every other PL).
         This field has a default value of 30.
         """
-        return self.__assuredConcurrencyShares
+        return self.__assured_concurrency_shares
 
-    def limitResponse(self) -> Optional["LimitResponse"]:
+    def limit_response(self) -> Optional["LimitResponse"]:
         """
         `limitResponse` indicates what to do with requests that can not be executed right now
         """
-        return self.__limitResponse
+        return self.__limit_response
 
 
 class PriorityLevelConfigurationSpec(types.Object):
@@ -860,7 +870,7 @@ class PriorityLevelConfiguration(base.TypedObject, base.MetadataObject):
         spec: "PriorityLevelConfigurationSpec" = None,
     ):
         super().__init__(
-            apiVersion="flowcontrol.apiserver.k8s.io/v1alpha1",
+            api_version="flowcontrol.apiserver.k8s.io/v1alpha1",
             kind="PriorityLevelConfiguration",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

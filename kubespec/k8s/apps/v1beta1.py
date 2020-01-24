@@ -91,7 +91,7 @@ class ControllerRevision(base.TypedObject, base.NamespacedMetadataObject):
         revision: int = 0,
     ):
         super().__init__(
-            apiVersion="apps/v1beta1",
+            api_version="apps/v1beta1",
             kind="ControllerRevision",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -133,26 +133,28 @@ class RollingUpdateDeployment(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
+        self, max_unavailable: Union[int, str] = None, max_surge: Union[int, str] = None
     ):
         super().__init__()
-        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else "25%"
-        self.__maxSurge = maxSurge if maxSurge is not None else "25%"
+        self.__max_unavailable = (
+            max_unavailable if max_unavailable is not None else "25%"
+        )
+        self.__max_surge = max_surge if max_surge is not None else "25%"
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        maxUnavailable = self.maxUnavailable()
-        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
-        if maxUnavailable is not None:  # omit empty
-            v["maxUnavailable"] = maxUnavailable
-        maxSurge = self.maxSurge()
-        check_type("maxSurge", maxSurge, Optional[Union[int, str]])
-        if maxSurge is not None:  # omit empty
-            v["maxSurge"] = maxSurge
+        max_unavailable = self.max_unavailable()
+        check_type("max_unavailable", max_unavailable, Optional[Union[int, str]])
+        if max_unavailable is not None:  # omit empty
+            v["maxUnavailable"] = max_unavailable
+        max_surge = self.max_surge()
+        check_type("max_surge", max_surge, Optional[Union[int, str]])
+        if max_surge is not None:  # omit empty
+            v["maxSurge"] = max_surge
         return v
 
-    def maxUnavailable(self) -> Optional[Union[int, str]]:
+    def max_unavailable(self) -> Optional[Union[int, str]]:
         """
         The maximum number of pods that can be unavailable during the update.
         Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
@@ -165,9 +167,9 @@ class RollingUpdateDeployment(types.Object):
         that the total number of pods available at all times during the update is at
         least 70% of desired pods.
         """
-        return self.__maxUnavailable
+        return self.__max_unavailable
 
-    def maxSurge(self) -> Optional[Union[int, str]]:
+    def max_surge(self) -> Optional[Union[int, str]]:
         """
         The maximum number of pods that can be scheduled above the desired number of
         pods.
@@ -181,7 +183,7 @@ class RollingUpdateDeployment(types.Object):
         new ReplicaSet can be scaled up further, ensuring that total number of pods running
         at any time during the update is at most 130% of desired pods.
         """
-        return self.__maxSurge
+        return self.__max_surge
 
 
 class DeploymentStrategy(types.Object):
@@ -194,12 +196,12 @@ class DeploymentStrategy(types.Object):
     def __init__(
         self,
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
-        rollingUpdate: "RollingUpdateDeployment" = None,
+        rolling_update: "RollingUpdateDeployment" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__rollingUpdate = (
-            rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
+        self.__rolling_update = (
+            rolling_update if rolling_update is not None else RollingUpdateDeployment()
         )
 
     @typechecked
@@ -209,10 +211,12 @@ class DeploymentStrategy(types.Object):
         check_type("type", type, Optional[DeploymentStrategyType])
         if type:  # omit empty
             v["type"] = type
-        rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDeployment"])
-        if rollingUpdate is not None:  # omit empty
-            v["rollingUpdate"] = rollingUpdate
+        rolling_update = self.rolling_update()
+        check_type(
+            "rolling_update", rolling_update, Optional["RollingUpdateDeployment"]
+        )
+        if rolling_update is not None:  # omit empty
+            v["rollingUpdate"] = rolling_update
         return v
 
     def type(self) -> Optional[DeploymentStrategyType]:
@@ -221,7 +225,7 @@ class DeploymentStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional["RollingUpdateDeployment"]:
+    def rolling_update(self) -> Optional["RollingUpdateDeployment"]:
         """
         Rolling update config params. Present only if DeploymentStrategyType =
         RollingUpdate.
@@ -229,7 +233,7 @@ class DeploymentStrategy(types.Object):
         TODO: Update this to follow our convention for oneOf, whatever we decide it
         to be.
         """
-        return self.__rollingUpdate
+        return self.__rolling_update
 
 
 class DeploymentSpec(types.Object):
@@ -245,23 +249,23 @@ class DeploymentSpec(types.Object):
         selector: "metav1.LabelSelector" = None,
         template: "k8sv1.PodTemplateSpec" = None,
         strategy: "DeploymentStrategy" = None,
-        minReadySeconds: int = None,
-        revisionHistoryLimit: int = None,
+        min_ready_seconds: int = None,
+        revision_history_limit: int = None,
         paused: bool = None,
-        progressDeadlineSeconds: int = None,
+        progress_deadline_seconds: int = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
-        self.__minReadySeconds = minReadySeconds
-        self.__revisionHistoryLimit = (
-            revisionHistoryLimit if revisionHistoryLimit is not None else 2
+        self.__min_ready_seconds = min_ready_seconds
+        self.__revision_history_limit = (
+            revision_history_limit if revision_history_limit is not None else 2
         )
         self.__paused = paused
-        self.__progressDeadlineSeconds = (
-            progressDeadlineSeconds if progressDeadlineSeconds is not None else 600
+        self.__progress_deadline_seconds = (
+            progress_deadline_seconds if progress_deadline_seconds is not None else 600
         )
 
     @typechecked
@@ -281,22 +285,24 @@ class DeploymentSpec(types.Object):
         strategy = self.strategy()
         check_type("strategy", strategy, Optional["DeploymentStrategy"])
         v["strategy"] = strategy
-        minReadySeconds = self.minReadySeconds()
-        check_type("minReadySeconds", minReadySeconds, Optional[int])
-        if minReadySeconds:  # omit empty
-            v["minReadySeconds"] = minReadySeconds
-        revisionHistoryLimit = self.revisionHistoryLimit()
-        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
-        if revisionHistoryLimit is not None:  # omit empty
-            v["revisionHistoryLimit"] = revisionHistoryLimit
+        min_ready_seconds = self.min_ready_seconds()
+        check_type("min_ready_seconds", min_ready_seconds, Optional[int])
+        if min_ready_seconds:  # omit empty
+            v["minReadySeconds"] = min_ready_seconds
+        revision_history_limit = self.revision_history_limit()
+        check_type("revision_history_limit", revision_history_limit, Optional[int])
+        if revision_history_limit is not None:  # omit empty
+            v["revisionHistoryLimit"] = revision_history_limit
         paused = self.paused()
         check_type("paused", paused, Optional[bool])
         if paused:  # omit empty
             v["paused"] = paused
-        progressDeadlineSeconds = self.progressDeadlineSeconds()
-        check_type("progressDeadlineSeconds", progressDeadlineSeconds, Optional[int])
-        if progressDeadlineSeconds is not None:  # omit empty
-            v["progressDeadlineSeconds"] = progressDeadlineSeconds
+        progress_deadline_seconds = self.progress_deadline_seconds()
+        check_type(
+            "progress_deadline_seconds", progress_deadline_seconds, Optional[int]
+        )
+        if progress_deadline_seconds is not None:  # omit empty
+            v["progressDeadlineSeconds"] = progress_deadline_seconds
         return v
 
     def replicas(self) -> Optional[int]:
@@ -325,21 +331,21 @@ class DeploymentSpec(types.Object):
         """
         return self.__strategy
 
-    def minReadySeconds(self) -> Optional[int]:
+    def min_ready_seconds(self) -> Optional[int]:
         """
         Minimum number of seconds for which a newly created pod should be ready
         without any of its container crashing, for it to be considered available.
         Defaults to 0 (pod will be considered available as soon as it is ready)
         """
-        return self.__minReadySeconds
+        return self.__min_ready_seconds
 
-    def revisionHistoryLimit(self) -> Optional[int]:
+    def revision_history_limit(self) -> Optional[int]:
         """
         The number of old ReplicaSets to retain to allow rollback.
         This is a pointer to distinguish between explicit zero and not specified.
         Defaults to 2.
         """
-        return self.__revisionHistoryLimit
+        return self.__revision_history_limit
 
     def paused(self) -> Optional[bool]:
         """
@@ -347,7 +353,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__paused
 
-    def progressDeadlineSeconds(self) -> Optional[int]:
+    def progress_deadline_seconds(self) -> Optional[int]:
         """
         The maximum time in seconds for a deployment to make progress before it
         is considered to be failed. The deployment controller will continue to
@@ -355,7 +361,7 @@ class DeploymentSpec(types.Object):
         reason will be surfaced in the deployment status. Note that progress will
         not be estimated during the time a deployment is paused. Defaults to 600s.
         """
-        return self.__progressDeadlineSeconds
+        return self.__progress_deadline_seconds
 
 
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
@@ -376,7 +382,7 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         spec: "DeploymentSpec" = None,
     ):
         super().__init__(
-            apiVersion="apps/v1beta1",
+            api_version="apps/v1beta1",
             kind="Deployment",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -438,15 +444,17 @@ class DeploymentRollback(base.TypedObject):
     def __init__(
         self,
         name: str = "",
-        updatedAnnotations: Dict[str, str] = None,
-        rollbackTo: "RollbackConfig" = None,
+        updated_annotations: Dict[str, str] = None,
+        rollback_to: "RollbackConfig" = None,
     ):
-        super().__init__(apiVersion="apps/v1beta1", kind="DeploymentRollback")
+        super().__init__(api_version="apps/v1beta1", kind="DeploymentRollback")
         self.__name = name
-        self.__updatedAnnotations = (
-            updatedAnnotations if updatedAnnotations is not None else {}
+        self.__updated_annotations = (
+            updated_annotations if updated_annotations is not None else {}
         )
-        self.__rollbackTo = rollbackTo if rollbackTo is not None else RollbackConfig()
+        self.__rollback_to = (
+            rollback_to if rollback_to is not None else RollbackConfig()
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -454,13 +462,13 @@ class DeploymentRollback(base.TypedObject):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        updatedAnnotations = self.updatedAnnotations()
-        check_type("updatedAnnotations", updatedAnnotations, Optional[Dict[str, str]])
-        if updatedAnnotations:  # omit empty
-            v["updatedAnnotations"] = updatedAnnotations
-        rollbackTo = self.rollbackTo()
-        check_type("rollbackTo", rollbackTo, "RollbackConfig")
-        v["rollbackTo"] = rollbackTo
+        updated_annotations = self.updated_annotations()
+        check_type("updated_annotations", updated_annotations, Optional[Dict[str, str]])
+        if updated_annotations:  # omit empty
+            v["updatedAnnotations"] = updated_annotations
+        rollback_to = self.rollback_to()
+        check_type("rollback_to", rollback_to, "RollbackConfig")
+        v["rollbackTo"] = rollback_to
         return v
 
     def name(self) -> str:
@@ -469,17 +477,17 @@ class DeploymentRollback(base.TypedObject):
         """
         return self.__name
 
-    def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+    def updated_annotations(self) -> Optional[Dict[str, str]]:
         """
         The annotations to be updated to a deployment
         """
-        return self.__updatedAnnotations
+        return self.__updated_annotations
 
-    def rollbackTo(self) -> "RollbackConfig":
+    def rollback_to(self) -> "RollbackConfig":
         """
         The config of this deployment rollback.
         """
-        return self.__rollbackTo
+        return self.__rollback_to
 
 
 class RollingUpdateStatefulSetStrategy(types.Object):
@@ -553,7 +561,7 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ScaleSpec" = None,
     ):
         super().__init__(
-            apiVersion="apps/v1beta1",
+            api_version="apps/v1beta1",
             kind="Scale",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -589,11 +597,11 @@ class StatefulSetUpdateStrategy(types.Object):
     def __init__(
         self,
         type: StatefulSetUpdateStrategyType = StatefulSetUpdateStrategyType["OnDelete"],
-        rollingUpdate: "RollingUpdateStatefulSetStrategy" = None,
+        rolling_update: "RollingUpdateStatefulSetStrategy" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__rollingUpdate = rollingUpdate
+        self.__rolling_update = rolling_update
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -602,12 +610,14 @@ class StatefulSetUpdateStrategy(types.Object):
         check_type("type", type, Optional[StatefulSetUpdateStrategyType])
         if type:  # omit empty
             v["type"] = type
-        rollingUpdate = self.rollingUpdate()
+        rolling_update = self.rolling_update()
         check_type(
-            "rollingUpdate", rollingUpdate, Optional["RollingUpdateStatefulSetStrategy"]
+            "rolling_update",
+            rolling_update,
+            Optional["RollingUpdateStatefulSetStrategy"],
         )
-        if rollingUpdate is not None:  # omit empty
-            v["rollingUpdate"] = rollingUpdate
+        if rolling_update is not None:  # omit empty
+            v["rollingUpdate"] = rolling_update
         return v
 
     def type(self) -> Optional[StatefulSetUpdateStrategyType]:
@@ -616,11 +626,11 @@ class StatefulSetUpdateStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional["RollingUpdateStatefulSetStrategy"]:
+    def rolling_update(self) -> Optional["RollingUpdateStatefulSetStrategy"]:
         """
         RollingUpdate is used to communicate parameters when Type is RollingUpdateStatefulSetStrategyType.
         """
-        return self.__rollingUpdate
+        return self.__rolling_update
 
 
 class StatefulSetSpec(types.Object):
@@ -635,30 +645,30 @@ class StatefulSetSpec(types.Object):
         replicas: int = None,
         selector: "metav1.LabelSelector" = None,
         template: "k8sv1.PodTemplateSpec" = None,
-        volumeClaimTemplates: List["k8sv1.PersistentVolumeClaim"] = None,
-        serviceName: str = "",
-        podManagementPolicy: PodManagementPolicyType = PodManagementPolicyType[
+        volume_claim_templates: List["k8sv1.PersistentVolumeClaim"] = None,
+        service_name: str = "",
+        pod_management_policy: PodManagementPolicyType = PodManagementPolicyType[
             "OrderedReady"
         ],
-        updateStrategy: "StatefulSetUpdateStrategy" = None,
-        revisionHistoryLimit: int = None,
+        update_strategy: "StatefulSetUpdateStrategy" = None,
+        revision_history_limit: int = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
-        self.__volumeClaimTemplates = (
-            volumeClaimTemplates if volumeClaimTemplates is not None else []
+        self.__volume_claim_templates = (
+            volume_claim_templates if volume_claim_templates is not None else []
         )
-        self.__serviceName = serviceName
-        self.__podManagementPolicy = podManagementPolicy
-        self.__updateStrategy = (
-            updateStrategy
-            if updateStrategy is not None
+        self.__service_name = service_name
+        self.__pod_management_policy = pod_management_policy
+        self.__update_strategy = (
+            update_strategy
+            if update_strategy is not None
             else StatefulSetUpdateStrategy()
         )
-        self.__revisionHistoryLimit = (
-            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        self.__revision_history_limit = (
+            revision_history_limit if revision_history_limit is not None else 10
         )
 
     @typechecked
@@ -675,34 +685,34 @@ class StatefulSetSpec(types.Object):
         template = self.template()
         check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
-        volumeClaimTemplates = self.volumeClaimTemplates()
+        volume_claim_templates = self.volume_claim_templates()
         check_type(
-            "volumeClaimTemplates",
-            volumeClaimTemplates,
+            "volume_claim_templates",
+            volume_claim_templates,
             Optional[List["k8sv1.PersistentVolumeClaim"]],
         )
-        if volumeClaimTemplates:  # omit empty
-            v["volumeClaimTemplates"] = volumeClaimTemplates
-        serviceName = self.serviceName()
-        check_type("serviceName", serviceName, str)
-        v["serviceName"] = serviceName
-        podManagementPolicy = self.podManagementPolicy()
+        if volume_claim_templates:  # omit empty
+            v["volumeClaimTemplates"] = volume_claim_templates
+        service_name = self.service_name()
+        check_type("service_name", service_name, str)
+        v["serviceName"] = service_name
+        pod_management_policy = self.pod_management_policy()
         check_type(
-            "podManagementPolicy",
-            podManagementPolicy,
+            "pod_management_policy",
+            pod_management_policy,
             Optional[PodManagementPolicyType],
         )
-        if podManagementPolicy:  # omit empty
-            v["podManagementPolicy"] = podManagementPolicy
-        updateStrategy = self.updateStrategy()
+        if pod_management_policy:  # omit empty
+            v["podManagementPolicy"] = pod_management_policy
+        update_strategy = self.update_strategy()
         check_type(
-            "updateStrategy", updateStrategy, Optional["StatefulSetUpdateStrategy"]
+            "update_strategy", update_strategy, Optional["StatefulSetUpdateStrategy"]
         )
-        v["updateStrategy"] = updateStrategy
-        revisionHistoryLimit = self.revisionHistoryLimit()
-        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
-        if revisionHistoryLimit is not None:  # omit empty
-            v["revisionHistoryLimit"] = revisionHistoryLimit
+        v["updateStrategy"] = update_strategy
+        revision_history_limit = self.revision_history_limit()
+        check_type("revision_history_limit", revision_history_limit, Optional[int])
+        if revision_history_limit is not None:  # omit empty
+            v["revisionHistoryLimit"] = revision_history_limit
         return v
 
     def replicas(self) -> Optional[int]:
@@ -732,7 +742,7 @@ class StatefulSetSpec(types.Object):
         """
         return self.__template
 
-    def volumeClaimTemplates(self) -> Optional[List["k8sv1.PersistentVolumeClaim"]]:
+    def volume_claim_templates(self) -> Optional[List["k8sv1.PersistentVolumeClaim"]]:
         """
         volumeClaimTemplates is a list of claims that pods are allowed to reference.
         The StatefulSet controller is responsible for mapping network identities to
@@ -742,9 +752,9 @@ class StatefulSetSpec(types.Object):
         any volumes in the template, with the same name.
         TODO: Define the behavior if a claim already exists with the same name.
         """
-        return self.__volumeClaimTemplates
+        return self.__volume_claim_templates
 
-    def serviceName(self) -> str:
+    def service_name(self) -> str:
         """
         serviceName is the name of the service that governs this StatefulSet.
         This service must exist before the StatefulSet, and is responsible for
@@ -752,9 +762,9 @@ class StatefulSetSpec(types.Object):
         pattern: pod-specific-string.serviceName.default.svc.cluster.local
         where "pod-specific-string" is managed by the StatefulSet controller.
         """
-        return self.__serviceName
+        return self.__service_name
 
-    def podManagementPolicy(self) -> Optional[PodManagementPolicyType]:
+    def pod_management_policy(self) -> Optional[PodManagementPolicyType]:
         """
         podManagementPolicy controls how pods are created during initial scale up,
         when replacing pods on nodes, or when scaling down. The default policy is
@@ -765,24 +775,24 @@ class StatefulSetSpec(types.Object):
         to match the desired scale without waiting, and on scale down will delete
         all pods at once.
         """
-        return self.__podManagementPolicy
+        return self.__pod_management_policy
 
-    def updateStrategy(self) -> Optional["StatefulSetUpdateStrategy"]:
+    def update_strategy(self) -> Optional["StatefulSetUpdateStrategy"]:
         """
         updateStrategy indicates the StatefulSetUpdateStrategy that will be
         employed to update Pods in the StatefulSet when a revision is made to
         Template.
         """
-        return self.__updateStrategy
+        return self.__update_strategy
 
-    def revisionHistoryLimit(self) -> Optional[int]:
+    def revision_history_limit(self) -> Optional[int]:
         """
         revisionHistoryLimit is the maximum number of revisions that will
         be maintained in the StatefulSet's revision history. The revision history
         consists of all revisions not represented by a currently applied
         StatefulSetSpec version. The default value is 10.
         """
-        return self.__revisionHistoryLimit
+        return self.__revision_history_limit
 
 
 class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
@@ -808,7 +818,7 @@ class StatefulSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: "StatefulSetSpec" = None,
     ):
         super().__init__(
-            apiVersion="apps/v1beta1",
+            api_version="apps/v1beta1",
             kind="StatefulSet",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

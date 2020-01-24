@@ -25,22 +25,22 @@ class JobSpec(types.Object):
         self,
         parallelism: int = None,
         completions: int = None,
-        activeDeadlineSeconds: int = None,
-        backoffLimit: int = None,
+        active_deadline_seconds: int = None,
+        backoff_limit: int = None,
         selector: "metav1.LabelSelector" = None,
-        manualSelector: bool = None,
+        manual_selector: bool = None,
         template: "k8sv1.PodTemplateSpec" = None,
-        ttlSecondsAfterFinished: int = None,
+        ttl_seconds_after_finished: int = None,
     ):
         super().__init__()
         self.__parallelism = parallelism if parallelism is not None else 1
         self.__completions = completions if completions is not None else 1
-        self.__activeDeadlineSeconds = activeDeadlineSeconds
-        self.__backoffLimit = backoffLimit if backoffLimit is not None else 6
+        self.__active_deadline_seconds = active_deadline_seconds
+        self.__backoff_limit = backoff_limit if backoff_limit is not None else 6
         self.__selector = selector
-        self.__manualSelector = manualSelector
+        self.__manual_selector = manual_selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
-        self.__ttlSecondsAfterFinished = ttlSecondsAfterFinished
+        self.__ttl_seconds_after_finished = ttl_seconds_after_finished
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -53,29 +53,31 @@ class JobSpec(types.Object):
         check_type("completions", completions, Optional[int])
         if completions is not None:  # omit empty
             v["completions"] = completions
-        activeDeadlineSeconds = self.activeDeadlineSeconds()
-        check_type("activeDeadlineSeconds", activeDeadlineSeconds, Optional[int])
-        if activeDeadlineSeconds is not None:  # omit empty
-            v["activeDeadlineSeconds"] = activeDeadlineSeconds
-        backoffLimit = self.backoffLimit()
-        check_type("backoffLimit", backoffLimit, Optional[int])
-        if backoffLimit is not None:  # omit empty
-            v["backoffLimit"] = backoffLimit
+        active_deadline_seconds = self.active_deadline_seconds()
+        check_type("active_deadline_seconds", active_deadline_seconds, Optional[int])
+        if active_deadline_seconds is not None:  # omit empty
+            v["activeDeadlineSeconds"] = active_deadline_seconds
+        backoff_limit = self.backoff_limit()
+        check_type("backoff_limit", backoff_limit, Optional[int])
+        if backoff_limit is not None:  # omit empty
+            v["backoffLimit"] = backoff_limit
         selector = self.selector()
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
-        manualSelector = self.manualSelector()
-        check_type("manualSelector", manualSelector, Optional[bool])
-        if manualSelector is not None:  # omit empty
-            v["manualSelector"] = manualSelector
+        manual_selector = self.manual_selector()
+        check_type("manual_selector", manual_selector, Optional[bool])
+        if manual_selector is not None:  # omit empty
+            v["manualSelector"] = manual_selector
         template = self.template()
         check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
-        ttlSecondsAfterFinished = self.ttlSecondsAfterFinished()
-        check_type("ttlSecondsAfterFinished", ttlSecondsAfterFinished, Optional[int])
-        if ttlSecondsAfterFinished is not None:  # omit empty
-            v["ttlSecondsAfterFinished"] = ttlSecondsAfterFinished
+        ttl_seconds_after_finished = self.ttl_seconds_after_finished()
+        check_type(
+            "ttl_seconds_after_finished", ttl_seconds_after_finished, Optional[int]
+        )
+        if ttl_seconds_after_finished is not None:  # omit empty
+            v["ttlSecondsAfterFinished"] = ttl_seconds_after_finished
         return v
 
     def parallelism(self) -> Optional[int]:
@@ -99,19 +101,19 @@ class JobSpec(types.Object):
         """
         return self.__completions
 
-    def activeDeadlineSeconds(self) -> Optional[int]:
+    def active_deadline_seconds(self) -> Optional[int]:
         """
         Specifies the duration in seconds relative to the startTime that the job may be active
         before the system tries to terminate it; value must be positive integer
         """
-        return self.__activeDeadlineSeconds
+        return self.__active_deadline_seconds
 
-    def backoffLimit(self) -> Optional[int]:
+    def backoff_limit(self) -> Optional[int]:
         """
         Specifies the number of retries before marking this job failed.
         Defaults to 6
         """
-        return self.__backoffLimit
+        return self.__backoff_limit
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
         """
@@ -121,7 +123,7 @@ class JobSpec(types.Object):
         """
         return self.__selector
 
-    def manualSelector(self) -> Optional[bool]:
+    def manual_selector(self) -> Optional[bool]:
         """
         manualSelector controls generation of pod labels and pod selectors.
         Leave `manualSelector` unset unless you are certain what you are doing.
@@ -134,7 +136,7 @@ class JobSpec(types.Object):
         API.
         More info: https://kubernetes.io/docs/concepts/workloads/controllers/jobs-run-to-completion/#specifying-your-own-pod-selector
         """
-        return self.__manualSelector
+        return self.__manual_selector
 
     def template(self) -> "k8sv1.PodTemplateSpec":
         """
@@ -143,7 +145,7 @@ class JobSpec(types.Object):
         """
         return self.__template
 
-    def ttlSecondsAfterFinished(self) -> Optional[int]:
+    def ttl_seconds_after_finished(self) -> Optional[int]:
         """
         ttlSecondsAfterFinished limits the lifetime of a Job that has finished
         execution (either Complete or Failed). If this field is set,
@@ -155,7 +157,7 @@ class JobSpec(types.Object):
         This field is alpha-level and is only honored by servers that enable the
         TTLAfterFinished feature.
         """
-        return self.__ttlSecondsAfterFinished
+        return self.__ttl_seconds_after_finished
 
 
 class Job(base.TypedObject, base.NamespacedMetadataObject):
@@ -174,7 +176,7 @@ class Job(base.TypedObject, base.NamespacedMetadataObject):
         spec: "JobSpec" = None,
     ):
         super().__init__(
-            apiVersion="batch/v1",
+            api_version="batch/v1",
             kind="Job",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

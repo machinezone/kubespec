@@ -165,16 +165,16 @@ class SubjectAccessReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        resourceAttributes: "ResourceAttributes" = None,
-        nonResourceAttributes: "NonResourceAttributes" = None,
+        resource_attributes: "ResourceAttributes" = None,
+        non_resource_attributes: "NonResourceAttributes" = None,
         user: str = None,
         group: List[str] = None,
         extra: Dict[str, List[str]] = None,
         uid: str = None,
     ):
         super().__init__()
-        self.__resourceAttributes = resourceAttributes
-        self.__nonResourceAttributes = nonResourceAttributes
+        self.__resource_attributes = resource_attributes
+        self.__non_resource_attributes = non_resource_attributes
         self.__user = user
         self.__group = group if group is not None else []
         self.__extra = extra if extra is not None else {}
@@ -183,20 +183,20 @@ class SubjectAccessReviewSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        resourceAttributes = self.resourceAttributes()
+        resource_attributes = self.resource_attributes()
         check_type(
-            "resourceAttributes", resourceAttributes, Optional["ResourceAttributes"]
+            "resource_attributes", resource_attributes, Optional["ResourceAttributes"]
         )
-        if resourceAttributes is not None:  # omit empty
-            v["resourceAttributes"] = resourceAttributes
-        nonResourceAttributes = self.nonResourceAttributes()
+        if resource_attributes is not None:  # omit empty
+            v["resourceAttributes"] = resource_attributes
+        non_resource_attributes = self.non_resource_attributes()
         check_type(
-            "nonResourceAttributes",
-            nonResourceAttributes,
+            "non_resource_attributes",
+            non_resource_attributes,
             Optional["NonResourceAttributes"],
         )
-        if nonResourceAttributes is not None:  # omit empty
-            v["nonResourceAttributes"] = nonResourceAttributes
+        if non_resource_attributes is not None:  # omit empty
+            v["nonResourceAttributes"] = non_resource_attributes
         user = self.user()
         check_type("user", user, Optional[str])
         if user:  # omit empty
@@ -215,17 +215,17 @@ class SubjectAccessReviewSpec(types.Object):
             v["uid"] = uid
         return v
 
-    def resourceAttributes(self) -> Optional["ResourceAttributes"]:
+    def resource_attributes(self) -> Optional["ResourceAttributes"]:
         """
         ResourceAuthorizationAttributes describes information for a resource access request
         """
-        return self.__resourceAttributes
+        return self.__resource_attributes
 
-    def nonResourceAttributes(self) -> Optional["NonResourceAttributes"]:
+    def non_resource_attributes(self) -> Optional["NonResourceAttributes"]:
         """
         NonResourceAttributes describes information for a non-resource access request
         """
-        return self.__nonResourceAttributes
+        return self.__non_resource_attributes
 
     def user(self) -> Optional[str]:
         """
@@ -272,7 +272,7 @@ class LocalSubjectAccessReview(base.TypedObject, base.NamespacedMetadataObject):
         spec: "SubjectAccessReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authorization.k8s.io/v1beta1",
+            api_version="authorization.k8s.io/v1beta1",
             kind="LocalSubjectAccessReview",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -307,43 +307,43 @@ class SelfSubjectAccessReviewSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        resourceAttributes: "ResourceAttributes" = None,
-        nonResourceAttributes: "NonResourceAttributes" = None,
+        resource_attributes: "ResourceAttributes" = None,
+        non_resource_attributes: "NonResourceAttributes" = None,
     ):
         super().__init__()
-        self.__resourceAttributes = resourceAttributes
-        self.__nonResourceAttributes = nonResourceAttributes
+        self.__resource_attributes = resource_attributes
+        self.__non_resource_attributes = non_resource_attributes
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        resourceAttributes = self.resourceAttributes()
+        resource_attributes = self.resource_attributes()
         check_type(
-            "resourceAttributes", resourceAttributes, Optional["ResourceAttributes"]
+            "resource_attributes", resource_attributes, Optional["ResourceAttributes"]
         )
-        if resourceAttributes is not None:  # omit empty
-            v["resourceAttributes"] = resourceAttributes
-        nonResourceAttributes = self.nonResourceAttributes()
+        if resource_attributes is not None:  # omit empty
+            v["resourceAttributes"] = resource_attributes
+        non_resource_attributes = self.non_resource_attributes()
         check_type(
-            "nonResourceAttributes",
-            nonResourceAttributes,
+            "non_resource_attributes",
+            non_resource_attributes,
             Optional["NonResourceAttributes"],
         )
-        if nonResourceAttributes is not None:  # omit empty
-            v["nonResourceAttributes"] = nonResourceAttributes
+        if non_resource_attributes is not None:  # omit empty
+            v["nonResourceAttributes"] = non_resource_attributes
         return v
 
-    def resourceAttributes(self) -> Optional["ResourceAttributes"]:
+    def resource_attributes(self) -> Optional["ResourceAttributes"]:
         """
         ResourceAuthorizationAttributes describes information for a resource access request
         """
-        return self.__resourceAttributes
+        return self.__resource_attributes
 
-    def nonResourceAttributes(self) -> Optional["NonResourceAttributes"]:
+    def non_resource_attributes(self) -> Optional["NonResourceAttributes"]:
         """
         NonResourceAttributes describes information for a non-resource access request
         """
-        return self.__nonResourceAttributes
+        return self.__non_resource_attributes
 
 
 class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
@@ -363,7 +363,7 @@ class SelfSubjectAccessReview(base.TypedObject, base.MetadataObject):
         spec: "SelfSubjectAccessReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authorization.k8s.io/v1beta1",
+            api_version="authorization.k8s.io/v1beta1",
             kind="SelfSubjectAccessReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -429,7 +429,7 @@ class SelfSubjectRulesReview(base.TypedObject, base.MetadataObject):
         spec: "SelfSubjectRulesReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authorization.k8s.io/v1beta1",
+            api_version="authorization.k8s.io/v1beta1",
             kind="SelfSubjectRulesReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -467,7 +467,7 @@ class SubjectAccessReview(base.TypedObject, base.MetadataObject):
         spec: "SubjectAccessReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authorization.k8s.io/v1beta1",
+            api_version="authorization.k8s.io/v1beta1",
             kind="SubjectAccessReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

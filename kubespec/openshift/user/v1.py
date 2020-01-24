@@ -27,7 +27,7 @@ class Group(base.TypedObject, base.MetadataObject):
         users: List[str] = None,
     ):
         super().__init__(
-            apiVersion="user.openshift.io/v1",
+            api_version="user.openshift.io/v1",
             kind="Group",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -66,32 +66,32 @@ class Identity(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        providerName: str = "",
-        providerUserName: str = "",
+        provider_name: str = "",
+        provider_user_name: str = "",
         user: "k8sv1.ObjectReference" = None,
         extra: Dict[str, str] = None,
     ):
         super().__init__(
-            apiVersion="user.openshift.io/v1",
+            api_version="user.openshift.io/v1",
             kind="Identity",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__providerName = providerName
-        self.__providerUserName = providerUserName
+        self.__provider_name = provider_name
+        self.__provider_user_name = provider_user_name
         self.__user = user if user is not None else k8sv1.ObjectReference()
         self.__extra = extra if extra is not None else {}
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        providerName = self.providerName()
-        check_type("providerName", providerName, str)
-        v["providerName"] = providerName
-        providerUserName = self.providerUserName()
-        check_type("providerUserName", providerUserName, str)
-        v["providerUserName"] = providerUserName
+        provider_name = self.provider_name()
+        check_type("provider_name", provider_name, str)
+        v["providerName"] = provider_name
+        provider_user_name = self.provider_user_name()
+        check_type("provider_user_name", provider_user_name, str)
+        v["providerUserName"] = provider_user_name
         user = self.user()
         check_type("user", user, "k8sv1.ObjectReference")
         v["user"] = user
@@ -101,17 +101,17 @@ class Identity(base.TypedObject, base.MetadataObject):
             v["extra"] = extra
         return v
 
-    def providerName(self) -> str:
+    def provider_name(self) -> str:
         """
         ProviderName is the source of identity information
         """
-        return self.__providerName
+        return self.__provider_name
 
-    def providerUserName(self) -> str:
+    def provider_user_name(self) -> str:
         """
         ProviderUserName uniquely represents this identity in the scope of the provider
         """
-        return self.__providerUserName
+        return self.__provider_user_name
 
     def user(self) -> "k8sv1.ObjectReference":
         """
@@ -143,28 +143,28 @@ class User(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        fullName: str = None,
+        full_name: str = None,
         identities: List[str] = None,
         groups: List[str] = None,
     ):
         super().__init__(
-            apiVersion="user.openshift.io/v1",
+            api_version="user.openshift.io/v1",
             kind="User",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__fullName = fullName
+        self.__full_name = full_name
         self.__identities = identities if identities is not None else []
         self.__groups = groups if groups is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        fullName = self.fullName()
-        check_type("fullName", fullName, Optional[str])
-        if fullName:  # omit empty
-            v["fullName"] = fullName
+        full_name = self.full_name()
+        check_type("full_name", full_name, Optional[str])
+        if full_name:  # omit empty
+            v["fullName"] = full_name
         identities = self.identities()
         check_type("identities", identities, List[str])
         v["identities"] = identities
@@ -173,11 +173,11 @@ class User(base.TypedObject, base.MetadataObject):
         v["groups"] = groups
         return v
 
-    def fullName(self) -> Optional[str]:
+    def full_name(self) -> Optional[str]:
         """
         FullName is the full name of user
         """
-        return self.__fullName
+        return self.__full_name
 
     def identities(self) -> List[str]:
         """
@@ -210,7 +210,7 @@ class UserIdentityMapping(base.TypedObject, base.MetadataObject):
         user: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
-            apiVersion="user.openshift.io/v1",
+            api_version="user.openshift.io/v1",
             kind="UserIdentityMapping",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

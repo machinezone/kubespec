@@ -253,13 +253,13 @@ class APIServerNamedServingCert(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, names: List[str] = None, servingCertificate: "SecretNameReference" = None
+        self, names: List[str] = None, serving_certificate: "SecretNameReference" = None
     ):
         super().__init__()
         self.__names = names if names is not None else []
-        self.__servingCertificate = (
-            servingCertificate
-            if servingCertificate is not None
+        self.__serving_certificate = (
+            serving_certificate
+            if serving_certificate is not None
             else SecretNameReference()
         )
 
@@ -270,9 +270,9 @@ class APIServerNamedServingCert(types.Object):
         check_type("names", names, Optional[List[str]])
         if names:  # omit empty
             v["names"] = names
-        servingCertificate = self.servingCertificate()
-        check_type("servingCertificate", servingCertificate, "SecretNameReference")
-        v["servingCertificate"] = servingCertificate
+        serving_certificate = self.serving_certificate()
+        check_type("serving_certificate", serving_certificate, "SecretNameReference")
+        v["servingCertificate"] = serving_certificate
         return v
 
     def names(self) -> Optional[List[str]]:
@@ -283,45 +283,45 @@ class APIServerNamedServingCert(types.Object):
         """
         return self.__names
 
-    def servingCertificate(self) -> "SecretNameReference":
+    def serving_certificate(self) -> "SecretNameReference":
         """
         servingCertificate references a kubernetes.io/tls type secret containing the TLS cert info for serving secure traffic.
         The secret must exist in the openshift-config namespace and contain the following required fields:
         - Secret.Data["tls.key"] - TLS private key.
         - Secret.Data["tls.crt"] - TLS certificate.
         """
-        return self.__servingCertificate
+        return self.__serving_certificate
 
 
 class APIServerServingCerts(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, namedCertificates: List["APIServerNamedServingCert"] = None):
+    def __init__(self, named_certificates: List["APIServerNamedServingCert"] = None):
         super().__init__()
-        self.__namedCertificates = (
-            namedCertificates if namedCertificates is not None else []
+        self.__named_certificates = (
+            named_certificates if named_certificates is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        namedCertificates = self.namedCertificates()
+        named_certificates = self.named_certificates()
         check_type(
-            "namedCertificates",
-            namedCertificates,
+            "named_certificates",
+            named_certificates,
             Optional[List["APIServerNamedServingCert"]],
         )
-        if namedCertificates:  # omit empty
-            v["namedCertificates"] = namedCertificates
+        if named_certificates:  # omit empty
+            v["namedCertificates"] = named_certificates
         return v
 
-    def namedCertificates(self) -> Optional[List["APIServerNamedServingCert"]]:
+    def named_certificates(self) -> Optional[List["APIServerNamedServingCert"]]:
         """
         namedCertificates references secrets containing the TLS cert info for serving secure traffic to specific hostnames.
         If no named certificates are provided, or no named certificates match the server name as understood by a client,
         the defaultServingCertificate will be used.
         """
-        return self.__namedCertificates
+        return self.__named_certificates
 
 
 class ConfigMapNameReference(types.Object):
@@ -360,11 +360,11 @@ class TLSProfileSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, ciphers: List[str] = None, minTLSVersion: TLSProtocolVersion = None
+        self, ciphers: List[str] = None, min_tls_version: TLSProtocolVersion = None
     ):
         super().__init__()
         self.__ciphers = ciphers if ciphers is not None else []
-        self.__minTLSVersion = minTLSVersion
+        self.__min_tls_version = min_tls_version
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -372,9 +372,9 @@ class TLSProfileSpec(types.Object):
         ciphers = self.ciphers()
         check_type("ciphers", ciphers, List[str])
         v["ciphers"] = ciphers
-        minTLSVersion = self.minTLSVersion()
-        check_type("minTLSVersion", minTLSVersion, TLSProtocolVersion)
-        v["minTLSVersion"] = minTLSVersion
+        min_tls_version = self.min_tls_version()
+        check_type("min_tls_version", min_tls_version, TLSProtocolVersion)
+        v["minTLSVersion"] = min_tls_version
         return v
 
     def ciphers(self) -> List[str]:
@@ -388,7 +388,7 @@ class TLSProfileSpec(types.Object):
         """
         return self.__ciphers
 
-    def minTLSVersion(self) -> TLSProtocolVersion:
+    def min_tls_version(self) -> TLSProtocolVersion:
         """
         minTLSVersion is used to specify the minimal version of the TLS protocol
         that is negotiated during the TLS handshake. For example, to use TLS
@@ -398,7 +398,7 @@ class TLSProfileSpec(types.Object):
         
         NOTE: currently the highest minTLSVersion allowed is VersionTLS12
         """
-        return self.__minTLSVersion
+        return self.__min_tls_version
 
 
 class CustomTLSProfile(types.Object):
@@ -409,22 +409,22 @@ class CustomTLSProfile(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, tLSProfileSpec: "TLSProfileSpec" = None):
+    def __init__(self, tls_profile_spec: "TLSProfileSpec" = None):
         super().__init__()
-        self.__tLSProfileSpec = (
-            tLSProfileSpec if tLSProfileSpec is not None else TLSProfileSpec()
+        self.__tls_profile_spec = (
+            tls_profile_spec if tls_profile_spec is not None else TLSProfileSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        tLSProfileSpec = self.tLSProfileSpec()
-        check_type("tLSProfileSpec", tLSProfileSpec, "TLSProfileSpec")
-        v.update(tLSProfileSpec._root())  # inline
+        tls_profile_spec = self.tls_profile_spec()
+        check_type("tls_profile_spec", tls_profile_spec, "TLSProfileSpec")
+        v.update(tls_profile_spec._root())  # inline
         return v
 
-    def tLSProfileSpec(self) -> "TLSProfileSpec":
-        return self.__tLSProfileSpec
+    def tls_profile_spec(self) -> "TLSProfileSpec":
+        return self.__tls_profile_spec
 
 
 class IntermediateTLSProfile(types.Object):
@@ -634,63 +634,65 @@ class APIServerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        servingCerts: "APIServerServingCerts" = None,
-        clientCA: "ConfigMapNameReference" = None,
-        additionalCORSAllowedOrigins: List[str] = None,
+        serving_certs: "APIServerServingCerts" = None,
+        client_ca: "ConfigMapNameReference" = None,
+        additional_cors_allowed_origins: List[str] = None,
         encryption: "APIServerEncryption" = None,
-        tlsSecurityProfile: "TLSSecurityProfile" = None,
+        tls_security_profile: "TLSSecurityProfile" = None,
     ):
         super().__init__()
-        self.__servingCerts = (
-            servingCerts if servingCerts is not None else APIServerServingCerts()
+        self.__serving_certs = (
+            serving_certs if serving_certs is not None else APIServerServingCerts()
         )
-        self.__clientCA = clientCA if clientCA is not None else ConfigMapNameReference()
-        self.__additionalCORSAllowedOrigins = (
-            additionalCORSAllowedOrigins
-            if additionalCORSAllowedOrigins is not None
+        self.__client_ca = (
+            client_ca if client_ca is not None else ConfigMapNameReference()
+        )
+        self.__additional_cors_allowed_origins = (
+            additional_cors_allowed_origins
+            if additional_cors_allowed_origins is not None
             else []
         )
         self.__encryption = (
             encryption if encryption is not None else APIServerEncryption()
         )
-        self.__tlsSecurityProfile = tlsSecurityProfile
+        self.__tls_security_profile = tls_security_profile
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        servingCerts = self.servingCerts()
-        check_type("servingCerts", servingCerts, "APIServerServingCerts")
-        v["servingCerts"] = servingCerts
-        clientCA = self.clientCA()
-        check_type("clientCA", clientCA, "ConfigMapNameReference")
-        v["clientCA"] = clientCA
-        additionalCORSAllowedOrigins = self.additionalCORSAllowedOrigins()
+        serving_certs = self.serving_certs()
+        check_type("serving_certs", serving_certs, "APIServerServingCerts")
+        v["servingCerts"] = serving_certs
+        client_ca = self.client_ca()
+        check_type("client_ca", client_ca, "ConfigMapNameReference")
+        v["clientCA"] = client_ca
+        additional_cors_allowed_origins = self.additional_cors_allowed_origins()
         check_type(
-            "additionalCORSAllowedOrigins",
-            additionalCORSAllowedOrigins,
+            "additional_cors_allowed_origins",
+            additional_cors_allowed_origins,
             Optional[List[str]],
         )
-        if additionalCORSAllowedOrigins:  # omit empty
-            v["additionalCORSAllowedOrigins"] = additionalCORSAllowedOrigins
+        if additional_cors_allowed_origins:  # omit empty
+            v["additionalCORSAllowedOrigins"] = additional_cors_allowed_origins
         encryption = self.encryption()
         check_type("encryption", encryption, "APIServerEncryption")
         v["encryption"] = encryption
-        tlsSecurityProfile = self.tlsSecurityProfile()
+        tls_security_profile = self.tls_security_profile()
         check_type(
-            "tlsSecurityProfile", tlsSecurityProfile, Optional["TLSSecurityProfile"]
+            "tls_security_profile", tls_security_profile, Optional["TLSSecurityProfile"]
         )
-        if tlsSecurityProfile is not None:  # omit empty
-            v["tlsSecurityProfile"] = tlsSecurityProfile
+        if tls_security_profile is not None:  # omit empty
+            v["tlsSecurityProfile"] = tls_security_profile
         return v
 
-    def servingCerts(self) -> "APIServerServingCerts":
+    def serving_certs(self) -> "APIServerServingCerts":
         """
         servingCert is the TLS cert info for serving secure traffic. If not specified, operator managed certificates
         will be used for serving secure traffic.
         """
-        return self.__servingCerts
+        return self.__serving_certs
 
-    def clientCA(self) -> "ConfigMapNameReference":
+    def client_ca(self) -> "ConfigMapNameReference":
         """
         clientCA references a ConfigMap containing a certificate bundle for the signers that will be recognized for
         incoming client certificates in addition to the operator managed signers. If this is empty, then only operator managed signers are valid.
@@ -698,16 +700,16 @@ class APIServerSpec(types.Object):
         The ConfigMap must exist in the openshift-config namespace and contain the following required fields:
         - ConfigMap.Data["ca-bundle.crt"] - CA bundle.
         """
-        return self.__clientCA
+        return self.__client_ca
 
-    def additionalCORSAllowedOrigins(self) -> Optional[List[str]]:
+    def additional_cors_allowed_origins(self) -> Optional[List[str]]:
         """
         additionalCORSAllowedOrigins lists additional, user-defined regular expressions describing hosts for which the
         API server allows access using the CORS headers. This may be needed to access the API and the integrated OAuth
         server from JavaScript applications.
         The values are regular expressions that correspond to the Golang regular expression language.
         """
-        return self.__additionalCORSAllowedOrigins
+        return self.__additional_cors_allowed_origins
 
     def encryption(self) -> "APIServerEncryption":
         """
@@ -715,7 +717,7 @@ class APIServerSpec(types.Object):
         """
         return self.__encryption
 
-    def tlsSecurityProfile(self) -> Optional["TLSSecurityProfile"]:
+    def tls_security_profile(self) -> Optional["TLSSecurityProfile"]:
         """
         tlsSecurityProfile specifies settings for TLS connections for externally exposed servers.
         
@@ -723,7 +725,7 @@ class APIServerSpec(types.Object):
         Intermediate profiles are currently supported, and the maximum available MinTLSVersions
         is VersionTLS12.
         """
-        return self.__tlsSecurityProfile
+        return self.__tls_security_profile
 
 
 class APIServer(base.TypedObject, base.MetadataObject):
@@ -743,7 +745,7 @@ class APIServer(base.TypedObject, base.MetadataObject):
         spec: "APIServerSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="APIServer",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -812,51 +814,53 @@ class AdmissionConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        pluginConfig: Dict[str, "AdmissionPluginConfig"] = None,
-        enabledPlugins: List[str] = None,
-        disabledPlugins: List[str] = None,
+        plugin_config: Dict[str, "AdmissionPluginConfig"] = None,
+        enabled_plugins: List[str] = None,
+        disabled_plugins: List[str] = None,
     ):
         super().__init__()
-        self.__pluginConfig = pluginConfig if pluginConfig is not None else {}
-        self.__enabledPlugins = enabledPlugins if enabledPlugins is not None else []
-        self.__disabledPlugins = disabledPlugins if disabledPlugins is not None else []
+        self.__plugin_config = plugin_config if plugin_config is not None else {}
+        self.__enabled_plugins = enabled_plugins if enabled_plugins is not None else []
+        self.__disabled_plugins = (
+            disabled_plugins if disabled_plugins is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        pluginConfig = self.pluginConfig()
+        plugin_config = self.plugin_config()
         check_type(
-            "pluginConfig", pluginConfig, Optional[Dict[str, "AdmissionPluginConfig"]]
+            "plugin_config", plugin_config, Optional[Dict[str, "AdmissionPluginConfig"]]
         )
-        if pluginConfig:  # omit empty
-            v["pluginConfig"] = pluginConfig
-        enabledPlugins = self.enabledPlugins()
-        check_type("enabledPlugins", enabledPlugins, Optional[List[str]])
-        if enabledPlugins:  # omit empty
-            v["enabledPlugins"] = enabledPlugins
-        disabledPlugins = self.disabledPlugins()
-        check_type("disabledPlugins", disabledPlugins, Optional[List[str]])
-        if disabledPlugins:  # omit empty
-            v["disabledPlugins"] = disabledPlugins
+        if plugin_config:  # omit empty
+            v["pluginConfig"] = plugin_config
+        enabled_plugins = self.enabled_plugins()
+        check_type("enabled_plugins", enabled_plugins, Optional[List[str]])
+        if enabled_plugins:  # omit empty
+            v["enabledPlugins"] = enabled_plugins
+        disabled_plugins = self.disabled_plugins()
+        check_type("disabled_plugins", disabled_plugins, Optional[List[str]])
+        if disabled_plugins:  # omit empty
+            v["disabledPlugins"] = disabled_plugins
         return v
 
-    def pluginConfig(self) -> Optional[Dict[str, "AdmissionPluginConfig"]]:
-        return self.__pluginConfig
+    def plugin_config(self) -> Optional[Dict[str, "AdmissionPluginConfig"]]:
+        return self.__plugin_config
 
-    def enabledPlugins(self) -> Optional[List[str]]:
+    def enabled_plugins(self) -> Optional[List[str]]:
         """
         enabledPlugins is a list of admission plugins that must be on in addition to the default list.
         Some admission plugins are disabled by default, but certain configurations require them.  This is fairly uncommon
         and can result in performance penalties and unexpected behavior.
         """
-        return self.__enabledPlugins
+        return self.__enabled_plugins
 
-    def disabledPlugins(self) -> Optional[List[str]]:
+    def disabled_plugins(self) -> Optional[List[str]]:
         """
         disabledPlugins is a list of admission plugins that must be off.  Putting something in this list
         is almost always a mistake and likely to result in cluster instability.
         """
-        return self.__disabledPlugins
+        return self.__disabled_plugins
 
 
 class AuditConfig(types.Object):
@@ -869,27 +873,27 @@ class AuditConfig(types.Object):
     def __init__(
         self,
         enabled: bool = False,
-        auditFilePath: str = "",
-        maximumFileRetentionDays: int = 0,
-        maximumRetainedFiles: int = 0,
-        maximumFileSizeMegabytes: int = 0,
-        policyFile: str = "",
-        policyConfiguration: "runtime.RawExtension" = None,
-        logFormat: LogFormatType = None,
-        webHookKubeConfig: str = "",
-        webHookMode: WebHookModeType = None,
+        audit_file_path: str = "",
+        maximum_file_retention_days: int = 0,
+        maximum_retained_files: int = 0,
+        maximum_file_size_megabytes: int = 0,
+        policy_file: str = "",
+        policy_configuration: "runtime.RawExtension" = None,
+        log_format: LogFormatType = None,
+        web_hook_kube_config: str = "",
+        web_hook_mode: WebHookModeType = None,
     ):
         super().__init__()
         self.__enabled = enabled
-        self.__auditFilePath = auditFilePath
-        self.__maximumFileRetentionDays = maximumFileRetentionDays
-        self.__maximumRetainedFiles = maximumRetainedFiles
-        self.__maximumFileSizeMegabytes = maximumFileSizeMegabytes
-        self.__policyFile = policyFile
-        self.__policyConfiguration = policyConfiguration
-        self.__logFormat = logFormat
-        self.__webHookKubeConfig = webHookKubeConfig
-        self.__webHookMode = webHookMode
+        self.__audit_file_path = audit_file_path
+        self.__maximum_file_retention_days = maximum_file_retention_days
+        self.__maximum_retained_files = maximum_retained_files
+        self.__maximum_file_size_megabytes = maximum_file_size_megabytes
+        self.__policy_file = policy_file
+        self.__policy_configuration = policy_configuration
+        self.__log_format = log_format
+        self.__web_hook_kube_config = web_hook_kube_config
+        self.__web_hook_mode = web_hook_mode
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -897,33 +901,33 @@ class AuditConfig(types.Object):
         enabled = self.enabled()
         check_type("enabled", enabled, bool)
         v["enabled"] = enabled
-        auditFilePath = self.auditFilePath()
-        check_type("auditFilePath", auditFilePath, str)
-        v["auditFilePath"] = auditFilePath
-        maximumFileRetentionDays = self.maximumFileRetentionDays()
-        check_type("maximumFileRetentionDays", maximumFileRetentionDays, int)
-        v["maximumFileRetentionDays"] = maximumFileRetentionDays
-        maximumRetainedFiles = self.maximumRetainedFiles()
-        check_type("maximumRetainedFiles", maximumRetainedFiles, int)
-        v["maximumRetainedFiles"] = maximumRetainedFiles
-        maximumFileSizeMegabytes = self.maximumFileSizeMegabytes()
-        check_type("maximumFileSizeMegabytes", maximumFileSizeMegabytes, int)
-        v["maximumFileSizeMegabytes"] = maximumFileSizeMegabytes
-        policyFile = self.policyFile()
-        check_type("policyFile", policyFile, str)
-        v["policyFile"] = policyFile
-        policyConfiguration = self.policyConfiguration()
-        check_type("policyConfiguration", policyConfiguration, "runtime.RawExtension")
-        v["policyConfiguration"] = policyConfiguration
-        logFormat = self.logFormat()
-        check_type("logFormat", logFormat, LogFormatType)
-        v["logFormat"] = logFormat
-        webHookKubeConfig = self.webHookKubeConfig()
-        check_type("webHookKubeConfig", webHookKubeConfig, str)
-        v["webHookKubeConfig"] = webHookKubeConfig
-        webHookMode = self.webHookMode()
-        check_type("webHookMode", webHookMode, WebHookModeType)
-        v["webHookMode"] = webHookMode
+        audit_file_path = self.audit_file_path()
+        check_type("audit_file_path", audit_file_path, str)
+        v["auditFilePath"] = audit_file_path
+        maximum_file_retention_days = self.maximum_file_retention_days()
+        check_type("maximum_file_retention_days", maximum_file_retention_days, int)
+        v["maximumFileRetentionDays"] = maximum_file_retention_days
+        maximum_retained_files = self.maximum_retained_files()
+        check_type("maximum_retained_files", maximum_retained_files, int)
+        v["maximumRetainedFiles"] = maximum_retained_files
+        maximum_file_size_megabytes = self.maximum_file_size_megabytes()
+        check_type("maximum_file_size_megabytes", maximum_file_size_megabytes, int)
+        v["maximumFileSizeMegabytes"] = maximum_file_size_megabytes
+        policy_file = self.policy_file()
+        check_type("policy_file", policy_file, str)
+        v["policyFile"] = policy_file
+        policy_configuration = self.policy_configuration()
+        check_type("policy_configuration", policy_configuration, "runtime.RawExtension")
+        v["policyConfiguration"] = policy_configuration
+        log_format = self.log_format()
+        check_type("log_format", log_format, LogFormatType)
+        v["logFormat"] = log_format
+        web_hook_kube_config = self.web_hook_kube_config()
+        check_type("web_hook_kube_config", web_hook_kube_config, str)
+        v["webHookKubeConfig"] = web_hook_kube_config
+        web_hook_mode = self.web_hook_mode()
+        check_type("web_hook_mode", web_hook_mode, WebHookModeType)
+        v["webHookMode"] = web_hook_mode
         return v
 
     def enabled(self) -> bool:
@@ -933,62 +937,62 @@ class AuditConfig(types.Object):
         """
         return self.__enabled
 
-    def auditFilePath(self) -> str:
+    def audit_file_path(self) -> str:
         """
         All requests coming to the apiserver will be logged to this file.
         """
-        return self.__auditFilePath
+        return self.__audit_file_path
 
-    def maximumFileRetentionDays(self) -> int:
+    def maximum_file_retention_days(self) -> int:
         """
         Maximum number of days to retain old log files based on the timestamp encoded in their filename.
         """
-        return self.__maximumFileRetentionDays
+        return self.__maximum_file_retention_days
 
-    def maximumRetainedFiles(self) -> int:
+    def maximum_retained_files(self) -> int:
         """
         Maximum number of old log files to retain.
         """
-        return self.__maximumRetainedFiles
+        return self.__maximum_retained_files
 
-    def maximumFileSizeMegabytes(self) -> int:
+    def maximum_file_size_megabytes(self) -> int:
         """
         Maximum size in megabytes of the log file before it gets rotated. Defaults to 100MB.
         """
-        return self.__maximumFileSizeMegabytes
+        return self.__maximum_file_size_megabytes
 
-    def policyFile(self) -> str:
+    def policy_file(self) -> str:
         """
         PolicyFile is a path to the file that defines the audit policy configuration.
         """
-        return self.__policyFile
+        return self.__policy_file
 
-    def policyConfiguration(self) -> "runtime.RawExtension":
+    def policy_configuration(self) -> "runtime.RawExtension":
         """
         PolicyConfiguration is an embedded policy configuration object to be used
         as the audit policy configuration. If present, it will be used instead of
         the path to the policy file.
         +nullable
         """
-        return self.__policyConfiguration
+        return self.__policy_configuration
 
-    def logFormat(self) -> LogFormatType:
+    def log_format(self) -> LogFormatType:
         """
         Format of saved audits (legacy or json).
         """
-        return self.__logFormat
+        return self.__log_format
 
-    def webHookKubeConfig(self) -> str:
+    def web_hook_kube_config(self) -> str:
         """
         Path to a .kubeconfig formatted file that defines the audit webhook configuration.
         """
-        return self.__webHookKubeConfig
+        return self.__web_hook_kube_config
 
-    def webHookMode(self) -> WebHookModeType:
+    def web_hook_mode(self) -> WebHookModeType:
         """
         Strategy for sending audit events (block or batch).
         """
-        return self.__webHookMode
+        return self.__web_hook_mode
 
 
 class WebhookTokenAuthenticator(types.Object):
@@ -998,21 +1002,21 @@ class WebhookTokenAuthenticator(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, kubeConfig: "SecretNameReference" = None):
+    def __init__(self, kube_config: "SecretNameReference" = None):
         super().__init__()
-        self.__kubeConfig = (
-            kubeConfig if kubeConfig is not None else SecretNameReference()
+        self.__kube_config = (
+            kube_config if kube_config is not None else SecretNameReference()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        kubeConfig = self.kubeConfig()
-        check_type("kubeConfig", kubeConfig, "SecretNameReference")
-        v["kubeConfig"] = kubeConfig
+        kube_config = self.kube_config()
+        check_type("kube_config", kube_config, "SecretNameReference")
+        v["kubeConfig"] = kube_config
         return v
 
-    def kubeConfig(self) -> "SecretNameReference":
+    def kube_config(self) -> "SecretNameReference":
         """
         kubeConfig contains kube config file data which describes how to access the remote webhook service.
         For further details, see:
@@ -1022,7 +1026,7 @@ class WebhookTokenAuthenticator(types.Object):
         If the specified kube config data is not valid, the webhook is not honored.
         The namespace for this secret is determined by the point of use.
         """
-        return self.__kubeConfig
+        return self.__kube_config
 
 
 class AuthenticationSpec(types.Object):
@@ -1031,16 +1035,18 @@ class AuthenticationSpec(types.Object):
     def __init__(
         self,
         type: AuthenticationType = None,
-        oauthMetadata: "ConfigMapNameReference" = None,
-        webhookTokenAuthenticators: List["WebhookTokenAuthenticator"] = None,
+        oauth_metadata: "ConfigMapNameReference" = None,
+        webhook_token_authenticators: List["WebhookTokenAuthenticator"] = None,
     ):
         super().__init__()
         self.__type = type
-        self.__oauthMetadata = (
-            oauthMetadata if oauthMetadata is not None else ConfigMapNameReference()
+        self.__oauth_metadata = (
+            oauth_metadata if oauth_metadata is not None else ConfigMapNameReference()
         )
-        self.__webhookTokenAuthenticators = (
-            webhookTokenAuthenticators if webhookTokenAuthenticators is not None else []
+        self.__webhook_token_authenticators = (
+            webhook_token_authenticators
+            if webhook_token_authenticators is not None
+            else []
         )
 
     @typechecked
@@ -1049,17 +1055,17 @@ class AuthenticationSpec(types.Object):
         type = self.type()
         check_type("type", type, AuthenticationType)
         v["type"] = type
-        oauthMetadata = self.oauthMetadata()
-        check_type("oauthMetadata", oauthMetadata, "ConfigMapNameReference")
-        v["oauthMetadata"] = oauthMetadata
-        webhookTokenAuthenticators = self.webhookTokenAuthenticators()
+        oauth_metadata = self.oauth_metadata()
+        check_type("oauth_metadata", oauth_metadata, "ConfigMapNameReference")
+        v["oauthMetadata"] = oauth_metadata
+        webhook_token_authenticators = self.webhook_token_authenticators()
         check_type(
-            "webhookTokenAuthenticators",
-            webhookTokenAuthenticators,
+            "webhook_token_authenticators",
+            webhook_token_authenticators,
             Optional[List["WebhookTokenAuthenticator"]],
         )
-        if webhookTokenAuthenticators:  # omit empty
-            v["webhookTokenAuthenticators"] = webhookTokenAuthenticators
+        if webhook_token_authenticators:  # omit empty
+            v["webhookTokenAuthenticators"] = webhook_token_authenticators
         return v
 
     def type(self) -> AuthenticationType:
@@ -1070,7 +1076,7 @@ class AuthenticationSpec(types.Object):
         """
         return self.__type
 
-    def oauthMetadata(self) -> "ConfigMapNameReference":
+    def oauth_metadata(self) -> "ConfigMapNameReference":
         """
         oauthMetadata contains the discovery endpoint data for OAuth 2.0
         Authorization Server Metadata for an external OAuth server.
@@ -1085,9 +1091,11 @@ class AuthenticationSpec(types.Object):
         If the specified metadata is not valid, no metadata is served.
         The namespace for this config map is openshift-config.
         """
-        return self.__oauthMetadata
+        return self.__oauth_metadata
 
-    def webhookTokenAuthenticators(self) -> Optional[List["WebhookTokenAuthenticator"]]:
+    def webhook_token_authenticators(
+        self
+    ) -> Optional[List["WebhookTokenAuthenticator"]]:
         """
         webhookTokenAuthenticators configures remote token reviewers.
         These remote authentication webhooks can be used to verify bearer tokens
@@ -1095,7 +1103,7 @@ class AuthenticationSpec(types.Object):
         honor bearer tokens that are provisioned by an external authentication service.
         The namespace for these secrets is openshift-config.
         """
-        return self.__webhookTokenAuthenticators
+        return self.__webhook_token_authenticators
 
 
 class Authentication(base.TypedObject, base.MetadataObject):
@@ -1114,7 +1122,7 @@ class Authentication(base.TypedObject, base.MetadataObject):
         spec: "AuthenticationSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Authentication",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1149,17 +1157,17 @@ class OAuthRemoteConnectionInfo(types.Object):
         self,
         url: str = "",
         ca: "ConfigMapNameReference" = None,
-        tlsClientCert: "SecretNameReference" = None,
-        tlsClientKey: "SecretNameReference" = None,
+        tls_client_cert: "SecretNameReference" = None,
+        tls_client_key: "SecretNameReference" = None,
     ):
         super().__init__()
         self.__url = url
         self.__ca = ca if ca is not None else ConfigMapNameReference()
-        self.__tlsClientCert = (
-            tlsClientCert if tlsClientCert is not None else SecretNameReference()
+        self.__tls_client_cert = (
+            tls_client_cert if tls_client_cert is not None else SecretNameReference()
         )
-        self.__tlsClientKey = (
-            tlsClientKey if tlsClientKey is not None else SecretNameReference()
+        self.__tls_client_key = (
+            tls_client_key if tls_client_key is not None else SecretNameReference()
         )
 
     @typechecked
@@ -1171,12 +1179,12 @@ class OAuthRemoteConnectionInfo(types.Object):
         ca = self.ca()
         check_type("ca", ca, "ConfigMapNameReference")
         v["ca"] = ca
-        tlsClientCert = self.tlsClientCert()
-        check_type("tlsClientCert", tlsClientCert, "SecretNameReference")
-        v["tlsClientCert"] = tlsClientCert
-        tlsClientKey = self.tlsClientKey()
-        check_type("tlsClientKey", tlsClientKey, "SecretNameReference")
-        v["tlsClientKey"] = tlsClientKey
+        tls_client_cert = self.tls_client_cert()
+        check_type("tls_client_cert", tls_client_cert, "SecretNameReference")
+        v["tlsClientCert"] = tls_client_cert
+        tls_client_key = self.tls_client_key()
+        check_type("tls_client_key", tls_client_key, "SecretNameReference")
+        v["tlsClientKey"] = tls_client_key
         return v
 
     def url(self) -> str:
@@ -1197,7 +1205,7 @@ class OAuthRemoteConnectionInfo(types.Object):
         """
         return self.__ca
 
-    def tlsClientCert(self) -> "SecretNameReference":
+    def tls_client_cert(self) -> "SecretNameReference":
         """
         tlsClientCert is an optional reference to a secret by name that contains the
         PEM-encoded TLS client certificate to present when connecting to the server.
@@ -1206,9 +1214,9 @@ class OAuthRemoteConnectionInfo(types.Object):
         If the specified certificate data is not valid, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__tlsClientCert
+        return self.__tls_client_cert
 
-    def tlsClientKey(self) -> "SecretNameReference":
+    def tls_client_key(self) -> "SecretNameReference":
         """
         tlsClientKey is an optional reference to a secret by name that contains the
         PEM-encoded TLS private key for the client certificate referenced in tlsClientCert.
@@ -1217,7 +1225,7 @@ class OAuthRemoteConnectionInfo(types.Object):
         If the specified certificate data is not valid, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__tlsClientKey
+        return self.__tls_client_key
 
 
 class BasicAuthIdentityProvider(types.Object):
@@ -1227,31 +1235,33 @@ class BasicAuthIdentityProvider(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, oAuthRemoteConnectionInfo: "OAuthRemoteConnectionInfo" = None):
+    def __init__(
+        self, oauth_remote_connection_info: "OAuthRemoteConnectionInfo" = None
+    ):
         super().__init__()
-        self.__oAuthRemoteConnectionInfo = (
-            oAuthRemoteConnectionInfo
-            if oAuthRemoteConnectionInfo is not None
+        self.__oauth_remote_connection_info = (
+            oauth_remote_connection_info
+            if oauth_remote_connection_info is not None
             else OAuthRemoteConnectionInfo()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        oAuthRemoteConnectionInfo = self.oAuthRemoteConnectionInfo()
+        oauth_remote_connection_info = self.oauth_remote_connection_info()
         check_type(
-            "oAuthRemoteConnectionInfo",
-            oAuthRemoteConnectionInfo,
+            "oauth_remote_connection_info",
+            oauth_remote_connection_info,
             "OAuthRemoteConnectionInfo",
         )
-        v.update(oAuthRemoteConnectionInfo._root())  # inline
+        v.update(oauth_remote_connection_info._root())  # inline
         return v
 
-    def oAuthRemoteConnectionInfo(self) -> "OAuthRemoteConnectionInfo":
+    def oauth_remote_connection_info(self) -> "OAuthRemoteConnectionInfo":
         """
         OAuthRemoteConnectionInfo contains information about how to connect to the external basic auth server
         """
-        return self.__oAuthRemoteConnectionInfo
+        return self.__oauth_remote_connection_info
 
 
 class ImageLabel(types.Object):
@@ -1296,73 +1306,73 @@ class ProxySpec(types.Object):
     @typechecked
     def __init__(
         self,
-        httpProxy: str = None,
-        httpsProxy: str = None,
-        noProxy: str = None,
-        readinessEndpoints: List[str] = None,
-        trustedCA: "ConfigMapNameReference" = None,
+        http_proxy: str = None,
+        https_proxy: str = None,
+        no_proxy: str = None,
+        readiness_endpoints: List[str] = None,
+        trusted_ca: "ConfigMapNameReference" = None,
     ):
         super().__init__()
-        self.__httpProxy = httpProxy
-        self.__httpsProxy = httpsProxy
-        self.__noProxy = noProxy
-        self.__readinessEndpoints = (
-            readinessEndpoints if readinessEndpoints is not None else []
+        self.__http_proxy = http_proxy
+        self.__https_proxy = https_proxy
+        self.__no_proxy = no_proxy
+        self.__readiness_endpoints = (
+            readiness_endpoints if readiness_endpoints is not None else []
         )
-        self.__trustedCA = (
-            trustedCA if trustedCA is not None else ConfigMapNameReference()
+        self.__trusted_ca = (
+            trusted_ca if trusted_ca is not None else ConfigMapNameReference()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        httpProxy = self.httpProxy()
-        check_type("httpProxy", httpProxy, Optional[str])
-        if httpProxy:  # omit empty
-            v["httpProxy"] = httpProxy
-        httpsProxy = self.httpsProxy()
-        check_type("httpsProxy", httpsProxy, Optional[str])
-        if httpsProxy:  # omit empty
-            v["httpsProxy"] = httpsProxy
-        noProxy = self.noProxy()
-        check_type("noProxy", noProxy, Optional[str])
-        if noProxy:  # omit empty
-            v["noProxy"] = noProxy
-        readinessEndpoints = self.readinessEndpoints()
-        check_type("readinessEndpoints", readinessEndpoints, Optional[List[str]])
-        if readinessEndpoints:  # omit empty
-            v["readinessEndpoints"] = readinessEndpoints
-        trustedCA = self.trustedCA()
-        check_type("trustedCA", trustedCA, Optional["ConfigMapNameReference"])
-        v["trustedCA"] = trustedCA
+        http_proxy = self.http_proxy()
+        check_type("http_proxy", http_proxy, Optional[str])
+        if http_proxy:  # omit empty
+            v["httpProxy"] = http_proxy
+        https_proxy = self.https_proxy()
+        check_type("https_proxy", https_proxy, Optional[str])
+        if https_proxy:  # omit empty
+            v["httpsProxy"] = https_proxy
+        no_proxy = self.no_proxy()
+        check_type("no_proxy", no_proxy, Optional[str])
+        if no_proxy:  # omit empty
+            v["noProxy"] = no_proxy
+        readiness_endpoints = self.readiness_endpoints()
+        check_type("readiness_endpoints", readiness_endpoints, Optional[List[str]])
+        if readiness_endpoints:  # omit empty
+            v["readinessEndpoints"] = readiness_endpoints
+        trusted_ca = self.trusted_ca()
+        check_type("trusted_ca", trusted_ca, Optional["ConfigMapNameReference"])
+        v["trustedCA"] = trusted_ca
         return v
 
-    def httpProxy(self) -> Optional[str]:
+    def http_proxy(self) -> Optional[str]:
         """
         httpProxy is the URL of the proxy for HTTP requests.  Empty means unset and will not result in an env var.
         """
-        return self.__httpProxy
+        return self.__http_proxy
 
-    def httpsProxy(self) -> Optional[str]:
+    def https_proxy(self) -> Optional[str]:
         """
         httpsProxy is the URL of the proxy for HTTPS requests.  Empty means unset and will not result in an env var.
         """
-        return self.__httpsProxy
+        return self.__https_proxy
 
-    def noProxy(self) -> Optional[str]:
+    def no_proxy(self) -> Optional[str]:
         """
         noProxy is a comma-separated list of hostnames and/or CIDRs for which the proxy should not be used.
         Empty means unset and will not result in an env var.
         """
-        return self.__noProxy
+        return self.__no_proxy
 
-    def readinessEndpoints(self) -> Optional[List[str]]:
+    def readiness_endpoints(self) -> Optional[List[str]]:
         """
         readinessEndpoints is a list of endpoints used to verify readiness of the proxy.
         """
-        return self.__readinessEndpoints
+        return self.__readiness_endpoints
 
-    def trustedCA(self) -> Optional["ConfigMapNameReference"]:
+    def trusted_ca(self) -> Optional["ConfigMapNameReference"]:
         """
         trustedCA is a reference to a ConfigMap containing a CA certificate bundle used
         for client egress HTTPS connections. The certificate bundle must be from the CA
@@ -1384,7 +1394,7 @@ class ProxySpec(types.Object):
              Custom CA certificate bundle.
              -----END CERTIFICATE-----
         """
-        return self.__trustedCA
+        return self.__trusted_ca
 
 
 class BuildDefaults(types.Object):
@@ -1392,17 +1402,17 @@ class BuildDefaults(types.Object):
     @typechecked
     def __init__(
         self,
-        defaultProxy: "ProxySpec" = None,
-        gitProxy: "ProxySpec" = None,
+        default_proxy: "ProxySpec" = None,
+        git_proxy: "ProxySpec" = None,
         env: List["k8sv1.EnvVar"] = None,
-        imageLabels: List["ImageLabel"] = None,
+        image_labels: List["ImageLabel"] = None,
         resources: "k8sv1.ResourceRequirements" = None,
     ):
         super().__init__()
-        self.__defaultProxy = defaultProxy
-        self.__gitProxy = gitProxy
+        self.__default_proxy = default_proxy
+        self.__git_proxy = git_proxy
         self.__env = env if env is not None else []
-        self.__imageLabels = imageLabels if imageLabels is not None else []
+        self.__image_labels = image_labels if image_labels is not None else []
         self.__resources = (
             resources if resources is not None else k8sv1.ResourceRequirements()
         )
@@ -1410,28 +1420,28 @@ class BuildDefaults(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        defaultProxy = self.defaultProxy()
-        check_type("defaultProxy", defaultProxy, Optional["ProxySpec"])
-        if defaultProxy is not None:  # omit empty
-            v["defaultProxy"] = defaultProxy
-        gitProxy = self.gitProxy()
-        check_type("gitProxy", gitProxy, Optional["ProxySpec"])
-        if gitProxy is not None:  # omit empty
-            v["gitProxy"] = gitProxy
+        default_proxy = self.default_proxy()
+        check_type("default_proxy", default_proxy, Optional["ProxySpec"])
+        if default_proxy is not None:  # omit empty
+            v["defaultProxy"] = default_proxy
+        git_proxy = self.git_proxy()
+        check_type("git_proxy", git_proxy, Optional["ProxySpec"])
+        if git_proxy is not None:  # omit empty
+            v["gitProxy"] = git_proxy
         env = self.env()
         check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
-        imageLabels = self.imageLabels()
-        check_type("imageLabels", imageLabels, Optional[List["ImageLabel"]])
-        if imageLabels:  # omit empty
-            v["imageLabels"] = imageLabels
+        image_labels = self.image_labels()
+        check_type("image_labels", image_labels, Optional[List["ImageLabel"]])
+        if image_labels:  # omit empty
+            v["imageLabels"] = image_labels
         resources = self.resources()
         check_type("resources", resources, "k8sv1.ResourceRequirements")
         v["resources"] = resources
         return v
 
-    def defaultProxy(self) -> Optional["ProxySpec"]:
+    def default_proxy(self) -> Optional["ProxySpec"]:
         """
         DefaultProxy contains the default proxy settings for all build operations, including image pull/push
         and source download.
@@ -1439,16 +1449,16 @@ class BuildDefaults(types.Object):
         Values can be overrode by setting the `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` environment variables
         in the build config's strategy.
         """
-        return self.__defaultProxy
+        return self.__default_proxy
 
-    def gitProxy(self) -> Optional["ProxySpec"]:
+    def git_proxy(self) -> Optional["ProxySpec"]:
         """
         GitProxy contains the proxy settings for git operations only. If set, this will override
         any Proxy settings for all git commands, such as git clone.
         
         Values that are not set here will be inherited from DefaultProxy.
         """
-        return self.__gitProxy
+        return self.__git_proxy
 
     def env(self) -> Optional[List["k8sv1.EnvVar"]]:
         """
@@ -1457,13 +1467,13 @@ class BuildDefaults(types.Object):
         """
         return self.__env
 
-    def imageLabels(self) -> Optional[List["ImageLabel"]]:
+    def image_labels(self) -> Optional[List["ImageLabel"]]:
         """
         ImageLabels is a list of docker labels that are applied to the resulting image.
         User can override a default label by providing a label with the same name in their
         Build/BuildConfig.
         """
-        return self.__imageLabels
+        return self.__image_labels
 
     def resources(self) -> "k8sv1.ResourceRequirements":
         """
@@ -1477,45 +1487,45 @@ class BuildOverrides(types.Object):
     @typechecked
     def __init__(
         self,
-        imageLabels: List["ImageLabel"] = None,
-        nodeSelector: Dict[str, str] = None,
+        image_labels: List["ImageLabel"] = None,
+        node_selector: Dict[str, str] = None,
         tolerations: List["k8sv1.Toleration"] = None,
     ):
         super().__init__()
-        self.__imageLabels = imageLabels if imageLabels is not None else []
-        self.__nodeSelector = nodeSelector if nodeSelector is not None else {}
+        self.__image_labels = image_labels if image_labels is not None else []
+        self.__node_selector = node_selector if node_selector is not None else {}
         self.__tolerations = tolerations if tolerations is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        imageLabels = self.imageLabels()
-        check_type("imageLabels", imageLabels, Optional[List["ImageLabel"]])
-        if imageLabels:  # omit empty
-            v["imageLabels"] = imageLabels
-        nodeSelector = self.nodeSelector()
-        check_type("nodeSelector", nodeSelector, Optional[Dict[str, str]])
-        if nodeSelector:  # omit empty
-            v["nodeSelector"] = nodeSelector
+        image_labels = self.image_labels()
+        check_type("image_labels", image_labels, Optional[List["ImageLabel"]])
+        if image_labels:  # omit empty
+            v["imageLabels"] = image_labels
+        node_selector = self.node_selector()
+        check_type("node_selector", node_selector, Optional[Dict[str, str]])
+        if node_selector:  # omit empty
+            v["nodeSelector"] = node_selector
         tolerations = self.tolerations()
         check_type("tolerations", tolerations, Optional[List["k8sv1.Toleration"]])
         if tolerations:  # omit empty
             v["tolerations"] = tolerations
         return v
 
-    def imageLabels(self) -> Optional[List["ImageLabel"]]:
+    def image_labels(self) -> Optional[List["ImageLabel"]]:
         """
         ImageLabels is a list of docker labels that are applied to the resulting image.
         If user provided a label in their Build/BuildConfig with the same name as one in this
         list, the user's label will be overwritten.
         """
-        return self.__imageLabels
+        return self.__image_labels
 
-    def nodeSelector(self) -> Optional[Dict[str, str]]:
+    def node_selector(self) -> Optional[Dict[str, str]]:
         """
         NodeSelector is a selector which must be true for the build pod to fit on a node
         """
-        return self.__nodeSelector
+        return self.__node_selector
 
     def tolerations(self) -> Optional[List["k8sv1.Toleration"]]:
         """
@@ -1530,39 +1540,39 @@ class BuildSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        buildDefaults: "BuildDefaults" = None,
-        buildOverrides: "BuildOverrides" = None,
+        build_defaults: "BuildDefaults" = None,
+        build_overrides: "BuildOverrides" = None,
     ):
         super().__init__()
-        self.__buildDefaults = (
-            buildDefaults if buildDefaults is not None else BuildDefaults()
+        self.__build_defaults = (
+            build_defaults if build_defaults is not None else BuildDefaults()
         )
-        self.__buildOverrides = (
-            buildOverrides if buildOverrides is not None else BuildOverrides()
+        self.__build_overrides = (
+            build_overrides if build_overrides is not None else BuildOverrides()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        buildDefaults = self.buildDefaults()
-        check_type("buildDefaults", buildDefaults, "BuildDefaults")
-        v["buildDefaults"] = buildDefaults
-        buildOverrides = self.buildOverrides()
-        check_type("buildOverrides", buildOverrides, "BuildOverrides")
-        v["buildOverrides"] = buildOverrides
+        build_defaults = self.build_defaults()
+        check_type("build_defaults", build_defaults, "BuildDefaults")
+        v["buildDefaults"] = build_defaults
+        build_overrides = self.build_overrides()
+        check_type("build_overrides", build_overrides, "BuildOverrides")
+        v["buildOverrides"] = build_overrides
         return v
 
-    def buildDefaults(self) -> "BuildDefaults":
+    def build_defaults(self) -> "BuildDefaults":
         """
         BuildDefaults controls the default information for Builds
         """
-        return self.__buildDefaults
+        return self.__build_defaults
 
-    def buildOverrides(self) -> "BuildOverrides":
+    def build_overrides(self) -> "BuildOverrides":
         """
         BuildOverrides controls override settings for builds
         """
-        return self.__buildOverrides
+        return self.__build_overrides
 
 
 class Build(base.TypedObject, base.MetadataObject):
@@ -1583,7 +1593,7 @@ class Build(base.TypedObject, base.MetadataObject):
         spec: "BuildSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Build",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1614,33 +1624,33 @@ class CertInfo(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, certFile: str = "", keyFile: str = ""):
+    def __init__(self, cert_file: str = "", key_file: str = ""):
         super().__init__()
-        self.__certFile = certFile
-        self.__keyFile = keyFile
+        self.__cert_file = cert_file
+        self.__key_file = key_file
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        certFile = self.certFile()
-        check_type("certFile", certFile, str)
-        v["certFile"] = certFile
-        keyFile = self.keyFile()
-        check_type("keyFile", keyFile, str)
-        v["keyFile"] = keyFile
+        cert_file = self.cert_file()
+        check_type("cert_file", cert_file, str)
+        v["certFile"] = cert_file
+        key_file = self.key_file()
+        check_type("key_file", key_file, str)
+        v["keyFile"] = key_file
         return v
 
-    def certFile(self) -> str:
+    def cert_file(self) -> str:
         """
         CertFile is a file containing a PEM-encoded certificate
         """
-        return self.__certFile
+        return self.__cert_file
 
-    def keyFile(self) -> str:
+    def key_file(self) -> str:
         """
         KeyFile is a file containing a PEM-encoded private key for the certificate specified by CertFile
         """
-        return self.__keyFile
+        return self.__key_file
 
 
 class ClientConnectionOverrides(types.Object):
@@ -1648,26 +1658,26 @@ class ClientConnectionOverrides(types.Object):
     @typechecked
     def __init__(
         self,
-        acceptContentTypes: str = "",
-        contentType: str = "",
+        accept_content_types: str = "",
+        content_type: str = "",
         qps: float = float("0E+00"),
         burst: int = 0,
     ):
         super().__init__()
-        self.__acceptContentTypes = acceptContentTypes
-        self.__contentType = contentType
+        self.__accept_content_types = accept_content_types
+        self.__content_type = content_type
         self.__qps = qps
         self.__burst = burst
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        acceptContentTypes = self.acceptContentTypes()
-        check_type("acceptContentTypes", acceptContentTypes, str)
-        v["acceptContentTypes"] = acceptContentTypes
-        contentType = self.contentType()
-        check_type("contentType", contentType, str)
-        v["contentType"] = contentType
+        accept_content_types = self.accept_content_types()
+        check_type("accept_content_types", accept_content_types, str)
+        v["acceptContentTypes"] = accept_content_types
+        content_type = self.content_type()
+        check_type("content_type", content_type, str)
+        v["contentType"] = content_type
         qps = self.qps()
         check_type("qps", qps, float)
         v["qps"] = qps
@@ -1676,19 +1686,19 @@ class ClientConnectionOverrides(types.Object):
         v["burst"] = burst
         return v
 
-    def acceptContentTypes(self) -> str:
+    def accept_content_types(self) -> str:
         """
         acceptContentTypes defines the Accept header sent by clients when connecting to a server, overriding the
         default value of 'application/json'. This field will control all connections to the server used by a particular
         client.
         """
-        return self.__acceptContentTypes
+        return self.__accept_content_types
 
-    def contentType(self) -> str:
+    def content_type(self) -> str:
         """
         contentType is the content type used when sending data to the server from this client.
         """
-        return self.__contentType
+        return self.__content_type
 
     def qps(self) -> float:
         """
@@ -1711,10 +1721,10 @@ class ClusterNetworkEntry(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, cidr: str = "", hostPrefix: int = 0):
+    def __init__(self, cidr: str = "", host_prefix: int = 0):
         super().__init__()
         self.__cidr = cidr
-        self.__hostPrefix = hostPrefix
+        self.__host_prefix = host_prefix
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1722,9 +1732,9 @@ class ClusterNetworkEntry(types.Object):
         cidr = self.cidr()
         check_type("cidr", cidr, str)
         v["cidr"] = cidr
-        hostPrefix = self.hostPrefix()
-        check_type("hostPrefix", hostPrefix, int)
-        v["hostPrefix"] = hostPrefix
+        host_prefix = self.host_prefix()
+        check_type("host_prefix", host_prefix, int)
+        v["hostPrefix"] = host_prefix
         return v
 
     def cidr(self) -> str:
@@ -1733,11 +1743,11 @@ class ClusterNetworkEntry(types.Object):
         """
         return self.__cidr
 
-    def hostPrefix(self) -> int:
+    def host_prefix(self) -> int:
         """
         The size (prefix) of block to allocate to each node.
         """
-        return self.__hostPrefix
+        return self.__host_prefix
 
 
 class ClusterOperatorSpec(types.Object):
@@ -1765,7 +1775,7 @@ class ClusterOperator(base.TypedObject, base.MetadataObject):
         spec: "ClusterOperatorSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="ClusterOperator",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1941,15 +1951,15 @@ class ClusterVersionSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        clusterID: ClusterID = None,
-        desiredUpdate: "Update" = None,
+        cluster_id: ClusterID = None,
+        desired_update: "Update" = None,
         upstream: URL = None,
         channel: str = None,
         overrides: List["ComponentOverride"] = None,
     ):
         super().__init__()
-        self.__clusterID = clusterID
-        self.__desiredUpdate = desiredUpdate
+        self.__cluster_id = cluster_id
+        self.__desired_update = desired_update
         self.__upstream = upstream
         self.__channel = channel
         self.__overrides = overrides if overrides is not None else []
@@ -1957,13 +1967,13 @@ class ClusterVersionSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clusterID = self.clusterID()
-        check_type("clusterID", clusterID, ClusterID)
-        v["clusterID"] = clusterID
-        desiredUpdate = self.desiredUpdate()
-        check_type("desiredUpdate", desiredUpdate, Optional["Update"])
-        if desiredUpdate is not None:  # omit empty
-            v["desiredUpdate"] = desiredUpdate
+        cluster_id = self.cluster_id()
+        check_type("cluster_id", cluster_id, ClusterID)
+        v["clusterID"] = cluster_id
+        desired_update = self.desired_update()
+        check_type("desired_update", desired_update, Optional["Update"])
+        if desired_update is not None:  # omit empty
+            v["desiredUpdate"] = desired_update
         upstream = self.upstream()
         check_type("upstream", upstream, Optional[URL])
         if upstream:  # omit empty
@@ -1978,16 +1988,16 @@ class ClusterVersionSpec(types.Object):
             v["overrides"] = overrides
         return v
 
-    def clusterID(self) -> ClusterID:
+    def cluster_id(self) -> ClusterID:
         """
         clusterID uniquely identifies this cluster. This is expected to be
         an RFC4122 UUID value (xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx in
         hexadecimal values). This is a required field.
         +required
         """
-        return self.__clusterID
+        return self.__cluster_id
 
-    def desiredUpdate(self) -> Optional["Update"]:
+    def desired_update(self) -> Optional["Update"]:
         """
         desiredUpdate is an optional field that indicates the desired value of
         the cluster version. Setting this value will trigger an upgrade (if
@@ -2002,7 +2012,7 @@ class ClusterVersionSpec(types.Object):
         the previous version will cause a rollback to be attempted. Not all
         rollbacks will succeed.
         """
-        return self.__desiredUpdate
+        return self.__desired_update
 
     def upstream(self) -> Optional[URL]:
         """
@@ -2044,7 +2054,7 @@ class ClusterVersion(base.TypedObject, base.MetadataObject):
         spec: "ClusterVersionSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="ClusterVersion",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2111,20 +2121,20 @@ class ConsoleAuthentication(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, logoutRedirect: str = None):
+    def __init__(self, logout_redirect: str = None):
         super().__init__()
-        self.__logoutRedirect = logoutRedirect
+        self.__logout_redirect = logout_redirect
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        logoutRedirect = self.logoutRedirect()
-        check_type("logoutRedirect", logoutRedirect, Optional[str])
-        if logoutRedirect:  # omit empty
-            v["logoutRedirect"] = logoutRedirect
+        logout_redirect = self.logout_redirect()
+        check_type("logout_redirect", logout_redirect, Optional[str])
+        if logout_redirect:  # omit empty
+            v["logoutRedirect"] = logout_redirect
         return v
 
-    def logoutRedirect(self) -> Optional[str]:
+    def logout_redirect(self) -> Optional[str]:
         """
         An optional, absolute URL to redirect web browsers to after logging out of
         the console. If not specified, it will redirect to the default login page.
@@ -2137,7 +2147,7 @@ class ConsoleAuthentication(types.Object):
         provides the user the option to perform single logout (SLO) through the identity
         provider to destroy their single sign-on session.
         """
-        return self.__logoutRedirect
+        return self.__logout_redirect
 
 
 class ConsoleSpec(types.Object):
@@ -2182,7 +2192,7 @@ class Console(base.TypedObject, base.MetadataObject):
         spec: "ConsoleSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Console",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2296,32 +2306,32 @@ class DNSSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        baseDomain: str = "",
-        publicZone: "DNSZone" = None,
-        privateZone: "DNSZone" = None,
+        base_domain: str = "",
+        public_zone: "DNSZone" = None,
+        private_zone: "DNSZone" = None,
     ):
         super().__init__()
-        self.__baseDomain = baseDomain
-        self.__publicZone = publicZone
-        self.__privateZone = privateZone
+        self.__base_domain = base_domain
+        self.__public_zone = public_zone
+        self.__private_zone = private_zone
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        baseDomain = self.baseDomain()
-        check_type("baseDomain", baseDomain, str)
-        v["baseDomain"] = baseDomain
-        publicZone = self.publicZone()
-        check_type("publicZone", publicZone, Optional["DNSZone"])
-        if publicZone is not None:  # omit empty
-            v["publicZone"] = publicZone
-        privateZone = self.privateZone()
-        check_type("privateZone", privateZone, Optional["DNSZone"])
-        if privateZone is not None:  # omit empty
-            v["privateZone"] = privateZone
+        base_domain = self.base_domain()
+        check_type("base_domain", base_domain, str)
+        v["baseDomain"] = base_domain
+        public_zone = self.public_zone()
+        check_type("public_zone", public_zone, Optional["DNSZone"])
+        if public_zone is not None:  # omit empty
+            v["publicZone"] = public_zone
+        private_zone = self.private_zone()
+        check_type("private_zone", private_zone, Optional["DNSZone"])
+        if private_zone is not None:  # omit empty
+            v["privateZone"] = private_zone
         return v
 
-    def baseDomain(self) -> str:
+    def base_domain(self) -> str:
         """
         baseDomain is the base domain of the cluster. All managed DNS records will
         be sub-domains of this base.
@@ -2331,9 +2341,9 @@ class DNSSpec(types.Object):
         
         Once set, this field cannot be changed.
         """
-        return self.__baseDomain
+        return self.__base_domain
 
-    def publicZone(self) -> Optional["DNSZone"]:
+    def public_zone(self) -> Optional["DNSZone"]:
         """
         publicZone is the location where all the DNS records that are publicly accessible to
         the internet exist.
@@ -2342,9 +2352,9 @@ class DNSSpec(types.Object):
         
         Once set, this field cannot be changed.
         """
-        return self.__publicZone
+        return self.__public_zone
 
-    def privateZone(self) -> Optional["DNSZone"]:
+    def private_zone(self) -> Optional["DNSZone"]:
         """
         privateZone is the location where all the DNS records that are only available internally
         to the cluster exist.
@@ -2353,7 +2363,7 @@ class DNSSpec(types.Object):
         
         Once set, this field cannot be changed.
         """
-        return self.__privateZone
+        return self.__private_zone
 
 
 class DNS(base.TypedObject, base.MetadataObject):
@@ -2371,7 +2381,7 @@ class DNS(base.TypedObject, base.MetadataObject):
         spec: "DNSSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="DNS",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2403,12 +2413,12 @@ class EtcdConnectionInfo(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, urls: List[str] = None, ca: str = "", certInfo: "CertInfo" = None
+        self, urls: List[str] = None, ca: str = "", cert_info: "CertInfo" = None
     ):
         super().__init__()
         self.__urls = urls if urls is not None else []
         self.__ca = ca
-        self.__certInfo = certInfo if certInfo is not None else CertInfo()
+        self.__cert_info = cert_info if cert_info is not None else CertInfo()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2420,9 +2430,9 @@ class EtcdConnectionInfo(types.Object):
         ca = self.ca()
         check_type("ca", ca, str)
         v["ca"] = ca
-        certInfo = self.certInfo()
-        check_type("certInfo", certInfo, "CertInfo")
-        v.update(certInfo._root())  # inline
+        cert_info = self.cert_info()
+        check_type("cert_info", cert_info, "CertInfo")
+        v.update(cert_info._root())  # inline
         return v
 
     def urls(self) -> Optional[List[str]]:
@@ -2437,49 +2447,51 @@ class EtcdConnectionInfo(types.Object):
         """
         return self.__ca
 
-    def certInfo(self) -> "CertInfo":
+    def cert_info(self) -> "CertInfo":
         """
         CertInfo is the TLS client cert information for securing communication to etcd
         this is anonymous so that we can inline it for serialization
         """
-        return self.__certInfo
+        return self.__cert_info
 
 
 class EtcdStorageConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, etcdConnectionInfo: "EtcdConnectionInfo" = None, storagePrefix: str = ""
+        self,
+        etcd_connection_info: "EtcdConnectionInfo" = None,
+        storage_prefix: str = "",
     ):
         super().__init__()
-        self.__etcdConnectionInfo = (
-            etcdConnectionInfo
-            if etcdConnectionInfo is not None
+        self.__etcd_connection_info = (
+            etcd_connection_info
+            if etcd_connection_info is not None
             else EtcdConnectionInfo()
         )
-        self.__storagePrefix = storagePrefix
+        self.__storage_prefix = storage_prefix
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        etcdConnectionInfo = self.etcdConnectionInfo()
-        check_type("etcdConnectionInfo", etcdConnectionInfo, "EtcdConnectionInfo")
-        v.update(etcdConnectionInfo._root())  # inline
-        storagePrefix = self.storagePrefix()
-        check_type("storagePrefix", storagePrefix, str)
-        v["storagePrefix"] = storagePrefix
+        etcd_connection_info = self.etcd_connection_info()
+        check_type("etcd_connection_info", etcd_connection_info, "EtcdConnectionInfo")
+        v.update(etcd_connection_info._root())  # inline
+        storage_prefix = self.storage_prefix()
+        check_type("storage_prefix", storage_prefix, str)
+        v["storagePrefix"] = storage_prefix
         return v
 
-    def etcdConnectionInfo(self) -> "EtcdConnectionInfo":
-        return self.__etcdConnectionInfo
+    def etcd_connection_info(self) -> "EtcdConnectionInfo":
+        return self.__etcd_connection_info
 
-    def storagePrefix(self) -> str:
+    def storage_prefix(self) -> str:
         """
         StoragePrefix is the path within etcd that the OpenShift resources will
         be rooted under. This value, if changed, will mean existing objects in etcd will
         no longer be located.
         """
-        return self.__storagePrefix
+        return self.__storage_prefix
 
 
 class ExternalIPPolicy(types.Object):
@@ -2491,36 +2503,38 @@ class ExternalIPPolicy(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, allowedCIDRs: List[str] = None, rejectedCIDRs: List[str] = None):
+    def __init__(
+        self, allowed_cidrs: List[str] = None, rejected_cidrs: List[str] = None
+    ):
         super().__init__()
-        self.__allowedCIDRs = allowedCIDRs if allowedCIDRs is not None else []
-        self.__rejectedCIDRs = rejectedCIDRs if rejectedCIDRs is not None else []
+        self.__allowed_cidrs = allowed_cidrs if allowed_cidrs is not None else []
+        self.__rejected_cidrs = rejected_cidrs if rejected_cidrs is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        allowedCIDRs = self.allowedCIDRs()
-        check_type("allowedCIDRs", allowedCIDRs, Optional[List[str]])
-        if allowedCIDRs:  # omit empty
-            v["allowedCIDRs"] = allowedCIDRs
-        rejectedCIDRs = self.rejectedCIDRs()
-        check_type("rejectedCIDRs", rejectedCIDRs, Optional[List[str]])
-        if rejectedCIDRs:  # omit empty
-            v["rejectedCIDRs"] = rejectedCIDRs
+        allowed_cidrs = self.allowed_cidrs()
+        check_type("allowed_cidrs", allowed_cidrs, Optional[List[str]])
+        if allowed_cidrs:  # omit empty
+            v["allowedCIDRs"] = allowed_cidrs
+        rejected_cidrs = self.rejected_cidrs()
+        check_type("rejected_cidrs", rejected_cidrs, Optional[List[str]])
+        if rejected_cidrs:  # omit empty
+            v["rejectedCIDRs"] = rejected_cidrs
         return v
 
-    def allowedCIDRs(self) -> Optional[List[str]]:
+    def allowed_cidrs(self) -> Optional[List[str]]:
         """
         allowedCIDRs is the list of allowed CIDRs.
         """
-        return self.__allowedCIDRs
+        return self.__allowed_cidrs
 
-    def rejectedCIDRs(self) -> Optional[List[str]]:
+    def rejected_cidrs(self) -> Optional[List[str]]:
         """
         rejectedCIDRs is the list of disallowed CIDRs. These take precedence
         over allowedCIDRs.
         """
-        return self.__rejectedCIDRs
+        return self.__rejected_cidrs
 
 
 class ExternalIPConfig(types.Object):
@@ -2532,11 +2546,13 @@ class ExternalIPConfig(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, policy: "ExternalIPPolicy" = None, autoAssignCIDRs: List[str] = None
+        self, policy: "ExternalIPPolicy" = None, auto_assign_cidrs: List[str] = None
     ):
         super().__init__()
         self.__policy = policy
-        self.__autoAssignCIDRs = autoAssignCIDRs if autoAssignCIDRs is not None else []
+        self.__auto_assign_cidrs = (
+            auto_assign_cidrs if auto_assign_cidrs is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2545,10 +2561,10 @@ class ExternalIPConfig(types.Object):
         check_type("policy", policy, Optional["ExternalIPPolicy"])
         if policy is not None:  # omit empty
             v["policy"] = policy
-        autoAssignCIDRs = self.autoAssignCIDRs()
-        check_type("autoAssignCIDRs", autoAssignCIDRs, Optional[List[str]])
-        if autoAssignCIDRs:  # omit empty
-            v["autoAssignCIDRs"] = autoAssignCIDRs
+        auto_assign_cidrs = self.auto_assign_cidrs()
+        check_type("auto_assign_cidrs", auto_assign_cidrs, Optional[List[str]])
+        if auto_assign_cidrs:  # omit empty
+            v["autoAssignCIDRs"] = auto_assign_cidrs
         return v
 
     def policy(self) -> Optional["ExternalIPPolicy"]:
@@ -2558,7 +2574,7 @@ class ExternalIPConfig(types.Object):
         """
         return self.__policy
 
-    def autoAssignCIDRs(self) -> Optional[List[str]]:
+    def auto_assign_cidrs(self) -> Optional[List[str]]:
         """
         autoAssignCIDRs is a list of CIDRs from which to automatically assign
         Service.ExternalIP. These are assigned when the service is of type
@@ -2568,7 +2584,7 @@ class ExternalIPConfig(types.Object):
         ExternalIPPolicy rules.
         Currently, only one entry may be provided.
         """
-        return self.__autoAssignCIDRs
+        return self.__auto_assign_cidrs
 
 
 class FeatureGateSelection(types.Object):
@@ -2580,65 +2596,69 @@ class FeatureGateSelection(types.Object):
     @typechecked
     def __init__(
         self,
-        featureSet: FeatureSet = None,
-        customNoUpgrade: "CustomFeatureGates" = None,
+        feature_set: FeatureSet = None,
+        custom_no_upgrade: "CustomFeatureGates" = None,
     ):
         super().__init__()
-        self.__featureSet = featureSet
-        self.__customNoUpgrade = customNoUpgrade
+        self.__feature_set = feature_set
+        self.__custom_no_upgrade = custom_no_upgrade
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        featureSet = self.featureSet()
-        check_type("featureSet", featureSet, Optional[FeatureSet])
-        if featureSet:  # omit empty
-            v["featureSet"] = featureSet
-        customNoUpgrade = self.customNoUpgrade()
-        check_type("customNoUpgrade", customNoUpgrade, Optional["CustomFeatureGates"])
-        if customNoUpgrade is not None:  # omit empty
-            v["customNoUpgrade"] = customNoUpgrade
+        feature_set = self.feature_set()
+        check_type("feature_set", feature_set, Optional[FeatureSet])
+        if feature_set:  # omit empty
+            v["featureSet"] = feature_set
+        custom_no_upgrade = self.custom_no_upgrade()
+        check_type(
+            "custom_no_upgrade", custom_no_upgrade, Optional["CustomFeatureGates"]
+        )
+        if custom_no_upgrade is not None:  # omit empty
+            v["customNoUpgrade"] = custom_no_upgrade
         return v
 
-    def featureSet(self) -> Optional[FeatureSet]:
+    def feature_set(self) -> Optional[FeatureSet]:
         """
         featureSet changes the list of features in the cluster.  The default is empty.  Be very careful adjusting this setting.
         Turning on or off features may cause irreversible changes in your cluster which cannot be undone.
         +unionDiscriminator
         """
-        return self.__featureSet
+        return self.__feature_set
 
-    def customNoUpgrade(self) -> Optional["CustomFeatureGates"]:
+    def custom_no_upgrade(self) -> Optional["CustomFeatureGates"]:
         """
         customNoUpgrade allows the enabling or disabling of any feature. Turning this feature set on IS NOT SUPPORTED, CANNOT BE UNDONE, and PREVENTS UPGRADES.
         Because of its nature, this setting cannot be validated.  If you have any typos or accidentally apply invalid combinations
         your cluster may fail in an unrecoverable way.  featureSet must equal "CustomNoUpgrade" must be set to use this field.
         +nullable
         """
-        return self.__customNoUpgrade
+        return self.__custom_no_upgrade
 
 
 class FeatureGateSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, featureGateSelection: "FeatureGateSelection" = None):
+    def __init__(self, feature_gate_selection: "FeatureGateSelection" = None):
         super().__init__()
-        self.__featureGateSelection = (
-            featureGateSelection
-            if featureGateSelection is not None
+        self.__feature_gate_selection = (
+            feature_gate_selection
+            if feature_gate_selection is not None
             else FeatureGateSelection()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        featureGateSelection = self.featureGateSelection()
-        check_type("featureGateSelection", featureGateSelection, "FeatureGateSelection")
-        v.update(featureGateSelection._root())  # inline
+        feature_gate_selection = self.feature_gate_selection()
+        check_type(
+            "feature_gate_selection", feature_gate_selection, "FeatureGateSelection"
+        )
+        v.update(feature_gate_selection._root())  # inline
         return v
 
-    def featureGateSelection(self) -> "FeatureGateSelection":
-        return self.__featureGateSelection
+    def feature_gate_selection(self) -> "FeatureGateSelection":
+        return self.__feature_gate_selection
 
 
 class FeatureGate(base.TypedObject, base.MetadataObject):
@@ -2656,7 +2676,7 @@ class FeatureGate(base.TypedObject, base.MetadataObject):
         spec: "FeatureGateSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="FeatureGate",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2687,10 +2707,10 @@ class NamedCertificate(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, names: List[str] = None, certInfo: "CertInfo" = None):
+    def __init__(self, names: List[str] = None, cert_info: "CertInfo" = None):
         super().__init__()
         self.__names = names if names is not None else []
-        self.__certInfo = certInfo if certInfo is not None else CertInfo()
+        self.__cert_info = cert_info if cert_info is not None else CertInfo()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2699,9 +2719,9 @@ class NamedCertificate(types.Object):
         check_type("names", names, Optional[List[str]])
         if names:  # omit empty
             v["names"] = names
-        certInfo = self.certInfo()
-        check_type("certInfo", certInfo, "CertInfo")
-        v.update(certInfo._root())  # inline
+        cert_info = self.cert_info()
+        check_type("cert_info", cert_info, "CertInfo")
+        v.update(cert_info._root())  # inline
         return v
 
     def names(self) -> Optional[List[str]]:
@@ -2711,11 +2731,11 @@ class NamedCertificate(types.Object):
         """
         return self.__names
 
-    def certInfo(self) -> "CertInfo":
+    def cert_info(self) -> "CertInfo":
         """
         CertInfo is the TLS cert info for serving secure traffic
         """
-        return self.__certInfo
+        return self.__cert_info
 
 
 class ServingInfo(types.Object):
@@ -2727,102 +2747,102 @@ class ServingInfo(types.Object):
     @typechecked
     def __init__(
         self,
-        bindAddress: str = "",
-        bindNetwork: str = "",
-        certInfo: "CertInfo" = None,
-        clientCA: str = None,
-        namedCertificates: List["NamedCertificate"] = None,
-        minTLSVersion: str = None,
-        cipherSuites: List[str] = None,
+        bind_address: str = "",
+        bind_network: str = "",
+        cert_info: "CertInfo" = None,
+        client_ca: str = None,
+        named_certificates: List["NamedCertificate"] = None,
+        min_tls_version: str = None,
+        cipher_suites: List[str] = None,
     ):
         super().__init__()
-        self.__bindAddress = bindAddress
-        self.__bindNetwork = bindNetwork
-        self.__certInfo = certInfo if certInfo is not None else CertInfo()
-        self.__clientCA = clientCA
-        self.__namedCertificates = (
-            namedCertificates if namedCertificates is not None else []
+        self.__bind_address = bind_address
+        self.__bind_network = bind_network
+        self.__cert_info = cert_info if cert_info is not None else CertInfo()
+        self.__client_ca = client_ca
+        self.__named_certificates = (
+            named_certificates if named_certificates is not None else []
         )
-        self.__minTLSVersion = minTLSVersion
-        self.__cipherSuites = cipherSuites if cipherSuites is not None else []
+        self.__min_tls_version = min_tls_version
+        self.__cipher_suites = cipher_suites if cipher_suites is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        bindAddress = self.bindAddress()
-        check_type("bindAddress", bindAddress, str)
-        v["bindAddress"] = bindAddress
-        bindNetwork = self.bindNetwork()
-        check_type("bindNetwork", bindNetwork, str)
-        v["bindNetwork"] = bindNetwork
-        certInfo = self.certInfo()
-        check_type("certInfo", certInfo, "CertInfo")
-        v.update(certInfo._root())  # inline
-        clientCA = self.clientCA()
-        check_type("clientCA", clientCA, Optional[str])
-        if clientCA:  # omit empty
-            v["clientCA"] = clientCA
-        namedCertificates = self.namedCertificates()
+        bind_address = self.bind_address()
+        check_type("bind_address", bind_address, str)
+        v["bindAddress"] = bind_address
+        bind_network = self.bind_network()
+        check_type("bind_network", bind_network, str)
+        v["bindNetwork"] = bind_network
+        cert_info = self.cert_info()
+        check_type("cert_info", cert_info, "CertInfo")
+        v.update(cert_info._root())  # inline
+        client_ca = self.client_ca()
+        check_type("client_ca", client_ca, Optional[str])
+        if client_ca:  # omit empty
+            v["clientCA"] = client_ca
+        named_certificates = self.named_certificates()
         check_type(
-            "namedCertificates", namedCertificates, Optional[List["NamedCertificate"]]
+            "named_certificates", named_certificates, Optional[List["NamedCertificate"]]
         )
-        if namedCertificates:  # omit empty
-            v["namedCertificates"] = namedCertificates
-        minTLSVersion = self.minTLSVersion()
-        check_type("minTLSVersion", minTLSVersion, Optional[str])
-        if minTLSVersion:  # omit empty
-            v["minTLSVersion"] = minTLSVersion
-        cipherSuites = self.cipherSuites()
-        check_type("cipherSuites", cipherSuites, Optional[List[str]])
-        if cipherSuites:  # omit empty
-            v["cipherSuites"] = cipherSuites
+        if named_certificates:  # omit empty
+            v["namedCertificates"] = named_certificates
+        min_tls_version = self.min_tls_version()
+        check_type("min_tls_version", min_tls_version, Optional[str])
+        if min_tls_version:  # omit empty
+            v["minTLSVersion"] = min_tls_version
+        cipher_suites = self.cipher_suites()
+        check_type("cipher_suites", cipher_suites, Optional[List[str]])
+        if cipher_suites:  # omit empty
+            v["cipherSuites"] = cipher_suites
         return v
 
-    def bindAddress(self) -> str:
+    def bind_address(self) -> str:
         """
         BindAddress is the ip:port to serve on
         """
-        return self.__bindAddress
+        return self.__bind_address
 
-    def bindNetwork(self) -> str:
+    def bind_network(self) -> str:
         """
         BindNetwork is the type of network to bind to - defaults to "tcp4", accepts "tcp",
         "tcp4", and "tcp6"
         """
-        return self.__bindNetwork
+        return self.__bind_network
 
-    def certInfo(self) -> "CertInfo":
+    def cert_info(self) -> "CertInfo":
         """
         CertInfo is the TLS cert info for serving secure traffic.
         this is anonymous so that we can inline it for serialization
         """
-        return self.__certInfo
+        return self.__cert_info
 
-    def clientCA(self) -> Optional[str]:
+    def client_ca(self) -> Optional[str]:
         """
         ClientCA is the certificate bundle for all the signers that you'll recognize for incoming client certificates
         """
-        return self.__clientCA
+        return self.__client_ca
 
-    def namedCertificates(self) -> Optional[List["NamedCertificate"]]:
+    def named_certificates(self) -> Optional[List["NamedCertificate"]]:
         """
         NamedCertificates is a list of certificates to use to secure requests to specific hostnames
         """
-        return self.__namedCertificates
+        return self.__named_certificates
 
-    def minTLSVersion(self) -> Optional[str]:
+    def min_tls_version(self) -> Optional[str]:
         """
         MinTLSVersion is the minimum TLS version supported.
         Values must match version names from https://golang.org/pkg/crypto/tls/#pkg-constants
         """
-        return self.__minTLSVersion
+        return self.__min_tls_version
 
-    def cipherSuites(self) -> Optional[List[str]]:
+    def cipher_suites(self) -> Optional[List[str]]:
         """
         CipherSuites contains an overridden list of ciphers for the server to support.
         Values must match cipher suite IDs from https://golang.org/pkg/crypto/tls/#pkg-constants
         """
-        return self.__cipherSuites
+        return self.__cipher_suites
 
 
 class HTTPServingInfo(types.Object):
@@ -2834,47 +2854,49 @@ class HTTPServingInfo(types.Object):
     @typechecked
     def __init__(
         self,
-        servingInfo: "ServingInfo" = None,
-        maxRequestsInFlight: int = 0,
-        requestTimeoutSeconds: int = 0,
+        serving_info: "ServingInfo" = None,
+        max_requests_in_flight: int = 0,
+        request_timeout_seconds: int = 0,
     ):
         super().__init__()
-        self.__servingInfo = servingInfo if servingInfo is not None else ServingInfo()
-        self.__maxRequestsInFlight = maxRequestsInFlight
-        self.__requestTimeoutSeconds = requestTimeoutSeconds
+        self.__serving_info = (
+            serving_info if serving_info is not None else ServingInfo()
+        )
+        self.__max_requests_in_flight = max_requests_in_flight
+        self.__request_timeout_seconds = request_timeout_seconds
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        servingInfo = self.servingInfo()
-        check_type("servingInfo", servingInfo, "ServingInfo")
-        v.update(servingInfo._root())  # inline
-        maxRequestsInFlight = self.maxRequestsInFlight()
-        check_type("maxRequestsInFlight", maxRequestsInFlight, int)
-        v["maxRequestsInFlight"] = maxRequestsInFlight
-        requestTimeoutSeconds = self.requestTimeoutSeconds()
-        check_type("requestTimeoutSeconds", requestTimeoutSeconds, int)
-        v["requestTimeoutSeconds"] = requestTimeoutSeconds
+        serving_info = self.serving_info()
+        check_type("serving_info", serving_info, "ServingInfo")
+        v.update(serving_info._root())  # inline
+        max_requests_in_flight = self.max_requests_in_flight()
+        check_type("max_requests_in_flight", max_requests_in_flight, int)
+        v["maxRequestsInFlight"] = max_requests_in_flight
+        request_timeout_seconds = self.request_timeout_seconds()
+        check_type("request_timeout_seconds", request_timeout_seconds, int)
+        v["requestTimeoutSeconds"] = request_timeout_seconds
         return v
 
-    def servingInfo(self) -> "ServingInfo":
+    def serving_info(self) -> "ServingInfo":
         """
         ServingInfo is the HTTP serving information
         """
-        return self.__servingInfo
+        return self.__serving_info
 
-    def maxRequestsInFlight(self) -> int:
+    def max_requests_in_flight(self) -> int:
         """
         MaxRequestsInFlight is the number of concurrent requests allowed to the server. If zero, no limit.
         """
-        return self.__maxRequestsInFlight
+        return self.__max_requests_in_flight
 
-    def requestTimeoutSeconds(self) -> int:
+    def request_timeout_seconds(self) -> int:
         """
         RequestTimeoutSeconds is the number of seconds before requests are timed out. The default is 60 minutes, if
         -1 there is no limit on requests.
         """
-        return self.__requestTimeoutSeconds
+        return self.__request_timeout_seconds
 
 
 class KubeClientConfig(types.Object):
@@ -2882,41 +2904,41 @@ class KubeClientConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        kubeConfig: str = "",
-        connectionOverrides: "ClientConnectionOverrides" = None,
+        kube_config: str = "",
+        connection_overrides: "ClientConnectionOverrides" = None,
     ):
         super().__init__()
-        self.__kubeConfig = kubeConfig
-        self.__connectionOverrides = (
-            connectionOverrides
-            if connectionOverrides is not None
+        self.__kube_config = kube_config
+        self.__connection_overrides = (
+            connection_overrides
+            if connection_overrides is not None
             else ClientConnectionOverrides()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        kubeConfig = self.kubeConfig()
-        check_type("kubeConfig", kubeConfig, str)
-        v["kubeConfig"] = kubeConfig
-        connectionOverrides = self.connectionOverrides()
+        kube_config = self.kube_config()
+        check_type("kube_config", kube_config, str)
+        v["kubeConfig"] = kube_config
+        connection_overrides = self.connection_overrides()
         check_type(
-            "connectionOverrides", connectionOverrides, "ClientConnectionOverrides"
+            "connection_overrides", connection_overrides, "ClientConnectionOverrides"
         )
-        v["connectionOverrides"] = connectionOverrides
+        v["connectionOverrides"] = connection_overrides
         return v
 
-    def kubeConfig(self) -> str:
+    def kube_config(self) -> str:
         """
         kubeConfig is a .kubeconfig filename for going to the owning kube-apiserver.  Empty uses an in-cluster-config
         """
-        return self.__kubeConfig
+        return self.__kube_config
 
-    def connectionOverrides(self) -> "ClientConnectionOverrides":
+    def connection_overrides(self) -> "ClientConnectionOverrides":
         """
         connectionOverrides specifies client overrides for system components to loop back to this master.
         """
-        return self.__connectionOverrides
+        return self.__connection_overrides
 
 
 class GenericAPIServerConfig(types.Object):
@@ -2928,75 +2950,77 @@ class GenericAPIServerConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        servingInfo: "HTTPServingInfo" = None,
-        corsAllowedOrigins: List[str] = None,
-        auditConfig: "AuditConfig" = None,
-        storageConfig: "EtcdStorageConfig" = None,
+        serving_info: "HTTPServingInfo" = None,
+        cors_allowed_origins: List[str] = None,
+        audit_config: "AuditConfig" = None,
+        storage_config: "EtcdStorageConfig" = None,
         admission: "AdmissionConfig" = None,
-        kubeClientConfig: "KubeClientConfig" = None,
+        kube_client_config: "KubeClientConfig" = None,
     ):
         super().__init__()
-        self.__servingInfo = (
-            servingInfo if servingInfo is not None else HTTPServingInfo()
+        self.__serving_info = (
+            serving_info if serving_info is not None else HTTPServingInfo()
         )
-        self.__corsAllowedOrigins = (
-            corsAllowedOrigins if corsAllowedOrigins is not None else []
+        self.__cors_allowed_origins = (
+            cors_allowed_origins if cors_allowed_origins is not None else []
         )
-        self.__auditConfig = auditConfig if auditConfig is not None else AuditConfig()
-        self.__storageConfig = (
-            storageConfig if storageConfig is not None else EtcdStorageConfig()
+        self.__audit_config = (
+            audit_config if audit_config is not None else AuditConfig()
+        )
+        self.__storage_config = (
+            storage_config if storage_config is not None else EtcdStorageConfig()
         )
         self.__admission = admission if admission is not None else AdmissionConfig()
-        self.__kubeClientConfig = (
-            kubeClientConfig if kubeClientConfig is not None else KubeClientConfig()
+        self.__kube_client_config = (
+            kube_client_config if kube_client_config is not None else KubeClientConfig()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        servingInfo = self.servingInfo()
-        check_type("servingInfo", servingInfo, "HTTPServingInfo")
-        v["servingInfo"] = servingInfo
-        corsAllowedOrigins = self.corsAllowedOrigins()
-        check_type("corsAllowedOrigins", corsAllowedOrigins, List[str])
-        v["corsAllowedOrigins"] = corsAllowedOrigins
-        auditConfig = self.auditConfig()
-        check_type("auditConfig", auditConfig, "AuditConfig")
-        v["auditConfig"] = auditConfig
-        storageConfig = self.storageConfig()
-        check_type("storageConfig", storageConfig, "EtcdStorageConfig")
-        v["storageConfig"] = storageConfig
+        serving_info = self.serving_info()
+        check_type("serving_info", serving_info, "HTTPServingInfo")
+        v["servingInfo"] = serving_info
+        cors_allowed_origins = self.cors_allowed_origins()
+        check_type("cors_allowed_origins", cors_allowed_origins, List[str])
+        v["corsAllowedOrigins"] = cors_allowed_origins
+        audit_config = self.audit_config()
+        check_type("audit_config", audit_config, "AuditConfig")
+        v["auditConfig"] = audit_config
+        storage_config = self.storage_config()
+        check_type("storage_config", storage_config, "EtcdStorageConfig")
+        v["storageConfig"] = storage_config
         admission = self.admission()
         check_type("admission", admission, "AdmissionConfig")
         v["admission"] = admission
-        kubeClientConfig = self.kubeClientConfig()
-        check_type("kubeClientConfig", kubeClientConfig, "KubeClientConfig")
-        v["kubeClientConfig"] = kubeClientConfig
+        kube_client_config = self.kube_client_config()
+        check_type("kube_client_config", kube_client_config, "KubeClientConfig")
+        v["kubeClientConfig"] = kube_client_config
         return v
 
-    def servingInfo(self) -> "HTTPServingInfo":
+    def serving_info(self) -> "HTTPServingInfo":
         """
         servingInfo describes how to start serving
         """
-        return self.__servingInfo
+        return self.__serving_info
 
-    def corsAllowedOrigins(self) -> List[str]:
+    def cors_allowed_origins(self) -> List[str]:
         """
         corsAllowedOrigins
         """
-        return self.__corsAllowedOrigins
+        return self.__cors_allowed_origins
 
-    def auditConfig(self) -> "AuditConfig":
+    def audit_config(self) -> "AuditConfig":
         """
         auditConfig describes how to configure audit information
         """
-        return self.__auditConfig
+        return self.__audit_config
 
-    def storageConfig(self) -> "EtcdStorageConfig":
+    def storage_config(self) -> "EtcdStorageConfig":
         """
         storageConfig contains information about how to use
         """
-        return self.__storageConfig
+        return self.__storage_config
 
     def admission(self) -> "AdmissionConfig":
         """
@@ -3004,8 +3028,8 @@ class GenericAPIServerConfig(types.Object):
         """
         return self.__admission
 
-    def kubeClientConfig(self) -> "KubeClientConfig":
-        return self.__kubeClientConfig
+    def kube_client_config(self) -> "KubeClientConfig":
+        return self.__kube_client_config
 
 
 class GitHubIdentityProvider(types.Object):
@@ -3017,17 +3041,17 @@ class GitHubIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "SecretNameReference" = None,
+        client_id: str = "",
+        client_secret: "SecretNameReference" = None,
         organizations: List[str] = None,
         teams: List[str] = None,
         hostname: str = "",
         ca: "ConfigMapNameReference" = None,
     ):
         super().__init__()
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else SecretNameReference()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else SecretNameReference()
         )
         self.__organizations = organizations if organizations is not None else []
         self.__teams = teams if teams is not None else []
@@ -3037,12 +3061,12 @@ class GitHubIdentityProvider(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "SecretNameReference")
-        v["clientSecret"] = clientSecret
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "SecretNameReference")
+        v["clientSecret"] = client_secret
         organizations = self.organizations()
         check_type("organizations", organizations, Optional[List[str]])
         if organizations:  # omit empty
@@ -3059,20 +3083,20 @@ class GitHubIdentityProvider(types.Object):
         v["ca"] = ca
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "SecretNameReference":
+    def client_secret(self) -> "SecretNameReference":
         """
         clientSecret is a required reference to the secret by name containing the oauth client secret.
         The key "clientSecret" is used to locate the data.
         If the secret or expected key is not found, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__clientSecret
+        return self.__client_secret
 
     def organizations(self) -> Optional[List[str]]:
         """
@@ -3117,15 +3141,15 @@ class GitLabIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "SecretNameReference" = None,
+        client_id: str = "",
+        client_secret: "SecretNameReference" = None,
         url: str = "",
         ca: "ConfigMapNameReference" = None,
     ):
         super().__init__()
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else SecretNameReference()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else SecretNameReference()
         )
         self.__url = url
         self.__ca = ca if ca is not None else ConfigMapNameReference()
@@ -3133,12 +3157,12 @@ class GitLabIdentityProvider(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "SecretNameReference")
-        v["clientSecret"] = clientSecret
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "SecretNameReference")
+        v["clientSecret"] = client_secret
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
@@ -3147,20 +3171,20 @@ class GitLabIdentityProvider(types.Object):
         v["ca"] = ca
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "SecretNameReference":
+    def client_secret(self) -> "SecretNameReference":
         """
         clientSecret is a required reference to the secret by name containing the oauth client secret.
         The key "clientSecret" is used to locate the data.
         If the secret or expected key is not found, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__clientSecret
+        return self.__client_secret
 
     def url(self) -> str:
         """
@@ -3190,51 +3214,51 @@ class GoogleIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "SecretNameReference" = None,
-        hostedDomain: str = "",
+        client_id: str = "",
+        client_secret: "SecretNameReference" = None,
+        hosted_domain: str = "",
     ):
         super().__init__()
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else SecretNameReference()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else SecretNameReference()
         )
-        self.__hostedDomain = hostedDomain
+        self.__hosted_domain = hosted_domain
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "SecretNameReference")
-        v["clientSecret"] = clientSecret
-        hostedDomain = self.hostedDomain()
-        check_type("hostedDomain", hostedDomain, str)
-        v["hostedDomain"] = hostedDomain
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "SecretNameReference")
+        v["clientSecret"] = client_secret
+        hosted_domain = self.hosted_domain()
+        check_type("hosted_domain", hosted_domain, str)
+        v["hostedDomain"] = hosted_domain
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "SecretNameReference":
+    def client_secret(self) -> "SecretNameReference":
         """
         clientSecret is a required reference to the secret by name containing the oauth client secret.
         The key "clientSecret" is used to locate the data.
         If the secret or expected key is not found, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__clientSecret
+        return self.__client_secret
 
-    def hostedDomain(self) -> str:
+    def hosted_domain(self) -> str:
         """
         hostedDomain is the optional Google App domain (e.g. "mycompany.com") to restrict logins to
         """
-        return self.__hostedDomain
+        return self.__hosted_domain
 
 
 class HTPasswdIdentityProvider(types.Object):
@@ -3244,19 +3268,19 @@ class HTPasswdIdentityProvider(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, fileData: "SecretNameReference" = None):
+    def __init__(self, file_data: "SecretNameReference" = None):
         super().__init__()
-        self.__fileData = fileData if fileData is not None else SecretNameReference()
+        self.__file_data = file_data if file_data is not None else SecretNameReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        fileData = self.fileData()
-        check_type("fileData", fileData, "SecretNameReference")
-        v["fileData"] = fileData
+        file_data = self.file_data()
+        check_type("file_data", file_data, "SecretNameReference")
+        v["fileData"] = file_data
         return v
 
-    def fileData(self) -> "SecretNameReference":
+    def file_data(self) -> "SecretNameReference":
         """
         fileData is a required reference to a secret by name containing the data to use as the htpasswd file.
         The key "htpasswd" is used to locate the data.
@@ -3264,7 +3288,7 @@ class HTPasswdIdentityProvider(types.Object):
         If the specified htpasswd data is not valid, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__fileData
+        return self.__file_data
 
 
 class HubSource(types.Object):
@@ -3312,43 +3336,43 @@ class KeystoneIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        oAuthRemoteConnectionInfo: "OAuthRemoteConnectionInfo" = None,
-        domainName: str = "",
+        oauth_remote_connection_info: "OAuthRemoteConnectionInfo" = None,
+        domain_name: str = "",
     ):
         super().__init__()
-        self.__oAuthRemoteConnectionInfo = (
-            oAuthRemoteConnectionInfo
-            if oAuthRemoteConnectionInfo is not None
+        self.__oauth_remote_connection_info = (
+            oauth_remote_connection_info
+            if oauth_remote_connection_info is not None
             else OAuthRemoteConnectionInfo()
         )
-        self.__domainName = domainName
+        self.__domain_name = domain_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        oAuthRemoteConnectionInfo = self.oAuthRemoteConnectionInfo()
+        oauth_remote_connection_info = self.oauth_remote_connection_info()
         check_type(
-            "oAuthRemoteConnectionInfo",
-            oAuthRemoteConnectionInfo,
+            "oauth_remote_connection_info",
+            oauth_remote_connection_info,
             "OAuthRemoteConnectionInfo",
         )
-        v.update(oAuthRemoteConnectionInfo._root())  # inline
-        domainName = self.domainName()
-        check_type("domainName", domainName, str)
-        v["domainName"] = domainName
+        v.update(oauth_remote_connection_info._root())  # inline
+        domain_name = self.domain_name()
+        check_type("domain_name", domain_name, str)
+        v["domainName"] = domain_name
         return v
 
-    def oAuthRemoteConnectionInfo(self) -> "OAuthRemoteConnectionInfo":
+    def oauth_remote_connection_info(self) -> "OAuthRemoteConnectionInfo":
         """
         OAuthRemoteConnectionInfo contains information about how to connect to the keystone server
         """
-        return self.__oAuthRemoteConnectionInfo
+        return self.__oauth_remote_connection_info
 
-    def domainName(self) -> str:
+    def domain_name(self) -> str:
         """
         domainName is required for keystone v3
         """
-        return self.__domainName
+        return self.__domain_name
 
 
 class LDAPAttributeMapping(types.Object):
@@ -3361,14 +3385,14 @@ class LDAPAttributeMapping(types.Object):
     def __init__(
         self,
         id: List[str] = None,
-        preferredUsername: List[str] = None,
+        preferred_username: List[str] = None,
         name: List[str] = None,
         email: List[str] = None,
     ):
         super().__init__()
         self.__id = id if id is not None else []
-        self.__preferredUsername = (
-            preferredUsername if preferredUsername is not None else []
+        self.__preferred_username = (
+            preferred_username if preferred_username is not None else []
         )
         self.__name = name if name is not None else []
         self.__email = email if email is not None else []
@@ -3379,10 +3403,10 @@ class LDAPAttributeMapping(types.Object):
         id = self.id()
         check_type("id", id, List[str])
         v["id"] = id
-        preferredUsername = self.preferredUsername()
-        check_type("preferredUsername", preferredUsername, Optional[List[str]])
-        if preferredUsername:  # omit empty
-            v["preferredUsername"] = preferredUsername
+        preferred_username = self.preferred_username()
+        check_type("preferred_username", preferred_username, Optional[List[str]])
+        if preferred_username:  # omit empty
+            v["preferredUsername"] = preferred_username
         name = self.name()
         check_type("name", name, Optional[List[str]])
         if name:  # omit empty
@@ -3402,12 +3426,12 @@ class LDAPAttributeMapping(types.Object):
         """
         return self.__id
 
-    def preferredUsername(self) -> Optional[List[str]]:
+    def preferred_username(self) -> Optional[List[str]]:
         """
         preferredUsername is the list of attributes whose values should be used as the preferred username.
         LDAP standard login attribute is "uid"
         """
-        return self.__preferredUsername
+        return self.__preferred_username
 
     def name(self) -> Optional[List[str]]:
         """
@@ -3435,17 +3459,17 @@ class LDAPIdentityProvider(types.Object):
     def __init__(
         self,
         url: str = "",
-        bindDN: str = "",
-        bindPassword: "SecretNameReference" = None,
+        bind_dn: str = "",
+        bind_password: "SecretNameReference" = None,
         insecure: bool = False,
         ca: "ConfigMapNameReference" = None,
         attributes: "LDAPAttributeMapping" = None,
     ):
         super().__init__()
         self.__url = url
-        self.__bindDN = bindDN
-        self.__bindPassword = (
-            bindPassword if bindPassword is not None else SecretNameReference()
+        self.__bind_dn = bind_dn
+        self.__bind_password = (
+            bind_password if bind_password is not None else SecretNameReference()
         )
         self.__insecure = insecure
         self.__ca = ca if ca is not None else ConfigMapNameReference()
@@ -3459,12 +3483,12 @@ class LDAPIdentityProvider(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        bindDN = self.bindDN()
-        check_type("bindDN", bindDN, str)
-        v["bindDN"] = bindDN
-        bindPassword = self.bindPassword()
-        check_type("bindPassword", bindPassword, "SecretNameReference")
-        v["bindPassword"] = bindPassword
+        bind_dn = self.bind_dn()
+        check_type("bind_dn", bind_dn, str)
+        v["bindDN"] = bind_dn
+        bind_password = self.bind_password()
+        check_type("bind_password", bind_password, "SecretNameReference")
+        v["bindPassword"] = bind_password
         insecure = self.insecure()
         check_type("insecure", insecure, bool)
         v["insecure"] = insecure
@@ -3484,13 +3508,13 @@ class LDAPIdentityProvider(types.Object):
         """
         return self.__url
 
-    def bindDN(self) -> str:
+    def bind_dn(self) -> str:
         """
         bindDN is an optional DN to bind with during the search phase.
         """
-        return self.__bindDN
+        return self.__bind_dn
 
-    def bindPassword(self) -> "SecretNameReference":
+    def bind_password(self) -> "SecretNameReference":
         """
         bindPassword is an optional reference to a secret by name
         containing a password to bind with during the search phase.
@@ -3498,7 +3522,7 @@ class LDAPIdentityProvider(types.Object):
         If specified and the secret or expected key is not found, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__bindPassword
+        return self.__bind_password
 
     def insecure(self) -> bool:
         """
@@ -3538,13 +3562,13 @@ class OpenIDClaims(types.Object):
     @typechecked
     def __init__(
         self,
-        preferredUsername: List[str] = None,
+        preferred_username: List[str] = None,
         name: List[str] = None,
         email: List[str] = None,
     ):
         super().__init__()
-        self.__preferredUsername = (
-            preferredUsername if preferredUsername is not None else []
+        self.__preferred_username = (
+            preferred_username if preferred_username is not None else []
         )
         self.__name = name if name is not None else []
         self.__email = email if email is not None else []
@@ -3552,10 +3576,10 @@ class OpenIDClaims(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        preferredUsername = self.preferredUsername()
-        check_type("preferredUsername", preferredUsername, Optional[List[str]])
-        if preferredUsername:  # omit empty
-            v["preferredUsername"] = preferredUsername
+        preferred_username = self.preferred_username()
+        check_type("preferred_username", preferred_username, Optional[List[str]])
+        if preferred_username:  # omit empty
+            v["preferredUsername"] = preferred_username
         name = self.name()
         check_type("name", name, Optional[List[str]])
         if name:  # omit empty
@@ -3566,12 +3590,12 @@ class OpenIDClaims(types.Object):
             v["email"] = email
         return v
 
-    def preferredUsername(self) -> Optional[List[str]]:
+    def preferred_username(self) -> Optional[List[str]]:
         """
         preferredUsername is the list of claims whose values should be used as the preferred username.
         If unspecified, the preferred username is determined from the value of the sub claim
         """
-        return self.__preferredUsername
+        return self.__preferred_username
 
     def name(self) -> Optional[List[str]]:
         """
@@ -3597,23 +3621,23 @@ class OpenIDIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "SecretNameReference" = None,
+        client_id: str = "",
+        client_secret: "SecretNameReference" = None,
         ca: "ConfigMapNameReference" = None,
-        extraScopes: List[str] = None,
-        extraAuthorizeParameters: Dict[str, str] = None,
+        extra_scopes: List[str] = None,
+        extra_authorize_parameters: Dict[str, str] = None,
         issuer: str = "",
         claims: "OpenIDClaims" = None,
     ):
         super().__init__()
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else SecretNameReference()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else SecretNameReference()
         )
         self.__ca = ca if ca is not None else ConfigMapNameReference()
-        self.__extraScopes = extraScopes if extraScopes is not None else []
-        self.__extraAuthorizeParameters = (
-            extraAuthorizeParameters if extraAuthorizeParameters is not None else {}
+        self.__extra_scopes = extra_scopes if extra_scopes is not None else []
+        self.__extra_authorize_parameters = (
+            extra_authorize_parameters if extra_authorize_parameters is not None else {}
         )
         self.__issuer = issuer
         self.__claims = claims if claims is not None else OpenIDClaims()
@@ -3621,27 +3645,27 @@ class OpenIDIdentityProvider(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "SecretNameReference")
-        v["clientSecret"] = clientSecret
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "SecretNameReference")
+        v["clientSecret"] = client_secret
         ca = self.ca()
         check_type("ca", ca, "ConfigMapNameReference")
         v["ca"] = ca
-        extraScopes = self.extraScopes()
-        check_type("extraScopes", extraScopes, Optional[List[str]])
-        if extraScopes:  # omit empty
-            v["extraScopes"] = extraScopes
-        extraAuthorizeParameters = self.extraAuthorizeParameters()
+        extra_scopes = self.extra_scopes()
+        check_type("extra_scopes", extra_scopes, Optional[List[str]])
+        if extra_scopes:  # omit empty
+            v["extraScopes"] = extra_scopes
+        extra_authorize_parameters = self.extra_authorize_parameters()
         check_type(
-            "extraAuthorizeParameters",
-            extraAuthorizeParameters,
+            "extra_authorize_parameters",
+            extra_authorize_parameters,
             Optional[Dict[str, str]],
         )
-        if extraAuthorizeParameters:  # omit empty
-            v["extraAuthorizeParameters"] = extraAuthorizeParameters
+        if extra_authorize_parameters:  # omit empty
+            v["extraAuthorizeParameters"] = extra_authorize_parameters
         issuer = self.issuer()
         check_type("issuer", issuer, str)
         v["issuer"] = issuer
@@ -3650,20 +3674,20 @@ class OpenIDIdentityProvider(types.Object):
         v["claims"] = claims
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "SecretNameReference":
+    def client_secret(self) -> "SecretNameReference":
         """
         clientSecret is a required reference to the secret by name containing the oauth client secret.
         The key "clientSecret" is used to locate the data.
         If the secret or expected key is not found, the identity provider is not honored.
         The namespace for this secret is openshift-config.
         """
-        return self.__clientSecret
+        return self.__client_secret
 
     def ca(self) -> "ConfigMapNameReference":
         """
@@ -3677,17 +3701,17 @@ class OpenIDIdentityProvider(types.Object):
         """
         return self.__ca
 
-    def extraScopes(self) -> Optional[List[str]]:
+    def extra_scopes(self) -> Optional[List[str]]:
         """
         extraScopes are any scopes to request in addition to the standard "openid" scope.
         """
-        return self.__extraScopes
+        return self.__extra_scopes
 
-    def extraAuthorizeParameters(self) -> Optional[Dict[str, str]]:
+    def extra_authorize_parameters(self) -> Optional[Dict[str, str]]:
         """
         extraAuthorizeParameters are any custom parameters to add to the authorize request.
         """
-        return self.__extraAuthorizeParameters
+        return self.__extra_authorize_parameters
 
     def issuer(self) -> str:
         """
@@ -3712,60 +3736,60 @@ class RequestHeaderIdentityProvider(types.Object):
     @typechecked
     def __init__(
         self,
-        loginURL: str = "",
-        challengeURL: str = "",
+        login_url: str = "",
+        challenge_url: str = "",
         ca: "ConfigMapNameReference" = None,
-        clientCommonNames: List[str] = None,
+        client_common_names: List[str] = None,
         headers: List[str] = None,
-        preferredUsernameHeaders: List[str] = None,
-        nameHeaders: List[str] = None,
-        emailHeaders: List[str] = None,
+        preferred_username_headers: List[str] = None,
+        name_headers: List[str] = None,
+        email_headers: List[str] = None,
     ):
         super().__init__()
-        self.__loginURL = loginURL
-        self.__challengeURL = challengeURL
+        self.__login_url = login_url
+        self.__challenge_url = challenge_url
         self.__ca = ca if ca is not None else ConfigMapNameReference()
-        self.__clientCommonNames = (
-            clientCommonNames if clientCommonNames is not None else []
+        self.__client_common_names = (
+            client_common_names if client_common_names is not None else []
         )
         self.__headers = headers if headers is not None else []
-        self.__preferredUsernameHeaders = (
-            preferredUsernameHeaders if preferredUsernameHeaders is not None else []
+        self.__preferred_username_headers = (
+            preferred_username_headers if preferred_username_headers is not None else []
         )
-        self.__nameHeaders = nameHeaders if nameHeaders is not None else []
-        self.__emailHeaders = emailHeaders if emailHeaders is not None else []
+        self.__name_headers = name_headers if name_headers is not None else []
+        self.__email_headers = email_headers if email_headers is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        loginURL = self.loginURL()
-        check_type("loginURL", loginURL, str)
-        v["loginURL"] = loginURL
-        challengeURL = self.challengeURL()
-        check_type("challengeURL", challengeURL, str)
-        v["challengeURL"] = challengeURL
+        login_url = self.login_url()
+        check_type("login_url", login_url, str)
+        v["loginURL"] = login_url
+        challenge_url = self.challenge_url()
+        check_type("challenge_url", challenge_url, str)
+        v["challengeURL"] = challenge_url
         ca = self.ca()
         check_type("ca", ca, "ConfigMapNameReference")
         v["ca"] = ca
-        clientCommonNames = self.clientCommonNames()
-        check_type("clientCommonNames", clientCommonNames, Optional[List[str]])
-        if clientCommonNames:  # omit empty
-            v["clientCommonNames"] = clientCommonNames
+        client_common_names = self.client_common_names()
+        check_type("client_common_names", client_common_names, Optional[List[str]])
+        if client_common_names:  # omit empty
+            v["clientCommonNames"] = client_common_names
         headers = self.headers()
         check_type("headers", headers, List[str])
         v["headers"] = headers
-        preferredUsernameHeaders = self.preferredUsernameHeaders()
-        check_type("preferredUsernameHeaders", preferredUsernameHeaders, List[str])
-        v["preferredUsernameHeaders"] = preferredUsernameHeaders
-        nameHeaders = self.nameHeaders()
-        check_type("nameHeaders", nameHeaders, List[str])
-        v["nameHeaders"] = nameHeaders
-        emailHeaders = self.emailHeaders()
-        check_type("emailHeaders", emailHeaders, List[str])
-        v["emailHeaders"] = emailHeaders
+        preferred_username_headers = self.preferred_username_headers()
+        check_type("preferred_username_headers", preferred_username_headers, List[str])
+        v["preferredUsernameHeaders"] = preferred_username_headers
+        name_headers = self.name_headers()
+        check_type("name_headers", name_headers, List[str])
+        v["nameHeaders"] = name_headers
+        email_headers = self.email_headers()
+        check_type("email_headers", email_headers, List[str])
+        v["emailHeaders"] = email_headers
         return v
 
-    def loginURL(self) -> str:
+    def login_url(self) -> str:
         """
         loginURL is a URL to redirect unauthenticated /authorize requests to
         Unauthenticated requests from OAuth clients which expect interactive logins will be redirected here
@@ -3775,9 +3799,9 @@ class RequestHeaderIdentityProvider(types.Object):
           https://www.example.com/auth-proxy/oauth/authorize?${query}
         Required when login is set to true.
         """
-        return self.__loginURL
+        return self.__login_url
 
-    def challengeURL(self) -> str:
+    def challenge_url(self) -> str:
         """
         challengeURL is a URL to redirect unauthenticated /authorize requests to
         Unauthenticated requests from OAuth clients which expect WWW-Authenticate challenges will be
@@ -3788,7 +3812,7 @@ class RequestHeaderIdentityProvider(types.Object):
           https://www.example.com/auth-proxy/oauth/authorize?${query}
         Required when challenge is set to true.
         """
-        return self.__challengeURL
+        return self.__challenge_url
 
     def ca(self) -> "ConfigMapNameReference":
         """
@@ -3802,12 +3826,12 @@ class RequestHeaderIdentityProvider(types.Object):
         """
         return self.__ca
 
-    def clientCommonNames(self) -> Optional[List[str]]:
+    def client_common_names(self) -> Optional[List[str]]:
         """
         clientCommonNames is an optional list of common names to require a match from. If empty, any
         client certificate validated against the clientCA bundle is considered authoritative.
         """
-        return self.__clientCommonNames
+        return self.__client_common_names
 
     def headers(self) -> List[str]:
         """
@@ -3815,23 +3839,23 @@ class RequestHeaderIdentityProvider(types.Object):
         """
         return self.__headers
 
-    def preferredUsernameHeaders(self) -> List[str]:
+    def preferred_username_headers(self) -> List[str]:
         """
         preferredUsernameHeaders is the set of headers to check for the preferred username
         """
-        return self.__preferredUsernameHeaders
+        return self.__preferred_username_headers
 
-    def nameHeaders(self) -> List[str]:
+    def name_headers(self) -> List[str]:
         """
         nameHeaders is the set of headers to check for the display name
         """
-        return self.__nameHeaders
+        return self.__name_headers
 
-    def emailHeaders(self) -> List[str]:
+    def email_headers(self) -> List[str]:
         """
         emailHeaders is the set of headers to check for the email address
         """
-        return self.__emailHeaders
+        return self.__email_headers
 
 
 class IdentityProviderConfig(types.Object):
@@ -3844,27 +3868,27 @@ class IdentityProviderConfig(types.Object):
     def __init__(
         self,
         type: IdentityProviderType = None,
-        basicAuth: "BasicAuthIdentityProvider" = None,
+        basic_auth: "BasicAuthIdentityProvider" = None,
         github: "GitHubIdentityProvider" = None,
         gitlab: "GitLabIdentityProvider" = None,
         google: "GoogleIdentityProvider" = None,
         htpasswd: "HTPasswdIdentityProvider" = None,
         keystone: "KeystoneIdentityProvider" = None,
         ldap: "LDAPIdentityProvider" = None,
-        openID: "OpenIDIdentityProvider" = None,
-        requestHeader: "RequestHeaderIdentityProvider" = None,
+        open_id: "OpenIDIdentityProvider" = None,
+        request_header: "RequestHeaderIdentityProvider" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__basicAuth = basicAuth
+        self.__basic_auth = basic_auth
         self.__github = github
         self.__gitlab = gitlab
         self.__google = google
         self.__htpasswd = htpasswd
         self.__keystone = keystone
         self.__ldap = ldap
-        self.__openID = openID
-        self.__requestHeader = requestHeader
+        self.__open_id = open_id
+        self.__request_header = request_header
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -3872,10 +3896,10 @@ class IdentityProviderConfig(types.Object):
         type = self.type()
         check_type("type", type, IdentityProviderType)
         v["type"] = type
-        basicAuth = self.basicAuth()
-        check_type("basicAuth", basicAuth, Optional["BasicAuthIdentityProvider"])
-        if basicAuth is not None:  # omit empty
-            v["basicAuth"] = basicAuth
+        basic_auth = self.basic_auth()
+        check_type("basic_auth", basic_auth, Optional["BasicAuthIdentityProvider"])
+        if basic_auth is not None:  # omit empty
+            v["basicAuth"] = basic_auth
         github = self.github()
         check_type("github", github, Optional["GitHubIdentityProvider"])
         if github is not None:  # omit empty
@@ -3900,16 +3924,16 @@ class IdentityProviderConfig(types.Object):
         check_type("ldap", ldap, Optional["LDAPIdentityProvider"])
         if ldap is not None:  # omit empty
             v["ldap"] = ldap
-        openID = self.openID()
-        check_type("openID", openID, Optional["OpenIDIdentityProvider"])
-        if openID is not None:  # omit empty
-            v["openID"] = openID
-        requestHeader = self.requestHeader()
+        open_id = self.open_id()
+        check_type("open_id", open_id, Optional["OpenIDIdentityProvider"])
+        if open_id is not None:  # omit empty
+            v["openID"] = open_id
+        request_header = self.request_header()
         check_type(
-            "requestHeader", requestHeader, Optional["RequestHeaderIdentityProvider"]
+            "request_header", request_header, Optional["RequestHeaderIdentityProvider"]
         )
-        if requestHeader is not None:  # omit empty
-            v["requestHeader"] = requestHeader
+        if request_header is not None:  # omit empty
+            v["requestHeader"] = request_header
         return v
 
     def type(self) -> IdentityProviderType:
@@ -3918,11 +3942,11 @@ class IdentityProviderConfig(types.Object):
         """
         return self.__type
 
-    def basicAuth(self) -> Optional["BasicAuthIdentityProvider"]:
+    def basic_auth(self) -> Optional["BasicAuthIdentityProvider"]:
         """
         basicAuth contains configuration options for the BasicAuth IdP
         """
-        return self.__basicAuth
+        return self.__basic_auth
 
     def github(self) -> Optional["GitHubIdentityProvider"]:
         """
@@ -3960,17 +3984,17 @@ class IdentityProviderConfig(types.Object):
         """
         return self.__ldap
 
-    def openID(self) -> Optional["OpenIDIdentityProvider"]:
+    def open_id(self) -> Optional["OpenIDIdentityProvider"]:
         """
         openID enables user authentication using OpenID credentials
         """
-        return self.__openID
+        return self.__open_id
 
-    def requestHeader(self) -> Optional["RequestHeaderIdentityProvider"]:
+    def request_header(self) -> Optional["RequestHeaderIdentityProvider"]:
         """
         requestHeader enables user authentication using request header credentials
         """
-        return self.__requestHeader
+        return self.__request_header
 
 
 class IdentityProvider(types.Object):
@@ -3983,15 +4007,15 @@ class IdentityProvider(types.Object):
     def __init__(
         self,
         name: str = "",
-        mappingMethod: MappingMethodType = None,
-        identityProviderConfig: "IdentityProviderConfig" = None,
+        mapping_method: MappingMethodType = None,
+        identity_provider_config: "IdentityProviderConfig" = None,
     ):
         super().__init__()
         self.__name = name
-        self.__mappingMethod = mappingMethod
-        self.__identityProviderConfig = (
-            identityProviderConfig
-            if identityProviderConfig is not None
+        self.__mapping_method = mapping_method
+        self.__identity_provider_config = (
+            identity_provider_config
+            if identity_provider_config is not None
             else IdentityProviderConfig()
         )
 
@@ -4001,15 +4025,17 @@ class IdentityProvider(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        mappingMethod = self.mappingMethod()
-        check_type("mappingMethod", mappingMethod, Optional[MappingMethodType])
-        if mappingMethod:  # omit empty
-            v["mappingMethod"] = mappingMethod
-        identityProviderConfig = self.identityProviderConfig()
+        mapping_method = self.mapping_method()
+        check_type("mapping_method", mapping_method, Optional[MappingMethodType])
+        if mapping_method:  # omit empty
+            v["mappingMethod"] = mapping_method
+        identity_provider_config = self.identity_provider_config()
         check_type(
-            "identityProviderConfig", identityProviderConfig, "IdentityProviderConfig"
+            "identity_provider_config",
+            identity_provider_config,
+            "IdentityProviderConfig",
         )
-        v.update(identityProviderConfig._root())  # inline
+        v.update(identity_provider_config._root())  # inline
         return v
 
     def name(self) -> str:
@@ -4021,15 +4047,15 @@ class IdentityProvider(types.Object):
         """
         return self.__name
 
-    def mappingMethod(self) -> Optional[MappingMethodType]:
+    def mapping_method(self) -> Optional[MappingMethodType]:
         """
         mappingMethod determines how identities from this provider are mapped to users
         Defaults to "claim"
         """
-        return self.__mappingMethod
+        return self.__mapping_method
 
-    def identityProviderConfig(self) -> "IdentityProviderConfig":
-        return self.__identityProviderConfig
+    def identity_provider_config(self) -> "IdentityProviderConfig":
+        return self.__identity_provider_config
 
 
 class RegistryLocation(types.Object):
@@ -4040,30 +4066,30 @@ class RegistryLocation(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, domainName: str = "", insecure: bool = None):
+    def __init__(self, domain_name: str = "", insecure: bool = None):
         super().__init__()
-        self.__domainName = domainName
+        self.__domain_name = domain_name
         self.__insecure = insecure
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        domainName = self.domainName()
-        check_type("domainName", domainName, str)
-        v["domainName"] = domainName
+        domain_name = self.domain_name()
+        check_type("domain_name", domain_name, str)
+        v["domainName"] = domain_name
         insecure = self.insecure()
         check_type("insecure", insecure, Optional[bool])
         if insecure:  # omit empty
             v["insecure"] = insecure
         return v
 
-    def domainName(self) -> str:
+    def domain_name(self) -> str:
         """
         domainName specifies a domain name for the registry
         In case the registry use non-standard (80 or 443) port, the port should be included
         in the domain name as well.
         """
-        return self.__domainName
+        return self.__domain_name
 
     def insecure(self) -> Optional[bool]:
         """
@@ -4082,59 +4108,59 @@ class RegistrySources(types.Object):
     @typechecked
     def __init__(
         self,
-        insecureRegistries: List[str] = None,
-        blockedRegistries: List[str] = None,
-        allowedRegistries: List[str] = None,
+        insecure_registries: List[str] = None,
+        blocked_registries: List[str] = None,
+        allowed_registries: List[str] = None,
     ):
         super().__init__()
-        self.__insecureRegistries = (
-            insecureRegistries if insecureRegistries is not None else []
+        self.__insecure_registries = (
+            insecure_registries if insecure_registries is not None else []
         )
-        self.__blockedRegistries = (
-            blockedRegistries if blockedRegistries is not None else []
+        self.__blocked_registries = (
+            blocked_registries if blocked_registries is not None else []
         )
-        self.__allowedRegistries = (
-            allowedRegistries if allowedRegistries is not None else []
+        self.__allowed_registries = (
+            allowed_registries if allowed_registries is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        insecureRegistries = self.insecureRegistries()
-        check_type("insecureRegistries", insecureRegistries, Optional[List[str]])
-        if insecureRegistries:  # omit empty
-            v["insecureRegistries"] = insecureRegistries
-        blockedRegistries = self.blockedRegistries()
-        check_type("blockedRegistries", blockedRegistries, Optional[List[str]])
-        if blockedRegistries:  # omit empty
-            v["blockedRegistries"] = blockedRegistries
-        allowedRegistries = self.allowedRegistries()
-        check_type("allowedRegistries", allowedRegistries, Optional[List[str]])
-        if allowedRegistries:  # omit empty
-            v["allowedRegistries"] = allowedRegistries
+        insecure_registries = self.insecure_registries()
+        check_type("insecure_registries", insecure_registries, Optional[List[str]])
+        if insecure_registries:  # omit empty
+            v["insecureRegistries"] = insecure_registries
+        blocked_registries = self.blocked_registries()
+        check_type("blocked_registries", blocked_registries, Optional[List[str]])
+        if blocked_registries:  # omit empty
+            v["blockedRegistries"] = blocked_registries
+        allowed_registries = self.allowed_registries()
+        check_type("allowed_registries", allowed_registries, Optional[List[str]])
+        if allowed_registries:  # omit empty
+            v["allowedRegistries"] = allowed_registries
         return v
 
-    def insecureRegistries(self) -> Optional[List[str]]:
+    def insecure_registries(self) -> Optional[List[str]]:
         """
         insecureRegistries are registries which do not have a valid TLS certificates or only support HTTP connections.
         """
-        return self.__insecureRegistries
+        return self.__insecure_registries
 
-    def blockedRegistries(self) -> Optional[List[str]]:
+    def blocked_registries(self) -> Optional[List[str]]:
         """
         blockedRegistries cannot be used for image pull and push actions. All other registries are permitted.
         
         Only one of BlockedRegistries or AllowedRegistries may be set.
         """
-        return self.__blockedRegistries
+        return self.__blocked_registries
 
-    def allowedRegistries(self) -> Optional[List[str]]:
+    def allowed_registries(self) -> Optional[List[str]]:
         """
         allowedRegistries are the only registries permitted for image pull and push actions. All other registries are denied.
         
         Only one of BlockedRegistries or AllowedRegistries may be set.
         """
-        return self.__allowedRegistries
+        return self.__allowed_registries
 
 
 class ImageSpec(types.Object):
@@ -4142,53 +4168,61 @@ class ImageSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        allowedRegistriesForImport: List["RegistryLocation"] = None,
-        externalRegistryHostnames: List[str] = None,
-        additionalTrustedCA: "ConfigMapNameReference" = None,
-        registrySources: "RegistrySources" = None,
+        allowed_registries_for_import: List["RegistryLocation"] = None,
+        external_registry_hostnames: List[str] = None,
+        additional_trusted_ca: "ConfigMapNameReference" = None,
+        registry_sources: "RegistrySources" = None,
     ):
         super().__init__()
-        self.__allowedRegistriesForImport = (
-            allowedRegistriesForImport if allowedRegistriesForImport is not None else []
+        self.__allowed_registries_for_import = (
+            allowed_registries_for_import
+            if allowed_registries_for_import is not None
+            else []
         )
-        self.__externalRegistryHostnames = (
-            externalRegistryHostnames if externalRegistryHostnames is not None else []
+        self.__external_registry_hostnames = (
+            external_registry_hostnames
+            if external_registry_hostnames is not None
+            else []
         )
-        self.__additionalTrustedCA = (
-            additionalTrustedCA
-            if additionalTrustedCA is not None
+        self.__additional_trusted_ca = (
+            additional_trusted_ca
+            if additional_trusted_ca is not None
             else ConfigMapNameReference()
         )
-        self.__registrySources = (
-            registrySources if registrySources is not None else RegistrySources()
+        self.__registry_sources = (
+            registry_sources if registry_sources is not None else RegistrySources()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        allowedRegistriesForImport = self.allowedRegistriesForImport()
+        allowed_registries_for_import = self.allowed_registries_for_import()
         check_type(
-            "allowedRegistriesForImport",
-            allowedRegistriesForImport,
+            "allowed_registries_for_import",
+            allowed_registries_for_import,
             Optional[List["RegistryLocation"]],
         )
-        if allowedRegistriesForImport:  # omit empty
-            v["allowedRegistriesForImport"] = allowedRegistriesForImport
-        externalRegistryHostnames = self.externalRegistryHostnames()
+        if allowed_registries_for_import:  # omit empty
+            v["allowedRegistriesForImport"] = allowed_registries_for_import
+        external_registry_hostnames = self.external_registry_hostnames()
         check_type(
-            "externalRegistryHostnames", externalRegistryHostnames, Optional[List[str]]
+            "external_registry_hostnames",
+            external_registry_hostnames,
+            Optional[List[str]],
         )
-        if externalRegistryHostnames:  # omit empty
-            v["externalRegistryHostnames"] = externalRegistryHostnames
-        additionalTrustedCA = self.additionalTrustedCA()
-        check_type("additionalTrustedCA", additionalTrustedCA, "ConfigMapNameReference")
-        v["additionalTrustedCA"] = additionalTrustedCA
-        registrySources = self.registrySources()
-        check_type("registrySources", registrySources, "RegistrySources")
-        v["registrySources"] = registrySources
+        if external_registry_hostnames:  # omit empty
+            v["externalRegistryHostnames"] = external_registry_hostnames
+        additional_trusted_ca = self.additional_trusted_ca()
+        check_type(
+            "additional_trusted_ca", additional_trusted_ca, "ConfigMapNameReference"
+        )
+        v["additionalTrustedCA"] = additional_trusted_ca
+        registry_sources = self.registry_sources()
+        check_type("registry_sources", registry_sources, "RegistrySources")
+        v["registrySources"] = registry_sources
         return v
 
-    def allowedRegistriesForImport(self) -> Optional[List["RegistryLocation"]]:
+    def allowed_registries_for_import(self) -> Optional[List["RegistryLocation"]]:
         """
         allowedRegistriesForImport limits the container image registries that normal users may import
         images from. Set this list to the registries that you trust to contain valid Docker
@@ -4197,34 +4231,34 @@ class ImageSpec(types.Object):
         this policy - typically only administrators or system integrations will have those
         permissions.
         """
-        return self.__allowedRegistriesForImport
+        return self.__allowed_registries_for_import
 
-    def externalRegistryHostnames(self) -> Optional[List[str]]:
+    def external_registry_hostnames(self) -> Optional[List[str]]:
         """
         externalRegistryHostnames provides the hostnames for the default external image
         registry. The external hostname should be set only when the image registry
         is exposed externally. The first value is used in 'publicDockerImageRepository'
         field in ImageStreams. The value must be in "hostname[:port]" format.
         """
-        return self.__externalRegistryHostnames
+        return self.__external_registry_hostnames
 
-    def additionalTrustedCA(self) -> "ConfigMapNameReference":
+    def additional_trusted_ca(self) -> "ConfigMapNameReference":
         """
         additionalTrustedCA is a reference to a ConfigMap containing additional CAs that
         should be trusted during imagestream import, pod image pull, build image pull, and
         imageregistry pullthrough.
         The namespace for this config map is openshift-config.
         """
-        return self.__additionalTrustedCA
+        return self.__additional_trusted_ca
 
-    def registrySources(self) -> "RegistrySources":
+    def registry_sources(self) -> "RegistrySources":
         """
         registrySources contains configuration that determines how the container runtime
         should treat individual registries when accessing images for builds+pods. (e.g.
         whether or not to allow insecure access).  It does not contain configuration for the
         internal cluster registry.
         """
-        return self.__registrySources
+        return self.__registry_sources
 
 
 class Image(base.TypedObject, base.MetadataObject):
@@ -4247,7 +4281,7 @@ class Image(base.TypedObject, base.MetadataObject):
         spec: "ImageSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Image",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -4278,28 +4312,28 @@ class InfrastructureSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, cloudConfig: "ConfigMapFileReference" = None):
+    def __init__(self, cloud_config: "ConfigMapFileReference" = None):
         super().__init__()
-        self.__cloudConfig = (
-            cloudConfig if cloudConfig is not None else ConfigMapFileReference()
+        self.__cloud_config = (
+            cloud_config if cloud_config is not None else ConfigMapFileReference()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        cloudConfig = self.cloudConfig()
-        check_type("cloudConfig", cloudConfig, "ConfigMapFileReference")
-        v["cloudConfig"] = cloudConfig
+        cloud_config = self.cloud_config()
+        check_type("cloud_config", cloud_config, "ConfigMapFileReference")
+        v["cloudConfig"] = cloud_config
         return v
 
-    def cloudConfig(self) -> "ConfigMapFileReference":
+    def cloud_config(self) -> "ConfigMapFileReference":
         """
         cloudConfig is a reference to a ConfigMap containing the cloud provider configuration file.
         This configuration file is used to configure the Kubernetes cloud provider integration
         when using the built-in cloud provider integration or the external cloud controller manager.
         The namespace for this config map is openshift-config.
         """
-        return self.__cloudConfig
+        return self.__cloud_config
 
 
 class Infrastructure(base.TypedObject, base.MetadataObject):
@@ -4317,7 +4351,7 @@ class Infrastructure(base.TypedObject, base.MetadataObject):
         spec: "InfrastructureSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Infrastructure",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -4386,7 +4420,7 @@ class Ingress(base.TypedObject, base.MetadataObject):
         spec: "IngressSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Ingress",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -4422,22 +4456,22 @@ class LeaderElection(types.Object):
         disable: bool = None,
         namespace: str = None,
         name: str = None,
-        leaseDuration: "base.Duration" = None,
-        renewDeadline: "base.Duration" = None,
-        retryPeriod: "base.Duration" = None,
+        lease_duration: "base.Duration" = None,
+        renew_deadline: "base.Duration" = None,
+        retry_period: "base.Duration" = None,
     ):
         super().__init__()
         self.__disable = disable
         self.__namespace = namespace
         self.__name = name
-        self.__leaseDuration = (
-            leaseDuration if leaseDuration is not None else metav1.Duration()
+        self.__lease_duration = (
+            lease_duration if lease_duration is not None else metav1.Duration()
         )
-        self.__renewDeadline = (
-            renewDeadline if renewDeadline is not None else metav1.Duration()
+        self.__renew_deadline = (
+            renew_deadline if renew_deadline is not None else metav1.Duration()
         )
-        self.__retryPeriod = (
-            retryPeriod if retryPeriod is not None else metav1.Duration()
+        self.__retry_period = (
+            retry_period if retry_period is not None else metav1.Duration()
         )
 
     @typechecked
@@ -4455,15 +4489,15 @@ class LeaderElection(types.Object):
         check_type("name", name, Optional[str])
         if name:  # omit empty
             v["name"] = name
-        leaseDuration = self.leaseDuration()
-        check_type("leaseDuration", leaseDuration, "base.Duration")
-        v["leaseDuration"] = leaseDuration
-        renewDeadline = self.renewDeadline()
-        check_type("renewDeadline", renewDeadline, "base.Duration")
-        v["renewDeadline"] = renewDeadline
-        retryPeriod = self.retryPeriod()
-        check_type("retryPeriod", retryPeriod, "base.Duration")
-        v["retryPeriod"] = retryPeriod
+        lease_duration = self.lease_duration()
+        check_type("lease_duration", lease_duration, "base.Duration")
+        v["leaseDuration"] = lease_duration
+        renew_deadline = self.renew_deadline()
+        check_type("renew_deadline", renew_deadline, "base.Duration")
+        v["renewDeadline"] = renew_deadline
+        retry_period = self.retry_period()
+        check_type("retry_period", retry_period, "base.Duration")
+        v["retryPeriod"] = retry_period
         return v
 
     def disable(self) -> Optional[bool]:
@@ -4484,7 +4518,7 @@ class LeaderElection(types.Object):
         """
         return self.__name
 
-    def leaseDuration(self) -> "base.Duration":
+    def lease_duration(self) -> "base.Duration":
         """
         leaseDuration is the duration that non-leader candidates will wait
         after observing a leadership renewal until attempting to acquire
@@ -4494,9 +4528,9 @@ class LeaderElection(types.Object):
         enabled.
         +nullable
         """
-        return self.__leaseDuration
+        return self.__lease_duration
 
-    def renewDeadline(self) -> "base.Duration":
+    def renew_deadline(self) -> "base.Duration":
         """
         renewDeadline is the interval between attempts by the acting master to
         renew a leadership slot before it stops leading. This must be less
@@ -4504,16 +4538,16 @@ class LeaderElection(types.Object):
         election is enabled.
         +nullable
         """
-        return self.__renewDeadline
+        return self.__renew_deadline
 
-    def retryPeriod(self) -> "base.Duration":
+    def retry_period(self) -> "base.Duration":
         """
         retryPeriod is the duration the clients should wait between attempting
         acquisition and renewal of a leadership. This is only applicable if
         leader election is enabled.
         +nullable
         """
-        return self.__retryPeriod
+        return self.__retry_period
 
 
 class NetworkSpec(types.Object):
@@ -4528,51 +4562,51 @@ class NetworkSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        clusterNetwork: List["ClusterNetworkEntry"] = None,
-        serviceNetwork: List[str] = None,
-        networkType: str = "",
-        externalIP: "ExternalIPConfig" = None,
+        cluster_network: List["ClusterNetworkEntry"] = None,
+        service_network: List[str] = None,
+        network_type: str = "",
+        external_ip: "ExternalIPConfig" = None,
     ):
         super().__init__()
-        self.__clusterNetwork = clusterNetwork if clusterNetwork is not None else []
-        self.__serviceNetwork = serviceNetwork if serviceNetwork is not None else []
-        self.__networkType = networkType
-        self.__externalIP = externalIP
+        self.__cluster_network = cluster_network if cluster_network is not None else []
+        self.__service_network = service_network if service_network is not None else []
+        self.__network_type = network_type
+        self.__external_ip = external_ip
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clusterNetwork = self.clusterNetwork()
-        check_type("clusterNetwork", clusterNetwork, List["ClusterNetworkEntry"])
-        v["clusterNetwork"] = clusterNetwork
-        serviceNetwork = self.serviceNetwork()
-        check_type("serviceNetwork", serviceNetwork, List[str])
-        v["serviceNetwork"] = serviceNetwork
-        networkType = self.networkType()
-        check_type("networkType", networkType, str)
-        v["networkType"] = networkType
-        externalIP = self.externalIP()
-        check_type("externalIP", externalIP, Optional["ExternalIPConfig"])
-        if externalIP is not None:  # omit empty
-            v["externalIP"] = externalIP
+        cluster_network = self.cluster_network()
+        check_type("cluster_network", cluster_network, List["ClusterNetworkEntry"])
+        v["clusterNetwork"] = cluster_network
+        service_network = self.service_network()
+        check_type("service_network", service_network, List[str])
+        v["serviceNetwork"] = service_network
+        network_type = self.network_type()
+        check_type("network_type", network_type, str)
+        v["networkType"] = network_type
+        external_ip = self.external_ip()
+        check_type("external_ip", external_ip, Optional["ExternalIPConfig"])
+        if external_ip is not None:  # omit empty
+            v["externalIP"] = external_ip
         return v
 
-    def clusterNetwork(self) -> List["ClusterNetworkEntry"]:
+    def cluster_network(self) -> List["ClusterNetworkEntry"]:
         """
         IP address pool to use for pod IPs.
         This field is immutable after installation.
         """
-        return self.__clusterNetwork
+        return self.__cluster_network
 
-    def serviceNetwork(self) -> List[str]:
+    def service_network(self) -> List[str]:
         """
         IP address pool for services.
         Currently, we only support a single entry here.
         This field is immutable after installation.
         """
-        return self.__serviceNetwork
+        return self.__service_network
 
-    def networkType(self) -> str:
+    def network_type(self) -> str:
         """
         NetworkType is the plugin that is to be deployed (e.g. OpenShiftSDN).
         This should match a value that the cluster-network-operator understands,
@@ -4581,15 +4615,15 @@ class NetworkSpec(types.Object):
         - OpenShiftSDN
         This field is immutable after installation.
         """
-        return self.__networkType
+        return self.__network_type
 
-    def externalIP(self) -> Optional["ExternalIPConfig"]:
+    def external_ip(self) -> Optional["ExternalIPConfig"]:
         """
         externalIP defines configuration for controllers that
         affect Service.ExternalIP. If nil, then ExternalIP is
         not allowed to be set.
         """
-        return self.__externalIP
+        return self.__external_ip
 
 
 class Network(base.TypedObject, base.MetadataObject):
@@ -4608,7 +4642,7 @@ class Network(base.TypedObject, base.MetadataObject):
         spec: "NetworkSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Network",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -4645,14 +4679,14 @@ class OAuthTemplates(types.Object):
     def __init__(
         self,
         login: "SecretNameReference" = None,
-        providerSelection: "SecretNameReference" = None,
+        provider_selection: "SecretNameReference" = None,
         error: "SecretNameReference" = None,
     ):
         super().__init__()
         self.__login = login if login is not None else SecretNameReference()
-        self.__providerSelection = (
-            providerSelection
-            if providerSelection is not None
+        self.__provider_selection = (
+            provider_selection
+            if provider_selection is not None
             else SecretNameReference()
         )
         self.__error = error if error is not None else SecretNameReference()
@@ -4663,9 +4697,9 @@ class OAuthTemplates(types.Object):
         login = self.login()
         check_type("login", login, "SecretNameReference")
         v["login"] = login
-        providerSelection = self.providerSelection()
-        check_type("providerSelection", providerSelection, "SecretNameReference")
-        v["providerSelection"] = providerSelection
+        provider_selection = self.provider_selection()
+        check_type("provider_selection", provider_selection, "SecretNameReference")
+        v["providerSelection"] = provider_selection
         error = self.error()
         check_type("error", error, "SecretNameReference")
         v["error"] = error
@@ -4682,7 +4716,7 @@ class OAuthTemplates(types.Object):
         """
         return self.__login
 
-    def providerSelection(self) -> "SecretNameReference":
+    def provider_selection(self) -> "SecretNameReference":
         """
         providerSelection is the name of a secret that specifies a go template to use to render
         the provider selection page.
@@ -4692,7 +4726,7 @@ class OAuthTemplates(types.Object):
         If unspecified, the default provider selection page is used.
         The namespace for this secret is openshift-config.
         """
-        return self.__providerSelection
+        return self.__provider_selection
 
     def error(self) -> "SecretNameReference":
         """
@@ -4716,38 +4750,42 @@ class TokenConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        accessTokenMaxAgeSeconds: int = 0,
-        accessTokenInactivityTimeoutSeconds: int = None,
+        access_token_max_age_seconds: int = 0,
+        access_token_inactivity_timeout_seconds: int = None,
     ):
         super().__init__()
-        self.__accessTokenMaxAgeSeconds = accessTokenMaxAgeSeconds
-        self.__accessTokenInactivityTimeoutSeconds = accessTokenInactivityTimeoutSeconds
+        self.__access_token_max_age_seconds = access_token_max_age_seconds
+        self.__access_token_inactivity_timeout_seconds = (
+            access_token_inactivity_timeout_seconds
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        accessTokenMaxAgeSeconds = self.accessTokenMaxAgeSeconds()
-        check_type("accessTokenMaxAgeSeconds", accessTokenMaxAgeSeconds, int)
-        v["accessTokenMaxAgeSeconds"] = accessTokenMaxAgeSeconds
-        accessTokenInactivityTimeoutSeconds = self.accessTokenInactivityTimeoutSeconds()
+        access_token_max_age_seconds = self.access_token_max_age_seconds()
+        check_type("access_token_max_age_seconds", access_token_max_age_seconds, int)
+        v["accessTokenMaxAgeSeconds"] = access_token_max_age_seconds
+        access_token_inactivity_timeout_seconds = (
+            self.access_token_inactivity_timeout_seconds()
+        )
         check_type(
-            "accessTokenInactivityTimeoutSeconds",
-            accessTokenInactivityTimeoutSeconds,
+            "access_token_inactivity_timeout_seconds",
+            access_token_inactivity_timeout_seconds,
             Optional[int],
         )
-        if accessTokenInactivityTimeoutSeconds:  # omit empty
+        if access_token_inactivity_timeout_seconds:  # omit empty
             v[
                 "accessTokenInactivityTimeoutSeconds"
-            ] = accessTokenInactivityTimeoutSeconds
+            ] = access_token_inactivity_timeout_seconds
         return v
 
-    def accessTokenMaxAgeSeconds(self) -> int:
+    def access_token_max_age_seconds(self) -> int:
         """
         accessTokenMaxAgeSeconds defines the maximum age of access tokens
         """
-        return self.__accessTokenMaxAgeSeconds
+        return self.__access_token_max_age_seconds
 
-    def accessTokenInactivityTimeoutSeconds(self) -> Optional[int]:
+    def access_token_inactivity_timeout_seconds(self) -> Optional[int]:
         """
         accessTokenInactivityTimeoutSeconds defines the default token
         inactivity timeout for tokens granted by any client.
@@ -4761,7 +4799,7 @@ class TokenConfig(types.Object):
           x > 0  Tokens time out if there is no activity for x seconds
         The current minimum allowed value for X is 300 (5 minutes)
         """
-        return self.__accessTokenInactivityTimeoutSeconds
+        return self.__access_token_inactivity_timeout_seconds
 
 
 class OAuthSpec(types.Object):
@@ -4773,46 +4811,48 @@ class OAuthSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        identityProviders: List["IdentityProvider"] = None,
-        tokenConfig: "TokenConfig" = None,
+        identity_providers: List["IdentityProvider"] = None,
+        token_config: "TokenConfig" = None,
         templates: "OAuthTemplates" = None,
     ):
         super().__init__()
-        self.__identityProviders = (
-            identityProviders if identityProviders is not None else []
+        self.__identity_providers = (
+            identity_providers if identity_providers is not None else []
         )
-        self.__tokenConfig = tokenConfig if tokenConfig is not None else TokenConfig()
+        self.__token_config = (
+            token_config if token_config is not None else TokenConfig()
+        )
         self.__templates = templates if templates is not None else OAuthTemplates()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        identityProviders = self.identityProviders()
+        identity_providers = self.identity_providers()
         check_type(
-            "identityProviders", identityProviders, Optional[List["IdentityProvider"]]
+            "identity_providers", identity_providers, Optional[List["IdentityProvider"]]
         )
-        if identityProviders:  # omit empty
-            v["identityProviders"] = identityProviders
-        tokenConfig = self.tokenConfig()
-        check_type("tokenConfig", tokenConfig, "TokenConfig")
-        v["tokenConfig"] = tokenConfig
+        if identity_providers:  # omit empty
+            v["identityProviders"] = identity_providers
+        token_config = self.token_config()
+        check_type("token_config", token_config, "TokenConfig")
+        v["tokenConfig"] = token_config
         templates = self.templates()
         check_type("templates", templates, "OAuthTemplates")
         v["templates"] = templates
         return v
 
-    def identityProviders(self) -> Optional[List["IdentityProvider"]]:
+    def identity_providers(self) -> Optional[List["IdentityProvider"]]:
         """
         identityProviders is an ordered list of ways for a user to identify themselves.
         When this list is empty, no identities are provisioned for users.
         """
-        return self.__identityProviders
+        return self.__identity_providers
 
-    def tokenConfig(self) -> "TokenConfig":
+    def token_config(self) -> "TokenConfig":
         """
         tokenConfig contains options for authorization and access tokens
         """
-        return self.__tokenConfig
+        return self.__token_config
 
     def templates(self) -> "OAuthTemplates":
         """
@@ -4838,7 +4878,7 @@ class OAuth(base.TypedObject, base.MetadataObject):
         spec: "OAuthSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="OAuth",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -4869,33 +4909,37 @@ class OperatorHubSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, disableAllDefaultSources: bool = None, sources: List["HubSource"] = None
+        self,
+        disable_all_default_sources: bool = None,
+        sources: List["HubSource"] = None,
     ):
         super().__init__()
-        self.__disableAllDefaultSources = disableAllDefaultSources
+        self.__disable_all_default_sources = disable_all_default_sources
         self.__sources = sources if sources is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        disableAllDefaultSources = self.disableAllDefaultSources()
-        check_type("disableAllDefaultSources", disableAllDefaultSources, Optional[bool])
-        if disableAllDefaultSources:  # omit empty
-            v["disableAllDefaultSources"] = disableAllDefaultSources
+        disable_all_default_sources = self.disable_all_default_sources()
+        check_type(
+            "disable_all_default_sources", disable_all_default_sources, Optional[bool]
+        )
+        if disable_all_default_sources:  # omit empty
+            v["disableAllDefaultSources"] = disable_all_default_sources
         sources = self.sources()
         check_type("sources", sources, Optional[List["HubSource"]])
         if sources:  # omit empty
             v["sources"] = sources
         return v
 
-    def disableAllDefaultSources(self) -> Optional[bool]:
+    def disable_all_default_sources(self) -> Optional[bool]:
         """
         disableAllDefaultSources allows you to disable all the default hub
         sources. If this is true, a specific entry in sources can be used to
         enable a default source. If this is false, a specific entry in
         sources can be used to disable or enable a default source.
         """
-        return self.__disableAllDefaultSources
+        return self.__disable_all_default_sources
 
     def sources(self) -> Optional[List["HubSource"]]:
         """
@@ -4929,7 +4973,7 @@ class OperatorHub(base.TypedObject, base.NamespacedMetadataObject):
         spec: "OperatorHubSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="OperatorHub",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -4986,43 +5030,43 @@ class ProjectSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        projectRequestMessage: str = "",
-        projectRequestTemplate: "TemplateReference" = None,
+        project_request_message: str = "",
+        project_request_template: "TemplateReference" = None,
     ):
         super().__init__()
-        self.__projectRequestMessage = projectRequestMessage
-        self.__projectRequestTemplate = (
-            projectRequestTemplate
-            if projectRequestTemplate is not None
+        self.__project_request_message = project_request_message
+        self.__project_request_template = (
+            project_request_template
+            if project_request_template is not None
             else TemplateReference()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        projectRequestMessage = self.projectRequestMessage()
-        check_type("projectRequestMessage", projectRequestMessage, str)
-        v["projectRequestMessage"] = projectRequestMessage
-        projectRequestTemplate = self.projectRequestTemplate()
+        project_request_message = self.project_request_message()
+        check_type("project_request_message", project_request_message, str)
+        v["projectRequestMessage"] = project_request_message
+        project_request_template = self.project_request_template()
         check_type(
-            "projectRequestTemplate", projectRequestTemplate, "TemplateReference"
+            "project_request_template", project_request_template, "TemplateReference"
         )
-        v["projectRequestTemplate"] = projectRequestTemplate
+        v["projectRequestTemplate"] = project_request_template
         return v
 
-    def projectRequestMessage(self) -> str:
+    def project_request_message(self) -> str:
         """
         projectRequestMessage is the string presented to a user if they are unable to request a project via the projectrequest api endpoint
         """
-        return self.__projectRequestMessage
+        return self.__project_request_message
 
-    def projectRequestTemplate(self) -> "TemplateReference":
+    def project_request_template(self) -> "TemplateReference":
         """
         projectRequestTemplate is the template to use for creating projects in response to projectrequest.
         This must point to a template in 'openshift-config' namespace. It is optional.
         If it is not specified, a default template is used.
         """
-        return self.__projectRequestTemplate
+        return self.__project_request_template
 
 
 class Project(base.TypedObject, base.MetadataObject):
@@ -5040,7 +5084,7 @@ class Project(base.TypedObject, base.MetadataObject):
         spec: "ProjectSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Project",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -5079,7 +5123,7 @@ class Proxy(base.TypedObject, base.MetadataObject):
         spec: "ProxySpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Proxy",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -5110,11 +5154,11 @@ class RemoteConnectionInfo(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, url: str = "", ca: str = "", certInfo: "CertInfo" = None):
+    def __init__(self, url: str = "", ca: str = "", cert_info: "CertInfo" = None):
         super().__init__()
         self.__url = url
         self.__ca = ca
-        self.__certInfo = certInfo if certInfo is not None else CertInfo()
+        self.__cert_info = cert_info if cert_info is not None else CertInfo()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -5125,9 +5169,9 @@ class RemoteConnectionInfo(types.Object):
         ca = self.ca()
         check_type("ca", ca, str)
         v["ca"] = ca
-        certInfo = self.certInfo()
-        check_type("certInfo", certInfo, "CertInfo")
-        v.update(certInfo._root())  # inline
+        cert_info = self.cert_info()
+        check_type("cert_info", cert_info, "CertInfo")
+        v.update(cert_info._root())  # inline
         return v
 
     def url(self) -> str:
@@ -5142,12 +5186,12 @@ class RemoteConnectionInfo(types.Object):
         """
         return self.__ca
 
-    def certInfo(self) -> "CertInfo":
+    def cert_info(self) -> "CertInfo":
         """
         CertInfo is the TLS client cert information to present
         this is anonymous so that we can inline it for serialization
         """
-        return self.__certInfo
+        return self.__cert_info
 
 
 class SchedulerSpec(types.Object):
@@ -5156,13 +5200,13 @@ class SchedulerSpec(types.Object):
     def __init__(
         self,
         policy: "ConfigMapNameReference" = None,
-        defaultNodeSelector: str = None,
-        mastersSchedulable: bool = False,
+        default_node_selector: str = None,
+        masters_schedulable: bool = False,
     ):
         super().__init__()
         self.__policy = policy if policy is not None else ConfigMapNameReference()
-        self.__defaultNodeSelector = defaultNodeSelector
-        self.__mastersSchedulable = mastersSchedulable
+        self.__default_node_selector = default_node_selector
+        self.__masters_schedulable = masters_schedulable
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -5170,13 +5214,13 @@ class SchedulerSpec(types.Object):
         policy = self.policy()
         check_type("policy", policy, "ConfigMapNameReference")
         v["policy"] = policy
-        defaultNodeSelector = self.defaultNodeSelector()
-        check_type("defaultNodeSelector", defaultNodeSelector, Optional[str])
-        if defaultNodeSelector:  # omit empty
-            v["defaultNodeSelector"] = defaultNodeSelector
-        mastersSchedulable = self.mastersSchedulable()
-        check_type("mastersSchedulable", mastersSchedulable, bool)
-        v["mastersSchedulable"] = mastersSchedulable
+        default_node_selector = self.default_node_selector()
+        check_type("default_node_selector", default_node_selector, Optional[str])
+        if default_node_selector:  # omit empty
+            v["defaultNodeSelector"] = default_node_selector
+        masters_schedulable = self.masters_schedulable()
+        check_type("masters_schedulable", masters_schedulable, bool)
+        v["mastersSchedulable"] = masters_schedulable
         return v
 
     def policy(self) -> "ConfigMapNameReference":
@@ -5188,7 +5232,7 @@ class SchedulerSpec(types.Object):
         """
         return self.__policy
 
-    def defaultNodeSelector(self) -> Optional[str]:
+    def default_node_selector(self) -> Optional[str]:
         """
         defaultNodeSelector helps set the cluster-wide default node selector to
         restrict pod placement to specific nodes. This is applied to the pods
@@ -5210,9 +5254,9 @@ class SchedulerSpec(types.Object):
         that the default of "type=user-node,region=east" set in defaultNodeSelector
         would not be applied.
         """
-        return self.__defaultNodeSelector
+        return self.__default_node_selector
 
-    def mastersSchedulable(self) -> bool:
+    def masters_schedulable(self) -> bool:
         """
         MastersSchedulable allows masters nodes to be schedulable. When this flag is
         turned on, all the master nodes in the cluster will be made schedulable,
@@ -5223,7 +5267,7 @@ class SchedulerSpec(types.Object):
         are not impacted.
         Please turn on this field after doing due diligence.
         """
-        return self.__mastersSchedulable
+        return self.__masters_schedulable
 
 
 class Scheduler(base.TypedObject, base.MetadataObject):
@@ -5242,7 +5286,7 @@ class Scheduler(base.TypedObject, base.MetadataObject):
         spec: "SchedulerSpec" = None,
     ):
         super().__init__(
-            apiVersion="config.openshift.io/v1",
+            api_version="config.openshift.io/v1",
             kind="Scheduler",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -5274,13 +5318,13 @@ class StringSourceSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, value: str = "", env: str = "", file: str = "", keyFile: str = ""
+        self, value: str = "", env: str = "", file: str = "", key_file: str = ""
     ):
         super().__init__()
         self.__value = value
         self.__env = env
         self.__file = file
-        self.__keyFile = keyFile
+        self.__key_file = key_file
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -5294,9 +5338,9 @@ class StringSourceSpec(types.Object):
         file = self.file()
         check_type("file", file, str)
         v["file"] = file
-        keyFile = self.keyFile()
-        check_type("keyFile", keyFile, str)
-        v["keyFile"] = keyFile
+        key_file = self.key_file()
+        check_type("key_file", key_file, str)
+        v["keyFile"] = key_file
         return v
 
     def value(self) -> str:
@@ -5317,11 +5361,11 @@ class StringSourceSpec(types.Object):
         """
         return self.__file
 
-    def keyFile(self) -> str:
+    def key_file(self) -> str:
         """
         KeyFile references a file containing the key to use to decrypt the value.
         """
-        return self.__keyFile
+        return self.__key_file
 
 
 class StringSource(types.Object):
@@ -5332,22 +5376,22 @@ class StringSource(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, stringSourceSpec: "StringSourceSpec" = None):
+    def __init__(self, string_source_spec: "StringSourceSpec" = None):
         super().__init__()
-        self.__stringSourceSpec = (
-            stringSourceSpec if stringSourceSpec is not None else StringSourceSpec()
+        self.__string_source_spec = (
+            string_source_spec if string_source_spec is not None else StringSourceSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        stringSourceSpec = self.stringSourceSpec()
-        check_type("stringSourceSpec", stringSourceSpec, "StringSourceSpec")
-        v.update(stringSourceSpec._root())  # inline
+        string_source_spec = self.string_source_spec()
+        check_type("string_source_spec", string_source_spec, "StringSourceSpec")
+        v.update(string_source_spec._root())  # inline
         return v
 
-    def stringSourceSpec(self) -> "StringSourceSpec":
+    def string_source_spec(self) -> "StringSourceSpec":
         """
         StringSourceSpec specifies the string value, or external location
         """
-        return self.__stringSourceSpec
+        return self.__string_source_spec

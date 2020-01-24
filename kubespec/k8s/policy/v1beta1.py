@@ -187,25 +187,25 @@ class AllowedHostPath(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, pathPrefix: str = None, readOnly: bool = None):
+    def __init__(self, path_prefix: str = None, read_only: bool = None):
         super().__init__()
-        self.__pathPrefix = pathPrefix
-        self.__readOnly = readOnly
+        self.__path_prefix = path_prefix
+        self.__read_only = read_only
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        pathPrefix = self.pathPrefix()
-        check_type("pathPrefix", pathPrefix, Optional[str])
-        if pathPrefix:  # omit empty
-            v["pathPrefix"] = pathPrefix
-        readOnly = self.readOnly()
-        check_type("readOnly", readOnly, Optional[bool])
-        if readOnly:  # omit empty
-            v["readOnly"] = readOnly
+        path_prefix = self.path_prefix()
+        check_type("path_prefix", path_prefix, Optional[str])
+        if path_prefix:  # omit empty
+            v["pathPrefix"] = path_prefix
+        read_only = self.read_only()
+        check_type("read_only", read_only, Optional[bool])
+        if read_only:  # omit empty
+            v["readOnly"] = read_only
         return v
 
-    def pathPrefix(self) -> Optional[str]:
+    def path_prefix(self) -> Optional[str]:
         """
         pathPrefix is the path prefix that the host volume must match.
         It does not support `*`.
@@ -215,13 +215,13 @@ class AllowedHostPath(types.Object):
         `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
         `/foo` would not allow `/food` or `/etc/foo`
         """
-        return self.__pathPrefix
+        return self.__path_prefix
 
-    def readOnly(self) -> Optional[bool]:
+    def read_only(self) -> Optional[bool]:
         """
         when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
         """
-        return self.__readOnly
+        return self.__read_only
 
 
 class Eviction(base.TypedObject, base.NamespacedMetadataObject):
@@ -239,32 +239,32 @@ class Eviction(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        deleteOptions: "metav1.DeleteOptions" = None,
+        delete_options: "metav1.DeleteOptions" = None,
     ):
         super().__init__(
-            apiVersion="policy/v1beta1",
+            api_version="policy/v1beta1",
             kind="Eviction",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__deleteOptions = deleteOptions
+        self.__delete_options = delete_options
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        deleteOptions = self.deleteOptions()
-        check_type("deleteOptions", deleteOptions, Optional["metav1.DeleteOptions"])
-        if deleteOptions is not None:  # omit empty
-            v["deleteOptions"] = deleteOptions
+        delete_options = self.delete_options()
+        check_type("delete_options", delete_options, Optional["metav1.DeleteOptions"])
+        if delete_options is not None:  # omit empty
+            v["deleteOptions"] = delete_options
         return v
 
-    def deleteOptions(self) -> Optional["metav1.DeleteOptions"]:
+    def delete_options(self) -> Optional["metav1.DeleteOptions"]:
         """
         DeleteOptions may be provided
         """
-        return self.__deleteOptions
+        return self.__delete_options
 
 
 class IDRange(types.Object):
@@ -390,40 +390,40 @@ class PodDisruptionBudgetSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        minAvailable: Union[int, str] = None,
+        min_available: Union[int, str] = None,
         selector: "metav1.LabelSelector" = None,
-        maxUnavailable: Union[int, str] = None,
+        max_unavailable: Union[int, str] = None,
     ):
         super().__init__()
-        self.__minAvailable = minAvailable
+        self.__min_available = min_available
         self.__selector = selector
-        self.__maxUnavailable = maxUnavailable
+        self.__max_unavailable = max_unavailable
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        minAvailable = self.minAvailable()
-        check_type("minAvailable", minAvailable, Optional[Union[int, str]])
-        if minAvailable is not None:  # omit empty
-            v["minAvailable"] = minAvailable
+        min_available = self.min_available()
+        check_type("min_available", min_available, Optional[Union[int, str]])
+        if min_available is not None:  # omit empty
+            v["minAvailable"] = min_available
         selector = self.selector()
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
             v["selector"] = selector
-        maxUnavailable = self.maxUnavailable()
-        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
-        if maxUnavailable is not None:  # omit empty
-            v["maxUnavailable"] = maxUnavailable
+        max_unavailable = self.max_unavailable()
+        check_type("max_unavailable", max_unavailable, Optional[Union[int, str]])
+        if max_unavailable is not None:  # omit empty
+            v["maxUnavailable"] = max_unavailable
         return v
 
-    def minAvailable(self) -> Optional[Union[int, str]]:
+    def min_available(self) -> Optional[Union[int, str]]:
         """
         An eviction is allowed if at least "minAvailable" pods selected by
         "selector" will still be available after the eviction, i.e. even in the
         absence of the evicted pod.  So for example you can prevent all voluntary
         evictions by specifying "100%".
         """
-        return self.__minAvailable
+        return self.__min_available
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
         """
@@ -432,14 +432,14 @@ class PodDisruptionBudgetSpec(types.Object):
         """
         return self.__selector
 
-    def maxUnavailable(self) -> Optional[Union[int, str]]:
+    def max_unavailable(self) -> Optional[Union[int, str]]:
         """
         An eviction is allowed if at most "maxUnavailable" pods selected by
         "selector" are unavailable after the eviction, i.e. even in absence of
         the evicted pod. For example, one can prevent all voluntary evictions
         by specifying 0. This is a mutually exclusive setting with "minAvailable".
         """
-        return self.__maxUnavailable
+        return self.__max_unavailable
 
 
 class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
@@ -458,7 +458,7 @@ class PodDisruptionBudget(base.TypedObject, base.NamespacedMetadataObject):
         spec: "PodDisruptionBudgetSpec" = None,
     ):
         super().__init__(
-            apiVersion="policy/v1beta1",
+            api_version="policy/v1beta1",
             kind="PodDisruptionBudget",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -568,42 +568,48 @@ class RuntimeClassStrategyOptions(types.Object):
     @typechecked
     def __init__(
         self,
-        allowedRuntimeClassNames: List[str] = None,
-        defaultRuntimeClassName: str = None,
+        allowed_runtime_class_names: List[str] = None,
+        default_runtime_class_name: str = None,
     ):
         super().__init__()
-        self.__allowedRuntimeClassNames = (
-            allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
+        self.__allowed_runtime_class_names = (
+            allowed_runtime_class_names
+            if allowed_runtime_class_names is not None
+            else []
         )
-        self.__defaultRuntimeClassName = defaultRuntimeClassName
+        self.__default_runtime_class_name = default_runtime_class_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        allowedRuntimeClassNames = self.allowedRuntimeClassNames()
-        check_type("allowedRuntimeClassNames", allowedRuntimeClassNames, List[str])
-        v["allowedRuntimeClassNames"] = allowedRuntimeClassNames
-        defaultRuntimeClassName = self.defaultRuntimeClassName()
-        check_type("defaultRuntimeClassName", defaultRuntimeClassName, Optional[str])
-        if defaultRuntimeClassName is not None:  # omit empty
-            v["defaultRuntimeClassName"] = defaultRuntimeClassName
+        allowed_runtime_class_names = self.allowed_runtime_class_names()
+        check_type(
+            "allowed_runtime_class_names", allowed_runtime_class_names, List[str]
+        )
+        v["allowedRuntimeClassNames"] = allowed_runtime_class_names
+        default_runtime_class_name = self.default_runtime_class_name()
+        check_type(
+            "default_runtime_class_name", default_runtime_class_name, Optional[str]
+        )
+        if default_runtime_class_name is not None:  # omit empty
+            v["defaultRuntimeClassName"] = default_runtime_class_name
         return v
 
-    def allowedRuntimeClassNames(self) -> List[str]:
+    def allowed_runtime_class_names(self) -> List[str]:
         """
         allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
         A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
         list. An empty list requires the RuntimeClassName field to be unset.
         """
-        return self.__allowedRuntimeClassNames
+        return self.__allowed_runtime_class_names
 
-    def defaultRuntimeClassName(self) -> Optional[str]:
+    def default_runtime_class_name(self) -> Optional[str]:
         """
         defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
         The default MUST be allowed by the allowedRuntimeClassNames list.
         A value of nil does not mutate the Pod.
         """
-        return self.__defaultRuntimeClassName
+        return self.__default_runtime_class_name
 
 
 class SELinuxStrategyOptions(types.Object):
@@ -616,11 +622,11 @@ class SELinuxStrategyOptions(types.Object):
     def __init__(
         self,
         rule: SELinuxStrategy = None,
-        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
+        se_linux_options: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__rule = rule
-        self.__seLinuxOptions = seLinuxOptions
+        self.__se_linux_options = se_linux_options
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -628,10 +634,12 @@ class SELinuxStrategyOptions(types.Object):
         rule = self.rule()
         check_type("rule", rule, SELinuxStrategy)
         v["rule"] = rule
-        seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
-        if seLinuxOptions is not None:  # omit empty
-            v["seLinuxOptions"] = seLinuxOptions
+        se_linux_options = self.se_linux_options()
+        check_type(
+            "se_linux_options", se_linux_options, Optional["k8sv1.SELinuxOptions"]
+        )
+        if se_linux_options is not None:  # omit empty
+            v["seLinuxOptions"] = se_linux_options
         return v
 
     def rule(self) -> SELinuxStrategy:
@@ -640,12 +648,12 @@ class SELinuxStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
+    def se_linux_options(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
         """
-        return self.__seLinuxOptions
+        return self.__se_linux_options
 
 
 class SupplementalGroupsStrategyOptions(types.Object):
@@ -701,81 +709,83 @@ class PodSecurityPolicySpec(types.Object):
     def __init__(
         self,
         privileged: bool = None,
-        defaultAddCapabilities: List[k8sv1.Capability] = None,
-        requiredDropCapabilities: List[k8sv1.Capability] = None,
-        allowedCapabilities: List[k8sv1.Capability] = None,
+        default_add_capabilities: List[k8sv1.Capability] = None,
+        required_drop_capabilities: List[k8sv1.Capability] = None,
+        allowed_capabilities: List[k8sv1.Capability] = None,
         volumes: List[FSType] = None,
-        hostNetwork: bool = None,
-        hostPorts: List["HostPortRange"] = None,
-        hostPID: bool = None,
-        hostIPC: bool = None,
-        seLinux: "SELinuxStrategyOptions" = None,
-        runAsUser: "RunAsUserStrategyOptions" = None,
-        runAsGroup: "RunAsGroupStrategyOptions" = None,
-        supplementalGroups: "SupplementalGroupsStrategyOptions" = None,
-        fsGroup: "FSGroupStrategyOptions" = None,
-        readOnlyRootFilesystem: bool = None,
-        defaultAllowPrivilegeEscalation: bool = None,
-        allowPrivilegeEscalation: bool = None,
-        allowedHostPaths: List["AllowedHostPath"] = None,
-        allowedFlexVolumes: List["AllowedFlexVolume"] = None,
-        allowedCSIDrivers: List["AllowedCSIDriver"] = None,
-        allowedUnsafeSysctls: List[str] = None,
-        forbiddenSysctls: List[str] = None,
-        allowedProcMountTypes: List[k8sv1.ProcMountType] = None,
-        runtimeClass: "RuntimeClassStrategyOptions" = None,
+        host_network: bool = None,
+        host_ports: List["HostPortRange"] = None,
+        host_pid: bool = None,
+        host_ipc: bool = None,
+        se_linux: "SELinuxStrategyOptions" = None,
+        run_as_user: "RunAsUserStrategyOptions" = None,
+        run_as_group: "RunAsGroupStrategyOptions" = None,
+        supplemental_groups: "SupplementalGroupsStrategyOptions" = None,
+        fs_group: "FSGroupStrategyOptions" = None,
+        read_only_root_filesystem: bool = None,
+        default_allow_privilege_escalation: bool = None,
+        allow_privilege_escalation: bool = None,
+        allowed_host_paths: List["AllowedHostPath"] = None,
+        allowed_flex_volumes: List["AllowedFlexVolume"] = None,
+        allowed_csi_drivers: List["AllowedCSIDriver"] = None,
+        allowed_unsafe_sysctls: List[str] = None,
+        forbidden_sysctls: List[str] = None,
+        allowed_proc_mount_types: List[k8sv1.ProcMountType] = None,
+        runtime_class: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
         self.__privileged = privileged
-        self.__defaultAddCapabilities = (
-            defaultAddCapabilities if defaultAddCapabilities is not None else []
+        self.__default_add_capabilities = (
+            default_add_capabilities if default_add_capabilities is not None else []
         )
-        self.__requiredDropCapabilities = (
-            requiredDropCapabilities if requiredDropCapabilities is not None else []
+        self.__required_drop_capabilities = (
+            required_drop_capabilities if required_drop_capabilities is not None else []
         )
-        self.__allowedCapabilities = (
-            allowedCapabilities if allowedCapabilities is not None else []
+        self.__allowed_capabilities = (
+            allowed_capabilities if allowed_capabilities is not None else []
         )
         self.__volumes = volumes if volumes is not None else []
-        self.__hostNetwork = hostNetwork
-        self.__hostPorts = hostPorts if hostPorts is not None else []
-        self.__hostPID = hostPID
-        self.__hostIPC = hostIPC
-        self.__seLinux = seLinux if seLinux is not None else SELinuxStrategyOptions()
-        self.__runAsUser = (
-            runAsUser if runAsUser is not None else RunAsUserStrategyOptions()
+        self.__host_network = host_network
+        self.__host_ports = host_ports if host_ports is not None else []
+        self.__host_pid = host_pid
+        self.__host_ipc = host_ipc
+        self.__se_linux = se_linux if se_linux is not None else SELinuxStrategyOptions()
+        self.__run_as_user = (
+            run_as_user if run_as_user is not None else RunAsUserStrategyOptions()
         )
-        self.__runAsGroup = runAsGroup
-        self.__supplementalGroups = (
-            supplementalGroups
-            if supplementalGroups is not None
+        self.__run_as_group = run_as_group
+        self.__supplemental_groups = (
+            supplemental_groups
+            if supplemental_groups is not None
             else SupplementalGroupsStrategyOptions()
         )
-        self.__fsGroup = fsGroup if fsGroup is not None else FSGroupStrategyOptions()
-        self.__readOnlyRootFilesystem = readOnlyRootFilesystem
-        self.__defaultAllowPrivilegeEscalation = defaultAllowPrivilegeEscalation
-        self.__allowPrivilegeEscalation = (
-            allowPrivilegeEscalation if allowPrivilegeEscalation is not None else True
+        self.__fs_group = fs_group if fs_group is not None else FSGroupStrategyOptions()
+        self.__read_only_root_filesystem = read_only_root_filesystem
+        self.__default_allow_privilege_escalation = default_allow_privilege_escalation
+        self.__allow_privilege_escalation = (
+            allow_privilege_escalation
+            if allow_privilege_escalation is not None
+            else True
         )
-        self.__allowedHostPaths = (
-            allowedHostPaths if allowedHostPaths is not None else []
+        self.__allowed_host_paths = (
+            allowed_host_paths if allowed_host_paths is not None else []
         )
-        self.__allowedFlexVolumes = (
-            allowedFlexVolumes if allowedFlexVolumes is not None else []
+        self.__allowed_flex_volumes = (
+            allowed_flex_volumes if allowed_flex_volumes is not None else []
         )
-        self.__allowedCSIDrivers = (
-            allowedCSIDrivers if allowedCSIDrivers is not None else []
+        self.__allowed_csi_drivers = (
+            allowed_csi_drivers if allowed_csi_drivers is not None else []
         )
-        self.__allowedUnsafeSysctls = (
-            allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
+        self.__allowed_unsafe_sysctls = (
+            allowed_unsafe_sysctls if allowed_unsafe_sysctls is not None else []
         )
-        self.__forbiddenSysctls = (
-            forbiddenSysctls if forbiddenSysctls is not None else []
+        self.__forbidden_sysctls = (
+            forbidden_sysctls if forbidden_sysctls is not None else []
         )
-        self.__allowedProcMountTypes = (
-            allowedProcMountTypes if allowedProcMountTypes is not None else []
+        self.__allowed_proc_mount_types = (
+            allowed_proc_mount_types if allowed_proc_mount_types is not None else []
         )
-        self.__runtimeClass = runtimeClass
+        self.__runtime_class = runtime_class
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -784,126 +794,136 @@ class PodSecurityPolicySpec(types.Object):
         check_type("privileged", privileged, Optional[bool])
         if privileged:  # omit empty
             v["privileged"] = privileged
-        defaultAddCapabilities = self.defaultAddCapabilities()
+        default_add_capabilities = self.default_add_capabilities()
         check_type(
-            "defaultAddCapabilities",
-            defaultAddCapabilities,
+            "default_add_capabilities",
+            default_add_capabilities,
             Optional[List[k8sv1.Capability]],
         )
-        if defaultAddCapabilities:  # omit empty
-            v["defaultAddCapabilities"] = defaultAddCapabilities
-        requiredDropCapabilities = self.requiredDropCapabilities()
+        if default_add_capabilities:  # omit empty
+            v["defaultAddCapabilities"] = default_add_capabilities
+        required_drop_capabilities = self.required_drop_capabilities()
         check_type(
-            "requiredDropCapabilities",
-            requiredDropCapabilities,
+            "required_drop_capabilities",
+            required_drop_capabilities,
             Optional[List[k8sv1.Capability]],
         )
-        if requiredDropCapabilities:  # omit empty
-            v["requiredDropCapabilities"] = requiredDropCapabilities
-        allowedCapabilities = self.allowedCapabilities()
+        if required_drop_capabilities:  # omit empty
+            v["requiredDropCapabilities"] = required_drop_capabilities
+        allowed_capabilities = self.allowed_capabilities()
         check_type(
-            "allowedCapabilities", allowedCapabilities, Optional[List[k8sv1.Capability]]
+            "allowed_capabilities",
+            allowed_capabilities,
+            Optional[List[k8sv1.Capability]],
         )
-        if allowedCapabilities:  # omit empty
-            v["allowedCapabilities"] = allowedCapabilities
+        if allowed_capabilities:  # omit empty
+            v["allowedCapabilities"] = allowed_capabilities
         volumes = self.volumes()
         check_type("volumes", volumes, Optional[List[FSType]])
         if volumes:  # omit empty
             v["volumes"] = volumes
-        hostNetwork = self.hostNetwork()
-        check_type("hostNetwork", hostNetwork, Optional[bool])
-        if hostNetwork:  # omit empty
-            v["hostNetwork"] = hostNetwork
-        hostPorts = self.hostPorts()
-        check_type("hostPorts", hostPorts, Optional[List["HostPortRange"]])
-        if hostPorts:  # omit empty
-            v["hostPorts"] = hostPorts
-        hostPID = self.hostPID()
-        check_type("hostPID", hostPID, Optional[bool])
-        if hostPID:  # omit empty
-            v["hostPID"] = hostPID
-        hostIPC = self.hostIPC()
-        check_type("hostIPC", hostIPC, Optional[bool])
-        if hostIPC:  # omit empty
-            v["hostIPC"] = hostIPC
-        seLinux = self.seLinux()
-        check_type("seLinux", seLinux, "SELinuxStrategyOptions")
-        v["seLinux"] = seLinux
-        runAsUser = self.runAsUser()
-        check_type("runAsUser", runAsUser, "RunAsUserStrategyOptions")
-        v["runAsUser"] = runAsUser
-        runAsGroup = self.runAsGroup()
-        check_type("runAsGroup", runAsGroup, Optional["RunAsGroupStrategyOptions"])
-        if runAsGroup is not None:  # omit empty
-            v["runAsGroup"] = runAsGroup
-        supplementalGroups = self.supplementalGroups()
+        host_network = self.host_network()
+        check_type("host_network", host_network, Optional[bool])
+        if host_network:  # omit empty
+            v["hostNetwork"] = host_network
+        host_ports = self.host_ports()
+        check_type("host_ports", host_ports, Optional[List["HostPortRange"]])
+        if host_ports:  # omit empty
+            v["hostPorts"] = host_ports
+        host_pid = self.host_pid()
+        check_type("host_pid", host_pid, Optional[bool])
+        if host_pid:  # omit empty
+            v["hostPID"] = host_pid
+        host_ipc = self.host_ipc()
+        check_type("host_ipc", host_ipc, Optional[bool])
+        if host_ipc:  # omit empty
+            v["hostIPC"] = host_ipc
+        se_linux = self.se_linux()
+        check_type("se_linux", se_linux, "SELinuxStrategyOptions")
+        v["seLinux"] = se_linux
+        run_as_user = self.run_as_user()
+        check_type("run_as_user", run_as_user, "RunAsUserStrategyOptions")
+        v["runAsUser"] = run_as_user
+        run_as_group = self.run_as_group()
+        check_type("run_as_group", run_as_group, Optional["RunAsGroupStrategyOptions"])
+        if run_as_group is not None:  # omit empty
+            v["runAsGroup"] = run_as_group
+        supplemental_groups = self.supplemental_groups()
         check_type(
-            "supplementalGroups",
-            supplementalGroups,
+            "supplemental_groups",
+            supplemental_groups,
             "SupplementalGroupsStrategyOptions",
         )
-        v["supplementalGroups"] = supplementalGroups
-        fsGroup = self.fsGroup()
-        check_type("fsGroup", fsGroup, "FSGroupStrategyOptions")
-        v["fsGroup"] = fsGroup
-        readOnlyRootFilesystem = self.readOnlyRootFilesystem()
-        check_type("readOnlyRootFilesystem", readOnlyRootFilesystem, Optional[bool])
-        if readOnlyRootFilesystem:  # omit empty
-            v["readOnlyRootFilesystem"] = readOnlyRootFilesystem
-        defaultAllowPrivilegeEscalation = self.defaultAllowPrivilegeEscalation()
+        v["supplementalGroups"] = supplemental_groups
+        fs_group = self.fs_group()
+        check_type("fs_group", fs_group, "FSGroupStrategyOptions")
+        v["fsGroup"] = fs_group
+        read_only_root_filesystem = self.read_only_root_filesystem()
         check_type(
-            "defaultAllowPrivilegeEscalation",
-            defaultAllowPrivilegeEscalation,
+            "read_only_root_filesystem", read_only_root_filesystem, Optional[bool]
+        )
+        if read_only_root_filesystem:  # omit empty
+            v["readOnlyRootFilesystem"] = read_only_root_filesystem
+        default_allow_privilege_escalation = self.default_allow_privilege_escalation()
+        check_type(
+            "default_allow_privilege_escalation",
+            default_allow_privilege_escalation,
             Optional[bool],
         )
-        if defaultAllowPrivilegeEscalation is not None:  # omit empty
-            v["defaultAllowPrivilegeEscalation"] = defaultAllowPrivilegeEscalation
-        allowPrivilegeEscalation = self.allowPrivilegeEscalation()
-        check_type("allowPrivilegeEscalation", allowPrivilegeEscalation, Optional[bool])
-        if allowPrivilegeEscalation is not None:  # omit empty
-            v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
-        allowedHostPaths = self.allowedHostPaths()
+        if default_allow_privilege_escalation is not None:  # omit empty
+            v["defaultAllowPrivilegeEscalation"] = default_allow_privilege_escalation
+        allow_privilege_escalation = self.allow_privilege_escalation()
         check_type(
-            "allowedHostPaths", allowedHostPaths, Optional[List["AllowedHostPath"]]
+            "allow_privilege_escalation", allow_privilege_escalation, Optional[bool]
         )
-        if allowedHostPaths:  # omit empty
-            v["allowedHostPaths"] = allowedHostPaths
-        allowedFlexVolumes = self.allowedFlexVolumes()
+        if allow_privilege_escalation is not None:  # omit empty
+            v["allowPrivilegeEscalation"] = allow_privilege_escalation
+        allowed_host_paths = self.allowed_host_paths()
         check_type(
-            "allowedFlexVolumes",
-            allowedFlexVolumes,
+            "allowed_host_paths", allowed_host_paths, Optional[List["AllowedHostPath"]]
+        )
+        if allowed_host_paths:  # omit empty
+            v["allowedHostPaths"] = allowed_host_paths
+        allowed_flex_volumes = self.allowed_flex_volumes()
+        check_type(
+            "allowed_flex_volumes",
+            allowed_flex_volumes,
             Optional[List["AllowedFlexVolume"]],
         )
-        if allowedFlexVolumes:  # omit empty
-            v["allowedFlexVolumes"] = allowedFlexVolumes
-        allowedCSIDrivers = self.allowedCSIDrivers()
+        if allowed_flex_volumes:  # omit empty
+            v["allowedFlexVolumes"] = allowed_flex_volumes
+        allowed_csi_drivers = self.allowed_csi_drivers()
         check_type(
-            "allowedCSIDrivers", allowedCSIDrivers, Optional[List["AllowedCSIDriver"]]
+            "allowed_csi_drivers",
+            allowed_csi_drivers,
+            Optional[List["AllowedCSIDriver"]],
         )
-        if allowedCSIDrivers:  # omit empty
-            v["allowedCSIDrivers"] = allowedCSIDrivers
-        allowedUnsafeSysctls = self.allowedUnsafeSysctls()
-        check_type("allowedUnsafeSysctls", allowedUnsafeSysctls, Optional[List[str]])
-        if allowedUnsafeSysctls:  # omit empty
-            v["allowedUnsafeSysctls"] = allowedUnsafeSysctls
-        forbiddenSysctls = self.forbiddenSysctls()
-        check_type("forbiddenSysctls", forbiddenSysctls, Optional[List[str]])
-        if forbiddenSysctls:  # omit empty
-            v["forbiddenSysctls"] = forbiddenSysctls
-        allowedProcMountTypes = self.allowedProcMountTypes()
+        if allowed_csi_drivers:  # omit empty
+            v["allowedCSIDrivers"] = allowed_csi_drivers
+        allowed_unsafe_sysctls = self.allowed_unsafe_sysctls()
         check_type(
-            "allowedProcMountTypes",
-            allowedProcMountTypes,
+            "allowed_unsafe_sysctls", allowed_unsafe_sysctls, Optional[List[str]]
+        )
+        if allowed_unsafe_sysctls:  # omit empty
+            v["allowedUnsafeSysctls"] = allowed_unsafe_sysctls
+        forbidden_sysctls = self.forbidden_sysctls()
+        check_type("forbidden_sysctls", forbidden_sysctls, Optional[List[str]])
+        if forbidden_sysctls:  # omit empty
+            v["forbiddenSysctls"] = forbidden_sysctls
+        allowed_proc_mount_types = self.allowed_proc_mount_types()
+        check_type(
+            "allowed_proc_mount_types",
+            allowed_proc_mount_types,
             Optional[List[k8sv1.ProcMountType]],
         )
-        if allowedProcMountTypes:  # omit empty
-            v["allowedProcMountTypes"] = allowedProcMountTypes
-        runtimeClass = self.runtimeClass()
+        if allowed_proc_mount_types:  # omit empty
+            v["allowedProcMountTypes"] = allowed_proc_mount_types
+        runtime_class = self.runtime_class()
         check_type(
-            "runtimeClass", runtimeClass, Optional["RuntimeClassStrategyOptions"]
+            "runtime_class", runtime_class, Optional["RuntimeClassStrategyOptions"]
         )
-        if runtimeClass is not None:  # omit empty
-            v["runtimeClass"] = runtimeClass
+        if runtime_class is not None:  # omit empty
+            v["runtimeClass"] = runtime_class
         return v
 
     def privileged(self) -> Optional[bool]:
@@ -912,29 +932,29 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__privileged
 
-    def defaultAddCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def default_add_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         defaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capability in both
         defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
         allowed, and need not be included in the allowedCapabilities list.
         """
-        return self.__defaultAddCapabilities
+        return self.__default_add_capabilities
 
-    def requiredDropCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def required_drop_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         requiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
         """
-        return self.__requiredDropCapabilities
+        return self.__required_drop_capabilities
 
-    def allowedCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def allowed_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         allowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field may be added at the pod author's discretion.
         You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
         """
-        return self.__allowedCapabilities
+        return self.__allowed_capabilities
 
     def volumes(self) -> Optional[List[FSType]]:
         """
@@ -943,63 +963,63 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__volumes
 
-    def hostNetwork(self) -> Optional[bool]:
+    def host_network(self) -> Optional[bool]:
         """
         hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
         """
-        return self.__hostNetwork
+        return self.__host_network
 
-    def hostPorts(self) -> Optional[List["HostPortRange"]]:
+    def host_ports(self) -> Optional[List["HostPortRange"]]:
         """
         hostPorts determines which host port ranges are allowed to be exposed.
         """
-        return self.__hostPorts
+        return self.__host_ports
 
-    def hostPID(self) -> Optional[bool]:
+    def host_pid(self) -> Optional[bool]:
         """
         hostPID determines if the policy allows the use of HostPID in the pod spec.
         """
-        return self.__hostPID
+        return self.__host_pid
 
-    def hostIPC(self) -> Optional[bool]:
+    def host_ipc(self) -> Optional[bool]:
         """
         hostIPC determines if the policy allows the use of HostIPC in the pod spec.
         """
-        return self.__hostIPC
+        return self.__host_ipc
 
-    def seLinux(self) -> "SELinuxStrategyOptions":
+    def se_linux(self) -> "SELinuxStrategyOptions":
         """
         seLinux is the strategy that will dictate the allowable labels that may be set.
         """
-        return self.__seLinux
+        return self.__se_linux
 
-    def runAsUser(self) -> "RunAsUserStrategyOptions":
+    def run_as_user(self) -> "RunAsUserStrategyOptions":
         """
         runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
         """
-        return self.__runAsUser
+        return self.__run_as_user
 
-    def runAsGroup(self) -> Optional["RunAsGroupStrategyOptions"]:
+    def run_as_group(self) -> Optional["RunAsGroupStrategyOptions"]:
         """
         RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
         If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
         RunAsGroup feature gate to be enabled.
         """
-        return self.__runAsGroup
+        return self.__run_as_group
 
-    def supplementalGroups(self) -> "SupplementalGroupsStrategyOptions":
+    def supplemental_groups(self) -> "SupplementalGroupsStrategyOptions":
         """
         supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
         """
-        return self.__supplementalGroups
+        return self.__supplemental_groups
 
-    def fsGroup(self) -> "FSGroupStrategyOptions":
+    def fs_group(self) -> "FSGroupStrategyOptions":
         """
         fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
         """
-        return self.__fsGroup
+        return self.__fs_group
 
-    def readOnlyRootFilesystem(self) -> Optional[bool]:
+    def read_only_root_filesystem(self) -> Optional[bool]:
         """
         readOnlyRootFilesystem when set to true will force containers to run with a read only root file
         system.  If the container specifically requests to run with a non-read only root file system
@@ -1007,46 +1027,46 @@ class PodSecurityPolicySpec(types.Object):
         If set to false the container may run with a read only root file system if it wishes but it
         will not be forced to.
         """
-        return self.__readOnlyRootFilesystem
+        return self.__read_only_root_filesystem
 
-    def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
+    def default_allow_privilege_escalation(self) -> Optional[bool]:
         """
         defaultAllowPrivilegeEscalation controls the default setting for whether a
         process can gain more privileges than its parent process.
         """
-        return self.__defaultAllowPrivilegeEscalation
+        return self.__default_allow_privilege_escalation
 
-    def allowPrivilegeEscalation(self) -> Optional[bool]:
+    def allow_privilege_escalation(self) -> Optional[bool]:
         """
         allowPrivilegeEscalation determines if a pod can request to allow
         privilege escalation. If unspecified, defaults to true.
         """
-        return self.__allowPrivilegeEscalation
+        return self.__allow_privilege_escalation
 
-    def allowedHostPaths(self) -> Optional[List["AllowedHostPath"]]:
+    def allowed_host_paths(self) -> Optional[List["AllowedHostPath"]]:
         """
         allowedHostPaths is a white list of allowed host paths. Empty indicates
         that all host paths may be used.
         """
-        return self.__allowedHostPaths
+        return self.__allowed_host_paths
 
-    def allowedFlexVolumes(self) -> Optional[List["AllowedFlexVolume"]]:
+    def allowed_flex_volumes(self) -> Optional[List["AllowedFlexVolume"]]:
         """
         allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
         Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
         is allowed in the "volumes" field.
         """
-        return self.__allowedFlexVolumes
+        return self.__allowed_flex_volumes
 
-    def allowedCSIDrivers(self) -> Optional[List["AllowedCSIDriver"]]:
+    def allowed_csi_drivers(self) -> Optional[List["AllowedCSIDriver"]]:
         """
         AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
         An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
         This is an alpha field, and is only honored if the API server enables the CSIInlineVolume feature gate.
         """
-        return self.__allowedCSIDrivers
+        return self.__allowed_csi_drivers
 
-    def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+    def allowed_unsafe_sysctls(self) -> Optional[List[str]]:
         """
         allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1057,9 +1077,9 @@ class PodSecurityPolicySpec(types.Object):
         e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
         e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
         """
-        return self.__allowedUnsafeSysctls
+        return self.__allowed_unsafe_sysctls
 
-    def forbiddenSysctls(self) -> Optional[List[str]]:
+    def forbidden_sysctls(self) -> Optional[List[str]]:
         """
         forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1069,23 +1089,23 @@ class PodSecurityPolicySpec(types.Object):
         e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
         e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
         """
-        return self.__forbiddenSysctls
+        return self.__forbidden_sysctls
 
-    def allowedProcMountTypes(self) -> Optional[List[k8sv1.ProcMountType]]:
+    def allowed_proc_mount_types(self) -> Optional[List[k8sv1.ProcMountType]]:
         """
         AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
         Empty or nil indicates that only the DefaultProcMountType may be used.
         This requires the ProcMountType feature flag to be enabled.
         """
-        return self.__allowedProcMountTypes
+        return self.__allowed_proc_mount_types
 
-    def runtimeClass(self) -> Optional["RuntimeClassStrategyOptions"]:
+    def runtime_class(self) -> Optional["RuntimeClassStrategyOptions"]:
         """
         runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
         If this field is omitted, the pod's runtimeClassName field is unrestricted.
         Enforcement of this field depends on the RuntimeClass feature gate being enabled.
         """
-        return self.__runtimeClass
+        return self.__runtime_class
 
 
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
@@ -1104,7 +1124,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         spec: "PodSecurityPolicySpec" = None,
     ):
         super().__init__(
-            apiVersion="policy/v1beta1",
+            api_version="policy/v1beta1",
             kind="PodSecurityPolicy",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

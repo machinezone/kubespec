@@ -23,17 +23,17 @@ class ExternalMetricValue(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        metricName: str = "",
-        metricLabels: Dict[str, str] = None,
+        metric_name: str = "",
+        metric_labels: Dict[str, str] = None,
         timestamp: "base.Time" = None,
         window: int = None,
         value: "resource.Quantity" = None,
     ):
         super().__init__(
-            apiVersion="external.metrics.k8s.io/v1beta1", kind="ExternalMetricValue"
+            api_version="external.metrics.k8s.io/v1beta1", kind="ExternalMetricValue"
         )
-        self.__metricName = metricName
-        self.__metricLabels = metricLabels if metricLabels is not None else {}
+        self.__metric_name = metric_name
+        self.__metric_labels = metric_labels if metric_labels is not None else {}
         self.__timestamp = timestamp
         self.__window = window
         self.__value = value
@@ -41,12 +41,12 @@ class ExternalMetricValue(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        metricName = self.metricName()
-        check_type("metricName", metricName, str)
-        v["metricName"] = metricName
-        metricLabels = self.metricLabels()
-        check_type("metricLabels", metricLabels, Dict[str, str])
-        v["metricLabels"] = metricLabels
+        metric_name = self.metric_name()
+        check_type("metric_name", metric_name, str)
+        v["metricName"] = metric_name
+        metric_labels = self.metric_labels()
+        check_type("metric_labels", metric_labels, Dict[str, str])
+        v["metricLabels"] = metric_labels
         timestamp = self.timestamp()
         check_type("timestamp", timestamp, "base.Time")
         v["timestamp"] = timestamp
@@ -59,17 +59,17 @@ class ExternalMetricValue(base.TypedObject):
         v["value"] = value
         return v
 
-    def metricName(self) -> str:
+    def metric_name(self) -> str:
         """
         the name of the metric
         """
-        return self.__metricName
+        return self.__metric_name
 
-    def metricLabels(self) -> Dict[str, str]:
+    def metric_labels(self) -> Dict[str, str]:
         """
         a set of labels that identify a single time series for the metric
         """
-        return self.__metricLabels
+        return self.__metric_labels
 
     def timestamp(self) -> "base.Time":
         """

@@ -119,7 +119,7 @@ class AppliedClusterResourceQuota(base.TypedObject, base.NamespacedMetadataObjec
         spec: "ClusterResourceQuotaSpec" = None,
     ):
         super().__init__(
-            apiVersion="quota.openshift.io/v1",
+            api_version="quota.openshift.io/v1",
             kind="AppliedClusterResourceQuota",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -159,7 +159,7 @@ class ClusterResourceQuota(base.TypedObject, base.MetadataObject):
         spec: "ClusterResourceQuotaSpec" = None,
     ):
         super().__init__(
-            apiVersion="quota.openshift.io/v1",
+            api_version="quota.openshift.io/v1",
             kind="ClusterResourceQuota",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

@@ -27,21 +27,21 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         value: int = 0,
-        globalDefault: bool = None,
+        global_default: bool = None,
         description: str = None,
-        preemptionPolicy: k8sv1.PreemptionPolicy = None,
+        preemption_policy: k8sv1.PreemptionPolicy = None,
     ):
         super().__init__(
-            apiVersion="scheduling.k8s.io/v1beta1",
+            api_version="scheduling.k8s.io/v1beta1",
             kind="PriorityClass",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__value = value
-        self.__globalDefault = globalDefault
+        self.__global_default = global_default
         self.__description = description
-        self.__preemptionPolicy = preemptionPolicy
+        self.__preemption_policy = preemption_policy
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -49,20 +49,20 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         value = self.value()
         check_type("value", value, int)
         v["value"] = value
-        globalDefault = self.globalDefault()
-        check_type("globalDefault", globalDefault, Optional[bool])
-        if globalDefault:  # omit empty
-            v["globalDefault"] = globalDefault
+        global_default = self.global_default()
+        check_type("global_default", global_default, Optional[bool])
+        if global_default:  # omit empty
+            v["globalDefault"] = global_default
         description = self.description()
         check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
-        preemptionPolicy = self.preemptionPolicy()
+        preemption_policy = self.preemption_policy()
         check_type(
-            "preemptionPolicy", preemptionPolicy, Optional[k8sv1.PreemptionPolicy]
+            "preemption_policy", preemption_policy, Optional[k8sv1.PreemptionPolicy]
         )
-        if preemptionPolicy is not None:  # omit empty
-            v["preemptionPolicy"] = preemptionPolicy
+        if preemption_policy is not None:  # omit empty
+            v["preemptionPolicy"] = preemption_policy
         return v
 
     def value(self) -> int:
@@ -72,7 +72,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         """
         return self.__value
 
-    def globalDefault(self) -> Optional[bool]:
+    def global_default(self) -> Optional[bool]:
         """
         globalDefault specifies whether this PriorityClass should be considered as
         the default priority for pods that do not have any priority class.
@@ -80,7 +80,7 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         one PriorityClasses exists with their `globalDefault` field set to true,
         the smallest value of such global default PriorityClasses will be used as the default priority.
         """
-        return self.__globalDefault
+        return self.__global_default
 
     def description(self) -> Optional[str]:
         """
@@ -89,11 +89,11 @@ class PriorityClass(base.TypedObject, base.MetadataObject):
         """
         return self.__description
 
-    def preemptionPolicy(self) -> Optional[k8sv1.PreemptionPolicy]:
+    def preemption_policy(self) -> Optional[k8sv1.PreemptionPolicy]:
         """
         PreemptionPolicy is the Policy for preempting pods with lower priority.
         One of Never, PreemptLowerPriority.
         Defaults to PreemptLowerPriority if unset.
         This field is alpha-level and is only honored by servers that enable the NonPreemptingPriority feature.
         """
-        return self.__preemptionPolicy
+        return self.__preemption_policy

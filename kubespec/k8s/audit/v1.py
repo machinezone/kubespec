@@ -65,9 +65,9 @@ class ObjectReference(types.Object):
         namespace: str = None,
         name: str = None,
         uid: str = None,
-        apiGroup: str = None,
-        apiVersion: str = None,
-        resourceVersion: str = None,
+        api_group: str = None,
+        api_version: str = None,
+        resource_version: str = None,
         subresource: str = None,
     ):
         super().__init__()
@@ -75,9 +75,9 @@ class ObjectReference(types.Object):
         self.__namespace = namespace
         self.__name = name
         self.__uid = uid
-        self.__apiGroup = apiGroup
-        self.__apiVersion = apiVersion
-        self.__resourceVersion = resourceVersion
+        self.__api_group = api_group
+        self.__api_version = api_version
+        self.__resource_version = resource_version
         self.__subresource = subresource
 
     @typechecked
@@ -99,18 +99,18 @@ class ObjectReference(types.Object):
         check_type("uid", uid, Optional[str])
         if uid:  # omit empty
             v["uid"] = uid
-        apiGroup = self.apiGroup()
-        check_type("apiGroup", apiGroup, Optional[str])
-        if apiGroup:  # omit empty
-            v["apiGroup"] = apiGroup
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omit empty
-            v["apiVersion"] = apiVersion
-        resourceVersion = self.resourceVersion()
-        check_type("resourceVersion", resourceVersion, Optional[str])
-        if resourceVersion:  # omit empty
-            v["resourceVersion"] = resourceVersion
+        api_group = self.api_group()
+        check_type("api_group", api_group, Optional[str])
+        if api_group:  # omit empty
+            v["apiGroup"] = api_group
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omit empty
+            v["apiVersion"] = api_version
+        resource_version = self.resource_version()
+        check_type("resource_version", resource_version, Optional[str])
+        if resource_version:  # omit empty
+            v["resourceVersion"] = resource_version
         subresource = self.subresource()
         check_type("subresource", subresource, Optional[str])
         if subresource:  # omit empty
@@ -129,21 +129,21 @@ class ObjectReference(types.Object):
     def uid(self) -> Optional[str]:
         return self.__uid
 
-    def apiGroup(self) -> Optional[str]:
+    def api_group(self) -> Optional[str]:
         """
         APIGroup is the name of the API group that contains the referred object.
         The empty string represents the core API group.
         """
-        return self.__apiGroup
+        return self.__api_group
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         APIVersion is the version of the API group that contains the referred object.
         """
-        return self.__apiVersion
+        return self.__api_version
 
-    def resourceVersion(self) -> Optional[str]:
-        return self.__resourceVersion
+    def resource_version(self) -> Optional[str]:
+        return self.__resource_version
 
     def subresource(self) -> Optional[str]:
         return self.__subresource
@@ -159,38 +159,38 @@ class Event(base.TypedObject):
     def __init__(
         self,
         level: Level = None,
-        auditID: str = "",
+        audit_id: str = "",
         stage: Stage = None,
-        requestURI: str = "",
+        request_uri: str = "",
         verb: str = "",
         user: "authenticationv1.UserInfo" = None,
-        impersonatedUser: "authenticationv1.UserInfo" = None,
-        sourceIPs: List[str] = None,
-        userAgent: str = None,
-        objectRef: "ObjectReference" = None,
-        responseStatus: "metav1.Status" = None,
-        requestObject: "runtime.Unknown" = None,
-        responseObject: "runtime.Unknown" = None,
-        requestReceivedTimestamp: "base.MicroTime" = None,
-        stageTimestamp: "base.MicroTime" = None,
+        impersonated_user: "authenticationv1.UserInfo" = None,
+        source_ips: List[str] = None,
+        user_agent: str = None,
+        object_ref: "ObjectReference" = None,
+        response_status: "metav1.Status" = None,
+        request_object: "runtime.Unknown" = None,
+        response_object: "runtime.Unknown" = None,
+        request_received_timestamp: "base.MicroTime" = None,
+        stage_timestamp: "base.MicroTime" = None,
         annotations: Dict[str, str] = None,
     ):
-        super().__init__(apiVersion="audit.k8s.io/v1", kind="Event")
+        super().__init__(api_version="audit.k8s.io/v1", kind="Event")
         self.__level = level
-        self.__auditID = auditID
+        self.__audit_id = audit_id
         self.__stage = stage
-        self.__requestURI = requestURI
+        self.__request_uri = request_uri
         self.__verb = verb
         self.__user = user if user is not None else authenticationv1.UserInfo()
-        self.__impersonatedUser = impersonatedUser
-        self.__sourceIPs = sourceIPs if sourceIPs is not None else []
-        self.__userAgent = userAgent
-        self.__objectRef = objectRef
-        self.__responseStatus = responseStatus
-        self.__requestObject = requestObject
-        self.__responseObject = responseObject
-        self.__requestReceivedTimestamp = requestReceivedTimestamp
-        self.__stageTimestamp = stageTimestamp
+        self.__impersonated_user = impersonated_user
+        self.__source_ips = source_ips if source_ips is not None else []
+        self.__user_agent = user_agent
+        self.__object_ref = object_ref
+        self.__response_status = response_status
+        self.__request_object = request_object
+        self.__response_object = response_object
+        self.__request_received_timestamp = request_received_timestamp
+        self.__stage_timestamp = stage_timestamp
         self.__annotations = annotations if annotations is not None else {}
 
     @typechecked
@@ -199,59 +199,61 @@ class Event(base.TypedObject):
         level = self.level()
         check_type("level", level, Level)
         v["level"] = level
-        auditID = self.auditID()
-        check_type("auditID", auditID, str)
-        v["auditID"] = auditID
+        audit_id = self.audit_id()
+        check_type("audit_id", audit_id, str)
+        v["auditID"] = audit_id
         stage = self.stage()
         check_type("stage", stage, Stage)
         v["stage"] = stage
-        requestURI = self.requestURI()
-        check_type("requestURI", requestURI, str)
-        v["requestURI"] = requestURI
+        request_uri = self.request_uri()
+        check_type("request_uri", request_uri, str)
+        v["requestURI"] = request_uri
         verb = self.verb()
         check_type("verb", verb, str)
         v["verb"] = verb
         user = self.user()
         check_type("user", user, "authenticationv1.UserInfo")
         v["user"] = user
-        impersonatedUser = self.impersonatedUser()
+        impersonated_user = self.impersonated_user()
         check_type(
-            "impersonatedUser", impersonatedUser, Optional["authenticationv1.UserInfo"]
+            "impersonated_user",
+            impersonated_user,
+            Optional["authenticationv1.UserInfo"],
         )
-        if impersonatedUser is not None:  # omit empty
-            v["impersonatedUser"] = impersonatedUser
-        sourceIPs = self.sourceIPs()
-        check_type("sourceIPs", sourceIPs, Optional[List[str]])
-        if sourceIPs:  # omit empty
-            v["sourceIPs"] = sourceIPs
-        userAgent = self.userAgent()
-        check_type("userAgent", userAgent, Optional[str])
-        if userAgent:  # omit empty
-            v["userAgent"] = userAgent
-        objectRef = self.objectRef()
-        check_type("objectRef", objectRef, Optional["ObjectReference"])
-        if objectRef is not None:  # omit empty
-            v["objectRef"] = objectRef
-        responseStatus = self.responseStatus()
-        check_type("responseStatus", responseStatus, Optional["metav1.Status"])
-        if responseStatus is not None:  # omit empty
-            v["responseStatus"] = responseStatus
-        requestObject = self.requestObject()
-        check_type("requestObject", requestObject, Optional["runtime.Unknown"])
-        if requestObject is not None:  # omit empty
-            v["requestObject"] = requestObject
-        responseObject = self.responseObject()
-        check_type("responseObject", responseObject, Optional["runtime.Unknown"])
-        if responseObject is not None:  # omit empty
-            v["responseObject"] = responseObject
-        requestReceivedTimestamp = self.requestReceivedTimestamp()
+        if impersonated_user is not None:  # omit empty
+            v["impersonatedUser"] = impersonated_user
+        source_ips = self.source_ips()
+        check_type("source_ips", source_ips, Optional[List[str]])
+        if source_ips:  # omit empty
+            v["sourceIPs"] = source_ips
+        user_agent = self.user_agent()
+        check_type("user_agent", user_agent, Optional[str])
+        if user_agent:  # omit empty
+            v["userAgent"] = user_agent
+        object_ref = self.object_ref()
+        check_type("object_ref", object_ref, Optional["ObjectReference"])
+        if object_ref is not None:  # omit empty
+            v["objectRef"] = object_ref
+        response_status = self.response_status()
+        check_type("response_status", response_status, Optional["metav1.Status"])
+        if response_status is not None:  # omit empty
+            v["responseStatus"] = response_status
+        request_object = self.request_object()
+        check_type("request_object", request_object, Optional["runtime.Unknown"])
+        if request_object is not None:  # omit empty
+            v["requestObject"] = request_object
+        response_object = self.response_object()
+        check_type("response_object", response_object, Optional["runtime.Unknown"])
+        if response_object is not None:  # omit empty
+            v["responseObject"] = response_object
+        request_received_timestamp = self.request_received_timestamp()
         check_type(
-            "requestReceivedTimestamp", requestReceivedTimestamp, "base.MicroTime"
+            "request_received_timestamp", request_received_timestamp, "base.MicroTime"
         )
-        v["requestReceivedTimestamp"] = requestReceivedTimestamp
-        stageTimestamp = self.stageTimestamp()
-        check_type("stageTimestamp", stageTimestamp, "base.MicroTime")
-        v["stageTimestamp"] = stageTimestamp
+        v["requestReceivedTimestamp"] = request_received_timestamp
+        stage_timestamp = self.stage_timestamp()
+        check_type("stage_timestamp", stage_timestamp, "base.MicroTime")
+        v["stageTimestamp"] = stage_timestamp
         annotations = self.annotations()
         check_type("annotations", annotations, Optional[Dict[str, str]])
         if annotations:  # omit empty
@@ -264,11 +266,11 @@ class Event(base.TypedObject):
         """
         return self.__level
 
-    def auditID(self) -> str:
+    def audit_id(self) -> str:
         """
         Unique audit ID, generated for each request.
         """
-        return self.__auditID
+        return self.__audit_id
 
     def stage(self) -> Stage:
         """
@@ -276,11 +278,11 @@ class Event(base.TypedObject):
         """
         return self.__stage
 
-    def requestURI(self) -> str:
+    def request_uri(self) -> str:
         """
         RequestURI is the request URI as sent by the client to a server.
         """
-        return self.__requestURI
+        return self.__request_uri
 
     def verb(self) -> str:
         """
@@ -295,68 +297,68 @@ class Event(base.TypedObject):
         """
         return self.__user
 
-    def impersonatedUser(self) -> Optional["authenticationv1.UserInfo"]:
+    def impersonated_user(self) -> Optional["authenticationv1.UserInfo"]:
         """
         Impersonated user information.
         """
-        return self.__impersonatedUser
+        return self.__impersonated_user
 
-    def sourceIPs(self) -> Optional[List[str]]:
+    def source_ips(self) -> Optional[List[str]]:
         """
         Source IPs, from where the request originated and intermediate proxies.
         """
-        return self.__sourceIPs
+        return self.__source_ips
 
-    def userAgent(self) -> Optional[str]:
+    def user_agent(self) -> Optional[str]:
         """
         UserAgent records the user agent string reported by the client.
         Note that the UserAgent is provided by the client, and must not be trusted.
         """
-        return self.__userAgent
+        return self.__user_agent
 
-    def objectRef(self) -> Optional["ObjectReference"]:
+    def object_ref(self) -> Optional["ObjectReference"]:
         """
         Object reference this request is targeted at.
         Does not apply for List-type requests, or non-resource requests.
         """
-        return self.__objectRef
+        return self.__object_ref
 
-    def responseStatus(self) -> Optional["metav1.Status"]:
+    def response_status(self) -> Optional["metav1.Status"]:
         """
         The response status, populated even when the ResponseObject is not a Status type.
         For successful responses, this will only include the Code and StatusSuccess.
         For non-status type error responses, this will be auto-populated with the error Message.
         """
-        return self.__responseStatus
+        return self.__response_status
 
-    def requestObject(self) -> Optional["runtime.Unknown"]:
+    def request_object(self) -> Optional["runtime.Unknown"]:
         """
         API object from the request, in JSON format. The RequestObject is recorded as-is in the request
         (possibly re-encoded as JSON), prior to version conversion, defaulting, admission or
         merging. It is an external versioned object type, and may not be a valid object on its own.
         Omitted for non-resource requests.  Only logged at Request Level and higher.
         """
-        return self.__requestObject
+        return self.__request_object
 
-    def responseObject(self) -> Optional["runtime.Unknown"]:
+    def response_object(self) -> Optional["runtime.Unknown"]:
         """
         API object returned in the response, in JSON. The ResponseObject is recorded after conversion
         to the external type, and serialized as JSON.  Omitted for non-resource requests.  Only logged
         at Response Level.
         """
-        return self.__responseObject
+        return self.__response_object
 
-    def requestReceivedTimestamp(self) -> "base.MicroTime":
+    def request_received_timestamp(self) -> "base.MicroTime":
         """
         Time the request reached the apiserver.
         """
-        return self.__requestReceivedTimestamp
+        return self.__request_received_timestamp
 
-    def stageTimestamp(self) -> "base.MicroTime":
+    def stage_timestamp(self) -> "base.MicroTime":
         """
         Time the request reached current audit stage.
         """
-        return self.__stageTimestamp
+        return self.__stage_timestamp
 
     def annotations(self) -> Optional[Dict[str, str]]:
         """
@@ -381,12 +383,12 @@ class GroupResources(types.Object):
         self,
         group: str = None,
         resources: List[str] = None,
-        resourceNames: List[str] = None,
+        resource_names: List[str] = None,
     ):
         super().__init__()
         self.__group = group
         self.__resources = resources if resources is not None else []
-        self.__resourceNames = resourceNames if resourceNames is not None else []
+        self.__resource_names = resource_names if resource_names is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -399,10 +401,10 @@ class GroupResources(types.Object):
         check_type("resources", resources, Optional[List[str]])
         if resources:  # omit empty
             v["resources"] = resources
-        resourceNames = self.resourceNames()
-        check_type("resourceNames", resourceNames, Optional[List[str]])
-        if resourceNames:  # omit empty
-            v["resourceNames"] = resourceNames
+        resource_names = self.resource_names()
+        check_type("resource_names", resource_names, Optional[List[str]])
+        if resource_names:  # omit empty
+            v["resourceNames"] = resource_names
         return v
 
     def group(self) -> Optional[str]:
@@ -430,13 +432,13 @@ class GroupResources(types.Object):
         """
         return self.__resources
 
-    def resourceNames(self) -> Optional[List[str]]:
+    def resource_names(self) -> Optional[List[str]]:
         """
         ResourceNames is a list of resource instance names that the policy matches.
         Using this field requires Resources to be specified.
         An empty list implies that every instance of the resource is matched.
         """
-        return self.__resourceNames
+        return self.__resource_names
 
 
 class PolicyRule(types.Object):
@@ -451,22 +453,24 @@ class PolicyRule(types.Object):
         self,
         level: Level = None,
         users: List[str] = None,
-        userGroups: List[str] = None,
+        user_groups: List[str] = None,
         verbs: List[str] = None,
         resources: List["GroupResources"] = None,
         namespaces: List[str] = None,
-        nonResourceURLs: List[str] = None,
-        omitStages: List[Stage] = None,
+        non_resource_urls: List[str] = None,
+        omit_stages: List[Stage] = None,
     ):
         super().__init__()
         self.__level = level
         self.__users = users if users is not None else []
-        self.__userGroups = userGroups if userGroups is not None else []
+        self.__user_groups = user_groups if user_groups is not None else []
         self.__verbs = verbs if verbs is not None else []
         self.__resources = resources if resources is not None else []
         self.__namespaces = namespaces if namespaces is not None else []
-        self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
-        self.__omitStages = omitStages if omitStages is not None else []
+        self.__non_resource_urls = (
+            non_resource_urls if non_resource_urls is not None else []
+        )
+        self.__omit_stages = omit_stages if omit_stages is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -478,10 +482,10 @@ class PolicyRule(types.Object):
         check_type("users", users, Optional[List[str]])
         if users:  # omit empty
             v["users"] = users
-        userGroups = self.userGroups()
-        check_type("userGroups", userGroups, Optional[List[str]])
-        if userGroups:  # omit empty
-            v["userGroups"] = userGroups
+        user_groups = self.user_groups()
+        check_type("user_groups", user_groups, Optional[List[str]])
+        if user_groups:  # omit empty
+            v["userGroups"] = user_groups
         verbs = self.verbs()
         check_type("verbs", verbs, Optional[List[str]])
         if verbs:  # omit empty
@@ -494,14 +498,14 @@ class PolicyRule(types.Object):
         check_type("namespaces", namespaces, Optional[List[str]])
         if namespaces:  # omit empty
             v["namespaces"] = namespaces
-        nonResourceURLs = self.nonResourceURLs()
-        check_type("nonResourceURLs", nonResourceURLs, Optional[List[str]])
-        if nonResourceURLs:  # omit empty
-            v["nonResourceURLs"] = nonResourceURLs
-        omitStages = self.omitStages()
-        check_type("omitStages", omitStages, Optional[List[Stage]])
-        if omitStages:  # omit empty
-            v["omitStages"] = omitStages
+        non_resource_urls = self.non_resource_urls()
+        check_type("non_resource_urls", non_resource_urls, Optional[List[str]])
+        if non_resource_urls:  # omit empty
+            v["nonResourceURLs"] = non_resource_urls
+        omit_stages = self.omit_stages()
+        check_type("omit_stages", omit_stages, Optional[List[Stage]])
+        if omit_stages:  # omit empty
+            v["omitStages"] = omit_stages
         return v
 
     def level(self) -> Level:
@@ -517,13 +521,13 @@ class PolicyRule(types.Object):
         """
         return self.__users
 
-    def userGroups(self) -> Optional[List[str]]:
+    def user_groups(self) -> Optional[List[str]]:
         """
         The user groups this rule applies to. A user is considered matching
         if it is a member of any of the UserGroups.
         An empty list implies every user group.
         """
-        return self.__userGroups
+        return self.__user_groups
 
     def verbs(self) -> Optional[List[str]]:
         """
@@ -546,7 +550,7 @@ class PolicyRule(types.Object):
         """
         return self.__namespaces
 
-    def nonResourceURLs(self) -> Optional[List[str]]:
+    def non_resource_urls(self) -> Optional[List[str]]:
         """
         NonResourceURLs is a set of URL paths that should be audited.
         *s are allowed, but only as the full, final step in the path.
@@ -554,15 +558,15 @@ class PolicyRule(types.Object):
          "/metrics" - Log requests for apiserver metrics
          "/healthz*" - Log all health checks
         """
-        return self.__nonResourceURLs
+        return self.__non_resource_urls
 
-    def omitStages(self) -> Optional[List[Stage]]:
+    def omit_stages(self) -> Optional[List[Stage]]:
         """
         OmitStages is a list of stages for which no events are created. Note that this can also
         be specified policy wide in which case the union of both are omitted.
         An empty list means no restrictions will apply.
         """
-        return self.__omitStages
+        return self.__omit_stages
 
 
 class Policy(base.TypedObject, base.NamespacedMetadataObject):
@@ -580,10 +584,10 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         rules: List["PolicyRule"] = None,
-        omitStages: List[Stage] = None,
+        omit_stages: List[Stage] = None,
     ):
         super().__init__(
-            apiVersion="audit.k8s.io/v1",
+            api_version="audit.k8s.io/v1",
             kind="Policy",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -591,7 +595,7 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
-        self.__omitStages = omitStages if omitStages is not None else []
+        self.__omit_stages = omit_stages if omit_stages is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -599,10 +603,10 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         rules = self.rules()
         check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
-        omitStages = self.omitStages()
-        check_type("omitStages", omitStages, Optional[List[Stage]])
-        if omitStages:  # omit empty
-            v["omitStages"] = omitStages
+        omit_stages = self.omit_stages()
+        check_type("omit_stages", omit_stages, Optional[List[Stage]])
+        if omit_stages:  # omit empty
+            v["omitStages"] = omit_stages
         return v
 
     def rules(self) -> List["PolicyRule"]:
@@ -614,9 +618,9 @@ class Policy(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__rules
 
-    def omitStages(self) -> Optional[List[Stage]]:
+    def omit_stages(self) -> Optional[List[Stage]]:
         """
         OmitStages is a list of stages for which no events are created. Note that this can also
         be specified per rule in which case the union of both are omitted.
         """
-        return self.__omitStages
+        return self.__omit_stages

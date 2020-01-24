@@ -80,24 +80,24 @@ KeyUsage = base.Enum(
 class CAIssuer(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, secretName: str = ""):
+    def __init__(self, secret_name: str = ""):
         super().__init__()
-        self.__secretName = secretName
+        self.__secret_name = secret_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        secretName = self.secretName()
-        check_type("secretName", secretName, str)
-        v["secretName"] = secretName
+        secret_name = self.secret_name()
+        check_type("secret_name", secret_name, str)
+        v["secretName"] = secret_name
         return v
 
-    def secretName(self) -> str:
+    def secret_name(self) -> str:
         """
         SecretName is the name of the secret used to sign Certificates issued
         by this Issuer.
         """
-        return self.__secretName
+        return self.__secret_name
 
 
 class X509Subject(types.Object):
@@ -110,23 +110,25 @@ class X509Subject(types.Object):
     def __init__(
         self,
         countries: List[str] = None,
-        organizationalUnits: List[str] = None,
+        organizational_units: List[str] = None,
         localities: List[str] = None,
         provinces: List[str] = None,
-        streetAddresses: List[str] = None,
-        postalCodes: List[str] = None,
-        serialNumber: str = None,
+        street_addresses: List[str] = None,
+        postal_codes: List[str] = None,
+        serial_number: str = None,
     ):
         super().__init__()
         self.__countries = countries if countries is not None else []
-        self.__organizationalUnits = (
-            organizationalUnits if organizationalUnits is not None else []
+        self.__organizational_units = (
+            organizational_units if organizational_units is not None else []
         )
         self.__localities = localities if localities is not None else []
         self.__provinces = provinces if provinces is not None else []
-        self.__streetAddresses = streetAddresses if streetAddresses is not None else []
-        self.__postalCodes = postalCodes if postalCodes is not None else []
-        self.__serialNumber = serialNumber
+        self.__street_addresses = (
+            street_addresses if street_addresses is not None else []
+        )
+        self.__postal_codes = postal_codes if postal_codes is not None else []
+        self.__serial_number = serial_number
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -135,10 +137,10 @@ class X509Subject(types.Object):
         check_type("countries", countries, Optional[List[str]])
         if countries:  # omit empty
             v["countries"] = countries
-        organizationalUnits = self.organizationalUnits()
-        check_type("organizationalUnits", organizationalUnits, Optional[List[str]])
-        if organizationalUnits:  # omit empty
-            v["organizationalUnits"] = organizationalUnits
+        organizational_units = self.organizational_units()
+        check_type("organizational_units", organizational_units, Optional[List[str]])
+        if organizational_units:  # omit empty
+            v["organizationalUnits"] = organizational_units
         localities = self.localities()
         check_type("localities", localities, Optional[List[str]])
         if localities:  # omit empty
@@ -147,18 +149,18 @@ class X509Subject(types.Object):
         check_type("provinces", provinces, Optional[List[str]])
         if provinces:  # omit empty
             v["provinces"] = provinces
-        streetAddresses = self.streetAddresses()
-        check_type("streetAddresses", streetAddresses, Optional[List[str]])
-        if streetAddresses:  # omit empty
-            v["streetAddresses"] = streetAddresses
-        postalCodes = self.postalCodes()
-        check_type("postalCodes", postalCodes, Optional[List[str]])
-        if postalCodes:  # omit empty
-            v["postalCodes"] = postalCodes
-        serialNumber = self.serialNumber()
-        check_type("serialNumber", serialNumber, Optional[str])
-        if serialNumber:  # omit empty
-            v["serialNumber"] = serialNumber
+        street_addresses = self.street_addresses()
+        check_type("street_addresses", street_addresses, Optional[List[str]])
+        if street_addresses:  # omit empty
+            v["streetAddresses"] = street_addresses
+        postal_codes = self.postal_codes()
+        check_type("postal_codes", postal_codes, Optional[List[str]])
+        if postal_codes:  # omit empty
+            v["postalCodes"] = postal_codes
+        serial_number = self.serial_number()
+        check_type("serial_number", serial_number, Optional[str])
+        if serial_number:  # omit empty
+            v["serialNumber"] = serial_number
         return v
 
     def countries(self) -> Optional[List[str]]:
@@ -167,11 +169,11 @@ class X509Subject(types.Object):
         """
         return self.__countries
 
-    def organizationalUnits(self) -> Optional[List[str]]:
+    def organizational_units(self) -> Optional[List[str]]:
         """
         Organizational Units to be used on the Certificate.
         """
-        return self.__organizationalUnits
+        return self.__organizational_units
 
     def localities(self) -> Optional[List[str]]:
         """
@@ -185,23 +187,23 @@ class X509Subject(types.Object):
         """
         return self.__provinces
 
-    def streetAddresses(self) -> Optional[List[str]]:
+    def street_addresses(self) -> Optional[List[str]]:
         """
         Street addresses to be used on the Certificate.
         """
-        return self.__streetAddresses
+        return self.__street_addresses
 
-    def postalCodes(self) -> Optional[List[str]]:
+    def postal_codes(self) -> Optional[List[str]]:
         """
         Postal codes to be used on the Certificate.
         """
-        return self.__postalCodes
+        return self.__postal_codes
 
-    def serialNumber(self) -> Optional[str]:
+    def serial_number(self) -> Optional[str]:
         """
         Serial number to be used on the Certificate.
         """
-        return self.__serialNumber
+        return self.__serial_number
 
 
 class CertificateSpec(types.Object):
@@ -216,39 +218,39 @@ class CertificateSpec(types.Object):
     def __init__(
         self,
         subject: "X509Subject" = None,
-        commonName: str = None,
+        common_name: str = None,
         organization: List[str] = None,
         duration: "base.Duration" = None,
-        renewBefore: "base.Duration" = None,
-        dnsNames: List[str] = None,
-        ipAddresses: List[str] = None,
-        uriSANs: List[str] = None,
-        secretName: str = "",
-        issuerRef: "k8sv1.TypedLocalObjectReference" = None,
-        isCA: bool = None,
+        renew_before: "base.Duration" = None,
+        dns_names: List[str] = None,
+        ip_addresses: List[str] = None,
+        uri_sans: List[str] = None,
+        secret_name: str = "",
+        issuer_ref: "k8sv1.TypedLocalObjectReference" = None,
+        is_ca: bool = None,
         usages: List[KeyUsage] = None,
-        keySize: int = None,
-        keyAlgorithm: KeyAlgorithm = None,
-        keyEncoding: KeyEncoding = None,
+        key_size: int = None,
+        key_algorithm: KeyAlgorithm = None,
+        key_encoding: KeyEncoding = None,
     ):
         super().__init__()
         self.__subject = subject
-        self.__commonName = commonName
+        self.__common_name = common_name
         self.__organization = organization if organization is not None else []
         self.__duration = duration
-        self.__renewBefore = renewBefore
-        self.__dnsNames = dnsNames if dnsNames is not None else []
-        self.__ipAddresses = ipAddresses if ipAddresses is not None else []
-        self.__uriSANs = uriSANs if uriSANs is not None else []
-        self.__secretName = secretName
-        self.__issuerRef = (
-            issuerRef if issuerRef is not None else k8sv1.TypedLocalObjectReference()
+        self.__renew_before = renew_before
+        self.__dns_names = dns_names if dns_names is not None else []
+        self.__ip_addresses = ip_addresses if ip_addresses is not None else []
+        self.__uri_sans = uri_sans if uri_sans is not None else []
+        self.__secret_name = secret_name
+        self.__issuer_ref = (
+            issuer_ref if issuer_ref is not None else k8sv1.TypedLocalObjectReference()
         )
-        self.__isCA = isCA
+        self.__is_ca = is_ca
         self.__usages = usages if usages is not None else []
-        self.__keySize = keySize
-        self.__keyAlgorithm = keyAlgorithm
-        self.__keyEncoding = keyEncoding
+        self.__key_size = key_size
+        self.__key_algorithm = key_algorithm
+        self.__key_encoding = key_encoding
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -257,10 +259,10 @@ class CertificateSpec(types.Object):
         check_type("subject", subject, Optional["X509Subject"])
         if subject is not None:  # omit empty
             v["subject"] = subject
-        commonName = self.commonName()
-        check_type("commonName", commonName, Optional[str])
-        if commonName:  # omit empty
-            v["commonName"] = commonName
+        common_name = self.common_name()
+        check_type("common_name", common_name, Optional[str])
+        if common_name:  # omit empty
+            v["commonName"] = common_name
         organization = self.organization()
         check_type("organization", organization, Optional[List[str]])
         if organization:  # omit empty
@@ -269,48 +271,48 @@ class CertificateSpec(types.Object):
         check_type("duration", duration, Optional["base.Duration"])
         if duration is not None:  # omit empty
             v["duration"] = duration
-        renewBefore = self.renewBefore()
-        check_type("renewBefore", renewBefore, Optional["base.Duration"])
-        if renewBefore is not None:  # omit empty
-            v["renewBefore"] = renewBefore
-        dnsNames = self.dnsNames()
-        check_type("dnsNames", dnsNames, Optional[List[str]])
-        if dnsNames:  # omit empty
-            v["dnsNames"] = dnsNames
-        ipAddresses = self.ipAddresses()
-        check_type("ipAddresses", ipAddresses, Optional[List[str]])
-        if ipAddresses:  # omit empty
-            v["ipAddresses"] = ipAddresses
-        uriSANs = self.uriSANs()
-        check_type("uriSANs", uriSANs, Optional[List[str]])
-        if uriSANs:  # omit empty
-            v["uriSANs"] = uriSANs
-        secretName = self.secretName()
-        check_type("secretName", secretName, str)
-        v["secretName"] = secretName
-        issuerRef = self.issuerRef()
-        check_type("issuerRef", issuerRef, "k8sv1.TypedLocalObjectReference")
-        v["issuerRef"] = issuerRef
-        isCA = self.isCA()
-        check_type("isCA", isCA, Optional[bool])
-        if isCA:  # omit empty
-            v["isCA"] = isCA
+        renew_before = self.renew_before()
+        check_type("renew_before", renew_before, Optional["base.Duration"])
+        if renew_before is not None:  # omit empty
+            v["renewBefore"] = renew_before
+        dns_names = self.dns_names()
+        check_type("dns_names", dns_names, Optional[List[str]])
+        if dns_names:  # omit empty
+            v["dnsNames"] = dns_names
+        ip_addresses = self.ip_addresses()
+        check_type("ip_addresses", ip_addresses, Optional[List[str]])
+        if ip_addresses:  # omit empty
+            v["ipAddresses"] = ip_addresses
+        uri_sans = self.uri_sans()
+        check_type("uri_sans", uri_sans, Optional[List[str]])
+        if uri_sans:  # omit empty
+            v["uriSANs"] = uri_sans
+        secret_name = self.secret_name()
+        check_type("secret_name", secret_name, str)
+        v["secretName"] = secret_name
+        issuer_ref = self.issuer_ref()
+        check_type("issuer_ref", issuer_ref, "k8sv1.TypedLocalObjectReference")
+        v["issuerRef"] = issuer_ref
+        is_ca = self.is_ca()
+        check_type("is_ca", is_ca, Optional[bool])
+        if is_ca:  # omit empty
+            v["isCA"] = is_ca
         usages = self.usages()
         check_type("usages", usages, Optional[List[KeyUsage]])
         if usages:  # omit empty
             v["usages"] = usages
-        keySize = self.keySize()
-        check_type("keySize", keySize, Optional[int])
-        if keySize:  # omit empty
-            v["keySize"] = keySize
-        keyAlgorithm = self.keyAlgorithm()
-        check_type("keyAlgorithm", keyAlgorithm, Optional[KeyAlgorithm])
-        if keyAlgorithm:  # omit empty
-            v["keyAlgorithm"] = keyAlgorithm
-        keyEncoding = self.keyEncoding()
-        check_type("keyEncoding", keyEncoding, Optional[KeyEncoding])
-        if keyEncoding:  # omit empty
-            v["keyEncoding"] = keyEncoding
+        key_size = self.key_size()
+        check_type("key_size", key_size, Optional[int])
+        if key_size:  # omit empty
+            v["keySize"] = key_size
+        key_algorithm = self.key_algorithm()
+        check_type("key_algorithm", key_algorithm, Optional[KeyAlgorithm])
+        if key_algorithm:  # omit empty
+            v["keyAlgorithm"] = key_algorithm
+        key_encoding = self.key_encoding()
+        check_type("key_encoding", key_encoding, Optional[KeyEncoding])
+        if key_encoding:  # omit empty
+            v["keyEncoding"] = key_encoding
         return v
 
     def subject(self) -> Optional["X509Subject"]:
@@ -319,13 +321,13 @@ class CertificateSpec(types.Object):
         """
         return self.__subject
 
-    def commonName(self) -> Optional[str]:
+    def common_name(self) -> Optional[str]:
         """
         CommonName is a common name to be used on the Certificate.
         The CommonName should have a length of 64 characters or fewer to avoid
         generating invalid CSRs.
         """
-        return self.__commonName
+        return self.__common_name
 
     def organization(self) -> Optional[List[str]]:
         """
@@ -339,38 +341,38 @@ class CertificateSpec(types.Object):
         """
         return self.__duration
 
-    def renewBefore(self) -> Optional["base.Duration"]:
+    def renew_before(self) -> Optional["base.Duration"]:
         """
         Certificate renew before expiration duration
         """
-        return self.__renewBefore
+        return self.__renew_before
 
-    def dnsNames(self) -> Optional[List[str]]:
+    def dns_names(self) -> Optional[List[str]]:
         """
         DNSNames is a list of subject alt names to be used on the Certificate.
         """
-        return self.__dnsNames
+        return self.__dns_names
 
-    def ipAddresses(self) -> Optional[List[str]]:
+    def ip_addresses(self) -> Optional[List[str]]:
         """
         IPAddresses is a list of IP addresses to be used on the Certificate
         """
-        return self.__ipAddresses
+        return self.__ip_addresses
 
-    def uriSANs(self) -> Optional[List[str]]:
+    def uri_sans(self) -> Optional[List[str]]:
         """
         URISANs is a list of URI Subject Alternative Names to be set on this
         Certificate.
         """
-        return self.__uriSANs
+        return self.__uri_sans
 
-    def secretName(self) -> str:
+    def secret_name(self) -> str:
         """
         SecretName is the name of the secret resource to store this secret in
         """
-        return self.__secretName
+        return self.__secret_name
 
-    def issuerRef(self) -> "k8sv1.TypedLocalObjectReference":
+    def issuer_ref(self) -> "k8sv1.TypedLocalObjectReference":
         """
         IssuerRef is a reference to the issuer for this certificate.
         If the 'kind' field is not set, or set to 'Issuer', an Issuer resource
@@ -379,14 +381,14 @@ class CertificateSpec(types.Object):
         provided name will be used.
         The 'name' field in this stanza is required at all times.
         """
-        return self.__issuerRef
+        return self.__issuer_ref
 
-    def isCA(self) -> Optional[bool]:
+    def is_ca(self) -> Optional[bool]:
         """
         IsCA will mark this Certificate as valid for signing.
         This implies that the 'cert sign' usage is set
         """
-        return self.__isCA
+        return self.__is_ca
 
     def usages(self) -> Optional[List[KeyUsage]]:
         """
@@ -394,16 +396,16 @@ class CertificateSpec(types.Object):
         """
         return self.__usages
 
-    def keySize(self) -> Optional[int]:
+    def key_size(self) -> Optional[int]:
         """
         KeySize is the key bit size of the corresponding private key for this certificate.
         If provided, value must be between 2048 and 8192 inclusive when KeyAlgorithm is
         empty or is set to "rsa", and value must be one of (256, 384, 521) when
         KeyAlgorithm is set to "ecdsa".
         """
-        return self.__keySize
+        return self.__key_size
 
-    def keyAlgorithm(self) -> Optional[KeyAlgorithm]:
+    def key_algorithm(self) -> Optional[KeyAlgorithm]:
         """
         KeyAlgorithm is the private key algorithm of the corresponding private key
         for this certificate. If provided, allowed values are either "rsa" or "ecdsa"
@@ -411,16 +413,16 @@ class CertificateSpec(types.Object):
         key size of 256 will be used for "ecdsa" key algorithm and
         key size of 2048 will be used for "rsa" key algorithm.
         """
-        return self.__keyAlgorithm
+        return self.__key_algorithm
 
-    def keyEncoding(self) -> Optional[KeyEncoding]:
+    def key_encoding(self) -> Optional[KeyEncoding]:
         """
         KeyEncoding is the private key cryptography standards (PKCS)
         for this certificate's private key to be encoded in. If provided, allowed
         values are "pkcs1" and "pkcs8" standing for PKCS#1 and PKCS#8, respectively.
         If KeyEncoding is not specified, then PKCS#1 will be used by default.
         """
-        return self.__keyEncoding
+        return self.__key_encoding
 
 
 class Certificate(base.TypedObject, base.NamespacedMetadataObject):
@@ -439,7 +441,7 @@ class Certificate(base.TypedObject, base.NamespacedMetadataObject):
         spec: "CertificateSpec" = None,
     ):
         super().__init__(
-            apiVersion="cert-manager.io/v1alpha3",
+            api_version="cert-manager.io/v1alpha3",
             kind="Certificate",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -470,18 +472,18 @@ class CertificateRequestSpec(types.Object):
     def __init__(
         self,
         duration: "base.Duration" = None,
-        issuerRef: "k8sv1.TypedLocalObjectReference" = None,
+        issuer_ref: "k8sv1.TypedLocalObjectReference" = None,
         csr: bytes = None,
-        isCA: bool = None,
+        is_ca: bool = None,
         usages: List[KeyUsage] = None,
     ):
         super().__init__()
         self.__duration = duration
-        self.__issuerRef = (
-            issuerRef if issuerRef is not None else k8sv1.TypedLocalObjectReference()
+        self.__issuer_ref = (
+            issuer_ref if issuer_ref is not None else k8sv1.TypedLocalObjectReference()
         )
         self.__csr = csr if csr is not None else b""
-        self.__isCA = isCA
+        self.__is_ca = is_ca
         self.__usages = usages if usages is not None else []
 
     @typechecked
@@ -491,16 +493,16 @@ class CertificateRequestSpec(types.Object):
         check_type("duration", duration, Optional["base.Duration"])
         if duration is not None:  # omit empty
             v["duration"] = duration
-        issuerRef = self.issuerRef()
-        check_type("issuerRef", issuerRef, "k8sv1.TypedLocalObjectReference")
-        v["issuerRef"] = issuerRef
+        issuer_ref = self.issuer_ref()
+        check_type("issuer_ref", issuer_ref, "k8sv1.TypedLocalObjectReference")
+        v["issuerRef"] = issuer_ref
         csr = self.csr()
         check_type("csr", csr, bytes)
         v["csr"] = csr
-        isCA = self.isCA()
-        check_type("isCA", isCA, Optional[bool])
-        if isCA:  # omit empty
-            v["isCA"] = isCA
+        is_ca = self.is_ca()
+        check_type("is_ca", is_ca, Optional[bool])
+        if is_ca:  # omit empty
+            v["isCA"] = is_ca
         usages = self.usages()
         check_type("usages", usages, Optional[List[KeyUsage]])
         if usages:  # omit empty
@@ -513,7 +515,7 @@ class CertificateRequestSpec(types.Object):
         """
         return self.__duration
 
-    def issuerRef(self) -> "k8sv1.TypedLocalObjectReference":
+    def issuer_ref(self) -> "k8sv1.TypedLocalObjectReference":
         """
         IssuerRef is a reference to the issuer for this CertificateRequest.  If
         the 'kind' field is not set, or set to 'Issuer', an Issuer resource with
@@ -523,7 +525,7 @@ class CertificateRequestSpec(types.Object):
         required at all times. The group field refers to the API group of the
         issuer which defaults to 'cert-manager.io' if empty.
         """
-        return self.__issuerRef
+        return self.__issuer_ref
 
     def csr(self) -> bytes:
         """
@@ -531,12 +533,12 @@ class CertificateRequestSpec(types.Object):
         """
         return self.__csr
 
-    def isCA(self) -> Optional[bool]:
+    def is_ca(self) -> Optional[bool]:
         """
         IsCA will mark the resulting certificate as valid for signing. This
         implies that the 'cert sign' usage is set
         """
-        return self.__isCA
+        return self.__is_ca
 
     def usages(self) -> Optional[List[KeyUsage]]:
         """
@@ -562,7 +564,7 @@ class CertificateRequest(base.TypedObject, base.NamespacedMetadataObject):
         spec: "CertificateRequestSpec" = None,
     ):
         super().__init__(
-            apiVersion="cert-manager.io/v1alpha3",
+            api_version="cert-manager.io/v1alpha3",
             kind="CertificateRequest",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -593,14 +595,14 @@ class VaultAppRole(types.Object):
     def __init__(
         self,
         path: str = "",
-        roleId: str = "",
-        secretRef: "k8sv1.SecretKeySelector" = None,
+        role_id: str = "",
+        secret_ref: "k8sv1.SecretKeySelector" = None,
     ):
         super().__init__()
         self.__path = path
-        self.__roleId = roleId
-        self.__secretRef = (
-            secretRef if secretRef is not None else k8sv1.SecretKeySelector()
+        self.__role_id = role_id
+        self.__secret_ref = (
+            secret_ref if secret_ref is not None else k8sv1.SecretKeySelector()
         )
 
     @typechecked
@@ -609,12 +611,12 @@ class VaultAppRole(types.Object):
         path = self.path()
         check_type("path", path, str)
         v["path"] = path
-        roleId = self.roleId()
-        check_type("roleId", roleId, str)
-        v["roleId"] = roleId
-        secretRef = self.secretRef()
-        check_type("secretRef", secretRef, "k8sv1.SecretKeySelector")
-        v["secretRef"] = secretRef
+        role_id = self.role_id()
+        check_type("role_id", role_id, str)
+        v["roleId"] = role_id
+        secret_ref = self.secret_ref()
+        check_type("secret_ref", secret_ref, "k8sv1.SecretKeySelector")
+        v["secretRef"] = secret_ref
         return v
 
     def path(self) -> str:
@@ -623,11 +625,11 @@ class VaultAppRole(types.Object):
         """
         return self.__path
 
-    def roleId(self) -> str:
-        return self.__roleId
+    def role_id(self) -> str:
+        return self.__role_id
 
-    def secretRef(self) -> "k8sv1.SecretKeySelector":
-        return self.__secretRef
+    def secret_ref(self) -> "k8sv1.SecretKeySelector":
+        return self.__secret_ref
 
 
 class VaultKubernetesAuth(types.Object):
@@ -640,48 +642,48 @@ class VaultKubernetesAuth(types.Object):
     @typechecked
     def __init__(
         self,
-        mountPath: str = None,
-        secretRef: "k8sv1.SecretKeySelector" = None,
+        mount_path: str = None,
+        secret_ref: "k8sv1.SecretKeySelector" = None,
         role: str = "",
     ):
         super().__init__()
-        self.__mountPath = mountPath
-        self.__secretRef = (
-            secretRef if secretRef is not None else k8sv1.SecretKeySelector()
+        self.__mount_path = mount_path
+        self.__secret_ref = (
+            secret_ref if secret_ref is not None else k8sv1.SecretKeySelector()
         )
         self.__role = role
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        mountPath = self.mountPath()
-        check_type("mountPath", mountPath, Optional[str])
-        if mountPath:  # omit empty
-            v["mountPath"] = mountPath
-        secretRef = self.secretRef()
-        check_type("secretRef", secretRef, "k8sv1.SecretKeySelector")
-        v["secretRef"] = secretRef
+        mount_path = self.mount_path()
+        check_type("mount_path", mount_path, Optional[str])
+        if mount_path:  # omit empty
+            v["mountPath"] = mount_path
+        secret_ref = self.secret_ref()
+        check_type("secret_ref", secret_ref, "k8sv1.SecretKeySelector")
+        v["secretRef"] = secret_ref
         role = self.role()
         check_type("role", role, str)
         v["role"] = role
         return v
 
-    def mountPath(self) -> Optional[str]:
+    def mount_path(self) -> Optional[str]:
         """
         The Vault mountPath here is the mount path to use when authenticating with
         Vault. For example, setting a value to `/v1/auth/foo`, will use the path
         `/v1/auth/foo/login` to authenticate with Vault. If unspecified, the
         default value "/v1/auth/kubernetes" will be used.
         """
-        return self.__mountPath
+        return self.__mount_path
 
-    def secretRef(self) -> "k8sv1.SecretKeySelector":
+    def secret_ref(self) -> "k8sv1.SecretKeySelector":
         """
         The required Secret field containing a Kubernetes ServiceAccount JWT used
         for authenticating with Vault. Use of 'ambient credentials' is not
         supported.
         """
-        return self.__secretRef
+        return self.__secret_ref
 
     def role(self) -> str:
         """
@@ -703,45 +705,45 @@ class VaultAuth(types.Object):
     @typechecked
     def __init__(
         self,
-        tokenSecretRef: "k8sv1.SecretKeySelector" = None,
-        appRole: "VaultAppRole" = None,
+        token_secret_ref: "k8sv1.SecretKeySelector" = None,
+        app_role: "VaultAppRole" = None,
         kubernetes: "VaultKubernetesAuth" = None,
     ):
         super().__init__()
-        self.__tokenSecretRef = tokenSecretRef
-        self.__appRole = appRole
+        self.__token_secret_ref = token_secret_ref
+        self.__app_role = app_role
         self.__kubernetes = kubernetes
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        tokenSecretRef = self.tokenSecretRef()
+        token_secret_ref = self.token_secret_ref()
         check_type(
-            "tokenSecretRef", tokenSecretRef, Optional["k8sv1.SecretKeySelector"]
+            "token_secret_ref", token_secret_ref, Optional["k8sv1.SecretKeySelector"]
         )
-        if tokenSecretRef is not None:  # omit empty
-            v["tokenSecretRef"] = tokenSecretRef
-        appRole = self.appRole()
-        check_type("appRole", appRole, Optional["VaultAppRole"])
-        if appRole is not None:  # omit empty
-            v["appRole"] = appRole
+        if token_secret_ref is not None:  # omit empty
+            v["tokenSecretRef"] = token_secret_ref
+        app_role = self.app_role()
+        check_type("app_role", app_role, Optional["VaultAppRole"])
+        if app_role is not None:  # omit empty
+            v["appRole"] = app_role
         kubernetes = self.kubernetes()
         check_type("kubernetes", kubernetes, Optional["VaultKubernetesAuth"])
         if kubernetes is not None:  # omit empty
             v["kubernetes"] = kubernetes
         return v
 
-    def tokenSecretRef(self) -> Optional["k8sv1.SecretKeySelector"]:
+    def token_secret_ref(self) -> Optional["k8sv1.SecretKeySelector"]:
         """
         This Secret contains the Vault token key
         """
-        return self.__tokenSecretRef
+        return self.__token_secret_ref
 
-    def appRole(self) -> Optional["VaultAppRole"]:
+    def app_role(self) -> Optional["VaultAppRole"]:
         """
         This Secret contains a AppRole and Secret
         """
-        return self.__appRole
+        return self.__app_role
 
     def kubernetes(self) -> Optional["VaultKubernetesAuth"]:
         """
@@ -759,13 +761,13 @@ class VaultIssuer(types.Object):
         auth: "VaultAuth" = None,
         server: str = "",
         path: str = "",
-        caBundle: bytes = None,
+        ca_bundle: bytes = None,
     ):
         super().__init__()
         self.__auth = auth if auth is not None else VaultAuth()
         self.__server = server
         self.__path = path
-        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -779,10 +781,10 @@ class VaultIssuer(types.Object):
         path = self.path()
         check_type("path", path, str)
         v["path"] = path
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
         return v
 
     def auth(self) -> "VaultAuth":
@@ -803,14 +805,14 @@ class VaultIssuer(types.Object):
         """
         return self.__path
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         Base64 encoded CA bundle to validate Vault server certificate. Only used
         if the Server URL is using HTTPS protocol. This parameter is ignored for
         plain HTTP protocol connection. If not set the system root certificates
         are used to validate the TLS connection.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
 
 class VenafiCloud(types.Object):
@@ -821,13 +823,13 @@ class VenafiCloud(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, url: str = "", apiTokenSecretRef: "k8sv1.SecretKeySelector" = None
+        self, url: str = "", api_token_secret_ref: "k8sv1.SecretKeySelector" = None
     ):
         super().__init__()
         self.__url = url
-        self.__apiTokenSecretRef = (
-            apiTokenSecretRef
-            if apiTokenSecretRef is not None
+        self.__api_token_secret_ref = (
+            api_token_secret_ref
+            if api_token_secret_ref is not None
             else k8sv1.SecretKeySelector()
         )
 
@@ -837,9 +839,11 @@ class VenafiCloud(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        apiTokenSecretRef = self.apiTokenSecretRef()
-        check_type("apiTokenSecretRef", apiTokenSecretRef, "k8sv1.SecretKeySelector")
-        v["apiTokenSecretRef"] = apiTokenSecretRef
+        api_token_secret_ref = self.api_token_secret_ref()
+        check_type(
+            "api_token_secret_ref", api_token_secret_ref, "k8sv1.SecretKeySelector"
+        )
+        v["apiTokenSecretRef"] = api_token_secret_ref
         return v
 
     def url(self) -> str:
@@ -848,11 +852,11 @@ class VenafiCloud(types.Object):
         """
         return self.__url
 
-    def apiTokenSecretRef(self) -> "k8sv1.SecretKeySelector":
+    def api_token_secret_ref(self) -> "k8sv1.SecretKeySelector":
         """
         APITokenSecretRef is a secret key selector for the Venafi Cloud API token.
         """
-        return self.__apiTokenSecretRef
+        return self.__api_token_secret_ref
 
 
 class VenafiTPP(types.Object):
@@ -865,17 +869,17 @@ class VenafiTPP(types.Object):
     def __init__(
         self,
         url: str = "",
-        credentialsRef: "k8sv1.LocalObjectReference" = None,
-        caBundle: bytes = None,
+        credentials_ref: "k8sv1.LocalObjectReference" = None,
+        ca_bundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
-        self.__credentialsRef = (
-            credentialsRef
-            if credentialsRef is not None
+        self.__credentials_ref = (
+            credentials_ref
+            if credentials_ref is not None
             else k8sv1.LocalObjectReference()
         )
-        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -883,13 +887,13 @@ class VenafiTPP(types.Object):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        credentialsRef = self.credentialsRef()
-        check_type("credentialsRef", credentialsRef, "k8sv1.LocalObjectReference")
-        v["credentialsRef"] = credentialsRef
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
+        credentials_ref = self.credentials_ref()
+        check_type("credentials_ref", credentials_ref, "k8sv1.LocalObjectReference")
+        v["credentialsRef"] = credentials_ref
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
         return v
 
     def url(self) -> str:
@@ -898,15 +902,15 @@ class VenafiTPP(types.Object):
         """
         return self.__url
 
-    def credentialsRef(self) -> "k8sv1.LocalObjectReference":
+    def credentials_ref(self) -> "k8sv1.LocalObjectReference":
         """
         CredentialsRef is a reference to a Secret containing the username and
         password for the TPP server.
         The secret must contain two keys, 'username' and 'password'.
         """
-        return self.__credentialsRef
+        return self.__credentials_ref
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         CABundle is a PEM encoded TLS certifiate to use to verify connections to
         the TPP instance.
@@ -915,7 +919,7 @@ class VenafiTPP(types.Object):
         If not specified, the connection will be verified using the cert-manager
         system root certificates.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
 
 class VenafiIssuer(types.Object):
@@ -981,14 +985,14 @@ class IssuerConfig(types.Object):
         acme: "acmev1alpha3.ACMEIssuer" = None,
         ca: "CAIssuer" = None,
         vault: "VaultIssuer" = None,
-        selfSigned: "SelfSignedIssuer" = None,
+        self_signed: "SelfSignedIssuer" = None,
         venafi: "VenafiIssuer" = None,
     ):
         super().__init__()
         self.__acme = acme
         self.__ca = ca
         self.__vault = vault
-        self.__selfSigned = selfSigned
+        self.__self_signed = self_signed
         self.__venafi = venafi
 
     @typechecked
@@ -1006,10 +1010,10 @@ class IssuerConfig(types.Object):
         check_type("vault", vault, Optional["VaultIssuer"])
         if vault is not None:  # omit empty
             v["vault"] = vault
-        selfSigned = self.selfSigned()
-        check_type("selfSigned", selfSigned, Optional["SelfSignedIssuer"])
-        if selfSigned is not None:  # omit empty
-            v["selfSigned"] = selfSigned
+        self_signed = self.self_signed()
+        check_type("self_signed", self_signed, Optional["SelfSignedIssuer"])
+        if self_signed is not None:  # omit empty
+            v["selfSigned"] = self_signed
         venafi = self.venafi()
         check_type("venafi", venafi, Optional["VenafiIssuer"])
         if venafi is not None:  # omit empty
@@ -1025,8 +1029,8 @@ class IssuerConfig(types.Object):
     def vault(self) -> Optional["VaultIssuer"]:
         return self.__vault
 
-    def selfSigned(self) -> Optional["SelfSignedIssuer"]:
-        return self.__selfSigned
+    def self_signed(self) -> Optional["SelfSignedIssuer"]:
+        return self.__self_signed
 
     def venafi(self) -> Optional["VenafiIssuer"]:
         return self.__venafi
@@ -1040,22 +1044,22 @@ class IssuerSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, issuerConfig: "IssuerConfig" = None):
+    def __init__(self, issuer_config: "IssuerConfig" = None):
         super().__init__()
-        self.__issuerConfig = (
-            issuerConfig if issuerConfig is not None else IssuerConfig()
+        self.__issuer_config = (
+            issuer_config if issuer_config is not None else IssuerConfig()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        issuerConfig = self.issuerConfig()
-        check_type("issuerConfig", issuerConfig, "IssuerConfig")
-        v.update(issuerConfig._root())  # inline
+        issuer_config = self.issuer_config()
+        check_type("issuer_config", issuer_config, "IssuerConfig")
+        v.update(issuer_config._root())  # inline
         return v
 
-    def issuerConfig(self) -> "IssuerConfig":
-        return self.__issuerConfig
+    def issuer_config(self) -> "IssuerConfig":
+        return self.__issuer_config
 
 
 class ClusterIssuer(base.TypedObject, base.MetadataObject):
@@ -1069,7 +1073,7 @@ class ClusterIssuer(base.TypedObject, base.MetadataObject):
         spec: "IssuerSpec" = None,
     ):
         super().__init__(
-            apiVersion="cert-manager.io/v1alpha3",
+            api_version="cert-manager.io/v1alpha3",
             kind="ClusterIssuer",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -1101,7 +1105,7 @@ class Issuer(base.TypedObject, base.NamespacedMetadataObject):
         spec: "IssuerSpec" = None,
     ):
         super().__init__(
-            apiVersion="cert-manager.io/v1alpha3",
+            api_version="cert-manager.io/v1alpha3",
             kind="Issuer",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

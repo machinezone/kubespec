@@ -21,38 +21,38 @@ class MetricListOptions(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, labelSelector: str = None, metricLabelSelector: str = None):
+    def __init__(self, label_selector: str = None, metric_label_selector: str = None):
         super().__init__(
-            apiVersion="custom.metrics.k8s.io/v1beta1", kind="MetricListOptions"
+            api_version="custom.metrics.k8s.io/v1beta1", kind="MetricListOptions"
         )
-        self.__labelSelector = labelSelector
-        self.__metricLabelSelector = metricLabelSelector
+        self.__label_selector = label_selector
+        self.__metric_label_selector = metric_label_selector
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        labelSelector = self.labelSelector()
-        check_type("labelSelector", labelSelector, Optional[str])
-        if labelSelector:  # omit empty
-            v["labelSelector"] = labelSelector
-        metricLabelSelector = self.metricLabelSelector()
-        check_type("metricLabelSelector", metricLabelSelector, Optional[str])
-        if metricLabelSelector:  # omit empty
-            v["metricLabelSelector"] = metricLabelSelector
+        label_selector = self.label_selector()
+        check_type("label_selector", label_selector, Optional[str])
+        if label_selector:  # omit empty
+            v["labelSelector"] = label_selector
+        metric_label_selector = self.metric_label_selector()
+        check_type("metric_label_selector", metric_label_selector, Optional[str])
+        if metric_label_selector:  # omit empty
+            v["metricLabelSelector"] = metric_label_selector
         return v
 
-    def labelSelector(self) -> Optional[str]:
+    def label_selector(self) -> Optional[str]:
         """
         A selector to restrict the list of returned objects by their labels.
         Defaults to everything.
         """
-        return self.__labelSelector
+        return self.__label_selector
 
-    def metricLabelSelector(self) -> Optional[str]:
+    def metric_label_selector(self) -> Optional[str]:
         """
         A selector to restrict the list of returned metrics by their labels
         """
-        return self.__metricLabelSelector
+        return self.__metric_label_selector
 
 
 class MetricValue(base.TypedObject):
@@ -64,18 +64,22 @@ class MetricValue(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        describedObject: "k8sv1.ObjectReference" = None,
-        metricName: str = "",
+        described_object: "k8sv1.ObjectReference" = None,
+        metric_name: str = "",
         timestamp: "base.Time" = None,
         window: int = None,
         value: "resource.Quantity" = None,
         selector: "metav1.LabelSelector" = None,
     ):
-        super().__init__(apiVersion="custom.metrics.k8s.io/v1beta1", kind="MetricValue")
-        self.__describedObject = (
-            describedObject if describedObject is not None else k8sv1.ObjectReference()
+        super().__init__(
+            api_version="custom.metrics.k8s.io/v1beta1", kind="MetricValue"
         )
-        self.__metricName = metricName
+        self.__described_object = (
+            described_object
+            if described_object is not None
+            else k8sv1.ObjectReference()
+        )
+        self.__metric_name = metric_name
         self.__timestamp = timestamp
         self.__window = window
         self.__value = value
@@ -84,12 +88,12 @@ class MetricValue(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        describedObject = self.describedObject()
-        check_type("describedObject", describedObject, "k8sv1.ObjectReference")
-        v["describedObject"] = describedObject
-        metricName = self.metricName()
-        check_type("metricName", metricName, str)
-        v["metricName"] = metricName
+        described_object = self.described_object()
+        check_type("described_object", described_object, "k8sv1.ObjectReference")
+        v["describedObject"] = described_object
+        metric_name = self.metric_name()
+        check_type("metric_name", metric_name, str)
+        v["metricName"] = metric_name
         timestamp = self.timestamp()
         check_type("timestamp", timestamp, "base.Time")
         v["timestamp"] = timestamp
@@ -105,17 +109,17 @@ class MetricValue(base.TypedObject):
         v["selector"] = selector
         return v
 
-    def describedObject(self) -> "k8sv1.ObjectReference":
+    def described_object(self) -> "k8sv1.ObjectReference":
         """
         a reference to the described object
         """
-        return self.__describedObject
+        return self.__described_object
 
-    def metricName(self) -> str:
+    def metric_name(self) -> str:
         """
         the name of the metric
         """
-        return self.__metricName
+        return self.__metric_name
 
     def timestamp(self) -> "base.Time":
         """

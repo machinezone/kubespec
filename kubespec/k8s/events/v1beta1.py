@@ -21,10 +21,10 @@ class EventSeries(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, count: int = 0, lastObservedTime: "base.MicroTime" = None):
+    def __init__(self, count: int = 0, last_observed_time: "base.MicroTime" = None):
         super().__init__()
         self.__count = count
-        self.__lastObservedTime = lastObservedTime
+        self.__last_observed_time = last_observed_time
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -32,9 +32,9 @@ class EventSeries(types.Object):
         count = self.count()
         check_type("count", count, int)
         v["count"] = count
-        lastObservedTime = self.lastObservedTime()
-        check_type("lastObservedTime", lastObservedTime, "base.MicroTime")
-        v["lastObservedTime"] = lastObservedTime
+        last_observed_time = self.last_observed_time()
+        check_type("last_observed_time", last_observed_time, "base.MicroTime")
+        v["lastObservedTime"] = last_observed_time
         return v
 
     def count(self) -> int:
@@ -43,11 +43,11 @@ class EventSeries(types.Object):
         """
         return self.__count
 
-    def lastObservedTime(self) -> "base.MicroTime":
+    def last_observed_time(self) -> "base.MicroTime":
         """
         Time when last Event from the series was seen before last heartbeat.
         """
-        return self.__lastObservedTime
+        return self.__last_observed_time
 
 
 class Event(base.TypedObject, base.NamespacedMetadataObject):
@@ -63,10 +63,10 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        eventTime: "base.MicroTime" = None,
+        event_time: "base.MicroTime" = None,
         series: "EventSeries" = None,
-        reportingController: str = None,
-        reportingInstance: str = None,
+        reporting_controller: str = None,
+        reporting_instance: str = None,
         action: str = None,
         reason: str = None,
         regarding: "k8sv1.ObjectReference" = None,
@@ -75,17 +75,17 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         type: str = None,
     ):
         super().__init__(
-            apiVersion="events.k8s.io/v1beta1",
+            api_version="events.k8s.io/v1beta1",
             kind="Event",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__eventTime = eventTime
+        self.__event_time = event_time
         self.__series = series
-        self.__reportingController = reportingController
-        self.__reportingInstance = reportingInstance
+        self.__reporting_controller = reporting_controller
+        self.__reporting_instance = reporting_instance
         self.__action = action
         self.__reason = reason
         self.__regarding = (
@@ -98,21 +98,21 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        eventTime = self.eventTime()
-        check_type("eventTime", eventTime, "base.MicroTime")
-        v["eventTime"] = eventTime
+        event_time = self.event_time()
+        check_type("event_time", event_time, "base.MicroTime")
+        v["eventTime"] = event_time
         series = self.series()
         check_type("series", series, Optional["EventSeries"])
         if series is not None:  # omit empty
             v["series"] = series
-        reportingController = self.reportingController()
-        check_type("reportingController", reportingController, Optional[str])
-        if reportingController:  # omit empty
-            v["reportingController"] = reportingController
-        reportingInstance = self.reportingInstance()
-        check_type("reportingInstance", reportingInstance, Optional[str])
-        if reportingInstance:  # omit empty
-            v["reportingInstance"] = reportingInstance
+        reporting_controller = self.reporting_controller()
+        check_type("reporting_controller", reporting_controller, Optional[str])
+        if reporting_controller:  # omit empty
+            v["reportingController"] = reporting_controller
+        reporting_instance = self.reporting_instance()
+        check_type("reporting_instance", reporting_instance, Optional[str])
+        if reporting_instance:  # omit empty
+            v["reportingInstance"] = reporting_instance
         action = self.action()
         check_type("action", action, Optional[str])
         if action:  # omit empty
@@ -138,11 +138,11 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
             v["type"] = type
         return v
 
-    def eventTime(self) -> "base.MicroTime":
+    def event_time(self) -> "base.MicroTime":
         """
         Required. Time when this Event was first observed.
         """
-        return self.__eventTime
+        return self.__event_time
 
     def series(self) -> Optional["EventSeries"]:
         """
@@ -150,17 +150,17 @@ class Event(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__series
 
-    def reportingController(self) -> Optional[str]:
+    def reporting_controller(self) -> Optional[str]:
         """
         Name of the controller that emitted this Event, e.g. `kubernetes.io/kubelet`.
         """
-        return self.__reportingController
+        return self.__reporting_controller
 
-    def reportingInstance(self) -> Optional[str]:
+    def reporting_instance(self) -> Optional[str]:
         """
         ID of the controller instance, e.g. `kubelet-xyzf`.
         """
-        return self.__reportingInstance
+        return self.__reporting_instance
 
     def action(self) -> Optional[str]:
         """

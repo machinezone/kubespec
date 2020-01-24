@@ -79,35 +79,35 @@ class NetworkPolicyPeer(types.Object):
     @typechecked
     def __init__(
         self,
-        podSelector: "metav1.LabelSelector" = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
-        ipBlock: "IPBlock" = None,
+        pod_selector: "metav1.LabelSelector" = None,
+        namespace_selector: "metav1.LabelSelector" = None,
+        ip_block: "IPBlock" = None,
     ):
         super().__init__()
-        self.__podSelector = podSelector
-        self.__namespaceSelector = namespaceSelector
-        self.__ipBlock = ipBlock
+        self.__pod_selector = pod_selector
+        self.__namespace_selector = namespace_selector
+        self.__ip_block = ip_block
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podSelector = self.podSelector()
-        check_type("podSelector", podSelector, Optional["metav1.LabelSelector"])
-        if podSelector is not None:  # omit empty
-            v["podSelector"] = podSelector
-        namespaceSelector = self.namespaceSelector()
+        pod_selector = self.pod_selector()
+        check_type("pod_selector", pod_selector, Optional["metav1.LabelSelector"])
+        if pod_selector is not None:  # omit empty
+            v["podSelector"] = pod_selector
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
-        ipBlock = self.ipBlock()
-        check_type("ipBlock", ipBlock, Optional["IPBlock"])
-        if ipBlock is not None:  # omit empty
-            v["ipBlock"] = ipBlock
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
+        ip_block = self.ip_block()
+        check_type("ip_block", ip_block, Optional["IPBlock"])
+        if ip_block is not None:  # omit empty
+            v["ipBlock"] = ip_block
         return v
 
-    def podSelector(self) -> Optional["metav1.LabelSelector"]:
+    def pod_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         This is a label selector which selects Pods. This field follows standard label
         selector semantics; if present but empty, it selects all pods.
@@ -116,9 +116,9 @@ class NetworkPolicyPeer(types.Object):
         the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
         Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
         """
-        return self.__podSelector
+        return self.__pod_selector
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         Selects Namespaces using cluster-scoped labels. This field follows standard label
         selector semantics; if present but empty, it selects all namespaces.
@@ -127,14 +127,14 @@ class NetworkPolicyPeer(types.Object):
         the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
         Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def ipBlock(self) -> Optional["IPBlock"]:
+    def ip_block(self) -> Optional["IPBlock"]:
         """
         IPBlock defines policy on a particular IPBlock. If this field is set then
         neither of the other fields can be.
         """
-        return self.__ipBlock
+        return self.__ip_block
 
 
 class NetworkPolicyPort(types.Object):
@@ -289,25 +289,25 @@ class NetworkPolicySpec(types.Object):
     @typechecked
     def __init__(
         self,
-        podSelector: "metav1.LabelSelector" = None,
+        pod_selector: "metav1.LabelSelector" = None,
         ingress: List["NetworkPolicyIngressRule"] = None,
         egress: List["NetworkPolicyEgressRule"] = None,
-        policyTypes: List[PolicyType] = None,
+        policy_types: List[PolicyType] = None,
     ):
         super().__init__()
-        self.__podSelector = (
-            podSelector if podSelector is not None else metav1.LabelSelector()
+        self.__pod_selector = (
+            pod_selector if pod_selector is not None else metav1.LabelSelector()
         )
         self.__ingress = ingress if ingress is not None else []
         self.__egress = egress if egress is not None else []
-        self.__policyTypes = policyTypes if policyTypes is not None else []
+        self.__policy_types = policy_types if policy_types is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podSelector = self.podSelector()
-        check_type("podSelector", podSelector, "metav1.LabelSelector")
-        v["podSelector"] = podSelector
+        pod_selector = self.pod_selector()
+        check_type("pod_selector", pod_selector, "metav1.LabelSelector")
+        v["podSelector"] = pod_selector
         ingress = self.ingress()
         check_type("ingress", ingress, Optional[List["NetworkPolicyIngressRule"]])
         if ingress:  # omit empty
@@ -316,13 +316,13 @@ class NetworkPolicySpec(types.Object):
         check_type("egress", egress, Optional[List["NetworkPolicyEgressRule"]])
         if egress:  # omit empty
             v["egress"] = egress
-        policyTypes = self.policyTypes()
-        check_type("policyTypes", policyTypes, Optional[List[PolicyType]])
-        if policyTypes:  # omit empty
-            v["policyTypes"] = policyTypes
+        policy_types = self.policy_types()
+        check_type("policy_types", policy_types, Optional[List[PolicyType]])
+        if policy_types:  # omit empty
+            v["policyTypes"] = policy_types
         return v
 
-    def podSelector(self) -> "metav1.LabelSelector":
+    def pod_selector(self) -> "metav1.LabelSelector":
         """
         Selects the pods to which this NetworkPolicy object applies. The array of
         ingress rules is applied to any pods selected by this field. Multiple network
@@ -331,7 +331,7 @@ class NetworkPolicySpec(types.Object):
         label selector semantics. An empty podSelector matches all pods in this
         namespace.
         """
-        return self.__podSelector
+        return self.__pod_selector
 
     def ingress(self) -> Optional[List["NetworkPolicyIngressRule"]]:
         """
@@ -357,7 +357,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__egress
 
-    def policyTypes(self) -> Optional[List[PolicyType]]:
+    def policy_types(self) -> Optional[List[PolicyType]]:
         """
         List of rule types that the NetworkPolicy relates to.
         Valid options are "Ingress", "Egress", or "Ingress,Egress".
@@ -370,7 +370,7 @@ class NetworkPolicySpec(types.Object):
         an Egress section and would otherwise default to just [ "Ingress" ]).
         This field is beta-level in 1.8
         """
-        return self.__policyTypes
+        return self.__policy_types
 
 
 class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
@@ -389,7 +389,7 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         spec: "NetworkPolicySpec" = None,
     ):
         super().__init__(
-            apiVersion="networking.k8s.io/v1",
+            api_version="networking.k8s.io/v1",
             kind="NetworkPolicy",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

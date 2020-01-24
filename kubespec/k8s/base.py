@@ -22,33 +22,33 @@ def Enum(name: str, values: Dict[str, str]):
 
 class TypedObject(types.Object):
     def __init__(
-        self, apiVersion: Optional[str] = None, kind: Optional[str] = None, **kwargs
+        self, api_version: Optional[str] = None, kind: Optional[str] = None, **kwargs
     ):
         super().__init__(**kwargs)
-        self.__apiVersion = apiVersion
+        self.__api_version = api_version
         self.__kind = kind
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omitempty
-            v["apiVersion"] = apiVersion
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omitempty
+            v["apiVersion"] = api_version
         kind = self.kind()
         check_type("kind", kind, Optional[str])
         if kind:  # omitempty
             v["kind"] = kind
         return v
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         APIVersion defines the versioned schema of this representation of an object.
         Servers should convert recognized schemas to the latest internal value, and
         may reject unrecognized values.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
         """
-        return self.__apiVersion
+        return self.__api_version
 
     def kind(self) -> Optional[str]:
         """

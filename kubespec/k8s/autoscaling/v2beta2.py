@@ -64,11 +64,11 @@ class CrossVersionObjectReference(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, kind: str = "", name: str = "", apiVersion: str = None):
+    def __init__(self, kind: str = "", name: str = "", api_version: str = None):
         super().__init__()
         self.__kind = kind
         self.__name = name
-        self.__apiVersion = apiVersion
+        self.__api_version = api_version
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -79,10 +79,10 @@ class CrossVersionObjectReference(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omit empty
-            v["apiVersion"] = apiVersion
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omit empty
+            v["apiVersion"] = api_version
         return v
 
     def kind(self) -> str:
@@ -97,11 +97,11 @@ class CrossVersionObjectReference(types.Object):
         """
         return self.__name
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         API version of the referent
         """
-        return self.__apiVersion
+        return self.__api_version
 
 
 class MetricIdentifier(types.Object):
@@ -154,14 +154,14 @@ class MetricTarget(types.Object):
         self,
         type: MetricTargetType = None,
         value: "resource.Quantity" = None,
-        averageValue: "resource.Quantity" = None,
-        averageUtilization: int = None,
+        average_value: "resource.Quantity" = None,
+        average_utilization: int = None,
     ):
         super().__init__()
         self.__type = type
         self.__value = value
-        self.__averageValue = averageValue
-        self.__averageUtilization = averageUtilization
+        self.__average_value = average_value
+        self.__average_utilization = average_utilization
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -173,14 +173,14 @@ class MetricTarget(types.Object):
         check_type("value", value, Optional["resource.Quantity"])
         if value is not None:  # omit empty
             v["value"] = value
-        averageValue = self.averageValue()
-        check_type("averageValue", averageValue, Optional["resource.Quantity"])
-        if averageValue is not None:  # omit empty
-            v["averageValue"] = averageValue
-        averageUtilization = self.averageUtilization()
-        check_type("averageUtilization", averageUtilization, Optional[int])
-        if averageUtilization is not None:  # omit empty
-            v["averageUtilization"] = averageUtilization
+        average_value = self.average_value()
+        check_type("average_value", average_value, Optional["resource.Quantity"])
+        if average_value is not None:  # omit empty
+            v["averageValue"] = average_value
+        average_utilization = self.average_utilization()
+        check_type("average_utilization", average_utilization, Optional[int])
+        if average_utilization is not None:  # omit empty
+            v["averageUtilization"] = average_utilization
         return v
 
     def type(self) -> MetricTargetType:
@@ -195,21 +195,21 @@ class MetricTarget(types.Object):
         """
         return self.__value
 
-    def averageValue(self) -> Optional["resource.Quantity"]:
+    def average_value(self) -> Optional["resource.Quantity"]:
         """
         averageValue is the target value of the average of the
         metric across all relevant pods (as a quantity)
         """
-        return self.__averageValue
+        return self.__average_value
 
-    def averageUtilization(self) -> Optional[int]:
+    def average_utilization(self) -> Optional[int]:
         """
         averageUtilization is the target value of the average of the
         resource metric across all relevant pods, represented as a percentage of
         the requested value of the resource for the pods.
         Currently only valid for Resource metric source type
         """
-        return self.__averageUtilization
+        return self.__average_utilization
 
 
 class ExternalMetricSource(types.Object):
@@ -262,14 +262,14 @@ class ObjectMetricSource(types.Object):
     @typechecked
     def __init__(
         self,
-        describedObject: "CrossVersionObjectReference" = None,
+        described_object: "CrossVersionObjectReference" = None,
         target: "MetricTarget" = None,
         metric: "MetricIdentifier" = None,
     ):
         super().__init__()
-        self.__describedObject = (
-            describedObject
-            if describedObject is not None
+        self.__described_object = (
+            described_object
+            if described_object is not None
             else CrossVersionObjectReference()
         )
         self.__target = target if target is not None else MetricTarget()
@@ -278,9 +278,9 @@ class ObjectMetricSource(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        describedObject = self.describedObject()
-        check_type("describedObject", describedObject, "CrossVersionObjectReference")
-        v["describedObject"] = describedObject
+        described_object = self.described_object()
+        check_type("described_object", described_object, "CrossVersionObjectReference")
+        v["describedObject"] = described_object
         target = self.target()
         check_type("target", target, "MetricTarget")
         v["target"] = target
@@ -289,8 +289,8 @@ class ObjectMetricSource(types.Object):
         v["metric"] = metric
         return v
 
-    def describedObject(self) -> "CrossVersionObjectReference":
-        return self.__describedObject
+    def described_object(self) -> "CrossVersionObjectReference":
+        return self.__described_object
 
     def target(self) -> "MetricTarget":
         """
@@ -487,48 +487,48 @@ class HorizontalPodAutoscalerSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        scaleTargetRef: "CrossVersionObjectReference" = None,
-        minReplicas: int = None,
-        maxReplicas: int = 0,
+        scale_target_ref: "CrossVersionObjectReference" = None,
+        min_replicas: int = None,
+        max_replicas: int = 0,
         metrics: List["MetricSpec"] = None,
     ):
         super().__init__()
-        self.__scaleTargetRef = (
-            scaleTargetRef
-            if scaleTargetRef is not None
+        self.__scale_target_ref = (
+            scale_target_ref
+            if scale_target_ref is not None
             else CrossVersionObjectReference()
         )
-        self.__minReplicas = minReplicas if minReplicas is not None else 1
-        self.__maxReplicas = maxReplicas
+        self.__min_replicas = min_replicas if min_replicas is not None else 1
+        self.__max_replicas = max_replicas
         self.__metrics = metrics if metrics is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        scaleTargetRef = self.scaleTargetRef()
-        check_type("scaleTargetRef", scaleTargetRef, "CrossVersionObjectReference")
-        v["scaleTargetRef"] = scaleTargetRef
-        minReplicas = self.minReplicas()
-        check_type("minReplicas", minReplicas, Optional[int])
-        if minReplicas is not None:  # omit empty
-            v["minReplicas"] = minReplicas
-        maxReplicas = self.maxReplicas()
-        check_type("maxReplicas", maxReplicas, int)
-        v["maxReplicas"] = maxReplicas
+        scale_target_ref = self.scale_target_ref()
+        check_type("scale_target_ref", scale_target_ref, "CrossVersionObjectReference")
+        v["scaleTargetRef"] = scale_target_ref
+        min_replicas = self.min_replicas()
+        check_type("min_replicas", min_replicas, Optional[int])
+        if min_replicas is not None:  # omit empty
+            v["minReplicas"] = min_replicas
+        max_replicas = self.max_replicas()
+        check_type("max_replicas", max_replicas, int)
+        v["maxReplicas"] = max_replicas
         metrics = self.metrics()
         check_type("metrics", metrics, Optional[List["MetricSpec"]])
         if metrics:  # omit empty
             v["metrics"] = metrics
         return v
 
-    def scaleTargetRef(self) -> "CrossVersionObjectReference":
+    def scale_target_ref(self) -> "CrossVersionObjectReference":
         """
         scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics
         should be collected, as well as to actually change the replica count.
         """
-        return self.__scaleTargetRef
+        return self.__scale_target_ref
 
-    def minReplicas(self) -> Optional[int]:
+    def min_replicas(self) -> Optional[int]:
         """
         minReplicas is the lower limit for the number of replicas to which the autoscaler
         can scale down.  It defaults to 1 pod.  minReplicas is allowed to be 0 if the
@@ -536,14 +536,14 @@ class HorizontalPodAutoscalerSpec(types.Object):
         metric is configured.  Scaling is active as long as at least one metric value is
         available.
         """
-        return self.__minReplicas
+        return self.__min_replicas
 
-    def maxReplicas(self) -> int:
+    def max_replicas(self) -> int:
         """
         maxReplicas is the upper limit for the number of replicas to which the autoscaler can scale up.
         It cannot be less that minReplicas.
         """
-        return self.__maxReplicas
+        return self.__max_replicas
 
     def metrics(self) -> Optional[List["MetricSpec"]]:
         """
@@ -577,7 +577,7 @@ class HorizontalPodAutoscaler(base.TypedObject, base.NamespacedMetadataObject):
         spec: "HorizontalPodAutoscalerSpec" = None,
     ):
         super().__init__(
-            apiVersion="autoscaling/v2beta2",
+            api_version="autoscaling/v2beta2",
             kind="HorizontalPodAutoscaler",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

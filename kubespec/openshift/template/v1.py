@@ -23,40 +23,40 @@ class BrokerTemplateInstanceSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        templateInstance: "k8sv1.ObjectReference" = None,
+        template_instance: "k8sv1.ObjectReference" = None,
         secret: "k8sv1.ObjectReference" = None,
-        bindingIDs: List[str] = None,
+        binding_ids: List[str] = None,
     ):
         super().__init__()
-        self.__templateInstance = (
-            templateInstance
-            if templateInstance is not None
+        self.__template_instance = (
+            template_instance
+            if template_instance is not None
             else k8sv1.ObjectReference()
         )
         self.__secret = secret if secret is not None else k8sv1.ObjectReference()
-        self.__bindingIDs = bindingIDs if bindingIDs is not None else []
+        self.__binding_ids = binding_ids if binding_ids is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        templateInstance = self.templateInstance()
-        check_type("templateInstance", templateInstance, "k8sv1.ObjectReference")
-        v["templateInstance"] = templateInstance
+        template_instance = self.template_instance()
+        check_type("template_instance", template_instance, "k8sv1.ObjectReference")
+        v["templateInstance"] = template_instance
         secret = self.secret()
         check_type("secret", secret, "k8sv1.ObjectReference")
         v["secret"] = secret
-        bindingIDs = self.bindingIDs()
-        check_type("bindingIDs", bindingIDs, Optional[List[str]])
-        if bindingIDs:  # omit empty
-            v["bindingIDs"] = bindingIDs
+        binding_ids = self.binding_ids()
+        check_type("binding_ids", binding_ids, Optional[List[str]])
+        if binding_ids:  # omit empty
+            v["bindingIDs"] = binding_ids
         return v
 
-    def templateInstance(self) -> "k8sv1.ObjectReference":
+    def template_instance(self) -> "k8sv1.ObjectReference":
         """
         templateinstance is a reference to a TemplateInstance object residing
         in a namespace.
         """
-        return self.__templateInstance
+        return self.__template_instance
 
     def secret(self) -> "k8sv1.ObjectReference":
         """
@@ -65,12 +65,12 @@ class BrokerTemplateInstanceSpec(types.Object):
         """
         return self.__secret
 
-    def bindingIDs(self) -> Optional[List[str]]:
+    def binding_ids(self) -> Optional[List[str]]:
         """
         bindingids is a list of 'binding_id's provided during successive bind
         calls to the template service broker.
         """
-        return self.__bindingIDs
+        return self.__binding_ids
 
 
 class BrokerTemplateInstance(base.TypedObject, base.MetadataObject):
@@ -89,7 +89,7 @@ class BrokerTemplateInstance(base.TypedObject, base.MetadataObject):
         spec: "BrokerTemplateInstanceSpec" = None,
     ):
         super().__init__(
-            apiVersion="template.openshift.io/v1",
+            api_version="template.openshift.io/v1",
             kind="BrokerTemplateInstance",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -123,7 +123,7 @@ class Parameter(types.Object):
     def __init__(
         self,
         name: str = "",
-        displayName: str = None,
+        display_name: str = None,
         description: str = None,
         value: str = None,
         generate: str = None,
@@ -132,7 +132,7 @@ class Parameter(types.Object):
     ):
         super().__init__()
         self.__name = name
-        self.__displayName = displayName
+        self.__display_name = display_name
         self.__description = description
         self.__value = value
         self.__generate = generate
@@ -145,10 +145,10 @@ class Parameter(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        displayName = self.displayName()
-        check_type("displayName", displayName, Optional[str])
-        if displayName:  # omit empty
-            v["displayName"] = displayName
+        display_name = self.display_name()
+        check_type("display_name", display_name, Optional[str])
+        if display_name:  # omit empty
+            v["displayName"] = display_name
         description = self.description()
         check_type("description", description, Optional[str])
         if description:  # omit empty
@@ -178,11 +178,11 @@ class Parameter(types.Object):
         """
         return self.__name
 
-    def displayName(self) -> Optional[str]:
+    def display_name(self) -> Optional[str]:
         """
         Optional: The name that will show in UI instead of parameter 'Name'
         """
-        return self.__displayName
+        return self.__display_name
 
     def description(self) -> Optional[str]:
         """
@@ -252,7 +252,7 @@ class Template(base.TypedObject, base.NamespacedMetadataObject):
         labels: Dict[str, str] = None,
     ):
         super().__init__(
-            apiVersion="template.openshift.io/v1",
+            api_version="template.openshift.io/v1",
             kind="Template",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -461,7 +461,7 @@ class TemplateInstance(base.TypedObject, base.NamespacedMetadataObject):
         spec: "TemplateInstanceSpec" = None,
     ):
         super().__init__(
-            apiVersion="template.openshift.io/v1",
+            api_version="template.openshift.io/v1",
             kind="TemplateInstance",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

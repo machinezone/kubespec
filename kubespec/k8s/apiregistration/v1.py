@@ -76,19 +76,19 @@ class APIServiceSpec(types.Object):
         service: "ServiceReference" = None,
         group: str = None,
         version: str = None,
-        insecureSkipTLSVerify: bool = None,
-        caBundle: bytes = None,
-        groupPriorityMinimum: int = 0,
-        versionPriority: int = 0,
+        insecure_skip_tls_verify: bool = None,
+        ca_bundle: bytes = None,
+        group_priority_minimum: int = 0,
+        version_priority: int = 0,
     ):
         super().__init__()
         self.__service = service
         self.__group = group
         self.__version = version
-        self.__insecureSkipTLSVerify = insecureSkipTLSVerify
-        self.__caBundle = caBundle if caBundle is not None else b""
-        self.__groupPriorityMinimum = groupPriorityMinimum
-        self.__versionPriority = versionPriority
+        self.__insecure_skip_tls_verify = insecure_skip_tls_verify
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
+        self.__group_priority_minimum = group_priority_minimum
+        self.__version_priority = version_priority
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -104,20 +104,20 @@ class APIServiceSpec(types.Object):
         check_type("version", version, Optional[str])
         if version:  # omit empty
             v["version"] = version
-        insecureSkipTLSVerify = self.insecureSkipTLSVerify()
-        check_type("insecureSkipTLSVerify", insecureSkipTLSVerify, Optional[bool])
-        if insecureSkipTLSVerify:  # omit empty
-            v["insecureSkipTLSVerify"] = insecureSkipTLSVerify
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
-        groupPriorityMinimum = self.groupPriorityMinimum()
-        check_type("groupPriorityMinimum", groupPriorityMinimum, int)
-        v["groupPriorityMinimum"] = groupPriorityMinimum
-        versionPriority = self.versionPriority()
-        check_type("versionPriority", versionPriority, int)
-        v["versionPriority"] = versionPriority
+        insecure_skip_tls_verify = self.insecure_skip_tls_verify()
+        check_type("insecure_skip_tls_verify", insecure_skip_tls_verify, Optional[bool])
+        if insecure_skip_tls_verify:  # omit empty
+            v["insecureSkipTLSVerify"] = insecure_skip_tls_verify
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
+        group_priority_minimum = self.group_priority_minimum()
+        check_type("group_priority_minimum", group_priority_minimum, int)
+        v["groupPriorityMinimum"] = group_priority_minimum
+        version_priority = self.version_priority()
+        check_type("version_priority", version_priority, int)
+        v["versionPriority"] = version_priority
         return v
 
     def service(self) -> Optional["ServiceReference"]:
@@ -141,21 +141,21 @@ class APIServiceSpec(types.Object):
         """
         return self.__version
 
-    def insecureSkipTLSVerify(self) -> Optional[bool]:
+    def insecure_skip_tls_verify(self) -> Optional[bool]:
         """
         InsecureSkipTLSVerify disables TLS certificate verification when communicating with this server.
         This is strongly discouraged.  You should use the CABundle instead.
         """
-        return self.__insecureSkipTLSVerify
+        return self.__insecure_skip_tls_verify
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         CABundle is a PEM encoded CA bundle which will be used to validate an API server's serving certificate.
         If unspecified, system trust roots on the apiserver are used.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
-    def groupPriorityMinimum(self) -> int:
+    def group_priority_minimum(self) -> int:
         """
         GroupPriorityMininum is the priority this group should have at least. Higher priority means that the group is preferred by clients over lower priority ones.
         Note that other versions of this group might specify even higher GroupPriorityMininum values such that the whole group gets a higher priority.
@@ -164,9 +164,9 @@ class APIServiceSpec(types.Object):
         We'd recommend something like: *.k8s.io (except extensions) at 18000 and
         PaaSes (OpenShift, Deis) are recommended to be in the 2000s
         """
-        return self.__groupPriorityMinimum
+        return self.__group_priority_minimum
 
-    def versionPriority(self) -> int:
+    def version_priority(self) -> int:
         """
         VersionPriority controls the ordering of this API version inside of its group.  Must be greater than zero.
         The primary sort is based on VersionPriority, ordered highest to lowest (20 before 10).
@@ -179,7 +179,7 @@ class APIServiceSpec(types.Object):
         version, then minor version. An example sorted list of versions:
         v10, v2, v1, v11beta2, v10beta3, v3beta1, v12alpha1, v11alpha2, foo1, foo10.
         """
-        return self.__versionPriority
+        return self.__version_priority
 
 
 class APIService(base.TypedObject, base.MetadataObject):
@@ -198,7 +198,7 @@ class APIService(base.TypedObject, base.MetadataObject):
         spec: "APIServiceSpec" = None,
     ):
         super().__init__(
-            apiVersion="apiregistration.k8s.io/v1",
+            api_version="apiregistration.k8s.io/v1",
             kind="APIService",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

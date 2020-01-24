@@ -230,25 +230,25 @@ class AllowedHostPath(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, pathPrefix: str = None, readOnly: bool = None):
+    def __init__(self, path_prefix: str = None, read_only: bool = None):
         super().__init__()
-        self.__pathPrefix = pathPrefix
-        self.__readOnly = readOnly
+        self.__path_prefix = path_prefix
+        self.__read_only = read_only
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        pathPrefix = self.pathPrefix()
-        check_type("pathPrefix", pathPrefix, Optional[str])
-        if pathPrefix:  # omit empty
-            v["pathPrefix"] = pathPrefix
-        readOnly = self.readOnly()
-        check_type("readOnly", readOnly, Optional[bool])
-        if readOnly:  # omit empty
-            v["readOnly"] = readOnly
+        path_prefix = self.path_prefix()
+        check_type("path_prefix", path_prefix, Optional[str])
+        if path_prefix:  # omit empty
+            v["pathPrefix"] = path_prefix
+        read_only = self.read_only()
+        check_type("read_only", read_only, Optional[bool])
+        if read_only:  # omit empty
+            v["readOnly"] = read_only
         return v
 
-    def pathPrefix(self) -> Optional[str]:
+    def path_prefix(self) -> Optional[str]:
         """
         pathPrefix is the path prefix that the host volume must match.
         It does not support `*`.
@@ -258,13 +258,13 @@ class AllowedHostPath(types.Object):
         `/foo` would allow `/foo`, `/foo/` and `/foo/bar`
         `/foo` would not allow `/food` or `/etc/foo`
         """
-        return self.__pathPrefix
+        return self.__path_prefix
 
-    def readOnly(self) -> Optional[bool]:
+    def read_only(self) -> Optional[bool]:
         """
         when set to true, will allow host volumes matching the pathPrefix only if all volume mounts are readOnly.
         """
-        return self.__readOnly
+        return self.__read_only
 
 
 class RollingUpdateDaemonSet(types.Object):
@@ -274,20 +274,20 @@ class RollingUpdateDaemonSet(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, maxUnavailable: Union[int, str] = None):
+    def __init__(self, max_unavailable: Union[int, str] = None):
         super().__init__()
-        self.__maxUnavailable = maxUnavailable
+        self.__max_unavailable = max_unavailable
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        maxUnavailable = self.maxUnavailable()
-        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
-        if maxUnavailable is not None:  # omit empty
-            v["maxUnavailable"] = maxUnavailable
+        max_unavailable = self.max_unavailable()
+        check_type("max_unavailable", max_unavailable, Optional[Union[int, str]])
+        if max_unavailable is not None:  # omit empty
+            v["maxUnavailable"] = max_unavailable
         return v
 
-    def maxUnavailable(self) -> Optional[Union[int, str]]:
+    def max_unavailable(self) -> Optional[Union[int, str]]:
         """
         The maximum number of DaemonSet pods that can be unavailable during the
         update. Value can be an absolute number (ex: 5) or a percentage of total
@@ -304,7 +304,7 @@ class RollingUpdateDaemonSet(types.Object):
         that at least 70% of original number of DaemonSet pods are available at
         all times during the update.
         """
-        return self.__maxUnavailable
+        return self.__max_unavailable
 
 
 class DaemonSetUpdateStrategy(types.Object):
@@ -313,11 +313,11 @@ class DaemonSetUpdateStrategy(types.Object):
     def __init__(
         self,
         type: DaemonSetUpdateStrategyType = DaemonSetUpdateStrategyType["OnDelete"],
-        rollingUpdate: "RollingUpdateDaemonSet" = None,
+        rolling_update: "RollingUpdateDaemonSet" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__rollingUpdate = rollingUpdate
+        self.__rolling_update = rolling_update
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -326,10 +326,10 @@ class DaemonSetUpdateStrategy(types.Object):
         check_type("type", type, Optional[DaemonSetUpdateStrategyType])
         if type:  # omit empty
             v["type"] = type
-        rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDaemonSet"])
-        if rollingUpdate is not None:  # omit empty
-            v["rollingUpdate"] = rollingUpdate
+        rolling_update = self.rolling_update()
+        check_type("rolling_update", rolling_update, Optional["RollingUpdateDaemonSet"])
+        if rolling_update is not None:  # omit empty
+            v["rollingUpdate"] = rolling_update
         return v
 
     def type(self) -> Optional[DaemonSetUpdateStrategyType]:
@@ -339,7 +339,7 @@ class DaemonSetUpdateStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional["RollingUpdateDaemonSet"]:
+    def rolling_update(self) -> Optional["RollingUpdateDaemonSet"]:
         """
         Rolling update config params. Present only if type = "RollingUpdate".
         ---
@@ -347,7 +347,7 @@ class DaemonSetUpdateStrategy(types.Object):
         to be. Same as Deployment `strategy.rollingUpdate`.
         See https://github.com/kubernetes/kubernetes/issues/35345
         """
-        return self.__rollingUpdate
+        return self.__rolling_update
 
 
 class DaemonSetSpec(types.Object):
@@ -361,19 +361,21 @@ class DaemonSetSpec(types.Object):
         self,
         selector: "metav1.LabelSelector" = None,
         template: "k8sv1.PodTemplateSpec" = None,
-        updateStrategy: "DaemonSetUpdateStrategy" = None,
-        minReadySeconds: int = None,
-        revisionHistoryLimit: int = None,
+        update_strategy: "DaemonSetUpdateStrategy" = None,
+        min_ready_seconds: int = None,
+        revision_history_limit: int = None,
     ):
         super().__init__()
         self.__selector = selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
-        self.__updateStrategy = (
-            updateStrategy if updateStrategy is not None else DaemonSetUpdateStrategy()
+        self.__update_strategy = (
+            update_strategy
+            if update_strategy is not None
+            else DaemonSetUpdateStrategy()
         )
-        self.__minReadySeconds = minReadySeconds
-        self.__revisionHistoryLimit = (
-            revisionHistoryLimit if revisionHistoryLimit is not None else 10
+        self.__min_ready_seconds = min_ready_seconds
+        self.__revision_history_limit = (
+            revision_history_limit if revision_history_limit is not None else 10
         )
 
     @typechecked
@@ -386,19 +388,19 @@ class DaemonSetSpec(types.Object):
         template = self.template()
         check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
-        updateStrategy = self.updateStrategy()
+        update_strategy = self.update_strategy()
         check_type(
-            "updateStrategy", updateStrategy, Optional["DaemonSetUpdateStrategy"]
+            "update_strategy", update_strategy, Optional["DaemonSetUpdateStrategy"]
         )
-        v["updateStrategy"] = updateStrategy
-        minReadySeconds = self.minReadySeconds()
-        check_type("minReadySeconds", minReadySeconds, Optional[int])
-        if minReadySeconds:  # omit empty
-            v["minReadySeconds"] = minReadySeconds
-        revisionHistoryLimit = self.revisionHistoryLimit()
-        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
-        if revisionHistoryLimit is not None:  # omit empty
-            v["revisionHistoryLimit"] = revisionHistoryLimit
+        v["updateStrategy"] = update_strategy
+        min_ready_seconds = self.min_ready_seconds()
+        check_type("min_ready_seconds", min_ready_seconds, Optional[int])
+        if min_ready_seconds:  # omit empty
+            v["minReadySeconds"] = min_ready_seconds
+        revision_history_limit = self.revision_history_limit()
+        check_type("revision_history_limit", revision_history_limit, Optional[int])
+        if revision_history_limit is not None:  # omit empty
+            v["revisionHistoryLimit"] = revision_history_limit
         return v
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
@@ -420,28 +422,28 @@ class DaemonSetSpec(types.Object):
         """
         return self.__template
 
-    def updateStrategy(self) -> Optional["DaemonSetUpdateStrategy"]:
+    def update_strategy(self) -> Optional["DaemonSetUpdateStrategy"]:
         """
         An update strategy to replace existing DaemonSet pods with new pods.
         """
-        return self.__updateStrategy
+        return self.__update_strategy
 
-    def minReadySeconds(self) -> Optional[int]:
+    def min_ready_seconds(self) -> Optional[int]:
         """
         The minimum number of seconds for which a newly created DaemonSet pod should
         be ready without any of its container crashing, for it to be considered
         available. Defaults to 0 (pod will be considered available as soon as it
         is ready).
         """
-        return self.__minReadySeconds
+        return self.__min_ready_seconds
 
-    def revisionHistoryLimit(self) -> Optional[int]:
+    def revision_history_limit(self) -> Optional[int]:
         """
         The number of old history to retain to allow rollback.
         This is a pointer to distinguish between explicit zero and not specified.
         Defaults to 10.
         """
-        return self.__revisionHistoryLimit
+        return self.__revision_history_limit
 
 
 class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
@@ -462,7 +464,7 @@ class DaemonSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: "DaemonSetSpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="DaemonSet",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -495,26 +497,26 @@ class RollingUpdateDeployment(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, maxUnavailable: Union[int, str] = None, maxSurge: Union[int, str] = None
+        self, max_unavailable: Union[int, str] = None, max_surge: Union[int, str] = None
     ):
         super().__init__()
-        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else 1
-        self.__maxSurge = maxSurge if maxSurge is not None else 1
+        self.__max_unavailable = max_unavailable if max_unavailable is not None else 1
+        self.__max_surge = max_surge if max_surge is not None else 1
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        maxUnavailable = self.maxUnavailable()
-        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
-        if maxUnavailable is not None:  # omit empty
-            v["maxUnavailable"] = maxUnavailable
-        maxSurge = self.maxSurge()
-        check_type("maxSurge", maxSurge, Optional[Union[int, str]])
-        if maxSurge is not None:  # omit empty
-            v["maxSurge"] = maxSurge
+        max_unavailable = self.max_unavailable()
+        check_type("max_unavailable", max_unavailable, Optional[Union[int, str]])
+        if max_unavailable is not None:  # omit empty
+            v["maxUnavailable"] = max_unavailable
+        max_surge = self.max_surge()
+        check_type("max_surge", max_surge, Optional[Union[int, str]])
+        if max_surge is not None:  # omit empty
+            v["maxSurge"] = max_surge
         return v
 
-    def maxUnavailable(self) -> Optional[Union[int, str]]:
+    def max_unavailable(self) -> Optional[Union[int, str]]:
         """
         The maximum number of pods that can be unavailable during the update.
         Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
@@ -527,9 +529,9 @@ class RollingUpdateDeployment(types.Object):
         that the total number of pods available at all times during the update is at
         least 70% of desired pods.
         """
-        return self.__maxUnavailable
+        return self.__max_unavailable
 
-    def maxSurge(self) -> Optional[Union[int, str]]:
+    def max_surge(self) -> Optional[Union[int, str]]:
         """
         The maximum number of pods that can be scheduled above the desired number of
         pods.
@@ -543,7 +545,7 @@ class RollingUpdateDeployment(types.Object):
         new RC can be scaled up further, ensuring that total number of pods running
         at any time during the update is at most 130% of desired pods.
         """
-        return self.__maxSurge
+        return self.__max_surge
 
 
 class DeploymentStrategy(types.Object):
@@ -556,12 +558,12 @@ class DeploymentStrategy(types.Object):
     def __init__(
         self,
         type: DeploymentStrategyType = DeploymentStrategyType["RollingUpdate"],
-        rollingUpdate: "RollingUpdateDeployment" = None,
+        rolling_update: "RollingUpdateDeployment" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__rollingUpdate = (
-            rollingUpdate if rollingUpdate is not None else RollingUpdateDeployment()
+        self.__rolling_update = (
+            rolling_update if rolling_update is not None else RollingUpdateDeployment()
         )
 
     @typechecked
@@ -571,10 +573,12 @@ class DeploymentStrategy(types.Object):
         check_type("type", type, Optional[DeploymentStrategyType])
         if type:  # omit empty
             v["type"] = type
-        rollingUpdate = self.rollingUpdate()
-        check_type("rollingUpdate", rollingUpdate, Optional["RollingUpdateDeployment"])
-        if rollingUpdate is not None:  # omit empty
-            v["rollingUpdate"] = rollingUpdate
+        rolling_update = self.rolling_update()
+        check_type(
+            "rolling_update", rolling_update, Optional["RollingUpdateDeployment"]
+        )
+        if rolling_update is not None:  # omit empty
+            v["rollingUpdate"] = rolling_update
         return v
 
     def type(self) -> Optional[DeploymentStrategyType]:
@@ -583,7 +587,7 @@ class DeploymentStrategy(types.Object):
         """
         return self.__type
 
-    def rollingUpdate(self) -> Optional["RollingUpdateDeployment"]:
+    def rolling_update(self) -> Optional["RollingUpdateDeployment"]:
         """
         Rolling update config params. Present only if DeploymentStrategyType =
         RollingUpdate.
@@ -591,7 +595,7 @@ class DeploymentStrategy(types.Object):
         TODO: Update this to follow our convention for oneOf, whatever we decide it
         to be.
         """
-        return self.__rollingUpdate
+        return self.__rolling_update
 
 
 class DeploymentSpec(types.Object):
@@ -607,24 +611,24 @@ class DeploymentSpec(types.Object):
         selector: "metav1.LabelSelector" = None,
         template: "k8sv1.PodTemplateSpec" = None,
         strategy: "DeploymentStrategy" = None,
-        minReadySeconds: int = None,
-        revisionHistoryLimit: int = None,
+        min_ready_seconds: int = None,
+        revision_history_limit: int = None,
         paused: bool = None,
-        progressDeadlineSeconds: int = None,
+        progress_deadline_seconds: int = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
         self.__selector = selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
-        self.__minReadySeconds = minReadySeconds
-        self.__revisionHistoryLimit = (
-            revisionHistoryLimit if revisionHistoryLimit is not None else 2147483647
+        self.__min_ready_seconds = min_ready_seconds
+        self.__revision_history_limit = (
+            revision_history_limit if revision_history_limit is not None else 2147483647
         )
         self.__paused = paused
-        self.__progressDeadlineSeconds = (
-            progressDeadlineSeconds
-            if progressDeadlineSeconds is not None
+        self.__progress_deadline_seconds = (
+            progress_deadline_seconds
+            if progress_deadline_seconds is not None
             else 2147483647
         )
 
@@ -645,22 +649,24 @@ class DeploymentSpec(types.Object):
         strategy = self.strategy()
         check_type("strategy", strategy, Optional["DeploymentStrategy"])
         v["strategy"] = strategy
-        minReadySeconds = self.minReadySeconds()
-        check_type("minReadySeconds", minReadySeconds, Optional[int])
-        if minReadySeconds:  # omit empty
-            v["minReadySeconds"] = minReadySeconds
-        revisionHistoryLimit = self.revisionHistoryLimit()
-        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
-        if revisionHistoryLimit is not None:  # omit empty
-            v["revisionHistoryLimit"] = revisionHistoryLimit
+        min_ready_seconds = self.min_ready_seconds()
+        check_type("min_ready_seconds", min_ready_seconds, Optional[int])
+        if min_ready_seconds:  # omit empty
+            v["minReadySeconds"] = min_ready_seconds
+        revision_history_limit = self.revision_history_limit()
+        check_type("revision_history_limit", revision_history_limit, Optional[int])
+        if revision_history_limit is not None:  # omit empty
+            v["revisionHistoryLimit"] = revision_history_limit
         paused = self.paused()
         check_type("paused", paused, Optional[bool])
         if paused:  # omit empty
             v["paused"] = paused
-        progressDeadlineSeconds = self.progressDeadlineSeconds()
-        check_type("progressDeadlineSeconds", progressDeadlineSeconds, Optional[int])
-        if progressDeadlineSeconds is not None:  # omit empty
-            v["progressDeadlineSeconds"] = progressDeadlineSeconds
+        progress_deadline_seconds = self.progress_deadline_seconds()
+        check_type(
+            "progress_deadline_seconds", progress_deadline_seconds, Optional[int]
+        )
+        if progress_deadline_seconds is not None:  # omit empty
+            v["progressDeadlineSeconds"] = progress_deadline_seconds
         return v
 
     def replicas(self) -> Optional[int]:
@@ -689,22 +695,22 @@ class DeploymentSpec(types.Object):
         """
         return self.__strategy
 
-    def minReadySeconds(self) -> Optional[int]:
+    def min_ready_seconds(self) -> Optional[int]:
         """
         Minimum number of seconds for which a newly created pod should be ready
         without any of its container crashing, for it to be considered available.
         Defaults to 0 (pod will be considered available as soon as it is ready)
         """
-        return self.__minReadySeconds
+        return self.__min_ready_seconds
 
-    def revisionHistoryLimit(self) -> Optional[int]:
+    def revision_history_limit(self) -> Optional[int]:
         """
         The number of old ReplicaSets to retain to allow rollback.
         This is a pointer to distinguish between explicit zero and not specified.
         This is set to the max value of int32 (i.e. 2147483647) by default, which
         means "retaining all old RelicaSets".
         """
-        return self.__revisionHistoryLimit
+        return self.__revision_history_limit
 
     def paused(self) -> Optional[bool]:
         """
@@ -713,7 +719,7 @@ class DeploymentSpec(types.Object):
         """
         return self.__paused
 
-    def progressDeadlineSeconds(self) -> Optional[int]:
+    def progress_deadline_seconds(self) -> Optional[int]:
         """
         The maximum time in seconds for a deployment to make progress before it
         is considered to be failed. The deployment controller will continue to
@@ -722,7 +728,7 @@ class DeploymentSpec(types.Object):
         not be estimated during the time a deployment is paused. This is set to
         the max value of int32 (i.e. 2147483647) by default, which means "no deadline".
         """
-        return self.__progressDeadlineSeconds
+        return self.__progress_deadline_seconds
 
 
 class Deployment(base.TypedObject, base.NamespacedMetadataObject):
@@ -743,7 +749,7 @@ class Deployment(base.TypedObject, base.NamespacedMetadataObject):
         spec: "DeploymentSpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="Deployment",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -805,15 +811,17 @@ class DeploymentRollback(base.TypedObject):
     def __init__(
         self,
         name: str = "",
-        updatedAnnotations: Dict[str, str] = None,
-        rollbackTo: "RollbackConfig" = None,
+        updated_annotations: Dict[str, str] = None,
+        rollback_to: "RollbackConfig" = None,
     ):
-        super().__init__(apiVersion="extensions/v1beta1", kind="DeploymentRollback")
+        super().__init__(api_version="extensions/v1beta1", kind="DeploymentRollback")
         self.__name = name
-        self.__updatedAnnotations = (
-            updatedAnnotations if updatedAnnotations is not None else {}
+        self.__updated_annotations = (
+            updated_annotations if updated_annotations is not None else {}
         )
-        self.__rollbackTo = rollbackTo if rollbackTo is not None else RollbackConfig()
+        self.__rollback_to = (
+            rollback_to if rollback_to is not None else RollbackConfig()
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -821,13 +829,13 @@ class DeploymentRollback(base.TypedObject):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        updatedAnnotations = self.updatedAnnotations()
-        check_type("updatedAnnotations", updatedAnnotations, Optional[Dict[str, str]])
-        if updatedAnnotations:  # omit empty
-            v["updatedAnnotations"] = updatedAnnotations
-        rollbackTo = self.rollbackTo()
-        check_type("rollbackTo", rollbackTo, "RollbackConfig")
-        v["rollbackTo"] = rollbackTo
+        updated_annotations = self.updated_annotations()
+        check_type("updated_annotations", updated_annotations, Optional[Dict[str, str]])
+        if updated_annotations:  # omit empty
+            v["updatedAnnotations"] = updated_annotations
+        rollback_to = self.rollback_to()
+        check_type("rollback_to", rollback_to, "RollbackConfig")
+        v["rollbackTo"] = rollback_to
         return v
 
     def name(self) -> str:
@@ -836,17 +844,17 @@ class DeploymentRollback(base.TypedObject):
         """
         return self.__name
 
-    def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+    def updated_annotations(self) -> Optional[Dict[str, str]]:
         """
         The annotations to be updated to a deployment
         """
-        return self.__updatedAnnotations
+        return self.__updated_annotations
 
-    def rollbackTo(self) -> "RollbackConfig":
+    def rollback_to(self) -> "RollbackConfig":
         """
         The config of this deployment rollback.
         """
-        return self.__rollbackTo
+        return self.__rollback_to
 
 
 class IDRange(types.Object):
@@ -935,33 +943,33 @@ class IngressBackend(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, serviceName: str = "", servicePort: Union[int, str] = None):
+    def __init__(self, service_name: str = "", service_port: Union[int, str] = None):
         super().__init__()
-        self.__serviceName = serviceName
-        self.__servicePort = servicePort if servicePort is not None else 0
+        self.__service_name = service_name
+        self.__service_port = service_port if service_port is not None else 0
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        serviceName = self.serviceName()
-        check_type("serviceName", serviceName, str)
-        v["serviceName"] = serviceName
-        servicePort = self.servicePort()
-        check_type("servicePort", servicePort, Union[int, str])
-        v["servicePort"] = servicePort
+        service_name = self.service_name()
+        check_type("service_name", service_name, str)
+        v["serviceName"] = service_name
+        service_port = self.service_port()
+        check_type("service_port", service_port, Union[int, str])
+        v["servicePort"] = service_port
         return v
 
-    def serviceName(self) -> str:
+    def service_name(self) -> str:
         """
         Specifies the name of the referenced service.
         """
-        return self.__serviceName
+        return self.__service_name
 
-    def servicePort(self) -> Union[int, str]:
+    def service_port(self) -> Union[int, str]:
         """
         Specifies the port of the referenced service.
         """
-        return self.__servicePort
+        return self.__service_port
 
 
 class HTTPIngressPath(types.Object):
@@ -1156,11 +1164,11 @@ class IngressRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, host: str = None, ingressRuleValue: "IngressRuleValue" = None):
+    def __init__(self, host: str = None, ingress_rule_value: "IngressRuleValue" = None):
         super().__init__()
         self.__host = host
-        self.__ingressRuleValue = (
-            ingressRuleValue if ingressRuleValue is not None else IngressRuleValue()
+        self.__ingress_rule_value = (
+            ingress_rule_value if ingress_rule_value is not None else IngressRuleValue()
         )
 
     @typechecked
@@ -1170,9 +1178,11 @@ class IngressRule(types.Object):
         check_type("host", host, Optional[str])
         if host:  # omit empty
             v["host"] = host
-        ingressRuleValue = self.ingressRuleValue()
-        check_type("ingressRuleValue", ingressRuleValue, Optional["IngressRuleValue"])
-        v.update(ingressRuleValue._root())  # inline
+        ingress_rule_value = self.ingress_rule_value()
+        check_type(
+            "ingress_rule_value", ingress_rule_value, Optional["IngressRuleValue"]
+        )
+        v.update(ingress_rule_value._root())  # inline
         return v
 
     def host(self) -> Optional[str]:
@@ -1192,7 +1202,7 @@ class IngressRule(types.Object):
         """
         return self.__host
 
-    def ingressRuleValue(self) -> Optional["IngressRuleValue"]:
+    def ingress_rule_value(self) -> Optional["IngressRuleValue"]:
         """
         IngressRuleValue represents a rule to route requests for this IngressRule.
         If unspecified, the rule defaults to a http catch-all. Whether that sends
@@ -1200,7 +1210,7 @@ class IngressRule(types.Object):
         default backend, is left to the controller fulfilling the Ingress. Http is
         currently the only supported IngressRuleValue.
         """
-        return self.__ingressRuleValue
+        return self.__ingress_rule_value
 
 
 class IngressTLS(types.Object):
@@ -1210,10 +1220,10 @@ class IngressTLS(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, hosts: List[str] = None, secretName: str = None):
+    def __init__(self, hosts: List[str] = None, secret_name: str = None):
         super().__init__()
         self.__hosts = hosts if hosts is not None else []
-        self.__secretName = secretName
+        self.__secret_name = secret_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1222,10 +1232,10 @@ class IngressTLS(types.Object):
         check_type("hosts", hosts, Optional[List[str]])
         if hosts:  # omit empty
             v["hosts"] = hosts
-        secretName = self.secretName()
-        check_type("secretName", secretName, Optional[str])
-        if secretName:  # omit empty
-            v["secretName"] = secretName
+        secret_name = self.secret_name()
+        check_type("secret_name", secret_name, Optional[str])
+        if secret_name:  # omit empty
+            v["secretName"] = secret_name
         return v
 
     def hosts(self) -> Optional[List[str]]:
@@ -1237,7 +1247,7 @@ class IngressTLS(types.Object):
         """
         return self.__hosts
 
-    def secretName(self) -> Optional[str]:
+    def secret_name(self) -> Optional[str]:
         """
         SecretName is the name of the secret used to terminate SSL traffic on 443.
         Field is left optional to allow SSL routing based on SNI hostname alone.
@@ -1245,7 +1255,7 @@ class IngressTLS(types.Object):
         by an IngressRule, the SNI host is used for termination and value of the
         Host header is used for routing.
         """
-        return self.__secretName
+        return self.__secret_name
 
 
 class IngressSpec(types.Object):
@@ -1330,7 +1340,7 @@ class Ingress(base.TypedObject, base.NamespacedMetadataObject):
         spec: "IngressSpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="Ingress",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1364,35 +1374,35 @@ class NetworkPolicyPeer(types.Object):
     @typechecked
     def __init__(
         self,
-        podSelector: "metav1.LabelSelector" = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
-        ipBlock: "IPBlock" = None,
+        pod_selector: "metav1.LabelSelector" = None,
+        namespace_selector: "metav1.LabelSelector" = None,
+        ip_block: "IPBlock" = None,
     ):
         super().__init__()
-        self.__podSelector = podSelector
-        self.__namespaceSelector = namespaceSelector
-        self.__ipBlock = ipBlock
+        self.__pod_selector = pod_selector
+        self.__namespace_selector = namespace_selector
+        self.__ip_block = ip_block
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podSelector = self.podSelector()
-        check_type("podSelector", podSelector, Optional["metav1.LabelSelector"])
-        if podSelector is not None:  # omit empty
-            v["podSelector"] = podSelector
-        namespaceSelector = self.namespaceSelector()
+        pod_selector = self.pod_selector()
+        check_type("pod_selector", pod_selector, Optional["metav1.LabelSelector"])
+        if pod_selector is not None:  # omit empty
+            v["podSelector"] = pod_selector
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
-        ipBlock = self.ipBlock()
-        check_type("ipBlock", ipBlock, Optional["IPBlock"])
-        if ipBlock is not None:  # omit empty
-            v["ipBlock"] = ipBlock
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
+        ip_block = self.ip_block()
+        check_type("ip_block", ip_block, Optional["IPBlock"])
+        if ip_block is not None:  # omit empty
+            v["ipBlock"] = ip_block
         return v
 
-    def podSelector(self) -> Optional["metav1.LabelSelector"]:
+    def pod_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         This is a label selector which selects Pods. This field follows standard label
         selector semantics; if present but empty, it selects all pods.
@@ -1401,9 +1411,9 @@ class NetworkPolicyPeer(types.Object):
         the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
         Otherwise it selects the Pods matching PodSelector in the policy's own Namespace.
         """
-        return self.__podSelector
+        return self.__pod_selector
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         Selects Namespaces using cluster-scoped labels. This field follows standard label
         selector semantics; if present but empty, it selects all namespaces.
@@ -1412,14 +1422,14 @@ class NetworkPolicyPeer(types.Object):
         the Pods matching PodSelector in the Namespaces selected by NamespaceSelector.
         Otherwise it selects all Pods in the Namespaces selected by NamespaceSelector.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
-    def ipBlock(self) -> Optional["IPBlock"]:
+    def ip_block(self) -> Optional["IPBlock"]:
         """
         IPBlock defines policy on a particular IPBlock. If this field is set then
         neither of the other fields can be.
         """
-        return self.__ipBlock
+        return self.__ip_block
 
 
 class NetworkPolicyPort(types.Object):
@@ -1578,25 +1588,25 @@ class NetworkPolicySpec(types.Object):
     @typechecked
     def __init__(
         self,
-        podSelector: "metav1.LabelSelector" = None,
+        pod_selector: "metav1.LabelSelector" = None,
         ingress: List["NetworkPolicyIngressRule"] = None,
         egress: List["NetworkPolicyEgressRule"] = None,
-        policyTypes: List[PolicyType] = None,
+        policy_types: List[PolicyType] = None,
     ):
         super().__init__()
-        self.__podSelector = (
-            podSelector if podSelector is not None else metav1.LabelSelector()
+        self.__pod_selector = (
+            pod_selector if pod_selector is not None else metav1.LabelSelector()
         )
         self.__ingress = ingress if ingress is not None else []
         self.__egress = egress if egress is not None else []
-        self.__policyTypes = policyTypes if policyTypes is not None else []
+        self.__policy_types = policy_types if policy_types is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        podSelector = self.podSelector()
-        check_type("podSelector", podSelector, "metav1.LabelSelector")
-        v["podSelector"] = podSelector
+        pod_selector = self.pod_selector()
+        check_type("pod_selector", pod_selector, "metav1.LabelSelector")
+        v["podSelector"] = pod_selector
         ingress = self.ingress()
         check_type("ingress", ingress, Optional[List["NetworkPolicyIngressRule"]])
         if ingress:  # omit empty
@@ -1605,13 +1615,13 @@ class NetworkPolicySpec(types.Object):
         check_type("egress", egress, Optional[List["NetworkPolicyEgressRule"]])
         if egress:  # omit empty
             v["egress"] = egress
-        policyTypes = self.policyTypes()
-        check_type("policyTypes", policyTypes, Optional[List[PolicyType]])
-        if policyTypes:  # omit empty
-            v["policyTypes"] = policyTypes
+        policy_types = self.policy_types()
+        check_type("policy_types", policy_types, Optional[List[PolicyType]])
+        if policy_types:  # omit empty
+            v["policyTypes"] = policy_types
         return v
 
-    def podSelector(self) -> "metav1.LabelSelector":
+    def pod_selector(self) -> "metav1.LabelSelector":
         """
         Selects the pods to which this NetworkPolicy object applies.  The array of ingress rules
         is applied to any pods selected by this field. Multiple network policies can select the
@@ -1619,7 +1629,7 @@ class NetworkPolicySpec(types.Object):
         This field is NOT optional and follows standard label selector semantics.
         An empty podSelector matches all pods in this namespace.
         """
-        return self.__podSelector
+        return self.__pod_selector
 
     def ingress(self) -> Optional[List["NetworkPolicyIngressRule"]]:
         """
@@ -1645,7 +1655,7 @@ class NetworkPolicySpec(types.Object):
         """
         return self.__egress
 
-    def policyTypes(self) -> Optional[List[PolicyType]]:
+    def policy_types(self) -> Optional[List[PolicyType]]:
         """
         List of rule types that the NetworkPolicy relates to.
         Valid options are "Ingress", "Egress", or "Ingress,Egress".
@@ -1658,7 +1668,7 @@ class NetworkPolicySpec(types.Object):
         an Egress section and would otherwise default to just [ "Ingress" ]).
         This field is beta-level in 1.8
         """
-        return self.__policyTypes
+        return self.__policy_types
 
 
 class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
@@ -1678,7 +1688,7 @@ class NetworkPolicy(base.TypedObject, base.NamespacedMetadataObject):
         spec: "NetworkPolicySpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="NetworkPolicy",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1790,42 +1800,48 @@ class RuntimeClassStrategyOptions(types.Object):
     @typechecked
     def __init__(
         self,
-        allowedRuntimeClassNames: List[str] = None,
-        defaultRuntimeClassName: str = None,
+        allowed_runtime_class_names: List[str] = None,
+        default_runtime_class_name: str = None,
     ):
         super().__init__()
-        self.__allowedRuntimeClassNames = (
-            allowedRuntimeClassNames if allowedRuntimeClassNames is not None else []
+        self.__allowed_runtime_class_names = (
+            allowed_runtime_class_names
+            if allowed_runtime_class_names is not None
+            else []
         )
-        self.__defaultRuntimeClassName = defaultRuntimeClassName
+        self.__default_runtime_class_name = default_runtime_class_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        allowedRuntimeClassNames = self.allowedRuntimeClassNames()
-        check_type("allowedRuntimeClassNames", allowedRuntimeClassNames, List[str])
-        v["allowedRuntimeClassNames"] = allowedRuntimeClassNames
-        defaultRuntimeClassName = self.defaultRuntimeClassName()
-        check_type("defaultRuntimeClassName", defaultRuntimeClassName, Optional[str])
-        if defaultRuntimeClassName is not None:  # omit empty
-            v["defaultRuntimeClassName"] = defaultRuntimeClassName
+        allowed_runtime_class_names = self.allowed_runtime_class_names()
+        check_type(
+            "allowed_runtime_class_names", allowed_runtime_class_names, List[str]
+        )
+        v["allowedRuntimeClassNames"] = allowed_runtime_class_names
+        default_runtime_class_name = self.default_runtime_class_name()
+        check_type(
+            "default_runtime_class_name", default_runtime_class_name, Optional[str]
+        )
+        if default_runtime_class_name is not None:  # omit empty
+            v["defaultRuntimeClassName"] = default_runtime_class_name
         return v
 
-    def allowedRuntimeClassNames(self) -> List[str]:
+    def allowed_runtime_class_names(self) -> List[str]:
         """
         allowedRuntimeClassNames is a whitelist of RuntimeClass names that may be specified on a pod.
         A value of "*" means that any RuntimeClass name is allowed, and must be the only item in the
         list. An empty list requires the RuntimeClassName field to be unset.
         """
-        return self.__allowedRuntimeClassNames
+        return self.__allowed_runtime_class_names
 
-    def defaultRuntimeClassName(self) -> Optional[str]:
+    def default_runtime_class_name(self) -> Optional[str]:
         """
         defaultRuntimeClassName is the default RuntimeClassName to set on the pod.
         The default MUST be allowed by the allowedRuntimeClassNames list.
         A value of nil does not mutate the Pod.
         """
-        return self.__defaultRuntimeClassName
+        return self.__default_runtime_class_name
 
 
 class SELinuxStrategyOptions(types.Object):
@@ -1839,11 +1855,11 @@ class SELinuxStrategyOptions(types.Object):
     def __init__(
         self,
         rule: SELinuxStrategy = None,
-        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
+        se_linux_options: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__rule = rule
-        self.__seLinuxOptions = seLinuxOptions
+        self.__se_linux_options = se_linux_options
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1851,10 +1867,12 @@ class SELinuxStrategyOptions(types.Object):
         rule = self.rule()
         check_type("rule", rule, SELinuxStrategy)
         v["rule"] = rule
-        seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
-        if seLinuxOptions is not None:  # omit empty
-            v["seLinuxOptions"] = seLinuxOptions
+        se_linux_options = self.se_linux_options()
+        check_type(
+            "se_linux_options", se_linux_options, Optional["k8sv1.SELinuxOptions"]
+        )
+        if se_linux_options is not None:  # omit empty
+            v["seLinuxOptions"] = se_linux_options
         return v
 
     def rule(self) -> SELinuxStrategy:
@@ -1863,12 +1881,12 @@ class SELinuxStrategyOptions(types.Object):
         """
         return self.__rule
 
-    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
+    def se_linux_options(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         More info: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
         """
-        return self.__seLinuxOptions
+        return self.__se_linux_options
 
 
 class SupplementalGroupsStrategyOptions(types.Object):
@@ -1926,81 +1944,83 @@ class PodSecurityPolicySpec(types.Object):
     def __init__(
         self,
         privileged: bool = None,
-        defaultAddCapabilities: List[k8sv1.Capability] = None,
-        requiredDropCapabilities: List[k8sv1.Capability] = None,
-        allowedCapabilities: List[k8sv1.Capability] = None,
+        default_add_capabilities: List[k8sv1.Capability] = None,
+        required_drop_capabilities: List[k8sv1.Capability] = None,
+        allowed_capabilities: List[k8sv1.Capability] = None,
         volumes: List[FSType] = None,
-        hostNetwork: bool = None,
-        hostPorts: List["HostPortRange"] = None,
-        hostPID: bool = None,
-        hostIPC: bool = None,
-        seLinux: "SELinuxStrategyOptions" = None,
-        runAsUser: "RunAsUserStrategyOptions" = None,
-        runAsGroup: "RunAsGroupStrategyOptions" = None,
-        supplementalGroups: "SupplementalGroupsStrategyOptions" = None,
-        fsGroup: "FSGroupStrategyOptions" = None,
-        readOnlyRootFilesystem: bool = None,
-        defaultAllowPrivilegeEscalation: bool = None,
-        allowPrivilegeEscalation: bool = None,
-        allowedHostPaths: List["AllowedHostPath"] = None,
-        allowedFlexVolumes: List["AllowedFlexVolume"] = None,
-        allowedCSIDrivers: List["AllowedCSIDriver"] = None,
-        allowedUnsafeSysctls: List[str] = None,
-        forbiddenSysctls: List[str] = None,
-        allowedProcMountTypes: List[k8sv1.ProcMountType] = None,
-        runtimeClass: "RuntimeClassStrategyOptions" = None,
+        host_network: bool = None,
+        host_ports: List["HostPortRange"] = None,
+        host_pid: bool = None,
+        host_ipc: bool = None,
+        se_linux: "SELinuxStrategyOptions" = None,
+        run_as_user: "RunAsUserStrategyOptions" = None,
+        run_as_group: "RunAsGroupStrategyOptions" = None,
+        supplemental_groups: "SupplementalGroupsStrategyOptions" = None,
+        fs_group: "FSGroupStrategyOptions" = None,
+        read_only_root_filesystem: bool = None,
+        default_allow_privilege_escalation: bool = None,
+        allow_privilege_escalation: bool = None,
+        allowed_host_paths: List["AllowedHostPath"] = None,
+        allowed_flex_volumes: List["AllowedFlexVolume"] = None,
+        allowed_csi_drivers: List["AllowedCSIDriver"] = None,
+        allowed_unsafe_sysctls: List[str] = None,
+        forbidden_sysctls: List[str] = None,
+        allowed_proc_mount_types: List[k8sv1.ProcMountType] = None,
+        runtime_class: "RuntimeClassStrategyOptions" = None,
     ):
         super().__init__()
         self.__privileged = privileged
-        self.__defaultAddCapabilities = (
-            defaultAddCapabilities if defaultAddCapabilities is not None else []
+        self.__default_add_capabilities = (
+            default_add_capabilities if default_add_capabilities is not None else []
         )
-        self.__requiredDropCapabilities = (
-            requiredDropCapabilities if requiredDropCapabilities is not None else []
+        self.__required_drop_capabilities = (
+            required_drop_capabilities if required_drop_capabilities is not None else []
         )
-        self.__allowedCapabilities = (
-            allowedCapabilities if allowedCapabilities is not None else []
+        self.__allowed_capabilities = (
+            allowed_capabilities if allowed_capabilities is not None else []
         )
         self.__volumes = volumes if volumes is not None else []
-        self.__hostNetwork = hostNetwork
-        self.__hostPorts = hostPorts if hostPorts is not None else []
-        self.__hostPID = hostPID
-        self.__hostIPC = hostIPC
-        self.__seLinux = seLinux if seLinux is not None else SELinuxStrategyOptions()
-        self.__runAsUser = (
-            runAsUser if runAsUser is not None else RunAsUserStrategyOptions()
+        self.__host_network = host_network
+        self.__host_ports = host_ports if host_ports is not None else []
+        self.__host_pid = host_pid
+        self.__host_ipc = host_ipc
+        self.__se_linux = se_linux if se_linux is not None else SELinuxStrategyOptions()
+        self.__run_as_user = (
+            run_as_user if run_as_user is not None else RunAsUserStrategyOptions()
         )
-        self.__runAsGroup = runAsGroup
-        self.__supplementalGroups = (
-            supplementalGroups
-            if supplementalGroups is not None
+        self.__run_as_group = run_as_group
+        self.__supplemental_groups = (
+            supplemental_groups
+            if supplemental_groups is not None
             else SupplementalGroupsStrategyOptions()
         )
-        self.__fsGroup = fsGroup if fsGroup is not None else FSGroupStrategyOptions()
-        self.__readOnlyRootFilesystem = readOnlyRootFilesystem
-        self.__defaultAllowPrivilegeEscalation = defaultAllowPrivilegeEscalation
-        self.__allowPrivilegeEscalation = (
-            allowPrivilegeEscalation if allowPrivilegeEscalation is not None else True
+        self.__fs_group = fs_group if fs_group is not None else FSGroupStrategyOptions()
+        self.__read_only_root_filesystem = read_only_root_filesystem
+        self.__default_allow_privilege_escalation = default_allow_privilege_escalation
+        self.__allow_privilege_escalation = (
+            allow_privilege_escalation
+            if allow_privilege_escalation is not None
+            else True
         )
-        self.__allowedHostPaths = (
-            allowedHostPaths if allowedHostPaths is not None else []
+        self.__allowed_host_paths = (
+            allowed_host_paths if allowed_host_paths is not None else []
         )
-        self.__allowedFlexVolumes = (
-            allowedFlexVolumes if allowedFlexVolumes is not None else []
+        self.__allowed_flex_volumes = (
+            allowed_flex_volumes if allowed_flex_volumes is not None else []
         )
-        self.__allowedCSIDrivers = (
-            allowedCSIDrivers if allowedCSIDrivers is not None else []
+        self.__allowed_csi_drivers = (
+            allowed_csi_drivers if allowed_csi_drivers is not None else []
         )
-        self.__allowedUnsafeSysctls = (
-            allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
+        self.__allowed_unsafe_sysctls = (
+            allowed_unsafe_sysctls if allowed_unsafe_sysctls is not None else []
         )
-        self.__forbiddenSysctls = (
-            forbiddenSysctls if forbiddenSysctls is not None else []
+        self.__forbidden_sysctls = (
+            forbidden_sysctls if forbidden_sysctls is not None else []
         )
-        self.__allowedProcMountTypes = (
-            allowedProcMountTypes if allowedProcMountTypes is not None else []
+        self.__allowed_proc_mount_types = (
+            allowed_proc_mount_types if allowed_proc_mount_types is not None else []
         )
-        self.__runtimeClass = runtimeClass
+        self.__runtime_class = runtime_class
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -2009,126 +2029,136 @@ class PodSecurityPolicySpec(types.Object):
         check_type("privileged", privileged, Optional[bool])
         if privileged:  # omit empty
             v["privileged"] = privileged
-        defaultAddCapabilities = self.defaultAddCapabilities()
+        default_add_capabilities = self.default_add_capabilities()
         check_type(
-            "defaultAddCapabilities",
-            defaultAddCapabilities,
+            "default_add_capabilities",
+            default_add_capabilities,
             Optional[List[k8sv1.Capability]],
         )
-        if defaultAddCapabilities:  # omit empty
-            v["defaultAddCapabilities"] = defaultAddCapabilities
-        requiredDropCapabilities = self.requiredDropCapabilities()
+        if default_add_capabilities:  # omit empty
+            v["defaultAddCapabilities"] = default_add_capabilities
+        required_drop_capabilities = self.required_drop_capabilities()
         check_type(
-            "requiredDropCapabilities",
-            requiredDropCapabilities,
+            "required_drop_capabilities",
+            required_drop_capabilities,
             Optional[List[k8sv1.Capability]],
         )
-        if requiredDropCapabilities:  # omit empty
-            v["requiredDropCapabilities"] = requiredDropCapabilities
-        allowedCapabilities = self.allowedCapabilities()
+        if required_drop_capabilities:  # omit empty
+            v["requiredDropCapabilities"] = required_drop_capabilities
+        allowed_capabilities = self.allowed_capabilities()
         check_type(
-            "allowedCapabilities", allowedCapabilities, Optional[List[k8sv1.Capability]]
+            "allowed_capabilities",
+            allowed_capabilities,
+            Optional[List[k8sv1.Capability]],
         )
-        if allowedCapabilities:  # omit empty
-            v["allowedCapabilities"] = allowedCapabilities
+        if allowed_capabilities:  # omit empty
+            v["allowedCapabilities"] = allowed_capabilities
         volumes = self.volumes()
         check_type("volumes", volumes, Optional[List[FSType]])
         if volumes:  # omit empty
             v["volumes"] = volumes
-        hostNetwork = self.hostNetwork()
-        check_type("hostNetwork", hostNetwork, Optional[bool])
-        if hostNetwork:  # omit empty
-            v["hostNetwork"] = hostNetwork
-        hostPorts = self.hostPorts()
-        check_type("hostPorts", hostPorts, Optional[List["HostPortRange"]])
-        if hostPorts:  # omit empty
-            v["hostPorts"] = hostPorts
-        hostPID = self.hostPID()
-        check_type("hostPID", hostPID, Optional[bool])
-        if hostPID:  # omit empty
-            v["hostPID"] = hostPID
-        hostIPC = self.hostIPC()
-        check_type("hostIPC", hostIPC, Optional[bool])
-        if hostIPC:  # omit empty
-            v["hostIPC"] = hostIPC
-        seLinux = self.seLinux()
-        check_type("seLinux", seLinux, "SELinuxStrategyOptions")
-        v["seLinux"] = seLinux
-        runAsUser = self.runAsUser()
-        check_type("runAsUser", runAsUser, "RunAsUserStrategyOptions")
-        v["runAsUser"] = runAsUser
-        runAsGroup = self.runAsGroup()
-        check_type("runAsGroup", runAsGroup, Optional["RunAsGroupStrategyOptions"])
-        if runAsGroup is not None:  # omit empty
-            v["runAsGroup"] = runAsGroup
-        supplementalGroups = self.supplementalGroups()
+        host_network = self.host_network()
+        check_type("host_network", host_network, Optional[bool])
+        if host_network:  # omit empty
+            v["hostNetwork"] = host_network
+        host_ports = self.host_ports()
+        check_type("host_ports", host_ports, Optional[List["HostPortRange"]])
+        if host_ports:  # omit empty
+            v["hostPorts"] = host_ports
+        host_pid = self.host_pid()
+        check_type("host_pid", host_pid, Optional[bool])
+        if host_pid:  # omit empty
+            v["hostPID"] = host_pid
+        host_ipc = self.host_ipc()
+        check_type("host_ipc", host_ipc, Optional[bool])
+        if host_ipc:  # omit empty
+            v["hostIPC"] = host_ipc
+        se_linux = self.se_linux()
+        check_type("se_linux", se_linux, "SELinuxStrategyOptions")
+        v["seLinux"] = se_linux
+        run_as_user = self.run_as_user()
+        check_type("run_as_user", run_as_user, "RunAsUserStrategyOptions")
+        v["runAsUser"] = run_as_user
+        run_as_group = self.run_as_group()
+        check_type("run_as_group", run_as_group, Optional["RunAsGroupStrategyOptions"])
+        if run_as_group is not None:  # omit empty
+            v["runAsGroup"] = run_as_group
+        supplemental_groups = self.supplemental_groups()
         check_type(
-            "supplementalGroups",
-            supplementalGroups,
+            "supplemental_groups",
+            supplemental_groups,
             "SupplementalGroupsStrategyOptions",
         )
-        v["supplementalGroups"] = supplementalGroups
-        fsGroup = self.fsGroup()
-        check_type("fsGroup", fsGroup, "FSGroupStrategyOptions")
-        v["fsGroup"] = fsGroup
-        readOnlyRootFilesystem = self.readOnlyRootFilesystem()
-        check_type("readOnlyRootFilesystem", readOnlyRootFilesystem, Optional[bool])
-        if readOnlyRootFilesystem:  # omit empty
-            v["readOnlyRootFilesystem"] = readOnlyRootFilesystem
-        defaultAllowPrivilegeEscalation = self.defaultAllowPrivilegeEscalation()
+        v["supplementalGroups"] = supplemental_groups
+        fs_group = self.fs_group()
+        check_type("fs_group", fs_group, "FSGroupStrategyOptions")
+        v["fsGroup"] = fs_group
+        read_only_root_filesystem = self.read_only_root_filesystem()
         check_type(
-            "defaultAllowPrivilegeEscalation",
-            defaultAllowPrivilegeEscalation,
+            "read_only_root_filesystem", read_only_root_filesystem, Optional[bool]
+        )
+        if read_only_root_filesystem:  # omit empty
+            v["readOnlyRootFilesystem"] = read_only_root_filesystem
+        default_allow_privilege_escalation = self.default_allow_privilege_escalation()
+        check_type(
+            "default_allow_privilege_escalation",
+            default_allow_privilege_escalation,
             Optional[bool],
         )
-        if defaultAllowPrivilegeEscalation is not None:  # omit empty
-            v["defaultAllowPrivilegeEscalation"] = defaultAllowPrivilegeEscalation
-        allowPrivilegeEscalation = self.allowPrivilegeEscalation()
-        check_type("allowPrivilegeEscalation", allowPrivilegeEscalation, Optional[bool])
-        if allowPrivilegeEscalation is not None:  # omit empty
-            v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
-        allowedHostPaths = self.allowedHostPaths()
+        if default_allow_privilege_escalation is not None:  # omit empty
+            v["defaultAllowPrivilegeEscalation"] = default_allow_privilege_escalation
+        allow_privilege_escalation = self.allow_privilege_escalation()
         check_type(
-            "allowedHostPaths", allowedHostPaths, Optional[List["AllowedHostPath"]]
+            "allow_privilege_escalation", allow_privilege_escalation, Optional[bool]
         )
-        if allowedHostPaths:  # omit empty
-            v["allowedHostPaths"] = allowedHostPaths
-        allowedFlexVolumes = self.allowedFlexVolumes()
+        if allow_privilege_escalation is not None:  # omit empty
+            v["allowPrivilegeEscalation"] = allow_privilege_escalation
+        allowed_host_paths = self.allowed_host_paths()
         check_type(
-            "allowedFlexVolumes",
-            allowedFlexVolumes,
+            "allowed_host_paths", allowed_host_paths, Optional[List["AllowedHostPath"]]
+        )
+        if allowed_host_paths:  # omit empty
+            v["allowedHostPaths"] = allowed_host_paths
+        allowed_flex_volumes = self.allowed_flex_volumes()
+        check_type(
+            "allowed_flex_volumes",
+            allowed_flex_volumes,
             Optional[List["AllowedFlexVolume"]],
         )
-        if allowedFlexVolumes:  # omit empty
-            v["allowedFlexVolumes"] = allowedFlexVolumes
-        allowedCSIDrivers = self.allowedCSIDrivers()
+        if allowed_flex_volumes:  # omit empty
+            v["allowedFlexVolumes"] = allowed_flex_volumes
+        allowed_csi_drivers = self.allowed_csi_drivers()
         check_type(
-            "allowedCSIDrivers", allowedCSIDrivers, Optional[List["AllowedCSIDriver"]]
+            "allowed_csi_drivers",
+            allowed_csi_drivers,
+            Optional[List["AllowedCSIDriver"]],
         )
-        if allowedCSIDrivers:  # omit empty
-            v["allowedCSIDrivers"] = allowedCSIDrivers
-        allowedUnsafeSysctls = self.allowedUnsafeSysctls()
-        check_type("allowedUnsafeSysctls", allowedUnsafeSysctls, Optional[List[str]])
-        if allowedUnsafeSysctls:  # omit empty
-            v["allowedUnsafeSysctls"] = allowedUnsafeSysctls
-        forbiddenSysctls = self.forbiddenSysctls()
-        check_type("forbiddenSysctls", forbiddenSysctls, Optional[List[str]])
-        if forbiddenSysctls:  # omit empty
-            v["forbiddenSysctls"] = forbiddenSysctls
-        allowedProcMountTypes = self.allowedProcMountTypes()
+        if allowed_csi_drivers:  # omit empty
+            v["allowedCSIDrivers"] = allowed_csi_drivers
+        allowed_unsafe_sysctls = self.allowed_unsafe_sysctls()
         check_type(
-            "allowedProcMountTypes",
-            allowedProcMountTypes,
+            "allowed_unsafe_sysctls", allowed_unsafe_sysctls, Optional[List[str]]
+        )
+        if allowed_unsafe_sysctls:  # omit empty
+            v["allowedUnsafeSysctls"] = allowed_unsafe_sysctls
+        forbidden_sysctls = self.forbidden_sysctls()
+        check_type("forbidden_sysctls", forbidden_sysctls, Optional[List[str]])
+        if forbidden_sysctls:  # omit empty
+            v["forbiddenSysctls"] = forbidden_sysctls
+        allowed_proc_mount_types = self.allowed_proc_mount_types()
+        check_type(
+            "allowed_proc_mount_types",
+            allowed_proc_mount_types,
             Optional[List[k8sv1.ProcMountType]],
         )
-        if allowedProcMountTypes:  # omit empty
-            v["allowedProcMountTypes"] = allowedProcMountTypes
-        runtimeClass = self.runtimeClass()
+        if allowed_proc_mount_types:  # omit empty
+            v["allowedProcMountTypes"] = allowed_proc_mount_types
+        runtime_class = self.runtime_class()
         check_type(
-            "runtimeClass", runtimeClass, Optional["RuntimeClassStrategyOptions"]
+            "runtime_class", runtime_class, Optional["RuntimeClassStrategyOptions"]
         )
-        if runtimeClass is not None:  # omit empty
-            v["runtimeClass"] = runtimeClass
+        if runtime_class is not None:  # omit empty
+            v["runtimeClass"] = runtime_class
         return v
 
     def privileged(self) -> Optional[bool]:
@@ -2137,29 +2167,29 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__privileged
 
-    def defaultAddCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def default_add_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         defaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capability in both
         defaultAddCapabilities and requiredDropCapabilities. Capabilities added here are implicitly
         allowed, and need not be included in the allowedCapabilities list.
         """
-        return self.__defaultAddCapabilities
+        return self.__default_add_capabilities
 
-    def requiredDropCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def required_drop_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         requiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
         """
-        return self.__requiredDropCapabilities
+        return self.__required_drop_capabilities
 
-    def allowedCapabilities(self) -> Optional[List[k8sv1.Capability]]:
+    def allowed_capabilities(self) -> Optional[List[k8sv1.Capability]]:
         """
         allowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field may be added at the pod author's discretion.
         You must not list a capability in both allowedCapabilities and requiredDropCapabilities.
         """
-        return self.__allowedCapabilities
+        return self.__allowed_capabilities
 
     def volumes(self) -> Optional[List[FSType]]:
         """
@@ -2168,63 +2198,63 @@ class PodSecurityPolicySpec(types.Object):
         """
         return self.__volumes
 
-    def hostNetwork(self) -> Optional[bool]:
+    def host_network(self) -> Optional[bool]:
         """
         hostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
         """
-        return self.__hostNetwork
+        return self.__host_network
 
-    def hostPorts(self) -> Optional[List["HostPortRange"]]:
+    def host_ports(self) -> Optional[List["HostPortRange"]]:
         """
         hostPorts determines which host port ranges are allowed to be exposed.
         """
-        return self.__hostPorts
+        return self.__host_ports
 
-    def hostPID(self) -> Optional[bool]:
+    def host_pid(self) -> Optional[bool]:
         """
         hostPID determines if the policy allows the use of HostPID in the pod spec.
         """
-        return self.__hostPID
+        return self.__host_pid
 
-    def hostIPC(self) -> Optional[bool]:
+    def host_ipc(self) -> Optional[bool]:
         """
         hostIPC determines if the policy allows the use of HostIPC in the pod spec.
         """
-        return self.__hostIPC
+        return self.__host_ipc
 
-    def seLinux(self) -> "SELinuxStrategyOptions":
+    def se_linux(self) -> "SELinuxStrategyOptions":
         """
         seLinux is the strategy that will dictate the allowable labels that may be set.
         """
-        return self.__seLinux
+        return self.__se_linux
 
-    def runAsUser(self) -> "RunAsUserStrategyOptions":
+    def run_as_user(self) -> "RunAsUserStrategyOptions":
         """
         runAsUser is the strategy that will dictate the allowable RunAsUser values that may be set.
         """
-        return self.__runAsUser
+        return self.__run_as_user
 
-    def runAsGroup(self) -> Optional["RunAsGroupStrategyOptions"]:
+    def run_as_group(self) -> Optional["RunAsGroupStrategyOptions"]:
         """
         RunAsGroup is the strategy that will dictate the allowable RunAsGroup values that may be set.
         If this field is omitted, the pod's RunAsGroup can take any value. This field requires the
         RunAsGroup feature gate to be enabled.
         """
-        return self.__runAsGroup
+        return self.__run_as_group
 
-    def supplementalGroups(self) -> "SupplementalGroupsStrategyOptions":
+    def supplemental_groups(self) -> "SupplementalGroupsStrategyOptions":
         """
         supplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
         """
-        return self.__supplementalGroups
+        return self.__supplemental_groups
 
-    def fsGroup(self) -> "FSGroupStrategyOptions":
+    def fs_group(self) -> "FSGroupStrategyOptions":
         """
         fsGroup is the strategy that will dictate what fs group is used by the SecurityContext.
         """
-        return self.__fsGroup
+        return self.__fs_group
 
-    def readOnlyRootFilesystem(self) -> Optional[bool]:
+    def read_only_root_filesystem(self) -> Optional[bool]:
         """
         readOnlyRootFilesystem when set to true will force containers to run with a read only root file
         system.  If the container specifically requests to run with a non-read only root file system
@@ -2232,45 +2262,45 @@ class PodSecurityPolicySpec(types.Object):
         If set to false the container may run with a read only root file system if it wishes but it
         will not be forced to.
         """
-        return self.__readOnlyRootFilesystem
+        return self.__read_only_root_filesystem
 
-    def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
+    def default_allow_privilege_escalation(self) -> Optional[bool]:
         """
         defaultAllowPrivilegeEscalation controls the default setting for whether a
         process can gain more privileges than its parent process.
         """
-        return self.__defaultAllowPrivilegeEscalation
+        return self.__default_allow_privilege_escalation
 
-    def allowPrivilegeEscalation(self) -> Optional[bool]:
+    def allow_privilege_escalation(self) -> Optional[bool]:
         """
         allowPrivilegeEscalation determines if a pod can request to allow
         privilege escalation. If unspecified, defaults to true.
         """
-        return self.__allowPrivilegeEscalation
+        return self.__allow_privilege_escalation
 
-    def allowedHostPaths(self) -> Optional[List["AllowedHostPath"]]:
+    def allowed_host_paths(self) -> Optional[List["AllowedHostPath"]]:
         """
         allowedHostPaths is a white list of allowed host paths. Empty indicates
         that all host paths may be used.
         """
-        return self.__allowedHostPaths
+        return self.__allowed_host_paths
 
-    def allowedFlexVolumes(self) -> Optional[List["AllowedFlexVolume"]]:
+    def allowed_flex_volumes(self) -> Optional[List["AllowedFlexVolume"]]:
         """
         allowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
         Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
         is allowed in the "volumes" field.
         """
-        return self.__allowedFlexVolumes
+        return self.__allowed_flex_volumes
 
-    def allowedCSIDrivers(self) -> Optional[List["AllowedCSIDriver"]]:
+    def allowed_csi_drivers(self) -> Optional[List["AllowedCSIDriver"]]:
         """
         AllowedCSIDrivers is a whitelist of inline CSI drivers that must be explicitly set to be embedded within a pod spec.
         An empty value indicates that any CSI driver can be used for inline ephemeral volumes.
         """
-        return self.__allowedCSIDrivers
+        return self.__allowed_csi_drivers
 
-    def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+    def allowed_unsafe_sysctls(self) -> Optional[List[str]]:
         """
         allowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -2281,9 +2311,9 @@ class PodSecurityPolicySpec(types.Object):
         e.g. "foo/*" allows "foo/bar", "foo/baz", etc.
         e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
         """
-        return self.__allowedUnsafeSysctls
+        return self.__allowed_unsafe_sysctls
 
-    def forbiddenSysctls(self) -> Optional[List[str]]:
+    def forbidden_sysctls(self) -> Optional[List[str]]:
         """
         forbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -2293,23 +2323,23 @@ class PodSecurityPolicySpec(types.Object):
         e.g. "foo/*" forbids "foo/bar", "foo/baz", etc.
         e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
         """
-        return self.__forbiddenSysctls
+        return self.__forbidden_sysctls
 
-    def allowedProcMountTypes(self) -> Optional[List[k8sv1.ProcMountType]]:
+    def allowed_proc_mount_types(self) -> Optional[List[k8sv1.ProcMountType]]:
         """
         AllowedProcMountTypes is a whitelist of allowed ProcMountTypes.
         Empty or nil indicates that only the DefaultProcMountType may be used.
         This requires the ProcMountType feature flag to be enabled.
         """
-        return self.__allowedProcMountTypes
+        return self.__allowed_proc_mount_types
 
-    def runtimeClass(self) -> Optional["RuntimeClassStrategyOptions"]:
+    def runtime_class(self) -> Optional["RuntimeClassStrategyOptions"]:
         """
         runtimeClass is the strategy that will dictate the allowable RuntimeClasses for a pod.
         If this field is omitted, the pod's runtimeClassName field is unrestricted.
         Enforcement of this field depends on the RuntimeClass feature gate being enabled.
         """
-        return self.__runtimeClass
+        return self.__runtime_class
 
 
 class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
@@ -2329,7 +2359,7 @@ class PodSecurityPolicy(base.TypedObject, base.MetadataObject):
         spec: "PodSecurityPolicySpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="PodSecurityPolicy",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -2362,13 +2392,13 @@ class ReplicaSetSpec(types.Object):
     def __init__(
         self,
         replicas: int = None,
-        minReadySeconds: int = None,
+        min_ready_seconds: int = None,
         selector: "metav1.LabelSelector" = None,
         template: "k8sv1.PodTemplateSpec" = None,
     ):
         super().__init__()
         self.__replicas = replicas if replicas is not None else 1
-        self.__minReadySeconds = minReadySeconds
+        self.__min_ready_seconds = min_ready_seconds
         self.__selector = selector
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
 
@@ -2379,10 +2409,10 @@ class ReplicaSetSpec(types.Object):
         check_type("replicas", replicas, Optional[int])
         if replicas is not None:  # omit empty
             v["replicas"] = replicas
-        minReadySeconds = self.minReadySeconds()
-        check_type("minReadySeconds", minReadySeconds, Optional[int])
-        if minReadySeconds:  # omit empty
-            v["minReadySeconds"] = minReadySeconds
+        min_ready_seconds = self.min_ready_seconds()
+        check_type("min_ready_seconds", min_ready_seconds, Optional[int])
+        if min_ready_seconds:  # omit empty
+            v["minReadySeconds"] = min_ready_seconds
         selector = self.selector()
         check_type("selector", selector, Optional["metav1.LabelSelector"])
         if selector is not None:  # omit empty
@@ -2401,13 +2431,13 @@ class ReplicaSetSpec(types.Object):
         """
         return self.__replicas
 
-    def minReadySeconds(self) -> Optional[int]:
+    def min_ready_seconds(self) -> Optional[int]:
         """
         Minimum number of seconds for which a newly created pod should be ready
         without any of its container crashing, for it to be considered available.
         Defaults to 0 (pod will be considered available as soon as it is ready)
         """
-        return self.__minReadySeconds
+        return self.__min_ready_seconds
 
     def selector(self) -> Optional["metav1.LabelSelector"]:
         """
@@ -2445,7 +2475,7 @@ class ReplicaSet(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ReplicaSetSpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="ReplicaSet",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -2479,7 +2509,7 @@ class ReplicationControllerDummy(base.TypedObject):
     @typechecked
     def __init__(self):
         super().__init__(
-            apiVersion="extensions/v1beta1", kind="ReplicationControllerDummy"
+            api_version="extensions/v1beta1", kind="ReplicationControllerDummy"
         )
 
     @typechecked
@@ -2531,7 +2561,7 @@ class Scale(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ScaleSpec" = None,
     ):
         super().__init__(
-            apiVersion="extensions/v1beta1",
+            api_version="extensions/v1beta1",
             kind="Scale",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

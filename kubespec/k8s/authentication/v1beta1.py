@@ -71,7 +71,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         spec: "TokenReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authentication.k8s.io/v1beta1",
+            api_version="authentication.k8s.io/v1beta1",
             kind="TokenReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

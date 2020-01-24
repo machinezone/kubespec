@@ -64,39 +64,41 @@ class CSIDriverSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        attachRequired: bool = None,
-        podInfoOnMount: bool = None,
-        volumeLifecycleModes: List[VolumeLifecycleMode] = None,
+        attach_required: bool = None,
+        pod_info_on_mount: bool = None,
+        volume_lifecycle_modes: List[VolumeLifecycleMode] = None,
     ):
         super().__init__()
-        self.__attachRequired = attachRequired if attachRequired is not None else True
-        self.__podInfoOnMount = podInfoOnMount
-        self.__volumeLifecycleModes = (
-            volumeLifecycleModes if volumeLifecycleModes is not None else []
+        self.__attach_required = (
+            attach_required if attach_required is not None else True
+        )
+        self.__pod_info_on_mount = pod_info_on_mount
+        self.__volume_lifecycle_modes = (
+            volume_lifecycle_modes if volume_lifecycle_modes is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        attachRequired = self.attachRequired()
-        check_type("attachRequired", attachRequired, Optional[bool])
-        if attachRequired is not None:  # omit empty
-            v["attachRequired"] = attachRequired
-        podInfoOnMount = self.podInfoOnMount()
-        check_type("podInfoOnMount", podInfoOnMount, Optional[bool])
-        if podInfoOnMount is not None:  # omit empty
-            v["podInfoOnMount"] = podInfoOnMount
-        volumeLifecycleModes = self.volumeLifecycleModes()
+        attach_required = self.attach_required()
+        check_type("attach_required", attach_required, Optional[bool])
+        if attach_required is not None:  # omit empty
+            v["attachRequired"] = attach_required
+        pod_info_on_mount = self.pod_info_on_mount()
+        check_type("pod_info_on_mount", pod_info_on_mount, Optional[bool])
+        if pod_info_on_mount is not None:  # omit empty
+            v["podInfoOnMount"] = pod_info_on_mount
+        volume_lifecycle_modes = self.volume_lifecycle_modes()
         check_type(
-            "volumeLifecycleModes",
-            volumeLifecycleModes,
+            "volume_lifecycle_modes",
+            volume_lifecycle_modes,
             Optional[List[VolumeLifecycleMode]],
         )
-        if volumeLifecycleModes:  # omit empty
-            v["volumeLifecycleModes"] = volumeLifecycleModes
+        if volume_lifecycle_modes:  # omit empty
+            v["volumeLifecycleModes"] = volume_lifecycle_modes
         return v
 
-    def attachRequired(self) -> Optional[bool]:
+    def attach_required(self) -> Optional[bool]:
         """
         attachRequired indicates this CSI volume driver requires an attach
         operation (because it implements the CSI ControllerPublishVolume()
@@ -109,9 +111,9 @@ class CSIDriverSpec(types.Object):
         specified to false, the attach operation will be skipped.
         Otherwise the attach operation will be called.
         """
-        return self.__attachRequired
+        return self.__attach_required
 
-    def podInfoOnMount(self) -> Optional[bool]:
+    def pod_info_on_mount(self) -> Optional[bool]:
         """
         If set to true, podInfoOnMount indicates this CSI volume driver
         requires additional pod information (like podName, podUID, etc.) during
@@ -138,9 +140,9 @@ class CSIDriverSpec(types.Object):
         deployed on such a cluster and the deployment determines which mode that is, for example
         via a command line parameter of the driver.
         """
-        return self.__podInfoOnMount
+        return self.__pod_info_on_mount
 
-    def volumeLifecycleModes(self) -> Optional[List[VolumeLifecycleMode]]:
+    def volume_lifecycle_modes(self) -> Optional[List[VolumeLifecycleMode]]:
         """
         VolumeLifecycleModes defines what kind of volumes this CSI volume driver supports.
         The default if the list is empty is "Persistent", which is the usage
@@ -155,7 +157,7 @@ class CSIDriverSpec(types.Object):
         A driver can support one or more of these modes and
         more modes may be added in the future.
         """
-        return self.__volumeLifecycleModes
+        return self.__volume_lifecycle_modes
 
 
 class CSIDriver(base.TypedObject, base.MetadataObject):
@@ -180,7 +182,7 @@ class CSIDriver(base.TypedObject, base.MetadataObject):
         spec: "CSIDriverSpec" = None,
     ):
         super().__init__(
-            apiVersion="storage.k8s.io/v1beta1",
+            api_version="storage.k8s.io/v1beta1",
             kind="CSIDriver",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -243,14 +245,14 @@ class CSINodeDriver(types.Object):
     def __init__(
         self,
         name: str = "",
-        nodeID: str = "",
-        topologyKeys: List[str] = None,
+        node_id: str = "",
+        topology_keys: List[str] = None,
         allocatable: "VolumeNodeResources" = None,
     ):
         super().__init__()
         self.__name = name
-        self.__nodeID = nodeID
-        self.__topologyKeys = topologyKeys if topologyKeys is not None else []
+        self.__node_id = node_id
+        self.__topology_keys = topology_keys if topology_keys is not None else []
         self.__allocatable = allocatable
 
     @typechecked
@@ -259,12 +261,12 @@ class CSINodeDriver(types.Object):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        nodeID = self.nodeID()
-        check_type("nodeID", nodeID, str)
-        v["nodeID"] = nodeID
-        topologyKeys = self.topologyKeys()
-        check_type("topologyKeys", topologyKeys, List[str])
-        v["topologyKeys"] = topologyKeys
+        node_id = self.node_id()
+        check_type("node_id", node_id, str)
+        v["nodeID"] = node_id
+        topology_keys = self.topology_keys()
+        check_type("topology_keys", topology_keys, List[str])
+        v["topologyKeys"] = topology_keys
         allocatable = self.allocatable()
         check_type("allocatable", allocatable, Optional["VolumeNodeResources"])
         if allocatable is not None:  # omit empty
@@ -279,7 +281,7 @@ class CSINodeDriver(types.Object):
         """
         return self.__name
 
-    def nodeID(self) -> str:
+    def node_id(self) -> str:
         """
         nodeID of the node from the driver point of view.
         This field enables Kubernetes to communicate with storage systems that do
@@ -290,9 +292,9 @@ class CSINodeDriver(types.Object):
         refer to the node name using the ID that the storage system will
         understand, e.g. "nodeA" instead of "node1". This field is required.
         """
-        return self.__nodeID
+        return self.__node_id
 
-    def topologyKeys(self) -> List[str]:
+    def topology_keys(self) -> List[str]:
         """
         topologyKeys is the list of keys supported by the driver.
         When a driver is initialized on a cluster, it provides a set of topology
@@ -306,7 +308,7 @@ class CSINodeDriver(types.Object):
         It is possible for different nodes to use different topology keys.
         This can be empty if driver does not support topology.
         """
-        return self.__topologyKeys
+        return self.__topology_keys
 
     def allocatable(self) -> Optional["VolumeNodeResources"]:
         """
@@ -367,7 +369,7 @@ class CSINode(base.TypedObject, base.MetadataObject):
         spec: "CSINodeSpec" = None,
     ):
         super().__init__(
-            apiVersion="storage.k8s.io/v1beta1",
+            api_version="storage.k8s.io/v1beta1",
             kind="CSINode",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -408,14 +410,14 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         annotations: Dict[str, str] = None,
         provisioner: str = "",
         parameters: Dict[str, str] = None,
-        reclaimPolicy: k8sv1.PersistentVolumeReclaimPolicy = None,
-        mountOptions: List[str] = None,
-        allowVolumeExpansion: bool = None,
-        volumeBindingMode: VolumeBindingMode = None,
-        allowedTopologies: List["k8sv1.TopologySelectorTerm"] = None,
+        reclaim_policy: k8sv1.PersistentVolumeReclaimPolicy = None,
+        mount_options: List[str] = None,
+        allow_volume_expansion: bool = None,
+        volume_binding_mode: VolumeBindingMode = None,
+        allowed_topologies: List["k8sv1.TopologySelectorTerm"] = None,
     ):
         super().__init__(
-            apiVersion="storage.k8s.io/v1beta1",
+            api_version="storage.k8s.io/v1beta1",
             kind="StorageClass",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -423,20 +425,20 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         )
         self.__provisioner = provisioner
         self.__parameters = parameters if parameters is not None else {}
-        self.__reclaimPolicy = (
-            reclaimPolicy
-            if reclaimPolicy is not None
+        self.__reclaim_policy = (
+            reclaim_policy
+            if reclaim_policy is not None
             else k8sv1.PersistentVolumeReclaimPolicy["Delete"]
         )
-        self.__mountOptions = mountOptions if mountOptions is not None else []
-        self.__allowVolumeExpansion = allowVolumeExpansion
-        self.__volumeBindingMode = (
-            volumeBindingMode
-            if volumeBindingMode is not None
+        self.__mount_options = mount_options if mount_options is not None else []
+        self.__allow_volume_expansion = allow_volume_expansion
+        self.__volume_binding_mode = (
+            volume_binding_mode
+            if volume_binding_mode is not None
             else VolumeBindingMode["Immediate"]
         )
-        self.__allowedTopologies = (
-            allowedTopologies if allowedTopologies is not None else []
+        self.__allowed_topologies = (
+            allowed_topologies if allowed_topologies is not None else []
         )
 
     @typechecked
@@ -449,34 +451,36 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         check_type("parameters", parameters, Optional[Dict[str, str]])
         if parameters:  # omit empty
             v["parameters"] = parameters
-        reclaimPolicy = self.reclaimPolicy()
+        reclaim_policy = self.reclaim_policy()
         check_type(
-            "reclaimPolicy",
-            reclaimPolicy,
+            "reclaim_policy",
+            reclaim_policy,
             Optional[k8sv1.PersistentVolumeReclaimPolicy],
         )
-        if reclaimPolicy is not None:  # omit empty
-            v["reclaimPolicy"] = reclaimPolicy
-        mountOptions = self.mountOptions()
-        check_type("mountOptions", mountOptions, Optional[List[str]])
-        if mountOptions:  # omit empty
-            v["mountOptions"] = mountOptions
-        allowVolumeExpansion = self.allowVolumeExpansion()
-        check_type("allowVolumeExpansion", allowVolumeExpansion, Optional[bool])
-        if allowVolumeExpansion is not None:  # omit empty
-            v["allowVolumeExpansion"] = allowVolumeExpansion
-        volumeBindingMode = self.volumeBindingMode()
-        check_type("volumeBindingMode", volumeBindingMode, Optional[VolumeBindingMode])
-        if volumeBindingMode is not None:  # omit empty
-            v["volumeBindingMode"] = volumeBindingMode
-        allowedTopologies = self.allowedTopologies()
+        if reclaim_policy is not None:  # omit empty
+            v["reclaimPolicy"] = reclaim_policy
+        mount_options = self.mount_options()
+        check_type("mount_options", mount_options, Optional[List[str]])
+        if mount_options:  # omit empty
+            v["mountOptions"] = mount_options
+        allow_volume_expansion = self.allow_volume_expansion()
+        check_type("allow_volume_expansion", allow_volume_expansion, Optional[bool])
+        if allow_volume_expansion is not None:  # omit empty
+            v["allowVolumeExpansion"] = allow_volume_expansion
+        volume_binding_mode = self.volume_binding_mode()
         check_type(
-            "allowedTopologies",
-            allowedTopologies,
+            "volume_binding_mode", volume_binding_mode, Optional[VolumeBindingMode]
+        )
+        if volume_binding_mode is not None:  # omit empty
+            v["volumeBindingMode"] = volume_binding_mode
+        allowed_topologies = self.allowed_topologies()
+        check_type(
+            "allowed_topologies",
+            allowed_topologies,
             Optional[List["k8sv1.TopologySelectorTerm"]],
         )
-        if allowedTopologies:  # omit empty
-            v["allowedTopologies"] = allowedTopologies
+        if allowed_topologies:  # omit empty
+            v["allowedTopologies"] = allowed_topologies
         return v
 
     def provisioner(self) -> str:
@@ -492,43 +496,43 @@ class StorageClass(base.TypedObject, base.MetadataObject):
         """
         return self.__parameters
 
-    def reclaimPolicy(self) -> Optional[k8sv1.PersistentVolumeReclaimPolicy]:
+    def reclaim_policy(self) -> Optional[k8sv1.PersistentVolumeReclaimPolicy]:
         """
         Dynamically provisioned PersistentVolumes of this storage class are
         created with this reclaimPolicy. Defaults to Delete.
         """
-        return self.__reclaimPolicy
+        return self.__reclaim_policy
 
-    def mountOptions(self) -> Optional[List[str]]:
+    def mount_options(self) -> Optional[List[str]]:
         """
         Dynamically provisioned PersistentVolumes of this storage class are
         created with these mountOptions, e.g. ["ro", "soft"]. Not validated -
         mount of the PVs will simply fail if one is invalid.
         """
-        return self.__mountOptions
+        return self.__mount_options
 
-    def allowVolumeExpansion(self) -> Optional[bool]:
+    def allow_volume_expansion(self) -> Optional[bool]:
         """
         AllowVolumeExpansion shows whether the storage class allow volume expand
         """
-        return self.__allowVolumeExpansion
+        return self.__allow_volume_expansion
 
-    def volumeBindingMode(self) -> Optional[VolumeBindingMode]:
+    def volume_binding_mode(self) -> Optional[VolumeBindingMode]:
         """
         VolumeBindingMode indicates how PersistentVolumeClaims should be
         provisioned and bound.  When unset, VolumeBindingImmediate is used.
         This field is only honored by servers that enable the VolumeScheduling feature.
         """
-        return self.__volumeBindingMode
+        return self.__volume_binding_mode
 
-    def allowedTopologies(self) -> Optional[List["k8sv1.TopologySelectorTerm"]]:
+    def allowed_topologies(self) -> Optional[List["k8sv1.TopologySelectorTerm"]]:
         """
         Restrict the node topologies where volumes can be dynamically provisioned.
         Each volume plugin defines its own supported topology specifications.
         An empty TopologySelectorTerm list means there is no topology restriction.
         This field is only honored by servers that enable the VolumeScheduling feature.
         """
-        return self.__allowedTopologies
+        return self.__allowed_topologies
 
 
 class VolumeAttachmentSource(types.Object):
@@ -543,35 +547,37 @@ class VolumeAttachmentSource(types.Object):
     @typechecked
     def __init__(
         self,
-        persistentVolumeName: str = None,
-        inlineVolumeSpec: "k8sv1.PersistentVolumeSpec" = None,
+        persistent_volume_name: str = None,
+        inline_volume_spec: "k8sv1.PersistentVolumeSpec" = None,
     ):
         super().__init__()
-        self.__persistentVolumeName = persistentVolumeName
-        self.__inlineVolumeSpec = inlineVolumeSpec
+        self.__persistent_volume_name = persistent_volume_name
+        self.__inline_volume_spec = inline_volume_spec
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        persistentVolumeName = self.persistentVolumeName()
-        check_type("persistentVolumeName", persistentVolumeName, Optional[str])
-        if persistentVolumeName is not None:  # omit empty
-            v["persistentVolumeName"] = persistentVolumeName
-        inlineVolumeSpec = self.inlineVolumeSpec()
+        persistent_volume_name = self.persistent_volume_name()
+        check_type("persistent_volume_name", persistent_volume_name, Optional[str])
+        if persistent_volume_name is not None:  # omit empty
+            v["persistentVolumeName"] = persistent_volume_name
+        inline_volume_spec = self.inline_volume_spec()
         check_type(
-            "inlineVolumeSpec", inlineVolumeSpec, Optional["k8sv1.PersistentVolumeSpec"]
+            "inline_volume_spec",
+            inline_volume_spec,
+            Optional["k8sv1.PersistentVolumeSpec"],
         )
-        if inlineVolumeSpec is not None:  # omit empty
-            v["inlineVolumeSpec"] = inlineVolumeSpec
+        if inline_volume_spec is not None:  # omit empty
+            v["inlineVolumeSpec"] = inline_volume_spec
         return v
 
-    def persistentVolumeName(self) -> Optional[str]:
+    def persistent_volume_name(self) -> Optional[str]:
         """
         Name of the persistent volume to attach.
         """
-        return self.__persistentVolumeName
+        return self.__persistent_volume_name
 
-    def inlineVolumeSpec(self) -> Optional["k8sv1.PersistentVolumeSpec"]:
+    def inline_volume_spec(self) -> Optional["k8sv1.PersistentVolumeSpec"]:
         """
         inlineVolumeSpec contains all the information necessary to attach
         a persistent volume defined by a pod's inline VolumeSource. This field
@@ -580,7 +586,7 @@ class VolumeAttachmentSource(types.Object):
         PersistentVolumeSpec. This field is alpha-level and is only
         honored by servers that enabled the CSIMigration feature.
         """
-        return self.__inlineVolumeSpec
+        return self.__inline_volume_spec
 
 
 class VolumeAttachmentSpec(types.Object):
@@ -594,12 +600,12 @@ class VolumeAttachmentSpec(types.Object):
         self,
         attacher: str = "",
         source: "VolumeAttachmentSource" = None,
-        nodeName: str = "",
+        node_name: str = "",
     ):
         super().__init__()
         self.__attacher = attacher
         self.__source = source if source is not None else VolumeAttachmentSource()
-        self.__nodeName = nodeName
+        self.__node_name = node_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -610,9 +616,9 @@ class VolumeAttachmentSpec(types.Object):
         source = self.source()
         check_type("source", source, "VolumeAttachmentSource")
         v["source"] = source
-        nodeName = self.nodeName()
-        check_type("nodeName", nodeName, str)
-        v["nodeName"] = nodeName
+        node_name = self.node_name()
+        check_type("node_name", node_name, str)
+        v["nodeName"] = node_name
         return v
 
     def attacher(self) -> str:
@@ -628,11 +634,11 @@ class VolumeAttachmentSpec(types.Object):
         """
         return self.__source
 
-    def nodeName(self) -> str:
+    def node_name(self) -> str:
         """
         The node that the volume should be attached to.
         """
-        return self.__nodeName
+        return self.__node_name
 
 
 class VolumeAttachment(base.TypedObject, base.MetadataObject):
@@ -653,7 +659,7 @@ class VolumeAttachment(base.TypedObject, base.MetadataObject):
         spec: "VolumeAttachmentSpec" = None,
     ):
         super().__init__(
-            apiVersion="storage.k8s.io/v1beta1",
+            api_version="storage.k8s.io/v1beta1",
             kind="VolumeAttachment",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

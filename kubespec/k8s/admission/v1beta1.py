@@ -53,17 +53,17 @@ class AdmissionRequest(types.Object):
         uid: str = "",
         kind: "metav1.GroupVersionKind" = None,
         resource: "metav1.GroupVersionResource" = None,
-        subResource: str = None,
-        requestKind: "metav1.GroupVersionKind" = None,
-        requestResource: "metav1.GroupVersionResource" = None,
-        requestSubResource: str = None,
+        sub_resource: str = None,
+        request_kind: "metav1.GroupVersionKind" = None,
+        request_resource: "metav1.GroupVersionResource" = None,
+        request_sub_resource: str = None,
         name: str = None,
         namespace: str = None,
         operation: Operation = None,
-        userInfo: "authenticationv1.UserInfo" = None,
+        user_info: "authenticationv1.UserInfo" = None,
         object: "runtime.RawExtension" = None,
-        oldObject: "runtime.RawExtension" = None,
-        dryRun: bool = None,
+        old_object: "runtime.RawExtension" = None,
+        dry_run: bool = None,
         options: "runtime.RawExtension" = None,
     ):
         super().__init__()
@@ -72,19 +72,19 @@ class AdmissionRequest(types.Object):
         self.__resource = (
             resource if resource is not None else metav1.GroupVersionResource()
         )
-        self.__subResource = subResource
-        self.__requestKind = requestKind
-        self.__requestResource = requestResource
-        self.__requestSubResource = requestSubResource
+        self.__sub_resource = sub_resource
+        self.__request_kind = request_kind
+        self.__request_resource = request_resource
+        self.__request_sub_resource = request_sub_resource
         self.__name = name
         self.__namespace = namespace
         self.__operation = operation
-        self.__userInfo = (
-            userInfo if userInfo is not None else authenticationv1.UserInfo()
+        self.__user_info = (
+            user_info if user_info is not None else authenticationv1.UserInfo()
         )
         self.__object = object
-        self.__oldObject = oldObject
-        self.__dryRun = dryRun
+        self.__old_object = old_object
+        self.__dry_run = dry_run
         self.__options = options
 
     @typechecked
@@ -99,24 +99,26 @@ class AdmissionRequest(types.Object):
         resource = self.resource()
         check_type("resource", resource, "metav1.GroupVersionResource")
         v["resource"] = resource
-        subResource = self.subResource()
-        check_type("subResource", subResource, Optional[str])
-        if subResource:  # omit empty
-            v["subResource"] = subResource
-        requestKind = self.requestKind()
-        check_type("requestKind", requestKind, Optional["metav1.GroupVersionKind"])
-        if requestKind is not None:  # omit empty
-            v["requestKind"] = requestKind
-        requestResource = self.requestResource()
+        sub_resource = self.sub_resource()
+        check_type("sub_resource", sub_resource, Optional[str])
+        if sub_resource:  # omit empty
+            v["subResource"] = sub_resource
+        request_kind = self.request_kind()
+        check_type("request_kind", request_kind, Optional["metav1.GroupVersionKind"])
+        if request_kind is not None:  # omit empty
+            v["requestKind"] = request_kind
+        request_resource = self.request_resource()
         check_type(
-            "requestResource", requestResource, Optional["metav1.GroupVersionResource"]
+            "request_resource",
+            request_resource,
+            Optional["metav1.GroupVersionResource"],
         )
-        if requestResource is not None:  # omit empty
-            v["requestResource"] = requestResource
-        requestSubResource = self.requestSubResource()
-        check_type("requestSubResource", requestSubResource, Optional[str])
-        if requestSubResource:  # omit empty
-            v["requestSubResource"] = requestSubResource
+        if request_resource is not None:  # omit empty
+            v["requestResource"] = request_resource
+        request_sub_resource = self.request_sub_resource()
+        check_type("request_sub_resource", request_sub_resource, Optional[str])
+        if request_sub_resource:  # omit empty
+            v["requestSubResource"] = request_sub_resource
         name = self.name()
         check_type("name", name, Optional[str])
         if name:  # omit empty
@@ -128,19 +130,19 @@ class AdmissionRequest(types.Object):
         operation = self.operation()
         check_type("operation", operation, Operation)
         v["operation"] = operation
-        userInfo = self.userInfo()
-        check_type("userInfo", userInfo, "authenticationv1.UserInfo")
-        v["userInfo"] = userInfo
+        user_info = self.user_info()
+        check_type("user_info", user_info, "authenticationv1.UserInfo")
+        v["userInfo"] = user_info
         object = self.object()
         check_type("object", object, Optional["runtime.RawExtension"])
         v["object"] = object
-        oldObject = self.oldObject()
-        check_type("oldObject", oldObject, Optional["runtime.RawExtension"])
-        v["oldObject"] = oldObject
-        dryRun = self.dryRun()
-        check_type("dryRun", dryRun, Optional[bool])
-        if dryRun is not None:  # omit empty
-            v["dryRun"] = dryRun
+        old_object = self.old_object()
+        check_type("old_object", old_object, Optional["runtime.RawExtension"])
+        v["oldObject"] = old_object
+        dry_run = self.dry_run()
+        check_type("dry_run", dry_run, Optional[bool])
+        if dry_run is not None:  # omit empty
+            v["dryRun"] = dry_run
         options = self.options()
         check_type("options", options, Optional["runtime.RawExtension"])
         v["options"] = options
@@ -167,13 +169,13 @@ class AdmissionRequest(types.Object):
         """
         return self.__resource
 
-    def subResource(self) -> Optional[str]:
+    def sub_resource(self) -> Optional[str]:
         """
         SubResource is the subresource being requested, if any (for example, "status" or "scale")
         """
-        return self.__subResource
+        return self.__sub_resource
 
-    def requestKind(self) -> Optional["metav1.GroupVersionKind"]:
+    def request_kind(self) -> Optional["metav1.GroupVersionKind"]:
         """
         RequestKind is the fully-qualified type of the original API request (for example, v1.Pod or autoscaling.v1.Scale).
         If this is specified and differs from the value in "kind", an equivalent match and conversion was performed.
@@ -186,9 +188,9 @@ class AdmissionRequest(types.Object):
         
         See documentation for the "matchPolicy" field in the webhook configuration type for more details.
         """
-        return self.__requestKind
+        return self.__request_kind
 
-    def requestResource(self) -> Optional["metav1.GroupVersionResource"]:
+    def request_resource(self) -> Optional["metav1.GroupVersionResource"]:
         """
         RequestResource is the fully-qualified resource of the original API request (for example, v1.pods).
         If this is specified and differs from the value in "resource", an equivalent match and conversion was performed.
@@ -201,15 +203,15 @@ class AdmissionRequest(types.Object):
         
         See documentation for the "matchPolicy" field in the webhook configuration type.
         """
-        return self.__requestResource
+        return self.__request_resource
 
-    def requestSubResource(self) -> Optional[str]:
+    def request_sub_resource(self) -> Optional[str]:
         """
         RequestSubResource is the name of the subresource of the original API request, if any (for example, "status" or "scale")
         If this is specified and differs from the value in "subResource", an equivalent match and conversion was performed.
         See documentation for the "matchPolicy" field in the webhook configuration type.
         """
-        return self.__requestSubResource
+        return self.__request_sub_resource
 
     def name(self) -> Optional[str]:
         """
@@ -231,11 +233,11 @@ class AdmissionRequest(types.Object):
         """
         return self.__operation
 
-    def userInfo(self) -> "authenticationv1.UserInfo":
+    def user_info(self) -> "authenticationv1.UserInfo":
         """
         UserInfo is information about the requesting user
         """
-        return self.__userInfo
+        return self.__user_info
 
     def object(self) -> Optional["runtime.RawExtension"]:
         """
@@ -243,18 +245,18 @@ class AdmissionRequest(types.Object):
         """
         return self.__object
 
-    def oldObject(self) -> Optional["runtime.RawExtension"]:
+    def old_object(self) -> Optional["runtime.RawExtension"]:
         """
         OldObject is the existing object. Only populated for DELETE and UPDATE requests.
         """
-        return self.__oldObject
+        return self.__old_object
 
-    def dryRun(self) -> Optional[bool]:
+    def dry_run(self) -> Optional[bool]:
         """
         DryRun indicates that modifications will definitely not be persisted for this request.
         Defaults to false.
         """
-        return self.__dryRun
+        return self.__dry_run
 
     def options(self) -> Optional["runtime.RawExtension"]:
         """
@@ -280,17 +282,17 @@ class AdmissionResponse(types.Object):
         allowed: bool = False,
         status: "metav1.Status" = None,
         patch: bytes = None,
-        patchType: PatchType = None,
-        auditAnnotations: Dict[str, str] = None,
+        patch_type: PatchType = None,
+        audit_annotations: Dict[str, str] = None,
     ):
         super().__init__()
         self.__uid = uid
         self.__allowed = allowed
         self.__status = status
         self.__patch = patch if patch is not None else b""
-        self.__patchType = patchType
-        self.__auditAnnotations = (
-            auditAnnotations if auditAnnotations is not None else {}
+        self.__patch_type = patch_type
+        self.__audit_annotations = (
+            audit_annotations if audit_annotations is not None else {}
         )
 
     @typechecked
@@ -310,14 +312,14 @@ class AdmissionResponse(types.Object):
         check_type("patch", patch, Optional[bytes])
         if patch:  # omit empty
             v["patch"] = patch
-        patchType = self.patchType()
-        check_type("patchType", patchType, Optional[PatchType])
-        if patchType is not None:  # omit empty
-            v["patchType"] = patchType
-        auditAnnotations = self.auditAnnotations()
-        check_type("auditAnnotations", auditAnnotations, Optional[Dict[str, str]])
-        if auditAnnotations:  # omit empty
-            v["auditAnnotations"] = auditAnnotations
+        patch_type = self.patch_type()
+        check_type("patch_type", patch_type, Optional[PatchType])
+        if patch_type is not None:  # omit empty
+            v["patchType"] = patch_type
+        audit_annotations = self.audit_annotations()
+        check_type("audit_annotations", audit_annotations, Optional[Dict[str, str]])
+        if audit_annotations:  # omit empty
+            v["auditAnnotations"] = audit_annotations
         return v
 
     def uid(self) -> str:
@@ -346,20 +348,20 @@ class AdmissionResponse(types.Object):
         """
         return self.__patch
 
-    def patchType(self) -> Optional[PatchType]:
+    def patch_type(self) -> Optional[PatchType]:
         """
         The type of Patch. Currently we only allow "JSONPatch".
         """
-        return self.__patchType
+        return self.__patch_type
 
-    def auditAnnotations(self) -> Optional[Dict[str, str]]:
+    def audit_annotations(self) -> Optional[Dict[str, str]]:
         """
         AuditAnnotations is an unstructured key value map set by remote admission controller (e.g. error=image-blacklisted).
         MutatingAdmissionWebhook and ValidatingAdmissionWebhook admission controller will prefix the keys with
         admission webhook name (e.g. imagepolicy.example.com/error=image-blacklisted). AuditAnnotations will be provided by
         the admission webhook to add additional context to the audit log for this request.
         """
-        return self.__auditAnnotations
+        return self.__audit_annotations
 
 
 class AdmissionReview(base.TypedObject):
@@ -372,7 +374,7 @@ class AdmissionReview(base.TypedObject):
     def __init__(
         self, request: "AdmissionRequest" = None, response: "AdmissionResponse" = None
     ):
-        super().__init__(apiVersion="admission.k8s.io/v1beta1", kind="AdmissionReview")
+        super().__init__(api_version="admission.k8s.io/v1beta1", kind="AdmissionReview")
         self.__request = request
         self.__response = response
 

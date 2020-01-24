@@ -223,12 +223,12 @@ class PodSecurityPolicyReviewSpec(types.Object):
     def __init__(
         self,
         template: "k8sv1.PodTemplateSpec" = None,
-        serviceAccountNames: List[str] = None,
+        service_account_names: List[str] = None,
     ):
         super().__init__()
         self.__template = template if template is not None else k8sv1.PodTemplateSpec()
-        self.__serviceAccountNames = (
-            serviceAccountNames if serviceAccountNames is not None else []
+        self.__service_account_names = (
+            service_account_names if service_account_names is not None else []
         )
 
     @typechecked
@@ -237,10 +237,10 @@ class PodSecurityPolicyReviewSpec(types.Object):
         template = self.template()
         check_type("template", template, "k8sv1.PodTemplateSpec")
         v["template"] = template
-        serviceAccountNames = self.serviceAccountNames()
-        check_type("serviceAccountNames", serviceAccountNames, Optional[List[str]])
-        if serviceAccountNames:  # omit empty
-            v["serviceAccountNames"] = serviceAccountNames
+        service_account_names = self.service_account_names()
+        check_type("service_account_names", service_account_names, Optional[List[str]])
+        if service_account_names:  # omit empty
+            v["serviceAccountNames"] = service_account_names
         return v
 
     def template(self) -> "k8sv1.PodTemplateSpec":
@@ -252,7 +252,7 @@ class PodSecurityPolicyReviewSpec(types.Object):
         """
         return self.__template
 
-    def serviceAccountNames(self) -> Optional[List[str]]:
+    def service_account_names(self) -> Optional[List[str]]:
         """
         serviceAccountNames is an optional set of ServiceAccounts to run the check with.
         If serviceAccountNames is empty, the template.spec.serviceAccountName is used,
@@ -261,7 +261,7 @@ class PodSecurityPolicyReviewSpec(types.Object):
         
         TODO: find a way to express 'all service accounts'
         """
-        return self.__serviceAccountNames
+        return self.__service_account_names
 
 
 class PodSecurityPolicyReview(base.TypedObject):
@@ -273,7 +273,7 @@ class PodSecurityPolicyReview(base.TypedObject):
     @typechecked
     def __init__(self, spec: "PodSecurityPolicyReviewSpec" = None):
         super().__init__(
-            apiVersion="security.openshift.io/v1", kind="PodSecurityPolicyReview"
+            api_version="security.openshift.io/v1", kind="PodSecurityPolicyReview"
         )
         self.__spec = spec if spec is not None else PodSecurityPolicyReviewSpec()
 
@@ -327,7 +327,7 @@ class PodSecurityPolicySelfSubjectReview(base.TypedObject):
     @typechecked
     def __init__(self, spec: "PodSecurityPolicySelfSubjectReviewSpec" = None):
         super().__init__(
-            apiVersion="security.openshift.io/v1",
+            api_version="security.openshift.io/v1",
             kind="PodSecurityPolicySelfSubjectReview",
         )
         self.__spec = (
@@ -414,7 +414,8 @@ class PodSecurityPolicySubjectReview(base.TypedObject):
     @typechecked
     def __init__(self, spec: "PodSecurityPolicySubjectReviewSpec" = None):
         super().__init__(
-            apiVersion="security.openshift.io/v1", kind="PodSecurityPolicySubjectReview"
+            api_version="security.openshift.io/v1",
+            kind="PodSecurityPolicySubjectReview",
         )
         self.__spec = spec if spec is not None else PodSecurityPolicySubjectReviewSpec()
 
@@ -449,7 +450,7 @@ class RangeAllocation(base.TypedObject, base.MetadataObject):
         data: bytes = None,
     ):
         super().__init__(
-            apiVersion="security.openshift.io/v1",
+            api_version="security.openshift.io/v1",
             kind="RangeAllocation",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -494,14 +495,14 @@ class RunAsUserStrategyOptions(types.Object):
         self,
         type: RunAsUserStrategyType = None,
         uid: int = None,
-        uidRangeMin: int = None,
-        uidRangeMax: int = None,
+        uid_range_min: int = None,
+        uid_range_max: int = None,
     ):
         super().__init__()
         self.__type = type
         self.__uid = uid
-        self.__uidRangeMin = uidRangeMin
-        self.__uidRangeMax = uidRangeMax
+        self.__uid_range_min = uid_range_min
+        self.__uid_range_max = uid_range_max
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -514,14 +515,14 @@ class RunAsUserStrategyOptions(types.Object):
         check_type("uid", uid, Optional[int])
         if uid is not None:  # omit empty
             v["uid"] = uid
-        uidRangeMin = self.uidRangeMin()
-        check_type("uidRangeMin", uidRangeMin, Optional[int])
-        if uidRangeMin is not None:  # omit empty
-            v["uidRangeMin"] = uidRangeMin
-        uidRangeMax = self.uidRangeMax()
-        check_type("uidRangeMax", uidRangeMax, Optional[int])
-        if uidRangeMax is not None:  # omit empty
-            v["uidRangeMax"] = uidRangeMax
+        uid_range_min = self.uid_range_min()
+        check_type("uid_range_min", uid_range_min, Optional[int])
+        if uid_range_min is not None:  # omit empty
+            v["uidRangeMin"] = uid_range_min
+        uid_range_max = self.uid_range_max()
+        check_type("uid_range_max", uid_range_max, Optional[int])
+        if uid_range_max is not None:  # omit empty
+            v["uidRangeMax"] = uid_range_max
         return v
 
     def type(self) -> Optional[RunAsUserStrategyType]:
@@ -537,17 +538,17 @@ class RunAsUserStrategyOptions(types.Object):
         """
         return self.__uid
 
-    def uidRangeMin(self) -> Optional[int]:
+    def uid_range_min(self) -> Optional[int]:
         """
         UIDRangeMin defines the min value for a strategy that allocates by range.
         """
-        return self.__uidRangeMin
+        return self.__uid_range_min
 
-    def uidRangeMax(self) -> Optional[int]:
+    def uid_range_max(self) -> Optional[int]:
         """
         UIDRangeMax defines the max value for a strategy that allocates by range.
         """
-        return self.__uidRangeMax
+        return self.__uid_range_max
 
 
 class SELinuxContextStrategyOptions(types.Object):
@@ -560,11 +561,11 @@ class SELinuxContextStrategyOptions(types.Object):
     def __init__(
         self,
         type: SELinuxContextStrategyType = None,
-        seLinuxOptions: "k8sv1.SELinuxOptions" = None,
+        se_linux_options: "k8sv1.SELinuxOptions" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__seLinuxOptions = seLinuxOptions
+        self.__se_linux_options = se_linux_options
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -573,10 +574,12 @@ class SELinuxContextStrategyOptions(types.Object):
         check_type("type", type, Optional[SELinuxContextStrategyType])
         if type:  # omit empty
             v["type"] = type
-        seLinuxOptions = self.seLinuxOptions()
-        check_type("seLinuxOptions", seLinuxOptions, Optional["k8sv1.SELinuxOptions"])
-        if seLinuxOptions is not None:  # omit empty
-            v["seLinuxOptions"] = seLinuxOptions
+        se_linux_options = self.se_linux_options()
+        check_type(
+            "se_linux_options", se_linux_options, Optional["k8sv1.SELinuxOptions"]
+        )
+        if se_linux_options is not None:  # omit empty
+            v["seLinuxOptions"] = se_linux_options
         return v
 
     def type(self) -> Optional[SELinuxContextStrategyType]:
@@ -585,11 +588,11 @@ class SELinuxContextStrategyOptions(types.Object):
         """
         return self.__type
 
-    def seLinuxOptions(self) -> Optional["k8sv1.SELinuxOptions"]:
+    def se_linux_options(self) -> Optional["k8sv1.SELinuxOptions"]:
         """
         seLinuxOptions required to run as; required for MustRunAs
         """
-        return self.__seLinuxOptions
+        return self.__se_linux_options
 
 
 class SupplementalGroupsStrategyOptions(types.Object):
@@ -653,82 +656,84 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         priority: int = None,
-        allowPrivilegedContainer: bool = False,
-        defaultAddCapabilities: List[k8sv1.Capability] = None,
-        requiredDropCapabilities: List[k8sv1.Capability] = None,
-        allowedCapabilities: List[k8sv1.Capability] = None,
-        allowHostDirVolumePlugin: bool = False,
+        allow_privileged_container: bool = False,
+        default_add_capabilities: List[k8sv1.Capability] = None,
+        required_drop_capabilities: List[k8sv1.Capability] = None,
+        allowed_capabilities: List[k8sv1.Capability] = None,
+        allow_host_dir_volume_plugin: bool = False,
         volumes: List[FSType] = None,
-        allowedFlexVolumes: List["AllowedFlexVolume"] = None,
-        allowHostNetwork: bool = False,
-        allowHostPorts: bool = False,
-        allowHostPID: bool = False,
-        allowHostIPC: bool = False,
-        defaultAllowPrivilegeEscalation: bool = None,
-        allowPrivilegeEscalation: bool = None,
-        seLinuxContext: "SELinuxContextStrategyOptions" = None,
-        runAsUser: "RunAsUserStrategyOptions" = None,
-        supplementalGroups: "SupplementalGroupsStrategyOptions" = None,
-        fsGroup: "FSGroupStrategyOptions" = None,
-        readOnlyRootFilesystem: bool = False,
+        allowed_flex_volumes: List["AllowedFlexVolume"] = None,
+        allow_host_network: bool = False,
+        allow_host_ports: bool = False,
+        allow_host_pid: bool = False,
+        allow_host_ipc: bool = False,
+        default_allow_privilege_escalation: bool = None,
+        allow_privilege_escalation: bool = None,
+        se_linux_context: "SELinuxContextStrategyOptions" = None,
+        run_as_user: "RunAsUserStrategyOptions" = None,
+        supplemental_groups: "SupplementalGroupsStrategyOptions" = None,
+        fs_group: "FSGroupStrategyOptions" = None,
+        read_only_root_filesystem: bool = False,
         users: List[str] = None,
         groups: List[str] = None,
-        seccompProfiles: List[str] = None,
-        allowedUnsafeSysctls: List[str] = None,
-        forbiddenSysctls: List[str] = None,
+        seccomp_profiles: List[str] = None,
+        allowed_unsafe_sysctls: List[str] = None,
+        forbidden_sysctls: List[str] = None,
     ):
         super().__init__(
-            apiVersion="security.openshift.io/v1",
+            api_version="security.openshift.io/v1",
             kind="SecurityContextConstraints",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__priority = priority
-        self.__allowPrivilegedContainer = allowPrivilegedContainer
-        self.__defaultAddCapabilities = (
-            defaultAddCapabilities if defaultAddCapabilities is not None else []
+        self.__allow_privileged_container = allow_privileged_container
+        self.__default_add_capabilities = (
+            default_add_capabilities if default_add_capabilities is not None else []
         )
-        self.__requiredDropCapabilities = (
-            requiredDropCapabilities if requiredDropCapabilities is not None else []
+        self.__required_drop_capabilities = (
+            required_drop_capabilities if required_drop_capabilities is not None else []
         )
-        self.__allowedCapabilities = (
-            allowedCapabilities if allowedCapabilities is not None else []
+        self.__allowed_capabilities = (
+            allowed_capabilities if allowed_capabilities is not None else []
         )
-        self.__allowHostDirVolumePlugin = allowHostDirVolumePlugin
+        self.__allow_host_dir_volume_plugin = allow_host_dir_volume_plugin
         self.__volumes = volumes if volumes is not None else []
-        self.__allowedFlexVolumes = (
-            allowedFlexVolumes if allowedFlexVolumes is not None else []
+        self.__allowed_flex_volumes = (
+            allowed_flex_volumes if allowed_flex_volumes is not None else []
         )
-        self.__allowHostNetwork = allowHostNetwork
-        self.__allowHostPorts = allowHostPorts
-        self.__allowHostPID = allowHostPID
-        self.__allowHostIPC = allowHostIPC
-        self.__defaultAllowPrivilegeEscalation = defaultAllowPrivilegeEscalation
-        self.__allowPrivilegeEscalation = allowPrivilegeEscalation
-        self.__seLinuxContext = (
-            seLinuxContext
-            if seLinuxContext is not None
+        self.__allow_host_network = allow_host_network
+        self.__allow_host_ports = allow_host_ports
+        self.__allow_host_pid = allow_host_pid
+        self.__allow_host_ipc = allow_host_ipc
+        self.__default_allow_privilege_escalation = default_allow_privilege_escalation
+        self.__allow_privilege_escalation = allow_privilege_escalation
+        self.__se_linux_context = (
+            se_linux_context
+            if se_linux_context is not None
             else SELinuxContextStrategyOptions()
         )
-        self.__runAsUser = (
-            runAsUser if runAsUser is not None else RunAsUserStrategyOptions()
+        self.__run_as_user = (
+            run_as_user if run_as_user is not None else RunAsUserStrategyOptions()
         )
-        self.__supplementalGroups = (
-            supplementalGroups
-            if supplementalGroups is not None
+        self.__supplemental_groups = (
+            supplemental_groups
+            if supplemental_groups is not None
             else SupplementalGroupsStrategyOptions()
         )
-        self.__fsGroup = fsGroup if fsGroup is not None else FSGroupStrategyOptions()
-        self.__readOnlyRootFilesystem = readOnlyRootFilesystem
+        self.__fs_group = fs_group if fs_group is not None else FSGroupStrategyOptions()
+        self.__read_only_root_filesystem = read_only_root_filesystem
         self.__users = users if users is not None else []
         self.__groups = groups if groups is not None else []
-        self.__seccompProfiles = seccompProfiles if seccompProfiles is not None else []
-        self.__allowedUnsafeSysctls = (
-            allowedUnsafeSysctls if allowedUnsafeSysctls is not None else []
+        self.__seccomp_profiles = (
+            seccomp_profiles if seccomp_profiles is not None else []
         )
-        self.__forbiddenSysctls = (
-            forbiddenSysctls if forbiddenSysctls is not None else []
+        self.__allowed_unsafe_sysctls = (
+            allowed_unsafe_sysctls if allowed_unsafe_sysctls is not None else []
+        )
+        self.__forbidden_sysctls = (
+            forbidden_sysctls if forbidden_sysctls is not None else []
         )
 
     @typechecked
@@ -737,99 +742,107 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         priority = self.priority()
         check_type("priority", priority, Optional[int])
         v["priority"] = priority
-        allowPrivilegedContainer = self.allowPrivilegedContainer()
-        check_type("allowPrivilegedContainer", allowPrivilegedContainer, bool)
-        v["allowPrivilegedContainer"] = allowPrivilegedContainer
-        defaultAddCapabilities = self.defaultAddCapabilities()
+        allow_privileged_container = self.allow_privileged_container()
+        check_type("allow_privileged_container", allow_privileged_container, bool)
+        v["allowPrivilegedContainer"] = allow_privileged_container
+        default_add_capabilities = self.default_add_capabilities()
         check_type(
-            "defaultAddCapabilities", defaultAddCapabilities, List[k8sv1.Capability]
+            "default_add_capabilities", default_add_capabilities, List[k8sv1.Capability]
         )
-        v["defaultAddCapabilities"] = defaultAddCapabilities
-        requiredDropCapabilities = self.requiredDropCapabilities()
+        v["defaultAddCapabilities"] = default_add_capabilities
+        required_drop_capabilities = self.required_drop_capabilities()
         check_type(
-            "requiredDropCapabilities", requiredDropCapabilities, List[k8sv1.Capability]
+            "required_drop_capabilities",
+            required_drop_capabilities,
+            List[k8sv1.Capability],
         )
-        v["requiredDropCapabilities"] = requiredDropCapabilities
-        allowedCapabilities = self.allowedCapabilities()
-        check_type("allowedCapabilities", allowedCapabilities, List[k8sv1.Capability])
-        v["allowedCapabilities"] = allowedCapabilities
-        allowHostDirVolumePlugin = self.allowHostDirVolumePlugin()
-        check_type("allowHostDirVolumePlugin", allowHostDirVolumePlugin, bool)
-        v["allowHostDirVolumePlugin"] = allowHostDirVolumePlugin
+        v["requiredDropCapabilities"] = required_drop_capabilities
+        allowed_capabilities = self.allowed_capabilities()
+        check_type("allowed_capabilities", allowed_capabilities, List[k8sv1.Capability])
+        v["allowedCapabilities"] = allowed_capabilities
+        allow_host_dir_volume_plugin = self.allow_host_dir_volume_plugin()
+        check_type("allow_host_dir_volume_plugin", allow_host_dir_volume_plugin, bool)
+        v["allowHostDirVolumePlugin"] = allow_host_dir_volume_plugin
         volumes = self.volumes()
         check_type("volumes", volumes, List[FSType])
         v["volumes"] = volumes
-        allowedFlexVolumes = self.allowedFlexVolumes()
+        allowed_flex_volumes = self.allowed_flex_volumes()
         check_type(
-            "allowedFlexVolumes",
-            allowedFlexVolumes,
+            "allowed_flex_volumes",
+            allowed_flex_volumes,
             Optional[List["AllowedFlexVolume"]],
         )
-        if allowedFlexVolumes:  # omit empty
-            v["allowedFlexVolumes"] = allowedFlexVolumes
-        allowHostNetwork = self.allowHostNetwork()
-        check_type("allowHostNetwork", allowHostNetwork, bool)
-        v["allowHostNetwork"] = allowHostNetwork
-        allowHostPorts = self.allowHostPorts()
-        check_type("allowHostPorts", allowHostPorts, bool)
-        v["allowHostPorts"] = allowHostPorts
-        allowHostPID = self.allowHostPID()
-        check_type("allowHostPID", allowHostPID, bool)
-        v["allowHostPID"] = allowHostPID
-        allowHostIPC = self.allowHostIPC()
-        check_type("allowHostIPC", allowHostIPC, bool)
-        v["allowHostIPC"] = allowHostIPC
-        defaultAllowPrivilegeEscalation = self.defaultAllowPrivilegeEscalation()
+        if allowed_flex_volumes:  # omit empty
+            v["allowedFlexVolumes"] = allowed_flex_volumes
+        allow_host_network = self.allow_host_network()
+        check_type("allow_host_network", allow_host_network, bool)
+        v["allowHostNetwork"] = allow_host_network
+        allow_host_ports = self.allow_host_ports()
+        check_type("allow_host_ports", allow_host_ports, bool)
+        v["allowHostPorts"] = allow_host_ports
+        allow_host_pid = self.allow_host_pid()
+        check_type("allow_host_pid", allow_host_pid, bool)
+        v["allowHostPID"] = allow_host_pid
+        allow_host_ipc = self.allow_host_ipc()
+        check_type("allow_host_ipc", allow_host_ipc, bool)
+        v["allowHostIPC"] = allow_host_ipc
+        default_allow_privilege_escalation = self.default_allow_privilege_escalation()
         check_type(
-            "defaultAllowPrivilegeEscalation",
-            defaultAllowPrivilegeEscalation,
+            "default_allow_privilege_escalation",
+            default_allow_privilege_escalation,
             Optional[bool],
         )
-        if defaultAllowPrivilegeEscalation is not None:  # omit empty
-            v["defaultAllowPrivilegeEscalation"] = defaultAllowPrivilegeEscalation
-        allowPrivilegeEscalation = self.allowPrivilegeEscalation()
-        check_type("allowPrivilegeEscalation", allowPrivilegeEscalation, Optional[bool])
-        if allowPrivilegeEscalation is not None:  # omit empty
-            v["allowPrivilegeEscalation"] = allowPrivilegeEscalation
-        seLinuxContext = self.seLinuxContext()
+        if default_allow_privilege_escalation is not None:  # omit empty
+            v["defaultAllowPrivilegeEscalation"] = default_allow_privilege_escalation
+        allow_privilege_escalation = self.allow_privilege_escalation()
         check_type(
-            "seLinuxContext", seLinuxContext, Optional["SELinuxContextStrategyOptions"]
+            "allow_privilege_escalation", allow_privilege_escalation, Optional[bool]
         )
-        v["seLinuxContext"] = seLinuxContext
-        runAsUser = self.runAsUser()
-        check_type("runAsUser", runAsUser, Optional["RunAsUserStrategyOptions"])
-        v["runAsUser"] = runAsUser
-        supplementalGroups = self.supplementalGroups()
+        if allow_privilege_escalation is not None:  # omit empty
+            v["allowPrivilegeEscalation"] = allow_privilege_escalation
+        se_linux_context = self.se_linux_context()
         check_type(
-            "supplementalGroups",
-            supplementalGroups,
+            "se_linux_context",
+            se_linux_context,
+            Optional["SELinuxContextStrategyOptions"],
+        )
+        v["seLinuxContext"] = se_linux_context
+        run_as_user = self.run_as_user()
+        check_type("run_as_user", run_as_user, Optional["RunAsUserStrategyOptions"])
+        v["runAsUser"] = run_as_user
+        supplemental_groups = self.supplemental_groups()
+        check_type(
+            "supplemental_groups",
+            supplemental_groups,
             Optional["SupplementalGroupsStrategyOptions"],
         )
-        v["supplementalGroups"] = supplementalGroups
-        fsGroup = self.fsGroup()
-        check_type("fsGroup", fsGroup, Optional["FSGroupStrategyOptions"])
-        v["fsGroup"] = fsGroup
-        readOnlyRootFilesystem = self.readOnlyRootFilesystem()
-        check_type("readOnlyRootFilesystem", readOnlyRootFilesystem, bool)
-        v["readOnlyRootFilesystem"] = readOnlyRootFilesystem
+        v["supplementalGroups"] = supplemental_groups
+        fs_group = self.fs_group()
+        check_type("fs_group", fs_group, Optional["FSGroupStrategyOptions"])
+        v["fsGroup"] = fs_group
+        read_only_root_filesystem = self.read_only_root_filesystem()
+        check_type("read_only_root_filesystem", read_only_root_filesystem, bool)
+        v["readOnlyRootFilesystem"] = read_only_root_filesystem
         users = self.users()
         check_type("users", users, List[str])
         v["users"] = users
         groups = self.groups()
         check_type("groups", groups, List[str])
         v["groups"] = groups
-        seccompProfiles = self.seccompProfiles()
-        check_type("seccompProfiles", seccompProfiles, Optional[List[str]])
-        if seccompProfiles:  # omit empty
-            v["seccompProfiles"] = seccompProfiles
-        allowedUnsafeSysctls = self.allowedUnsafeSysctls()
-        check_type("allowedUnsafeSysctls", allowedUnsafeSysctls, Optional[List[str]])
-        if allowedUnsafeSysctls:  # omit empty
-            v["allowedUnsafeSysctls"] = allowedUnsafeSysctls
-        forbiddenSysctls = self.forbiddenSysctls()
-        check_type("forbiddenSysctls", forbiddenSysctls, Optional[List[str]])
-        if forbiddenSysctls:  # omit empty
-            v["forbiddenSysctls"] = forbiddenSysctls
+        seccomp_profiles = self.seccomp_profiles()
+        check_type("seccomp_profiles", seccomp_profiles, Optional[List[str]])
+        if seccomp_profiles:  # omit empty
+            v["seccompProfiles"] = seccomp_profiles
+        allowed_unsafe_sysctls = self.allowed_unsafe_sysctls()
+        check_type(
+            "allowed_unsafe_sysctls", allowed_unsafe_sysctls, Optional[List[str]]
+        )
+        if allowed_unsafe_sysctls:  # omit empty
+            v["allowedUnsafeSysctls"] = allowed_unsafe_sysctls
+        forbidden_sysctls = self.forbidden_sysctls()
+        check_type("forbidden_sysctls", forbidden_sysctls, Optional[List[str]])
+        if forbidden_sysctls:  # omit empty
+            v["forbiddenSysctls"] = forbidden_sysctls
         return v
 
     def priority(self) -> Optional[int]:
@@ -844,30 +857,30 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__priority
 
-    def allowPrivilegedContainer(self) -> bool:
+    def allow_privileged_container(self) -> bool:
         """
         AllowPrivilegedContainer determines if a container can request to be run as privileged.
         """
-        return self.__allowPrivilegedContainer
+        return self.__allow_privileged_container
 
-    def defaultAddCapabilities(self) -> List[k8sv1.Capability]:
+    def default_add_capabilities(self) -> List[k8sv1.Capability]:
         """
         DefaultAddCapabilities is the default set of capabilities that will be added to the container
         unless the pod spec specifically drops the capability.  You may not list a capabiility in both
         DefaultAddCapabilities and RequiredDropCapabilities.
         +nullable
         """
-        return self.__defaultAddCapabilities
+        return self.__default_add_capabilities
 
-    def requiredDropCapabilities(self) -> List[k8sv1.Capability]:
+    def required_drop_capabilities(self) -> List[k8sv1.Capability]:
         """
         RequiredDropCapabilities are the capabilities that will be dropped from the container.  These
         are required to be dropped and cannot be added.
         +nullable
         """
-        return self.__requiredDropCapabilities
+        return self.__required_drop_capabilities
 
-    def allowedCapabilities(self) -> List[k8sv1.Capability]:
+    def allowed_capabilities(self) -> List[k8sv1.Capability]:
         """
         AllowedCapabilities is a list of capabilities that can be requested to add to the container.
         Capabilities in this field maybe added at the pod author's discretion.
@@ -875,13 +888,13 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         To allow all capabilities you may use '*'.
         +nullable
         """
-        return self.__allowedCapabilities
+        return self.__allowed_capabilities
 
-    def allowHostDirVolumePlugin(self) -> bool:
+    def allow_host_dir_volume_plugin(self) -> bool:
         """
         AllowHostDirVolumePlugin determines if the policy allow containers to use the HostDir volume plugin
         """
-        return self.__allowHostDirVolumePlugin
+        return self.__allow_host_dir_volume_plugin
 
     def volumes(self) -> List[FSType]:
         """
@@ -892,84 +905,84 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__volumes
 
-    def allowedFlexVolumes(self) -> Optional[List["AllowedFlexVolume"]]:
+    def allowed_flex_volumes(self) -> Optional[List["AllowedFlexVolume"]]:
         """
         AllowedFlexVolumes is a whitelist of allowed Flexvolumes.  Empty or nil indicates that all
         Flexvolumes may be used.  This parameter is effective only when the usage of the Flexvolumes
         is allowed in the "Volumes" field.
         +nullable
         """
-        return self.__allowedFlexVolumes
+        return self.__allowed_flex_volumes
 
-    def allowHostNetwork(self) -> bool:
+    def allow_host_network(self) -> bool:
         """
         AllowHostNetwork determines if the policy allows the use of HostNetwork in the pod spec.
         """
-        return self.__allowHostNetwork
+        return self.__allow_host_network
 
-    def allowHostPorts(self) -> bool:
+    def allow_host_ports(self) -> bool:
         """
         AllowHostPorts determines if the policy allows host ports in the containers.
         """
-        return self.__allowHostPorts
+        return self.__allow_host_ports
 
-    def allowHostPID(self) -> bool:
+    def allow_host_pid(self) -> bool:
         """
         AllowHostPID determines if the policy allows host pid in the containers.
         """
-        return self.__allowHostPID
+        return self.__allow_host_pid
 
-    def allowHostIPC(self) -> bool:
+    def allow_host_ipc(self) -> bool:
         """
         AllowHostIPC determines if the policy allows host ipc in the containers.
         """
-        return self.__allowHostIPC
+        return self.__allow_host_ipc
 
-    def defaultAllowPrivilegeEscalation(self) -> Optional[bool]:
+    def default_allow_privilege_escalation(self) -> Optional[bool]:
         """
         DefaultAllowPrivilegeEscalation controls the default setting for whether a
         process can gain more privileges than its parent process.
         +nullable
         """
-        return self.__defaultAllowPrivilegeEscalation
+        return self.__default_allow_privilege_escalation
 
-    def allowPrivilegeEscalation(self) -> Optional[bool]:
+    def allow_privilege_escalation(self) -> Optional[bool]:
         """
         AllowPrivilegeEscalation determines if a pod can request to allow
         privilege escalation. If unspecified, defaults to true.
         +nullable
         """
-        return self.__allowPrivilegeEscalation
+        return self.__allow_privilege_escalation
 
-    def seLinuxContext(self) -> Optional["SELinuxContextStrategyOptions"]:
+    def se_linux_context(self) -> Optional["SELinuxContextStrategyOptions"]:
         """
         SELinuxContext is the strategy that will dictate what labels will be set in the SecurityContext.
         +nullable
         """
-        return self.__seLinuxContext
+        return self.__se_linux_context
 
-    def runAsUser(self) -> Optional["RunAsUserStrategyOptions"]:
+    def run_as_user(self) -> Optional["RunAsUserStrategyOptions"]:
         """
         RunAsUser is the strategy that will dictate what RunAsUser is used in the SecurityContext.
         +nullable
         """
-        return self.__runAsUser
+        return self.__run_as_user
 
-    def supplementalGroups(self) -> Optional["SupplementalGroupsStrategyOptions"]:
+    def supplemental_groups(self) -> Optional["SupplementalGroupsStrategyOptions"]:
         """
         SupplementalGroups is the strategy that will dictate what supplemental groups are used by the SecurityContext.
         +nullable
         """
-        return self.__supplementalGroups
+        return self.__supplemental_groups
 
-    def fsGroup(self) -> Optional["FSGroupStrategyOptions"]:
+    def fs_group(self) -> Optional["FSGroupStrategyOptions"]:
         """
         FSGroup is the strategy that will dictate what fs group is used by the SecurityContext.
         +nullable
         """
-        return self.__fsGroup
+        return self.__fs_group
 
-    def readOnlyRootFilesystem(self) -> bool:
+    def read_only_root_filesystem(self) -> bool:
         """
         ReadOnlyRootFilesystem when set to true will force containers to run with a read only root file
         system.  If the container specifically requests to run with a non-read only root file system
@@ -977,7 +990,7 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         If set to false the container may run with a read only root file system if it wishes but it
         will not be forced to.
         """
-        return self.__readOnlyRootFilesystem
+        return self.__read_only_root_filesystem
 
     def users(self) -> List[str]:
         """
@@ -993,7 +1006,7 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         """
         return self.__groups
 
-    def seccompProfiles(self) -> Optional[List[str]]:
+    def seccomp_profiles(self) -> Optional[List[str]]:
         """
         SeccompProfiles lists the allowed profiles that may be set for the pod or
         container's seccomp annotations.  An unset (nil) or empty value means that no profiles may
@@ -1002,9 +1015,9 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         the default.
         +nullable
         """
-        return self.__seccompProfiles
+        return self.__seccomp_profiles
 
-    def allowedUnsafeSysctls(self) -> Optional[List[str]]:
+    def allowed_unsafe_sysctls(self) -> Optional[List[str]]:
         """
         AllowedUnsafeSysctls is a list of explicitly allowed unsafe sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1016,9 +1029,9 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         e.g. "foo.*" allows "foo.bar", "foo.baz", etc.
         +nullable
         """
-        return self.__allowedUnsafeSysctls
+        return self.__allowed_unsafe_sysctls
 
-    def forbiddenSysctls(self) -> Optional[List[str]]:
+    def forbidden_sysctls(self) -> Optional[List[str]]:
         """
         ForbiddenSysctls is a list of explicitly forbidden sysctls, defaults to none.
         Each entry is either a plain sysctl name or ends in "*" in which case it is considered
@@ -1029,4 +1042,4 @@ class SecurityContextConstraints(base.TypedObject, base.MetadataObject):
         e.g. "foo.*" forbids "foo.bar", "foo.baz", etc.
         +nullable
         """
-        return self.__forbiddenSysctls
+        return self.__forbidden_sysctls

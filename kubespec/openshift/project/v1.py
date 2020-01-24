@@ -66,7 +66,7 @@ class Project(base.TypedObject, base.MetadataObject):
         spec: "ProjectSpec" = None,
     ):
         super().__init__(
-            apiVersion="project.openshift.io/v1",
+            api_version="project.openshift.io/v1",
             kind="Project",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -101,37 +101,37 @@ class ProjectRequest(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        displayName: str = None,
+        display_name: str = None,
         description: str = None,
     ):
         super().__init__(
-            apiVersion="project.openshift.io/v1",
+            api_version="project.openshift.io/v1",
             kind="ProjectRequest",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__displayName = displayName
+        self.__display_name = display_name
         self.__description = description
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        displayName = self.displayName()
-        check_type("displayName", displayName, Optional[str])
-        if displayName:  # omit empty
-            v["displayName"] = displayName
+        display_name = self.display_name()
+        check_type("display_name", display_name, Optional[str])
+        if display_name:  # omit empty
+            v["displayName"] = display_name
         description = self.description()
         check_type("description", description, Optional[str])
         if description:  # omit empty
             v["description"] = description
         return v
 
-    def displayName(self) -> Optional[str]:
+    def display_name(self) -> Optional[str]:
         """
         DisplayName is the display name to apply to a project
         """
-        return self.__displayName
+        return self.__display_name
 
     def description(self) -> Optional[str]:
         """

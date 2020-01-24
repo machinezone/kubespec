@@ -136,7 +136,7 @@ class AdmissionConfiguration(base.TypedObject):
     @typechecked
     def __init__(self, plugins: List["AdmissionPluginConfiguration"] = None):
         super().__init__(
-            apiVersion="apiserver.config.k8s.io/v1", kind="AdmissionConfiguration"
+            api_version="apiserver.config.k8s.io/v1", kind="AdmissionConfiguration"
         )
         self.__plugins = plugins if plugins is not None else []
 
@@ -382,7 +382,7 @@ class EncryptionConfiguration(base.TypedObject):
     @typechecked
     def __init__(self, resources: List["ResourceConfiguration"] = None):
         super().__init__(
-            apiVersion="apiserver.config.k8s.io/v1", kind="EncryptionConfiguration"
+            api_version="apiserver.config.k8s.io/v1", kind="EncryptionConfiguration"
         )
         self.__resources = resources if resources is not None else []
 

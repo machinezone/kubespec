@@ -27,23 +27,23 @@ class Action(types.Object):
         self,
         namespace: str = "",
         verb: str = "",
-        resourceAPIGroup: str = "",
-        resourceAPIVersion: str = "",
+        resource_api_group: str = "",
+        resource_api_version: str = "",
         resource: str = "",
-        resourceName: str = "",
+        resource_name: str = "",
         path: str = "",
-        isNonResourceURL: bool = False,
+        is_non_resource_url: bool = False,
         content: "runtime.RawExtension" = None,
     ):
         super().__init__()
         self.__namespace = namespace
         self.__verb = verb
-        self.__resourceAPIGroup = resourceAPIGroup
-        self.__resourceAPIVersion = resourceAPIVersion
+        self.__resource_api_group = resource_api_group
+        self.__resource_api_version = resource_api_version
         self.__resource = resource
-        self.__resourceName = resourceName
+        self.__resource_name = resource_name
         self.__path = path
-        self.__isNonResourceURL = isNonResourceURL
+        self.__is_non_resource_url = is_non_resource_url
         self.__content = content
 
     @typechecked
@@ -55,24 +55,24 @@ class Action(types.Object):
         verb = self.verb()
         check_type("verb", verb, str)
         v["verb"] = verb
-        resourceAPIGroup = self.resourceAPIGroup()
-        check_type("resourceAPIGroup", resourceAPIGroup, str)
-        v["resourceAPIGroup"] = resourceAPIGroup
-        resourceAPIVersion = self.resourceAPIVersion()
-        check_type("resourceAPIVersion", resourceAPIVersion, str)
-        v["resourceAPIVersion"] = resourceAPIVersion
+        resource_api_group = self.resource_api_group()
+        check_type("resource_api_group", resource_api_group, str)
+        v["resourceAPIGroup"] = resource_api_group
+        resource_api_version = self.resource_api_version()
+        check_type("resource_api_version", resource_api_version, str)
+        v["resourceAPIVersion"] = resource_api_version
         resource = self.resource()
         check_type("resource", resource, str)
         v["resource"] = resource
-        resourceName = self.resourceName()
-        check_type("resourceName", resourceName, str)
-        v["resourceName"] = resourceName
+        resource_name = self.resource_name()
+        check_type("resource_name", resource_name, str)
+        v["resourceName"] = resource_name
         path = self.path()
         check_type("path", path, str)
         v["path"] = path
-        isNonResourceURL = self.isNonResourceURL()
-        check_type("isNonResourceURL", isNonResourceURL, bool)
-        v["isNonResourceURL"] = isNonResourceURL
+        is_non_resource_url = self.is_non_resource_url()
+        check_type("is_non_resource_url", is_non_resource_url, bool)
+        v["isNonResourceURL"] = is_non_resource_url
         content = self.content()
         check_type("content", content, Optional["runtime.RawExtension"])
         v["content"] = content
@@ -90,19 +90,19 @@ class Action(types.Object):
         """
         return self.__verb
 
-    def resourceAPIGroup(self) -> str:
+    def resource_api_group(self) -> str:
         """
         Group is the API group of the resource
         Serialized as resourceAPIGroup to avoid confusion with the 'groups' field when inlined
         """
-        return self.__resourceAPIGroup
+        return self.__resource_api_group
 
-    def resourceAPIVersion(self) -> str:
+    def resource_api_version(self) -> str:
         """
         Version is the API version of the resource
         Serialized as resourceAPIVersion to avoid confusion with TypeMeta.apiVersion and ObjectMeta.resourceVersion when inlined
         """
-        return self.__resourceAPIVersion
+        return self.__resource_api_version
 
     def resource(self) -> str:
         """
@@ -110,11 +110,11 @@ class Action(types.Object):
         """
         return self.__resource
 
-    def resourceName(self) -> str:
+    def resource_name(self) -> str:
         """
         ResourceName is the name of the resource being requested for a "get" or deleted for a "delete"
         """
-        return self.__resourceName
+        return self.__resource_name
 
     def path(self) -> str:
         """
@@ -122,11 +122,11 @@ class Action(types.Object):
         """
         return self.__path
 
-    def isNonResourceURL(self) -> bool:
+    def is_non_resource_url(self) -> bool:
         """
         IsNonResourceURL is true if this is a request for a non-resource URL (outside of the resource hierarchy)
         """
-        return self.__isNonResourceURL
+        return self.__is_non_resource_url
 
     def content(self) -> Optional["runtime.RawExtension"]:
         """
@@ -146,19 +146,21 @@ class PolicyRule(types.Object):
     def __init__(
         self,
         verbs: List[str] = None,
-        attributeRestrictions: "runtime.RawExtension" = None,
-        apiGroups: List[str] = None,
+        attribute_restrictions: "runtime.RawExtension" = None,
+        api_groups: List[str] = None,
         resources: List[str] = None,
-        resourceNames: List[str] = None,
-        nonResourceURLs: List[str] = None,
+        resource_names: List[str] = None,
+        non_resource_urls: List[str] = None,
     ):
         super().__init__()
         self.__verbs = verbs if verbs is not None else []
-        self.__attributeRestrictions = attributeRestrictions
-        self.__apiGroups = apiGroups if apiGroups is not None else []
+        self.__attribute_restrictions = attribute_restrictions
+        self.__api_groups = api_groups if api_groups is not None else []
         self.__resources = resources if resources is not None else []
-        self.__resourceNames = resourceNames if resourceNames is not None else []
-        self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
+        self.__resource_names = resource_names if resource_names is not None else []
+        self.__non_resource_urls = (
+            non_resource_urls if non_resource_urls is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -166,27 +168,27 @@ class PolicyRule(types.Object):
         verbs = self.verbs()
         check_type("verbs", verbs, List[str])
         v["verbs"] = verbs
-        attributeRestrictions = self.attributeRestrictions()
+        attribute_restrictions = self.attribute_restrictions()
         check_type(
-            "attributeRestrictions",
-            attributeRestrictions,
+            "attribute_restrictions",
+            attribute_restrictions,
             Optional["runtime.RawExtension"],
         )
-        v["attributeRestrictions"] = attributeRestrictions
-        apiGroups = self.apiGroups()
-        check_type("apiGroups", apiGroups, List[str])
-        v["apiGroups"] = apiGroups
+        v["attributeRestrictions"] = attribute_restrictions
+        api_groups = self.api_groups()
+        check_type("api_groups", api_groups, List[str])
+        v["apiGroups"] = api_groups
         resources = self.resources()
         check_type("resources", resources, List[str])
         v["resources"] = resources
-        resourceNames = self.resourceNames()
-        check_type("resourceNames", resourceNames, Optional[List[str]])
-        if resourceNames:  # omit empty
-            v["resourceNames"] = resourceNames
-        nonResourceURLs = self.nonResourceURLs()
-        check_type("nonResourceURLs", nonResourceURLs, Optional[List[str]])
-        if nonResourceURLs:  # omit empty
-            v["nonResourceURLs"] = nonResourceURLs
+        resource_names = self.resource_names()
+        check_type("resource_names", resource_names, Optional[List[str]])
+        if resource_names:  # omit empty
+            v["resourceNames"] = resource_names
+        non_resource_urls = self.non_resource_urls()
+        check_type("non_resource_urls", non_resource_urls, Optional[List[str]])
+        if non_resource_urls:  # omit empty
+            v["nonResourceURLs"] = non_resource_urls
         return v
 
     def verbs(self) -> List[str]:
@@ -195,20 +197,20 @@ class PolicyRule(types.Object):
         """
         return self.__verbs
 
-    def attributeRestrictions(self) -> Optional["runtime.RawExtension"]:
+    def attribute_restrictions(self) -> Optional["runtime.RawExtension"]:
         """
         AttributeRestrictions will vary depending on what the Authorizer/AuthorizationAttributeBuilder pair supports.
         If the Authorizer does not recognize how to handle the AttributeRestrictions, the Authorizer should report an error.
         """
-        return self.__attributeRestrictions
+        return self.__attribute_restrictions
 
-    def apiGroups(self) -> List[str]:
+    def api_groups(self) -> List[str]:
         """
         APIGroups is the name of the APIGroup that contains the resources.  If this field is empty, then both kubernetes and origin API groups are assumed.
         That means that if an action is requested against one of the enumerated resources in either the kubernetes or the origin API group, the request
         will be allowed
         """
-        return self.__apiGroups
+        return self.__api_groups
 
     def resources(self) -> List[str]:
         """
@@ -216,18 +218,18 @@ class PolicyRule(types.Object):
         """
         return self.__resources
 
-    def resourceNames(self) -> Optional[List[str]]:
+    def resource_names(self) -> Optional[List[str]]:
         """
         ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
         """
-        return self.__resourceNames
+        return self.__resource_names
 
-    def nonResourceURLs(self) -> Optional[List[str]]:
+    def non_resource_urls(self) -> Optional[List[str]]:
         """
         NonResourceURLsSlice is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
         This name is intentionally different than the internal type so that the DefaultConvert works nicely and because the ordering may be different.
         """
-        return self.__nonResourceURLs
+        return self.__non_resource_urls
 
 
 class ClusterRole(base.TypedObject, base.MetadataObject):
@@ -243,17 +245,17 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         rules: List["PolicyRule"] = None,
-        aggregationRule: "rbacv1.AggregationRule" = None,
+        aggregation_rule: "rbacv1.AggregationRule" = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="ClusterRole",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
-        self.__aggregationRule = aggregationRule
+        self.__aggregation_rule = aggregation_rule
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -261,12 +263,12 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         rules = self.rules()
         check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
-        aggregationRule = self.aggregationRule()
+        aggregation_rule = self.aggregation_rule()
         check_type(
-            "aggregationRule", aggregationRule, Optional["rbacv1.AggregationRule"]
+            "aggregation_rule", aggregation_rule, Optional["rbacv1.AggregationRule"]
         )
-        if aggregationRule is not None:  # omit empty
-            v["aggregationRule"] = aggregationRule
+        if aggregation_rule is not None:  # omit empty
+            v["aggregationRule"] = aggregation_rule
         return v
 
     def rules(self) -> List["PolicyRule"]:
@@ -275,13 +277,13 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         """
         return self.__rules
 
-    def aggregationRule(self) -> Optional["rbacv1.AggregationRule"]:
+    def aggregation_rule(self) -> Optional["rbacv1.AggregationRule"]:
         """
         AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
         If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
         stomped by the controller.
         """
-        return self.__aggregationRule
+        return self.__aggregation_rule
 
 
 class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
@@ -298,55 +300,55 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        userNames: List[str] = None,
-        groupNames: List[str] = None,
+        user_names: List[str] = None,
+        group_names: List[str] = None,
         subjects: List["k8sv1.ObjectReference"] = None,
-        roleRef: "k8sv1.ObjectReference" = None,
+        role_ref: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="ClusterRoleBinding",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__userNames = userNames if userNames is not None else []
-        self.__groupNames = groupNames if groupNames is not None else []
+        self.__user_names = user_names if user_names is not None else []
+        self.__group_names = group_names if group_names is not None else []
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else k8sv1.ObjectReference()
+        self.__role_ref = role_ref if role_ref is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        userNames = self.userNames()
-        check_type("userNames", userNames, List[str])
-        v["userNames"] = userNames
-        groupNames = self.groupNames()
-        check_type("groupNames", groupNames, List[str])
-        v["groupNames"] = groupNames
+        user_names = self.user_names()
+        check_type("user_names", user_names, List[str])
+        v["userNames"] = user_names
+        group_names = self.group_names()
+        check_type("group_names", group_names, List[str])
+        v["groupNames"] = group_names
         subjects = self.subjects()
         check_type("subjects", subjects, List["k8sv1.ObjectReference"])
         v["subjects"] = subjects
-        roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "k8sv1.ObjectReference")
-        v["roleRef"] = roleRef
+        role_ref = self.role_ref()
+        check_type("role_ref", role_ref, "k8sv1.ObjectReference")
+        v["roleRef"] = role_ref
         return v
 
-    def userNames(self) -> List[str]:
+    def user_names(self) -> List[str]:
         """
         UserNames holds all the usernames directly bound to the role.
         This field should only be specified when supporting legacy clients and servers.
         See Subjects for further details.
         """
-        return self.__userNames
+        return self.__user_names
 
-    def groupNames(self) -> List[str]:
+    def group_names(self) -> List[str]:
         """
         GroupNames holds all the groups directly bound to the role.
         This field should only be specified when supporting legacy clients and servers.
         See Subjects for further details.
         """
-        return self.__groupNames
+        return self.__group_names
 
     def subjects(self) -> List["k8sv1.ObjectReference"]:
         """
@@ -358,13 +360,13 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "k8sv1.ObjectReference":
+    def role_ref(self) -> "k8sv1.ObjectReference":
         """
         RoleRef can only reference the current namespace and the global namespace.
         If the ClusterRoleRef cannot be resolved, the Authorizer must return an error.
         Since Policy is a singleton, this is sufficient knowledge to locate a role.
         """
-        return self.__roleRef
+        return self.__role_ref
 
 
 class GroupRestriction(types.Object):
@@ -419,7 +421,7 @@ class IsPersonalSubjectAccessReview(base.TypedObject):
     @typechecked
     def __init__(self):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="IsPersonalSubjectAccessReview",
         )
 
@@ -438,7 +440,8 @@ class LocalResourceAccessReview(base.TypedObject):
     @typechecked
     def __init__(self, action: "Action" = None):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="LocalResourceAccessReview"
+            api_version="authorization.openshift.io/v1",
+            kind="LocalResourceAccessReview",
         )
         self.__action = action if action is not None else Action()
 
@@ -472,7 +475,7 @@ class LocalSubjectAccessReview(base.TypedObject):
         scopes: List[str] = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="LocalSubjectAccessReview"
+            api_version="authorization.openshift.io/v1", kind="LocalSubjectAccessReview"
         )
         self.__action = action if action is not None else Action()
         self.__user = user
@@ -533,7 +536,7 @@ class ResourceAccessReview(base.TypedObject):
     @typechecked
     def __init__(self, action: "Action" = None):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="ResourceAccessReview"
+            api_version="authorization.openshift.io/v1", kind="ResourceAccessReview"
         )
         self.__action = action if action is not None else Action()
 
@@ -564,16 +567,16 @@ class ResourceAccessReviewResponse(base.TypedObject):
         namespace: str = None,
         users: List[str] = None,
         groups: List[str] = None,
-        evalutionError: str = "",
+        evalution_error: str = "",
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="ResourceAccessReviewResponse",
         )
         self.__namespace = namespace
         self.__users = users if users is not None else []
         self.__groups = groups if groups is not None else []
-        self.__evalutionError = evalutionError
+        self.__evalution_error = evalution_error
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -588,9 +591,9 @@ class ResourceAccessReviewResponse(base.TypedObject):
         groups = self.groups()
         check_type("groups", groups, List[str])
         v["groups"] = groups
-        evalutionError = self.evalutionError()
-        check_type("evalutionError", evalutionError, str)
-        v["evalutionError"] = evalutionError
+        evalution_error = self.evalution_error()
+        check_type("evalution_error", evalution_error, str)
+        v["evalutionError"] = evalution_error
         return v
 
     def namespace(self) -> Optional[str]:
@@ -611,13 +614,13 @@ class ResourceAccessReviewResponse(base.TypedObject):
         """
         return self.__groups
 
-    def evalutionError(self) -> str:
+    def evalution_error(self) -> str:
         """
         EvaluationError is an indication that some error occurred during resolution, but partial results can still be returned.
         It is entirely possible to get an error and be able to continue determine authorization status in spite of it.  This is
         most common when a bound role is missing, but enough roles are still present and bound to reason about the request.
         """
-        return self.__evalutionError
+        return self.__evalution_error
 
 
 class Role(base.TypedObject, base.NamespacedMetadataObject):
@@ -636,7 +639,7 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         rules: List["PolicyRule"] = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="Role",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -675,56 +678,56 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        userNames: List[str] = None,
-        groupNames: List[str] = None,
+        user_names: List[str] = None,
+        group_names: List[str] = None,
         subjects: List["k8sv1.ObjectReference"] = None,
-        roleRef: "k8sv1.ObjectReference" = None,
+        role_ref: "k8sv1.ObjectReference" = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="RoleBinding",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__userNames = userNames if userNames is not None else []
-        self.__groupNames = groupNames if groupNames is not None else []
+        self.__user_names = user_names if user_names is not None else []
+        self.__group_names = group_names if group_names is not None else []
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else k8sv1.ObjectReference()
+        self.__role_ref = role_ref if role_ref is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        userNames = self.userNames()
-        check_type("userNames", userNames, List[str])
-        v["userNames"] = userNames
-        groupNames = self.groupNames()
-        check_type("groupNames", groupNames, List[str])
-        v["groupNames"] = groupNames
+        user_names = self.user_names()
+        check_type("user_names", user_names, List[str])
+        v["userNames"] = user_names
+        group_names = self.group_names()
+        check_type("group_names", group_names, List[str])
+        v["groupNames"] = group_names
         subjects = self.subjects()
         check_type("subjects", subjects, List["k8sv1.ObjectReference"])
         v["subjects"] = subjects
-        roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "k8sv1.ObjectReference")
-        v["roleRef"] = roleRef
+        role_ref = self.role_ref()
+        check_type("role_ref", role_ref, "k8sv1.ObjectReference")
+        v["roleRef"] = role_ref
         return v
 
-    def userNames(self) -> List[str]:
+    def user_names(self) -> List[str]:
         """
         UserNames holds all the usernames directly bound to the role.
         This field should only be specified when supporting legacy clients and servers.
         See Subjects for further details.
         """
-        return self.__userNames
+        return self.__user_names
 
-    def groupNames(self) -> List[str]:
+    def group_names(self) -> List[str]:
         """
         GroupNames holds all the groups directly bound to the role.
         This field should only be specified when supporting legacy clients and servers.
         See Subjects for further details.
         """
-        return self.__groupNames
+        return self.__group_names
 
     def subjects(self) -> List["k8sv1.ObjectReference"]:
         """
@@ -736,13 +739,13 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "k8sv1.ObjectReference":
+    def role_ref(self) -> "k8sv1.ObjectReference":
         """
         RoleRef can only reference the current namespace and the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.
         Since Policy is a singleton, this is sufficient knowledge to locate a role.
         """
-        return self.__roleRef
+        return self.__role_ref
 
 
 class ServiceAccountReference(types.Object):
@@ -961,7 +964,7 @@ class RoleBindingRestriction(base.TypedObject, base.NamespacedMetadataObject):
         spec: "RoleBindingRestrictionSpec" = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="RoleBindingRestriction",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1021,7 +1024,7 @@ class SelfSubjectRulesReview(base.TypedObject):
     @typechecked
     def __init__(self, spec: "SelfSubjectRulesReviewSpec" = None):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="SelfSubjectRulesReview"
+            api_version="authorization.openshift.io/v1", kind="SelfSubjectRulesReview"
         )
         self.__spec = spec if spec is not None else SelfSubjectRulesReviewSpec()
 
@@ -1055,7 +1058,7 @@ class SubjectAccessReview(base.TypedObject):
         scopes: List[str] = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="SubjectAccessReview"
+            api_version="authorization.openshift.io/v1", kind="SubjectAccessReview"
         )
         self.__action = action if action is not None else Action()
         self.__user = user
@@ -1118,16 +1121,16 @@ class SubjectAccessReviewResponse(base.TypedObject):
         namespace: str = None,
         allowed: bool = False,
         reason: str = None,
-        evaluationError: str = None,
+        evaluation_error: str = None,
     ):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1",
+            api_version="authorization.openshift.io/v1",
             kind="SubjectAccessReviewResponse",
         )
         self.__namespace = namespace
         self.__allowed = allowed
         self.__reason = reason
-        self.__evaluationError = evaluationError
+        self.__evaluation_error = evaluation_error
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1143,10 +1146,10 @@ class SubjectAccessReviewResponse(base.TypedObject):
         check_type("reason", reason, Optional[str])
         if reason:  # omit empty
             v["reason"] = reason
-        evaluationError = self.evaluationError()
-        check_type("evaluationError", evaluationError, Optional[str])
-        if evaluationError:  # omit empty
-            v["evaluationError"] = evaluationError
+        evaluation_error = self.evaluation_error()
+        check_type("evaluation_error", evaluation_error, Optional[str])
+        if evaluation_error:  # omit empty
+            v["evaluationError"] = evaluation_error
         return v
 
     def namespace(self) -> Optional[str]:
@@ -1167,13 +1170,13 @@ class SubjectAccessReviewResponse(base.TypedObject):
         """
         return self.__reason
 
-    def evaluationError(self) -> Optional[str]:
+    def evaluation_error(self) -> Optional[str]:
         """
         EvaluationError is an indication that some error occurred during the authorization check.
         It is entirely possible to get an error and be able to continue determine authorization status in spite of it.  This is
         most common when a bound role is missing, but enough roles are still present and bound to reason about the request.
         """
-        return self.__evaluationError
+        return self.__evaluation_error
 
 
 class SubjectRulesReviewSpec(types.Object):
@@ -1233,7 +1236,7 @@ class SubjectRulesReview(base.TypedObject):
     @typechecked
     def __init__(self, spec: "SubjectRulesReviewSpec" = None):
         super().__init__(
-            apiVersion="authorization.openshift.io/v1", kind="SubjectRulesReview"
+            api_version="authorization.openshift.io/v1", kind="SubjectRulesReview"
         )
         self.__spec = spec if spec is not None else SubjectRulesReviewSpec()
 

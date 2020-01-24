@@ -22,13 +22,13 @@ class BoundObjectReference(types.Object):
     def __init__(
         self,
         kind: str = None,
-        apiVersion: str = None,
+        api_version: str = None,
         name: str = None,
         uid: str = None,
     ):
         super().__init__()
         self.__kind = kind
-        self.__apiVersion = apiVersion
+        self.__api_version = api_version
         self.__name = name
         self.__uid = uid
 
@@ -39,10 +39,10 @@ class BoundObjectReference(types.Object):
         check_type("kind", kind, Optional[str])
         if kind:  # omit empty
             v["kind"] = kind
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omit empty
-            v["apiVersion"] = apiVersion
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omit empty
+            v["apiVersion"] = api_version
         name = self.name()
         check_type("name", name, Optional[str])
         if name:  # omit empty
@@ -59,11 +59,11 @@ class BoundObjectReference(types.Object):
         """
         return self.__kind
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         API version of the referent.
         """
-        return self.__apiVersion
+        return self.__api_version
 
     def name(self) -> Optional[str]:
         """
@@ -88,15 +88,15 @@ class TokenRequestSpec(types.Object):
     def __init__(
         self,
         audiences: List[str] = None,
-        expirationSeconds: int = None,
-        boundObjectRef: "BoundObjectReference" = None,
+        expiration_seconds: int = None,
+        bound_object_ref: "BoundObjectReference" = None,
     ):
         super().__init__()
         self.__audiences = audiences if audiences is not None else []
-        self.__expirationSeconds = (
-            expirationSeconds if expirationSeconds is not None else 3600
+        self.__expiration_seconds = (
+            expiration_seconds if expiration_seconds is not None else 3600
         )
-        self.__boundObjectRef = boundObjectRef
+        self.__bound_object_ref = bound_object_ref
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -104,12 +104,14 @@ class TokenRequestSpec(types.Object):
         audiences = self.audiences()
         check_type("audiences", audiences, List[str])
         v["audiences"] = audiences
-        expirationSeconds = self.expirationSeconds()
-        check_type("expirationSeconds", expirationSeconds, Optional[int])
-        v["expirationSeconds"] = expirationSeconds
-        boundObjectRef = self.boundObjectRef()
-        check_type("boundObjectRef", boundObjectRef, Optional["BoundObjectReference"])
-        v["boundObjectRef"] = boundObjectRef
+        expiration_seconds = self.expiration_seconds()
+        check_type("expiration_seconds", expiration_seconds, Optional[int])
+        v["expirationSeconds"] = expiration_seconds
+        bound_object_ref = self.bound_object_ref()
+        check_type(
+            "bound_object_ref", bound_object_ref, Optional["BoundObjectReference"]
+        )
+        v["boundObjectRef"] = bound_object_ref
         return v
 
     def audiences(self) -> List[str]:
@@ -123,15 +125,15 @@ class TokenRequestSpec(types.Object):
         """
         return self.__audiences
 
-    def expirationSeconds(self) -> Optional[int]:
+    def expiration_seconds(self) -> Optional[int]:
         """
         ExpirationSeconds is the requested duration of validity of the request. The
         token issuer may return a token with a different validity duration so a
         client needs to check the 'expiration' field in a response.
         """
-        return self.__expirationSeconds
+        return self.__expiration_seconds
 
-    def boundObjectRef(self) -> Optional["BoundObjectReference"]:
+    def bound_object_ref(self) -> Optional["BoundObjectReference"]:
         """
         BoundObjectRef is a reference to an object that the token will be bound to.
         The token will only be valid for as long as the bound object exists.
@@ -139,7 +141,7 @@ class TokenRequestSpec(types.Object):
         BoundObjectRef, but other audiences may not. Keep ExpirationSeconds
         small if you want prompt revocation.
         """
-        return self.__boundObjectRef
+        return self.__bound_object_ref
 
 
 class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
@@ -158,7 +160,7 @@ class TokenRequest(base.TypedObject, base.NamespacedMetadataObject):
         spec: "TokenRequestSpec" = None,
     ):
         super().__init__(
-            apiVersion="authentication.k8s.io/v1",
+            api_version="authentication.k8s.io/v1",
             kind="TokenRequest",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -238,7 +240,7 @@ class TokenReview(base.TypedObject, base.MetadataObject):
         spec: "TokenReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="authentication.k8s.io/v1",
+            api_version="authentication.k8s.io/v1",
             kind="TokenReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

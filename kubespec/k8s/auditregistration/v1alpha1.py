@@ -163,12 +163,12 @@ class WebhookClientConfig(types.Object):
         self,
         url: str = None,
         service: "ServiceReference" = None,
-        caBundle: bytes = None,
+        ca_bundle: bytes = None,
     ):
         super().__init__()
         self.__url = url
         self.__service = service
-        self.__caBundle = caBundle if caBundle is not None else b""
+        self.__ca_bundle = ca_bundle if ca_bundle is not None else b""
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -181,10 +181,10 @@ class WebhookClientConfig(types.Object):
         check_type("service", service, Optional["ServiceReference"])
         if service is not None:  # omit empty
             v["service"] = service
-        caBundle = self.caBundle()
-        check_type("caBundle", caBundle, Optional[bytes])
-        if caBundle:  # omit empty
-            v["caBundle"] = caBundle
+        ca_bundle = self.ca_bundle()
+        check_type("ca_bundle", ca_bundle, Optional[bytes])
+        if ca_bundle:  # omit empty
+            v["caBundle"] = ca_bundle
         return v
 
     def url(self) -> Optional[str]:
@@ -226,12 +226,12 @@ class WebhookClientConfig(types.Object):
         """
         return self.__service
 
-    def caBundle(self) -> Optional[bytes]:
+    def ca_bundle(self) -> Optional[bytes]:
         """
         `caBundle` is a PEM encoded CA bundle which will be used to validate the webhook's server certificate.
         If unspecified, system trust roots on the apiserver are used.
         """
-        return self.__caBundle
+        return self.__ca_bundle
 
 
 class WebhookThrottleConfig(types.Object):
@@ -284,12 +284,12 @@ class Webhook(types.Object):
     def __init__(
         self,
         throttle: "WebhookThrottleConfig" = None,
-        clientConfig: "WebhookClientConfig" = None,
+        client_config: "WebhookClientConfig" = None,
     ):
         super().__init__()
         self.__throttle = throttle if throttle is not None else WebhookThrottleConfig()
-        self.__clientConfig = (
-            clientConfig if clientConfig is not None else WebhookClientConfig()
+        self.__client_config = (
+            client_config if client_config is not None else WebhookClientConfig()
         )
 
     @typechecked
@@ -299,9 +299,9 @@ class Webhook(types.Object):
         check_type("throttle", throttle, Optional["WebhookThrottleConfig"])
         if throttle is not None:  # omit empty
             v["throttle"] = throttle
-        clientConfig = self.clientConfig()
-        check_type("clientConfig", clientConfig, "WebhookClientConfig")
-        v["clientConfig"] = clientConfig
+        client_config = self.client_config()
+        check_type("client_config", client_config, "WebhookClientConfig")
+        v["clientConfig"] = client_config
         return v
 
     def throttle(self) -> Optional["WebhookThrottleConfig"]:
@@ -310,12 +310,12 @@ class Webhook(types.Object):
         """
         return self.__throttle
 
-    def clientConfig(self) -> "WebhookClientConfig":
+    def client_config(self) -> "WebhookClientConfig":
         """
         ClientConfig holds the connection parameters for the webhook
         required
         """
-        return self.__clientConfig
+        return self.__client_config
 
 
 class AuditSinkSpec(types.Object):
@@ -371,7 +371,7 @@ class AuditSink(base.TypedObject, base.MetadataObject):
         spec: "AuditSinkSpec" = None,
     ):
         super().__init__(
-            apiVersion="auditregistration.k8s.io/v1alpha1",
+            api_version="auditregistration.k8s.io/v1alpha1",
             kind="AuditSink",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

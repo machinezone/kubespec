@@ -72,12 +72,12 @@ class Unknown(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(
-        self, raw: bytes = None, contentEncoding: str = "", contentType: str = ""
+        self, raw: bytes = None, content_encoding: str = "", content_type: str = ""
     ):
         super().__init__()
         self.__raw = raw if raw is not None else b""
-        self.__contentEncoding = contentEncoding
-        self.__contentType = contentType
+        self.__content_encoding = content_encoding
+        self.__content_type = content_type
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -85,12 +85,12 @@ class Unknown(base.TypedObject):
         raw = self.raw()
         check_type("raw", raw, bytes)
         v["Raw"] = raw
-        contentEncoding = self.contentEncoding()
-        check_type("contentEncoding", contentEncoding, str)
-        v["ContentEncoding"] = contentEncoding
-        contentType = self.contentType()
-        check_type("contentType", contentType, str)
-        v["ContentType"] = contentType
+        content_encoding = self.content_encoding()
+        check_type("content_encoding", content_encoding, str)
+        v["ContentEncoding"] = content_encoding
+        content_type = self.content_type()
+        check_type("content_type", content_type, str)
+        v["ContentType"] = content_type
         return v
 
     def raw(self) -> bytes:
@@ -101,16 +101,16 @@ class Unknown(base.TypedObject):
         """
         return self.__raw
 
-    def contentEncoding(self) -> str:
+    def content_encoding(self) -> str:
         """
         ContentEncoding is encoding used to encode 'Raw' data.
         Unspecified means no encoding.
         """
-        return self.__contentEncoding
+        return self.__content_encoding
 
-    def contentType(self) -> str:
+    def content_type(self) -> str:
         """
-        ContentType  is serialization method used to serialize 'Raw'.
+        ContentType is serialization method used to serialize 'Raw'.
         Unspecified means ContentTypeJSON.
         """
-        return self.__contentType
+        return self.__content_type

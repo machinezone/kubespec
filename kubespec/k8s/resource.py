@@ -46,9 +46,9 @@ _suffixes: Dict[str, Tuple[int, int, Format]] = {  # str -> (base, exp, fmt)
     "Ei": (2, 60, Format.BinarySI),
 }
 
-_binSuffixes: Dict[int, str] = {v[1]: k for k, v in _suffixes.items() if v[0] == 2}
+_bin_suffixes: Dict[int, str] = {v[1]: k for k, v in _suffixes.items() if v[0] == 2}
 
-_decSuffixes: Dict[int, str] = {v[1]: k for k, v in _suffixes.items() if v[0] == 10}
+_dec_suffixes: Dict[int, str] = {v[1]: k for k, v in _suffixes.items() if v[0] == 10}
 
 
 # Quantity is a fixed-point representation of a number.
@@ -107,6 +107,9 @@ class Quantity(types.Renderable):
     def __init__(
         self, value: Union[int, float, str] = 0, fmt: Format = Format.DecimalSI
     ):
+        self.value = 0
+        self.scale = 0
+        self.format = fmt
         if isinstance(value, int):
             self._from_int(value, 0, fmt)
         elif isinstance(value, float):
@@ -124,13 +127,13 @@ class Quantity(types.Renderable):
 
     def _from_str(self, value: str):
         negative = value.startswith("-")
-        _, whole, frac, suffix = _parseValue(value)
-        base, exp, fmt = _parseSuffix(suffix)
+        _, whole, frac, suffix = _parse_value(value)
+        base_, exp, fmt = _parse_suffix(suffix)
         value = int(whole + frac)
         scale = -len(frac)
-        if base == 10:
+        if base_ == 10:
             scale += exp
-        elif base == 2:
+        elif base_ == 2:
             value *= 1 << exp
         if negative:
             value = -value
@@ -149,21 +152,21 @@ class Quantity(types.Renderable):
         if fmt == Format.BinarySI:
             rounded = self._with_scale(0)
             if rounded == self and abs(rounded.value) >= 1024:
-                value, exp = _removeFactors(rounded.value, 1024)
+                value, exp = _remove_factors(rounded.value, 1024)
                 if exp == 0:
                     return str(value)
-                return str(value) + _binSuffixes[10 * exp]
+                return str(value) + _bin_suffixes[10 * exp]
             fmt = Format.DecimalSI
 
-        value, exp = _removeFactors(self.value, 10)
+        value, exp = _remove_factors(self.value, 10)
         exp += self.scale
         while exp % 3 != 0:
             value *= 10
             exp -= 1
         if exp == 0:
             return str(value)
-        if fmt == Format.DecimalSI and exp in _decSuffixes:
-            return str(value) + _decSuffixes[exp]
+        if fmt == Format.DecimalSI and exp in _dec_suffixes:
+            return str(value) + _dec_suffixes[exp]
         return str(value) + "e" + str(exp)
 
     def _with_scale(self, scale: int) -> "Quantity":
@@ -239,7 +242,7 @@ class Quantity(types.Renderable):
         return this
 
 
-def _parseValue(s: str) -> Tuple[str, str, str, str]:
+def _parse_value(s: str) -> Tuple[str, str, str, str]:
     match = re.search("^([-+]?([0-9]+)(\\.([0-9]+)?)?)(.*)$", s)
     if not match:
         # TODO: raise exception
@@ -252,7 +255,7 @@ def _parseValue(s: str) -> Tuple[str, str, str, str]:
     )
 
 
-def _parseSuffix(s: str) -> Tuple[int, int, Format]:  # str -> (base, exp, fmt)
+def _parse_suffix(s: str) -> Tuple[int, int, Format]:  # str -> (base, exp, fmt)
     if s in _suffixes:
         return _suffixes[s]
     if s[0] in ("E", "e"):
@@ -261,7 +264,7 @@ def _parseSuffix(s: str) -> Tuple[int, int, Format]:  # str -> (base, exp, fmt)
     return 10, 0, Format.DecimalSI
 
 
-def _removeFactors(value: int, factor: int) -> Tuple[int, int]:
+def _remove_factors(value: int, factor: int) -> Tuple[int, int]:
     count = 0
     result = value
     negative = result < 0

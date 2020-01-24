@@ -36,7 +36,7 @@ class AllowAllPasswordIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(self):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="AllowAllPasswordIdentityProvider",
         )
 
@@ -53,34 +53,34 @@ class BasicAuthPasswordIdentityProvider(base.TypedObject):
 
     @context.scoped
     @typechecked
-    def __init__(self, remoteConnectionInfo: "configv1.RemoteConnectionInfo" = None):
+    def __init__(self, remote_connection_info: "configv1.RemoteConnectionInfo" = None):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="BasicAuthPasswordIdentityProvider",
         )
-        self.__remoteConnectionInfo = (
-            remoteConnectionInfo
-            if remoteConnectionInfo is not None
+        self.__remote_connection_info = (
+            remote_connection_info
+            if remote_connection_info is not None
             else configv1.RemoteConnectionInfo()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        remoteConnectionInfo = self.remoteConnectionInfo()
+        remote_connection_info = self.remote_connection_info()
         check_type(
-            "remoteConnectionInfo",
-            remoteConnectionInfo,
+            "remote_connection_info",
+            remote_connection_info,
             "configv1.RemoteConnectionInfo",
         )
-        v.update(remoteConnectionInfo._root())  # inline
+        v.update(remote_connection_info._root())  # inline
         return v
 
-    def remoteConnectionInfo(self) -> "configv1.RemoteConnectionInfo":
+    def remote_connection_info(self) -> "configv1.RemoteConnectionInfo":
         """
         RemoteConnectionInfo contains information about how to connect to the external basic auth server
         """
-        return self.__remoteConnectionInfo
+        return self.__remote_connection_info
 
 
 class DenyAllPasswordIdentityProvider(base.TypedObject):
@@ -92,7 +92,7 @@ class DenyAllPasswordIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(self):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="DenyAllPasswordIdentityProvider",
         )
 
@@ -111,19 +111,19 @@ class GitHubIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "configv1.StringSource" = None,
+        client_id: str = "",
+        client_secret: "configv1.StringSource" = None,
         organizations: List[str] = None,
         teams: List[str] = None,
         hostname: str = "",
         ca: str = "",
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="GitHubIdentityProvider"
+            api_version="osin.config.openshift.io/v1", kind="GitHubIdentityProvider"
         )
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else configv1.StringSource()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else configv1.StringSource()
         )
         self.__organizations = organizations if organizations is not None else []
         self.__teams = teams if teams is not None else []
@@ -133,12 +133,12 @@ class GitHubIdentityProvider(base.TypedObject):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "configv1.StringSource")
-        v["clientSecret"] = clientSecret
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "configv1.StringSource")
+        v["clientSecret"] = client_secret
         organizations = self.organizations()
         check_type("organizations", organizations, List[str])
         v["organizations"] = organizations
@@ -153,17 +153,17 @@ class GitHubIdentityProvider(base.TypedObject):
         v["ca"] = ca
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "configv1.StringSource":
+    def client_secret(self) -> "configv1.StringSource":
         """
         clientSecret is the oauth client secret
         """
-        return self.__clientSecret
+        return self.__client_secret
 
     def organizations(self) -> List[str]:
         """
@@ -203,18 +203,18 @@ class GitLabIdentityProvider(base.TypedObject):
         self,
         ca: str = "",
         url: str = "",
-        clientID: str = "",
-        clientSecret: "configv1.StringSource" = None,
+        client_id: str = "",
+        client_secret: "configv1.StringSource" = None,
         legacy: bool = None,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="GitLabIdentityProvider"
+            api_version="osin.config.openshift.io/v1", kind="GitLabIdentityProvider"
         )
         self.__ca = ca
         self.__url = url
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else configv1.StringSource()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else configv1.StringSource()
         )
         self.__legacy = legacy
 
@@ -227,12 +227,12 @@ class GitLabIdentityProvider(base.TypedObject):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "configv1.StringSource")
-        v["clientSecret"] = clientSecret
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "configv1.StringSource")
+        v["clientSecret"] = client_secret
         legacy = self.legacy()
         check_type("legacy", legacy, Optional[bool])
         if legacy is not None:  # omit empty
@@ -252,17 +252,17 @@ class GitLabIdentityProvider(base.TypedObject):
         """
         return self.__url
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "configv1.StringSource":
+    def client_secret(self) -> "configv1.StringSource":
         """
         clientSecret is the oauth client secret
         """
-        return self.__clientSecret
+        return self.__client_secret
 
     def legacy(self) -> Optional[bool]:
         """
@@ -286,50 +286,50 @@ class GoogleIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        clientID: str = "",
-        clientSecret: "configv1.StringSource" = None,
-        hostedDomain: str = "",
+        client_id: str = "",
+        client_secret: "configv1.StringSource" = None,
+        hosted_domain: str = "",
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="GoogleIdentityProvider"
+            api_version="osin.config.openshift.io/v1", kind="GoogleIdentityProvider"
         )
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else configv1.StringSource()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else configv1.StringSource()
         )
-        self.__hostedDomain = hostedDomain
+        self.__hosted_domain = hosted_domain
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "configv1.StringSource")
-        v["clientSecret"] = clientSecret
-        hostedDomain = self.hostedDomain()
-        check_type("hostedDomain", hostedDomain, str)
-        v["hostedDomain"] = hostedDomain
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "configv1.StringSource")
+        v["clientSecret"] = client_secret
+        hosted_domain = self.hosted_domain()
+        check_type("hosted_domain", hosted_domain, str)
+        v["hostedDomain"] = hosted_domain
         return v
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "configv1.StringSource":
+    def client_secret(self) -> "configv1.StringSource":
         """
         clientSecret is the oauth client secret
         """
-        return self.__clientSecret
+        return self.__client_secret
 
-    def hostedDomain(self) -> str:
+    def hosted_domain(self) -> str:
         """
         hostedDomain is the optional Google App domain (e.g. "mycompany.com") to restrict logins to
         """
-        return self.__hostedDomain
+        return self.__hosted_domain
 
 
 class GrantConfig(types.Object):
@@ -342,11 +342,11 @@ class GrantConfig(types.Object):
     def __init__(
         self,
         method: GrantHandlerType = None,
-        serviceAccountMethod: GrantHandlerType = None,
+        service_account_method: GrantHandlerType = None,
     ):
         super().__init__()
         self.__method = method
-        self.__serviceAccountMethod = serviceAccountMethod
+        self.__service_account_method = service_account_method
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -354,9 +354,9 @@ class GrantConfig(types.Object):
         method = self.method()
         check_type("method", method, GrantHandlerType)
         v["method"] = method
-        serviceAccountMethod = self.serviceAccountMethod()
-        check_type("serviceAccountMethod", serviceAccountMethod, GrantHandlerType)
-        v["serviceAccountMethod"] = serviceAccountMethod
+        service_account_method = self.service_account_method()
+        check_type("service_account_method", service_account_method, GrantHandlerType)
+        v["serviceAccountMethod"] = service_account_method
         return v
 
     def method(self) -> GrantHandlerType:
@@ -370,12 +370,12 @@ class GrantConfig(types.Object):
         """
         return self.__method
 
-    def serviceAccountMethod(self) -> GrantHandlerType:
+    def service_account_method(self) -> GrantHandlerType:
         """
         serviceAccountMethod is used for determining client authorization for service account oauth client.
         It must be either: deny, prompt
         """
-        return self.__serviceAccountMethod
+        return self.__service_account_method
 
 
 class HTPasswdPasswordIdentityProvider(base.TypedObject):
@@ -387,7 +387,7 @@ class HTPasswdPasswordIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(self, file: str = ""):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="HTPasswdPasswordIdentityProvider",
         )
         self.__file = file
@@ -419,14 +419,14 @@ class IdentityProvider(types.Object):
         name: str = "",
         challenge: bool = False,
         login: bool = False,
-        mappingMethod: str = "",
+        mapping_method: str = "",
         provider: "runtime.RawExtension" = None,
     ):
         super().__init__()
         self.__name = name
         self.__challenge = challenge
         self.__login = login
-        self.__mappingMethod = mappingMethod
+        self.__mapping_method = mapping_method
         self.__provider = provider
 
     @typechecked
@@ -441,9 +441,9 @@ class IdentityProvider(types.Object):
         login = self.login()
         check_type("login", login, bool)
         v["login"] = login
-        mappingMethod = self.mappingMethod()
-        check_type("mappingMethod", mappingMethod, str)
-        v["mappingMethod"] = mappingMethod
+        mapping_method = self.mapping_method()
+        check_type("mapping_method", mapping_method, str)
+        v["mappingMethod"] = mapping_method
         provider = self.provider()
         check_type("provider", provider, "runtime.RawExtension")
         v["provider"] = provider
@@ -467,11 +467,11 @@ class IdentityProvider(types.Object):
         """
         return self.__login
 
-    def mappingMethod(self) -> str:
+    def mapping_method(self) -> str:
         """
         mappingMethod determines how identities from this provider are mapped to users
         """
-        return self.__mappingMethod
+        return self.__mapping_method
 
     def provider(self) -> "runtime.RawExtension":
         """
@@ -489,57 +489,57 @@ class KeystonePasswordIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        remoteConnectionInfo: "configv1.RemoteConnectionInfo" = None,
-        domainName: str = "",
-        useKeystoneIdentity: bool = False,
+        remote_connection_info: "configv1.RemoteConnectionInfo" = None,
+        domain_name: str = "",
+        use_keystone_identity: bool = False,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="KeystonePasswordIdentityProvider",
         )
-        self.__remoteConnectionInfo = (
-            remoteConnectionInfo
-            if remoteConnectionInfo is not None
+        self.__remote_connection_info = (
+            remote_connection_info
+            if remote_connection_info is not None
             else configv1.RemoteConnectionInfo()
         )
-        self.__domainName = domainName
-        self.__useKeystoneIdentity = useKeystoneIdentity
+        self.__domain_name = domain_name
+        self.__use_keystone_identity = use_keystone_identity
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        remoteConnectionInfo = self.remoteConnectionInfo()
+        remote_connection_info = self.remote_connection_info()
         check_type(
-            "remoteConnectionInfo",
-            remoteConnectionInfo,
+            "remote_connection_info",
+            remote_connection_info,
             "configv1.RemoteConnectionInfo",
         )
-        v.update(remoteConnectionInfo._root())  # inline
-        domainName = self.domainName()
-        check_type("domainName", domainName, str)
-        v["domainName"] = domainName
-        useKeystoneIdentity = self.useKeystoneIdentity()
-        check_type("useKeystoneIdentity", useKeystoneIdentity, bool)
-        v["useKeystoneIdentity"] = useKeystoneIdentity
+        v.update(remote_connection_info._root())  # inline
+        domain_name = self.domain_name()
+        check_type("domain_name", domain_name, str)
+        v["domainName"] = domain_name
+        use_keystone_identity = self.use_keystone_identity()
+        check_type("use_keystone_identity", use_keystone_identity, bool)
+        v["useKeystoneIdentity"] = use_keystone_identity
         return v
 
-    def remoteConnectionInfo(self) -> "configv1.RemoteConnectionInfo":
+    def remote_connection_info(self) -> "configv1.RemoteConnectionInfo":
         """
         RemoteConnectionInfo contains information about how to connect to the keystone server
         """
-        return self.__remoteConnectionInfo
+        return self.__remote_connection_info
 
-    def domainName(self) -> str:
+    def domain_name(self) -> str:
         """
         domainName is required for keystone v3
         """
-        return self.__domainName
+        return self.__domain_name
 
-    def useKeystoneIdentity(self) -> bool:
+    def use_keystone_identity(self) -> bool:
         """
         useKeystoneIdentity flag indicates that user should be authenticated by keystone ID, not by username
         """
-        return self.__useKeystoneIdentity
+        return self.__use_keystone_identity
 
 
 class LDAPAttributeMapping(types.Object):
@@ -552,14 +552,14 @@ class LDAPAttributeMapping(types.Object):
     def __init__(
         self,
         id: List[str] = None,
-        preferredUsername: List[str] = None,
+        preferred_username: List[str] = None,
         name: List[str] = None,
         email: List[str] = None,
     ):
         super().__init__()
         self.__id = id if id is not None else []
-        self.__preferredUsername = (
-            preferredUsername if preferredUsername is not None else []
+        self.__preferred_username = (
+            preferred_username if preferred_username is not None else []
         )
         self.__name = name if name is not None else []
         self.__email = email if email is not None else []
@@ -570,9 +570,9 @@ class LDAPAttributeMapping(types.Object):
         id = self.id()
         check_type("id", id, List[str])
         v["id"] = id
-        preferredUsername = self.preferredUsername()
-        check_type("preferredUsername", preferredUsername, List[str])
-        v["preferredUsername"] = preferredUsername
+        preferred_username = self.preferred_username()
+        check_type("preferred_username", preferred_username, List[str])
+        v["preferredUsername"] = preferred_username
         name = self.name()
         check_type("name", name, List[str])
         v["name"] = name
@@ -588,12 +588,12 @@ class LDAPAttributeMapping(types.Object):
         """
         return self.__id
 
-    def preferredUsername(self) -> List[str]:
+    def preferred_username(self) -> List[str]:
         """
         preferredUsername is the list of attributes whose values should be used as the preferred username.
         LDAP standard login attribute is "uid"
         """
-        return self.__preferredUsername
+        return self.__preferred_username
 
     def name(self) -> List[str]:
         """
@@ -621,20 +621,20 @@ class LDAPPasswordIdentityProvider(base.TypedObject):
     def __init__(
         self,
         url: str = "",
-        bindDN: str = "",
-        bindPassword: "configv1.StringSource" = None,
+        bind_dn: str = "",
+        bind_password: "configv1.StringSource" = None,
         insecure: bool = False,
         ca: str = "",
         attributes: "LDAPAttributeMapping" = None,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="LDAPPasswordIdentityProvider",
         )
         self.__url = url
-        self.__bindDN = bindDN
-        self.__bindPassword = (
-            bindPassword if bindPassword is not None else configv1.StringSource()
+        self.__bind_dn = bind_dn
+        self.__bind_password = (
+            bind_password if bind_password is not None else configv1.StringSource()
         )
         self.__insecure = insecure
         self.__ca = ca
@@ -648,12 +648,12 @@ class LDAPPasswordIdentityProvider(base.TypedObject):
         url = self.url()
         check_type("url", url, str)
         v["url"] = url
-        bindDN = self.bindDN()
-        check_type("bindDN", bindDN, str)
-        v["bindDN"] = bindDN
-        bindPassword = self.bindPassword()
-        check_type("bindPassword", bindPassword, "configv1.StringSource")
-        v["bindPassword"] = bindPassword
+        bind_dn = self.bind_dn()
+        check_type("bind_dn", bind_dn, str)
+        v["bindDN"] = bind_dn
+        bind_password = self.bind_password()
+        check_type("bind_password", bind_password, "configv1.StringSource")
+        v["bindPassword"] = bind_password
         insecure = self.insecure()
         check_type("insecure", insecure, bool)
         v["insecure"] = insecure
@@ -672,17 +672,17 @@ class LDAPPasswordIdentityProvider(base.TypedObject):
         """
         return self.__url
 
-    def bindDN(self) -> str:
+    def bind_dn(self) -> str:
         """
         bindDN is an optional DN to bind with during the search phase.
         """
-        return self.__bindDN
+        return self.__bind_dn
 
-    def bindPassword(self) -> "configv1.StringSource":
+    def bind_password(self) -> "configv1.StringSource":
         """
         bindPassword is an optional password to bind with during the search phase.
         """
-        return self.__bindPassword
+        return self.__bind_password
 
     def insecure(self) -> bool:
         """
@@ -713,10 +713,10 @@ class OAuthTemplates(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, login: str = "", providerSelection: str = "", error: str = ""):
+    def __init__(self, login: str = "", provider_selection: str = "", error: str = ""):
         super().__init__()
         self.__login = login
-        self.__providerSelection = providerSelection
+        self.__provider_selection = provider_selection
         self.__error = error
 
     @typechecked
@@ -725,9 +725,9 @@ class OAuthTemplates(types.Object):
         login = self.login()
         check_type("login", login, str)
         v["login"] = login
-        providerSelection = self.providerSelection()
-        check_type("providerSelection", providerSelection, str)
-        v["providerSelection"] = providerSelection
+        provider_selection = self.provider_selection()
+        check_type("provider_selection", provider_selection, str)
+        v["providerSelection"] = provider_selection
         error = self.error()
         check_type("error", error, str)
         v["error"] = error
@@ -740,12 +740,12 @@ class OAuthTemplates(types.Object):
         """
         return self.__login
 
-    def providerSelection(self) -> str:
+    def provider_selection(self) -> str:
         """
         providerSelection is a path to a file containing a go template used to render the provider selection page.
         If unspecified, the default provider selection page is used.
         """
-        return self.__providerSelection
+        return self.__provider_selection
 
     def error(self) -> str:
         """
@@ -764,47 +764,47 @@ class SessionConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        sessionSecretsFile: str = "",
-        sessionMaxAgeSeconds: int = 0,
-        sessionName: str = "",
+        session_secrets_file: str = "",
+        session_max_age_seconds: int = 0,
+        session_name: str = "",
     ):
         super().__init__()
-        self.__sessionSecretsFile = sessionSecretsFile
-        self.__sessionMaxAgeSeconds = sessionMaxAgeSeconds
-        self.__sessionName = sessionName
+        self.__session_secrets_file = session_secrets_file
+        self.__session_max_age_seconds = session_max_age_seconds
+        self.__session_name = session_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        sessionSecretsFile = self.sessionSecretsFile()
-        check_type("sessionSecretsFile", sessionSecretsFile, str)
-        v["sessionSecretsFile"] = sessionSecretsFile
-        sessionMaxAgeSeconds = self.sessionMaxAgeSeconds()
-        check_type("sessionMaxAgeSeconds", sessionMaxAgeSeconds, int)
-        v["sessionMaxAgeSeconds"] = sessionMaxAgeSeconds
-        sessionName = self.sessionName()
-        check_type("sessionName", sessionName, str)
-        v["sessionName"] = sessionName
+        session_secrets_file = self.session_secrets_file()
+        check_type("session_secrets_file", session_secrets_file, str)
+        v["sessionSecretsFile"] = session_secrets_file
+        session_max_age_seconds = self.session_max_age_seconds()
+        check_type("session_max_age_seconds", session_max_age_seconds, int)
+        v["sessionMaxAgeSeconds"] = session_max_age_seconds
+        session_name = self.session_name()
+        check_type("session_name", session_name, str)
+        v["sessionName"] = session_name
         return v
 
-    def sessionSecretsFile(self) -> str:
+    def session_secrets_file(self) -> str:
         """
         sessionSecretsFile is a reference to a file containing a serialized SessionSecrets object
         If no file is specified, a random signing and encryption key are generated at each server start
         """
-        return self.__sessionSecretsFile
+        return self.__session_secrets_file
 
-    def sessionMaxAgeSeconds(self) -> int:
+    def session_max_age_seconds(self) -> int:
         """
         sessionMaxAgeSeconds specifies how long created sessions last. Used by AuthRequestHandlerSession
         """
-        return self.__sessionMaxAgeSeconds
+        return self.__session_max_age_seconds
 
-    def sessionName(self) -> str:
+    def session_name(self) -> str:
         """
         sessionName is the cookie name used to store the session
         """
-        return self.__sessionName
+        return self.__session_name
 
 
 class TokenConfig(types.Object):
@@ -816,49 +816,55 @@ class TokenConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        authorizeTokenMaxAgeSeconds: int = 0,
-        accessTokenMaxAgeSeconds: int = 0,
-        accessTokenInactivityTimeoutSeconds: int = None,
+        authorize_token_max_age_seconds: int = 0,
+        access_token_max_age_seconds: int = 0,
+        access_token_inactivity_timeout_seconds: int = None,
     ):
         super().__init__()
-        self.__authorizeTokenMaxAgeSeconds = authorizeTokenMaxAgeSeconds
-        self.__accessTokenMaxAgeSeconds = accessTokenMaxAgeSeconds
-        self.__accessTokenInactivityTimeoutSeconds = accessTokenInactivityTimeoutSeconds
+        self.__authorize_token_max_age_seconds = authorize_token_max_age_seconds
+        self.__access_token_max_age_seconds = access_token_max_age_seconds
+        self.__access_token_inactivity_timeout_seconds = (
+            access_token_inactivity_timeout_seconds
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        authorizeTokenMaxAgeSeconds = self.authorizeTokenMaxAgeSeconds()
-        check_type("authorizeTokenMaxAgeSeconds", authorizeTokenMaxAgeSeconds, int)
-        v["authorizeTokenMaxAgeSeconds"] = authorizeTokenMaxAgeSeconds
-        accessTokenMaxAgeSeconds = self.accessTokenMaxAgeSeconds()
-        check_type("accessTokenMaxAgeSeconds", accessTokenMaxAgeSeconds, int)
-        v["accessTokenMaxAgeSeconds"] = accessTokenMaxAgeSeconds
-        accessTokenInactivityTimeoutSeconds = self.accessTokenInactivityTimeoutSeconds()
+        authorize_token_max_age_seconds = self.authorize_token_max_age_seconds()
         check_type(
-            "accessTokenInactivityTimeoutSeconds",
-            accessTokenInactivityTimeoutSeconds,
+            "authorize_token_max_age_seconds", authorize_token_max_age_seconds, int
+        )
+        v["authorizeTokenMaxAgeSeconds"] = authorize_token_max_age_seconds
+        access_token_max_age_seconds = self.access_token_max_age_seconds()
+        check_type("access_token_max_age_seconds", access_token_max_age_seconds, int)
+        v["accessTokenMaxAgeSeconds"] = access_token_max_age_seconds
+        access_token_inactivity_timeout_seconds = (
+            self.access_token_inactivity_timeout_seconds()
+        )
+        check_type(
+            "access_token_inactivity_timeout_seconds",
+            access_token_inactivity_timeout_seconds,
             Optional[int],
         )
-        if accessTokenInactivityTimeoutSeconds is not None:  # omit empty
+        if access_token_inactivity_timeout_seconds is not None:  # omit empty
             v[
                 "accessTokenInactivityTimeoutSeconds"
-            ] = accessTokenInactivityTimeoutSeconds
+            ] = access_token_inactivity_timeout_seconds
         return v
 
-    def authorizeTokenMaxAgeSeconds(self) -> int:
+    def authorize_token_max_age_seconds(self) -> int:
         """
         authorizeTokenMaxAgeSeconds defines the maximum age of authorize tokens
         """
-        return self.__authorizeTokenMaxAgeSeconds
+        return self.__authorize_token_max_age_seconds
 
-    def accessTokenMaxAgeSeconds(self) -> int:
+    def access_token_max_age_seconds(self) -> int:
         """
         accessTokenMaxAgeSeconds defines the maximum age of access tokens
         """
-        return self.__accessTokenMaxAgeSeconds
+        return self.__access_token_max_age_seconds
 
-    def accessTokenInactivityTimeoutSeconds(self) -> Optional[int]:
+    def access_token_inactivity_timeout_seconds(self) -> Optional[int]:
         """
         accessTokenInactivityTimeoutSeconds defined the default token
         inactivity timeout for tokens granted by any client.
@@ -873,7 +879,7 @@ class TokenConfig(types.Object):
         - X: Tokens time out if there is no activity for X seconds
         The current minimum allowed value for X is 300 (5 minutes)
         """
-        return self.__accessTokenInactivityTimeoutSeconds
+        return self.__access_token_inactivity_timeout_seconds
 
 
 class OAuthConfig(types.Object):
@@ -885,57 +891,63 @@ class OAuthConfig(types.Object):
     @typechecked
     def __init__(
         self,
-        loginURL: str = "",
-        assetPublicURL: str = "",
-        alwaysShowProviderSelection: bool = False,
-        identityProviders: List["IdentityProvider"] = None,
-        grantConfig: "GrantConfig" = None,
-        sessionConfig: "SessionConfig" = None,
-        tokenConfig: "TokenConfig" = None,
+        login_url: str = "",
+        asset_public_url: str = "",
+        always_show_provider_selection: bool = False,
+        identity_providers: List["IdentityProvider"] = None,
+        grant_config: "GrantConfig" = None,
+        session_config: "SessionConfig" = None,
+        token_config: "TokenConfig" = None,
         templates: "OAuthTemplates" = None,
     ):
         super().__init__()
-        self.__loginURL = loginURL
-        self.__assetPublicURL = assetPublicURL
-        self.__alwaysShowProviderSelection = alwaysShowProviderSelection
-        self.__identityProviders = (
-            identityProviders if identityProviders is not None else []
+        self.__login_url = login_url
+        self.__asset_public_url = asset_public_url
+        self.__always_show_provider_selection = always_show_provider_selection
+        self.__identity_providers = (
+            identity_providers if identity_providers is not None else []
         )
-        self.__grantConfig = grantConfig if grantConfig is not None else GrantConfig()
-        self.__sessionConfig = sessionConfig
-        self.__tokenConfig = tokenConfig if tokenConfig is not None else TokenConfig()
+        self.__grant_config = (
+            grant_config if grant_config is not None else GrantConfig()
+        )
+        self.__session_config = session_config
+        self.__token_config = (
+            token_config if token_config is not None else TokenConfig()
+        )
         self.__templates = templates
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        loginURL = self.loginURL()
-        check_type("loginURL", loginURL, str)
-        v["loginURL"] = loginURL
-        assetPublicURL = self.assetPublicURL()
-        check_type("assetPublicURL", assetPublicURL, str)
-        v["assetPublicURL"] = assetPublicURL
-        alwaysShowProviderSelection = self.alwaysShowProviderSelection()
-        check_type("alwaysShowProviderSelection", alwaysShowProviderSelection, bool)
-        v["alwaysShowProviderSelection"] = alwaysShowProviderSelection
-        identityProviders = self.identityProviders()
-        check_type("identityProviders", identityProviders, List["IdentityProvider"])
-        v["identityProviders"] = identityProviders
-        grantConfig = self.grantConfig()
-        check_type("grantConfig", grantConfig, "GrantConfig")
-        v["grantConfig"] = grantConfig
-        sessionConfig = self.sessionConfig()
-        check_type("sessionConfig", sessionConfig, Optional["SessionConfig"])
-        v["sessionConfig"] = sessionConfig
-        tokenConfig = self.tokenConfig()
-        check_type("tokenConfig", tokenConfig, "TokenConfig")
-        v["tokenConfig"] = tokenConfig
+        login_url = self.login_url()
+        check_type("login_url", login_url, str)
+        v["loginURL"] = login_url
+        asset_public_url = self.asset_public_url()
+        check_type("asset_public_url", asset_public_url, str)
+        v["assetPublicURL"] = asset_public_url
+        always_show_provider_selection = self.always_show_provider_selection()
+        check_type(
+            "always_show_provider_selection", always_show_provider_selection, bool
+        )
+        v["alwaysShowProviderSelection"] = always_show_provider_selection
+        identity_providers = self.identity_providers()
+        check_type("identity_providers", identity_providers, List["IdentityProvider"])
+        v["identityProviders"] = identity_providers
+        grant_config = self.grant_config()
+        check_type("grant_config", grant_config, "GrantConfig")
+        v["grantConfig"] = grant_config
+        session_config = self.session_config()
+        check_type("session_config", session_config, Optional["SessionConfig"])
+        v["sessionConfig"] = session_config
+        token_config = self.token_config()
+        check_type("token_config", token_config, "TokenConfig")
+        v["tokenConfig"] = token_config
         templates = self.templates()
         check_type("templates", templates, Optional["OAuthTemplates"])
         v["templates"] = templates
         return v
 
-    def loginURL(self) -> str:
+    def login_url(self) -> str:
         """
         loginURL, along with masterCA, masterURL and masterPublicURL have distinct
         meanings depending on how the OAuth server is run.  The two states are:
@@ -954,43 +966,43 @@ class OAuthConfig(types.Object):
         For further details, see the IETF Draft:
         https://tools.ietf.org/html/draft-ietf-oauth-discovery-04#section-2
         """
-        return self.__loginURL
+        return self.__login_url
 
-    def assetPublicURL(self) -> str:
+    def asset_public_url(self) -> str:
         """
         assetPublicURL is used for building valid client redirect URLs for external access
         """
-        return self.__assetPublicURL
+        return self.__asset_public_url
 
-    def alwaysShowProviderSelection(self) -> bool:
+    def always_show_provider_selection(self) -> bool:
         """
         alwaysShowProviderSelection will force the provider selection page to render even when there is only a single provider.
         """
-        return self.__alwaysShowProviderSelection
+        return self.__always_show_provider_selection
 
-    def identityProviders(self) -> List["IdentityProvider"]:
+    def identity_providers(self) -> List["IdentityProvider"]:
         """
         identityProviders is an ordered list of ways for a user to identify themselves
         """
-        return self.__identityProviders
+        return self.__identity_providers
 
-    def grantConfig(self) -> "GrantConfig":
+    def grant_config(self) -> "GrantConfig":
         """
         grantConfig describes how to handle grants
         """
-        return self.__grantConfig
+        return self.__grant_config
 
-    def sessionConfig(self) -> Optional["SessionConfig"]:
+    def session_config(self) -> Optional["SessionConfig"]:
         """
         sessionConfig hold information about configuring sessions.
         """
-        return self.__sessionConfig
+        return self.__session_config
 
-    def tokenConfig(self) -> "TokenConfig":
+    def token_config(self) -> "TokenConfig":
         """
         tokenConfig contains options for authorization and access tokens
         """
-        return self.__tokenConfig
+        return self.__token_config
 
     def templates(self) -> Optional["OAuthTemplates"]:
         """
@@ -1009,14 +1021,14 @@ class OpenIDClaims(types.Object):
     def __init__(
         self,
         id: List[str] = None,
-        preferredUsername: List[str] = None,
+        preferred_username: List[str] = None,
         name: List[str] = None,
         email: List[str] = None,
     ):
         super().__init__()
         self.__id = id if id is not None else []
-        self.__preferredUsername = (
-            preferredUsername if preferredUsername is not None else []
+        self.__preferred_username = (
+            preferred_username if preferred_username is not None else []
         )
         self.__name = name if name is not None else []
         self.__email = email if email is not None else []
@@ -1027,9 +1039,9 @@ class OpenIDClaims(types.Object):
         id = self.id()
         check_type("id", id, List[str])
         v["id"] = id
-        preferredUsername = self.preferredUsername()
-        check_type("preferredUsername", preferredUsername, List[str])
-        v["preferredUsername"] = preferredUsername
+        preferred_username = self.preferred_username()
+        check_type("preferred_username", preferred_username, List[str])
+        v["preferredUsername"] = preferred_username
         name = self.name()
         check_type("name", name, List[str])
         v["name"] = name
@@ -1045,12 +1057,12 @@ class OpenIDClaims(types.Object):
         """
         return self.__id
 
-    def preferredUsername(self) -> List[str]:
+    def preferred_username(self) -> List[str]:
         """
         preferredUsername is the list of claims whose values should be used as the preferred username.
         If unspecified, the preferred username is determined from the value of the id claim
         """
-        return self.__preferredUsername
+        return self.__preferred_username
 
     def name(self) -> List[str]:
         """
@@ -1074,11 +1086,11 @@ class OpenIDURLs(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, authorize: str = "", token: str = "", userInfo: str = ""):
+    def __init__(self, authorize: str = "", token: str = "", user_info: str = ""):
         super().__init__()
         self.__authorize = authorize
         self.__token = token
-        self.__userInfo = userInfo
+        self.__user_info = user_info
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1089,9 +1101,9 @@ class OpenIDURLs(types.Object):
         token = self.token()
         check_type("token", token, str)
         v["token"] = token
-        userInfo = self.userInfo()
-        check_type("userInfo", userInfo, str)
-        v["userInfo"] = userInfo
+        user_info = self.user_info()
+        check_type("user_info", user_info, str)
+        v["userInfo"] = user_info
         return v
 
     def authorize(self) -> str:
@@ -1106,13 +1118,13 @@ class OpenIDURLs(types.Object):
         """
         return self.__token
 
-    def userInfo(self) -> str:
+    def user_info(self) -> str:
         """
         userInfo is the optional userinfo URL.
         If present, a granted access_token is used to request claims
         If empty, a granted id_token is parsed for claims
         """
-        return self.__userInfo
+        return self.__user_info
 
 
 class OpenIDIdentityProvider(base.TypedObject):
@@ -1125,24 +1137,24 @@ class OpenIDIdentityProvider(base.TypedObject):
     def __init__(
         self,
         ca: str = "",
-        clientID: str = "",
-        clientSecret: "configv1.StringSource" = None,
-        extraScopes: List[str] = None,
-        extraAuthorizeParameters: Dict[str, str] = None,
+        client_id: str = "",
+        client_secret: "configv1.StringSource" = None,
+        extra_scopes: List[str] = None,
+        extra_authorize_parameters: Dict[str, str] = None,
         urls: "OpenIDURLs" = None,
         claims: "OpenIDClaims" = None,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="OpenIDIdentityProvider"
+            api_version="osin.config.openshift.io/v1", kind="OpenIDIdentityProvider"
         )
         self.__ca = ca
-        self.__clientID = clientID
-        self.__clientSecret = (
-            clientSecret if clientSecret is not None else configv1.StringSource()
+        self.__client_id = client_id
+        self.__client_secret = (
+            client_secret if client_secret is not None else configv1.StringSource()
         )
-        self.__extraScopes = extraScopes if extraScopes is not None else []
-        self.__extraAuthorizeParameters = (
-            extraAuthorizeParameters if extraAuthorizeParameters is not None else {}
+        self.__extra_scopes = extra_scopes if extra_scopes is not None else []
+        self.__extra_authorize_parameters = (
+            extra_authorize_parameters if extra_authorize_parameters is not None else {}
         )
         self.__urls = urls if urls is not None else OpenIDURLs()
         self.__claims = claims if claims is not None else OpenIDClaims()
@@ -1153,18 +1165,20 @@ class OpenIDIdentityProvider(base.TypedObject):
         ca = self.ca()
         check_type("ca", ca, str)
         v["ca"] = ca
-        clientID = self.clientID()
-        check_type("clientID", clientID, str)
-        v["clientID"] = clientID
-        clientSecret = self.clientSecret()
-        check_type("clientSecret", clientSecret, "configv1.StringSource")
-        v["clientSecret"] = clientSecret
-        extraScopes = self.extraScopes()
-        check_type("extraScopes", extraScopes, List[str])
-        v["extraScopes"] = extraScopes
-        extraAuthorizeParameters = self.extraAuthorizeParameters()
-        check_type("extraAuthorizeParameters", extraAuthorizeParameters, Dict[str, str])
-        v["extraAuthorizeParameters"] = extraAuthorizeParameters
+        client_id = self.client_id()
+        check_type("client_id", client_id, str)
+        v["clientID"] = client_id
+        client_secret = self.client_secret()
+        check_type("client_secret", client_secret, "configv1.StringSource")
+        v["clientSecret"] = client_secret
+        extra_scopes = self.extra_scopes()
+        check_type("extra_scopes", extra_scopes, List[str])
+        v["extraScopes"] = extra_scopes
+        extra_authorize_parameters = self.extra_authorize_parameters()
+        check_type(
+            "extra_authorize_parameters", extra_authorize_parameters, Dict[str, str]
+        )
+        v["extraAuthorizeParameters"] = extra_authorize_parameters
         urls = self.urls()
         check_type("urls", urls, "OpenIDURLs")
         v["urls"] = urls
@@ -1180,29 +1194,29 @@ class OpenIDIdentityProvider(base.TypedObject):
         """
         return self.__ca
 
-    def clientID(self) -> str:
+    def client_id(self) -> str:
         """
         clientID is the oauth client ID
         """
-        return self.__clientID
+        return self.__client_id
 
-    def clientSecret(self) -> "configv1.StringSource":
+    def client_secret(self) -> "configv1.StringSource":
         """
         clientSecret is the oauth client secret
         """
-        return self.__clientSecret
+        return self.__client_secret
 
-    def extraScopes(self) -> List[str]:
+    def extra_scopes(self) -> List[str]:
         """
         extraScopes are any scopes to request in addition to the standard "openid" scope.
         """
-        return self.__extraScopes
+        return self.__extra_scopes
 
-    def extraAuthorizeParameters(self) -> Dict[str, str]:
+    def extra_authorize_parameters(self) -> Dict[str, str]:
         """
         extraAuthorizeParameters are any custom parameters to add to the authorize request.
         """
-        return self.__extraAuthorizeParameters
+        return self.__extra_authorize_parameters
 
     def urls(self) -> "OpenIDURLs":
         """
@@ -1222,45 +1236,47 @@ class OsinServerConfig(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        genericAPIServerConfig: "configv1.GenericAPIServerConfig" = None,
-        oauthConfig: "OAuthConfig" = None,
+        generic_api_server_config: "configv1.GenericAPIServerConfig" = None,
+        oauth_config: "OAuthConfig" = None,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="OsinServerConfig"
+            api_version="osin.config.openshift.io/v1", kind="OsinServerConfig"
         )
-        self.__genericAPIServerConfig = (
-            genericAPIServerConfig
-            if genericAPIServerConfig is not None
+        self.__generic_api_server_config = (
+            generic_api_server_config
+            if generic_api_server_config is not None
             else configv1.GenericAPIServerConfig()
         )
-        self.__oauthConfig = oauthConfig if oauthConfig is not None else OAuthConfig()
+        self.__oauth_config = (
+            oauth_config if oauth_config is not None else OAuthConfig()
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        genericAPIServerConfig = self.genericAPIServerConfig()
+        generic_api_server_config = self.generic_api_server_config()
         check_type(
-            "genericAPIServerConfig",
-            genericAPIServerConfig,
+            "generic_api_server_config",
+            generic_api_server_config,
             "configv1.GenericAPIServerConfig",
         )
-        v.update(genericAPIServerConfig._root())  # inline
-        oauthConfig = self.oauthConfig()
-        check_type("oauthConfig", oauthConfig, "OAuthConfig")
-        v["oauthConfig"] = oauthConfig
+        v.update(generic_api_server_config._root())  # inline
+        oauth_config = self.oauth_config()
+        check_type("oauth_config", oauth_config, "OAuthConfig")
+        v["oauthConfig"] = oauth_config
         return v
 
-    def genericAPIServerConfig(self) -> "configv1.GenericAPIServerConfig":
+    def generic_api_server_config(self) -> "configv1.GenericAPIServerConfig":
         """
         provides the standard apiserver configuration
         """
-        return self.__genericAPIServerConfig
+        return self.__generic_api_server_config
 
-    def oauthConfig(self) -> "OAuthConfig":
+    def oauth_config(self) -> "OAuthConfig":
         """
         oauthConfig holds the necessary configuration options for OAuth authentication
         """
-        return self.__oauthConfig
+        return self.__oauth_config
 
 
 class RequestHeaderIdentityProvider(base.TypedObject):
@@ -1272,62 +1288,62 @@ class RequestHeaderIdentityProvider(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        loginURL: str = "",
-        challengeURL: str = "",
-        clientCA: str = "",
-        clientCommonNames: List[str] = None,
+        login_url: str = "",
+        challenge_url: str = "",
+        client_ca: str = "",
+        client_common_names: List[str] = None,
         headers: List[str] = None,
-        preferredUsernameHeaders: List[str] = None,
-        nameHeaders: List[str] = None,
-        emailHeaders: List[str] = None,
+        preferred_username_headers: List[str] = None,
+        name_headers: List[str] = None,
+        email_headers: List[str] = None,
     ):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1",
+            api_version="osin.config.openshift.io/v1",
             kind="RequestHeaderIdentityProvider",
         )
-        self.__loginURL = loginURL
-        self.__challengeURL = challengeURL
-        self.__clientCA = clientCA
-        self.__clientCommonNames = (
-            clientCommonNames if clientCommonNames is not None else []
+        self.__login_url = login_url
+        self.__challenge_url = challenge_url
+        self.__client_ca = client_ca
+        self.__client_common_names = (
+            client_common_names if client_common_names is not None else []
         )
         self.__headers = headers if headers is not None else []
-        self.__preferredUsernameHeaders = (
-            preferredUsernameHeaders if preferredUsernameHeaders is not None else []
+        self.__preferred_username_headers = (
+            preferred_username_headers if preferred_username_headers is not None else []
         )
-        self.__nameHeaders = nameHeaders if nameHeaders is not None else []
-        self.__emailHeaders = emailHeaders if emailHeaders is not None else []
+        self.__name_headers = name_headers if name_headers is not None else []
+        self.__email_headers = email_headers if email_headers is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        loginURL = self.loginURL()
-        check_type("loginURL", loginURL, str)
-        v["loginURL"] = loginURL
-        challengeURL = self.challengeURL()
-        check_type("challengeURL", challengeURL, str)
-        v["challengeURL"] = challengeURL
-        clientCA = self.clientCA()
-        check_type("clientCA", clientCA, str)
-        v["clientCA"] = clientCA
-        clientCommonNames = self.clientCommonNames()
-        check_type("clientCommonNames", clientCommonNames, List[str])
-        v["clientCommonNames"] = clientCommonNames
+        login_url = self.login_url()
+        check_type("login_url", login_url, str)
+        v["loginURL"] = login_url
+        challenge_url = self.challenge_url()
+        check_type("challenge_url", challenge_url, str)
+        v["challengeURL"] = challenge_url
+        client_ca = self.client_ca()
+        check_type("client_ca", client_ca, str)
+        v["clientCA"] = client_ca
+        client_common_names = self.client_common_names()
+        check_type("client_common_names", client_common_names, List[str])
+        v["clientCommonNames"] = client_common_names
         headers = self.headers()
         check_type("headers", headers, List[str])
         v["headers"] = headers
-        preferredUsernameHeaders = self.preferredUsernameHeaders()
-        check_type("preferredUsernameHeaders", preferredUsernameHeaders, List[str])
-        v["preferredUsernameHeaders"] = preferredUsernameHeaders
-        nameHeaders = self.nameHeaders()
-        check_type("nameHeaders", nameHeaders, List[str])
-        v["nameHeaders"] = nameHeaders
-        emailHeaders = self.emailHeaders()
-        check_type("emailHeaders", emailHeaders, List[str])
-        v["emailHeaders"] = emailHeaders
+        preferred_username_headers = self.preferred_username_headers()
+        check_type("preferred_username_headers", preferred_username_headers, List[str])
+        v["preferredUsernameHeaders"] = preferred_username_headers
+        name_headers = self.name_headers()
+        check_type("name_headers", name_headers, List[str])
+        v["nameHeaders"] = name_headers
+        email_headers = self.email_headers()
+        check_type("email_headers", email_headers, List[str])
+        v["emailHeaders"] = email_headers
         return v
 
-    def loginURL(self) -> str:
+    def login_url(self) -> str:
         """
         loginURL is a URL to redirect unauthenticated /authorize requests to
         Unauthenticated requests from OAuth clients which expect interactive logins will be redirected here
@@ -1336,9 +1352,9 @@ class RequestHeaderIdentityProvider(base.TypedObject):
         ${query} is replaced with the current query string
           https://www.example.com/auth-proxy/oauth/authorize?${query}
         """
-        return self.__loginURL
+        return self.__login_url
 
-    def challengeURL(self) -> str:
+    def challenge_url(self) -> str:
         """
         challengeURL is a URL to redirect unauthenticated /authorize requests to
         Unauthenticated requests from OAuth clients which expect WWW-Authenticate challenges will be redirected here
@@ -1347,19 +1363,19 @@ class RequestHeaderIdentityProvider(base.TypedObject):
         ${query} is replaced with the current query string
           https://www.example.com/auth-proxy/oauth/authorize?${query}
         """
-        return self.__challengeURL
+        return self.__challenge_url
 
-    def clientCA(self) -> str:
+    def client_ca(self) -> str:
         """
         clientCA is a file with the trusted signer certs.  If empty, no request verification is done, and any direct request to the OAuth server can impersonate any identity from this provider, merely by setting a request header.
         """
-        return self.__clientCA
+        return self.__client_ca
 
-    def clientCommonNames(self) -> List[str]:
+    def client_common_names(self) -> List[str]:
         """
         clientCommonNames is an optional list of common names to require a match from. If empty, any client certificate validated against the clientCA bundle is considered authoritative.
         """
-        return self.__clientCommonNames
+        return self.__client_common_names
 
     def headers(self) -> List[str]:
         """
@@ -1367,23 +1383,23 @@ class RequestHeaderIdentityProvider(base.TypedObject):
         """
         return self.__headers
 
-    def preferredUsernameHeaders(self) -> List[str]:
+    def preferred_username_headers(self) -> List[str]:
         """
         preferredUsernameHeaders is the set of headers to check for the preferred username
         """
-        return self.__preferredUsernameHeaders
+        return self.__preferred_username_headers
 
-    def nameHeaders(self) -> List[str]:
+    def name_headers(self) -> List[str]:
         """
         nameHeaders is the set of headers to check for the display name
         """
-        return self.__nameHeaders
+        return self.__name_headers
 
-    def emailHeaders(self) -> List[str]:
+    def email_headers(self) -> List[str]:
         """
         emailHeaders is the set of headers to check for the email address
         """
-        return self.__emailHeaders
+        return self.__email_headers
 
 
 class SessionSecret(types.Object):
@@ -1431,7 +1447,7 @@ class SessionSecrets(base.TypedObject):
     @typechecked
     def __init__(self, secrets: List["SessionSecret"] = None):
         super().__init__(
-            apiVersion="osin.config.openshift.io/v1", kind="SessionSecrets"
+            api_version="osin.config.openshift.io/v1", kind="SessionSecrets"
         )
         self.__secrets = secrets if secrets is not None else []
 

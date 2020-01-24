@@ -63,10 +63,10 @@ class ApplicationMenuSpec(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, section: str = "", imageURL: str = None):
+    def __init__(self, section: str = "", image_url: str = None):
         super().__init__()
         self.__section = section
-        self.__imageURL = imageURL
+        self.__image_url = image_url
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -74,10 +74,10 @@ class ApplicationMenuSpec(types.Object):
         section = self.section()
         check_type("section", section, str)
         v["section"] = section
-        imageURL = self.imageURL()
-        check_type("imageURL", imageURL, Optional[str])
-        if imageURL:  # omit empty
-            v["imageURL"] = imageURL
+        image_url = self.image_url()
+        check_type("image_url", image_url, Optional[str])
+        if image_url:  # omit empty
+            v["imageURL"] = image_url
         return v
 
     def section(self) -> str:
@@ -88,12 +88,12 @@ class ApplicationMenuSpec(types.Object):
         """
         return self.__section
 
-    def imageURL(self) -> Optional[str]:
+    def image_url(self) -> Optional[str]:
         """
         imageUrl is the URL for the icon used in front of the link in the application menu.
         The URL must be an HTTPS URL or a Data URI. The image should be square and will be shown at 24x24 pixels.
         """
-        return self.__imageURL
+        return self.__image_url
 
 
 class CLIDownloadLink(types.Object):
@@ -137,21 +137,21 @@ class ConsoleCLIDownloadSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        displayName: str = "",
+        display_name: str = "",
         description: str = "",
         links: List["CLIDownloadLink"] = None,
     ):
         super().__init__()
-        self.__displayName = displayName
+        self.__display_name = display_name
         self.__description = description
         self.__links = links if links is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        displayName = self.displayName()
-        check_type("displayName", displayName, str)
-        v["displayName"] = displayName
+        display_name = self.display_name()
+        check_type("display_name", display_name, str)
+        v["displayName"] = display_name
         description = self.description()
         check_type("description", description, str)
         v["description"] = description
@@ -160,11 +160,11 @@ class ConsoleCLIDownloadSpec(types.Object):
         v["links"] = links
         return v
 
-    def displayName(self) -> str:
+    def display_name(self) -> str:
         """
         displayName is the display name of the CLI download.
         """
-        return self.__displayName
+        return self.__display_name
 
     def description(self) -> str:
         """
@@ -194,7 +194,7 @@ class ConsoleCLIDownload(base.TypedObject, base.MetadataObject):
         spec: "ConsoleCLIDownloadSpec" = None,
     ):
         super().__init__(
-            apiVersion="console.openshift.io/v1",
+            api_version="console.openshift.io/v1",
             kind="ConsoleCLIDownload",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -223,12 +223,12 @@ class ConsoleExternalLogLinkSpec(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, text: str = "", hrefTemplate: str = "", namespaceFilter: str = None
+        self, text: str = "", href_template: str = "", namespace_filter: str = None
     ):
         super().__init__()
         self.__text = text
-        self.__hrefTemplate = hrefTemplate
-        self.__namespaceFilter = namespaceFilter
+        self.__href_template = href_template
+        self.__namespace_filter = namespace_filter
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -236,13 +236,13 @@ class ConsoleExternalLogLinkSpec(types.Object):
         text = self.text()
         check_type("text", text, str)
         v["text"] = text
-        hrefTemplate = self.hrefTemplate()
-        check_type("hrefTemplate", hrefTemplate, str)
-        v["hrefTemplate"] = hrefTemplate
-        namespaceFilter = self.namespaceFilter()
-        check_type("namespaceFilter", namespaceFilter, Optional[str])
-        if namespaceFilter:  # omit empty
-            v["namespaceFilter"] = namespaceFilter
+        href_template = self.href_template()
+        check_type("href_template", href_template, str)
+        v["hrefTemplate"] = href_template
+        namespace_filter = self.namespace_filter()
+        check_type("namespace_filter", namespace_filter, Optional[str])
+        if namespace_filter:  # omit empty
+            v["namespaceFilter"] = namespace_filter
         return v
 
     def text(self) -> str:
@@ -251,7 +251,7 @@ class ConsoleExternalLogLinkSpec(types.Object):
         """
         return self.__text
 
-    def hrefTemplate(self) -> str:
+    def href_template(self) -> str:
         """
         hrefTemplate is an absolute secure URL (must use https) for the log link including
         variables to be replaced. Variables are specified in the URL with the format ${variableName},
@@ -269,16 +269,16 @@ class ConsoleExternalLogLinkSpec(types.Object):
         
         e.g., https://example.com/logs?resourceName=${resourceName}&containerName=${containerName}&resourceNamespace=${resourceNamespace}&podLabels=${podLabels}
         """
-        return self.__hrefTemplate
+        return self.__href_template
 
-    def namespaceFilter(self) -> Optional[str]:
+    def namespace_filter(self) -> Optional[str]:
         """
         namespaceFilter is a regular expression used to restrict a log link to a
         matching set of namespaces (e.g., `^openshift-`). The string is converted
         into a regular expression using the JavaScript RegExp constructor.
         If not specified, links will be displayed for all the namespaces.
         """
-        return self.__namespaceFilter
+        return self.__namespace_filter
 
 
 class ConsoleExternalLogLink(base.TypedObject, base.MetadataObject):
@@ -296,7 +296,7 @@ class ConsoleExternalLogLink(base.TypedObject, base.MetadataObject):
         spec: "ConsoleExternalLogLinkSpec" = None,
     ):
         super().__init__(
-            apiVersion="console.openshift.io/v1",
+            api_version="console.openshift.io/v1",
             kind="ConsoleExternalLogLink",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -363,11 +363,11 @@ class NamespaceDashboardSpec(types.Object):
     def __init__(
         self,
         namespaces: List[str] = None,
-        namespaceSelector: "metav1.LabelSelector" = None,
+        namespace_selector: "metav1.LabelSelector" = None,
     ):
         super().__init__()
         self.__namespaces = namespaces if namespaces is not None else []
-        self.__namespaceSelector = namespaceSelector
+        self.__namespace_selector = namespace_selector
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -376,12 +376,12 @@ class NamespaceDashboardSpec(types.Object):
         check_type("namespaces", namespaces, Optional[List[str]])
         if namespaces:  # omit empty
             v["namespaces"] = namespaces
-        namespaceSelector = self.namespaceSelector()
+        namespace_selector = self.namespace_selector()
         check_type(
-            "namespaceSelector", namespaceSelector, Optional["metav1.LabelSelector"]
+            "namespace_selector", namespace_selector, Optional["metav1.LabelSelector"]
         )
-        if namespaceSelector is not None:  # omit empty
-            v["namespaceSelector"] = namespaceSelector
+        if namespace_selector is not None:  # omit empty
+            v["namespaceSelector"] = namespace_selector
         return v
 
     def namespaces(self) -> Optional[List[str]]:
@@ -390,12 +390,12 @@ class NamespaceDashboardSpec(types.Object):
         """
         return self.__namespaces
 
-    def namespaceSelector(self) -> Optional["metav1.LabelSelector"]:
+    def namespace_selector(self) -> Optional["metav1.LabelSelector"]:
         """
         namespaceSelector is used to select the Namespaces that should contain dashboard link by label.
         If the namespace labels match, dashboard link will be shown for the namespaces.
         """
-        return self.__namespaceSelector
+        return self.__namespace_selector
 
 
 class ConsoleLinkSpec(types.Object):
@@ -409,14 +409,14 @@ class ConsoleLinkSpec(types.Object):
         self,
         link: "Link" = None,
         location: ConsoleLinkLocation = None,
-        applicationMenu: "ApplicationMenuSpec" = None,
-        namespaceDashboard: "NamespaceDashboardSpec" = None,
+        application_menu: "ApplicationMenuSpec" = None,
+        namespace_dashboard: "NamespaceDashboardSpec" = None,
     ):
         super().__init__()
         self.__link = link if link is not None else Link()
         self.__location = location
-        self.__applicationMenu = applicationMenu
-        self.__namespaceDashboard = namespaceDashboard
+        self.__application_menu = application_menu
+        self.__namespace_dashboard = namespace_dashboard
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -427,16 +427,20 @@ class ConsoleLinkSpec(types.Object):
         location = self.location()
         check_type("location", location, ConsoleLinkLocation)
         v["location"] = location
-        applicationMenu = self.applicationMenu()
-        check_type("applicationMenu", applicationMenu, Optional["ApplicationMenuSpec"])
-        if applicationMenu is not None:  # omit empty
-            v["applicationMenu"] = applicationMenu
-        namespaceDashboard = self.namespaceDashboard()
+        application_menu = self.application_menu()
         check_type(
-            "namespaceDashboard", namespaceDashboard, Optional["NamespaceDashboardSpec"]
+            "application_menu", application_menu, Optional["ApplicationMenuSpec"]
         )
-        if namespaceDashboard is not None:  # omit empty
-            v["namespaceDashboard"] = namespaceDashboard
+        if application_menu is not None:  # omit empty
+            v["applicationMenu"] = application_menu
+        namespace_dashboard = self.namespace_dashboard()
+        check_type(
+            "namespace_dashboard",
+            namespace_dashboard,
+            Optional["NamespaceDashboardSpec"],
+        )
+        if namespace_dashboard is not None:  # omit empty
+            v["namespaceDashboard"] = namespace_dashboard
         return v
 
     def link(self) -> "Link":
@@ -448,20 +452,20 @@ class ConsoleLinkSpec(types.Object):
         """
         return self.__location
 
-    def applicationMenu(self) -> Optional["ApplicationMenuSpec"]:
+    def application_menu(self) -> Optional["ApplicationMenuSpec"]:
         """
         applicationMenu holds information about section and icon used for the link in the
         application menu, and it is applicable only when location is set to ApplicationMenu.
         """
-        return self.__applicationMenu
+        return self.__application_menu
 
-    def namespaceDashboard(self) -> Optional["NamespaceDashboardSpec"]:
+    def namespace_dashboard(self) -> Optional["NamespaceDashboardSpec"]:
         """
         namespaceDashboard holds information about namespaces in which the dashboard link should
         appear, and it is applicable only when location is set to NamespaceDashboard.
         If not specified, the link will appear in all namespaces.
         """
-        return self.__namespaceDashboard
+        return self.__namespace_dashboard
 
 
 class ConsoleLink(base.TypedObject, base.MetadataObject):
@@ -479,7 +483,7 @@ class ConsoleLink(base.TypedObject, base.MetadataObject):
         spec: "ConsoleLinkSpec" = None,
     ):
         super().__init__(
-            apiVersion="console.openshift.io/v1",
+            api_version="console.openshift.io/v1",
             kind="ConsoleLink",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -512,14 +516,14 @@ class ConsoleNotificationSpec(types.Object):
         location: ConsoleNotificationLocation = None,
         link: "Link" = None,
         color: str = None,
-        backgroundColor: str = None,
+        background_color: str = None,
     ):
         super().__init__()
         self.__text = text
         self.__location = location
         self.__link = link
         self.__color = color
-        self.__backgroundColor = backgroundColor
+        self.__background_color = background_color
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -539,10 +543,10 @@ class ConsoleNotificationSpec(types.Object):
         check_type("color", color, Optional[str])
         if color:  # omit empty
             v["color"] = color
-        backgroundColor = self.backgroundColor()
-        check_type("backgroundColor", backgroundColor, Optional[str])
-        if backgroundColor:  # omit empty
-            v["backgroundColor"] = backgroundColor
+        background_color = self.background_color()
+        check_type("background_color", background_color, Optional[str])
+        if background_color:  # omit empty
+            v["backgroundColor"] = background_color
         return v
 
     def text(self) -> str:
@@ -569,11 +573,11 @@ class ConsoleNotificationSpec(types.Object):
         """
         return self.__color
 
-    def backgroundColor(self) -> Optional[str]:
+    def background_color(self) -> Optional[str]:
         """
         backgroundColor is the color of the background for the notification as CSS data type color.
         """
-        return self.__backgroundColor
+        return self.__background_color
 
 
 class ConsoleNotification(base.TypedObject, base.MetadataObject):
@@ -591,7 +595,7 @@ class ConsoleNotification(base.TypedObject, base.MetadataObject):
         spec: "ConsoleNotificationSpec" = None,
     ):
         super().__init__(
-            apiVersion="console.openshift.io/v1",
+            api_version="console.openshift.io/v1",
             kind="ConsoleNotification",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -622,15 +626,15 @@ class ConsoleYAMLSampleSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        targetResource: "metav1.TypeMeta" = None,
+        target_resource: "metav1.TypeMeta" = None,
         title: ConsoleYAMLSampleTitle = None,
         description: ConsoleYAMLSampleDescription = None,
         yaml: ConsoleYAMLSampleYAML = None,
         snippet: bool = False,
     ):
         super().__init__()
-        self.__targetResource = (
-            targetResource if targetResource is not None else metav1.TypeMeta()
+        self.__target_resource = (
+            target_resource if target_resource is not None else metav1.TypeMeta()
         )
         self.__title = title
         self.__description = description
@@ -640,9 +644,9 @@ class ConsoleYAMLSampleSpec(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        targetResource = self.targetResource()
-        check_type("targetResource", targetResource, "metav1.TypeMeta")
-        v["targetResource"] = targetResource
+        target_resource = self.target_resource()
+        check_type("target_resource", target_resource, "metav1.TypeMeta")
+        v["targetResource"] = target_resource
         title = self.title()
         check_type("title", title, ConsoleYAMLSampleTitle)
         v["title"] = title
@@ -657,12 +661,12 @@ class ConsoleYAMLSampleSpec(types.Object):
         v["snippet"] = snippet
         return v
 
-    def targetResource(self) -> "metav1.TypeMeta":
+    def target_resource(self) -> "metav1.TypeMeta":
         """
         targetResource contains apiVersion and kind of the resource
         YAML sample is representating.
         """
-        return self.__targetResource
+        return self.__target_resource
 
     def title(self) -> ConsoleYAMLSampleTitle:
         """
@@ -706,7 +710,7 @@ class ConsoleYAMLSample(base.TypedObject, base.MetadataObject):
         spec: "ConsoleYAMLSampleSpec" = None,
     ):
         super().__init__(
-            apiVersion="console.openshift.io/v1",
+            api_version="console.openshift.io/v1",
             kind="ConsoleYAMLSample",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

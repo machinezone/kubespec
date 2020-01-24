@@ -122,13 +122,13 @@ class ExecNewPodHook(types.Object):
         self,
         command: List[str] = None,
         env: List["k8sv1.EnvVar"] = None,
-        containerName: str = "",
+        container_name: str = "",
         volumes: List[str] = None,
     ):
         super().__init__()
         self.__command = command if command is not None else []
         self.__env = env if env is not None else []
-        self.__containerName = containerName
+        self.__container_name = container_name
         self.__volumes = volumes if volumes is not None else []
 
     @typechecked
@@ -141,9 +141,9 @@ class ExecNewPodHook(types.Object):
         check_type("env", env, Optional[List["k8sv1.EnvVar"]])
         if env:  # omit empty
             v["env"] = env
-        containerName = self.containerName()
-        check_type("containerName", containerName, str)
-        v["containerName"] = containerName
+        container_name = self.container_name()
+        check_type("container_name", container_name, str)
+        v["containerName"] = container_name
         volumes = self.volumes()
         check_type("volumes", volumes, Optional[List[str]])
         if volumes:  # omit empty
@@ -162,12 +162,12 @@ class ExecNewPodHook(types.Object):
         """
         return self.__env
 
-    def containerName(self) -> str:
+    def container_name(self) -> str:
         """
         ContainerName is the name of a container in the deployment pod template
         whose container image will be used for the hook pod's container.
         """
-        return self.__containerName
+        return self.__container_name
 
     def volumes(self) -> Optional[List[str]]:
         """
@@ -185,28 +185,28 @@ class TagImageHook(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, containerName: str = "", to: "k8sv1.ObjectReference" = None):
+    def __init__(self, container_name: str = "", to: "k8sv1.ObjectReference" = None):
         super().__init__()
-        self.__containerName = containerName
+        self.__container_name = container_name
         self.__to = to if to is not None else k8sv1.ObjectReference()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        containerName = self.containerName()
-        check_type("containerName", containerName, str)
-        v["containerName"] = containerName
+        container_name = self.container_name()
+        check_type("container_name", container_name, str)
+        v["containerName"] = container_name
         to = self.to()
         check_type("to", to, "k8sv1.ObjectReference")
         v["to"] = to
         return v
 
-    def containerName(self) -> str:
+    def container_name(self) -> str:
         """
         ContainerName is the name of a container in the deployment config whose image value will be used as the source of the tag. If there is only a single
         container this value will be defaulted to the name of that container.
         """
-        return self.__containerName
+        return self.__container_name
 
     def to(self) -> "k8sv1.ObjectReference":
         """
@@ -224,48 +224,48 @@ class LifecycleHook(types.Object):
     @typechecked
     def __init__(
         self,
-        failurePolicy: LifecycleHookFailurePolicy = None,
-        execNewPod: "ExecNewPodHook" = None,
-        tagImages: List["TagImageHook"] = None,
+        failure_policy: LifecycleHookFailurePolicy = None,
+        exec_new_pod: "ExecNewPodHook" = None,
+        tag_images: List["TagImageHook"] = None,
     ):
         super().__init__()
-        self.__failurePolicy = failurePolicy
-        self.__execNewPod = execNewPod
-        self.__tagImages = tagImages if tagImages is not None else []
+        self.__failure_policy = failure_policy
+        self.__exec_new_pod = exec_new_pod
+        self.__tag_images = tag_images if tag_images is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        failurePolicy = self.failurePolicy()
-        check_type("failurePolicy", failurePolicy, LifecycleHookFailurePolicy)
-        v["failurePolicy"] = failurePolicy
-        execNewPod = self.execNewPod()
-        check_type("execNewPod", execNewPod, Optional["ExecNewPodHook"])
-        if execNewPod is not None:  # omit empty
-            v["execNewPod"] = execNewPod
-        tagImages = self.tagImages()
-        check_type("tagImages", tagImages, Optional[List["TagImageHook"]])
-        if tagImages:  # omit empty
-            v["tagImages"] = tagImages
+        failure_policy = self.failure_policy()
+        check_type("failure_policy", failure_policy, LifecycleHookFailurePolicy)
+        v["failurePolicy"] = failure_policy
+        exec_new_pod = self.exec_new_pod()
+        check_type("exec_new_pod", exec_new_pod, Optional["ExecNewPodHook"])
+        if exec_new_pod is not None:  # omit empty
+            v["execNewPod"] = exec_new_pod
+        tag_images = self.tag_images()
+        check_type("tag_images", tag_images, Optional[List["TagImageHook"]])
+        if tag_images:  # omit empty
+            v["tagImages"] = tag_images
         return v
 
-    def failurePolicy(self) -> LifecycleHookFailurePolicy:
+    def failure_policy(self) -> LifecycleHookFailurePolicy:
         """
         FailurePolicy specifies what action to take if the hook fails.
         """
-        return self.__failurePolicy
+        return self.__failure_policy
 
-    def execNewPod(self) -> Optional["ExecNewPodHook"]:
+    def exec_new_pod(self) -> Optional["ExecNewPodHook"]:
         """
         ExecNewPod specifies the options for a lifecycle hook backed by a pod.
         """
-        return self.__execNewPod
+        return self.__exec_new_pod
 
-    def tagImages(self) -> Optional[List["TagImageHook"]]:
+    def tag_images(self) -> Optional[List["TagImageHook"]]:
         """
         TagImages instructs the deployer to tag the current image referenced under a container onto an image stream tag.
         """
-        return self.__tagImages
+        return self.__tag_images
 
 
 class RecreateDeploymentStrategyParams(types.Object):
@@ -278,13 +278,13 @@ class RecreateDeploymentStrategyParams(types.Object):
     @typechecked
     def __init__(
         self,
-        timeoutSeconds: int = None,
+        timeout_seconds: int = None,
         pre: "LifecycleHook" = None,
         mid: "LifecycleHook" = None,
         post: "LifecycleHook" = None,
     ):
         super().__init__()
-        self.__timeoutSeconds = timeoutSeconds if timeoutSeconds is not None else 600
+        self.__timeout_seconds = timeout_seconds if timeout_seconds is not None else 600
         self.__pre = pre
         self.__mid = mid
         self.__post = post
@@ -292,10 +292,10 @@ class RecreateDeploymentStrategyParams(types.Object):
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        timeoutSeconds = self.timeoutSeconds()
-        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
-        if timeoutSeconds is not None:  # omit empty
-            v["timeoutSeconds"] = timeoutSeconds
+        timeout_seconds = self.timeout_seconds()
+        check_type("timeout_seconds", timeout_seconds, Optional[int])
+        if timeout_seconds is not None:  # omit empty
+            v["timeoutSeconds"] = timeout_seconds
         pre = self.pre()
         check_type("pre", pre, Optional["LifecycleHook"])
         if pre is not None:  # omit empty
@@ -310,12 +310,12 @@ class RecreateDeploymentStrategyParams(types.Object):
             v["post"] = post
         return v
 
-    def timeoutSeconds(self) -> Optional[int]:
+    def timeout_seconds(self) -> Optional[int]:
         """
         TimeoutSeconds is the time to wait for updates before giving up. If the
         value is nil, a default will be used.
         """
-        return self.__timeoutSeconds
+        return self.__timeout_seconds
 
     def pre(self) -> Optional["LifecycleHook"]:
         """
@@ -349,48 +349,52 @@ class RollingDeploymentStrategyParams(types.Object):
     @typechecked
     def __init__(
         self,
-        updatePeriodSeconds: int = None,
-        intervalSeconds: int = None,
-        timeoutSeconds: int = None,
-        maxUnavailable: Union[int, str] = None,
-        maxSurge: Union[int, str] = None,
+        update_period_seconds: int = None,
+        interval_seconds: int = None,
+        timeout_seconds: int = None,
+        max_unavailable: Union[int, str] = None,
+        max_surge: Union[int, str] = None,
         pre: "LifecycleHook" = None,
         post: "LifecycleHook" = None,
     ):
         super().__init__()
-        self.__updatePeriodSeconds = (
-            updatePeriodSeconds if updatePeriodSeconds is not None else 1
+        self.__update_period_seconds = (
+            update_period_seconds if update_period_seconds is not None else 1
         )
-        self.__intervalSeconds = intervalSeconds if intervalSeconds is not None else 1
-        self.__timeoutSeconds = timeoutSeconds if timeoutSeconds is not None else 600
-        self.__maxUnavailable = maxUnavailable if maxUnavailable is not None else "25%"
-        self.__maxSurge = maxSurge if maxSurge is not None else "25%"
+        self.__interval_seconds = (
+            interval_seconds if interval_seconds is not None else 1
+        )
+        self.__timeout_seconds = timeout_seconds if timeout_seconds is not None else 600
+        self.__max_unavailable = (
+            max_unavailable if max_unavailable is not None else "25%"
+        )
+        self.__max_surge = max_surge if max_surge is not None else "25%"
         self.__pre = pre
         self.__post = post
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        updatePeriodSeconds = self.updatePeriodSeconds()
-        check_type("updatePeriodSeconds", updatePeriodSeconds, Optional[int])
-        if updatePeriodSeconds is not None:  # omit empty
-            v["updatePeriodSeconds"] = updatePeriodSeconds
-        intervalSeconds = self.intervalSeconds()
-        check_type("intervalSeconds", intervalSeconds, Optional[int])
-        if intervalSeconds is not None:  # omit empty
-            v["intervalSeconds"] = intervalSeconds
-        timeoutSeconds = self.timeoutSeconds()
-        check_type("timeoutSeconds", timeoutSeconds, Optional[int])
-        if timeoutSeconds is not None:  # omit empty
-            v["timeoutSeconds"] = timeoutSeconds
-        maxUnavailable = self.maxUnavailable()
-        check_type("maxUnavailable", maxUnavailable, Optional[Union[int, str]])
-        if maxUnavailable is not None:  # omit empty
-            v["maxUnavailable"] = maxUnavailable
-        maxSurge = self.maxSurge()
-        check_type("maxSurge", maxSurge, Optional[Union[int, str]])
-        if maxSurge is not None:  # omit empty
-            v["maxSurge"] = maxSurge
+        update_period_seconds = self.update_period_seconds()
+        check_type("update_period_seconds", update_period_seconds, Optional[int])
+        if update_period_seconds is not None:  # omit empty
+            v["updatePeriodSeconds"] = update_period_seconds
+        interval_seconds = self.interval_seconds()
+        check_type("interval_seconds", interval_seconds, Optional[int])
+        if interval_seconds is not None:  # omit empty
+            v["intervalSeconds"] = interval_seconds
+        timeout_seconds = self.timeout_seconds()
+        check_type("timeout_seconds", timeout_seconds, Optional[int])
+        if timeout_seconds is not None:  # omit empty
+            v["timeoutSeconds"] = timeout_seconds
+        max_unavailable = self.max_unavailable()
+        check_type("max_unavailable", max_unavailable, Optional[Union[int, str]])
+        if max_unavailable is not None:  # omit empty
+            v["maxUnavailable"] = max_unavailable
+        max_surge = self.max_surge()
+        check_type("max_surge", max_surge, Optional[Union[int, str]])
+        if max_surge is not None:  # omit empty
+            v["maxSurge"] = max_surge
         pre = self.pre()
         check_type("pre", pre, Optional["LifecycleHook"])
         if pre is not None:  # omit empty
@@ -401,28 +405,28 @@ class RollingDeploymentStrategyParams(types.Object):
             v["post"] = post
         return v
 
-    def updatePeriodSeconds(self) -> Optional[int]:
+    def update_period_seconds(self) -> Optional[int]:
         """
         UpdatePeriodSeconds is the time to wait between individual pod updates.
         If the value is nil, a default will be used.
         """
-        return self.__updatePeriodSeconds
+        return self.__update_period_seconds
 
-    def intervalSeconds(self) -> Optional[int]:
+    def interval_seconds(self) -> Optional[int]:
         """
         IntervalSeconds is the time to wait between polling deployment status
         after update. If the value is nil, a default will be used.
         """
-        return self.__intervalSeconds
+        return self.__interval_seconds
 
-    def timeoutSeconds(self) -> Optional[int]:
+    def timeout_seconds(self) -> Optional[int]:
         """
         TimeoutSeconds is the time to wait for updates before giving up. If the
         value is nil, a default will be used.
         """
-        return self.__timeoutSeconds
+        return self.__timeout_seconds
 
-    def maxUnavailable(self) -> Optional[Union[int, str]]:
+    def max_unavailable(self) -> Optional[Union[int, str]]:
         """
         MaxUnavailable is the maximum number of pods that can be unavailable
         during the update. Value can be an absolute number (ex: 5) or a
@@ -437,9 +441,9 @@ class RollingDeploymentStrategyParams(types.Object):
         ensuring that at least 70% of original number of pods are available at
         all times during the update.
         """
-        return self.__maxUnavailable
+        return self.__max_unavailable
 
-    def maxSurge(self) -> Optional[Union[int, str]]:
+    def max_surge(self) -> Optional[Union[int, str]]:
         """
         MaxSurge is the maximum number of pods that can be scheduled above the
         original number of pods. Value can be an absolute number (ex: 5) or a
@@ -454,7 +458,7 @@ class RollingDeploymentStrategyParams(types.Object):
         pods running at any time during the update is atmost 130% of original
         pods.
         """
-        return self.__maxSurge
+        return self.__max_surge
 
     def pre(self) -> Optional["LifecycleHook"]:
         """
@@ -482,21 +486,21 @@ class DeploymentStrategy(types.Object):
     def __init__(
         self,
         type: DeploymentStrategyType = DeploymentStrategyType["Rolling"],
-        customParams: "CustomDeploymentStrategyParams" = None,
-        recreateParams: "RecreateDeploymentStrategyParams" = None,
-        rollingParams: "RollingDeploymentStrategyParams" = None,
+        custom_params: "CustomDeploymentStrategyParams" = None,
+        recreate_params: "RecreateDeploymentStrategyParams" = None,
+        rolling_params: "RollingDeploymentStrategyParams" = None,
         resources: "k8sv1.ResourceRequirements" = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        activeDeadlineSeconds: int = None,
+        active_deadline_seconds: int = None,
     ):
         super().__init__()
         self.__type = type
-        self.__customParams = customParams
-        self.__recreateParams = recreateParams
-        self.__rollingParams = (
-            rollingParams
-            if rollingParams is not None
+        self.__custom_params = custom_params
+        self.__recreate_params = recreate_params
+        self.__rolling_params = (
+            rolling_params
+            if rolling_params is not None
             else RollingDeploymentStrategyParams()
         )
         self.__resources = (
@@ -504,8 +508,8 @@ class DeploymentStrategy(types.Object):
         )
         self.__labels = labels if labels is not None else {}
         self.__annotations = annotations if annotations is not None else {}
-        self.__activeDeadlineSeconds = (
-            activeDeadlineSeconds if activeDeadlineSeconds is not None else 21600
+        self.__active_deadline_seconds = (
+            active_deadline_seconds if active_deadline_seconds is not None else 21600
         )
 
     @typechecked
@@ -515,26 +519,28 @@ class DeploymentStrategy(types.Object):
         check_type("type", type, Optional[DeploymentStrategyType])
         if type:  # omit empty
             v["type"] = type
-        customParams = self.customParams()
+        custom_params = self.custom_params()
         check_type(
-            "customParams", customParams, Optional["CustomDeploymentStrategyParams"]
+            "custom_params", custom_params, Optional["CustomDeploymentStrategyParams"]
         )
-        if customParams is not None:  # omit empty
-            v["customParams"] = customParams
-        recreateParams = self.recreateParams()
+        if custom_params is not None:  # omit empty
+            v["customParams"] = custom_params
+        recreate_params = self.recreate_params()
         check_type(
-            "recreateParams",
-            recreateParams,
+            "recreate_params",
+            recreate_params,
             Optional["RecreateDeploymentStrategyParams"],
         )
-        if recreateParams is not None:  # omit empty
-            v["recreateParams"] = recreateParams
-        rollingParams = self.rollingParams()
+        if recreate_params is not None:  # omit empty
+            v["recreateParams"] = recreate_params
+        rolling_params = self.rolling_params()
         check_type(
-            "rollingParams", rollingParams, Optional["RollingDeploymentStrategyParams"]
+            "rolling_params",
+            rolling_params,
+            Optional["RollingDeploymentStrategyParams"],
         )
-        if rollingParams is not None:  # omit empty
-            v["rollingParams"] = rollingParams
+        if rolling_params is not None:  # omit empty
+            v["rollingParams"] = rolling_params
         resources = self.resources()
         check_type("resources", resources, Optional["k8sv1.ResourceRequirements"])
         v["resources"] = resources
@@ -546,10 +552,10 @@ class DeploymentStrategy(types.Object):
         check_type("annotations", annotations, Optional[Dict[str, str]])
         if annotations:  # omit empty
             v["annotations"] = annotations
-        activeDeadlineSeconds = self.activeDeadlineSeconds()
-        check_type("activeDeadlineSeconds", activeDeadlineSeconds, Optional[int])
-        if activeDeadlineSeconds is not None:  # omit empty
-            v["activeDeadlineSeconds"] = activeDeadlineSeconds
+        active_deadline_seconds = self.active_deadline_seconds()
+        check_type("active_deadline_seconds", active_deadline_seconds, Optional[int])
+        if active_deadline_seconds is not None:  # omit empty
+            v["activeDeadlineSeconds"] = active_deadline_seconds
         return v
 
     def type(self) -> Optional[DeploymentStrategyType]:
@@ -558,25 +564,25 @@ class DeploymentStrategy(types.Object):
         """
         return self.__type
 
-    def customParams(self) -> Optional["CustomDeploymentStrategyParams"]:
+    def custom_params(self) -> Optional["CustomDeploymentStrategyParams"]:
         """
         CustomParams are the input to the Custom deployment strategy, and may also
         be specified for the Recreate and Rolling strategies to customize the execution
         process that runs the deployment.
         """
-        return self.__customParams
+        return self.__custom_params
 
-    def recreateParams(self) -> Optional["RecreateDeploymentStrategyParams"]:
+    def recreate_params(self) -> Optional["RecreateDeploymentStrategyParams"]:
         """
         RecreateParams are the input to the Recreate deployment strategy.
         """
-        return self.__recreateParams
+        return self.__recreate_params
 
-    def rollingParams(self) -> Optional["RollingDeploymentStrategyParams"]:
+    def rolling_params(self) -> Optional["RollingDeploymentStrategyParams"]:
         """
         RollingParams are the input to the Rolling deployment strategy.
         """
-        return self.__rollingParams
+        return self.__rolling_params
 
     def resources(self) -> Optional["k8sv1.ResourceRequirements"]:
         """
@@ -596,12 +602,12 @@ class DeploymentStrategy(types.Object):
         """
         return self.__annotations
 
-    def activeDeadlineSeconds(self) -> Optional[int]:
+    def active_deadline_seconds(self) -> Optional[int]:
         """
         ActiveDeadlineSeconds is the duration in seconds that the deployer pods for this deployment
         config may be active on a node before the system actively tries to terminate them.
         """
-        return self.__activeDeadlineSeconds
+        return self.__active_deadline_seconds
 
 
 class DeploymentTriggerImageChangeParams(types.Object):
@@ -614,15 +620,15 @@ class DeploymentTriggerImageChangeParams(types.Object):
     def __init__(
         self,
         automatic: bool = None,
-        containerNames: List[str] = None,
+        container_names: List[str] = None,
         from_: "k8sv1.ObjectReference" = None,
-        lastTriggeredImage: str = None,
+        last_triggered_image: str = None,
     ):
         super().__init__()
         self.__automatic = automatic
-        self.__containerNames = containerNames if containerNames is not None else []
+        self.__container_names = container_names if container_names is not None else []
         self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
-        self.__lastTriggeredImage = lastTriggeredImage
+        self.__last_triggered_image = last_triggered_image
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -631,17 +637,17 @@ class DeploymentTriggerImageChangeParams(types.Object):
         check_type("automatic", automatic, Optional[bool])
         if automatic:  # omit empty
             v["automatic"] = automatic
-        containerNames = self.containerNames()
-        check_type("containerNames", containerNames, Optional[List[str]])
-        if containerNames:  # omit empty
-            v["containerNames"] = containerNames
+        container_names = self.container_names()
+        check_type("container_names", container_names, Optional[List[str]])
+        if container_names:  # omit empty
+            v["containerNames"] = container_names
         from_ = self.from_()
         check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
-        lastTriggeredImage = self.lastTriggeredImage()
-        check_type("lastTriggeredImage", lastTriggeredImage, Optional[str])
-        if lastTriggeredImage:  # omit empty
-            v["lastTriggeredImage"] = lastTriggeredImage
+        last_triggered_image = self.last_triggered_image()
+        check_type("last_triggered_image", last_triggered_image, Optional[str])
+        if last_triggered_image:  # omit empty
+            v["lastTriggeredImage"] = last_triggered_image
         return v
 
     def automatic(self) -> Optional[bool]:
@@ -651,14 +657,14 @@ class DeploymentTriggerImageChangeParams(types.Object):
         """
         return self.__automatic
 
-    def containerNames(self) -> Optional[List[str]]:
+    def container_names(self) -> Optional[List[str]]:
         """
         ContainerNames is used to restrict tag updates to the specified set of container names in a pod.
         If multiple triggers point to the same containers, the resulting behavior is undefined. Future
         API versions will make this a validation error. If ContainerNames does not point to a valid container,
         the trigger will be ignored. Future API versions will make this a validation error.
         """
-        return self.__containerNames
+        return self.__container_names
 
     def from_(self) -> "k8sv1.ObjectReference":
         """
@@ -668,11 +674,11 @@ class DeploymentTriggerImageChangeParams(types.Object):
         """
         return self.__from_
 
-    def lastTriggeredImage(self) -> Optional[str]:
+    def last_triggered_image(self) -> Optional[str]:
         """
         LastTriggeredImage is the last image to be triggered.
         """
-        return self.__lastTriggeredImage
+        return self.__last_triggered_image
 
 
 class DeploymentTriggerPolicy(types.Object):
@@ -685,11 +691,11 @@ class DeploymentTriggerPolicy(types.Object):
     def __init__(
         self,
         type: DeploymentTriggerType = None,
-        imageChangeParams: "DeploymentTriggerImageChangeParams" = None,
+        image_change_params: "DeploymentTriggerImageChangeParams" = None,
     ):
         super().__init__()
         self.__type = type
-        self.__imageChangeParams = imageChangeParams
+        self.__image_change_params = image_change_params
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -698,14 +704,14 @@ class DeploymentTriggerPolicy(types.Object):
         check_type("type", type, Optional[DeploymentTriggerType])
         if type:  # omit empty
             v["type"] = type
-        imageChangeParams = self.imageChangeParams()
+        image_change_params = self.image_change_params()
         check_type(
-            "imageChangeParams",
-            imageChangeParams,
+            "image_change_params",
+            image_change_params,
             Optional["DeploymentTriggerImageChangeParams"],
         )
-        if imageChangeParams is not None:  # omit empty
-            v["imageChangeParams"] = imageChangeParams
+        if image_change_params is not None:  # omit empty
+            v["imageChangeParams"] = image_change_params
         return v
 
     def type(self) -> Optional[DeploymentTriggerType]:
@@ -714,11 +720,11 @@ class DeploymentTriggerPolicy(types.Object):
         """
         return self.__type
 
-    def imageChangeParams(self) -> Optional["DeploymentTriggerImageChangeParams"]:
+    def image_change_params(self) -> Optional["DeploymentTriggerImageChangeParams"]:
         """
         ImageChangeParams represents the parameters for the ImageChange trigger.
         """
-        return self.__imageChangeParams
+        return self.__image_change_params
 
 
 class DeploymentConfigSpec(types.Object):
@@ -731,10 +737,10 @@ class DeploymentConfigSpec(types.Object):
     def __init__(
         self,
         strategy: "DeploymentStrategy" = None,
-        minReadySeconds: int = None,
+        min_ready_seconds: int = None,
         triggers: List["DeploymentTriggerPolicy"] = None,
         replicas: int = 0,
-        revisionHistoryLimit: int = None,
+        revision_history_limit: int = None,
         test: bool = False,
         paused: bool = None,
         selector: Dict[str, str] = None,
@@ -742,10 +748,10 @@ class DeploymentConfigSpec(types.Object):
     ):
         super().__init__()
         self.__strategy = strategy if strategy is not None else DeploymentStrategy()
-        self.__minReadySeconds = minReadySeconds
+        self.__min_ready_seconds = min_ready_seconds
         self.__triggers = triggers if triggers is not None else []
         self.__replicas = replicas
-        self.__revisionHistoryLimit = revisionHistoryLimit
+        self.__revision_history_limit = revision_history_limit
         self.__test = test
         self.__paused = paused
         self.__selector = selector if selector is not None else {}
@@ -757,20 +763,20 @@ class DeploymentConfigSpec(types.Object):
         strategy = self.strategy()
         check_type("strategy", strategy, "DeploymentStrategy")
         v["strategy"] = strategy
-        minReadySeconds = self.minReadySeconds()
-        check_type("minReadySeconds", minReadySeconds, Optional[int])
-        if minReadySeconds:  # omit empty
-            v["minReadySeconds"] = minReadySeconds
+        min_ready_seconds = self.min_ready_seconds()
+        check_type("min_ready_seconds", min_ready_seconds, Optional[int])
+        if min_ready_seconds:  # omit empty
+            v["minReadySeconds"] = min_ready_seconds
         triggers = self.triggers()
         check_type("triggers", triggers, List["DeploymentTriggerPolicy"])
         v["triggers"] = triggers
         replicas = self.replicas()
         check_type("replicas", replicas, int)
         v["replicas"] = replicas
-        revisionHistoryLimit = self.revisionHistoryLimit()
-        check_type("revisionHistoryLimit", revisionHistoryLimit, Optional[int])
-        if revisionHistoryLimit is not None:  # omit empty
-            v["revisionHistoryLimit"] = revisionHistoryLimit
+        revision_history_limit = self.revision_history_limit()
+        check_type("revision_history_limit", revision_history_limit, Optional[int])
+        if revision_history_limit is not None:  # omit empty
+            v["revisionHistoryLimit"] = revision_history_limit
         test = self.test()
         check_type("test", test, bool)
         v["test"] = test
@@ -794,13 +800,13 @@ class DeploymentConfigSpec(types.Object):
         """
         return self.__strategy
 
-    def minReadySeconds(self) -> Optional[int]:
+    def min_ready_seconds(self) -> Optional[int]:
         """
         MinReadySeconds is the minimum number of seconds for which a newly created pod should
         be ready without any of its container crashing, for it to be considered available.
         Defaults to 0 (pod will be considered available as soon as it is ready)
         """
-        return self.__minReadySeconds
+        return self.__min_ready_seconds
 
     def triggers(self) -> List["DeploymentTriggerPolicy"]:
         """
@@ -816,13 +822,13 @@ class DeploymentConfigSpec(types.Object):
         """
         return self.__replicas
 
-    def revisionHistoryLimit(self) -> Optional[int]:
+    def revision_history_limit(self) -> Optional[int]:
         """
         RevisionHistoryLimit is the number of old ReplicationControllers to retain to allow for rollbacks.
         This field is a pointer to allow for differentiation between an explicit zero and not specified.
         Defaults to 10. (This only applies to DeploymentConfigs created via the new group API resource, not the legacy resource.)
         """
-        return self.__revisionHistoryLimit
+        return self.__revision_history_limit
 
     def test(self) -> bool:
         """
@@ -877,7 +883,7 @@ class DeploymentConfig(base.TypedObject, base.NamespacedMetadataObject):
         spec: "DeploymentConfigSpec" = None,
     ):
         super().__init__(
-            apiVersion="apps.openshift.io/v1",
+            api_version="apps.openshift.io/v1",
             kind="DeploymentConfig",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -912,18 +918,18 @@ class DeploymentConfigRollbackSpec(types.Object):
         self,
         from_: "k8sv1.ObjectReference" = None,
         revision: int = None,
-        includeTriggers: bool = False,
-        includeTemplate: bool = False,
-        includeReplicationMeta: bool = False,
-        includeStrategy: bool = False,
+        include_triggers: bool = False,
+        include_template: bool = False,
+        include_replication_meta: bool = False,
+        include_strategy: bool = False,
     ):
         super().__init__()
         self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__revision = revision
-        self.__includeTriggers = includeTriggers
-        self.__includeTemplate = includeTemplate
-        self.__includeReplicationMeta = includeReplicationMeta
-        self.__includeStrategy = includeStrategy
+        self.__include_triggers = include_triggers
+        self.__include_template = include_template
+        self.__include_replication_meta = include_replication_meta
+        self.__include_strategy = include_strategy
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -935,18 +941,18 @@ class DeploymentConfigRollbackSpec(types.Object):
         check_type("revision", revision, Optional[int])
         if revision:  # omit empty
             v["revision"] = revision
-        includeTriggers = self.includeTriggers()
-        check_type("includeTriggers", includeTriggers, bool)
-        v["includeTriggers"] = includeTriggers
-        includeTemplate = self.includeTemplate()
-        check_type("includeTemplate", includeTemplate, bool)
-        v["includeTemplate"] = includeTemplate
-        includeReplicationMeta = self.includeReplicationMeta()
-        check_type("includeReplicationMeta", includeReplicationMeta, bool)
-        v["includeReplicationMeta"] = includeReplicationMeta
-        includeStrategy = self.includeStrategy()
-        check_type("includeStrategy", includeStrategy, bool)
-        v["includeStrategy"] = includeStrategy
+        include_triggers = self.include_triggers()
+        check_type("include_triggers", include_triggers, bool)
+        v["includeTriggers"] = include_triggers
+        include_template = self.include_template()
+        check_type("include_template", include_template, bool)
+        v["includeTemplate"] = include_template
+        include_replication_meta = self.include_replication_meta()
+        check_type("include_replication_meta", include_replication_meta, bool)
+        v["includeReplicationMeta"] = include_replication_meta
+        include_strategy = self.include_strategy()
+        check_type("include_strategy", include_strategy, bool)
+        v["includeStrategy"] = include_strategy
         return v
 
     def from_(self) -> "k8sv1.ObjectReference":
@@ -961,29 +967,29 @@ class DeploymentConfigRollbackSpec(types.Object):
         """
         return self.__revision
 
-    def includeTriggers(self) -> bool:
+    def include_triggers(self) -> bool:
         """
         IncludeTriggers specifies whether to include config Triggers.
         """
-        return self.__includeTriggers
+        return self.__include_triggers
 
-    def includeTemplate(self) -> bool:
+    def include_template(self) -> bool:
         """
         IncludeTemplate specifies whether to include the PodTemplateSpec.
         """
-        return self.__includeTemplate
+        return self.__include_template
 
-    def includeReplicationMeta(self) -> bool:
+    def include_replication_meta(self) -> bool:
         """
         IncludeReplicationMeta specifies whether to include the replica count and selector.
         """
-        return self.__includeReplicationMeta
+        return self.__include_replication_meta
 
-    def includeStrategy(self) -> bool:
+    def include_strategy(self) -> bool:
         """
         IncludeStrategy specifies whether to include the deployment Strategy.
         """
-        return self.__includeStrategy
+        return self.__include_strategy
 
 
 class DeploymentConfigRollback(base.TypedObject):
@@ -996,15 +1002,15 @@ class DeploymentConfigRollback(base.TypedObject):
     def __init__(
         self,
         name: str = "",
-        updatedAnnotations: Dict[str, str] = None,
+        updated_annotations: Dict[str, str] = None,
         spec: "DeploymentConfigRollbackSpec" = None,
     ):
         super().__init__(
-            apiVersion="apps.openshift.io/v1", kind="DeploymentConfigRollback"
+            api_version="apps.openshift.io/v1", kind="DeploymentConfigRollback"
         )
         self.__name = name
-        self.__updatedAnnotations = (
-            updatedAnnotations if updatedAnnotations is not None else {}
+        self.__updated_annotations = (
+            updated_annotations if updated_annotations is not None else {}
         )
         self.__spec = spec if spec is not None else DeploymentConfigRollbackSpec()
 
@@ -1014,10 +1020,10 @@ class DeploymentConfigRollback(base.TypedObject):
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
-        updatedAnnotations = self.updatedAnnotations()
-        check_type("updatedAnnotations", updatedAnnotations, Optional[Dict[str, str]])
-        if updatedAnnotations:  # omit empty
-            v["updatedAnnotations"] = updatedAnnotations
+        updated_annotations = self.updated_annotations()
+        check_type("updated_annotations", updated_annotations, Optional[Dict[str, str]])
+        if updated_annotations:  # omit empty
+            v["updatedAnnotations"] = updated_annotations
         spec = self.spec()
         check_type("spec", spec, "DeploymentConfigRollbackSpec")
         v["spec"] = spec
@@ -1029,11 +1035,11 @@ class DeploymentConfigRollback(base.TypedObject):
         """
         return self.__name
 
-    def updatedAnnotations(self) -> Optional[Dict[str, str]]:
+    def updated_annotations(self) -> Optional[Dict[str, str]]:
         """
         UpdatedAnnotations is a set of new annotations that will be added in the deployment config.
         """
-        return self.__updatedAnnotations
+        return self.__updated_annotations
 
     def spec(self) -> "DeploymentConfigRollbackSpec":
         """
@@ -1050,7 +1056,7 @@ class DeploymentLog(base.TypedObject):
     @context.scoped
     @typechecked
     def __init__(self):
-        super().__init__(apiVersion="apps.openshift.io/v1", kind="DeploymentLog")
+        super().__init__(api_version="apps.openshift.io/v1", kind="DeploymentLog")
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1070,23 +1076,25 @@ class DeploymentLogOptions(base.TypedObject):
         container: str = None,
         follow: bool = None,
         previous: bool = None,
-        sinceSeconds: int = None,
-        sinceTime: "base.Time" = None,
+        since_seconds: int = None,
+        since_time: "base.Time" = None,
         timestamps: bool = None,
-        tailLines: int = None,
-        limitBytes: int = None,
+        tail_lines: int = None,
+        limit_bytes: int = None,
         nowait: bool = None,
         version: int = None,
     ):
-        super().__init__(apiVersion="apps.openshift.io/v1", kind="DeploymentLogOptions")
+        super().__init__(
+            api_version="apps.openshift.io/v1", kind="DeploymentLogOptions"
+        )
         self.__container = container
         self.__follow = follow
         self.__previous = previous
-        self.__sinceSeconds = sinceSeconds
-        self.__sinceTime = sinceTime
+        self.__since_seconds = since_seconds
+        self.__since_time = since_time
         self.__timestamps = timestamps
-        self.__tailLines = tailLines
-        self.__limitBytes = limitBytes
+        self.__tail_lines = tail_lines
+        self.__limit_bytes = limit_bytes
         self.__nowait = nowait
         self.__version = version
 
@@ -1105,26 +1113,26 @@ class DeploymentLogOptions(base.TypedObject):
         check_type("previous", previous, Optional[bool])
         if previous:  # omit empty
             v["previous"] = previous
-        sinceSeconds = self.sinceSeconds()
-        check_type("sinceSeconds", sinceSeconds, Optional[int])
-        if sinceSeconds is not None:  # omit empty
-            v["sinceSeconds"] = sinceSeconds
-        sinceTime = self.sinceTime()
-        check_type("sinceTime", sinceTime, Optional["base.Time"])
-        if sinceTime is not None:  # omit empty
-            v["sinceTime"] = sinceTime
+        since_seconds = self.since_seconds()
+        check_type("since_seconds", since_seconds, Optional[int])
+        if since_seconds is not None:  # omit empty
+            v["sinceSeconds"] = since_seconds
+        since_time = self.since_time()
+        check_type("since_time", since_time, Optional["base.Time"])
+        if since_time is not None:  # omit empty
+            v["sinceTime"] = since_time
         timestamps = self.timestamps()
         check_type("timestamps", timestamps, Optional[bool])
         if timestamps:  # omit empty
             v["timestamps"] = timestamps
-        tailLines = self.tailLines()
-        check_type("tailLines", tailLines, Optional[int])
-        if tailLines is not None:  # omit empty
-            v["tailLines"] = tailLines
-        limitBytes = self.limitBytes()
-        check_type("limitBytes", limitBytes, Optional[int])
-        if limitBytes is not None:  # omit empty
-            v["limitBytes"] = limitBytes
+        tail_lines = self.tail_lines()
+        check_type("tail_lines", tail_lines, Optional[int])
+        if tail_lines is not None:  # omit empty
+            v["tailLines"] = tail_lines
+        limit_bytes = self.limit_bytes()
+        check_type("limit_bytes", limit_bytes, Optional[int])
+        if limit_bytes is not None:  # omit empty
+            v["limitBytes"] = limit_bytes
         nowait = self.nowait()
         check_type("nowait", nowait, Optional[bool])
         if nowait:  # omit empty
@@ -1154,23 +1162,23 @@ class DeploymentLogOptions(base.TypedObject):
         """
         return self.__previous
 
-    def sinceSeconds(self) -> Optional[int]:
+    def since_seconds(self) -> Optional[int]:
         """
         A relative time in seconds before the current time from which to show logs. If this value
         precedes the time a pod was started, only logs since the pod start will be returned.
         If this value is in the future, no logs will be returned.
         Only one of sinceSeconds or sinceTime may be specified.
         """
-        return self.__sinceSeconds
+        return self.__since_seconds
 
-    def sinceTime(self) -> Optional["base.Time"]:
+    def since_time(self) -> Optional["base.Time"]:
         """
         An RFC3339 timestamp from which to show logs. If this value
         precedes the time a pod was started, only logs since the pod start will be returned.
         If this value is in the future, no logs will be returned.
         Only one of sinceSeconds or sinceTime may be specified.
         """
-        return self.__sinceTime
+        return self.__since_time
 
     def timestamps(self) -> Optional[bool]:
         """
@@ -1179,20 +1187,20 @@ class DeploymentLogOptions(base.TypedObject):
         """
         return self.__timestamps
 
-    def tailLines(self) -> Optional[int]:
+    def tail_lines(self) -> Optional[int]:
         """
         If set, the number of lines from the end of the logs to show. If not specified,
         logs are shown from the creation of the container or sinceSeconds or sinceTime
         """
-        return self.__tailLines
+        return self.__tail_lines
 
-    def limitBytes(self) -> Optional[int]:
+    def limit_bytes(self) -> Optional[int]:
         """
         If set, the number of bytes to read from the server before terminating the
         log output. This may not display a complete final line of logging, and may return
         slightly more or slightly less than the specified limit.
         """
-        return self.__limitBytes
+        return self.__limit_bytes
 
     def nowait(self) -> Optional[bool]:
         """
@@ -1221,13 +1229,15 @@ class DeploymentRequest(base.TypedObject):
         name: str = "",
         latest: bool = False,
         force: bool = False,
-        excludeTriggers: List[DeploymentTriggerType] = None,
+        exclude_triggers: List[DeploymentTriggerType] = None,
     ):
-        super().__init__(apiVersion="apps.openshift.io/v1", kind="DeploymentRequest")
+        super().__init__(api_version="apps.openshift.io/v1", kind="DeploymentRequest")
         self.__name = name
         self.__latest = latest
         self.__force = force
-        self.__excludeTriggers = excludeTriggers if excludeTriggers is not None else []
+        self.__exclude_triggers = (
+            exclude_triggers if exclude_triggers is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1241,12 +1251,12 @@ class DeploymentRequest(base.TypedObject):
         force = self.force()
         check_type("force", force, bool)
         v["force"] = force
-        excludeTriggers = self.excludeTriggers()
+        exclude_triggers = self.exclude_triggers()
         check_type(
-            "excludeTriggers", excludeTriggers, Optional[List[DeploymentTriggerType]]
+            "exclude_triggers", exclude_triggers, Optional[List[DeploymentTriggerType]]
         )
-        if excludeTriggers:  # omit empty
-            v["excludeTriggers"] = excludeTriggers
+        if exclude_triggers:  # omit empty
+            v["excludeTriggers"] = exclude_triggers
         return v
 
     def name(self) -> str:
@@ -1268,10 +1278,10 @@ class DeploymentRequest(base.TypedObject):
         """
         return self.__force
 
-    def excludeTriggers(self) -> Optional[List[DeploymentTriggerType]]:
+    def exclude_triggers(self) -> Optional[List[DeploymentTriggerType]]:
         """
         ExcludeTriggers instructs the instantiator to avoid processing the specified triggers.
         This field overrides the triggers from latest and allows clients to control specific
         logic. This field is ignored if not specified.
         """
-        return self.__excludeTriggers
+        return self.__exclude_triggers

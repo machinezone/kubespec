@@ -214,10 +214,10 @@ class Preconditions(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, uid: str = None, resourceVersion: str = None):
+    def __init__(self, uid: str = None, resource_version: str = None):
         super().__init__()
         self.__uid = uid
-        self.__resourceVersion = resourceVersion
+        self.__resource_version = resource_version
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -226,10 +226,10 @@ class Preconditions(types.Object):
         check_type("uid", uid, Optional[str])
         if uid is not None:  # omit empty
             v["uid"] = uid
-        resourceVersion = self.resourceVersion()
-        check_type("resourceVersion", resourceVersion, Optional[str])
-        if resourceVersion is not None:  # omit empty
-            v["resourceVersion"] = resourceVersion
+        resource_version = self.resource_version()
+        check_type("resource_version", resource_version, Optional[str])
+        if resource_version is not None:  # omit empty
+            v["resourceVersion"] = resource_version
         return v
 
     def uid(self) -> Optional[str]:
@@ -238,11 +238,11 @@ class Preconditions(types.Object):
         """
         return self.__uid
 
-    def resourceVersion(self) -> Optional[str]:
+    def resource_version(self) -> Optional[str]:
         """
         Specifies the target ResourceVersion
         """
-        return self.__resourceVersion
+        return self.__resource_version
 
 
 class TypeMeta(types.Object):
@@ -254,10 +254,10 @@ class TypeMeta(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, kind: str = None, apiVersion: str = None):
+    def __init__(self, kind: str = None, api_version: str = None):
         super().__init__()
         self.__kind = kind
-        self.__apiVersion = apiVersion
+        self.__api_version = api_version
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -266,10 +266,10 @@ class TypeMeta(types.Object):
         check_type("kind", kind, Optional[str])
         if kind:  # omit empty
             v["kind"] = kind
-        apiVersion = self.apiVersion()
-        check_type("apiVersion", apiVersion, Optional[str])
-        if apiVersion:  # omit empty
-            v["apiVersion"] = apiVersion
+        api_version = self.api_version()
+        check_type("api_version", api_version, Optional[str])
+        if api_version:  # omit empty
+            v["apiVersion"] = api_version
         return v
 
     def kind(self) -> Optional[str]:
@@ -282,14 +282,14 @@ class TypeMeta(types.Object):
         """
         return self.__kind
 
-    def apiVersion(self) -> Optional[str]:
+    def api_version(self) -> Optional[str]:
         """
         APIVersion defines the versioned schema of this representation of an object.
         Servers should convert recognized schemas to the latest internal value, and
         may reject unrecognized values.
         More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
         """
-        return self.__apiVersion
+        return self.__api_version
 
 
 class DeleteOptions(base.TypedObject):
@@ -301,48 +301,48 @@ class DeleteOptions(base.TypedObject):
     @typechecked
     def __init__(
         self,
-        gracePeriodSeconds: int = None,
+        grace_period_seconds: int = None,
         preconditions: "Preconditions" = None,
-        propagationPolicy: DeletionPropagation = None,
-        dryRun: List[str] = None,
+        propagation_policy: DeletionPropagation = None,
+        dry_run: List[str] = None,
     ):
         super().__init__()
-        self.__gracePeriodSeconds = gracePeriodSeconds
+        self.__grace_period_seconds = grace_period_seconds
         self.__preconditions = preconditions
-        self.__propagationPolicy = propagationPolicy
-        self.__dryRun = dryRun if dryRun is not None else []
+        self.__propagation_policy = propagation_policy
+        self.__dry_run = dry_run if dry_run is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        gracePeriodSeconds = self.gracePeriodSeconds()
-        check_type("gracePeriodSeconds", gracePeriodSeconds, Optional[int])
-        if gracePeriodSeconds is not None:  # omit empty
-            v["gracePeriodSeconds"] = gracePeriodSeconds
+        grace_period_seconds = self.grace_period_seconds()
+        check_type("grace_period_seconds", grace_period_seconds, Optional[int])
+        if grace_period_seconds is not None:  # omit empty
+            v["gracePeriodSeconds"] = grace_period_seconds
         preconditions = self.preconditions()
         check_type("preconditions", preconditions, Optional["Preconditions"])
         if preconditions is not None:  # omit empty
             v["preconditions"] = preconditions
-        propagationPolicy = self.propagationPolicy()
+        propagation_policy = self.propagation_policy()
         check_type(
-            "propagationPolicy", propagationPolicy, Optional[DeletionPropagation]
+            "propagation_policy", propagation_policy, Optional[DeletionPropagation]
         )
-        if propagationPolicy is not None:  # omit empty
-            v["propagationPolicy"] = propagationPolicy
-        dryRun = self.dryRun()
-        check_type("dryRun", dryRun, Optional[List[str]])
-        if dryRun:  # omit empty
-            v["dryRun"] = dryRun
+        if propagation_policy is not None:  # omit empty
+            v["propagationPolicy"] = propagation_policy
+        dry_run = self.dry_run()
+        check_type("dry_run", dry_run, Optional[List[str]])
+        if dry_run:  # omit empty
+            v["dryRun"] = dry_run
         return v
 
-    def gracePeriodSeconds(self) -> Optional[int]:
+    def grace_period_seconds(self) -> Optional[int]:
         """
         The duration in seconds before the object should be deleted. Value must be non-negative integer.
         The value zero indicates delete immediately. If this value is nil, the default grace period for the
         specified type will be used.
         Defaults to a per object value if not specified. zero means delete immediately.
         """
-        return self.__gracePeriodSeconds
+        return self.__grace_period_seconds
 
     def preconditions(self) -> Optional["Preconditions"]:
         """
@@ -351,7 +351,7 @@ class DeleteOptions(base.TypedObject):
         """
         return self.__preconditions
 
-    def propagationPolicy(self) -> Optional[DeletionPropagation]:
+    def propagation_policy(self) -> Optional[DeletionPropagation]:
         """
         Whether and how garbage collection will be performed.
         Either this field or OrphanDependents may be set, but not both.
@@ -362,9 +362,9 @@ class DeleteOptions(base.TypedObject):
         'Foreground' - a cascading policy that deletes all dependents in the
         foreground.
         """
-        return self.__propagationPolicy
+        return self.__propagation_policy
 
-    def dryRun(self) -> Optional[List[str]]:
+    def dry_run(self) -> Optional[List[str]]:
         """
         When present, indicates that modifications should not be
         persisted. An invalid or unrecognized dryRun directive will
@@ -372,7 +372,7 @@ class DeleteOptions(base.TypedObject):
         request. Valid values are:
         - All: all dry run stages will be processed
         """
-        return self.__dryRun
+        return self.__dry_run
 
 
 class GroupVersionKind(types.Object):
@@ -519,45 +519,45 @@ class LabelSelector(types.Object):
     @typechecked
     def __init__(
         self,
-        matchLabels: Dict[str, str] = None,
-        matchExpressions: List["LabelSelectorRequirement"] = None,
+        match_labels: Dict[str, str] = None,
+        match_expressions: List["LabelSelectorRequirement"] = None,
     ):
         super().__init__()
-        self.__matchLabels = matchLabels if matchLabels is not None else {}
-        self.__matchExpressions = (
-            matchExpressions if matchExpressions is not None else []
+        self.__match_labels = match_labels if match_labels is not None else {}
+        self.__match_expressions = (
+            match_expressions if match_expressions is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        matchLabels = self.matchLabels()
-        check_type("matchLabels", matchLabels, Optional[Dict[str, str]])
-        if matchLabels:  # omit empty
-            v["matchLabels"] = matchLabels
-        matchExpressions = self.matchExpressions()
+        match_labels = self.match_labels()
+        check_type("match_labels", match_labels, Optional[Dict[str, str]])
+        if match_labels:  # omit empty
+            v["matchLabels"] = match_labels
+        match_expressions = self.match_expressions()
         check_type(
-            "matchExpressions",
-            matchExpressions,
+            "match_expressions",
+            match_expressions,
             Optional[List["LabelSelectorRequirement"]],
         )
-        if matchExpressions:  # omit empty
-            v["matchExpressions"] = matchExpressions
+        if match_expressions:  # omit empty
+            v["matchExpressions"] = match_expressions
         return v
 
-    def matchLabels(self) -> Optional[Dict[str, str]]:
+    def match_labels(self) -> Optional[Dict[str, str]]:
         """
         matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
         map is equivalent to an element of matchExpressions, whose key field is "key", the
         operator is "In", and the values array contains only "value". The requirements are ANDed.
         """
-        return self.__matchLabels
+        return self.__match_labels
 
-    def matchExpressions(self) -> Optional[List["LabelSelectorRequirement"]]:
+    def match_expressions(self) -> Optional[List["LabelSelectorRequirement"]]:
         """
         matchExpressions is a list of label selector requirements. The requirements are ANDed.
         """
-        return self.__matchExpressions
+        return self.__match_expressions
 
 
 class ListMeta(types.Object):
@@ -568,10 +568,10 @@ class ListMeta(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, continue_: str = None, remainingItemCount: int = None):
+    def __init__(self, continue_: str = None, remaining_item_count: int = None):
         super().__init__()
         self.__continue_ = continue_
-        self.__remainingItemCount = remainingItemCount
+        self.__remaining_item_count = remaining_item_count
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -580,10 +580,10 @@ class ListMeta(types.Object):
         check_type("continue_", continue_, Optional[str])
         if continue_:  # omit empty
             v["continue"] = continue_
-        remainingItemCount = self.remainingItemCount()
-        check_type("remainingItemCount", remainingItemCount, Optional[int])
-        if remainingItemCount is not None:  # omit empty
-            v["remainingItemCount"] = remainingItemCount
+        remaining_item_count = self.remaining_item_count()
+        check_type("remaining_item_count", remaining_item_count, Optional[int])
+        if remaining_item_count is not None:  # omit empty
+            v["remainingItemCount"] = remaining_item_count
         return v
 
     def continue_(self) -> Optional[str]:
@@ -598,7 +598,7 @@ class ListMeta(types.Object):
         """
         return self.__continue_
 
-    def remainingItemCount(self) -> Optional[int]:
+    def remaining_item_count(self) -> Optional[int]:
         """
         remainingItemCount is the number of subsequent items in the list which are not included in this
         list response. If the list request contained label or field selectors, then the number of
@@ -610,7 +610,7 @@ class ListMeta(types.Object):
         The intended use of the remainingItemCount is *estimating* the size of a collection. Clients
         should not rely on the remainingItemCount to be set or to be exact.
         """
-        return self.__remainingItemCount
+        return self.__remaining_item_count
 
 
 class ObjectMeta(types.Object):
@@ -779,7 +779,7 @@ class StatusDetails(types.Object):
         kind: str = None,
         uid: str = None,
         causes: List["StatusCause"] = None,
-        retryAfterSeconds: int = None,
+        retry_after_seconds: int = None,
     ):
         super().__init__()
         self.__name = name
@@ -787,7 +787,7 @@ class StatusDetails(types.Object):
         self.__kind = kind
         self.__uid = uid
         self.__causes = causes if causes is not None else []
-        self.__retryAfterSeconds = retryAfterSeconds
+        self.__retry_after_seconds = retry_after_seconds
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -812,10 +812,10 @@ class StatusDetails(types.Object):
         check_type("causes", causes, Optional[List["StatusCause"]])
         if causes:  # omit empty
             v["causes"] = causes
-        retryAfterSeconds = self.retryAfterSeconds()
-        check_type("retryAfterSeconds", retryAfterSeconds, Optional[int])
-        if retryAfterSeconds:  # omit empty
-            v["retryAfterSeconds"] = retryAfterSeconds
+        retry_after_seconds = self.retry_after_seconds()
+        check_type("retry_after_seconds", retry_after_seconds, Optional[int])
+        if retry_after_seconds:  # omit empty
+            v["retryAfterSeconds"] = retry_after_seconds
         return v
 
     def name(self) -> Optional[str]:
@@ -854,13 +854,13 @@ class StatusDetails(types.Object):
         """
         return self.__causes
 
-    def retryAfterSeconds(self) -> Optional[int]:
+    def retry_after_seconds(self) -> Optional[int]:
         """
         If specified, the time in seconds before the operation should be retried. Some errors may indicate
         the client must take an alternate action - for those errors this field may indicate how long to wait
         before taking the alternate action.
         """
-        return self.__retryAfterSeconds
+        return self.__retry_after_seconds
 
 
 class Status(base.TypedObject):

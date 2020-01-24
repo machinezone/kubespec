@@ -110,7 +110,7 @@ class ImageReview(base.TypedObject, base.MetadataObject):
         spec: "ImageReviewSpec" = None,
     ):
         super().__init__(
-            apiVersion="imagepolicy.k8s.io/v1alpha1",
+            api_version="imagepolicy.k8s.io/v1alpha1",
             kind="ImageReview",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

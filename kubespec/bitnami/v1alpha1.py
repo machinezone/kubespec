@@ -64,12 +64,12 @@ class SealedSecretSpec(types.Object):
         self,
         template: "SecretTemplateSpec" = None,
         data: bytes = None,
-        encryptedData: Dict[str, str] = None,
+        encrypted_data: Dict[str, str] = None,
     ):
         super().__init__()
         self.__template = template if template is not None else SecretTemplateSpec()
         self.__data = data if data is not None else b""
-        self.__encryptedData = encryptedData if encryptedData is not None else {}
+        self.__encrypted_data = encrypted_data if encrypted_data is not None else {}
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -81,9 +81,9 @@ class SealedSecretSpec(types.Object):
         check_type("data", data, Optional[bytes])
         if data:  # omit empty
             v["data"] = data
-        encryptedData = self.encryptedData()
-        check_type("encryptedData", encryptedData, Dict[str, str])
-        v["encryptedData"] = encryptedData
+        encrypted_data = self.encrypted_data()
+        check_type("encrypted_data", encrypted_data, Dict[str, str])
+        v["encryptedData"] = encrypted_data
         return v
 
     def template(self) -> Optional["SecretTemplateSpec"]:
@@ -99,8 +99,8 @@ class SealedSecretSpec(types.Object):
         """
         return self.__data
 
-    def encryptedData(self) -> Dict[str, str]:
-        return self.__encryptedData
+    def encrypted_data(self) -> Dict[str, str]:
+        return self.__encrypted_data
 
 
 class SealedSecret(base.TypedObject, base.NamespacedMetadataObject):
@@ -121,7 +121,7 @@ class SealedSecret(base.TypedObject, base.NamespacedMetadataObject):
         spec: "SealedSecretSpec" = None,
     ):
         super().__init__(
-            apiVersion="bitnami.com/v1alpha1",
+            api_version="bitnami.com/v1alpha1",
             kind="SealedSecret",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

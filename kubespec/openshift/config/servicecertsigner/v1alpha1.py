@@ -16,22 +16,22 @@ from typing import Any, Dict
 class ServiceCertSignerOperatorConfigSpec(types.Object):
     @context.scoped
     @typechecked
-    def __init__(self, operatorSpec: "operatorv1.OperatorSpec" = None):
+    def __init__(self, operator_spec: "operatorv1.OperatorSpec" = None):
         super().__init__()
-        self.__operatorSpec = (
-            operatorSpec if operatorSpec is not None else operatorv1.OperatorSpec()
+        self.__operator_spec = (
+            operator_spec if operator_spec is not None else operatorv1.OperatorSpec()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        operatorSpec = self.operatorSpec()
-        check_type("operatorSpec", operatorSpec, "operatorv1.OperatorSpec")
-        v.update(operatorSpec._root())  # inline
+        operator_spec = self.operator_spec()
+        check_type("operator_spec", operator_spec, "operatorv1.OperatorSpec")
+        v.update(operator_spec._root())  # inline
         return v
 
-    def operatorSpec(self) -> "operatorv1.OperatorSpec":
-        return self.__operatorSpec
+    def operator_spec(self) -> "operatorv1.OperatorSpec":
+        return self.__operator_spec
 
 
 class ServiceCertSignerOperatorConfig(base.TypedObject, base.MetadataObject):
@@ -49,7 +49,7 @@ class ServiceCertSignerOperatorConfig(base.TypedObject, base.MetadataObject):
         spec: "ServiceCertSignerOperatorConfigSpec" = None,
     ):
         super().__init__(
-            apiVersion="servicecertsigner.config.openshift.io/v1alpha1",
+            api_version="servicecertsigner.config.openshift.io/v1alpha1",
             kind="ServiceCertSignerOperatorConfig",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),

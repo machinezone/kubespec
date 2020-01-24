@@ -50,11 +50,11 @@ class ImageLayer(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, name: str = "", size: int = 0, mediaType: str = ""):
+    def __init__(self, name: str = "", size: int = 0, media_type: str = ""):
         super().__init__()
         self.__name = name
         self.__size = size
-        self.__mediaType = mediaType
+        self.__media_type = media_type
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -65,9 +65,9 @@ class ImageLayer(types.Object):
         size = self.size()
         check_type("size", size, int)
         v["size"] = size
-        mediaType = self.mediaType()
-        check_type("mediaType", mediaType, str)
-        v["mediaType"] = mediaType
+        media_type = self.media_type()
+        check_type("media_type", media_type, str)
+        v["mediaType"] = media_type
         return v
 
     def name(self) -> str:
@@ -82,11 +82,11 @@ class ImageLayer(types.Object):
         """
         return self.__size
 
-    def mediaType(self) -> str:
+    def media_type(self) -> str:
         """
         MediaType of the referenced object.
         """
-        return self.__mediaType
+        return self.__media_type
 
 
 class SignatureCondition(types.Object):
@@ -100,16 +100,16 @@ class SignatureCondition(types.Object):
         self,
         type: SignatureConditionType = None,
         status: k8sv1.ConditionStatus = None,
-        lastProbeTime: "base.Time" = None,
-        lastTransitionTime: "base.Time" = None,
+        last_probe_time: "base.Time" = None,
+        last_transition_time: "base.Time" = None,
         reason: str = None,
         message: str = None,
     ):
         super().__init__()
         self.__type = type
         self.__status = status
-        self.__lastProbeTime = lastProbeTime
-        self.__lastTransitionTime = lastTransitionTime
+        self.__last_probe_time = last_probe_time
+        self.__last_transition_time = last_transition_time
         self.__reason = reason
         self.__message = message
 
@@ -122,12 +122,12 @@ class SignatureCondition(types.Object):
         status = self.status()
         check_type("status", status, k8sv1.ConditionStatus)
         v["status"] = status
-        lastProbeTime = self.lastProbeTime()
-        check_type("lastProbeTime", lastProbeTime, Optional["base.Time"])
-        v["lastProbeTime"] = lastProbeTime
-        lastTransitionTime = self.lastTransitionTime()
-        check_type("lastTransitionTime", lastTransitionTime, Optional["base.Time"])
-        v["lastTransitionTime"] = lastTransitionTime
+        last_probe_time = self.last_probe_time()
+        check_type("last_probe_time", last_probe_time, Optional["base.Time"])
+        v["lastProbeTime"] = last_probe_time
+        last_transition_time = self.last_transition_time()
+        check_type("last_transition_time", last_transition_time, Optional["base.Time"])
+        v["lastTransitionTime"] = last_transition_time
         reason = self.reason()
         check_type("reason", reason, Optional[str])
         if reason:  # omit empty
@@ -150,17 +150,17 @@ class SignatureCondition(types.Object):
         """
         return self.__status
 
-    def lastProbeTime(self) -> Optional["base.Time"]:
+    def last_probe_time(self) -> Optional["base.Time"]:
         """
         Last time the condition was checked.
         """
-        return self.__lastProbeTime
+        return self.__last_probe_time
 
-    def lastTransitionTime(self) -> Optional["base.Time"]:
+    def last_transition_time(self) -> Optional["base.Time"]:
         """
         Last time the condition transit from one status to another.
         """
-        return self.__lastTransitionTime
+        return self.__last_transition_time
 
     def reason(self) -> Optional[str]:
         """
@@ -183,10 +183,10 @@ class SignatureGenericEntity(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, organization: str = None, commonName: str = None):
+    def __init__(self, organization: str = None, common_name: str = None):
         super().__init__()
         self.__organization = organization
-        self.__commonName = commonName
+        self.__common_name = common_name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -195,10 +195,10 @@ class SignatureGenericEntity(types.Object):
         check_type("organization", organization, Optional[str])
         if organization:  # omit empty
             v["organization"] = organization
-        commonName = self.commonName()
-        check_type("commonName", commonName, Optional[str])
-        if commonName:  # omit empty
-            v["commonName"] = commonName
+        common_name = self.common_name()
+        check_type("common_name", common_name, Optional[str])
+        if common_name:  # omit empty
+            v["commonName"] = common_name
         return v
 
     def organization(self) -> Optional[str]:
@@ -207,11 +207,11 @@ class SignatureGenericEntity(types.Object):
         """
         return self.__organization
 
-    def commonName(self) -> Optional[str]:
+    def common_name(self) -> Optional[str]:
         """
         Common name (e.g. openshift-signing-service).
         """
-        return self.__commonName
+        return self.__common_name
 
 
 class SignatureIssuer(types.Object):
@@ -221,26 +221,28 @@ class SignatureIssuer(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, signatureGenericEntity: "SignatureGenericEntity" = None):
+    def __init__(self, signature_generic_entity: "SignatureGenericEntity" = None):
         super().__init__()
-        self.__signatureGenericEntity = (
-            signatureGenericEntity
-            if signatureGenericEntity is not None
+        self.__signature_generic_entity = (
+            signature_generic_entity
+            if signature_generic_entity is not None
             else SignatureGenericEntity()
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        signatureGenericEntity = self.signatureGenericEntity()
+        signature_generic_entity = self.signature_generic_entity()
         check_type(
-            "signatureGenericEntity", signatureGenericEntity, "SignatureGenericEntity"
+            "signature_generic_entity",
+            signature_generic_entity,
+            "SignatureGenericEntity",
         )
-        v.update(signatureGenericEntity._root())  # inline
+        v.update(signature_generic_entity._root())  # inline
         return v
 
-    def signatureGenericEntity(self) -> "SignatureGenericEntity":
-        return self.__signatureGenericEntity
+    def signature_generic_entity(self) -> "SignatureGenericEntity":
+        return self.__signature_generic_entity
 
 
 class SignatureSubject(types.Object):
@@ -252,40 +254,42 @@ class SignatureSubject(types.Object):
     @typechecked
     def __init__(
         self,
-        signatureGenericEntity: "SignatureGenericEntity" = None,
-        publicKeyID: str = "",
+        signature_generic_entity: "SignatureGenericEntity" = None,
+        public_key_id: str = "",
     ):
         super().__init__()
-        self.__signatureGenericEntity = (
-            signatureGenericEntity
-            if signatureGenericEntity is not None
+        self.__signature_generic_entity = (
+            signature_generic_entity
+            if signature_generic_entity is not None
             else SignatureGenericEntity()
         )
-        self.__publicKeyID = publicKeyID
+        self.__public_key_id = public_key_id
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        signatureGenericEntity = self.signatureGenericEntity()
+        signature_generic_entity = self.signature_generic_entity()
         check_type(
-            "signatureGenericEntity", signatureGenericEntity, "SignatureGenericEntity"
+            "signature_generic_entity",
+            signature_generic_entity,
+            "SignatureGenericEntity",
         )
-        v.update(signatureGenericEntity._root())  # inline
-        publicKeyID = self.publicKeyID()
-        check_type("publicKeyID", publicKeyID, str)
-        v["publicKeyID"] = publicKeyID
+        v.update(signature_generic_entity._root())  # inline
+        public_key_id = self.public_key_id()
+        check_type("public_key_id", public_key_id, str)
+        v["publicKeyID"] = public_key_id
         return v
 
-    def signatureGenericEntity(self) -> "SignatureGenericEntity":
-        return self.__signatureGenericEntity
+    def signature_generic_entity(self) -> "SignatureGenericEntity":
+        return self.__signature_generic_entity
 
-    def publicKeyID(self) -> str:
+    def public_key_id(self) -> str:
         """
         If present, it is a human readable key id of public key belonging to the subject used to verify image
         signature. It should contain at least 64 lowest bits of public key's fingerprint (e.g.
         0x685ebe62bf278440).
         """
-        return self.__publicKeyID
+        return self.__public_key_id
 
 
 class ImageSignature(base.TypedObject, base.MetadataObject):
@@ -307,14 +311,14 @@ class ImageSignature(base.TypedObject, base.MetadataObject):
         type: str = "",
         content: bytes = None,
         conditions: List["SignatureCondition"] = None,
-        imageIdentity: str = None,
-        signedClaims: Dict[str, str] = None,
+        image_identity: str = None,
+        signed_claims: Dict[str, str] = None,
         created: "base.Time" = None,
-        issuedBy: "SignatureIssuer" = None,
-        issuedTo: "SignatureSubject" = None,
+        issued_by: "SignatureIssuer" = None,
+        issued_to: "SignatureSubject" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageSignature",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
@@ -323,11 +327,11 @@ class ImageSignature(base.TypedObject, base.MetadataObject):
         self.__type = type
         self.__content = content if content is not None else b""
         self.__conditions = conditions if conditions is not None else []
-        self.__imageIdentity = imageIdentity
-        self.__signedClaims = signedClaims if signedClaims is not None else {}
+        self.__image_identity = image_identity
+        self.__signed_claims = signed_claims if signed_claims is not None else {}
         self.__created = created
-        self.__issuedBy = issuedBy
-        self.__issuedTo = issuedTo
+        self.__issued_by = issued_by
+        self.__issued_to = issued_to
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -342,26 +346,26 @@ class ImageSignature(base.TypedObject, base.MetadataObject):
         check_type("conditions", conditions, Optional[List["SignatureCondition"]])
         if conditions:  # omit empty
             v["conditions"] = conditions
-        imageIdentity = self.imageIdentity()
-        check_type("imageIdentity", imageIdentity, Optional[str])
-        if imageIdentity:  # omit empty
-            v["imageIdentity"] = imageIdentity
-        signedClaims = self.signedClaims()
-        check_type("signedClaims", signedClaims, Optional[Dict[str, str]])
-        if signedClaims:  # omit empty
-            v["signedClaims"] = signedClaims
+        image_identity = self.image_identity()
+        check_type("image_identity", image_identity, Optional[str])
+        if image_identity:  # omit empty
+            v["imageIdentity"] = image_identity
+        signed_claims = self.signed_claims()
+        check_type("signed_claims", signed_claims, Optional[Dict[str, str]])
+        if signed_claims:  # omit empty
+            v["signedClaims"] = signed_claims
         created = self.created()
         check_type("created", created, Optional["base.Time"])
         if created is not None:  # omit empty
             v["created"] = created
-        issuedBy = self.issuedBy()
-        check_type("issuedBy", issuedBy, Optional["SignatureIssuer"])
-        if issuedBy is not None:  # omit empty
-            v["issuedBy"] = issuedBy
-        issuedTo = self.issuedTo()
-        check_type("issuedTo", issuedTo, Optional["SignatureSubject"])
-        if issuedTo is not None:  # omit empty
-            v["issuedTo"] = issuedTo
+        issued_by = self.issued_by()
+        check_type("issued_by", issued_by, Optional["SignatureIssuer"])
+        if issued_by is not None:  # omit empty
+            v["issuedBy"] = issued_by
+        issued_to = self.issued_to()
+        check_type("issued_to", issued_to, Optional["SignatureSubject"])
+        if issued_to is not None:  # omit empty
+            v["issuedTo"] = issued_to
         return v
 
     def type(self) -> str:
@@ -382,18 +386,18 @@ class ImageSignature(base.TypedObject, base.MetadataObject):
         """
         return self.__conditions
 
-    def imageIdentity(self) -> Optional[str]:
+    def image_identity(self) -> Optional[str]:
         """
         A human readable string representing image's identity. It could be a product name and version, or an
         image pull spec (e.g. "registry.access.redhat.com/rhel7/rhel:7.2").
         """
-        return self.__imageIdentity
+        return self.__image_identity
 
-    def signedClaims(self) -> Optional[Dict[str, str]]:
+    def signed_claims(self) -> Optional[Dict[str, str]]:
         """
         Contains claims from the signature.
         """
-        return self.__signedClaims
+        return self.__signed_claims
 
     def created(self) -> Optional["base.Time"]:
         """
@@ -401,19 +405,19 @@ class ImageSignature(base.TypedObject, base.MetadataObject):
         """
         return self.__created
 
-    def issuedBy(self) -> Optional["SignatureIssuer"]:
+    def issued_by(self) -> Optional["SignatureIssuer"]:
         """
         If specified, it holds information about an issuer of signing certificate or key (a person or entity
         who signed the signing certificate or key).
         """
-        return self.__issuedBy
+        return self.__issued_by
 
-    def issuedTo(self) -> Optional["SignatureSubject"]:
+    def issued_to(self) -> Optional["SignatureSubject"]:
         """
         If specified, it holds information about a subject of signing certificate or key (a person or entity
         who signed the image).
         """
-        return self.__issuedTo
+        return self.__issued_to
 
 
 class Image(base.TypedObject, base.MetadataObject):
@@ -435,113 +439,119 @@ class Image(base.TypedObject, base.MetadataObject):
         name: str = None,
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
-        dockerImageReference: str = None,
-        dockerImageMetadata: "runtime.RawExtension" = None,
-        dockerImageMetadataVersion: str = None,
-        dockerImageManifest: str = None,
-        dockerImageLayers: List["ImageLayer"] = None,
+        docker_image_reference: str = None,
+        docker_image_metadata: "runtime.RawExtension" = None,
+        docker_image_metadata_version: str = None,
+        docker_image_manifest: str = None,
+        docker_image_layers: List["ImageLayer"] = None,
         signatures: List["ImageSignature"] = None,
-        dockerImageSignatures: List[bytes] = None,
-        dockerImageManifestMediaType: str = None,
-        dockerImageConfig: str = None,
+        docker_image_signatures: List[bytes] = None,
+        docker_image_manifest_media_type: str = None,
+        docker_image_config: str = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="Image",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
-        self.__dockerImageReference = dockerImageReference
-        self.__dockerImageMetadata = dockerImageMetadata
-        self.__dockerImageMetadataVersion = dockerImageMetadataVersion
-        self.__dockerImageManifest = dockerImageManifest
-        self.__dockerImageLayers = (
-            dockerImageLayers if dockerImageLayers is not None else []
+        self.__docker_image_reference = docker_image_reference
+        self.__docker_image_metadata = docker_image_metadata
+        self.__docker_image_metadata_version = docker_image_metadata_version
+        self.__docker_image_manifest = docker_image_manifest
+        self.__docker_image_layers = (
+            docker_image_layers if docker_image_layers is not None else []
         )
         self.__signatures = signatures if signatures is not None else []
-        self.__dockerImageSignatures = (
-            dockerImageSignatures if dockerImageSignatures is not None else []
+        self.__docker_image_signatures = (
+            docker_image_signatures if docker_image_signatures is not None else []
         )
-        self.__dockerImageManifestMediaType = dockerImageManifestMediaType
-        self.__dockerImageConfig = dockerImageConfig
+        self.__docker_image_manifest_media_type = docker_image_manifest_media_type
+        self.__docker_image_config = docker_image_config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        dockerImageReference = self.dockerImageReference()
-        check_type("dockerImageReference", dockerImageReference, Optional[str])
-        if dockerImageReference:  # omit empty
-            v["dockerImageReference"] = dockerImageReference
-        dockerImageMetadata = self.dockerImageMetadata()
+        docker_image_reference = self.docker_image_reference()
+        check_type("docker_image_reference", docker_image_reference, Optional[str])
+        if docker_image_reference:  # omit empty
+            v["dockerImageReference"] = docker_image_reference
+        docker_image_metadata = self.docker_image_metadata()
         check_type(
-            "dockerImageMetadata", dockerImageMetadata, Optional["runtime.RawExtension"]
+            "docker_image_metadata",
+            docker_image_metadata,
+            Optional["runtime.RawExtension"],
         )
-        v["dockerImageMetadata"] = dockerImageMetadata
-        dockerImageMetadataVersion = self.dockerImageMetadataVersion()
+        v["dockerImageMetadata"] = docker_image_metadata
+        docker_image_metadata_version = self.docker_image_metadata_version()
         check_type(
-            "dockerImageMetadataVersion", dockerImageMetadataVersion, Optional[str]
+            "docker_image_metadata_version",
+            docker_image_metadata_version,
+            Optional[str],
         )
-        if dockerImageMetadataVersion:  # omit empty
-            v["dockerImageMetadataVersion"] = dockerImageMetadataVersion
-        dockerImageManifest = self.dockerImageManifest()
-        check_type("dockerImageManifest", dockerImageManifest, Optional[str])
-        if dockerImageManifest:  # omit empty
-            v["dockerImageManifest"] = dockerImageManifest
-        dockerImageLayers = self.dockerImageLayers()
-        check_type("dockerImageLayers", dockerImageLayers, List["ImageLayer"])
-        v["dockerImageLayers"] = dockerImageLayers
+        if docker_image_metadata_version:  # omit empty
+            v["dockerImageMetadataVersion"] = docker_image_metadata_version
+        docker_image_manifest = self.docker_image_manifest()
+        check_type("docker_image_manifest", docker_image_manifest, Optional[str])
+        if docker_image_manifest:  # omit empty
+            v["dockerImageManifest"] = docker_image_manifest
+        docker_image_layers = self.docker_image_layers()
+        check_type("docker_image_layers", docker_image_layers, List["ImageLayer"])
+        v["dockerImageLayers"] = docker_image_layers
         signatures = self.signatures()
         check_type("signatures", signatures, Optional[List["ImageSignature"]])
         if signatures:  # omit empty
             v["signatures"] = signatures
-        dockerImageSignatures = self.dockerImageSignatures()
+        docker_image_signatures = self.docker_image_signatures()
         check_type(
-            "dockerImageSignatures", dockerImageSignatures, Optional[List[bytes]]
+            "docker_image_signatures", docker_image_signatures, Optional[List[bytes]]
         )
-        if dockerImageSignatures:  # omit empty
-            v["dockerImageSignatures"] = dockerImageSignatures
-        dockerImageManifestMediaType = self.dockerImageManifestMediaType()
+        if docker_image_signatures:  # omit empty
+            v["dockerImageSignatures"] = docker_image_signatures
+        docker_image_manifest_media_type = self.docker_image_manifest_media_type()
         check_type(
-            "dockerImageManifestMediaType", dockerImageManifestMediaType, Optional[str]
+            "docker_image_manifest_media_type",
+            docker_image_manifest_media_type,
+            Optional[str],
         )
-        if dockerImageManifestMediaType:  # omit empty
-            v["dockerImageManifestMediaType"] = dockerImageManifestMediaType
-        dockerImageConfig = self.dockerImageConfig()
-        check_type("dockerImageConfig", dockerImageConfig, Optional[str])
-        if dockerImageConfig:  # omit empty
-            v["dockerImageConfig"] = dockerImageConfig
+        if docker_image_manifest_media_type:  # omit empty
+            v["dockerImageManifestMediaType"] = docker_image_manifest_media_type
+        docker_image_config = self.docker_image_config()
+        check_type("docker_image_config", docker_image_config, Optional[str])
+        if docker_image_config:  # omit empty
+            v["dockerImageConfig"] = docker_image_config
         return v
 
-    def dockerImageReference(self) -> Optional[str]:
+    def docker_image_reference(self) -> Optional[str]:
         """
         DockerImageReference is the string that can be used to pull this image.
         """
-        return self.__dockerImageReference
+        return self.__docker_image_reference
 
-    def dockerImageMetadata(self) -> Optional["runtime.RawExtension"]:
+    def docker_image_metadata(self) -> Optional["runtime.RawExtension"]:
         """
         DockerImageMetadata contains metadata about this image
         """
-        return self.__dockerImageMetadata
+        return self.__docker_image_metadata
 
-    def dockerImageMetadataVersion(self) -> Optional[str]:
+    def docker_image_metadata_version(self) -> Optional[str]:
         """
         DockerImageMetadataVersion conveys the version of the object, which if empty defaults to "1.0"
         """
-        return self.__dockerImageMetadataVersion
+        return self.__docker_image_metadata_version
 
-    def dockerImageManifest(self) -> Optional[str]:
+    def docker_image_manifest(self) -> Optional[str]:
         """
         DockerImageManifest is the raw JSON of the manifest
         """
-        return self.__dockerImageManifest
+        return self.__docker_image_manifest
 
-    def dockerImageLayers(self) -> List["ImageLayer"]:
+    def docker_image_layers(self) -> List["ImageLayer"]:
         """
         DockerImageLayers represents the layers in the image. May not be set if the image does not define that data.
         """
-        return self.__dockerImageLayers
+        return self.__docker_image_layers
 
     def signatures(self) -> Optional[List["ImageSignature"]]:
         """
@@ -549,23 +559,23 @@ class Image(base.TypedObject, base.MetadataObject):
         """
         return self.__signatures
 
-    def dockerImageSignatures(self) -> Optional[List[bytes]]:
+    def docker_image_signatures(self) -> Optional[List[bytes]]:
         """
         DockerImageSignatures provides the signatures as opaque blobs. This is a part of manifest schema v1.
         """
-        return self.__dockerImageSignatures
+        return self.__docker_image_signatures
 
-    def dockerImageManifestMediaType(self) -> Optional[str]:
+    def docker_image_manifest_media_type(self) -> Optional[str]:
         """
         DockerImageManifestMediaType specifies the mediaType of manifest. This is a part of manifest schema v2.
         """
-        return self.__dockerImageManifestMediaType
+        return self.__docker_image_manifest_media_type
 
-    def dockerImageConfig(self) -> Optional[str]:
+    def docker_image_config(self) -> Optional[str]:
         """
         DockerImageConfig is a JSON blob that the runtime uses to set up the container. This is a part of manifest schema v2.
         """
-        return self.__dockerImageConfig
+        return self.__docker_image_config
 
 
 class ImageBlobReferences(types.Object):
@@ -576,19 +586,19 @@ class ImageBlobReferences(types.Object):
     @context.scoped
     @typechecked
     def __init__(
-        self, imageMissing: bool = False, layers: List[str] = None, config: str = None
+        self, image_missing: bool = False, layers: List[str] = None, config: str = None
     ):
         super().__init__()
-        self.__imageMissing = imageMissing
+        self.__image_missing = image_missing
         self.__layers = layers if layers is not None else []
         self.__config = config
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        imageMissing = self.imageMissing()
-        check_type("imageMissing", imageMissing, bool)
-        v["imageMissing"] = imageMissing
+        image_missing = self.image_missing()
+        check_type("image_missing", image_missing, bool)
+        v["imageMissing"] = image_missing
         layers = self.layers()
         check_type("layers", layers, List[str])
         v["layers"] = layers
@@ -597,14 +607,14 @@ class ImageBlobReferences(types.Object):
         v["config"] = config
         return v
 
-    def imageMissing(self) -> bool:
+    def image_missing(self) -> bool:
         """
         imageMissing is true if the image is referenced by the image stream but the image
         object has been deleted from the API by an administrator. When this field is set,
         layers and config fields may be empty and callers that depend on the image metadata
         should consider the image to be unavailable for download or viewing.
         """
-        return self.__imageMissing
+        return self.__image_missing
 
     def layers(self) -> List[str]:
         """
@@ -706,20 +716,20 @@ class ImageImportSpec(types.Object):
         self,
         from_: "k8sv1.ObjectReference" = None,
         to: "k8sv1.LocalObjectReference" = None,
-        importPolicy: "TagImportPolicy" = None,
-        referencePolicy: "TagReferencePolicy" = None,
-        includeManifest: bool = None,
+        import_policy: "TagImportPolicy" = None,
+        reference_policy: "TagReferencePolicy" = None,
+        include_manifest: bool = None,
     ):
         super().__init__()
         self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
         self.__to = to
-        self.__importPolicy = (
-            importPolicy if importPolicy is not None else TagImportPolicy()
+        self.__import_policy = (
+            import_policy if import_policy is not None else TagImportPolicy()
         )
-        self.__referencePolicy = (
-            referencePolicy if referencePolicy is not None else TagReferencePolicy()
+        self.__reference_policy = (
+            reference_policy if reference_policy is not None else TagReferencePolicy()
         )
-        self.__includeManifest = includeManifest
+        self.__include_manifest = include_manifest
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -731,16 +741,16 @@ class ImageImportSpec(types.Object):
         check_type("to", to, Optional["k8sv1.LocalObjectReference"])
         if to is not None:  # omit empty
             v["to"] = to
-        importPolicy = self.importPolicy()
-        check_type("importPolicy", importPolicy, Optional["TagImportPolicy"])
-        v["importPolicy"] = importPolicy
-        referencePolicy = self.referencePolicy()
-        check_type("referencePolicy", referencePolicy, Optional["TagReferencePolicy"])
-        v["referencePolicy"] = referencePolicy
-        includeManifest = self.includeManifest()
-        check_type("includeManifest", includeManifest, Optional[bool])
-        if includeManifest:  # omit empty
-            v["includeManifest"] = includeManifest
+        import_policy = self.import_policy()
+        check_type("import_policy", import_policy, Optional["TagImportPolicy"])
+        v["importPolicy"] = import_policy
+        reference_policy = self.reference_policy()
+        check_type("reference_policy", reference_policy, Optional["TagReferencePolicy"])
+        v["referencePolicy"] = reference_policy
+        include_manifest = self.include_manifest()
+        check_type("include_manifest", include_manifest, Optional[bool])
+        if include_manifest:  # omit empty
+            v["includeManifest"] = include_manifest
         return v
 
     def from_(self) -> "k8sv1.ObjectReference":
@@ -755,23 +765,23 @@ class ImageImportSpec(types.Object):
         """
         return self.__to
 
-    def importPolicy(self) -> Optional["TagImportPolicy"]:
+    def import_policy(self) -> Optional["TagImportPolicy"]:
         """
         ImportPolicy is the policy controlling how the image is imported
         """
-        return self.__importPolicy
+        return self.__import_policy
 
-    def referencePolicy(self) -> Optional["TagReferencePolicy"]:
+    def reference_policy(self) -> Optional["TagReferencePolicy"]:
         """
         ReferencePolicy defines how other components should consume the image
         """
-        return self.__referencePolicy
+        return self.__reference_policy
 
-    def includeManifest(self) -> Optional[bool]:
+    def include_manifest(self) -> Optional[bool]:
         """
         IncludeManifest determines if the manifest for each image is returned in the response
         """
-        return self.__includeManifest
+        return self.__include_manifest
 
 
 class ImageLayerData(types.Object):
@@ -781,10 +791,10 @@ class ImageLayerData(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, size: int = None, mediaType: str = ""):
+    def __init__(self, size: int = None, media_type: str = ""):
         super().__init__()
         self.__size = size
-        self.__mediaType = mediaType
+        self.__media_type = media_type
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -792,9 +802,9 @@ class ImageLayerData(types.Object):
         size = self.size()
         check_type("size", size, Optional[int])
         v["size"] = size
-        mediaType = self.mediaType()
-        check_type("mediaType", mediaType, str)
-        v["mediaType"] = mediaType
+        media_type = self.media_type()
+        check_type("media_type", media_type, str)
+        v["mediaType"] = media_type
         return v
 
     def size(self) -> Optional[int]:
@@ -804,11 +814,11 @@ class ImageLayerData(types.Object):
         """
         return self.__size
 
-    def mediaType(self) -> str:
+    def media_type(self) -> str:
         """
         MediaType of the referenced object.
         """
-        return self.__mediaType
+        return self.__media_type
 
 
 class ImageLookupPolicy(types.Object):
@@ -856,8 +866,8 @@ class TagReference(types.Object):
         from_: "k8sv1.ObjectReference" = None,
         reference: bool = None,
         generation: int = None,
-        importPolicy: "TagImportPolicy" = None,
-        referencePolicy: "TagReferencePolicy" = None,
+        import_policy: "TagImportPolicy" = None,
+        reference_policy: "TagReferencePolicy" = None,
     ):
         super().__init__()
         self.__name = name
@@ -865,11 +875,11 @@ class TagReference(types.Object):
         self.__from_ = from_
         self.__reference = reference
         self.__generation = generation
-        self.__importPolicy = (
-            importPolicy if importPolicy is not None else TagImportPolicy()
+        self.__import_policy = (
+            import_policy if import_policy is not None else TagImportPolicy()
         )
-        self.__referencePolicy = (
-            referencePolicy if referencePolicy is not None else TagReferencePolicy()
+        self.__reference_policy = (
+            reference_policy if reference_policy is not None else TagReferencePolicy()
         )
 
     @typechecked
@@ -892,12 +902,12 @@ class TagReference(types.Object):
         generation = self.generation()
         check_type("generation", generation, Optional[int])
         v["generation"] = generation
-        importPolicy = self.importPolicy()
-        check_type("importPolicy", importPolicy, Optional["TagImportPolicy"])
-        v["importPolicy"] = importPolicy
-        referencePolicy = self.referencePolicy()
-        check_type("referencePolicy", referencePolicy, Optional["TagReferencePolicy"])
-        v["referencePolicy"] = referencePolicy
+        import_policy = self.import_policy()
+        check_type("import_policy", import_policy, Optional["TagImportPolicy"])
+        v["importPolicy"] = import_policy
+        reference_policy = self.reference_policy()
+        check_type("reference_policy", reference_policy, Optional["TagReferencePolicy"])
+        v["referencePolicy"] = reference_policy
         return v
 
     def name(self) -> str:
@@ -939,17 +949,17 @@ class TagReference(types.Object):
         """
         return self.__generation
 
-    def importPolicy(self) -> Optional["TagImportPolicy"]:
+    def import_policy(self) -> Optional["TagImportPolicy"]:
         """
         ImportPolicy is information that controls how images may be imported by the server.
         """
-        return self.__importPolicy
+        return self.__import_policy
 
-    def referencePolicy(self) -> Optional["TagReferencePolicy"]:
+    def reference_policy(self) -> Optional["TagReferencePolicy"]:
         """
         ReferencePolicy defines how other components should consume the image.
         """
-        return self.__referencePolicy
+        return self.__reference_policy
 
 
 class ImageStreamSpec(types.Object):
@@ -961,32 +971,32 @@ class ImageStreamSpec(types.Object):
     @typechecked
     def __init__(
         self,
-        lookupPolicy: "ImageLookupPolicy" = None,
+        lookup_policy: "ImageLookupPolicy" = None,
         tags: List["TagReference"] = None,
     ):
         super().__init__()
-        self.__lookupPolicy = (
-            lookupPolicy if lookupPolicy is not None else ImageLookupPolicy()
+        self.__lookup_policy = (
+            lookup_policy if lookup_policy is not None else ImageLookupPolicy()
         )
         self.__tags = tags if tags is not None else []
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        lookupPolicy = self.lookupPolicy()
-        check_type("lookupPolicy", lookupPolicy, Optional["ImageLookupPolicy"])
-        v["lookupPolicy"] = lookupPolicy
+        lookup_policy = self.lookup_policy()
+        check_type("lookup_policy", lookup_policy, Optional["ImageLookupPolicy"])
+        v["lookupPolicy"] = lookup_policy
         tags = self.tags()
         check_type("tags", tags, Optional[List["TagReference"]])
         if tags:  # omit empty
             v["tags"] = tags
         return v
 
-    def lookupPolicy(self) -> Optional["ImageLookupPolicy"]:
+    def lookup_policy(self) -> Optional["ImageLookupPolicy"]:
         """
         lookupPolicy controls how other resources reference images within this namespace.
         """
-        return self.__lookupPolicy
+        return self.__lookup_policy
 
     def tags(self) -> Optional[List["TagReference"]]:
         """
@@ -1024,7 +1034,7 @@ class ImageStream(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ImageStreamSpec" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStream",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1075,7 +1085,7 @@ class ImageStreamImage(base.TypedObject, base.NamespacedMetadataObject):
         image: "Image" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStreamImage",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1109,19 +1119,19 @@ class RepositoryImportSpec(types.Object):
     def __init__(
         self,
         from_: "k8sv1.ObjectReference" = None,
-        importPolicy: "TagImportPolicy" = None,
-        referencePolicy: "TagReferencePolicy" = None,
-        includeManifest: bool = None,
+        import_policy: "TagImportPolicy" = None,
+        reference_policy: "TagReferencePolicy" = None,
+        include_manifest: bool = None,
     ):
         super().__init__()
         self.__from_ = from_ if from_ is not None else k8sv1.ObjectReference()
-        self.__importPolicy = (
-            importPolicy if importPolicy is not None else TagImportPolicy()
+        self.__import_policy = (
+            import_policy if import_policy is not None else TagImportPolicy()
         )
-        self.__referencePolicy = (
-            referencePolicy if referencePolicy is not None else TagReferencePolicy()
+        self.__reference_policy = (
+            reference_policy if reference_policy is not None else TagReferencePolicy()
         )
-        self.__includeManifest = includeManifest
+        self.__include_manifest = include_manifest
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -1129,16 +1139,16 @@ class RepositoryImportSpec(types.Object):
         from_ = self.from_()
         check_type("from_", from_, "k8sv1.ObjectReference")
         v["from"] = from_
-        importPolicy = self.importPolicy()
-        check_type("importPolicy", importPolicy, Optional["TagImportPolicy"])
-        v["importPolicy"] = importPolicy
-        referencePolicy = self.referencePolicy()
-        check_type("referencePolicy", referencePolicy, Optional["TagReferencePolicy"])
-        v["referencePolicy"] = referencePolicy
-        includeManifest = self.includeManifest()
-        check_type("includeManifest", includeManifest, Optional[bool])
-        if includeManifest:  # omit empty
-            v["includeManifest"] = includeManifest
+        import_policy = self.import_policy()
+        check_type("import_policy", import_policy, Optional["TagImportPolicy"])
+        v["importPolicy"] = import_policy
+        reference_policy = self.reference_policy()
+        check_type("reference_policy", reference_policy, Optional["TagReferencePolicy"])
+        v["referencePolicy"] = reference_policy
+        include_manifest = self.include_manifest()
+        check_type("include_manifest", include_manifest, Optional[bool])
+        if include_manifest:  # omit empty
+            v["includeManifest"] = include_manifest
         return v
 
     def from_(self) -> "k8sv1.ObjectReference":
@@ -1147,23 +1157,23 @@ class RepositoryImportSpec(types.Object):
         """
         return self.__from_
 
-    def importPolicy(self) -> Optional["TagImportPolicy"]:
+    def import_policy(self) -> Optional["TagImportPolicy"]:
         """
         ImportPolicy is the policy controlling how the image is imported
         """
-        return self.__importPolicy
+        return self.__import_policy
 
-    def referencePolicy(self) -> Optional["TagReferencePolicy"]:
+    def reference_policy(self) -> Optional["TagReferencePolicy"]:
         """
         ReferencePolicy defines how other components should consume the image
         """
-        return self.__referencePolicy
+        return self.__reference_policy
 
-    def includeManifest(self) -> Optional[bool]:
+    def include_manifest(self) -> Optional[bool]:
         """
         IncludeManifest determines if the manifest for each image is returned in the response
         """
-        return self.__includeManifest
+        return self.__include_manifest
 
 
 class ImageStreamImportSpec(types.Object):
@@ -1244,7 +1254,7 @@ class ImageStreamImport(base.TypedObject, base.NamespacedMetadataObject):
         spec: "ImageStreamImportSpec" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStreamImport",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1286,7 +1296,7 @@ class ImageStreamLayers(base.TypedObject, base.NamespacedMetadataObject):
         images: Dict[str, "ImageBlobReferences"] = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStreamLayers",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1345,7 +1355,7 @@ class ImageStreamMapping(base.TypedObject, base.NamespacedMetadataObject):
         tag: str = "",
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStreamMapping",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1390,7 +1400,7 @@ class TagEventCondition(types.Object):
         self,
         type: TagEventConditionType = None,
         status: k8sv1.ConditionStatus = None,
-        lastTransitionTime: "base.Time" = None,
+        last_transition_time: "base.Time" = None,
         reason: str = None,
         message: str = None,
         generation: int = 0,
@@ -1398,7 +1408,7 @@ class TagEventCondition(types.Object):
         super().__init__()
         self.__type = type
         self.__status = status
-        self.__lastTransitionTime = lastTransitionTime
+        self.__last_transition_time = last_transition_time
         self.__reason = reason
         self.__message = message
         self.__generation = generation
@@ -1412,9 +1422,9 @@ class TagEventCondition(types.Object):
         status = self.status()
         check_type("status", status, k8sv1.ConditionStatus)
         v["status"] = status
-        lastTransitionTime = self.lastTransitionTime()
-        check_type("lastTransitionTime", lastTransitionTime, Optional["base.Time"])
-        v["lastTransitionTime"] = lastTransitionTime
+        last_transition_time = self.last_transition_time()
+        check_type("last_transition_time", last_transition_time, Optional["base.Time"])
+        v["lastTransitionTime"] = last_transition_time
         reason = self.reason()
         check_type("reason", reason, Optional[str])
         if reason:  # omit empty
@@ -1440,11 +1450,11 @@ class TagEventCondition(types.Object):
         """
         return self.__status
 
-    def lastTransitionTime(self) -> Optional["base.Time"]:
+    def last_transition_time(self) -> Optional["base.Time"]:
         """
         LastTransitionTIme is the time the condition transitioned from one status to another.
         """
-        return self.__lastTransitionTime
+        return self.__last_transition_time
 
     def reason(self) -> Optional[str]:
         """
@@ -1487,12 +1497,12 @@ class ImageStreamTag(base.TypedObject, base.NamespacedMetadataObject):
         annotations: Dict[str, str] = None,
         tag: "TagReference" = None,
         generation: int = 0,
-        lookupPolicy: "ImageLookupPolicy" = None,
+        lookup_policy: "ImageLookupPolicy" = None,
         conditions: List["TagEventCondition"] = None,
         image: "Image" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageStreamTag",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -1501,8 +1511,8 @@ class ImageStreamTag(base.TypedObject, base.NamespacedMetadataObject):
         )
         self.__tag = tag
         self.__generation = generation
-        self.__lookupPolicy = (
-            lookupPolicy if lookupPolicy is not None else ImageLookupPolicy()
+        self.__lookup_policy = (
+            lookup_policy if lookup_policy is not None else ImageLookupPolicy()
         )
         self.__conditions = conditions if conditions is not None else []
         self.__image = image if image is not None else Image()
@@ -1516,9 +1526,9 @@ class ImageStreamTag(base.TypedObject, base.NamespacedMetadataObject):
         generation = self.generation()
         check_type("generation", generation, int)
         v["generation"] = generation
-        lookupPolicy = self.lookupPolicy()
-        check_type("lookupPolicy", lookupPolicy, "ImageLookupPolicy")
-        v["lookupPolicy"] = lookupPolicy
+        lookup_policy = self.lookup_policy()
+        check_type("lookup_policy", lookup_policy, "ImageLookupPolicy")
+        v["lookupPolicy"] = lookup_policy
         conditions = self.conditions()
         check_type("conditions", conditions, Optional[List["TagEventCondition"]])
         if conditions:  # omit empty
@@ -1544,12 +1554,12 @@ class ImageStreamTag(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__generation
 
-    def lookupPolicy(self) -> "ImageLookupPolicy":
+    def lookup_policy(self) -> "ImageLookupPolicy":
         """
         lookupPolicy indicates whether this tag will handle image references in this
         namespace.
         """
-        return self.__lookupPolicy
+        return self.__lookup_policy
 
     def conditions(self) -> Optional[List["TagEventCondition"]]:
         """
@@ -1588,7 +1598,7 @@ class ImageTag(base.TypedObject, base.NamespacedMetadataObject):
         image: "Image" = None,
     ):
         super().__init__(
-            apiVersion="image.openshift.io/v1",
+            api_version="image.openshift.io/v1",
             kind="ImageTag",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),

@@ -24,19 +24,19 @@ class PolicySpec(types.Object):
         user: str = None,
         group: str = None,
         readonly: bool = None,
-        apiGroup: str = None,
+        api_group: str = None,
         resource: str = None,
         namespace: str = None,
-        nonResourcePath: str = None,
+        non_resource_path: str = None,
     ):
         super().__init__()
         self.__user = user
         self.__group = group
         self.__readonly = readonly
-        self.__apiGroup = apiGroup
+        self.__api_group = api_group
         self.__resource = resource
         self.__namespace = namespace
-        self.__nonResourcePath = nonResourcePath
+        self.__non_resource_path = non_resource_path
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -53,10 +53,10 @@ class PolicySpec(types.Object):
         check_type("readonly", readonly, Optional[bool])
         if readonly:  # omit empty
             v["readonly"] = readonly
-        apiGroup = self.apiGroup()
-        check_type("apiGroup", apiGroup, Optional[str])
-        if apiGroup:  # omit empty
-            v["apiGroup"] = apiGroup
+        api_group = self.api_group()
+        check_type("api_group", api_group, Optional[str])
+        if api_group:  # omit empty
+            v["apiGroup"] = api_group
         resource = self.resource()
         check_type("resource", resource, Optional[str])
         if resource:  # omit empty
@@ -65,10 +65,10 @@ class PolicySpec(types.Object):
         check_type("namespace", namespace, Optional[str])
         if namespace:  # omit empty
             v["namespace"] = namespace
-        nonResourcePath = self.nonResourcePath()
-        check_type("nonResourcePath", nonResourcePath, Optional[str])
-        if nonResourcePath:  # omit empty
-            v["nonResourcePath"] = nonResourcePath
+        non_resource_path = self.non_resource_path()
+        check_type("non_resource_path", non_resource_path, Optional[str])
+        if non_resource_path:  # omit empty
+            v["nonResourcePath"] = non_resource_path
         return v
 
     def user(self) -> Optional[str]:
@@ -93,12 +93,12 @@ class PolicySpec(types.Object):
         """
         return self.__readonly
 
-    def apiGroup(self) -> Optional[str]:
+    def api_group(self) -> Optional[str]:
         """
         APIGroup is the name of an API group. APIGroup, Resource, and Namespace are required to match resource requests.
         "*" matches all API groups
         """
-        return self.__apiGroup
+        return self.__api_group
 
     def resource(self) -> Optional[str]:
         """
@@ -114,13 +114,13 @@ class PolicySpec(types.Object):
         """
         return self.__namespace
 
-    def nonResourcePath(self) -> Optional[str]:
+    def non_resource_path(self) -> Optional[str]:
         """
         NonResourcePath matches non-resource request paths.
         "*" matches all paths
         "/foo/*" matches all subpaths of foo
         """
-        return self.__nonResourcePath
+        return self.__non_resource_path
 
 
 class Policy(base.TypedObject):
@@ -132,7 +132,7 @@ class Policy(base.TypedObject):
     @typechecked
     def __init__(self, spec: "PolicySpec" = None):
         super().__init__(
-            apiVersion="abac.authorization.kubernetes.io/v1beta1", kind="Policy"
+            api_version="abac.authorization.kubernetes.io/v1beta1", kind="Policy"
         )
         self.__spec = spec if spec is not None else PolicySpec()
 

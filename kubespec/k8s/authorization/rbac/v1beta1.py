@@ -20,31 +20,31 @@ class AggregationRule(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, clusterRoleSelectors: List["metav1.LabelSelector"] = None):
+    def __init__(self, cluster_role_selectors: List["metav1.LabelSelector"] = None):
         super().__init__()
-        self.__clusterRoleSelectors = (
-            clusterRoleSelectors if clusterRoleSelectors is not None else []
+        self.__cluster_role_selectors = (
+            cluster_role_selectors if cluster_role_selectors is not None else []
         )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        clusterRoleSelectors = self.clusterRoleSelectors()
+        cluster_role_selectors = self.cluster_role_selectors()
         check_type(
-            "clusterRoleSelectors",
-            clusterRoleSelectors,
+            "cluster_role_selectors",
+            cluster_role_selectors,
             Optional[List["metav1.LabelSelector"]],
         )
-        if clusterRoleSelectors:  # omit empty
-            v["clusterRoleSelectors"] = clusterRoleSelectors
+        if cluster_role_selectors:  # omit empty
+            v["clusterRoleSelectors"] = cluster_role_selectors
         return v
 
-    def clusterRoleSelectors(self) -> Optional[List["metav1.LabelSelector"]]:
+    def cluster_role_selectors(self) -> Optional[List["metav1.LabelSelector"]]:
         """
         ClusterRoleSelectors holds a list of selectors which will be used to find ClusterRoles and create the rules.
         If any of the selectors match, then the ClusterRole's permissions will be added
         """
-        return self.__clusterRoleSelectors
+        return self.__cluster_role_selectors
 
 
 class PolicyRule(types.Object):
@@ -58,17 +58,19 @@ class PolicyRule(types.Object):
     def __init__(
         self,
         verbs: List[str] = None,
-        apiGroups: List[str] = None,
+        api_groups: List[str] = None,
         resources: List[str] = None,
-        resourceNames: List[str] = None,
-        nonResourceURLs: List[str] = None,
+        resource_names: List[str] = None,
+        non_resource_urls: List[str] = None,
     ):
         super().__init__()
         self.__verbs = verbs if verbs is not None else []
-        self.__apiGroups = apiGroups if apiGroups is not None else []
+        self.__api_groups = api_groups if api_groups is not None else []
         self.__resources = resources if resources is not None else []
-        self.__resourceNames = resourceNames if resourceNames is not None else []
-        self.__nonResourceURLs = nonResourceURLs if nonResourceURLs is not None else []
+        self.__resource_names = resource_names if resource_names is not None else []
+        self.__non_resource_urls = (
+            non_resource_urls if non_resource_urls is not None else []
+        )
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -76,22 +78,22 @@ class PolicyRule(types.Object):
         verbs = self.verbs()
         check_type("verbs", verbs, List[str])
         v["verbs"] = verbs
-        apiGroups = self.apiGroups()
-        check_type("apiGroups", apiGroups, Optional[List[str]])
-        if apiGroups:  # omit empty
-            v["apiGroups"] = apiGroups
+        api_groups = self.api_groups()
+        check_type("api_groups", api_groups, Optional[List[str]])
+        if api_groups:  # omit empty
+            v["apiGroups"] = api_groups
         resources = self.resources()
         check_type("resources", resources, Optional[List[str]])
         if resources:  # omit empty
             v["resources"] = resources
-        resourceNames = self.resourceNames()
-        check_type("resourceNames", resourceNames, Optional[List[str]])
-        if resourceNames:  # omit empty
-            v["resourceNames"] = resourceNames
-        nonResourceURLs = self.nonResourceURLs()
-        check_type("nonResourceURLs", nonResourceURLs, Optional[List[str]])
-        if nonResourceURLs:  # omit empty
-            v["nonResourceURLs"] = nonResourceURLs
+        resource_names = self.resource_names()
+        check_type("resource_names", resource_names, Optional[List[str]])
+        if resource_names:  # omit empty
+            v["resourceNames"] = resource_names
+        non_resource_urls = self.non_resource_urls()
+        check_type("non_resource_urls", non_resource_urls, Optional[List[str]])
+        if non_resource_urls:  # omit empty
+            v["nonResourceURLs"] = non_resource_urls
         return v
 
     def verbs(self) -> List[str]:
@@ -100,12 +102,12 @@ class PolicyRule(types.Object):
         """
         return self.__verbs
 
-    def apiGroups(self) -> Optional[List[str]]:
+    def api_groups(self) -> Optional[List[str]]:
         """
         APIGroups is the name of the APIGroup that contains the resources.  If multiple API groups are specified, any action requested against one of
         the enumerated resources in any API group will be allowed.
         """
-        return self.__apiGroups
+        return self.__api_groups
 
     def resources(self) -> Optional[List[str]]:
         """
@@ -114,19 +116,19 @@ class PolicyRule(types.Object):
         """
         return self.__resources
 
-    def resourceNames(self) -> Optional[List[str]]:
+    def resource_names(self) -> Optional[List[str]]:
         """
         ResourceNames is an optional white list of names that the rule applies to.  An empty set means that everything is allowed.
         """
-        return self.__resourceNames
+        return self.__resource_names
 
-    def nonResourceURLs(self) -> Optional[List[str]]:
+    def non_resource_urls(self) -> Optional[List[str]]:
         """
         NonResourceURLs is a set of partial urls that a user should have access to.  *s are allowed, but only as the full, final step in the path
         Since non-resource URLs are not namespaced, this field is only applicable for ClusterRoles referenced from a ClusterRoleBinding.
         Rules can either apply to API resources (such as "pods" or "secrets") or non-resource URL paths (such as "/api"),  but not both.
         """
-        return self.__nonResourceURLs
+        return self.__non_resource_urls
 
 
 class ClusterRole(base.TypedObject, base.MetadataObject):
@@ -143,17 +145,17 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         rules: List["PolicyRule"] = None,
-        aggregationRule: "AggregationRule" = None,
+        aggregation_rule: "AggregationRule" = None,
     ):
         super().__init__(
-            apiVersion="rbac.authorization.k8s.io/v1beta1",
+            api_version="rbac.authorization.k8s.io/v1beta1",
             kind="ClusterRole",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__rules = rules if rules is not None else []
-        self.__aggregationRule = aggregationRule
+        self.__aggregation_rule = aggregation_rule
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -161,10 +163,10 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         rules = self.rules()
         check_type("rules", rules, List["PolicyRule"])
         v["rules"] = rules
-        aggregationRule = self.aggregationRule()
-        check_type("aggregationRule", aggregationRule, Optional["AggregationRule"])
-        if aggregationRule is not None:  # omit empty
-            v["aggregationRule"] = aggregationRule
+        aggregation_rule = self.aggregation_rule()
+        check_type("aggregation_rule", aggregation_rule, Optional["AggregationRule"])
+        if aggregation_rule is not None:  # omit empty
+            v["aggregationRule"] = aggregation_rule
         return v
 
     def rules(self) -> List["PolicyRule"]:
@@ -173,13 +175,13 @@ class ClusterRole(base.TypedObject, base.MetadataObject):
         """
         return self.__rules
 
-    def aggregationRule(self) -> Optional["AggregationRule"]:
+    def aggregation_rule(self) -> Optional["AggregationRule"]:
         """
         AggregationRule is an optional field that describes how to build the Rules for this ClusterRole.
         If AggregationRule is set, then the Rules are controller managed and direct changes to Rules will be
         stomped by the controller.
         """
-        return self.__aggregationRule
+        return self.__aggregation_rule
 
 
 class RoleRef(types.Object):
@@ -191,21 +193,21 @@ class RoleRef(types.Object):
     @typechecked
     def __init__(
         self,
-        apiGroup: str = "rbac.authorization.k8s.io",
+        api_group: str = "rbac.authorization.k8s.io",
         kind: str = "",
         name: str = "",
     ):
         super().__init__()
-        self.__apiGroup = apiGroup
+        self.__api_group = api_group
         self.__kind = kind
         self.__name = name
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        apiGroup = self.apiGroup()
-        check_type("apiGroup", apiGroup, str)
-        v["apiGroup"] = apiGroup
+        api_group = self.api_group()
+        check_type("api_group", api_group, str)
+        v["apiGroup"] = api_group
         kind = self.kind()
         check_type("kind", kind, str)
         v["kind"] = kind
@@ -214,11 +216,11 @@ class RoleRef(types.Object):
         v["name"] = name
         return v
 
-    def apiGroup(self) -> str:
+    def api_group(self) -> str:
         """
         APIGroup is the group for the resource being referenced
         """
-        return self.__apiGroup
+        return self.__api_group
 
     def kind(self) -> str:
         """
@@ -244,13 +246,13 @@ class Subject(types.Object):
     def __init__(
         self,
         kind: str = "",
-        apiGroup: str = None,
+        api_group: str = None,
         name: str = "",
         namespace: str = None,
     ):
         super().__init__()
         self.__kind = kind
-        self.__apiGroup = apiGroup
+        self.__api_group = api_group
         self.__name = name
         self.__namespace = namespace
 
@@ -260,10 +262,10 @@ class Subject(types.Object):
         kind = self.kind()
         check_type("kind", kind, str)
         v["kind"] = kind
-        apiGroup = self.apiGroup()
-        check_type("apiGroup", apiGroup, Optional[str])
-        if apiGroup:  # omit empty
-            v["apiGroup"] = apiGroup
+        api_group = self.api_group()
+        check_type("api_group", api_group, Optional[str])
+        if api_group:  # omit empty
+            v["apiGroup"] = api_group
         name = self.name()
         check_type("name", name, str)
         v["name"] = name
@@ -280,13 +282,13 @@ class Subject(types.Object):
         """
         return self.__kind
 
-    def apiGroup(self) -> Optional[str]:
+    def api_group(self) -> Optional[str]:
         """
         APIGroup holds the API group of the referenced subject.
         Defaults to "" for ServiceAccount subjects.
         Defaults to "rbac.authorization.k8s.io" for User and Group subjects.
         """
-        return self.__apiGroup
+        return self.__api_group
 
     def name(self) -> str:
         """
@@ -317,17 +319,17 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         subjects: List["Subject"] = None,
-        roleRef: "RoleRef" = None,
+        role_ref: "RoleRef" = None,
     ):
         super().__init__(
-            apiVersion="rbac.authorization.k8s.io/v1beta1",
+            api_version="rbac.authorization.k8s.io/v1beta1",
             kind="ClusterRoleBinding",
             **({"name": name} if name is not None else {}),
             **({"labels": labels} if labels is not None else {}),
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else RoleRef()
+        self.__role_ref = role_ref if role_ref is not None else RoleRef()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -336,9 +338,9 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         check_type("subjects", subjects, Optional[List["Subject"]])
         if subjects:  # omit empty
             v["subjects"] = subjects
-        roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "RoleRef")
-        v["roleRef"] = roleRef
+        role_ref = self.role_ref()
+        check_type("role_ref", role_ref, "RoleRef")
+        v["roleRef"] = role_ref
         return v
 
     def subjects(self) -> Optional[List["Subject"]]:
@@ -347,12 +349,12 @@ class ClusterRoleBinding(base.TypedObject, base.MetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "RoleRef":
+    def role_ref(self) -> "RoleRef":
         """
         RoleRef can only reference a ClusterRole in the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.
         """
-        return self.__roleRef
+        return self.__role_ref
 
 
 class Role(base.TypedObject, base.NamespacedMetadataObject):
@@ -372,7 +374,7 @@ class Role(base.TypedObject, base.NamespacedMetadataObject):
         rules: List["PolicyRule"] = None,
     ):
         super().__init__(
-            apiVersion="rbac.authorization.k8s.io/v1beta1",
+            api_version="rbac.authorization.k8s.io/v1beta1",
             kind="Role",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -413,10 +415,10 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         labels: Dict[str, str] = None,
         annotations: Dict[str, str] = None,
         subjects: List["Subject"] = None,
-        roleRef: "RoleRef" = None,
+        role_ref: "RoleRef" = None,
     ):
         super().__init__(
-            apiVersion="rbac.authorization.k8s.io/v1beta1",
+            api_version="rbac.authorization.k8s.io/v1beta1",
             kind="RoleBinding",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
@@ -424,7 +426,7 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
             **({"annotations": annotations} if annotations is not None else {}),
         )
         self.__subjects = subjects if subjects is not None else []
-        self.__roleRef = roleRef if roleRef is not None else RoleRef()
+        self.__role_ref = role_ref if role_ref is not None else RoleRef()
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -433,9 +435,9 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         check_type("subjects", subjects, Optional[List["Subject"]])
         if subjects:  # omit empty
             v["subjects"] = subjects
-        roleRef = self.roleRef()
-        check_type("roleRef", roleRef, "RoleRef")
-        v["roleRef"] = roleRef
+        role_ref = self.role_ref()
+        check_type("role_ref", role_ref, "RoleRef")
+        v["roleRef"] = role_ref
         return v
 
     def subjects(self) -> Optional[List["Subject"]]:
@@ -444,9 +446,9 @@ class RoleBinding(base.TypedObject, base.NamespacedMetadataObject):
         """
         return self.__subjects
 
-    def roleRef(self) -> "RoleRef":
+    def role_ref(self) -> "RoleRef":
         """
         RoleRef can reference a Role in the current namespace or a ClusterRole in the global namespace.
         If the RoleRef cannot be resolved, the Authorizer must return an error.
         """
-        return self.__roleRef
+        return self.__role_ref

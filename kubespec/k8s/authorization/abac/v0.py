@@ -27,7 +27,7 @@ class Policy(base.TypedObject):
         namespace: str = None,
     ):
         super().__init__(
-            apiVersion="abac.authorization.kubernetes.io/v0", kind="Policy"
+            api_version="abac.authorization.kubernetes.io/v0", kind="Policy"
         )
         self.__user = user
         self.__group = group

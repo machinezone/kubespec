@@ -66,25 +66,25 @@ class RoutePort(types.Object):
 
     @context.scoped
     @typechecked
-    def __init__(self, targetPort: Union[int, str] = None):
+    def __init__(self, target_port: Union[int, str] = None):
         super().__init__()
-        self.__targetPort = targetPort if targetPort is not None else 0
+        self.__target_port = target_port if target_port is not None else 0
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
         v = super()._root()
-        targetPort = self.targetPort()
-        check_type("targetPort", targetPort, Union[int, str])
-        v["targetPort"] = targetPort
+        target_port = self.target_port()
+        check_type("target_port", target_port, Union[int, str])
+        v["targetPort"] = target_port
         return v
 
-    def targetPort(self) -> Union[int, str]:
+    def target_port(self) -> Union[int, str]:
         """
         The target port on pods selected by the service this route points to.
         If this is a string, it will be looked up as a named port in the target
         endpoints port list. Required
         """
-        return self.__targetPort
+        return self.__target_port
 
 
 class RouteTargetReference(types.Object):
@@ -147,17 +147,17 @@ class TLSConfig(types.Object):
         termination: TLSTerminationType = TLSTerminationType["Edge"],
         certificate: str = None,
         key: str = None,
-        caCertificate: str = None,
-        destinationCACertificate: str = None,
-        insecureEdgeTerminationPolicy: InsecureEdgeTerminationPolicyType = None,
+        ca_certificate: str = None,
+        destination_ca_certificate: str = None,
+        insecure_edge_termination_policy: InsecureEdgeTerminationPolicyType = None,
     ):
         super().__init__()
         self.__termination = termination
         self.__certificate = certificate
         self.__key = key
-        self.__caCertificate = caCertificate
-        self.__destinationCACertificate = destinationCACertificate
-        self.__insecureEdgeTerminationPolicy = insecureEdgeTerminationPolicy
+        self.__ca_certificate = ca_certificate
+        self.__destination_ca_certificate = destination_ca_certificate
+        self.__insecure_edge_termination_policy = insecure_edge_termination_policy
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -173,22 +173,24 @@ class TLSConfig(types.Object):
         check_type("key", key, Optional[str])
         if key:  # omit empty
             v["key"] = key
-        caCertificate = self.caCertificate()
-        check_type("caCertificate", caCertificate, Optional[str])
-        if caCertificate:  # omit empty
-            v["caCertificate"] = caCertificate
-        destinationCACertificate = self.destinationCACertificate()
-        check_type("destinationCACertificate", destinationCACertificate, Optional[str])
-        if destinationCACertificate:  # omit empty
-            v["destinationCACertificate"] = destinationCACertificate
-        insecureEdgeTerminationPolicy = self.insecureEdgeTerminationPolicy()
+        ca_certificate = self.ca_certificate()
+        check_type("ca_certificate", ca_certificate, Optional[str])
+        if ca_certificate:  # omit empty
+            v["caCertificate"] = ca_certificate
+        destination_ca_certificate = self.destination_ca_certificate()
         check_type(
-            "insecureEdgeTerminationPolicy",
-            insecureEdgeTerminationPolicy,
+            "destination_ca_certificate", destination_ca_certificate, Optional[str]
+        )
+        if destination_ca_certificate:  # omit empty
+            v["destinationCACertificate"] = destination_ca_certificate
+        insecure_edge_termination_policy = self.insecure_edge_termination_policy()
+        check_type(
+            "insecure_edge_termination_policy",
+            insecure_edge_termination_policy,
             Optional[InsecureEdgeTerminationPolicyType],
         )
-        if insecureEdgeTerminationPolicy:  # omit empty
-            v["insecureEdgeTerminationPolicy"] = insecureEdgeTerminationPolicy
+        if insecure_edge_termination_policy:  # omit empty
+            v["insecureEdgeTerminationPolicy"] = insecure_edge_termination_policy
         return v
 
     def termination(self) -> TLSTerminationType:
@@ -209,13 +211,13 @@ class TLSConfig(types.Object):
         """
         return self.__key
 
-    def caCertificate(self) -> Optional[str]:
+    def ca_certificate(self) -> Optional[str]:
         """
         caCertificate provides the cert authority certificate contents
         """
-        return self.__caCertificate
+        return self.__ca_certificate
 
-    def destinationCACertificate(self) -> Optional[str]:
+    def destination_ca_certificate(self) -> Optional[str]:
         """
         destinationCACertificate provides the contents of the ca certificate of the final destination.  When using reencrypt
         termination this file should be provided in order to have routers use it for health checks on the secure connection.
@@ -223,9 +225,9 @@ class TLSConfig(types.Object):
         the short service name (service.namespace.svc), which allows infrastructure generated certificates to automatically
         verify.
         """
-        return self.__destinationCACertificate
+        return self.__destination_ca_certificate
 
-    def insecureEdgeTerminationPolicy(
+    def insecure_edge_termination_policy(
         self
     ) -> Optional[InsecureEdgeTerminationPolicyType]:
         """
@@ -236,7 +238,7 @@ class TLSConfig(types.Object):
         * Disable - no traffic is allowed on the insecure port.
         * Redirect - clients are redirected to the secure port.
         """
-        return self.__insecureEdgeTerminationPolicy
+        return self.__insecure_edge_termination_policy
 
 
 class RouteSpec(types.Object):
@@ -266,22 +268,22 @@ class RouteSpec(types.Object):
         subdomain: str = None,
         path: str = None,
         to: "RouteTargetReference" = None,
-        alternateBackends: List["RouteTargetReference"] = None,
+        alternate_backends: List["RouteTargetReference"] = None,
         port: "RoutePort" = None,
         tls: "TLSConfig" = None,
-        wildcardPolicy: WildcardPolicyType = WildcardPolicyType["None"],
+        wildcard_policy: WildcardPolicyType = WildcardPolicyType["None"],
     ):
         super().__init__()
         self.__host = host
         self.__subdomain = subdomain
         self.__path = path
         self.__to = to if to is not None else RouteTargetReference()
-        self.__alternateBackends = (
-            alternateBackends if alternateBackends is not None else []
+        self.__alternate_backends = (
+            alternate_backends if alternate_backends is not None else []
         )
         self.__port = port
         self.__tls = tls
-        self.__wildcardPolicy = wildcardPolicy
+        self.__wildcard_policy = wildcard_policy
 
     @typechecked
     def _root(self) -> Dict[str, Any]:
@@ -300,14 +302,14 @@ class RouteSpec(types.Object):
         to = self.to()
         check_type("to", to, "RouteTargetReference")
         v["to"] = to
-        alternateBackends = self.alternateBackends()
+        alternate_backends = self.alternate_backends()
         check_type(
-            "alternateBackends",
-            alternateBackends,
+            "alternate_backends",
+            alternate_backends,
             Optional[List["RouteTargetReference"]],
         )
-        if alternateBackends:  # omit empty
-            v["alternateBackends"] = alternateBackends
+        if alternate_backends:  # omit empty
+            v["alternateBackends"] = alternate_backends
         port = self.port()
         check_type("port", port, Optional["RoutePort"])
         if port is not None:  # omit empty
@@ -316,10 +318,10 @@ class RouteSpec(types.Object):
         check_type("tls", tls, Optional["TLSConfig"])
         if tls is not None:  # omit empty
             v["tls"] = tls
-        wildcardPolicy = self.wildcardPolicy()
-        check_type("wildcardPolicy", wildcardPolicy, Optional[WildcardPolicyType])
-        if wildcardPolicy:  # omit empty
-            v["wildcardPolicy"] = wildcardPolicy
+        wildcard_policy = self.wildcard_policy()
+        check_type("wildcard_policy", wildcard_policy, Optional[WildcardPolicyType])
+        if wildcard_policy:  # omit empty
+            v["wildcardPolicy"] = wildcard_policy
         return v
 
     def host(self) -> str:
@@ -362,13 +364,13 @@ class RouteSpec(types.Object):
         """
         return self.__to
 
-    def alternateBackends(self) -> Optional[List["RouteTargetReference"]]:
+    def alternate_backends(self) -> Optional[List["RouteTargetReference"]]:
         """
         alternateBackends allows up to 3 additional backends to be assigned to the route.
         Only the Service kind is allowed, and it will be defaulted to Service.
         Use the weight field in RouteTargetReference object to specify relative preference.
         """
-        return self.__alternateBackends
+        return self.__alternate_backends
 
     def port(self) -> Optional["RoutePort"]:
         """
@@ -384,12 +386,12 @@ class RouteSpec(types.Object):
         """
         return self.__tls
 
-    def wildcardPolicy(self) -> Optional[WildcardPolicyType]:
+    def wildcard_policy(self) -> Optional[WildcardPolicyType]:
         """
         Wildcard policy if any for the route.
         Currently only 'Subdomain' or 'None' is allowed.
         """
-        return self.__wildcardPolicy
+        return self.__wildcard_policy
 
 
 class Route(base.TypedObject, base.NamespacedMetadataObject):
@@ -424,7 +426,7 @@ class Route(base.TypedObject, base.NamespacedMetadataObject):
         spec: "RouteSpec" = None,
     ):
         super().__init__(
-            apiVersion="route.openshift.io/v1",
+            api_version="route.openshift.io/v1",
             kind="Route",
             **({"namespace": namespace} if namespace is not None else {}),
             **({"name": name} if name is not None else {}),
